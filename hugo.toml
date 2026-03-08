@@ -1,0 +1,58 @@
+baseURL = 'https://hdknr.github.io/blogs/'
+languageCode = 'ja'
+defaultContentLanguage = 'ja'
+title = 'hdknr blog'
+theme = 'PaperMod'
+paginate = 10
+
+[params]
+  env = 'production'
+  defaultTheme = 'auto'
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+
+  [params.homeInfoParams]
+    Title = 'hdknr blog'
+    Content = 'Gist ブログのまとめサイト'
+
+[taxonomies]
+  category = 'categories'
+  tag = 'tags'
+
+[menu]
+  [[menu.main]]
+    identifier = 'categories'
+    name = 'カテゴリ'
+    url = '/categories/'
+    weight = 10
+  [[menu.main]]
+    identifier = 'tags'
+    name = 'タグ'
+    url = '/tags/'
+    weight = 20
+  [[menu.main]]
+    identifier = 'wiki'
+    name = 'Wiki'
+    url = '/wiki/'
+    weight = 30
+  [[menu.main]]
+    identifier = 'archives'
+    name = 'アーカイブ'
+    url = '/archives/'
+    weight = 40
+
+[outputs]
+  home = ['HTML', 'RSS', 'JSON']
+
+[markup]
+  [markup.highlight]
+    codeFences = true
+    lineNos = true
+    style = 'monokai'
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
