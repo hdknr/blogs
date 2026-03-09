@@ -117,25 +117,36 @@ tags: ["tag1", "tag2"]
 - 実用的な情報を含める（コマンド例、設定例、コードサンプルなど）
 - GitHub コメント/Issue からの内容はそのまま活かしつつ、ブログ記事として読みやすく整形する
 
-## コミット・ブランチ・PR 作成
+## コミット・ブランチ・PR 作成（worktree 方式）
 
-記事作成後、以下の手順で PR を作成する:
+記事作成後、以下の手順で PR を作成する。
+**重要: git worktree を使い、メインの作業ディレクトリのブランチを汚さないようにする。**
 
-1. ブランチを作成する:
+1. ブランチ名を決定する: `blog/YYYY-MM-DD-<slug>`
+2. worktree を作成してそこで作業する:
    ```bash
-   git checkout -b blog/YYYY-MM-DD-<slug>
+   # メインリポジトリのルートで実行（main ブランチのまま）
+   BRANCH_NAME="blog/YYYY-MM-DD-<slug>"
+   WORKTREE_DIR="../blogs-worktree-<slug>"
+
+   git worktree add -b "$BRANCH_NAME" "$WORKTREE_DIR" main
    ```
-2. 記事ファイルをステージングしてコミットする:
+3. worktree 内で記事ファイルを作成する:
+   - 記事の書き込み先: `$WORKTREE_DIR/content/posts/YYYY-MM-DD-<slug>.md`
+4. worktree 内で Hugo ビルド確認:
    ```bash
+   cd "$WORKTREE_DIR" && hugo --gc 2>&1 | tail -5
+   ```
+5. worktree 内でコミット・プッシュ:
+   ```bash
+   cd "$WORKTREE_DIR"
    git add content/posts/YYYY-MM-DD-<slug>.md
    git commit -m "Add blog post: <記事タイトル>"
+   git push -u origin "$BRANCH_NAME"
    ```
-3. リモートにプッシュする:
+6. PR を作成する:
    ```bash
-   git push -u origin blog/YYYY-MM-DD-<slug>
-   ```
-4. PR を作成する:
-   ```bash
+   cd "$WORKTREE_DIR"
    gh pr create --repo hdknr/blogs --title "Add blog: <記事タイトル>" --body "$(cat <<'EOF'
    ## Summary
    - 新規ブログ記事: <記事タイトル>
@@ -146,7 +157,12 @@ tags: ["tag1", "tag2"]
    EOF
    )"
    ```
-5. PR の URL を控える（ソース元への追記に使用する）
+7. PR の URL を控える（ソース元への追記に使用する）
+8. worktree を削除する:
+   ```bash
+   cd <メインリポジトリのルート>
+   git worktree remove "$WORKTREE_DIR"
+   ```
 
 ## ソース元への PR リンク追記
 
@@ -182,14 +198,5 @@ gh api /repos/{owner}/{repo}/issues/{issue_number}/comments \
 
 ## 後処理
 
-1. main ブランチに戻る:
-   ```bash
-   git checkout main
-   ```
+1. worktree は PR 作成手順の中で削除済み（メインリポジトリは main ブランチのまま）
 2. 作成した PR の URL をユーザーに伝える
-
-## 確認
-
-記事作成後（PR 作成前）:
-
-1. Hugo のビルドが通るか確認する: `hugo --gc 2>&1 | tail -5`
