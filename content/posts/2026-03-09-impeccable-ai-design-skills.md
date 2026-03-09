@@ -5,7 +5,7 @@ lastmod: 2026-03-09
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4020349617"
 categories: ["AI/LLM"]
-tags: ["claude-code", "agent"]
+tags: ["claude-code", "agent", "ui", "ux"]
 ---
 
 AI コーディングツール（Claude Code、Cursor、Gemini CLI など）で UI を生成すると、「動くけど見た目がイマイチ」になりがちだ。Impeccable は、AI に設計のボキャブラリーを教えることで、生成される UI の品質を引き上げるスキルライブラリだ。
