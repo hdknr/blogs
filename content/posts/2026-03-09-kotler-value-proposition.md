@@ -51,7 +51,7 @@ tags: ["マーケティング"]
 
 前述の4つの価値は、この Relevance・Benefit・Urgency の掛け合わせで説明できる。
 
-![4つの価値と3つの視点の関係](/images/kotler-value-perspectives.svg)
+![4つの価値と3つの視点の関係](/blogs/images/kotler-value-perspectives.svg)
 
 **1. 「切実な不満」の解消** は、3つの視点すべてが自然に揃うケースだ。痛みを抱えている本人にとって Relevance は明白であり、解決策という Benefit は直接的で、痛みが続いている限り Urgency も高い。だからこそ最も強い動機づけになる。
 
