@@ -45,6 +45,30 @@ MiroFish の動作は以下のステップで構成されます。
 
 盛大グループ（Shanda Group）の創業者である陳天橋氏は、MiroFish のデモを見た後、24時間以内にシードラウンドとして3,000万元の投資を即決したと報じられています。AI エージェント分野への注目度の高さと、群体知能（Swarm Intelligence）アプローチの将来性を評価した判断と考えられます。
 
+## 使用している AI モデルと技術スタック
+
+MiroFish は独自のモデルを訓練しているわけではなく、既存の LLM API をマルチエージェントの「頭脳」として利用し、群体知能シミュレーションのオーケストレーション層を提供しています。
+
+### LLM バックエンド
+
+**OpenAI SDK 互換の任意の LLM API** をサポートする設計です。デフォルトでは Alibaba Cloud の **Qwen-plus**（通義千問）が推奨されています。
+
+```env
+LLM_API_KEY=your_api_key
+LLM_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+LLM_MODEL_NAME=qwen-plus
+```
+
+`LLM_BASE_URL` と `LLM_MODEL_NAME` を変更するだけで、OpenAI GPT シリーズや DeepSeek など他のモデルに切り替え可能です。
+
+### エージェント記憶基盤
+
+各エージェントの人格・長期記憶・行動ログの保持には **[Zep Cloud](https://app.getzep.com/)** を使用しています。無料枠でも簡単な利用には十分とのことです。
+
+### シミュレーションエンジン
+
+シミュレーション部分は CAMEL-AI チームが開発した **[OASIS (Open Agent Social Interaction Simulations)](https://github.com/camel-ai/oasis)** をベースにしています。
+
 ## GitHub リポジトリ
 
 - **リポジトリ**: [666ghj/MiroFish](https://github.com/666ghj/MiroFish)
