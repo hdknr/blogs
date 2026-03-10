@@ -71,6 +71,8 @@ Zep は AI エージェント向けの長期記憶プラットフォームです
 
 シミュレーション部分は CAMEL-AI チームが開発した **[OASIS (Open Agent Social Interaction Simulations)](https://github.com/camel-ai/oasis)** をベースにしています。
 
+OASIS は、最大100万エージェント規模のソーシャルメディアシミュレーションを実現するオープンソースプラットフォームです。内部は Environment Server（動的なソーシャルネットワークと投稿情報の管理）、RecSys（興味ベース・ホットスコアベースのレコメンデーション）、Time Engine（時間進行の制御と加速）、Agent Module（LLM ベースのエージェント制御）の4つのモジュールで構成されています。エージェントはフォロー・コメント・リポストなど21種類のアクションを実行でき、実際のソーシャルメディアに近い多面的なインタラクションが可能です。MiroFish はこの OASIS の基盤を活用し、ソーシャルメディアに限らず金融・政策・フィクションなど幅広い領域の未来予測に応用しています。
+
 ## GitHub リポジトリ
 
 - **リポジトリ**: [666ghj/MiroFish](https://github.com/666ghj/MiroFish)
