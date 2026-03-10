@@ -33,6 +33,14 @@ cd ~/cc-openclaw
 stow --no-folding -t ~/your-openclaw-home-repo .
 ```
 
+ここで使っている `stow` は [GNU Stow](https://www.gnu.org/software/stow/) というシンボリックリンク管理ツールです。dotfiles 管理（`.bashrc`, `.vimrc` 等）でよく使われるもので、上記のコマンドは cc-openclaw リポジトリ内のファイル（`.claude/skills/` 以下のスキル定義など）を、OpenClaw のホームリポジトリにシンボリックリンクとして配置します。コピーではなくリンクなので、cc-openclaw 側で `git pull` するだけでスキル定義が最新に更新されます。`--no-folding` オプションにより、ディレクトリ自体ではなくファイル単位でリンクが作成されます。
+
+macOS では Homebrew でインストールできます:
+
+```bash
+brew install stow
+```
+
 スキルはリポジトリの位置を動的に判定します:
 
 ```bash
