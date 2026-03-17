@@ -11,6 +11,59 @@ redis-py の `Lock` クラスは UUID ベースのトークンでロックの所
 
 本記事では、redis-py の `Lock` を拡張してフェンシングトークンを発行する `FencedLock` クラスの実装例を紹介する。
 
+## 前提知識：Redis の Lua スクリプティング
+
+Redis はバージョン 2.6 から [Lua スクリプトの実行機能](https://redis.io/docs/latest/develop/interact/programmability/eval-intro/)を内蔵している。`EVAL` コマンドで Lua スクリプトを Redis サーバー上で直接実行でき、**複数の Redis コマンドをアトミック（不可分）に実行**できる。
+
+### なぜ Lua スクリプトが必要か
+
+通常、Redis コマンドは1つずつ実行される。例えば「キーが存在しなければセットし、同時にカウンターをインクリメントする」という処理を2つのコマンドで行うと、その間に他のクライアントが割り込む可能性がある：
+
+```
+クライアント A: SET mykey value NX  → 成功
+                                        ← クライアント B が割り込む余地
+クライアント A: INCR counter         → インクリメント
+```
+
+Lua スクリプトを使えば、この2つの操作を**1回のアトミックな呼び出し**にまとめられる：
+
+```lua
+-- Redis サーバー上で実行される（他のコマンドは割り込めない）
+local ok = redis.call('SET', KEYS[1], ARGV[1], 'NX')
+if ok then
+    return redis.call('INCR', KEYS[2])
+end
+return nil
+```
+
+### Redis CLI での実行例
+
+```bash
+# EVAL "スクリプト" キーの数 キー1 キー2 ... 引数1 引数2 ...
+redis-cli EVAL "return redis.call('SET', KEYS[1], ARGV[1])" 1 mykey myvalue
+```
+
+### redis-py での実行例
+
+```python
+import redis
+r = redis.Redis()
+
+# 方法1: eval で直接実行
+r.eval("return redis.call('SET', KEYS[1], ARGV[1])", 1, "mykey", "myvalue")
+
+# 方法2: register_script で事前登録（推奨）
+# サーバー側に SHA1 でキャッシュされ、2回目以降はスクリプト本文の転送が不要
+script = r.register_script("return redis.call('GET', KEYS[1])")
+result = script(keys=["mykey"])
+```
+
+### セキュリティ上の注意
+
+Lua スクリプトのパラメータは `KEYS[]` と `ARGV[]` で渡される。SQL のプリペアドステートメントと同様に、パラメータが文字列としてスクリプトに展開されることはないため、**パラメータ経由でのインジェクションはできない**。ただし、ユーザー入力でスクリプト文字列自体を動的に組み立てると危険なので、スクリプトは固定文字列として定義すること。
+
+また、Redis は Lua 環境で `loadstring()`, `dofile()`, `os`, `io` ライブラリを無効化しており、OS コマンド実行やファイルアクセスはできない。
+
 ## redis-py の Lock のカスタマイズポイント
 
 redis-py の [`Lock` クラス](https://redis.readthedocs.io/en/stable/_modules/redis/lock.html)は、以下のメソッドをオーバーライドすることでカスタマイズできる：
