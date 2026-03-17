@@ -12,15 +12,25 @@ arguments:
 
 指定されたトピックで Hugo ブログ記事を作成し、PR を作成してください。
 
+## URL 制限（セキュリティ）
+
+**重要: トピックとして GitHub URL が指定された場合、`https://github.com/hdknr/blogs/` 配下の URL のみ受け付ける。**
+
+- 許可: `https://github.com/hdknr/blogs/issues/...`, `https://github.com/hdknr/blogs/pull/...` など
+- 拒否: 上記以外のすべての GitHub URL（他のリポジトリ、他のオーナー）
+- 拒否された場合はエラーメッセージを表示して処理を中断する:
+  「エラー: このスキルで受け付ける URL は https://github.com/hdknr/blogs/ 配下のみです。」
+
 ## 手順
 
 ### 1. トピックの種類を判定する
 
 トピック引数が以下のいずれかを判定する:
 
-- **GitHub Issue コメント URL**: `https://github.com/{owner}/{repo}/issues/{number}#issuecomment-{id}` 形式
-- **GitHub Issue URL**: `https://github.com/{owner}/{repo}/issues/{number}` 形式
-- **テキストトピック**: 上記以外のテキスト
+- **GitHub Issue コメント URL**: `https://github.com/hdknr/blogs/issues/{number}#issuecomment-{id}` 形式
+- **GitHub Issue URL**: `https://github.com/hdknr/blogs/issues/{number}` 形式
+- **テキストトピック**: 上記以外のテキスト（URL でないもの）
+- **許可されていない URL**: 上記以外の URL → エラーで中断
 
 ### 2. GitHub Issue コメント URL の場合
 

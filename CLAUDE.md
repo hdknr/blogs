@@ -13,6 +13,7 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 ## 記事作成
 
 - `/blog <トピック or GitHub Issue URL>` スキルで記事作成〜PR作成まで自動化
+- **URL 制限: `/blog` スキルで受け付ける URL は `https://github.com/hdknr/blogs/` 配下のみ。他リポジトリの URL は拒否する**
 - 記事は日本語で記述
 - フロントマター: title, date, lastmod, draft, categories, tags（+ source_url）
 - カテゴリは `scripts/categorize.py` のルールに従う
