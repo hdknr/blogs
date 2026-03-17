@@ -1,0 +1,124 @@
+---
+title: "Agentic Coding時代のドキュメント配置: /docs ディレクトリはもう限界？"
+date: 2026-03-13
+lastmod: 2026-03-17
+draft: false
+source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4058450348"
+categories: ["AI/LLM"]
+tags: ["agent", "claude-code", "llm"]
+---
+
+Agentic Coding（AIエージェントによるコーディング）が普及する中、AIに渡すドキュメントをどこに配置すべきかという問題が注目されています。[古川陽介氏（@yosuke_furukawa）のポスト](https://x.com/yosuke_furukawa/status/2032377413800472967)で紹介されていた記事「[Your Docs Directory Is Doomed](https://yagmin.com/blog/your-docs-directory-is-doomed/)」（Yagmin）の内容をもとに、この問題を考えます。
+
+## /docs ディレクトリの進化と限界
+
+Agentic Coding を始めると、多くのプロジェクトで以下のようなドキュメントが増えていきます:
+
+1. まず `CLAUDE.md` や `AGENTS.md` のような設定ファイルを作成
+2. `ARCHITECTURE.md` でシステム全体の構造を記述
+3. 機能仕様やデザインドキュメントを `/docs` フォルダにまとめ始める
+
+この流れ自体は自然ですが、記事では `/docs` ディレクトリへの集約には根本的な問題があると指摘しています。
+
+## /docs ディレクトリの問題点
+
+### 1. 発見可能性（Discoverability）
+
+LLM はどのドキュメントをいつ読むべきかを自律的に判断する必要があります。`/docs` に大量のファイルがある場合、LLM が適切なドキュメントを見つけられる保証はありません。計画フェーズで必要なドキュメントと、コード生成フェーズで必要なドキュメントは異なりますが、それを正しく参照できるでしょうか。
+
+### 2. ドキュメントの腐敗（Documentation Rot）
+
+コードは頻繁に変更されますが、対応するドキュメントの更新は忘れがちです。小さな不整合が積み重なり、LLM が参照するコンテキストの品質が徐々に劣化していきます。さらに厄介なのは、ドキュメントが間違っていることに気づくための仕組み（observability）がないことです。
+
+### 3. 構造の欠如
+
+ドキュメント間の階層関係や依存関係が明示されていないため、LLM がドキュメント群をナビゲートする明確な方法がありません。各自が自分のスタイルで書くため、LLM にとって情報の探索がしにくい構造になります。
+
+### 4. 変更速度の不一致（Velocity Mismatch）
+
+ドキュメントの種類によって変更頻度が異なります。アーキテクチャの概要はめったに変わりませんが、API仕様やコンポーネントの詳細は頻繁に更新されます。一つのディレクトリにすべてをまとめると、この違いが管理を困難にします。
+
+## コロケーション（Colocation）というアプローチ
+
+古川氏がツイートで触れているように、一つの解決策は**コロケーション** — ドキュメントをコードの近くに直接配置する方法です。
+
+```
+src/
+  auth/
+    README.md          # 認証モジュールの説明
+    auth.ts
+    auth.test.ts
+  api/
+    README.md          # APIモジュールの説明
+    routes.ts
+    middleware.ts
+```
+
+このアプローチの利点:
+
+- **発見可能性の向上**: 関連コードと同じディレクトリにあるため、LLM が自然に参照できる
+- **更新の同期**: コードを変更する際にドキュメントも目に入るため、更新忘れが減る
+- **スコープの明確化**: 各ドキュメントが担当する範囲が明確
+
+## Agentic Coding でのドキュメント管理の方向性
+
+「Your Docs Directory Is Doomed」の記事は、従来のドキュメント管理は「1985年からの解決策」に過ぎないと指摘しています。Agentic Coding 時代には、以下の要素が重要になります:
+
+- **ナビゲーション可能**: LLM がドキュメント間を適切に移動できること
+- **コンポーザブル**: 必要な部分だけを組み合わせて参照できること
+- **組織的な所有**: 個人ではなくチーム・組織としてドキュメントを維持すること
+
+コンテキストの生成と管理は、コード生成とはまったく別の問題です。AIエージェントが効果的にコードを書くためには、適切なコンテキストを適切なタイミングで提供する仕組みが必要であり、単にMarkdownファイルを `/docs` に追加していくだけでは不十分ということです。
+
+## コロケーションと既存のドキュメントツールの共存
+
+コロケーションに移行する際に気になるのが、MkDocs のような既存のドキュメントビルドツールとの共存だ。`/docs` ディレクトリに Markdown を集約する従来の構成から、ソースツリーに散在させる構成に変えた場合、ドキュメントサイトはどうビルドするのか。
+
+### mkdocs-gen-files による仮想ファイル収集
+
+[mkdocs-gen-files](https://github.com/oprypin/mkdocs-gen-files) と [mkdocs-literate-nav](https://github.com/oprypin/mkdocs-literate-nav) を組み合わせると、ビルド時に Python スクリプトでソースツリーを走査し、`README.md` などの Markdown だけを仮想的に収集してドキュメントサイトを生成できる。
+
+```yaml
+# mkdocs.yml
+docs_dir: docs          # トップページ等の固定ドキュメント
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - scripts/gen_doc_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+```
+
+```python
+# scripts/gen_doc_pages.py
+import mkdocs_gen_files
+from pathlib import Path
+
+nav = mkdocs_gen_files.Nav()
+for path in sorted(Path("src").rglob("README.md")):
+    module_path = path.relative_to("src")
+    doc_path = module_path.parent / "index.md"
+    nav[module_path.parent.parts] = doc_path.as_posix()
+    with mkdocs_gen_files.open(doc_path, "w") as f:
+        f.write(path.read_text())
+
+with mkdocs_gen_files.open("SUMMARY.md", "w") as nav_file:
+    nav_file.writelines(nav.build_literate_nav())
+```
+
+このアプローチのポイントは、**実際のファイルシステムにはコピーが作られない**こと。ソースツリー内の `README.md` が唯一の正（single source of truth）のまま維持され、二重管理が発生しない。`docs/` にはトップページなど最小限の固定ドキュメントだけを置けばよい。
+
+### その他の選択肢
+
+| プラグイン | 特徴 |
+|---|---|
+| [mkdocs-simple-plugin](https://github.com/athackst/mkdocs-simple-plugin) | リポジトリ全体から Markdown を自動検出。最も手軽 |
+| [mkdocs-monorepo-plugin](https://github.com/backstage/mkdocs-monorepo-plugin) | サブディレクトリごとに `mkdocs.yml` を持たせて統合。大規模向け |
+| [mkdocs-same-dir](https://github.com/oprypin/mkdocs-same-dir) | `docs_dir: .` を可能にするが、内部パッチに依存するため安定性に懸念 |
+
+コロケーションは LLM のためだけの方針ではなく、既存のドキュメントツールチェーンとも両立できる。むしろ「コードの近くにドキュメントがある」状態は、人間の開発者にとっても自然であり、ドキュメントの腐敗を防ぐ効果が期待できる。
+
+## まとめ
+
+Agentic Coding の普及に伴い、「AIにどうやってプロジェクトのコンテキストを伝えるか」は避けて通れない課題になっています。`/docs` ディレクトリは出発点としては有効ですが、プロジェクトが成長するにつれて限界が見えてきます。コロケーションをはじめとする、コードとドキュメントの距離を縮めるアプローチが今後ますます重要になっていくでしょう。
