@@ -1,7 +1,7 @@
 ---
 title: "Agentic Coding時代のドキュメント配置: /docs ディレクトリはもう限界？"
 date: 2026-03-13
-lastmod: 2026-03-13
+lastmod: 2026-03-17
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4058450348"
 categories: ["AI/LLM"]
@@ -69,6 +69,55 @@ src/
 - **組織的な所有**: 個人ではなくチーム・組織としてドキュメントを維持すること
 
 コンテキストの生成と管理は、コード生成とはまったく別の問題です。AIエージェントが効果的にコードを書くためには、適切なコンテキストを適切なタイミングで提供する仕組みが必要であり、単にMarkdownファイルを `/docs` に追加していくだけでは不十分ということです。
+
+## コロケーションと既存のドキュメントツールの共存
+
+コロケーションに移行する際に気になるのが、MkDocs のような既存のドキュメントビルドツールとの共存だ。`/docs` ディレクトリに Markdown を集約する従来の構成から、ソースツリーに散在させる構成に変えた場合、ドキュメントサイトはどうビルドするのか。
+
+### mkdocs-gen-files による仮想ファイル収集
+
+[mkdocs-gen-files](https://github.com/oprypin/mkdocs-gen-files) と [mkdocs-literate-nav](https://github.com/oprypin/mkdocs-literate-nav) を組み合わせると、ビルド時に Python スクリプトでソースツリーを走査し、`README.md` などの Markdown だけを仮想的に収集してドキュメントサイトを生成できる。
+
+```yaml
+# mkdocs.yml
+docs_dir: docs          # トップページ等の固定ドキュメント
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - scripts/gen_doc_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+```
+
+```python
+# scripts/gen_doc_pages.py
+import mkdocs_gen_files
+from pathlib import Path
+
+nav = mkdocs_gen_files.Nav()
+for path in sorted(Path("src").rglob("README.md")):
+    module_path = path.relative_to("src")
+    doc_path = module_path.parent / "index.md"
+    nav[module_path.parent.parts] = doc_path.as_posix()
+    with mkdocs_gen_files.open(doc_path, "w") as f:
+        f.write(path.read_text())
+
+with mkdocs_gen_files.open("SUMMARY.md", "w") as nav_file:
+    nav_file.writelines(nav.build_literate_nav())
+```
+
+このアプローチのポイントは、**実際のファイルシステムにはコピーが作られない**こと。ソースツリー内の `README.md` が唯一の正（single source of truth）のまま維持され、二重管理が発生しない。`docs/` にはトップページなど最小限の固定ドキュメントだけを置けばよい。
+
+### その他の選択肢
+
+| プラグイン | 特徴 |
+|---|---|
+| [mkdocs-simple-plugin](https://github.com/athackst/mkdocs-simple-plugin) | リポジトリ全体から Markdown を自動検出。最も手軽 |
+| [mkdocs-monorepo-plugin](https://github.com/backstage/mkdocs-monorepo-plugin) | サブディレクトリごとに `mkdocs.yml` を持たせて統合。大規模向け |
+| [mkdocs-same-dir](https://github.com/oprypin/mkdocs-same-dir) | `docs_dir: .` を可能にするが、内部パッチに依存するため安定性に懸念 |
+
+コロケーションは LLM のためだけの方針ではなく、既存のドキュメントツールチェーンとも両立できる。むしろ「コードの近くにドキュメントがある」状態は、人間の開発者にとっても自然であり、ドキュメントの腐敗を防ぐ効果が期待できる。
 
 ## まとめ
 
