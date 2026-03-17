@@ -197,6 +197,39 @@ def process_order(order_id):
 - **トークンキーに TTL を設定しない** — `fence:{resource}` は単調増加を保つために永続化する（リセットすると安全性が崩れる）
 - **検証はデータストア側** — Redis 側ではなく、最終的な書き込み先（RDB 等）で `fence_token < ?` を条件にする
 
+#### django-redis の lock はフェンシングトークンを提供しない
+
+Django プロジェクトでは [django-redis](https://github.com/jazzband/django-redis) の `cache.lock()` が手軽に使える：
+
+```python
+from django.core.cache import cache
+
+with cache.lock("my-resource"):
+    do_something()
+```
+
+しかし、この `lock()` の内部実装は以下のように委譲されるだけだ：
+
+```
+django-redis cache.lock()
+  → redis-py client.lock()
+    → Redis SET key <UUID> NX PX <timeout>
+```
+
+redis-py の `Lock` クラスは UUID（ランダム値）をトークンとして使用する。これはロック解放時に「自分が取得したロックだけを解放する」ための所有者検証には有効だが、**単調増加する値ではない**ため、データストア側で「どちらの書き込みが新しいか」を判定できない。
+
+つまり、django-redis の lock が**解決する**のは：
+
+- 他のクライアントのロックを誤って解放する問題
+- スレッド間の誤操作（`thread_local=True`）
+
+django-redis の lock が**解決しない**のは：
+
+- TTL 切れによる二重取得後のデータ不整合
+- GC pause 後に古いロック保持者が書き込みを行う問題
+
+Django プロジェクトで正確性が求められる場合は、前述の Lua スクリプトによる自前実装でフェンシングトークンを発行するか、`SELECT ... FOR UPDATE` のようなデータベースレベルのロックを検討する必要がある。
+
 #### Redlock の限界
 
 Redis の Redlock アルゴリズムにはフェンシングトークンを生成する仕組みが組み込まれていない。`INCR` コマンドで自前のカウンターを用意することは可能だが、Redlock 自体の設計にはトークンの単調増加を保証するメカニズムがない。これが Kleppmann が指摘する Redlock の根本的な限界の一つだ。
