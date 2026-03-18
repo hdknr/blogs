@@ -178,6 +178,51 @@ Line Items は以下のオブジェクトと関連付けできます。
 
 **Line Items は 1 つの親オブジェクトにのみ属します。** 同じ Line Item を複数の取引や見積もりに共有することはできません。複数のオブジェクトに同じ製品を紐付けたい場合は、オブジェクトごとに別々の Line Item を作成する必要があります。
 
+## カスタムプロパティで備考情報を追加する
+
+デフォルトの `description` は製品説明用のため、Line Item ごとの備考には**カスタムプロパティ**を作成するのが実用的です。
+
+### API でカスタムプロパティを作成
+
+```json
+POST /crm/v3/properties/line_items
+
+{
+  "name": "notes",
+  "label": "備考",
+  "type": "string",
+  "fieldType": "textarea",
+  "groupName": "lineiteminformation"
+}
+```
+
+主な `fieldType` の選択肢:
+
+| fieldType | 用途 |
+|-----------|------|
+| `text` | 単行テキスト |
+| `textarea` | 複数行テキスト（備考向き） |
+| `number` | 数値 |
+| `date` | 日付 |
+| `select` | ドロップダウン選択 |
+
+### Line Item 作成・更新時に備考を設定
+
+```json
+POST /crm/v3/objects/line_items
+
+{
+  "properties": {
+    "name": "Web開発サービス",
+    "price": "500000",
+    "quantity": "1",
+    "notes": "初回割引適用。契約更新時に見直し予定。"
+  }
+}
+```
+
+カスタムプロパティは HubSpot UI の **設定 → プロパティ → 商品項目** からも作成・管理できます。
+
 ## 参考リンク
 
 - [HubSpot Line Items API リファレンス（日本語）](https://developers.hubspot.jp/docs/api-reference/crm-line-items-v3/guide)
