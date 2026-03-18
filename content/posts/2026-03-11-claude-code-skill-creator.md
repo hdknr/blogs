@@ -24,7 +24,23 @@ Claude Code は 3 段階の情報ロードシステム（**Progressive Disclosur
 
 この仕組みにより、多数のスキルをインストールしてもコンテキストウィンドウを無駄に消費しません。
 
-## skill-creator プラグインとは
+## skill-creator プラグインのインストール
+
+skill-creator は Anthropic 公式マーケットプレイスに含まれています。Claude Code 内で以下のコマンドを実行するだけでインストールできます。
+
+```shell
+/plugin install skill-creator@claude-plugins-official
+```
+
+インストール後、プラグインを有効化します。
+
+```shell
+/reload-plugins
+```
+
+なお、`/plugin` コマンドで **Discover** タブを開き、GUI からインストールすることも可能です。プラグイン機能を利用するには Claude Code **バージョン 1.0.33 以上** が必要です（`claude --version` で確認できます）。
+
+## skill-creator の 4 つのモード
 
 **skill-creator** は Anthropic が公式に提供するプラグインで、スキルの開発ライフサイクル全体をサポートします。4 つのモードがあります。
 
