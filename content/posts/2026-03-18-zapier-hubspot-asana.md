@@ -158,7 +158,75 @@ output = {
 
 ## より高度な集計: Zapier Functions
 
-標準の Code by Zapier ではライブラリの追加ができませんが、**Zapier Functions**（Python 環境）を使えば、Pandas や NumPy などのパッケージも利用できます。
+標準の Code by Zapier ではライブラリの追加ができませんが、**Zapier Functions** を使えば、外部パッケージを含む本格的な Python コードを実行できます。
+
+### Zapier Functions とは
+
+Zapier Functions は、Zapier 内でサーバーレス Python 関数を作成・実行できるサービスです。概念的には **AWS Lambda に近い**ですが、Zapier のエコシステムに統合されている点が異なります。
+
+| 観点 | Zapier Functions | AWS Lambda |
+|---|---|---|
+| 位置づけ | Zapier 内のサーバーレス関数 | AWS のサーバーレスコンピューティング |
+| 言語 | Python | Python, Node.js, Go, Java 他多数 |
+| 外部パッケージ | Pandas, NumPy, TensorFlow 等の主要パッケージ | pip/npm 等で自由にインストール可能 |
+| 実行時間制限 | 5 分 | 最大 15 分 |
+| トリガー | Zap のステップ、Agent、MCP サーバー | API Gateway, S3, SQS 等多数 |
+| シークレット管理 | 組み込みの Secrets 機能 | AWS Secrets Manager / Parameter Store |
+| デプロイ | Zapier UI 上で直接編集・保存 | ZIP アップロード、SAM、CDK 等 |
+| 再利用性 | 複数の Zap / Agent から呼び出し可能 | API Gateway 等経由で任意に呼び出し可能 |
+| インフラ管理 | 不要（フルマネージド） | 不要（フルマネージド） |
+| 料金 | Zapier プランに含まれる（オープンベータ） | 実行回数・時間による従量課金 |
+
+### Code by Zapier との違い
+
+Zapier Functions は Code by Zapier の上位互換ではなく、**別のサービス**として提供されています。
+
+| 観点 | Code by Zapier | Zapier Functions |
+|---|---|---|
+| 用途 | Zap 内のインラインスクリプト | 独立した再利用可能な関数 |
+| 言語 | JavaScript (Node.js 18) / Python | Python |
+| 外部パッケージ | 不可（標準ライブラリ + fetch/requests のみ） | Pandas, NumPy, TensorFlow 等が利用可能 |
+| 実行時間 | 30 秒（プランにより延長あり） | 5 分 |
+| メモリ | 256 MB | 非公開（より大きいと推定） |
+| シークレット管理 | なし（Input Data に直接入力） | 組み込みの Secrets 機能で安全に管理 |
+| 再利用 | Zap ごとにコードを記述 | 1 つの関数を複数の Zap / Agent から呼び出し可能 |
+| 開発環境 | Zapier エディタ内のテキストエリア | 専用の開発環境（ファイル分割可能） |
+| ステータス | GA（正式リリース） | オープンベータ |
+
+### Zapier Functions のアーキテクチャ
+
+Zapier Functions は以下の構成要素で動作します。
+
+```
+[Zap / Agent / MCP サーバー]
+    ↓ Call a Function アクション
+[Zapier Functions]
+    ├── Start a Function トリガー（入力フィールド定義）
+    ├── Python コード（外部パッケージ + Secrets 利用可能）
+    └── Return from Function アクション（結果を呼び出し元に返却）
+    ↓
+[呼び出し元に結果を返す]
+```
+
+1. **Start a Function トリガー**: 入力パラメータを定義する。Zap から渡されるデータのスキーマを設定
+2. **Python コード**: メインのロジックを記述。外部パッケージのインポートや Secrets の参照が可能
+3. **Return from Function アクション**: 処理結果を呼び出し元（Zap / Agent）に返す。これにより呼び出し元は結果を待ってから次のステップに進める
+
+### Secrets 管理
+
+Zapier Functions には組み込みのシークレット管理機能があり、API キーやトークンを安全に保存できます。
+
+```python
+# Zapier Functions (Python)
+# シークレットは環境変数のように参照可能
+import os
+
+hubspot_token = os.environ['HUBSPOT_API_KEY']  # Secrets に登録した値
+```
+
+Code by Zapier では Input Data にトークンを直接入力する必要がありましたが、Functions ではシークレットとして暗号化管理されるため、よりセキュアです。
+
+### 利用例: Pandas でディールデータを集計
 
 ```python
 # Zapier Functions (Python)
@@ -179,6 +247,12 @@ output = {
     'total_pipeline': int(deals['amount'].sum())
 }
 ```
+
+### どちらを使うべきか
+
+- **Code by Zapier**: 簡単なデータ変換、フォーマット処理、単純な API コールなど、数行で済む処理
+- **Zapier Functions**: 外部パッケージが必要な処理、複数の Zap で共有したいロジック、API キーを安全に管理したい場合、30 秒以上かかる処理
+- **AWS Lambda**: Zapier のエコシステム外で動かしたい場合、Python 以外の言語を使いたい場合、15 分以上の処理、完全なカスタマイズが必要な場合
 
 ## 実践例: Asana タスクを集計して HubSpot Deal に Line Item を追加する
 
