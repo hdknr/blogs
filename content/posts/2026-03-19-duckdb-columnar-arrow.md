@@ -1,5 +1,5 @@
 ---
-title: "DuckDBとApache Arrowの関係を整理する：列指向DB・ゼロコピー連携・使い分け"
+title: "DuckDB・Apache Arrow・Parquetの関係を整理する：列指向エコシステムの全体像"
 date: 2026-03-19
 lastmod: 2026-03-19
 draft: false
@@ -7,17 +7,27 @@ categories: ["データベース"]
 tags: ["duckdb", "python"]
 ---
 
-DuckDB は「SQLite の分析版」とも呼ばれるインプロセス OLAP データベースです。Apache Arrow と同じ列指向の思想を持ちますが、両者の役割は異なります。この記事では DuckDB のアーキテクチャ、Arrow との関係、そして従来の行指向 DB との違いを整理します。
+DuckDB は「SQLite の分析版」とも呼ばれるインプロセス OLAP データベースです。Apache Arrow、Apache Parquet と同じ列指向の思想を持ちますが、三者の役割はそれぞれ異なります。この記事では DuckDB のアーキテクチャ、Arrow・Parquet との関係、そして従来の行指向 DB との違いを整理します。
 
-## DuckDB と Apache Arrow の位置付け
+## Parquet・Arrow・DuckDB の位置付け
 
-| | DuckDB | Apache Arrow |
-|---|---|---|
-| **何か** | SQL データベースエンジン | インメモリ列指向データフォーマット（仕様+ライブラリ） |
-| **目的** | SQL クエリの実行・最適化 | アプリケーション間のゼロコピーデータ交換 |
-| **ストレージ** | 独自の列指向形式 + 外部ファイル対応 | メモリ上のデータレイアウト仕様 |
+| | Parquet | Arrow | DuckDB |
+|---|---|---|---|
+| **何か** | ディスク上の列指向ファイル形式 | インメモリ列指向データフォーマット（仕様+ライブラリ） | SQL データベースエンジン |
+| **レイヤー** | ストレージ（ディスク） | データ交換（メモリ） | クエリ実行（エンジン） |
+| **目的** | 効率的な永続化・圧縮 | アプリケーション間のゼロコピーデータ交換 | SQL クエリの実行・最適化 |
 
-Arrow は「データの並べ方の規格」、DuckDB は「その上で SQL を実行するエンジン」です。Arrow 単体ではクエリを実行できず、DuckDB 単体でもデータ交換の標準規格にはなりません。両者は補完関係にあります。
+三者は列指向エコシステムの異なるレイヤーを担っており、補完関係にあります。
+
+```
+[ディスク]  Parquet ファイル（列指向・圧縮済み）
+    ↓ 読み込み（必要な列だけ）
+[メモリ]   Arrow フォーマット（列指向・ゼロコピー）
+    ↓ クエリ実行
+[エンジン]  DuckDB（ベクトル化 SQL 実行）
+```
+
+Parquet は「データの保存形式」、Arrow は「メモリ上のデータの並べ方の規格」、DuckDB は「SQL を実行するエンジン」です。三者とも列指向という共通思想を持つため、組み合わせるとデータ変換のオーバーヘッドがほぼ発生しません。
 
 ## DuckDB の高速性を支える3つの柱
 
@@ -111,6 +121,64 @@ SELECT * FROM read_json_auto('logs.json') WHERE level = 'error';
 
 特に Parquet ファイルとの組み合わせは、ファイル自体が列指向フォーマットであるため、DuckDB の列指向エンジンと相性が良く最も高速に動作します。
 
+## Apache Parquet とは
+
+Apache Parquet はディスク上の列指向ファイルフォーマットです。CSV や JSON の「列指向版」と考えるとわかりやすいでしょう。
+
+```
+CSV（行指向）:
+  id,name,age
+  1,Alice,30
+  2,Bob,25
+  → 1行ずつ順番に格納
+
+Parquet（列指向）:
+  id列:   [1, 2]       ← まとめて圧縮
+  name列: [Alice, Bob]  ← まとめて圧縮
+  age列:  [30, 25]      ← まとめて圧縮
+```
+
+### Parquet の利点
+
+- **圧縮効率が高い**: 同じ型のデータが連続するため、CSV の 1/5〜1/10 程度のサイズになることが多い
+- **不要な列を読み飛ばせる**: `SELECT age FROM ...` なら age 列だけ読む（CSV は全行パースが必要）
+- **パーティション除去**: フィルター条件に合わないデータブロックをまるごとスキップできる
+
+### DuckDB と Parquet の組み合わせが速い理由
+
+両方とも列指向のため、DuckDB のオプティマイザがフィルターと列選択を Parquet のスキャン段階にプッシュダウンできます。
+
+```sql
+-- CSV: 全行パースしてからフィルター（遅い）
+SELECT AVG(age) FROM read_csv_auto('users.csv') WHERE country = 'JP';
+
+-- Parquet: age列とcountry列だけ読み、該当ブロックだけスキャン（速い）
+SELECT AVG(age) FROM read_parquet('users.parquet') WHERE country = 'JP';
+```
+
+具体的には以下の最適化が自動で行われます。
+
+- **Column Pruning**: クエリに必要な列だけを読み込む
+- **Predicate Pushdown**: 条件に合わないデータブロックを丸ごとスキップ
+- **ゼロコピー処理**: 読み込んだデータは Arrow 形式でメモリコピーなしに処理
+
+### CSV → Parquet への変換
+
+DuckDB 自体で簡単に変換できます。一度 Parquet に変換しておけば、以降のクエリが劇的に速くなります。
+
+```sql
+-- CSV を Parquet に変換（DuckDB のワンライナー）
+COPY (SELECT * FROM read_csv_auto('data.csv')) TO 'data.parquet' (FORMAT PARQUET);
+```
+
+## データフォーマットの比較
+
+| フォーマット | 用途 | サイズ | 分析速度 | 人間の可読性 |
+|---|---|---|---|---|
+| CSV / JSON | 小規模データ・データ交換 | 大 | 遅い | ✅ |
+| Parquet | 大規模データの永続化 | 小（圧縮） | 速い | |
+| Arrow | メモリ上のデータ交換 | - | 最速（ゼロコピー） | |
+
 ## SQLite との使い分け
 
 | ユースケース | SQLite | DuckDB |
@@ -127,9 +195,10 @@ SELECT * FROM read_json_auto('logs.json') WHERE level = 'error';
 
 ## まとめ
 
-- DuckDB は Arrow と同じ**列指向の思想**を持つ SQL 実行エンジン
-- Arrow が「データフォーマット仕様」なのに対し、DuckDB は「クエリ実行エンジン」
-- 両者はゼロコピーで連携でき、Pandas/Polars とも統合が進んでいる
+- **Parquet**（ディスク）→ **Arrow**（メモリ）→ **DuckDB**（クエリ）が列指向データ分析のゴールデンスタック
+- 三者は列指向という共通思想を持ち、組み合わせるとデータ変換のオーバーヘッドが最小になる
+- Parquet は CSV に比べてファイルサイズが 1/5〜1/10 で、必要な列だけ読める
+- DuckDB と Arrow はゼロコピーで連携でき、Pandas/Polars とも統合が進んでいる
 - 行指向 DB（SQLite, PostgreSQL）とは得意分野が異なり、分析クエリで圧倒的な性能を発揮する
 
 ## 参考リンク
@@ -137,3 +206,5 @@ SELECT * FROM read_json_auto('logs.json') WHERE level = 'error';
 - [DuckDB 公式ドキュメント](https://duckdb.org/docs/stable/)
 - [DuckDB Quacks Arrow: Zero-Copy Data Integration（DuckDB 公式ブログ）](https://duckdb.org/2021/12/03/duck-arrow)
 - [Apache Arrow と DuckDB のゼロコピー統合（Arrow 公式ブログ）](https://arrow.apache.org/blog/2021/12/03/arrow-duckdb/)
+- [Parquet とは何なのか — 不要なデータを読み飛ばせることの真価（サーバーワークスブログ）](https://blog.serverworks.co.jp/2025/06/11/085838)
+- [DuckDB で CSV より Parquet が速い理由（grasys blog）](https://blog.grasys.io/post/nishino/duckdb-apache-parquet/)
