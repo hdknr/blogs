@@ -102,7 +102,40 @@ result = duckdb.sql("SELECT category, SUM(value) FROM df GROUP BY category")
 print(result.df())  # 結果を Pandas DataFrame で取得
 ```
 
-Polars との連携も同様にゼロコピーで動作します。2026年現在、「DuckDB + Polars + Pandas」を組み合わせたワークフローが Python データ処理の主流になりつつあります。
+### Polars とは
+
+[Polars](https://pola.rs/) は Rust で実装された高速な DataFrame ライブラリです。内部データ形式に Apache Arrow を採用しており、列指向エコシステムの一員として DuckDB・Arrow・Parquet と自然に連携します。
+
+Pandas との主な違いは以下の通りです。
+
+| | Pandas | Polars |
+|---|---|---|
+| **実装言語** | C / Python | Rust |
+| **内部データ形式** | 独自（NumPy ベース） | Apache Arrow |
+| **実行モデル** | 即時実行のみ | 即時実行 + 遅延実行（Lazy） |
+| **マルチスレッド** | 基本シングルスレッド | 自動並列化 |
+| **メモリ効率** | コピーが多い | ゼロコピー・Arrow ベース |
+
+Polars の遅延実行（Lazy API）は、DuckDB のクエリオプティマイザと似た発想で、処理グラフ全体を見てから最適な実行計画を立てます。不要な列の除去やフィルターの先行実行が自動で行われます。
+
+### DuckDB × Polars の連携
+
+DuckDB は Polars の DataFrame を Arrow 経由でゼロコピーのまま SQL クエリできます。
+
+```python
+import duckdb
+import polars as pl
+
+# Polars DataFrame を作成
+lf = pl.LazyFrame({"name": ["Alice", "Bob", "Charlie"], "score": [85, 92, 78]})
+df = lf.collect()
+
+# DuckDB から直接 SQL でクエリ（Arrow 経由・ゼロコピー）
+result = duckdb.sql("SELECT name, score FROM df WHERE score >= 80")
+print(result.pl())  # 結果を Polars DataFrame で取得
+```
+
+Polars の得意な変換処理と DuckDB の SQL クエリを組み合わせることで、それぞれの強みを活かしたワークフローが構築できます。2026年現在、「DuckDB + Polars + Pandas」を組み合わせたワークフローが Python データ処理の主流になりつつあります。
 
 ## 外部ファイルの直接クエリ
 
