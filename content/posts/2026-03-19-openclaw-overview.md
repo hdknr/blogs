@@ -31,7 +31,7 @@ OpenClaw の歴史は、名前の変遷そのものです:
 
 OpenClaw の中核は **Gateway** と呼ばれる常駐デーモンプロセスです。
 
-![OpenClaw Gateway Architecture](/images/openclaw-gateway-architecture.svg)
+![OpenClaw Gateway Architecture](../../images/openclaw-gateway-architecture.svg)
 
 Gateway はローカルの WebSocket サーバー（`ws://127.0.0.1:18789`）として動作し、以下を統合管理します:
 
