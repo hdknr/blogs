@@ -130,9 +130,41 @@ clawhub update --all           # 全スキルの更新
 - **image-lab**: Gemini API を活用した画像生成・編集
 - **Composio 連携**: 860 以上の外部ツール（GitHub、Slack、Gmail 等）へのアクセス
 
-### Lobster: ワークフローシェル
+### Lobster: 型付きワークフローランタイム
 
-**Lobster** は OpenClaw ネイティブのワークフローシェルです。スキルやツールを組み合わせたパイプラインを定義し、複雑な自動化を 1 ステップで実行できます。
+**Lobster** は OpenClaw のオプションプラグインで、スキルやツールを組み合わせた多段パイプラインを **1 回のツール呼び出しで決定論的に実行する** ワークフローランタイムです。Unix のシェルパイプライン（`cmd1 | cmd2 | cmd3`）に似ていますが、AI エージェント向けに設計されています。
+
+ワークフローは YAML で定義します:
+
+```yaml
+name: inbox-triage
+steps:
+  - id: collect
+    command: inbox list --json
+  - id: categorize
+    command: inbox categorize --json
+    stdin: $collect.stdout
+  - id: approve
+    command: inbox apply --approve
+    stdin: $categorize.stdout
+    approval: required          # ← ここで停止して人間の承認を待つ
+  - id: execute
+    command: inbox apply --execute
+    condition: $approve.approved
+```
+
+#### Unix パイプとの違い
+
+| | Unix パイプ | Lobster |
+|---|---|---|
+| **承認機能** | なし | ビルトイン（ステップ途中で停止・再開） |
+| **LLM コスト** | 各ステップごとにツール呼び出し | 1 回の呼び出しで全ステップ実行 |
+| **安全性** | スクリプト依存 | ランタイムが強制（タイムアウト、出力上限、サンドボックス） |
+| **再開** | 最初からやり直し | resume token で途中から再開可能 |
+
+Lobster の核心的な価値は **承認チェックポイント** にあります。エージェントが「メール送信」「コメント投稿」など副作用のある操作を含むワークフローを実行する際、`approval: required` のステップで自動停止し、人間の承認を待ってから再開できます。承認後は resume token により、全ステップを再実行せず途中から続行されます。
+
+「AI に自律的に動いてほしいが、重要な操作は人間が確認したい」というニーズに応える仕組みです。
 
 ## インストールと始め方
 
