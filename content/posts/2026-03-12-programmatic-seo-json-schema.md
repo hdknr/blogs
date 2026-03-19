@@ -5,7 +5,7 @@ lastmod: 2026-03-12
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050652885"
 categories: ["AI/LLM"]
-tags: ["llm", "prompt"]
+tags: ["llm", "prompt", "seo"]
 ---
 
 SEO・コンテンツマーケティングの専門家 Jake Ward 氏が、AI とプログラマティック SEO を組み合わせて **60日間で SEO トラフィックを466%（5.7倍）増加** させた手法が注目を集めています。13,000ページ以上をわずか3時間で生成し、週間オーガニッククリックを971から5,500に伸ばした具体的なアプローチを解説します。
