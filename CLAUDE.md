@@ -19,6 +19,7 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 - `hugo.toml` — Hugo 設定ファイル
 - `.claude/skills/blog/` — `/blog` スキル定義
 - `.claude/agents/` — カスタム専門エージェント
+- `.claude/temp/` — 一時ファイル置き場（.gitignore 済み、`/tmp` の代わりに使用）
 
 ## カスタムエージェント
 

@@ -3,4 +3,5 @@ resources/_gen/
 .hugo_build.lock
 .secrets
 .claude/worktrees/
+.claude/temp/
 .mcp.json
