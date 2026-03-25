@@ -124,6 +124,29 @@ Agent Teams の通信はローカルファイルシステムベース（`~/.clau
 
 プラグインアーキテクチャで設計されており、Slack や WhatsApp など追加プラットフォームへの拡張が見込まれています。
 
+### ローカル LAN で複数 Mac を連携するには
+
+Channels は外部メッセージングプラットフォームの Bot を介する設計のため、LAN 内で直接接続する仕組みではありません。複数の Mac（例: Mac Studio と MacBook）を連携させるには、以下のアプローチが考えられます。
+
+**SSH + Agent Teams（最もシンプル）**
+
+MacBook から Mac Studio に SSH して、Mac Studio 上で Agent Teams を動かす方法です。追加インフラ不要で、すぐに始められます。
+
+```bash
+# MacBook から Mac Studio に接続
+ssh macstudio
+claude  # Mac Studio 上で Agent Teams を起動
+```
+
+**Telegram Bot + Channels（スマホからも操作可能）**
+
+Telegram Bot を作成して Channels 接続する方法です。Bot の作成は数分で完了し、MacBook・スマホなどどのデバイスからでも Mac Studio 上の Claude Code に指示を送れます。外部サービスを経由しますが、セットアップの簡単さでは最も現実的です。
+
+**使い分けの目安**:
+
+- ターミナル操作が苦にならない → SSH + Agent Teams
+- ブラウザやスマホから気軽に指示したい → Telegram Bot + Channels
+
 ## まとめ
 
 Agent Teams は、複数の Claude Code セッションが対等な立場でコミュニケーションしながら協調作業を行える機能です。従来のサブエージェントモデル（親→子の一方向）から、ピアツーピアのマルチエージェントモデルへの進化と言えます。
