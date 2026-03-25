@@ -102,15 +102,42 @@ Mac Studio の Claude Code からサブエージェントが `ssh macbook "comma
 
 各マシンで Claude Code を動かせば CPU は分散できますが、Agent Teams のピアツーピア通信が使えないため、タスク調整は人手か Git 同期（push/pull）に頼ることになります。
 
-### 結論: Telegram Bot + Channels が現実的
+### 自作 MCP チャットサーバーという選択肢
 
-現時点では、**Mac Studio で Claude Code を稼働させ、Telegram Bot + Channels で MacBook やスマホからタスクを指示する構成が最もバランスが良い**です。
+Channels の実体は MCP サーバーです。つまり、Telegram や Discord に頼らなくても、**LAN 内で動く自前のチャットサーバーを MCP で構築すれば、外部サービスを経由せずに複数 Mac 間を繋げます**。
 
-- Bot の作成は数分で完了
-- MacBook・スマホなどどのデバイスからでも指示可能
-- CPU 分散が必要なローカルタスク（ビルド等）は MacBook 側で手動実行
+```
+Mac Studio: Claude Code ← stdio → 自作 MCP チャットサーバー ← WebSocket → LAN
+MacBook: ブラウザで http://macstudio:3000 にアクセス
+```
 
-「2台の Claude Code が自律的に協調する」という理想にはまだ届いていませんが、Channels のプラグインアーキテクチャが拡張されれば、将来的にマシン間の Agent Teams 通信も実現するかもしれません。
+Channels の双方向通信は、以下の2つの MCP の仕組みで実現されています。
+
+1. **ユーザー → Claude（通知 / Push）**: MCP サーバーが `notifications/claude/channel` イベントを発行し、Claude Code セッションにメッセージを注入
+2. **Claude → ユーザー（ツール呼び出し）**: MCP サーバーに定義した `reply` ツールを Claude が呼び出し、WebSocket 経由でチャット UI に返信
+
+実装には公式 MCP SDK（Python の `mcp` パッケージ、または Node.js の `@modelcontextprotocol/sdk`）を使用します。Web サーバー部分は FastAPI + WebSocket や Express + Socket.io で構築できます。
+
+**Telegram Bot と比較した利点:**
+
+- LAN 内完結で外部サービスに依存しない
+- プライベートなコードや情報が外部を通らない
+- レイテンシが低い
+
+**注意点:**
+
+- Channels 機能は research preview 段階のため、`--channels` フラグで起動できるのは公式プラグインのみという制限がバージョンによってある可能性がある
+- ただし、汎用的な MCP の通知 + ツールを使った独自ブリッジは制限に関わらず構築可能
+
+### まとめ: 複数 PC 連携の選択肢
+
+| 構成 | 手軽さ | LAN 完結 | 向いているケース |
+|---|---|---|---|
+| SSH + Agent Teams | ★★★ | ○ | ターミナル操作に慣れている場合 |
+| Telegram Bot + Channels | ★★★ | × | スマホからも操作したい場合 |
+| 自作 MCP チャットサーバー | ★★ | ○ | 外部サービスを避けたい・カスタマイズしたい場合 |
+
+「2台の Claude Code が自律的に協調する」という理想にはまだ届いていませんが、MCP ベースの自作サーバーであれば、それに近い体験を LAN 内で実現できます。
 
 ## Channels 機能の対応プラットフォーム
 
