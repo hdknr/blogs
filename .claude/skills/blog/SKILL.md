@@ -142,7 +142,11 @@ tags: ["tag1", "tag2"]
      ```bash
      gh api /repos/{owner}/{repo} --jq '.full_name' 2>&1
      ```
-   - 公式サイトの URL がある場合、WebFetch でアクセスできるか確認する
+   - 公式サイトの URL がある場合、`aegis_fetch` ツールでセキュリティスキャン付きフェッチを行う
+     - verdict が "allow" → そのまま使用
+     - verdict が "warn" → ユーザーに警告を表示して確認を求める
+     - verdict が "block" → その URL を記事から除外し、ユーザーに報告
+     - aegis が利用できない場合（MCP 未接続等）は、WebFetch にフォールバックする
 
 2. **コマンド・APIの正確性**
    - 記事に記載されているインストールコマンドや CLI コマンドが正しい構文か
