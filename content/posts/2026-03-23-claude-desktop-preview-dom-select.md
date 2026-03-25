@@ -5,7 +5,8 @@ lastmod: 2026-03-23
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4113385416"
 categories: ["AI/LLM"]
-tags: ["claude-code", "claude", "react"]
+tags: ["claude-code", "claude", "claude-desktop", "react", "mcp"]
+description: "Claude Desktop Preview に追加された DOM 要素クリック機能の使い方と仕組み、CLI 版 Claude Code との違い、Chrome DevTools MCP による代替手段を解説します。"
 ---
 
 Claude Desktop の Preview 機能に、画面上の要素をクリックするだけで DOM 要素を直接指定できる機能が追加されました。「ヘッダー右のボタンの...」のような言葉での説明が不要になり、フロントエンド開発のワークフローが大きく変わります。
@@ -22,13 +23,11 @@ Claude Code の開発者である Lydia Hallie 氏が X で紹介したこの機
 - 周辺の HTML 構造
 - クロップされたスクリーンショット
 
-React アプリの場合はさらに:
+React アプリの場合は以下の情報も取得されます:
 
 - ソースファイルのパス
 - コンポーネント名
 - Props の情報
-
-も取得されます。
 
 ## 使い方
 
