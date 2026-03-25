@@ -28,12 +28,13 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 - カテゴリは `scripts/categorize.py` のルールに従う
 - ビルド確認: `hugo --gc`
 
-## ファクトチェック時のセキュリティスキャン
+## 外部 URL のフェッチ方針
 
-- 記事内の外部 URL を検証する際は、`aegis_fetch` MCP ツールを優先的に使用する
+- 記事作成・ファクトチェックを問わず、外部 URL の取得には `aegis_fetch` MCP ツールを優先使用する
 - aegis が利用できない場合（MCP 未接続等）は `WebFetch` にフォールバック
+- SPA サイト（X/Twitter 等）は `api.fxtwitter.com` 等の代替 API を利用する
 - aegis 環境: `~/Projects/hdknr/aegis`（`docker compose up -d` で起動）
-- 詳細は `.claude/skills/blog/SKILL.md` のファクトチェックセクションを参照
+- 詳細は `.claude/skills/blog/SKILL.md` の「外部 URL のフェッチ方針」セクションを参照
 
 ## カテゴリ一覧
 

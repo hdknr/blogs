@@ -118,6 +118,24 @@ tags: ["tag1", "tag2"]
 ---
 ```
 
+## 外部 URL のフェッチ方針
+
+記事作成・ファクトチェックを問わず、外部 URL のコンテンツを取得する際は以下の優先順位に従う:
+
+1. **`aegis_fetch` を優先使用する**
+   - セキュリティスキャン（verdict: allow/warn/block）付きでコンテンツを取得できる
+   - verdict が "warn" → ユーザーに警告を表示して確認を求める
+   - verdict が "block" → コンテンツを使用せず、ユーザーに報告する
+   - 取得した HTML/JSON の解析は Claude が直接行う
+
+2. **`aegis_fetch` が利用できない場合は `WebFetch` にフォールバック**
+   - MCP 未接続、aegis 未起動などの場合
+
+3. **SPA（JavaScript 描画）サイトの場合**
+   - `aegis_fetch` / `WebFetch` どちらでも生 HTML からコンテンツを取得できない場合がある
+   - X (Twitter) の場合: URL を `api.fxtwitter.com` に変換して JSON API 経由で取得する
+   - その他の SPA: `WebSearch` で該当ページの情報を検索する
+
 ## 記事の構成ガイドライン
 
 - 見出し（##）を使って構造化する
@@ -142,11 +160,7 @@ tags: ["tag1", "tag2"]
      ```bash
      gh api /repos/{owner}/{repo} --jq '.full_name' 2>&1
      ```
-   - 公式サイトの URL がある場合、`aegis_fetch` ツールでセキュリティスキャン付きフェッチを行う
-     - verdict が "allow" → そのまま使用
-     - verdict が "warn" → ユーザーに警告を表示して確認を求める
-     - verdict が "block" → その URL を記事から除外し、ユーザーに報告
-     - aegis が利用できない場合（MCP 未接続等）は、WebFetch にフォールバックする
+   - 公式サイトの URL がある場合、「外部 URL のフェッチ方針」に従って取得・検証する
 
 2. **コマンド・APIの正確性**
    - 記事に記載されているインストールコマンドや CLI コマンドが正しい構文か
