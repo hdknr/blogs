@@ -28,6 +28,13 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 - カテゴリは `scripts/categorize.py` のルールに従う
 - ビルド確認: `hugo --gc`
 
+## ファクトチェック時のセキュリティスキャン
+
+- 記事内の外部 URL を検証する際は、`aegis_fetch` MCP ツールを優先的に使用する
+- aegis が利用できない場合（MCP 未接続等）は `WebFetch` にフォールバック
+- aegis 環境: `~/Projects/hdknr/aegis`（`docker compose up -d` で起動）
+- 詳細は `.claude/skills/blog/SKILL.md` のファクトチェックセクションを参照
+
 ## カテゴリ一覧
 
 AI/LLM, セキュリティ, クラウド/インフラ, Web開発, プログラミング言語, モバイル, データベース, ツール/開発環境, ビジネス/キャリア, 地域/グルメ, その他
