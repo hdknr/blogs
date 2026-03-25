@@ -19,6 +19,10 @@ paginate = 10
     Title = 'hdknr blog'
     Content = 'Gist ブログのまとめサイト'
 
+[permalinks]
+  [permalinks.page]
+    posts = '/posts/:year/:month/:slug/'
+
 [taxonomies]
   category = 'categories'
   tag = 'tags'

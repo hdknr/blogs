@@ -20,7 +20,7 @@ tools: [Read, Grep, Glob, WebSearch, WebFetch, mcp__aegis__aegis_fetch]
 ## 調査手順
 
 1. WebSearch で直近1週間の技術ニュースを検索
-2. 既存記事（content/posts/）を Grep で確認し、まだ取り上げていないトピックを優先
+2. 既存記事（content/posts/**/）を Grep で確認し、まだ取り上げていないトピックを優先
 3. 各トピックについて、記事にする価値があるか評価
 
 ## 出力形式

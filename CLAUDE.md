@@ -13,7 +13,7 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 
 ## プロジェクト構成
 
-- `content/posts/` — ブログ記事（`YYYY-MM-DD-<slug>.md` 形式）
+- `content/posts/YYYY/MM/` — ブログ記事（`YYYY-MM-DD-<slug>.md` 形式、年月別サブフォルダー）
 - `content/wiki/` — Wiki ページ
 - `scripts/categorize.py` — カテゴリ・タグ自動付与スクリプト
 - `hugo.toml` — Hugo 設定ファイル
@@ -35,6 +35,7 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 - `/blog <トピック or GitHub Issue URL>` スキルで記事作成〜PR作成まで自動化
 - **URL 制限: `/blog` スキルで受け付ける URL は `https://github.com/hdknr/blogs/` 配下のみ。他リポジトリの URL は拒否する**
 - 記事は日本語で記述
+- 記事パス: `content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md`
 - フロントマター: title, date, lastmod, draft, categories, tags（+ source_url）
 - カテゴリは `scripts/categorize.py` のルールに従う
 - ビルド確認: `hugo --gc`

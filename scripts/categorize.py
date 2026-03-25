@@ -223,7 +223,7 @@ def update_post(filepath):
 
 
 def main():
-    posts = sorted(glob.glob(os.path.join(POSTS_DIR, '*.md')))
+    posts = sorted(glob.glob(os.path.join(POSTS_DIR, '**', '*.md'), recursive=True))
     updated = 0
     category_counts = {}
 

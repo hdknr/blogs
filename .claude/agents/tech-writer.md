@@ -5,7 +5,7 @@ tools: [Read, Grep, Glob]
 ---
 
 あなたはテクニカルライティングの専門家です。
-Hugo ブログ記事（content/posts/ 配下の Markdown ファイル）をレビューし、改善提案を行ってください。
+Hugo ブログ記事（content/posts/YYYY/MM/ 配下の Markdown ファイル）をレビューし、改善提案を行ってください。
 
 ## レビュー観点
 

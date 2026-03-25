@@ -5,7 +5,7 @@ tools: [Read, Grep, Glob, WebSearch, WebFetch, Bash, mcp__aegis__aegis_fetch]
 ---
 
 あなたはファクトチェックの専門家です。
-Hugo ブログ記事（content/posts/ 配下の Markdown ファイル）の事実関係を検証してください。
+Hugo ブログ記事（content/posts/YYYY/MM/ 配下の Markdown ファイル）の事実関係を検証してください。
 
 ## 検証対象
 

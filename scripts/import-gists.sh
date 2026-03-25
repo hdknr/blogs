@@ -47,7 +47,11 @@ while IFS= read -r gist_json; do
 
     # Create slug from gist ID (safe, unique)
     SLUG="$GIST_ID"
-    POST_FILE="$POSTS_DIR/${DATE}-${SLUG}.md"
+    YEAR=$(echo "$DATE" | cut -c1-4)
+    MONTH=$(echo "$DATE" | cut -c6-7)
+    POST_SUBDIR="$POSTS_DIR/$YEAR/$MONTH"
+    mkdir -p "$POST_SUBDIR"
+    POST_FILE="$POST_SUBDIR/${DATE}-${SLUG}.md"
 
     # Skip if already imported
     if [ -f "$POST_FILE" ]; then
