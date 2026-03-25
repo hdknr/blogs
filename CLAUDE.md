@@ -18,6 +18,16 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 - `scripts/categorize.py` — カテゴリ・タグ自動付与スクリプト
 - `hugo.toml` — Hugo 設定ファイル
 - `.claude/skills/blog/` — `/blog` スキル定義
+- `.claude/agents/` — カスタム専門エージェント
+
+## カスタムエージェント
+
+以下の専門エージェントが `.claude/agents/` に定義されている:
+
+- **fact-checker** — 記事のファクトチェック（ツール名・コマンド・URL・バージョンの検証）
+- **seo-advisor** — SEO 最適化（タイトル改善、タグ提案、内部リンク提案）
+- **tech-writer** — 記事品質レビュー（構成、読みやすさ、日本語品質）
+- **trend-researcher** — 技術トレンド調査と記事ネタ提案
 
 ## 記事作成
 
