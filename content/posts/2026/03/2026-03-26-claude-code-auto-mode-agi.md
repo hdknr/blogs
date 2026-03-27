@@ -9,6 +9,8 @@ categories: ["AI/LLM"]
 tags: ["claude-code", "claude", "agent", "anthropic", "llm"]
 ---
 
+AGI（Artificial General Intelligence、汎用人工知能）とは、特定のタスクに限定されず、人間のように幅広い知的作業をこなせる AI を指す概念だ。現在の AI は特定領域で高い能力を発揮するが、未知の領域への汎用的な対応力では人間に及ばないとされている。
+
 Claude Code に auto mode が導入された。パーミッションの承認を Claude 自身が判断するこの機能について、「次に来るのは Claude 実行自体の auto mode、つまり AGI だ」という指摘が注目を集めている。開発ツールの自律性の進化と、その先にある可能性を考える。
 
 ## Auto Mode の本質
