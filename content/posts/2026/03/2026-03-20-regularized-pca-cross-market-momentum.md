@@ -25,6 +25,34 @@ tags: ["PCA", "機械学習", "株式投資", "クオンツ", "統計"]
 
 米国市場の終値で確定した情報が、翌朝の日本市場の寄付きから日中にかけて反映される — この「リード・ラグ仮説」を ETF の日次リターンデータで検証する構成です。
 
+### データの入手方法
+
+業種別 ETF の価格データは誰でも無料で入手できます。
+
+**米国の業種 ETF（SPDR Select Sector シリーズ）**
+
+XLK（テクノロジー）、XLF（金融）、XLE（エネルギー）など 11 セクターの ETF が上場しています。Yahoo Finance や Google Finance で日次データを取得可能です。
+
+**日本の業種 ETF（TOPIX-17 業種別シリーズ）**
+
+NEXT FUNDS TOPIX-17 シリーズ（野村アセットマネジメント）など、17 業種に対応する ETF があります。JPX（日本取引所グループ）や Yahoo!ファイナンスで取得できます。
+
+**Python での取得例**
+
+```python
+import yfinance as yf
+
+# 米国: SPDR Select Sector ETF（11業種）
+us_sectors = ["XLB", "XLC", "XLE", "XLF", "XLI", "XLK", "XLP", "XLRE", "XLU", "XLV", "XLY"]
+us_data = yf.download(us_sectors, period="2y")
+
+# 日本: TOPIX-17 業種別 ETF（例: 食品 1617, エネルギー資源 1618, ...）
+jp_sectors = ["1617.T", "1618.T", "1619.T", "1620.T", "1621.T"]  # 一部抜粋
+jp_data = yf.download(jp_sectors, period="2y")
+```
+
+このほか、[J-Quants API](https://jpx-jquants.com/)（JPX 公式）でも日本株データを取得でき、個人利用は無料プランがあります。
+
 ## なぜ PCA が必要か
 
 11 × 17 = 187 の業種ペアの関係をそのまま推定しようとすると、データ不足でノイズまみれの推定になります。
