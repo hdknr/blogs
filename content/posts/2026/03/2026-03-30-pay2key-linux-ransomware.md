@@ -5,7 +5,8 @@ lastmod: 2026-03-30
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4157822211"
 categories: ["セキュリティ"]
-tags: ["ランサムウェア", "Linux", "Pay2Key", "Morphisec", "I2P", "security"]
+description: "イラン系攻撃グループ Pay2Key の Linux ランサムウェア新亜種 Pay2Key.I2P の技術分析。SELinux/AppArmor 無効化、ChaCha20 暗号化、I2P 匿名通信の手口と対策を解説。"
+tags: ["ランサムウェア", "Linux", "Pay2Key", "SELinux", "I2P", "マルウェア"]
 ---
 
 Linux を標的とするランサムウェアが新たな段階に入った。イラン系とされる攻撃グループ Pay2Key が Linux 向けに進化し、「Pay2Key.I2P」と呼ばれる新たな亜種を展開している。Morphisec の技術分析をもとに、攻撃の手口、防御機構の無効化手法、そして具体的な対策を整理する。
