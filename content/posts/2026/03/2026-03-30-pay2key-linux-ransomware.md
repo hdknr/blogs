@@ -6,7 +6,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4157822211"
 categories: ["セキュリティ"]
 description: "イラン系攻撃グループ Pay2Key の Linux ランサムウェア新亜種 Pay2Key.I2P の技術分析。SELinux/AppArmor 無効化、ChaCha20 暗号化、I2P 匿名通信の手口と対策を解説。"
-tags: ["ランサムウェア", "Linux", "Pay2Key", "SELinux", "I2P", "マルウェア"]
+tags: ["ランサムウェア", "Linux", "Pay2Key", "SELinux", "I2P", "Docker", "AWS"]
 ---
 
 Linux を標的とするランサムウェアが新たな段階に入った。イラン系とされる攻撃グループ Pay2Key が Linux 向けに進化し、「Pay2Key.I2P」と呼ばれる新たな亜種を展開している。Morphisec の技術分析をもとに、攻撃の手口、防御機構の無効化手法、そして具体的な対策を整理する。
@@ -71,6 +71,30 @@ Linux サーバーの管理者は以下の対策を検討すべきである。
 - **systemd サービスの異常停止を監視する** — 重要サービスの予期しない停止をアラートする
 - **ファイル整合性監視（FIM）を導入する** — 部分暗号化にも対応できるよう、ファイルの変更を即座に検知する
 - **ネットワーク監視で I2P 通信を検知する** — I2P のトラフィックパターンをブロックまたはアラートする
+
+## Docker / AWS ECS 環境での考慮点
+
+Linux ベースのコンテナ環境でも Pay2Key の脅威は無視できない。特に AWS ECS で運用している場合の考慮点を整理する。
+
+### コンテナレベルの対策
+
+- **non-root で実行する** — Pay2Key は root 必須で、取得できなければ即終了する設計。ECS タスク定義で `user` を指定し、特権コンテナ（`privileged: true`）を避ける
+- **読み取り専用ルートファイルシステム** — `readonlyRootFilesystem: true` を設定すれば、コンテナ内での暗号化や cron 永続化が困難になる
+- **seccomp / AppArmor プロファイル** — `setenforce` や `systemctl` の実行をブロックするカスタムプロファイルを適用する
+
+### ホスト（EC2 起動タイプ）レベルの対策
+
+- **ECS Optimized AMI を最新に保つ** — ホスト OS に侵入されると全コンテナが危険。パッチ適用を自動化する
+- **SELinux / AppArmor を有効に維持** — ホスト側で無効化されるとコンテナの分離も弱まる
+- **ホスト上の cron / systemd を監視** — 不審なエントリの追加を検知する仕組み（auditd 等）を導入する
+
+### AWS ECS 固有の対策
+
+- **Fargate を優先検討する** — ホスト OS の管理が不要になり、攻撃面が大幅に減る。Pay2Key の cron 永続化や systemd 停止は Fargate では実質無効
+- **ARM64（Graviton）でも油断しない** — Pay2Key は ARM64 対応のため「Graviton だから安全」とは言えない。同じセキュリティ対策が必要
+- **IAM タスクロールの最小権限化** — コンテナからの横展開（他の S3 バケットや EC2 への到達）を制限する
+- **I2P トラフィックのブロック** — VPC の Security Group / NACL で不要なアウトバウンド通信を制限し、VPC Flow Logs で異常な通信を監視する
+- **AWS GuardDuty の有効化** — ECS ランタイムモニタリングで不審なプロセス実行を検知できる
 
 ## まとめ
 
