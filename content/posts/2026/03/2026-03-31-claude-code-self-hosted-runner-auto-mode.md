@@ -22,57 +22,119 @@ claude CLI failed (rc=1): stdout=Auto mode is unavailable for your plan
 
 ## 原因
 
-ワークフローで `CLAUDE_CODE_OAUTH_TOKEN` 環境変数に **期限切れの OAuth トークン** を渡していたことが原因。
+2つの問題が重なっていた。
+
+### 1. OAuth トークンの期限切れ（副次的問題）
+
+ワークフローで `CLAUDE_CODE_OAUTH_TOKEN` 環境変数に **期限切れの OAuth トークン** を GitHub Secrets から渡していた。
 
 ```yaml
 # daily-proposal.yml
 - name: 日次投資提案を生成
-  run: uv run trader daily-proposal
   env:
     CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}  # ← 2月に設定したまま
 ```
 
-### なぜローカルでは動くのか
+- GitHub Secrets のトークンは静的で自動更新されない
+- ローカルでは環境変数未設定のため、キーチェーンから有効なトークンが自動取得されて動作していた
 
-Claude Code の認証は以下の優先順位で解決される:
+### 2. Opus の auto mode 制限（真の原因）
 
-1. **環境変数** `CLAUDE_CODE_OAUTH_TOKEN`（設定されていれば最優先）
-2. **macOS キーチェーン**（`Claude Code-credentials` エントリ）
-3. **対話的 OAuth フロー**
+`claude --print` はデフォルトで **auto mode**（ツール自動承認）で動作する。Max プランで **Opus モデルの auto mode が制限された**ため、トークンが有効でも Opus では `--print` が使えなくなっていた。
 
-ローカル実行時は環境変数を設定していないため、キーチェーンから有効なトークンが自動取得される。一方、GitHub Actions では期限切れのトークンが環境変数で渡され、キーチェーンの有効な認証を**上書き**してしまっていた。
+```bash
+# NG: auto mode (デフォルト)
+$ claude --print --model claude-opus-4-20250514 "hello"
+Auto mode is unavailable for your plan
 
-### トークン期限切れのメカニズム
+# OK: permission-mode default を明示
+$ claude --print --permission-mode default --model claude-opus-4-20250514 "hello"
+Hello! How can I help you?
 
-Claude Code の OAuth トークンには有効期限がある。通常の対話的利用では CLI がリフレッシュトークンを使って自動更新するが、GitHub Secrets に保存された静的なトークンは更新されない。2月に設定したトークンが3月末に期限切れとなり、エラーが発生した。
+# OK: Sonnet は auto mode でも動作
+$ claude --print --model claude-sonnet-4-20250514 "hello"
+Hello! How can I help you?
+```
 
 ## 対処
 
-ワークフローから `CLAUDE_CODE_OAUTH_TOKEN` 環境変数の行を削除した。
+### Step 1: OAuth トークンをファイルベースで動的取得
 
-```diff
-  env:
-    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    DATABASE_URL: ${{ vars.DATABASE_URL }}
-    BITFLYER_HOST: ${{ vars.BITFLYER_HOST }}
-    BITFLYER_PORT: ${{ vars.BITFLYER_PORT }}
--   CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+GitHub Actions の self-hosted ランナーは macOS キーチェーンにアクセスできない（`security find-generic-password` が空を返す）ため、ファイル経由でトークンを渡す。
+
+**トークンエクスポートスクリプト** (`scripts/refresh-oauth-token.sh`):
+
+```bash
+#!/bin/bash
+TOKEN_FILE="$HOME/.claude/.oauth_token"
+TOKEN=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null | \
+  python3 -c "import sys,json; print(json.load(sys.stdin)['claudeAiOauth']['accessToken'])" 2>/dev/null)
+echo -n "$TOKEN" > "$TOKEN_FILE"
+chmod 600 "$TOKEN_FILE"
 ```
 
-**PR**: [hdknr/trader#313](https://github.com/hdknr/trader/pull/313)
+**launchd で4時間ごとに自動更新** (`~/Library/LaunchAgents/com.trader.refresh-oauth-token.plist`):
 
-### なぜこれで動くのか
+```xml
+<dict>
+    <key>Label</key>
+    <string>com.trader.refresh-oauth-token</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/path/to/scripts/refresh-oauth-token.sh</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>14400</integer>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+```
 
-self-hosted runner は同一マシン・同一ユーザー（`hdknr`）で動作している。環境変数がなければ、`claude --print` は macOS キーチェーンから有効な OAuth トークンを自動取得する。さらに、CLI が定期的にリフレッシュトークンでアクセストークンを更新するため、今後の期限切れも自動的に回避される。
+**ワークフローでファイルから読み取り**:
+
+```yaml
+- name: Claude OAuth トークン取得
+  id: claude-auth
+  run: |
+    TOKEN=$(cat "$HOME/.claude/.oauth_token")
+    echo "::add-mask::$TOKEN"
+    echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
+
+- name: 日次投資提案を生成
+  env:
+    CLAUDE_CODE_OAUTH_TOKEN: ${{ steps.claude-auth.outputs.token }}
+```
+
+### Step 2: --permission-mode default を追加
+
+```python
+# Before
+subprocess.run([claude_cmd, "--print", "--model", model, "--system-prompt", prompt, message])
+
+# After
+subprocess.run([claude_cmd, "--print", "--permission-mode", "default", "--model", model, "--system-prompt", prompt, message])
+```
+
+この変更により、Opus でも `--print` モードが動作する。ツールを使わずプロンプト→テキスト応答のみの用途では、permission mode の違いは実質的に影響しない。
+
+## 調査の過程で試して失敗したこと
+
+| 試行 | 結果 | 理由 |
+|------|------|------|
+| GitHub Secrets から `CLAUDE_CODE_OAUTH_TOKEN` を削除 | `Not logged in` | ランナーがキーチェーンにアクセスできない |
+| ワークフローで `HOME: /Users/hdknr` を設定 | `Not logged in` | HOME が正しくてもキーチェーンセッションにアクセス不可 |
+| `security find-generic-password` をワークフロー内で実行 | JSON パースエラー | ランナープロセスからキーチェーンが空を返す |
+| 全エージェントを Sonnet に変更 | 動作するが Opus の品質が失われる | auto mode 制限の回避にはなるが根本対処ではない |
 
 ## 教訓
 
 | ポイント | 詳細 |
 |---------|------|
-| **self-hosted runner ではキーチェーン認証を使う** | 同一マシンなら Secrets でトークンを管理する必要がない |
-| **環境変数は最優先で解決される** | 期限切れのトークンを環境変数で渡すと、有効な認証を上書きしてしまう |
-| **OAuth トークンは Secrets に保存しない** | 静的に保存されたトークンは自動更新されず、いずれ期限切れになる |
-| **エラーメッセージに注意** | 「Auto mode is unavailable for your plan」はプランの問題ではなく、認証トークンの問題だった |
+| **`--print` は暗黙的に auto mode** | `--permission-mode default` で明示的に変更可能 |
+| **モデルごとに auto mode の制限が異なる** | Sonnet は OK、Opus は制限される場合がある |
+| **self-hosted runner でもキーチェーンは使えない** | GitHub Actions プロセスはキーチェーンのログインセッション外で動く |
+| **OAuth トークンは Secrets に静的保存しない** | ファイル + 定期更新（launchd）で鮮度を保つ |
+| **エラーメッセージの解釈に注意** | 「unavailable for your plan」はプランの問題ではなく、モデル×モードの組み合わせ制限だった |
 
 ## 環境
 
@@ -80,3 +142,12 @@ self-hosted runner は同一マシン・同一ユーザー（`hdknr`）で動作
 - macOS (Apple Silicon)
 - GitHub Actions self-hosted runner
 - Claude Max プラン
+
+## 関連 PR
+
+- [hdknr/trader#313](https://github.com/hdknr/trader/pull/313) — 期限切れ CLAUDE_CODE_OAUTH_TOKEN 削除
+- [hdknr/trader#314](https://github.com/hdknr/trader/pull/314) — HOME 明示（効果なし）
+- [hdknr/trader#315](https://github.com/hdknr/trader/pull/315) — keychain から動的取得（ランナーからアクセス不可）
+- [hdknr/trader#316](https://github.com/hdknr/trader/pull/316) — ファイルベーストークン取得
+- [hdknr/trader#317](https://github.com/hdknr/trader/pull/317) — 全エージェント Sonnet 化（暫定）
+- [hdknr/trader#318](https://github.com/hdknr/trader/pull/318) — `--permission-mode default` で Opus 復活（最終解決）
