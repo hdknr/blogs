@@ -5,7 +5,7 @@ lastmod: 2026-03-18
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4082929222"
 categories: ["AI/LLM"]
-tags: ["python", "rag", "github", "llm"]
+tags: ["python", "rag", "github", "llm", "pdf"]
 ---
 
 GPUなしで毎秒100ページ以上のPDF→Markdown変換を実現するオープンソースツール「OpenDataLoader PDF」が話題になっている。Apache 2.0ライセンスで完全無料、CPUのみで動作するため、高価なGPUハードウェアは不要だ。
