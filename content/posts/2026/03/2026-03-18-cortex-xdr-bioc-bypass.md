@@ -9,7 +9,7 @@ categories: ["セキュリティ"]
 tags: ["Palo Alto Networks", "Cortex XDR", "EDR", "脆弱性", "BIOC"]
 ---
 
-Palo Alto Networks の EDR 製品「Cortex XDR」のエージェントに、重大な欠陥が発見された。振る舞い検知（BIOC: Behavioral Indicators of Compromise）ルールを解読し、検知を完全に回避できるというものだ。InfoGuard Labs の研究者 Manuel Feifel らが発見し、2025年7月に報告、2026年2月末に修正がリリースされた。Cortex XDR エージェント v8.7/8.8 を利用する組織は、修正済みの v9.1 へのアップデートが必要となる。
+Palo Alto Networks の EDR（Endpoint Detection and Response: エンドポイント検知・対応）製品「Cortex XDR」のエージェントに、重大な欠陥が発見された。振る舞い検知（BIOC: Behavioral Indicators of Compromise）ルールを解読し、検知を完全に回避できるというものだ。InfoGuard Labs の研究者 Manuel Feifel らが発見し、2025年7月に報告、2026年2月末に修正がリリースされた。Cortex XDR エージェント v8.7/8.8 を利用する組織は、修正済みの v9.1 へのアップデートが必要となる。
 
 ## 発見の経緯
 
