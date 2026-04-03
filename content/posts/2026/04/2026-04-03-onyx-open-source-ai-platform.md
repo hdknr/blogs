@@ -70,7 +70,28 @@ Onyx はあらゆる LLM と接続可能です。
 - **クラウド LLM**: OpenAI（GPT-4o）、Anthropic（Claude）、Google（Gemini）など
 - **セルフホスト LLM**: Ollama、vLLM、LiteLLM など
 
-組織のセキュリティ要件に応じて、完全オンプレミス＋ローカル LLM の構成も可能です。防衛・航空宇宙など高セキュリティ環境でのエアギャップ運用にも対応しています。
+組織のセキュリティ要件に応じて、完全オンプレミス＋ローカル LLM の構成も可能です。公式ドキュメントではエアギャップ環境向けのデプロイガイドも提供されています。
+
+### Ollama + Qwen でのローカル構成例
+
+ローカルで Ollama + Qwen を動かしている環境であれば、外部 API を一切使わずに Onyx を運用できます。
+
+1. Ollama で Qwen モデルを起動する
+
+```bash
+ollama pull qwen3.5
+```
+
+2. Onyx の管理画面で LLM プロバイダーに **Ollama** を選択
+3. API URL に `http://host.docker.internal:11434` を指定（Onyx を Docker で動かしている場合、`127.0.0.1` ではなく `host.docker.internal` を使う）
+
+**注意点:**
+
+- **Embedding モデル**も別途必要です。Ollama で `nomic-embed-text` などを併用するか、別の Embedding プロバイダーを設定します
+- 同時利用が増えると Ollama がボトルネックになる場合があります。その際は vLLM や SGLang への移行が推奨されています
+- **Lite モード**（軽量 Chat UI、メモリ 1GB 未満）も用意されており、リソースが限られた環境でも利用可能です
+
+詳細は [Ollama 公式の Onyx 統合ガイド](https://docs.ollama.com/integrations/onyx) を参照してください。
 
 ## どんな場面で使えるか
 
