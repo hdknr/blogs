@@ -135,7 +135,84 @@ Claude Code はコードコメントや CLAUDE.md のルールを忠実に守る
 
 ### 出力のゴールデンファイルを用意する
 
-テンプレートに必須セクションを定義し、レンダリング結果を検証する。テンプレートエンジン（Jinja2 等）を使っている場合、必須変数の未展開もテストで検出できる。
+ゴールデンファイルとは、「正しい出力はこうあるべき」という期待値を記録したファイルのこと。テスト時に実際の出力と比較し、差分があればテストを落とす。
+
+たとえば、サマリー Issue のテンプレートと期待値ファイルを以下のように用意する。
+
+**テンプレート（Jinja2）:**
+
+```jinja2
+# {{ date }} 総合投資評価
+## 現在のポートフォリオ
+{{ portfolio_table }}
+## 銘柄別計画
+{{ plan_table }}
+## 銘柄別サマリー
+{{ per_stock_summary }}
+## 総評
+### アクション分布
+{{ action_distribution }}
+### 全体判断
+{{ overall_judgement }}
+## 子課題チェックリスト
+{{ checklist }}
+```
+
+**ゴールデンファイル（`tests/golden/summary_issue.md`）:**
+
+```markdown
+# 2026-04-03 総合投資評価
+## 現在のポートフォリオ
+| 銘柄 | 数量 | 取得単価 | 現在値 |
+|------|------|----------|--------|
+| 7203 | 100 | 2,500 | 2,680 |
+## 銘柄別計画
+| 銘柄 | アクション | リンク |
+|------|-----------|--------|
+| 7203 | HOLD | #101 |
+## 銘柄別サマリー
+- **7203**: 上昇トレンド継続、HOLD推奨
+## 総評
+### アクション分布
+| BUY | SELL | HOLD | 合計 |
+|-----|------|------|------|
+| 0 | 0 | 1 | 1 |
+### 全体判断
+HOLD多数 — 積極エントリー不向き。平均信頼度: 55%
+## 子課題チェックリスト
+- [ ] #101 7203
+```
+
+**テストコード:**
+
+```python
+from pathlib import Path
+
+def test_summary_matches_golden_file(self, ...):
+    """サマリーIssueがゴールデンファイルと一致する."""
+    # ...フォールバック実行...
+    actual = summary_issue_call.kwargs["body"]
+    golden = Path("tests/golden/summary_issue.md").read_text()
+    assert actual == golden
+```
+
+完全一致が厳しい場合（日付やデータが動的に変わる等）は、必須セクションの見出しだけを抽出して比較する方法もある。
+
+```python
+import re
+
+def extract_headings(md: str) -> list[str]:
+    return re.findall(r"^#{1,3} .+", md, re.MULTILINE)
+
+def test_summary_has_required_headings(self, ...):
+    actual_headings = extract_headings(summary_issue_call.kwargs["body"])
+    golden_headings = extract_headings(
+        Path("tests/golden/summary_issue.md").read_text()
+    )
+    assert actual_headings == golden_headings
+```
+
+この方法なら、テンプレートに新しいセクションを追加した際にゴールデンファイルも更新する必要があり、フォールバックパスだけ取り残される事態を防げる。
 
 ## まとめ
 
