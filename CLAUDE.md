@@ -14,7 +14,8 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 ## プロジェクト構成
 
 - `content/posts/YYYY/MM/` — ブログ記事（`YYYY-MM-DD-<slug>.md` 形式、年月別サブフォルダー）
-- `content/wiki/` — Wiki ページ
+- `content/wiki/` — Wiki ナレッジベース（concepts/, tools/, guides/）
+- `.claude/skills/wiki-ingest/` — `/wiki-ingest` スキル定義
 - `scripts/categorize.py` — カテゴリ・タグ自動付与スクリプト
 - `hugo.toml` — Hugo 設定ファイル
 - `.claude/skills/blog/` — `/blog` スキル定義
@@ -48,6 +49,14 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 - SPA サイト（X/Twitter 等）は `api.fxtwitter.com` 等の代替 API を利用する
 - aegis 環境: `~/Projects/hdknr/aegis`（`docker compose up -d` で起動）
 - 詳細は `.claude/skills/blog/SKILL.md` の「外部 URL のフェッチ方針」セクションを参照
+
+## Wiki 管理（LLM Wiki パターン）
+
+- `/wiki-ingest <対象>` スキルで記事から Wiki ページを自動生成・更新
+- Wiki 構造: `content/wiki/concepts/`（概念）、`content/wiki/tools/`（ツール）、`content/wiki/guides/`（手順）
+- Wiki ページのフロントマター: title, description, date, lastmod, aliases, related_posts, tags
+- Wiki ページは記事の丸コピーではなく、要約・統合した知識として再構成する
+- 詳細は `.claude/skills/wiki-ingest/SKILL.md` を参照
 
 ## カテゴリ一覧
 
