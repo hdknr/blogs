@@ -105,7 +105,9 @@ docker build -f Dockerfile.base -t autoagent-base .
 
 ### 4. タスク（評価データ）の準備
 
-`tasks/` ディレクトリに [Harbor フォーマット](https://harborframework.com/docs/tasks)のタスクを配置します。各タスクにはテスト（スコアを 0.0〜1.0 で出力）が含まれ、メタエージェントはこのスコアを最大化するようにハーネスを改善します。
+AutoAgent のタスク管理には [Harbor](https://github.com/harbor-framework/harbor) を使用します。Harbor はエージェント評価と RL 環境の実行フレームワークで、Docker コンテナ内でエージェントを動かし、テストスクリプトがスコア（0.0〜1.0）を出力します。メタエージェントはこのスコアを最大化するようにハーネスを改善します。
+
+`tasks/` ディレクトリに Harbor フォーマットのタスクを配置します。
 
 ```text
 tasks/my-task/
