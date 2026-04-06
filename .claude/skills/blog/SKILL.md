@@ -317,3 +317,17 @@ gh api /repos/{owner}/{repo}/issues/{issue_number}/comments \
    ```bash
    git worktree remove --force "$WORKTREE_DIR"
    ```
+3. **Wiki 自動 Ingest チェック**: PR マージ後、以下の手順で Wiki 更新の要否を判定する:
+   1. `.claude/wiki-last-ingest.txt` から最終 ingest 日付を読み取る（ファイルがなければ `1970-01-01`）
+   2. `content/posts/` 内で最終 ingest 日付以降に作成された記事数をカウントする（フロントマターの `date` を参照）
+   3. **20件以上** の場合: `/wiki-ingest all` を自動実行し、完了後に `.claude/wiki-last-ingest.txt` を今日の日付で更新する
+   4. **20件未満** の場合: 「Wiki 更新まであと N 件」とだけ報告する（ingest は実行しない）
+
+   ```bash
+   # 最終 ingest 日付の読み取り例
+   cat .claude/wiki-last-ingest.txt
+   # → 2026-04-06
+
+   # ingest 完了後の更新例（Write ツールで書き込む）
+   # .claude/wiki-last-ingest.txt に今日の日付を書き込む
+   ```
