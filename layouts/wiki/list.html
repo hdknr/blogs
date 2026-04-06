@@ -1,0 +1,58 @@
+{{- define "main" }}
+
+{{- if not .IsHome | and .Title }}
+<header class="page-header">
+  {{ partial "breadcrumbs.html" . }}
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <div class="post-description">
+    {{ .Description | markdownify }}
+  </div>
+  {{- end }}
+</header>
+{{- end }}
+
+{{- if .Content }}
+<div class="post-content">
+  {{- if not (.Param "disableAnchoredHeadings") }}
+  {{- partial "anchored_headings.html" .Content -}}
+  {{- else }}{{ .Content }}{{ end }}
+</div>
+{{- end }}
+
+{{- /* サブセクション一覧 */ -}}
+{{- if .Sections }}
+<div style="margin-top: 1.5em;">
+  {{- range .Sections }}
+  <h2 style="margin-top: 1.5em;">
+    <a href="{{ .Permalink }}" style="text-decoration: none;">{{ .Title }}</a>
+    <span style="font-size: 0.8em; color: var(--secondary);">({{ len .RegularPages }})</span>
+  </h2>
+  {{- if .Description }}
+  <p style="color: var(--secondary);">{{ .Description }}</p>
+  {{- end }}
+  <ul>
+    {{- range .RegularPages }}
+    <li>
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+      {{- if .Description }} — <span style="color: var(--secondary);">{{ .Description }}</span>{{ end }}
+    </li>
+    {{- end }}
+  </ul>
+  {{- end }}
+</div>
+{{- end }}
+
+{{- /* セクション直下のページ一覧（サブセクションがない場合） */ -}}
+{{- if and (not .Sections) .RegularPages }}
+<ul style="margin-top: 1em;">
+  {{- range .RegularPages }}
+  <li>
+    <a href="{{ .Permalink }}">{{ .Title }}</a>
+    {{- if .Description }} — <span style="color: var(--secondary);">{{ .Description }}</span>{{ end }}
+  </li>
+  {{- end }}
+</ul>
+{{- end }}
+
+{{- end }}{{/* end main */}}

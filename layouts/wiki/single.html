@@ -1,0 +1,58 @@
+{{- define "main" }}
+
+<article class="post-single">
+  <header class="post-header">
+    {{ partial "breadcrumbs.html" . }}
+    <h1 class="post-title entry-hint-parent">
+      {{ .Title }}
+    </h1>
+    {{- if .Description }}
+    <div class="post-description">
+      {{ .Description }}
+    </div>
+    {{- end }}
+    <div class="post-meta">
+      {{- if .Params.aliases }}
+      <span title="別名">{{ delimit .Params.aliases " / " }}</span> &middot;
+      {{- end }}
+      <span title="最終更新">更新: {{ .Lastmod.Format "2006-01-02" }}</span>
+      {{- if .Params.tags }}
+      &middot;
+      {{- range .Params.tags }}
+      <a href="{{ absURL (printf "tags/%s/" (urlize .)) }}" class="post-tag">{{ . }}</a>
+      {{- end }}
+      {{- end }}
+    </div>
+  </header>
+
+  {{- if (.Param "ShowToc") }}
+  {{- partial "toc.html" . }}
+  {{- end }}
+
+  {{- if .Content }}
+  <div class="post-content">
+    {{- if not (.Param "disableAnchoredHeadings") }}
+    {{- partial "anchored_headings.html" .Content -}}
+    {{- else }}{{ .Content }}{{ end }}
+  </div>
+  {{- end }}
+
+  <footer class="post-footer">
+    {{- /* 同セクションの他ページへのナビゲーション */ -}}
+    {{- $section := .Parent }}
+    {{- if $section }}
+    <div style="margin-top: 1.5em; padding-top: 1em; border-top: 1px solid var(--border);">
+      <strong>{{ $section.Title }}の他のページ:</strong>
+      <ul style="margin-top: 0.5em;">
+        {{- range $section.RegularPages }}
+        {{- if ne .Permalink $.Permalink }}
+        <li><a href="{{ .Permalink }}">{{ .Title }}</a>{{- if .Description }} — {{ .Description }}{{ end }}</li>
+        {{- end }}
+        {{- end }}
+      </ul>
+    </div>
+    {{- end }}
+  </footer>
+</article>
+
+{{- end }}{{/* end main */}}
