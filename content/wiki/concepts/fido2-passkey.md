@@ -1,0 +1,32 @@
+---
+title: "FIDO2/パスキー認証"
+description: "秘密を送信しない公開鍵ベースの認証で、フィッシング耐性を構造的に実現する次世代認証"
+date: 2026-04-06
+lastmod: 2026-04-06
+aliases: ["FIDO2", "パスキー", "Passkey", "WebAuthn"]
+related_posts:
+  - "/posts/2026/03/fido2-passkey-authentication/"
+tags: ["認証", "FIDO2", "パスキー", "セキュリティ"]
+---
+
+## 概要
+
+パスワード認証は秘密そのものをネットワーク送信するため本質的に脆弱。FIDO2 は秘密鍵をデバイス内（TPM・Secure Enclave）に保管し、署名のみ送信。チャレンジ・レスポンス方式でリプレイ攻撃不可能。
+
+## 3層フィッシング防御
+
+1. ブラウザがオリジン情報を認証器に伝達
+2. 認証器がドメイン一致を検証
+3. サーバーがオリジン情報を最終検証
+
+## 普及状況
+
+Google 8億+アカウント、Amazon 1.75億人が利用。日本証券業協会が OTP を非推奨化しパスキー推奨。楽天証券・SMBC 日興証券が導入。
+
+## 関連ページ
+
+- [メール認証（SPF/DKIM/DMARC）](/blogs/wiki/concepts/email-authentication/) — 別のなりすまし防止技術
+
+## ソース記事
+
+- [FIDO2/パスキー認証](/blogs/posts/2026/03/fido2-passkey-authentication/) — 2026-03
