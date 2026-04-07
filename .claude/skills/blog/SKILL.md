@@ -133,12 +133,13 @@ tags: ["tag1", "tag2"]
 
 3. **`aegis_fetch` の大きな結果の扱い**
    - 結果がトークン上限を超えると、Claude Code が自動的に `~/.claude/projects/.../tool-results/` に保存する
-   - このパスは保護対象のため、直接 Grep すると同意確認が発生する
+   - このパスは保護対象（sensitive file）のため、`cp` や `Grep` でアクセスすると同意確認が発生する
    - **対処: `.claude/temp/` にコピーしてから Read/Grep する**
      ```bash
      cp /Users/hdknr/.claude/projects/.../tool-results/mcp-aegis-aegis_fetch-XXXX.txt .claude/temp/aegis-result.txt
      ```
    - 作業完了後は `.claude/temp/` 内のコピーを削除する
+   - **同意プロンプトの恒久対策**: 初回の同意プロンプトで「Yes, and always allow access to tool-results/ from this project」を選択すれば、以降の `tool-results/` へのアクセスは自動許可される
 
 4. **SPA（JavaScript 描画）サイトの場合**
    - `aegis_fetch` / `WebFetch` どちらでも生 HTML からコンテンツを取得できない場合がある
