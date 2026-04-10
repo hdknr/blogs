@@ -2,6 +2,7 @@
 title: "OpenClaw 入門: チャットボットを超える AI エージェントランタイムの全体像"
 date: 2026-03-19
 lastmod: 2026-03-19
+slug: "openclaw-agent-runtime"
 draft: false
 categories: ["AI/LLM"]
 tags: ["openclaw", "agent", "claude"]

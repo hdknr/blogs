@@ -7,6 +7,7 @@ aliases: ["openclaw"]
 related_posts:
   - "/posts/2026/03/openclaw-claude-code-setup/"
   - "/posts/2026/03/openclaw-overview/"
+  - "/posts/2026/03/openclaw-agent-runtime/"
   - "/posts/2026/03/openclaw-china-security-warning/"
 tags: ["agent", "オープンソース", "フレームワーク"]
 ---
@@ -28,4 +29,5 @@ tags: ["agent", "オープンソース", "フレームワーク"]
 
 - [OpenClaw セットアップ](/blogs/posts/2026/03/openclaw-claude-code-setup/) — 2026-03
 - [OpenClaw 概要](/blogs/posts/2026/03/openclaw-overview/) — 2026-03
+- [OpenClaw エージェントランタイム全体像](/blogs/posts/2026/03/openclaw-agent-runtime/) — 2026-03
 - [OpenClaw セキュリティ警告](/blogs/posts/2026/03/openclaw-china-security-warning/) — 2026-03
