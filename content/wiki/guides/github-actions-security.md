@@ -3,9 +3,7 @@ title: "GitHub Actions スクリプトインジェクション対策"
 description: "GitHub Actions で ${{ }} テンプレート式の不適切な使用による攻撃を防ぐガイド"
 date: 2026-04-06
 lastmod: 2026-04-06
-related_posts:
-  - "/posts/2026/03/github-actions-script-injection-complete-guide/"
-  - "/posts/2026/03/github-actions-script-injection-untrusted-input/"
+related_posts: []
 tags: ["GitHub Actions", "CI/CD", "セキュリティ"]
 ---
 
@@ -19,7 +17,3 @@ tags: ["GitHub Actions", "CI/CD", "セキュリティ"]
 - actionlint・zizmor で自動検出
 - サードパーティ Actions はコミットハッシュでピン留め
 
-## ソース記事
-
-- [GitHub Actions スクリプトインジェクション完全ガイド](/blogs/posts/2026/03/github-actions-script-injection-complete-guide/) — 2026-03
-- [信頼できない入力の扱い](/blogs/posts/2026/03/github-actions-script-injection-untrusted-input/) — 2026-03
