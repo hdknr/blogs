@@ -41,6 +41,11 @@ Hugo + PaperMod で構築された技術ブログ。GitHub Pages でホスティ
 - フロントマター: title, date, lastmod, draft, categories, tags（+ source_url）
 - カテゴリは `scripts/categorize.py` のルールに従う
 - ビルド確認: `hugo --gc`
+- **ダイアグラムは画像化する**: アスキーアート（```` ``` ```` 内のテキスト図）は使わず、drawio で作成して PNG で埋め込む
+  - drawio ファイル: `static/images/<name>.drawio`
+  - エクスポート: `/Applications/draw.io.app/Contents/MacOS/draw.io --export --format png --scale 2 --output <out>.png <in>.drawio`
+  - 記事内参照: `![alt テキスト](/blogs/images/<name>.png)`（絶対パス）
+  - alt テキストには図の内容を自然文で記述する（SEO・アクセシビリティ向上）
 
 ## 外部 URL のフェッチ方針
 
