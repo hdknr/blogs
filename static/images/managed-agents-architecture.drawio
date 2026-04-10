@@ -1,0 +1,180 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="managed-agents-arch" name="Managed Agents Architecture">
+    <mxGraphModel dx="1000" dy="620" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="Claude Managed Agents: Brain / Session / Hands の分離アーキテクチャ" style="text;html=1;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="150" y="10" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- OS Analogy label -->
+        <mxCell id="analogy" value="OS がハードウェアを抽象化したように、エージェントのコンポーネントを安定したインターフェースで抽象化" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#888888;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="150" y="38" width="700" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Developer / API layer -->
+        <mxCell id="dev-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;strokeWidth=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="940" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="dev-label" value="開発者のアプリケーション" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#666666;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="72" width="200" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="api-create" value="POST /agents" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="95" width="110" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="api-env" value="POST /environments" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="175" y="95" width="130" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="api-session" value="POST /sessions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="320" y="95" width="110" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="api-event" value="POST /events (SSE)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="445" y="95" width="130" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="api-get" value="GET /events" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="590" y="95" width="100" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="beta-header" value="β managed-agents-2026-04-01" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#b85450;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="760" y="95" width="190" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- Meta-Harness boundary -->
+        <mxCell id="meta-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#4472C4;strokeWidth=2;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="150" width="940" height="450" as="geometry"/>
+        </mxCell>
+        <mxCell id="meta-label" value="Managed Agents（メタハーネス）" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#4472C4;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="152" width="300" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="meta-desc" value="インターフェースは安定、内部実装は自由に交換可能" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#4472C4;fontStyle=2;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="340" y="152" width="350" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- Brain section -->
+        <mxCell id="brain-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="190" width="350" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="brain-title" value="🧠 Brain（ハーネス + Claude）" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#b85450;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="195" width="280" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="brain-desc" value="ステートレス — クラッシュしても再起動可能" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#b85450;fontStyle=2;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="215" width="300" height="18" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="harness" value="Agent Harness&#xa;(エージェントループ)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="245" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="harness-items" value="• プロンプトキャッシュ&#xa;• コンパクション&#xa;• コンテキストエンジニアリング" style="text;html=1;fontSize=9;align=left;verticalAlign=top;fontColor=#555555;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="70" y="298" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="claude" value="Claude&#xa;(LLM 推論)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="245" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="claude-items" value="• ツール呼び出し判断&#xa;• 自律的タスク実行&#xa;• コンテキスト照会" style="text;html=1;fontSize=9;align=left;verticalAlign=top;fontColor=#555555;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="240" y="298" width="140" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="brain-wake" value="wake(sessionId)&#xa;getSession(id)&#xa;emitEvent(id, event)" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#b85450;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="100" y="348" width="250" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Session section -->
+        <mxCell id="session-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="410" width="350" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="session-title" value="📋 Session（永続セッションログ）" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#6c8ebf;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="415" width="300" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="session-desc" value="コンテキストウィンドウの外に存在する永続的なコンテキスト" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#6c8ebf;fontStyle=2;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="435" width="330" height="18" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="eventlog" value="Event Log&#xa;(append-only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="460" width="140" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="getevents" value="getEvents()&#xa;位置スライスで照会" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="230" y="460" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="session-note" value="Brain がクラッシュ → 新しい Brain が Session から復元" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#6c8ebf;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="70" y="515" width="310" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Hands section -->
+        <mxCell id="hands-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="460" y="190" width="490" height="390" as="geometry"/>
+        </mxCell>
+        <mxCell id="hands-title" value="🤲 Hands（サンドボックス + ツール）" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#82b366;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="470" y="195" width="350" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="hands-desc" value="Cattle — 使い捨て可能、Brain から execute(name, input) → string で呼び出し" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#82b366;fontStyle=2;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="470" y="215" width="460" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- Sandbox -->
+        <mxCell id="sandbox" value="Sandbox（コンテナ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="245" width="200" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="sandbox-items" value="• Bash 実行&#xa;• ファイル操作（read/write/edit/glob/grep）&#xa;• コード実行（Python, Node.js, Go...）&#xa;• 認証情報はサンドボックスの外" style="text;html=1;fontSize=9;align=left;verticalAlign=top;fontColor=#555555;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="480" y="293" width="200" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- MCP Tools -->
+        <mxCell id="mcp-box" value="MCP サーバー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="710" y="245" width="220" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp-items" value="• 外部サービス連携&#xa;• OAuth トークンは Vault に格納&#xa;• 専用プロキシ経由でアクセス" style="text;html=1;fontSize=9;align=left;verticalAlign=top;fontColor=#555555;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="710" y="293" width="220" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Web tools -->
+        <mxCell id="web" value="Web Search / Fetch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="365" width="200" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Built-in tools -->
+        <mxCell id="builtin" value="組み込みツール" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="710" y="365" width="220" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Environment config -->
+        <mxCell id="env-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="425" width="450" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="env-title" value="Environment（環境テンプレート）" style="text;html=1;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;fontColor=#9673a6;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="490" y="430" width="250" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="env-pkg" value="パッケージ&#xa;Python, Node.js, Go..." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="495" y="460" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="env-net" value="ネットワーク&#xa;アクセスルール" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="640" y="460" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="env-files" value="マウントファイル&#xa;リポジトリ等" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="785" y="460" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="env-note" value="provision({resources}) で初期化 — コンテナは Cattle（使い捨て可能）" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#9673a6;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="495" y="510" width="420" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Security boundary note -->
+        <mxCell id="security" value="🔒 セキュリティ境界: 認証情報はサンドボックスの外（Vault / リポジトリ埋め込み）に保持。Brain も Hands も直接触れない。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;verticalAlign=middle;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="460" y="545" width="490" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows: Brain to Session -->
+        <mxCell id="arr-brain-session" value="emitEvent()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;fontSize=9;fontColor=#6c8ebf;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="brain-box" target="session-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows: Brain to Hands -->
+        <mxCell id="arr-brain-hands" value="execute(name, input) → string" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=blockThin;endFill=1;fontSize=9;fontColor=#82b366;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="brain-box" target="hands-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

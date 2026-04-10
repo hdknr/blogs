@@ -1,0 +1,128 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="comparison" name="Managed Agents vs OpenClaw">
+    <mxGraphModel dx="900" dy="520" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="エージェント基盤の設計思想: ローカル自律型 vs マネージドサービス" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="100" y="10" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- OpenClaw side -->
+        <mxCell id="oc-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="20" y="55" width="420" height="440" as="geometry"/>
+        </mxCell>
+        <mxCell id="oc-title" value="OpenClaw（ローカル自律型）" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="400" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="oc-desc" value="ユーザーのデバイスで動く常駐デーモン" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#b85450;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="30" y="82" width="400" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- OpenClaw: Gateway -->
+        <mxCell id="oc-gw" value="Gateway（Control Plane）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="380" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="oc-gw-items" value="22+ チャネル統合 / Heartbeat / Cron / Webhook" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="380" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- OpenClaw: Agent Runtime -->
+        <mxCell id="oc-rt" value="Agent Runtime（LLM）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="178" width="380" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="oc-rt-items" value="判断 + 実行を同一 LLM が担当 / スキル選択" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="40" y="218" width="380" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- OpenClaw: Personality -->
+        <mxCell id="oc-soul" value="人格 / 記憶" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="245" width="180" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="oc-soul-items" value="SOUL.md / MEMORY.md&#xa;memory/YYYY-MM-DD.md" style="text;html=1;fontSize=9;align=center;verticalAlign=top;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="180" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- OpenClaw: Skills -->
+        <mxCell id="oc-skill" value="スキル / Lobster" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="245" width="180" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="oc-skill-items" value="ClawHub 13,000+ スキル&#xa;Lobster ワークフロー" style="text;html=1;fontSize=9;align=center;verticalAlign=top;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="240" y="280" width="180" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- OpenClaw: Execution -->
+        <mxCell id="oc-exec" value="ローカル実行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="320" width="380" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="oc-exec-items" value="シェル / ブラウザ / ファイル操作 / API 呼び出し（すべてユーザーのデバイス上）" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="40" y="355" width="380" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- OpenClaw highlights -->
+        <mxCell id="oc-highlights" value="特徴:&#xa;• 完全ローカル実行（データがデバイスの外に出ない）&#xa;• マルチチャネル統合（22+プラットフォーム）&#xa;• 常駐型自律動作（Heartbeat + Cron）&#xa;• 決定論的ワークフロー（Lobster YAML）&#xa;• ユーザーがインフラを管理" style="text;html=1;fontSize=10;align=left;verticalAlign=top;fontColor=#b85450;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="385" width="390" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Managed Agents side -->
+        <mxCell id="ma-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="460" y="55" width="420" height="440" as="geometry"/>
+        </mxCell>
+        <mxCell id="ma-title" value="Claude Managed Agents（マネージド型）" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="470" y="60" width="400" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="ma-desc" value="Anthropic のクラウド上で動くマネージドサービス" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#6c8ebf;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="470" y="82" width="400" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- Managed Agents: Brain -->
+        <mxCell id="ma-brain" value="Brain（ハーネス + Claude）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="110" width="380" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="ma-brain-items" value="ステートレス / プロンプトキャッシュ / コンパクション / コンテキストエンジニアリング" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="480" y="150" width="380" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- Managed Agents: Session -->
+        <mxCell id="ma-session" value="Session（永続セッションログ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="178" width="380" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="ma-session-items" value="append-only Event Log / getEvents() でスライス照会 / Brain 障害からの復元" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="480" y="218" width="380" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- Managed Agents: Agent -->
+        <mxCell id="ma-agent" value="Agent 定義" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="245" width="180" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="ma-agent-items" value="モデル / システムプロンプト&#xa;ツール / MCP / スキル" style="text;html=1;fontSize=9;align=center;verticalAlign=top;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="480" y="280" width="180" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Managed Agents: Environment -->
+        <mxCell id="ma-env" value="Environment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="680" y="245" width="180" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="ma-env-items" value="コンテナテンプレート&#xa;パッケージ / ネットワーク" style="text;html=1;fontSize=9;align=center;verticalAlign=top;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="680" y="280" width="180" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Managed Agents: Hands -->
+        <mxCell id="ma-hands" value="Hands（サンドボックス + ツール）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="320" width="380" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="ma-hands-items" value="Bash / ファイル操作 / Web Search / MCP サーバー（Cattle: 使い捨て可能、必要時のみ起動）" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="480" y="355" width="380" height="18" as="geometry"/>
+        </mxCell>
+
+        <!-- Managed Agents highlights -->
+        <mxCell id="ma-highlights" value="特徴:&#xa;• クラウド実行（インフラ管理不要）&#xa;• Brain / Session / Hands を分離（障害分離）&#xa;• 長時間実行（数時間〜のタスク）&#xa;• Many Brains, Many Hands（スケーラブル）&#xa;• セキュリティ境界（認証情報は Vault に隔離）" style="text;html=1;fontSize=10;align=left;verticalAlign=top;fontColor=#6c8ebf;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="480" y="385" width="390" height="100" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
