@@ -155,6 +155,23 @@ tags: ["tag1", "tag2"]
 - 実用的な情報を含める（コマンド例、設定例、コードサンプルなど）
 - GitHub コメント/Issue からの内容はそのまま活かしつつ、ブログ記事として読みやすく整形する
 
+### ダイアグラム（図）の作成ルール
+
+アーキテクチャ図やフロー図が必要な場合、**アスキーアートは使わず drawio で画像化する**。
+
+1. drawio ファイルを作成する: `static/images/<slug>-<diagram-name>.drawio`
+2. PNG にエクスポートする（`--scale 2` で高解像度）:
+   ```bash
+   /Applications/draw.io.app/Contents/MacOS/draw.io --export --format png --scale 2 --output static/images/<name>.png static/images/<name>.drawio
+   ```
+3. 記事内で絶対パスで参照する:
+   ```markdown
+   ![図の内容を自然文で記述した alt テキスト](/blogs/images/<name>.png)
+   ```
+4. **alt テキスト**: 図の内容を自然文で記述する（SEO の画像検索露出 + アクセシビリティ向上）
+5. **相対パス（`../../images/`）は使わない**: Hugo のパーマリンク構造で 404 になるため、必ず `/blogs/images/` の絶対パスを使う
+6. 既存の drawio ファイル（`static/images/openclaw-gateway-architecture.drawio` 等）のスタイルを参考にする
+
 ## ファクトチェック（情報検証）
 
 記事をコミットする前に、以下の手順で記事内の事実関係を検証する。

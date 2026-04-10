@@ -1,0 +1,88 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="openclaw-3step" name="OpenClaw 3-Step Flow">
+    <mxGraphModel dx="900" dy="460" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="460" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="OpenClaw の処理を 3 ステップで理解する" style="text;html=1;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 1: Event -->
+        <mxCell id="step1-label" value="Step 1" style="text;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="160" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="event" value="イベント発生" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="event-items" value="&#x2022; チャネルメッセージ&#xa;&#x2022; Heartbeat&#xa;&#x2022; Cron&#xa;&#x2022; Webhook" style="text;html=1;fontSize=10;align=left;verticalAlign=top;fontColor=#555555;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="135" width="160" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- Gateway (Normalization) -->
+        <mxCell id="gateway" value="Gateway&#xa;(正規化)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="gw-desc" value="どこから来た入力でも&#xa;統一フォーマットに変換" style="text;html=1;fontSize=10;align=center;verticalAlign=top;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="275" y="135" width="150" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 2 & 3: Agent Runtime -->
+        <mxCell id="step23-label" value="Step 2: 判断 + Step 3: 実行" style="text;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="500" y="60" width="180" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="runtime" value="Agent Runtime&#xa;(LLM: 判断 + 実行)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="80" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="key-point" value="判断した LLM 自身が実行する&#xa;（別の LLM に指示を出すのではない）" style="text;html=1;fontSize=10;align=center;verticalAlign=top;fontColor=#b85450;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="490" y="135" width="200" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Output actions from Runtime -->
+        <mxCell id="action-tool" value="ツール呼び出し" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="730" y="60" width="130" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="action-skill" value="スキル実行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="730" y="110" width="130" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="action-lobster" value="Lobster 起動" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="730" y="160" width="130" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="action-reply" value="会話応答" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="730" y="210" width="130" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows -->
+        <mxCell id="arr-ev-gw" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="event" target="gateway">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-gw-rt" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4472C4;strokeWidth=2.5;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="gateway" target="runtime">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-rt-tool" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d79b00;strokeWidth=1.5;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="runtime" target="action-tool">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-rt-skill" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d79b00;strokeWidth=1.5;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="runtime" target="action-skill">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-rt-lob" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=1.5;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="runtime" target="action-lobster">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-rt-reply" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=1.5;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="runtime" target="action-reply">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Role labels at bottom -->
+        <mxCell id="role-gw" value="「賢い受付」" style="text;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;fontColor=#4472C4;" vertex="1" parent="1">
+          <mxGeometry x="295" y="175" width="110" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="role-rt" value="「考えて動く担当者」" style="text;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="510" y="175" width="160" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
