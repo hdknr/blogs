@@ -2,6 +2,7 @@
 title: "Claude Code を Ollama でローカル無料実行する方法"
 date: 2026-03-31
 lastmod: 2026-03-31
+slug: "claude-code-ollama-local-free"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4165254271"
 categories: ["AI/LLM"]

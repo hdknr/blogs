@@ -2,6 +2,7 @@
 title: "脆弱性管理の次の時代 ── Exposure Management とは何か"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "exposure-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041976236"
 categories: ["セキュリティ"]

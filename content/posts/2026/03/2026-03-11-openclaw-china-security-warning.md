@@ -2,6 +2,7 @@
 title: "中国政府が OpenClaw に緊急セキュリティ警告：AI エージェントの安全な運用とは"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "openclaw-china-security-warning"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4042040426"
 categories: ["セキュリティ"]

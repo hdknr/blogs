@@ -2,6 +2,7 @@
 title: "redis-py の Lock をサブクラス化してフェンシングトークンを実装する"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "redis-fenced-lock-python"
 draft: false
 categories: ["データベース"]
 tags: ["redis", "python", "django"]

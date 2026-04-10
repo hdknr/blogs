@@ -2,6 +2,7 @@
 title: "OpenClaw × Claude Code セットアップガイド — AI エージェントチームを構築する2つのアプローチ"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "openclaw-claude-code-setup"
 draft: false
 categories: ["AI/LLM"]
 tags: ["claude-code", "openclaw", "agent", "mcp"]

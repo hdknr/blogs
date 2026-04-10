@@ -2,6 +2,7 @@
 title: "OpenClaw とは何か：話題のオープンソース AI エージェントを徹底解説"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "openclaw-overview"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4022815487"
 categories: ["AI/LLM"]

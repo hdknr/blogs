@@ -2,6 +2,7 @@
 title: "AutoAgent — AIがAIを育てる自己改善エージェントOSSライブラリ"
 date: 2026-04-05
 lastmod: 2026-04-05
+slug: "autoagent-self-improving-agents"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4189423123"
 categories: ["AI/LLM"]

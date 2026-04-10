@@ -2,6 +2,7 @@
 title: "Vibe Hacking とは何か：AI が変えるサイバー攻撃の新潮流"
 date: 2026-03-10
 lastmod: 2026-03-18
+slug: "vibe-hacking"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4031826348"
 categories: ["セキュリティ"]
