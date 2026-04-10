@@ -2,6 +2,7 @@
 title: "Claude Managed Agents のアーキテクチャ: Brain / Session / Hands の分離設計"
 date: 2026-04-10
 lastmod: 2026-04-10
+slug: "claude-managed-agents-architecture"
 draft: false
 description: "Anthropic のエンジニアリングブログに基づき、Claude Managed Agents の内部アーキテクチャを解説。Brain・Session・Hands の3層分離、セキュリティ境界、OpenClaw との設計思想の違いをダイアグラム付きで整理。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4214253259"
@@ -174,8 +175,43 @@ GET /v1/sessions/{id}/stream
 
 すべてのエンドポイントにベータヘッダー `managed-agents-2026-04-01` が必要だ。SDK を使えばヘッダーは自動設定される。
 
+### SSE（Server-Sent Events）とは
+
+ステップ5で使われている SSE（Server-Sent Events）は、HTTP 上でサーバーからクライアントへ**一方向**にリアルタイムデータを配信する W3C 標準の仕組みだ。`Content-Type: text/event-stream` で接続を維持し、イベントを逐次送信する。
+
+WebSocket との違いは以下の通り:
+
+| 項目 | SSE | WebSocket |
+|---|---|---|
+| **通信方向** | サーバー → クライアント（単方向） | 双方向 |
+| **プロトコル** | 標準 HTTP | 独自プロトコル (ws://) |
+| **再接続** | 自動 | 手動実装が必要 |
+| **インフラ互換性** | プロキシ / LB と相性良好 | 対応が必要な場合あり |
+
+Managed Agents ではエージェントへの**指示は REST API**（`POST /v1/sessions/{id}/events`）で送り、**結果の受信は SSE**（`GET /v1/sessions/{id}/stream`）で行う。エージェント実行の監視は本質的にサーバーからの単方向配信であり、双方向通信は不要なため、インフラの複雑さを増さない SSE が合理的な選択となっている。
+
+## 実際の利用フロー: チャットボットとの連携例
+
+CMA 自体にはチャット UI やチャネル監視の機能はない。開発者が自前のアプリケーション（チャットボット、Web UI など）を構築し、そのアプリが CMA の API を仲介する形になる。
+
+![ユーザーのメッセージが開発者アプリを経由して CMA の Session に送信され、Brain がオーケストレーションを実行し、SSE で結果を返す一連のイベントフロー図](/blogs/images/managed-agents-event-flow.png)
+
+1. **ユーザーがチャットでメッセージを送信** — チャットボットや Web UI がメッセージを受け取る
+2. **アプリが API でイベントを送信** — `POST /v1/sessions/{id}/events` で Session にイベントを書き込む
+3. **Brain がイベントを取得** — `getEvents()` で Session のイベントログを読み取る
+4. **Brain がオーケストレーション実行** — Agent Harness が Claude に推論させ、必要に応じて Hands（Sandbox / Tools）を `execute()` で呼び出す
+5. **Brain が結果を記録** — `emitEvent()` で Session にイベントを書き込む
+6. **SSE でアプリに結果をストリーム** — `GET /v1/sessions/{id}/stream` でアプリがリアルタイムに結果を受信
+7. **アプリがユーザーに応答を表示**
+
+つまり、OpenClaw のように Gateway が直接チャットチャネルを監視するのとは異なり、CMA では**開発者のアプリケーションがイベントの入出力を仲介する**設計になっている。これにより、どのようなフロントエンド（Slack ボット、Web アプリ、モバイルアプリなど）とも柔軟に統合できる。
+
 ## まとめ
 
 Claude Managed Agents のアーキテクチャは「ハーネスに埋め込まれた前提は陳腐化する」という課題に対する構造的な解答だ。Brain / Session / Hands を分離し、それぞれを Cattle として扱えるようにすることで、障害分離、スケーラビリティ、セキュリティを同時に達成している。
 
 OS が「まだ考えられていないプログラム」のためにハードウェアを抽象化したように、Managed Agents は「まだ考えられていないハーネス」のためにエージェントのコンポーネントを抽象化する。モデルの能力が向上するたびにハーネスの前提が変わっても、インターフェースは安定し続ける。この設計判断が、今後のエージェント基盤の進化にどれだけ寄与するかが注目される。
+
+## 参考
+
+- [OpenClaw 入門: チャットボットを超える AI エージェントランタイムの全体像](/blogs/posts/2026/03/openclaw-agent-runtime/) — OpenClaw のアーキテクチャ（Gateway / Runtime / Heartbeat）を解説。CMA との設計思想の違いを理解する上で参考になる
