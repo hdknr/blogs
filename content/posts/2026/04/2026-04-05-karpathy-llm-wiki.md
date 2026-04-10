@@ -2,6 +2,7 @@
 title: "Karpathy の LLM Wiki — AIエージェントが育てる個人ナレッジベースという新パターン"
 date: 2026-04-05
 lastmod: 2026-04-05
+slug: "karpathy-llm-wiki"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4189722488"
 categories: ["AI/LLM"]

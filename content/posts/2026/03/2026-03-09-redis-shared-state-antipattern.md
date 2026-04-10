@@ -2,6 +2,7 @@
 title: "Redisを「共有状態」として使うアンチパターン：キー設計の落とし穴"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "redis-shared-state-antipattern"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4022716816"
 categories: ["データベース"]

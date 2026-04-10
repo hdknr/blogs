@@ -2,6 +2,7 @@
 title: "Claude Code Review — エージェントチームが PR のバグを狩る新機能"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "claude-code-review"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4028055781"
 categories: ["AI/LLM"]

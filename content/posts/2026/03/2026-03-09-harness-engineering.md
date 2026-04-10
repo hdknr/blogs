@@ -2,6 +2,7 @@
 title: "Harness Engineering ベストプラクティス 2026 — AI コーディングエージェントを安定稼働させる設計術"
 date: 2026-03-09
 lastmod: 2026-03-18
+slug: "harness-engineering"
 draft: false
 description: "逆瀬川氏のHarness Engineeringベストプラクティス記事を要約。Hooks 4パターン、リンター戦略、E2Eテスト、CLAUDE.md設計、MVH導入ステップを解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4022922774"

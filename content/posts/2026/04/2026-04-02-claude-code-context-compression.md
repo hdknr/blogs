@@ -2,6 +2,7 @@
 title: "Claude Code のコンテキスト圧縮戦略 — ソースコードから見える5つのアプローチ"
 date: 2026-04-02
 lastmod: 2026-04-02
+slug: "claude-code-context-compression"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4174061524"
 categories: ["AI/LLM"]

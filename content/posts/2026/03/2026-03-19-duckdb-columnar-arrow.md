@@ -2,6 +2,7 @@
 title: "DuckDB・Apache Arrow・Parquetの関係を整理する：列指向エコシステムの全体像"
 date: 2026-03-19
 lastmod: 2026-03-19
+slug: "duckdb-columnar-arrow"
 draft: false
 categories: ["データベース"]
 tags: ["duckdb", "python"]

@@ -2,6 +2,7 @@
 title: "1Password Unified Access：AIエージェント時代のシークレット管理が本格始動"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "1password-unified-access-ai-agent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077558341"
 categories: ["セキュリティ"]

@@ -2,6 +2,7 @@
 title: "Vercelを使えばインフラエンジニア不要？ Framework-defined Infrastructureが変えるWebアプリ開発"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "vercel-no-infra-engineer"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050663858"
 categories: ["クラウド/インフラ"]

@@ -2,6 +2,7 @@
 title: "CLAUDE.md の設定を99%消したら逆にうまくいった話：AI への指示は「哲学」だけ残せ"
 date: 2026-03-11
 lastmod: 2026-03-18
+slug: "claude-md-less-is-more"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4042712659"
 categories: ["AI/LLM"]
