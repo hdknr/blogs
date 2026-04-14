@@ -1,0 +1,120 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="llm-wiki-arch" name="LLM Wiki Architecture">
+    <mxGraphModel dx="900" dy="560" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="LLM Wiki パターン: 3 層アーキテクチャ" style="text;html=1;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="150" y="10" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Schema layer (top) -->
+        <mxCell id="schema-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="60" width="800" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="schema-title" value="Schema（構造定義）" style="text;html=1;fontSize=14;fontStyle=1;align=left;verticalAlign=middle;fontColor=#9673a6;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="65" width="250" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="schema-desc" value="ユーザーと LLM がスキーマを共同で進化させる" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#9673a6;fontStyle=2;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="65" width="350" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="claudemd" value="CLAUDE.md&#xa;（Wiki の構造規約・ワークフロー定義）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="280" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="conventions" value="ページ種別 / 命名規約 /&#xa;インデックス形式 / ログ形式" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="390" y="100" width="210" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="workflows" value="Ingest / Query / Lint&#xa;のワークフロー手順" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="630" y="100" width="200" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Wiki layer (middle) -->
+        <mxCell id="wiki-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="190" width="800" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="wiki-title" value="Wiki（LLM が管理するナレッジベース）" style="text;html=1;fontSize=14;fontStyle=1;align=left;verticalAlign=middle;fontColor=#6c8ebf;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="195" width="350" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="wiki-desc" value="LLM が書き、ユーザーが読む — 永続的に蓄積される知識" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#6c8ebf;fontStyle=2;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="410" y="195" width="400" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="index" value="index.md&#xa;（全ページカタログ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="235" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="summaries" value="summaries/&#xa;（ソース要約）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="215" y="235" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="concepts" value="concepts/&#xa;（概念ページ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="360" y="235" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="entities" value="entities/&#xa;（エンティティページ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="505" y="235" width="140" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="logfile" value="log.md&#xa;（操作ログ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="660" y="235" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="wiki-links" value="相互リンク・クロスリファレンスが自動維持される" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#6c8ebf;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="285" width="500" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Raw Sources layer (bottom) -->
+        <mxCell id="raw-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="360" width="800" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="raw-title" value="Raw Sources（生ソース）" style="text;html=1;fontSize=14;fontStyle=1;align=left;verticalAlign=middle;fontColor=#82b366;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="365" width="250" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="raw-desc" value="イミュータブル — LLM は読むだけ、変更しない（信頼できる唯一の情報源）" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#82b366;fontStyle=2;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="365" width="450" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="articles" value="記事クリッピング" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="405" width="120" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="pdfs" value="PDF / 論文" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="220" y="405" width="120" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="highlights" value="書籍ハイライト" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="360" y="405" width="120" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="podcasts" value="ポッドキャストメモ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="500" y="405" width="130" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="transcripts" value="会議文字起こし" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="650" y="405" width="130" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- LLM Agent (center right) -->
+        <mxCell id="llm-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="280" y="480" width="340" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="llm-label" value="Claude Code（LLM エージェント）" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="290" y="485" width="320" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="llm-ops" value="Ingest（取り込み）  |  Query（照会）  |  Lint（健全性チェック）" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#b85450;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="290" y="510" width="320" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: LLM reads Raw Sources -->
+        <mxCell id="arr-llm-raw" value="読み取り" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=blockThin;endFill=1;fontSize=9;fontColor=#82b366;labelBackgroundColor=#FFFFFF;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.2;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="llm-box" target="raw-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: LLM writes Wiki -->
+        <mxCell id="arr-llm-wiki" value="書き込み・更新" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;fontSize=9;fontColor=#6c8ebf;labelBackgroundColor=#FFFFFF;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="llm-box" target="wiki-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: LLM follows Schema -->
+        <mxCell id="arr-llm-schema" value="構造規約に従う" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=2;endArrow=blockThin;endFill=1;fontSize=9;fontColor=#9673a6;labelBackgroundColor=#FFFFFF;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.8;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="llm-box" target="schema-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
