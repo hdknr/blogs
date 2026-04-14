@@ -5,7 +5,7 @@ lastmod: 2026-04-13
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4239451950"
 categories: ["AI/LLM"]
-tags: ["claude", "llm", "prompt", "anthropic"]
+tags: ["claude", "llm", "prompt", "anthropic", "EQ"]
 description: "Claude の EQ（感情知性）の本質は脳内トレース能力にある。曖昧な指示から完成像を形にする Claude の対話スタイルと、その活用法を解説。"
 ---
 
