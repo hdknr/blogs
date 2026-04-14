@@ -30,5 +30,8 @@ jq -n --rawfile body "${TEMP_DIR}/blog_comment_body.txt" '{body: $body}' > "${TE
 # PATCH the comment
 gh api "/repos/${OWNER}/${REPO}/issues/comments/${COMMENT_ID}" --method PATCH --input "${TEMP_DIR}/patch_body.json" --jq '.html_url'
 
+# Add 🚀 reaction to mark as blogged
+gh api "/repos/${OWNER}/${REPO}/issues/comments/${COMMENT_ID}/reactions" -f content=rocket --silent 2>/dev/null || true
+
 # Cleanup
 rm -f "${TEMP_DIR}/blog_comment_body.txt" "${TEMP_DIR}/patch_body.json"
