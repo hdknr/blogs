@@ -5,20 +5,24 @@
 #   ./scripts/blog-batch.sh <issue_number> [options]
 #
 # Options:
-#   --dry-run       ツイート内容を一覧表示するのみ（ブログ作成しない）
-#   --limit N       処理件数の上限（デフォルト: 全件）
-#   --skip-review   ファクトチェック・エージェントレビューを省略（高速化）
-#   --model MODEL   使用モデル（デフォルト: sonnet）
+#   --dry-run         ツイート内容を一覧表示するのみ（ブログ作成しない）
+#   --limit N         処理件数の上限（デフォルト: 全件）
+#   --skip-review     ファクトチェック・エージェントレビューを省略（高速化）
+#   --model MODEL     使用モデル（デフォルト: sonnet）
+#   --interval SECS   処理間のインターバル秒数（デフォルト: 5）
+#   --overnight       夜間バッチモード（nohup 相当 + インターバル60秒 + PRサマリー出力）
 #
 # Examples:
-#   ./scripts/blog-batch.sh 1 --dry-run              # 未ブログ化一覧を確認
-#   ./scripts/blog-batch.sh 1 --limit 3              # 3件だけ処理
-#   ./scripts/blog-batch.sh 1 --skip-review --limit 5 # レビュー省略で5件処理
+#   ./scripts/blog-batch.sh 1 --dry-run                     # 未ブログ化一覧を確認
+#   ./scripts/blog-batch.sh 1 --limit 3                     # 3件だけ処理
+#   ./scripts/blog-batch.sh 1 --skip-review --limit 5       # レビュー省略で5件処理
+#   ./scripts/blog-batch.sh 1 --overnight                   # 全件を夜間バッチで処理
+#   ./scripts/blog-batch.sh 1 --overnight --interval 120    # 2分間隔で夜間バッチ
 
 set -euo pipefail
 
 REPO="hdknr/blogs"
-ISSUE_NUMBER="${1:?Usage: blog-batch.sh <issue_number> [--dry-run] [--limit N] [--skip-review] [--model MODEL]}"
+ISSUE_NUMBER="${1:?Usage: blog-batch.sh <issue_number> [--dry-run] [--limit N] [--skip-review] [--model MODEL] [--interval SECS] [--overnight]}"
 shift
 
 # --- オプション解析 ---
@@ -26,16 +30,32 @@ DRY_RUN=false
 LIMIT=0
 SKIP_REVIEW=false
 MODEL="sonnet"
+INTERVAL=5
+OVERNIGHT=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --dry-run)    DRY_RUN=true; shift ;;
-    --limit)      LIMIT="$2"; shift 2 ;;
-    --skip-review) SKIP_REVIEW=true; shift ;;
-    --model)      MODEL="$2"; shift 2 ;;
-    *)            echo "Unknown option: $1"; exit 1 ;;
+    --dry-run)      DRY_RUN=true; shift ;;
+    --limit)        LIMIT="$2"; shift 2 ;;
+    --skip-review)  SKIP_REVIEW=true; shift ;;
+    --model)        MODEL="$2"; shift 2 ;;
+    --interval)     INTERVAL="$2"; shift 2 ;;
+    --overnight)    OVERNIGHT=true; shift ;;
+    *)              echo "Unknown option: $1"; exit 1 ;;
   esac
 done
+
+# overnight モードのデフォルト設定
+if [[ "$OVERNIGHT" == "true" ]]; then
+  if [[ "$INTERVAL" -eq 5 ]]; then
+    INTERVAL=60  # デフォルトを60秒に
+  fi
+  SKIP_REVIEW=true  # 夜間は自動でレビュー省略
+fi
+
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+LOG_FILE=".claude/temp/blog-batch-${TIMESTAMP}.log"
+REPORT_FILE=".claude/temp/blog-batch-report-${TIMESTAMP}.md"
 
 # --- 未ブログ化コメント取得 ---
 echo "=== Issue #${ISSUE_NUMBER} の未ブログ化コメントを取得中... ==="
@@ -75,6 +95,9 @@ if [[ "$DRY_RUN" == "true" ]]; then
     echo ""
   done
   echo "=== ブログ化するには --dry-run を外して実行してください ==="
+  echo ""
+  echo "夜間バッチ例:"
+  echo "  nohup ./scripts/blog-batch.sh ${ISSUE_NUMBER} --overnight > .claude/temp/blog-batch-stdout.log 2>&1 &"
   exit 0
 fi
 
@@ -87,11 +110,30 @@ fi
 SUCCESS=0
 FAILED=0
 SKIPPED=0
-LOG_FILE=".claude/temp/blog-batch-$(date +%Y%m%d-%H%M%S).log"
+declare -a PR_URLS=()
+declare -a FAILED_URLS=()
+
+# レポートヘッダー
+cat > "$REPORT_FILE" <<HEADER
+# Blog Batch Report
+
+- **実行日時**: $(date '+%Y-%m-%d %H:%M:%S')
+- **Issue**: #${ISSUE_NUMBER}
+- **対象件数**: ${PROCESS_COUNT} / ${TOTAL}
+- **モデル**: ${MODEL}
+- **インターバル**: ${INTERVAL}秒
+- **レビュー省略**: ${SKIP_REVIEW}
+
+## 処理結果
+
+| # | コメント | ステータス | PR |
+|---|---------|-----------|-----|
+HEADER
 
 echo ""
-echo "=== ブログ化開始 ==="
+echo "=== ブログ化開始 (インターバル: ${INTERVAL}秒) ==="
 echo "ログ: ${LOG_FILE}"
+echo "レポート: ${REPORT_FILE}"
 echo ""
 
 for i in $(seq 0 $((PROCESS_COUNT - 1))); do
@@ -103,8 +145,9 @@ for i in $(seq 0 $((PROCESS_COUNT - 1))); do
   COMMENT_ID=$(echo "$COMMENT" | jq -r '.id')
   COMMENT_URL=$(echo "$COMMENT" | jq -r '.url')
   BODY_PREVIEW=$(echo "$COMMENT" | jq -r '.body' | head -1 | cut -c1-80)
+  NUM=$((i + 1))
 
-  echo "[$((i + 1))/${PROCESS_COUNT}] ${COMMENT_URL}"
+  echo "[${NUM}/${PROCESS_COUNT}] $(date '+%H:%M:%S') ${COMMENT_URL}"
   echo "    ${BODY_PREVIEW}"
 
   # claude -p でブログ作成
@@ -115,6 +158,8 @@ ${SKIP_REVIEW_PROMPT}"
   fi
 
   RESULT_FILE=".claude/temp/blog-batch-result-${COMMENT_ID}.txt"
+  STATUS=""
+  PR_URL="-"
 
   if claude -p \
     --model "$MODEL" \
@@ -123,33 +168,89 @@ ${SKIP_REVIEW_PROMPT}"
     "$PROMPT" \
     > "$RESULT_FILE" 2>&1; then
     echo "    ✅ 成功"
+    STATUS="✅ 成功"
     SUCCESS=$((SUCCESS + 1))
+
+    # 結果から PR URL を抽出
+    EXTRACTED_PR=$(grep -oE 'https://github.com/[^/]+/[^/]+/pull/[0-9]+' "$RESULT_FILE" | tail -1 || true)
+    if [[ -n "$EXTRACTED_PR" ]]; then
+      PR_URL="$EXTRACTED_PR"
+      PR_URLS+=("$EXTRACTED_PR")
+    fi
   else
     EXIT_CODE=$?
     if [[ $EXIT_CODE -eq 2 ]]; then
       echo "    ⏭️  スキップ（ブログ化不適と判断）"
+      STATUS="⏭️ スキップ"
       SKIPPED=$((SKIPPED + 1))
     else
       echo "    ❌ 失敗 (exit code: ${EXIT_CODE})"
+      STATUS="❌ 失敗 (exit ${EXIT_CODE})"
       FAILED=$((FAILED + 1))
+      FAILED_URLS+=("$COMMENT_URL")
     fi
   fi
 
+  # レポートに行追加
+  echo "| ${NUM} | [${COMMENT_ID}](${COMMENT_URL}) | ${STATUS} | ${PR_URL} |" >> "$REPORT_FILE"
+
   # 結果をログに追記
-  echo "=== ${COMMENT_URL} ===" >> "$LOG_FILE"
+  echo "=== [${NUM}/${PROCESS_COUNT}] $(date '+%Y-%m-%d %H:%M:%S') ${COMMENT_URL} ===" >> "$LOG_FILE"
   cat "$RESULT_FILE" >> "$LOG_FILE" 2>/dev/null
   echo "" >> "$LOG_FILE"
   rm -f "$RESULT_FILE"
 
-  # レート制限対策: 短い待機
-  if [[ $((i + 1)) -lt "$PROCESS_COUNT" ]]; then
-    sleep 5
+  # インターバル（最後の1件では不要）
+  if [[ $((i + 1)) -lt "$PROCESS_COUNT" ]] && [[ $((i + 1)) -lt "$TOTAL" ]]; then
+    echo "    💤 ${INTERVAL}秒待機..."
+    sleep "$INTERVAL"
   fi
 done
 
+# --- サマリー ---
+SUMMARY="
+## サマリー
+
+- ✅ 成功: ${SUCCESS} 件
+- ⏭️ スキップ: ${SKIPPED} 件
+- ❌ 失敗: ${FAILED} 件
+- 完了時刻: $(date '+%Y-%m-%d %H:%M:%S')
+"
+
+echo "$SUMMARY" >> "$REPORT_FILE"
+
+# PR 一覧
+if [[ ${#PR_URLS[@]} -gt 0 ]]; then
+  echo "## 作成された PR（レビュー待ち）" >> "$REPORT_FILE"
+  echo "" >> "$REPORT_FILE"
+  for pr in "${PR_URLS[@]}"; do
+    echo "- ${pr}" >> "$REPORT_FILE"
+  done
+  echo "" >> "$REPORT_FILE"
+fi
+
+# 失敗一覧
+if [[ ${#FAILED_URLS[@]} -gt 0 ]]; then
+  echo "## 失敗したコメント（要リトライ）" >> "$REPORT_FILE"
+  echo "" >> "$REPORT_FILE"
+  for url in "${FAILED_URLS[@]}"; do
+    echo "- ${url}" >> "$REPORT_FILE"
+  done
+  echo "" >> "$REPORT_FILE"
+fi
+
 echo ""
-echo "=== 完了 ==="
+echo "=== 完了 $(date '+%H:%M:%S') ==="
 echo "✅ 成功: ${SUCCESS} 件"
 echo "⏭️  スキップ: ${SKIPPED} 件"
 echo "❌ 失敗: ${FAILED} 件"
 echo "📄 ログ: ${LOG_FILE}"
+echo "📊 レポート: ${REPORT_FILE}"
+
+if [[ ${#PR_URLS[@]} -gt 0 ]]; then
+  echo ""
+  echo "📋 作成された PR:"
+  for pr in "${PR_URLS[@]}"; do
+    echo "  ${pr}"
+  done
+fi
