@@ -67,6 +67,7 @@ MLX（Apple Silicon）エコシステムのサポートが成熟しており、`
 
 ## 関連ページ
 
+- [ローカルLLM比較（2026年春）](/blogs/wiki/concepts/local-llm-comparison/) — Gemma 4 / Qwen3.5 / BitNet の横断比較
 - [Gemma 4](/blogs/wiki/concepts/gemma4/) — Google DeepMind のオープンソース LLM
 - [Ollama](/blogs/wiki/tools/ollama/) — ローカル LLM 実行環境
 - [BitNet](/blogs/wiki/tools/bitnet/) — CPU 専用の超軽量 LLM

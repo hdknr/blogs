@@ -46,6 +46,7 @@ Gemma 4 31B をベースに Abliteration 技術でセーフティを除去した
 
 ## 関連ページ
 
+- [ローカルLLM比較（2026年春）](/blogs/wiki/concepts/local-llm-comparison/) — Gemma 4 / Qwen3.5 / BitNet の横断比較
 - [Ollama](/blogs/wiki/tools/ollama/) — Gemma 4 のローカル実行環境
 - [BitNet](/blogs/wiki/tools/bitnet/) — 同時期のローカル LLM 選択肢
 - [Qwen](/blogs/wiki/tools/qwen/) — Gemma 4 と競合する Alibaba のオープンソース LLM

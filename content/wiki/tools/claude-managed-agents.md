@@ -70,6 +70,7 @@ LangChain 創設者 Harrison Chase が指摘する通り、Claude Managed Agents
 ## 関連ページ
 
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — エージェント品質保証の設計パターン
+- [エージェントメモリのロックイン](/blogs/wiki/concepts/agent-memory-lock-in/) — Claude Managed Agents のメモリロックイン問題
 - [AI エージェント](/blogs/wiki/concepts/ai-agent/) — エージェント基盤の概念
 - [MCP](/blogs/wiki/concepts/mcp/) — エージェントと外部ツールの接続プロトコル
 - [OpenClaw](/blogs/wiki/tools/openclaw/) — ローカル自律型エージェントとの対比

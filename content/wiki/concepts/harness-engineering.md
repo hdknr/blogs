@@ -50,6 +50,7 @@ LangChain 創設者 Harrison Chase が指摘する通り、ハーネスとメモ
 ## 関連ページ
 
 - [AI エージェント](/blogs/wiki/concepts/ai-agent/) — ハーネスで品質保証される対象
+- [エージェントメモリのロックイン](/blogs/wiki/concepts/agent-memory-lock-in/) — ハーネスとメモリの不可分性とロックインリスク
 - [Claude Code](/blogs/wiki/tools/claude-code/) — ハーネスエンジニアリングの主要実装環境
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/) — Anthropic のマネージドハーネス
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — ハーネス自体を AI が改善するパターン
