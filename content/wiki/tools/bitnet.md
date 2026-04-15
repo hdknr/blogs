@@ -50,6 +50,9 @@ Hugging Face で公開されている初のオープンソースネイティブ 
 
 ## 関連ページ
 
+- [ローカルLLM比較（2026年春）](/blogs/wiki/concepts/local-llm-comparison/) — Gemma 4 / Qwen3.5 / BitNet の横断比較
+- [Gemma 4](/blogs/wiki/concepts/gemma4/) — 同時期のオープンソース LLM
+- [Qwen](/blogs/wiki/tools/qwen/) — 同時期の Alibaba オープンソース LLM
 - [Ollama](/blogs/wiki/tools/ollama/) — CPU での LLM 実行の代替手段
 
 ## ソース記事
