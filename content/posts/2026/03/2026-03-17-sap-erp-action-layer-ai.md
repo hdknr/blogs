@@ -8,7 +8,7 @@ categories: ["AI/LLM"]
 tags: ["ERP", "SAP", "AIエージェント", "アクションレイヤー", "Computer Use"]
 ---
 
-a16z が公開した「Why the World Still Runs on SAP」というレポートを受けて、Kurashiru CTO の Masato Otake 氏が自社での業務 AI 開発の知見を交えてまとめた考察を紹介します。
+SAP を置き換えるのは現実的ではない——だからこそ、工夫しながら SAP を使い続ける方法を考える必要があります。a16z が公開した「Why the World Still Runs on SAP」というレポートを受けて、Kurashiru CTO の Masato Otake 氏が自社での業務 AI 開発の知見を交えてまとめた考察を紹介します。
 
 ## ERPとは何か
 
