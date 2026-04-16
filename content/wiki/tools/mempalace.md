@@ -46,6 +46,7 @@ tags: ["MemPalace", "LLMメモリ", "ChromaDB", "MCP", "オープンソース"]
 - [MCP](/blogs/wiki/concepts/mcp/) — MCP 経由で AI ツールと統合
 - [RAG](/blogs/wiki/concepts/rag/) — ベクトル検索による知識拡張の概念
 - [LLM Wiki パターン](/blogs/wiki/concepts/llm-wiki-pattern/) — AI と連携する知識管理の別アプローチ
+- [claude-mem](/blogs/wiki/tools/claude-mem/) — Claude Code 専用の永続メモリプラグイン（別アプローチ）
 
 ## ソース記事
 
