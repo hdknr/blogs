@@ -2,11 +2,12 @@
 title: "Gemma 4"
 description: "Google DeepMind が開発したオープンソース LLM シリーズ。Apache 2.0 ライセンスで商用利用可能。26B MoE はアクティブパラメータ約 3.8B、E2B はスマートフォンで動作する"
 date: 2026-04-07
-lastmod: 2026-04-07
+lastmod: 2026-04-16
 aliases: ["Gemma4", "gemma-4"]
 related_posts:
   - "/posts/2026/04/gemma4-api-economy-disruption/"
   - "/posts/2026/04/gemma4-vs-qwen35-local-llm/"
+  - "/posts/2026/04/gemma4-31b-abliterated-crack/"
 tags: ["Gemma", "Google", "オープンソースLLM", "MoE", "エッジAI", "Apache2.0"]
 ---
 
@@ -54,6 +55,17 @@ E2B モデルは量子化により 1.5GB 未満のメモリで動作し、スマ
 
 推論・数学・マルチモーダルには Gemma 4、コーディング・メモリ効率・MLX エコシステムには Qwen3.5 が向いている。
 
+## Abliteration（安全性除去）モデル
+
+Gemma 4 31B をベースに安全性制限を除去した「CRACK」モデルが Hugging Face で公開されている。
+
+- **手法**: Abliteration（拒否方向の特定と重みの直交化）
+- **量子化**: JANG_4M プロファイル（Attention=8bit、MLP=4bit）で 18GB に圧縮
+- **性能劣化**: MMLU で -2.0%（74.5% vs 76.5%）にとどまる
+- **HarmBench**: 93.7% のコンプライアンス率
+
+詳細は [Abliteration](/blogs/wiki/concepts/abliteration/) を参照。
+
 ## ローカル実行
 
 ```bash
@@ -69,8 +81,10 @@ Apple Silicon では標準の mlx_lm は未対応（2026年4月時点）。[vMLX
 - [Qwen](/blogs/wiki/tools/qwen/) — Alibaba のオープンソース LLM（比較対象）
 - [BitNet](/blogs/wiki/tools/bitnet/) — Microsoft の 1-bit LLM（別アプローチのエッジ AI）
 - [ローカル LLM 比較](/blogs/wiki/concepts/local-llm-comparison/) — ローカル LLM の選択ガイド
+- [Abliteration](/blogs/wiki/concepts/abliteration/) — LLM の安全性制限を除去する技術
 
 ## ソース記事
 
 - [Gemma 4 がAPI経済を破壊する — オープンモデルがSaaS課金モデルを変える理由](/blogs/posts/2026/04/gemma4-api-economy-disruption/) — 2026-04-07
 - [Gemma 4 31B vs Qwen3.5-27B — ローカルLLM最強はどちらか](/blogs/posts/2026/04/gemma4-vs-qwen35-local-llm/) — 2026-04-07
+- [Gemma 4 31B の脱獄モデル「CRACK」登場 — Abliteration 技術でセーフティを除去](/blogs/posts/2026/04/gemma4-31b-abliterated-crack/) — 2026-04-06
