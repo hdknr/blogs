@@ -2,7 +2,7 @@
 title: "マルチエージェント調整パターン"
 description: "複数 AI エージェントを協調させる5つの設計パターン。Anthropic が体系化した Generator-Verifier・Orchestrator-Subagent・Agent Teams・Message Bus・Shared State"
 date: 2026-04-11
-lastmod: 2026-04-11
+lastmod: 2026-04-16
 aliases: ["マルチエージェントパターン", "multi-agent-coordination"]
 related_posts:
   - "/posts/2026/04/anthropic-multi-agent-coordination-patterns/"
