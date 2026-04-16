@@ -6,6 +6,7 @@ lastmod: 2026-04-14
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
+  - "/posts/2026/04/claude-code-silent-degradation/"
   - "/posts/2026/04/karpathy-llm-wiki/"
   - "/posts/2026/04/claude-thinking-nerfed/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント"]
@@ -48,5 +49,6 @@ Karpathy は Claude Code を LLM Wiki の実行環境として使用。「左画
 ## ソース記事
 
 - [Claude Code のコンテキスト圧縮戦略](/blogs/posts/2026/04/claude-code-context-compression/) — 2026-04-02
+- [Claude Code のサイレントな性能劣化を見逃すな](/blogs/posts/2026/04/claude-code-silent-degradation/) — 2026-04-03
 - [Karpathy の LLM Wiki](/blogs/posts/2026/04/karpathy-llm-wiki/) — 2026-04-05
 - [Claude の思考深度が 67% 低下？サイレント・ダウングレード問題](/blogs/posts/2026/04/claude-thinking-nerfed/) — 2026-04-13
