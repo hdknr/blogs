@@ -44,6 +44,7 @@ Karpathy は Claude Code を LLM Wiki の実行環境として使用。「左画
 - [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/) — Claude Code のコンテキスト管理戦略
 - [LLM Wiki パターン](/blogs/wiki/concepts/llm-wiki-pattern/) — Claude Code を活用した知識管理パターン
 - [AutoAgent](/blogs/wiki/tools/autoagent/) — Claude Code をメタエージェントとして活用可能
+- [dmux](/blogs/wiki/tools/dmux/) — Claude Code の並列実行環境を安全に管理するツール
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/) — Anthropic のマネージドエージェント基盤
 
 ## ソース記事

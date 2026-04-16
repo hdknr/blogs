@@ -2,7 +2,7 @@
 title: "アダプティブ・シンキング（Claude の思考深度制御）"
 description: "Anthropic が導入した Claude の思考量を動的に調整する仕組み。ユーザーから「サイレント・ダウングレード」と批判され、/effort max で元の深度に戻せる"
 date: 2026-04-13
-lastmod: 2026-04-13
+lastmod: 2026-04-16
 aliases: ["adaptive thinking", "effort level", "claude thinking depth"]
 related_posts:
   - "/posts/2026/04/claude-thinking-nerfed/"
