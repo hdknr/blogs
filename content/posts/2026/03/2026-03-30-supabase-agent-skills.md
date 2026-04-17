@@ -1,11 +1,25 @@
 ---
 title: "Supabase × Claude Code: agent-skills でパフォーマンスと RLS の正確性を高める"
 date: 2026-03-30
-lastmod: 2026-03-30
+lastmod: 2026-04-17
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4157861135"
 categories: ["AI/LLM"]
 tags: ["Supabase", "Claude Code", "RLS", "PostgreSQL", "パフォーマンス"]
+---
+
+## Supabase とは
+
+[Supabase](https://supabase.com) は **Firebase のオープンソース代替** として急成長している BaaS（Backend as a Service）だ。PostgreSQL をベースに、認証・リアルタイムデータベース・ストレージ・Edge Functions をワンストップで提供する。
+
+- **PostgreSQL がそのまま使える** — 独自のクエリ言語ではなく標準 SQL
+- **Row Level Security (RLS)** — テーブル単位でアクセス制御ポリシーを定義
+- **自動生成 REST API** — テーブル定義から即座に CRUD API が生成される
+- **オープンソース** — セルフホスティングも可能
+- **無料枠あり** — 個人プロジェクトなら無料で始められる
+
+Firebase との最大の違いは「中身が PostgreSQL」である点だ。NoSQL ではなく RDB なので、既存の SQL 知識がそのまま活かせる。
+
 ---
 
 Supabase を使っているプロジェクトで Claude Code を活用している場合、公式の `supabase/agent-skills` をインストールするだけでコード品質とパフォーマンスが大幅に向上する。特に Row Level Security (RLS) の書き方ミスを防ぐ効果が高い。
