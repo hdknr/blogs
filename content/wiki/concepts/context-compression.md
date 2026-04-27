@@ -2,11 +2,14 @@
 title: "コンテキスト圧縮"
 description: "LLM の会話が長くなった際にコンテキストウィンドウを管理する戦略群"
 date: 2026-04-06
-lastmod: 2026-04-06
+lastmod: 2026-04-23
 aliases: ["Context Compression", "コンテキスト管理"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
-tags: ["LLM", "claude-code", "コンテキスト"]
+  - "/posts/2026/04/2026-04-17-claude-code-context-rot-session-management/"
+  - "/posts/2026/04/2026-04-17-claude-caveman-token-reduction/"
+  - "/posts/2026/04/2026-04-15-claude-rate-limit-mac-mini-local-model/"
+tags: ["LLM", "claude-code", "コンテキスト", "トークン削減"]
 ---
 
 ## 概要
