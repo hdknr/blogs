@@ -5,7 +5,7 @@ date: 2026-04-15
 lastmod: 2026-04-15
 aliases: ["dmux", "AI エージェント並列実行"]
 related_posts:
-  - "/posts/2026/04/dmux-parallel-ai-agents/"
+  - "/posts/2026/04/2026-04-15-dmux-parallel-ai-agents/"
 tags: ["dmux", "Claude Code", "git worktree", "AI エージェント", "並列実行"]
 ---
 
@@ -49,4 +49,4 @@ git worktree は同一リポジトリを複数ディレクトリに展開する 
 
 ## ソース記事
 
-- [dmux：Claude Code / Codex を安全に並列実行するための git worktree 管理ツール](/blogs/posts/2026/04/dmux-parallel-ai-agents/) — 2026-04-15
+- [dmux：Claude Code / Codex を安全に並列実行するための git worktree 管理ツール](/blogs/posts/2026/04/2026-04-15-dmux-parallel-ai-agents/) — 2026-04-15
