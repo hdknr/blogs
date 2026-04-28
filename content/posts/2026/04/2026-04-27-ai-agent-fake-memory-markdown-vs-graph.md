@@ -312,6 +312,14 @@ vector_db.add(text, metadata={"entity_ids": [t.subject_id, t.object_id]})
 
 > **pgvector + LLM 抽出 + timestamp による時間減衰**
 
+![推奨スタートラインのシステム構成図。左に書き込み経路（ユーザー会話 → Claude Haiku 4.5 による LLM 抽出 → 正規化・重複検出 → created_at を付与して upsert）、中央に PostgreSQL + pgvector の memory テーブル（id, text, embedding, entity_id, predicate, created_at, source_ref カラム）、右に検索経路（クエリ → 埋め込み生成 → ベクトル類似度検索 → 時間減衰リランキング score = sim × exp(-λ × age) → Sonnet 4.6 に context 注入 → 応答）を配置。下部に4欠陥カバー範囲の凡例。](/blogs/images/rag-recommended-architecture.png)
+
+このアーキテクチャの要点は3つだ。
+
+- **ストレージは PostgreSQL 1 個に集約**: pgvector で「ベクトル DB」を別途立てる必要がなく、運用負荷が最小
+- **LLM 抽出層を必ず挟む**: 会話を生のまま入れず、Haiku 4.5 等で fact 単位に分解してから保存。これで重複排除（①）の足場ができる
+- **`created_at` で時間減衰を持たせる**: 検索時に `score = similarity × exp(-λ × age)` でリランキング。古い情報の重みが自動的に下がる
+
 これで4欠陥のうち②③に加え、抽出層を入れることで①も部分的にカバーできる。④（関係性）が本当に必要になった段階で、前述の `entity_id` ブリッジ構造を導入し Mem0 や GraphRAG に移行するのが、2026年における ROI 最良の進め方だ。
 
 「いきなり Knowledge Graph」は構築・メンテコストが高すぎて多くのプロジェクトが頓挫している。**RAG は「すべての記憶システムが必ず満たすべき下限」、Graph は「関係性が本当に効く領域でだけ追加する上澄み」** と捉えるのが実態に合っている。多くのプロジェクトは下限だけで十分機能する。
