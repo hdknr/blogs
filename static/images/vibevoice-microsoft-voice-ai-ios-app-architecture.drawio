@@ -1,0 +1,200 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="vibevoice-ios-app-arch" name="VibeVoice iOS App Architecture">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="iPad / iPhone クライアント — Swift 6 + SwiftUI のレイヤード構成" style="text;html=1;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#222222;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="1000" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="MVVM + Clean Architecture / Actor によるスレッド安全 / async-await + AsyncStream のチャンクパイプライン" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#888888;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="40" width="1000" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== Presentation Layer ========== -->
+        <mxCell id="pres-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="1320" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="pres-title" value="🎨 Presentation Layer（SwiftUI）" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#3d5b8c;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="86" width="500" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="pres-desc" value="View は宣言的 / 状態は ViewModel が単一ソース" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#3d5b8c;fontStyle=2;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="106" width="500" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="view-record" value="RecordingView&#xa;・録音/停止ボタン&#xa;・波形 (Canvas)&#xa;・経過時間タイマー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="55" y="130" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="view-caption" value="LiveCaptionView&#xa;・🟡 暫定字幕(opacity 0.6)&#xa;・🟢 補正字幕に差替&#xa;・🔵 確定マーク&#xa;・話者カラータグ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="270" y="130" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="view-minutes" value="MinutesView&#xa;・確定議事録 Markdown 表示&#xa;・要約 / 決定 / アクション&#xa;・PDF 共有 (Share Sheet)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="485" y="130" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="view-history" value="HistoryListView&#xa;・過去セッション一覧&#xa;・SwiftData 直接バインド&#xa;・iCloud 同期" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="700" y="130" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="view-settings" value="SettingsView&#xa;・ホットワード辞書編集&#xa;・参加者プロファイル&#xa;・音質/言語設定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="915" y="130" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="view-design" value="DesignSystem&#xa;Color/Typography/Components&#xa;Dynamic Type / Dark Mode" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="130" width="225" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== Application / ViewModel Layer ========== -->
+        <mxCell id="vm-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="265" width="1320" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="vm-title" value="🧩 Application Layer — @Observable ViewModels / @MainActor" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#3f8624;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="271" width="600" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="vm-desc" value="View からの意図を UseCase に橋渡し / 状態遷移を SessionStateMachine が単一管理" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#3f8624;fontStyle=2;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="291" width="700" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="vm-recording" value="RecordingViewModel&#xa;@Observable&#xa;・start() / stop() / pause()&#xa;・isRecording / level / duration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="55" y="315" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="vm-caption" value="CaptionViewModel&#xa;@Observable&#xa;・captions: [Caption]&#xa;・applyDelta(_:) で差分マージ&#xa;・色とフォントの確度マッピング" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="290" y="315" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="vm-state" value="SessionStateMachine (Actor)&#xa;.idle → .recording → .streaming&#xa;→ .ending → .processing → .ready&#xa;不正遷移をコンパイル時に防止" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="525" y="315" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="vm-minutes" value="MinutesViewModel&#xa;@Observable&#xa;・load(sessionId:) async&#xa;・export(format:) async&#xa;・retry / refresh" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="760" y="315" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="vm-router" value="AppRouter&#xa;NavigationStack 制御&#xa;Deep Link (URL Scheme)&#xa;Push Notification 受信" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="995" y="315" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="vm-error" value="ErrorRouter&#xa;ネットワーク劣化通知&#xa;トースト/アラート出し分け" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="315" width="125" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== Domain Layer ========== -->
+        <mxCell id="dom-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="450" width="1320" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="dom-title" value="🧠 Domain Layer — UseCases + Pure Models（Foundation のみに依存）" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#9c7a0f;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="456" width="700" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="dom-desc" value="フレームワーク非依存 → 単体テストが超高速。Repository は protocol で抽象化" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#9c7a0f;fontStyle=2;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="476" width="700" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="uc-start" value="StartSessionUseCase&#xa;ホットワード集約 → API 開始呼び出し" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#d6b656;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="55" y="500" width="250" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-stream" value="StreamAudioUseCase&#xa;AudioChunkStream → WebSocket" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#d6b656;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="320" y="500" width="250" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-recv" value="ReceiveCaptionsUseCase&#xa;AsyncStream&lt;CaptionEvent&gt; を提供" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#d6b656;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="585" y="500" width="250" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-end" value="EndSessionUseCase&#xa;END 通知 → Final 待ち → 通知購読" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#d6b656;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="850" y="500" width="250" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-export" value="ExportMinutesUseCase&#xa;PDF / Markdown 生成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#d6b656;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="1115" y="500" width="240" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="model-row" value="Models: Session / AudioChunk / Caption(provisional/refined/final) / Speaker / Minute / Hotword / Participant" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#9c7a0f;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="55" y="560" width="1300" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="repo-row" value="Repository protocols: SessionRepository / AudioChannel / CaptionChannel / MinuteRepository / AuthTokenStore" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#9c7a0f;fontFamily=monospace;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="55" y="582" width="1300" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ========== Infrastructure Layer ========== -->
+        <mxCell id="inf-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="625" width="1320" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="inf-title" value="⚡ Infrastructure Layer — Apple SDK / AWS SDK / 外部接続" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#a02c39;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="631" width="700" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="inf-desc" value="ここだけが iOS API を直接触る。Domain の protocol に対する具体実装。" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#a02c39;fontStyle=2;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="651" width="700" height="16" as="geometry"/>
+        </mxCell>
+
+        <!-- Audio sub-block -->
+        <mxCell id="audio-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="55" y="675" width="320" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="audio-title" value="🎙 Audio Pipeline（Actor）" style="text;html=1;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;fontColor=#a02c39;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="680" width="300" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="audio-engine" value="AVAudioEngine + InputNode&#xa;Format: Float32 → PCM Int16 16kHz" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="705" width="310" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="audio-session" value="AVAudioSession (.playAndRecord, .allowBluetooth)&#xa;Background Mode: Audio で背景録音" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="745" width="310" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="audio-chunker" value="ChunkerActor — 30秒×5秒重複&#xa;AsyncStream&lt;AudioChunk&gt; を発行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="60" y="785" width="310" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="audio-vad" value="任意: SFSpeechRecognizer ローカル ASR&#xa;Quick 渋滞時のフォールバック字幕" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="822" width="310" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Network sub-block -->
+        <mxCell id="net-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="385" y="675" width="320" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="net-title" value="🌐 Network" style="text;html=1;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;fontColor=#a02c39;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="390" y="680" width="300" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="net-ws" value="WebSocketClient (Actor)&#xa;URLSessionWebSocketTask&#xa;・自動再接続（指数バックオフ）&#xa;・heartbeat ping/pong" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="390" y="705" width="310" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="net-rest" value="APIClient (struct)&#xa;async URLSession.data(for:)&#xa;・JWT 自動付与&#xa;・リトライ + サーキットブレーカ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="390" y="765" width="310" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="net-monitor" value="NWPathMonitor 接続劣化検知" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="822" width="310" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Auth + Persistence sub-block -->
+        <mxCell id="auth-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="715" y="675" width="320" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="auth-title" value="🔐 Auth + Persistence" style="text;html=1;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;fontColor=#a02c39;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="720" y="680" width="300" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="auth-cognito" value="AWSCognitoIdentityProvider&#xa;Hosted UI / SRP / MFA&#xa;Token Refresh タスク" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="720" y="705" width="310" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="auth-keychain" value="KeychainStore&#xa;ID/Access/Refresh Token&#xa;kSecAttrAccessibleAfterFirstUnlock" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="720" y="765" width="310" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="auth-data" value="SwiftData: Session / Minute / Hotword&#xa;ローカル音声バッファ (FileManager)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="822" width="310" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Lifecycle + Push sub-block -->
+        <mxCell id="life-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1045" y="675" width="310" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="life-title" value="🔁 Lifecycle / Background" style="text;html=1;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;fontColor=#a02c39;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="680" width="300" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="life-bg" value="BGTaskScheduler&#xa;ネットワーク復帰時にチャンク再送&#xa;失敗チャンクを localStore からリプレイ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="705" width="300" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="life-push" value="UNUserNotificationCenter + APNs&#xa;確定議事録生成完了の通知&#xa;(EventBridge → SNS → APNs)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="765" width="300" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="life-app" value="ScenePhase 連携 — 録音は前面/背景/中断対応" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="822" width="300" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow: layered top-down -->
+        <mxCell id="arrow-down" value="依存方向: View → ViewModel → UseCase → Repository protocol（実装は Infra で差し込み）" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#444444;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="870" width="1320" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
