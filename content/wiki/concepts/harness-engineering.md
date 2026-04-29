@@ -2,7 +2,7 @@
 title: "ハーネスエンジニアリング"
 description: "AI エージェントの出力品質を保証する設計パターン。検証層・制約層・フィードバック層で構成"
 date: 2026-04-06
-lastmod: 2026-04-27
+lastmod: 2026-04-29
 aliases: ["Harness Engineering"]
 related_posts:
   - "/posts/2026/03/harness-engineering/"
@@ -14,6 +14,8 @@ related_posts:
   - "/posts/2026/04/2026-04-17-ai-first-harness-engineering-creao/"
   - "/posts/2026/04/2026-04-17-agent-harness-rag-context-size/"
   - "/posts/2026/04/2026-04-14-claude-harness-v4-hokage/"
+  - "/posts/2026/04/2026-04-23-harness-engineering-agent-vs-user-harness/"
+  - "/posts/2026/04/2026-04-23-harness-engineering-beyond-rule-files/"
 tags: ["agent", "品質保証", "CLAUDE.md", "設計パターン", "ロックイン"]
 ---
 
