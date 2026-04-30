@@ -212,6 +212,51 @@ Claude Code や Codex CLI は Warp の中で動く独立プロセスです。
 
 つまり「有料プランの目的 = Oz 利用」という理解は半分正解で、実際は **「Oz をスケールさせる」「Warp 内蔵 AI を本気で使う」「チーム/企業として安全に展開する」の 3 つの軸** が独立して存在する、と捉えるのが正確です。
 
+## i18n / 日本語サポート状況
+
+日本人開発者にとって気になる UI の多言語対応について、2026-04-30 時点の状況をリポジトリ上の Issue / PR から整理します。**結論から言うと「インフラは入りつつあるが、まだ仕上がっていない」段階です。**
+
+### i18n インフラは整備済み・拡張中
+
+- 設定画面の国際化を完成させる PR [#9458](https://github.com/warpdotdev/warp/pull/9458) が 2026-04-29 に提出されました（記事執筆時点で open）
+- 対応予定言語: **英語 / 簡体中国語 / 日本語 / 韓国語 / ドイツ語 / ブラジルポルトガル語** の 6 言語
+- 各言語ファイルが 1,055 キーで同期される計画。日本語 (`ja.rs`) は既存 635 キーから 420 キー追加され、設定 UI 全領域をカバー
+- ロケール検出は `WARP_LOCALE` / `LANGUAGE` / `LC_ALL` / `LC_MESSAGES` / `LANG` の環境変数経由
+
+つまり **「Warp は最初から日本語をターゲット言語の一つに含めて多言語化を進めている」** ことが OSS 化されたコードベースから読み取れます。
+
+### 日本語 UI 対応 Issue は完了扱いで close
+
+- Issue [#6581 "Support for Japanese language UI / 日本語UI対応の追加希望"](https://github.com/warpdotdev/warp/issues/6581) は 2026-04-18 に **completed として close** されています
+- ただしメインの i18n Issue [#1194](https://github.com/warpdotdev/warp/issues/1194)（191 リアクション）は依然 open で、**ユーザー向けの言語切り替え UI 自体はまだ実装途中**
+- 現時点で正式リリース版の Warp に「設定画面で日本語を選択する」UI があるわけではなく、環境変数や開発中ビルドでの利用が前提
+
+### 日本語入力（IME）には未解決の課題が多い
+
+UI ローカライズとは別に、**日本語の入力体験**に関するバグが複数 open のままです。
+
+- [#9145](https://github.com/warpdotdev/warp/issues/9145) IME 変換候補ポップアップがカーソル位置とずれる
+- [#6623](https://github.com/warpdotdev/warp/issues/6623) コマンド入力中に日本語キーボードへ切り替えると文字が見えなくなる
+- [#8566](https://github.com/warpdotdev/warp/issues/8566) Ctrl+H が IME 編成中に余分な文字を削除する
+- [#3944](https://github.com/warpdotdev/warp/issues/3944) マルチバイト日本語が確定するまで表示されない
+- [#7261](https://github.com/warpdotdev/warp/issues/7261) IME 変換確定後の Enter が意図せずフォーム送信になる
+- [#9161](https://github.com/warpdotdev/warp/issues/9161) Windows 版で CJK ワイド文字によりクラッシュ
+- [#2777](https://github.com/warpdotdev/warp/issues/2777) ターミナルログを中国語/日本語で検索できない
+
+### 実用上の落としどころ
+
+現時点（2026-04-30）で Warp を日本語環境で使う場合の現実的な期待値は次の通りです。
+
+| 項目 | 状況 |
+|------|------|
+| メニュー / 設定 UI の日本語化 | ⏳ インフラ整備中（PR #9458 マージ後に完成見込み） |
+| 言語切り替え UI | ❌ 未実装（環境変数で間接的に切替） |
+| 日本語入力（IME） | ⚠️ 部分的に動作するが既知バグ複数残存 |
+| AI 応答の日本語化 | ✅ Issue [#5622](https://github.com/warpdotdev/warp/issues/5622) は close 済み（モデル次第で日本語応答可能） |
+| ターミナル出力の UTF-8 / 全角文字表示 | ⚠️ macOS Sequoia 系で文字化け事例あり、改善継続中 |
+
+OSS 化により、**日本語訳の改善や IME バグ修正をコミュニティから PR で投げられる** ようになったのは大きな前進です。`ja.rs` の翻訳改善や IME バグ修正は、まさに README が示す Issue to PR フロー（`ready-to-spec` → `ready-to-implement` → 実装）で関与できる領域といえます。
+
 ## 開発者にとっての示唆
 
 Warp のオープンソース化は単なる「OSS 化トピック」を超えて、**ターミナルがエージェント実行のハブになる** 流れを象徴しています。
