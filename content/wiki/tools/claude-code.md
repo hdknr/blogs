@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-04-23
+lastmod: 2026-04-29
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -15,6 +15,23 @@ related_posts:
   - "/posts/2026/04/2026-04-17-claude-caveman-token-reduction/"
   - "/posts/2026/04/2026-04-17-claude-code-context-rot-session-management/"
   - "/posts/2026/04/2026-04-17-video-use-claude-code-video-editing/"
+  - "/posts/2026/04/2026-04-17-apm-agent-package-manager/"
+  - "/posts/2026/04/2026-04-21-claude-code-45-tasks-automation-student/"
+  - "/posts/2026/04/2026-04-21-claude-code-auto-memory-skills/"
+  - "/posts/2026/04/2026-04-21-claude-code-level5/"
+  - "/posts/2026/04/2026-04-21-claude-code-zero-handwritten-code-49-features/"
+  - "/posts/2026/04/2026-04-23-claude-code-local-llm-vllm/"
+  - "/posts/2026/04/2026-04-23-claude-code-obsidian-second-brain/"
+  - "/posts/2026/04/2026-04-23-claude-code-plan-mode-cost-reduction/"
+  - "/posts/2026/04/2026-04-23-claude-code-sns-automation-affiliate/"
+  - "/posts/2026/04/2026-04-25-exa-for-claude-mcp-plugin/"
+  - "/posts/2026/04/2026-04-27-claude-code-creator-setup/"
+  - "/posts/2026/04/2026-04-27-claude-code-kabukicho-ai-simulation/"
+  - "/posts/2026/04/2026-04-27-claude-code-stock-trading-automation/"
+  - "/posts/2026/04/2026-04-14-claude-code-world-ai-simulator/"
+  - "/posts/2026/04/2026-04-17-pytest-chaos-engineering/"
+  - "/posts/2026/03/2026-03-17-claude-code-auto-mode/"
+  - "/posts/2026/03/2026-03-17-claude-code-commands/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント"]
 ---
 
