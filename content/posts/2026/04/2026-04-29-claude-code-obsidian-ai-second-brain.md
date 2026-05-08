@@ -299,6 +299,123 @@ Karpathy が想定しているのは後者です。彼の Vault には「特定�
 
 これが Karpathy の使い方とも整合し、現実のワークフローとしても破綻しない構成です。
 
+## 個人 Vault の同期・バックアップ — GitHub private repo は現実解か
+
+個人 Vault を運用する際、次に決めるのが「**どうやって複数デバイス間で同期し、バックアップするか**」です。**特に開発者層では GitHub private repo + git による同期が王道の一つ**になっています。
+
+### Obsidian Vault の同期手段（人気順）
+
+| 方式 | コスト | 強み | 弱み |
+|---|---|---|---|
+| **Obsidian Sync**（公式） | $4-10/月 | E2EE、モバイル含む完璧な同期、リアルタイム | 有料、ベンダーロックイン |
+| **iCloud / Dropbox / OneDrive** | 無料〜 | 設定が極めて簡単 | 履歴管理が弱い、競合に弱い |
+| **GitHub private repo + git** | 無料 | 履歴管理、ブランチ、バックアップ、開発者の慣れた UX | モバイル同期が面倒、競合は手動解決 |
+| **Syncthing**（P2P） | 無料 | プライバシー重視、サーバー不要 | デバイス間でアプリ常駐が必要 |
+
+### GitHub private repo + git が選ばれる理由
+
+#### 1. 公式コミュニティプラグイン「Obsidian Git」がある
+
+[`Obsidian Git`](https://github.com/Vinzent03/obsidian-git) はコミュニティプラグインのダウンロード数上位で、以下を自動化できます。
+
+- 一定間隔で自動 commit & push（例: 10 分ごと）
+- 起動時に pull、終了時に push
+- コミットメッセージは自動生成
+
+「git を意識せずに使える」ところまで成熟しています。
+
+#### 2. 開発者の既存ワークフローと完全に親和
+
+SSH 鍵、`.gitignore`、ブランチ、`git log` での過去参照など、毎日使っている道具がそのまま流用できます。「過去のあの日のメモを見たい」が `git log -p` で済むのは強力です。
+
+#### 3. GitHub private repo が無料・無制限
+
+2019 年以降、GitHub の private repo は無料アカウントでも無制限に作れます。Obsidian Sync の年額 $48〜 を払わずに同等の機能が手に入ります。
+
+#### 4. 部分公開が容易
+
+- Vault 内の一部フォルダだけ別 public repo に submodule として切り出して公開
+- GitHub Pages で MkDocs / Hugo ビルドして公開
+- gist として個別ノートだけ共有
+
+### 注意点と落とし穴
+
+#### 1. モバイル同期が最大の弱点
+
+**iOS / Android の Obsidian モバイルアプリは git をネイティブサポートしない**ため、モバイルで同期するには工夫が必要です。
+
+- **iOS**: [Working Copy](https://workingcopy.app/)（買い切り、$20 程度）と Obsidian の File Provider 連携
+- **Android**: [Termux](https://termux.com/) で `git pull / push`、または Obsidian Git のモバイルサポート（実験的）
+- **ハイブリッド**: モバイルは Obsidian Sync、デスクトップは git、という使い分けも現実的
+
+#### 2. 競合解決は手動
+
+複数デバイスで同時編集すると git の merge conflict が発生します。Obsidian Sync は競合を自動マージしてくれるので、このあたりは劣ります。対策は **`pull → edit → push` のサイクルで運用、長時間放置しない**ことです。
+
+#### 3. 大きな添付ファイル
+
+画像・PDF・録音ファイルを大量に貼ると repo が肥大化します。対策:
+
+- `git-lfs` を導入
+- `.gitignore` で `attachments/` を除外して別途 Dropbox 同期
+- ノート量に対して画像が多くなければ素のまま運用でも数年は問題にならない
+
+#### 4. `.obsidian/` の gitignore 設計
+
+最低限の `.gitignore` 例:
+
+```gitignore
+# 個人のワークスペース状態
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# キャッシュ
+.obsidian/cache
+.trash/
+
+# OS
+.DS_Store
+```
+
+`.obsidian/plugins/` や `.obsidian/themes/` は**コミットすると別マシンで設定が即座に揃う**ため便利です。
+
+#### 5. プライバシーの限界
+
+GitHub private repo は「他人から見えない」ですが、**GitHub Inc.（Microsoft）には技術的にアクセス可能**です。機密性の高いノート（資格情報、未公開のビジネス情報、個人的な日記）を入れる場合は:
+
+- 自前の Gitea / Forgejo ホスティング
+- E2EE が必要なら Obsidian Sync 一択
+- ノート単位で `age` や `git-crypt` で暗号化
+
+という選択肢があります。
+
+### 実際の運用構成例
+
+```text
+~/SecondBrain/                    ← Obsidian Vault
+├── .git/                         ← github.com/<user>/second-brain (private)
+├── .obsidian/
+│   ├── plugins/                  ← コミット（マシン間で共有）
+│   ├── themes/                   ← コミット
+│   └── workspace.json            ← .gitignore（個人の状態）
+├── concepts/
+├── sources/
+├── people/
+├── log.md
+└── attachments/                  ← git-lfs or .gitignore
+```
+
+Obsidian Git プラグインで 5〜10 分ごとに自動コミット・プッシュ。デスクトップ間（Mac / Linux / Windows）はこれで完結。モバイルは Working Copy 連携か、参照のみの妥協。
+
+### 結論
+
+- **開発者ユーザーには最も一般的な選択肢の一つ** — 無料で履歴・バックアップ・部分公開がすべて手に入る
+- **Obsidian Git プラグインの存在で運用コストは大幅に下がっている**
+- **モバイルへのこだわりがなければ** GitHub private repo + Obsidian Git は鉄板構成
+- **本格的にモバイルも使いたい**なら Obsidian Sync の方が楽（年 $48 程度の価値はある）
+
+Claude Code との組み合わせでも、Vault が git 管理されていれば「**この概念ページの過去バージョンを見せて**」「**先月から今月にかけて変わった点を要約して**」といった質問が可能になり、第二の脳に時間軸が加わります。
+
 ## このシステムが向かない人
 
 全員におすすめできる万能ツールではありません。
