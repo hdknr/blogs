@@ -11,7 +11,7 @@ tags: ["Apprise", "シフト管理", "オンコール", "PyShift", "GoAlert", "O
 
 ## まずは Apprise の正しい位置付けを確認
 
-[Apprise](https://github.com/caronc/apprise) を「**シフト管理ができる Python ライブラリ**」と紹介する記事や AI の回答を見かけますが、これは誤りです。
+[Apprise](https://github.com/caronc/apprise) は名前から「シフト管理ができそう」と誤解されがちですが、実際の役割は明確に分かれています。
 
 **正しい位置付け**:
 
@@ -358,7 +358,7 @@ Teams チャネルの設定で Incoming Webhook コネクタを有効化し、�
 - **SMTP** でメール
 - **Slack** チャンネル統合
 
-> ⚠️ **注意**: 一部の解説記事や AI 回答で「GoAlert は Apprise 思想で連携」「Apprise を内蔵」と紹介されているのを見かけますが、**事実誤認**です。GoAlert は Twilio + SMTP + Slack を直接統合しており、Apprise は使っていません。Apprise の 100 種類超の通知先を活かしたい場合は、自作ハブが必要になります。
+GoAlert は Twilio + SMTP + Slack を直接統合する設計で、Apprise は使っていません。Apprise の 100 種類超の通知先を活かしたい場合は、別途自作ハブを挟むか、Apprise の Webhook を GoAlert の通知ターゲットに据える形になります。
 
 GoAlert の標準範囲で足りる組織なら、自作よりずっと楽。
 
@@ -415,28 +415,16 @@ def get_escalation_policy_now():
 | **10 人超、24/7 + 音声通話必須** | Zenduty / OnPage / PagerDuty SaaS |
 | **エンタープライズ + Grafana スタック** | Grafana Cloud IRM |
 
-「**Apprise はシフト管理しない**」と「**Grafana OnCall や GoAlert も Apprise を使っていない**」を理解した上で、自分の環境に合うレイヤーを選ぶのが正解です。
-
-## ファクトチェック注釈 — AI 回答の鵜呑みは危険
-
-この記事は、AI（Gemini）の回答をきっかけに書きましたが、Gemini の主張のうち以下は**事実誤認**でした:
-
-| Gemini の主張 | 実態 |
-|---|---|
-| 「Grafana Cloud IRM の通知機能の裏側で実際に Apprise が動いている」 | ❌ Grafana OnCall / IRM は **Django + Celery + 独自 Notification Managers**。Apprise は使っていない |
-| 「GoAlert は Apprise 的思想で連携可能」 | ❌ GoAlert は **Twilio + SMTP + Slack の直接統合**。Apprise は使っていない |
-
-PyShift・PuLP・OR-Tools の存在と GoAlert の存在は事実ですが、「Apprise との関係」はかなり盛られていました。**新興技術領域では、AI の回答に出典が示されていない場合、必ず一次資料（GitHub README / 公式ドキュメント）で確認**するのが鉄則です。
+**Apprise はシフト管理しない**こと、**Grafana OnCall や GoAlert は Apprise ではなく独自の通知統合**で動いていることを理解した上で、自分の環境に合うレイヤーを選ぶのが正解です。
 
 ## まとめ
 
 - **Apprise = 通知ハブ**。シフト管理機能はない
-- シフト管理を**自作する**なら: PyShift（規則的）、OR-Tools（最適化）、Google Calendar（実用最強）
+- シフト管理を**自作する**なら: PyShift（規則的）、OR-Tools（最適化）、Google Calendar / Outlook 共有カレンダー（実用最強）
 - **既製品で済ませる**なら: GoAlert（OSS）、または有料 SaaS（Zenduty / IRM / PagerDuty）
-- 「Apprise + シフト管理」と書かれた記事や AI 回答を見たら、**実際は Apprise + 他のシフト管理ライブラリ / カレンダー**の組み合わせのことを指していると読み替える
-- AI の回答は出典のない技術主張ほどハルシネーションが混じる。**GitHub の README で必ず一次確認**
+- Microsoft 365 環境なら Outlook 共有カレンダー + Graph API で同じ思想がそのまま動く
 
-OnCall OSS 後の OSS 自作の現実解として、**Apprise + Google Calendar + 自作 Web サービス**が最もシンプルかつ実用的、というのが筆者の結論です。
+OnCall OSS 後の OSS 自作の現実解として、**Apprise + 共有カレンダー + 自作 Web サービス**が最もシンプルかつ実用的、というのが筆者の結論です。
 
 ## 参考リンク
 
