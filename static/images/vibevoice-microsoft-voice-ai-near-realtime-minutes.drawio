@@ -1,0 +1,306 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="vibevoice-near-realtime-minutes" name="VibeVoice Near-Realtime Minutes">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="準リアルタイム議事録生成アーキテクチャ — VibeVoice-ASR の 3 レーン構成" style="text;html=1;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="1000" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="チャンクASR（暫定字幕）／ウィンドウASR（文脈補正）／フルパスASR（確定議事録）の3段階で精度と遅延を両立" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#888888;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="40" width="1000" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ========= Client Box ========= -->
+        <mxCell id="client-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="220" height="780" as="geometry"/>
+        </mxCell>
+        <mxCell id="client-title" value="📱 Client（iPad / iPhone）" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#6c8ebf;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="86" width="200" height="22" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-rec" value="🎤 連続録音&#xa;PCM 16kHz" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="125" width="195" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-chunker" value="ローリング&#xa;チャンカー&#xa;(30秒単位 / 5秒重複)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="190" width="195" height="65" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-uploader" value="アップローダ&#xa;WebSocket /asr/stream&#xa;HTTPS PUT (chunk保管)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=10;verticalAlign=middle;align=center;fontFamily=monospace;" vertex="1" parent="1">
+          <mxGeometry x="55" y="270" width="195" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-live" value="🟡 暫定字幕表示&#xa;(30秒遅延・修正される前提)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="350" width="195" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-refined" value="🟢 補正版字幕の差し替え&#xa;(5〜10分ごとに更新)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="420" width="195" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-final" value="🔵 確定議事録の表示&#xa;(会議終了から数分後)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="490" width="195" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-notif" value="プッシュ通知&#xa;確定議事録生成完了" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="55" y="560" width="195" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-hotwords" value="📝 事前入力&#xa;・参加者名&#xa;・プロジェクト名&#xa;・専門用語&#xa;→ ホットワードとして送信" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="55" y="615" width="195" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-meta" value="🎬 セッション操作&#xa;START / END / 一時停止" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="55" y="710" width="195" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="client-note" value="3段階の表示色で&#xa;字幕の確度を視覚化" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#6c8ebf;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="55" y="780" width="195" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ========= Application Layer (Session Orchestrator) ========= -->
+        <mxCell id="app-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="290" y="80" width="280" height="780" as="geometry"/>
+        </mxCell>
+        <mxCell id="app-title" value="⚙️ Session Orchestrator" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#82b366;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="300" y="86" width="260" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="app-desc" value="3レーンへの音声分配と結果マージ" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#82b366;fontStyle=2;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="300" y="106" width="260" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="app-ws" value="WebSocket Gateway&#xa;セッション ID で多重化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="305" y="125" width="255" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="app-buffer" value="🗂 累積バッファ&#xa;（オブジェクトストレージ + Redis）&#xa;・チャンク連結&#xa;・スライディングウィンドウ提供&#xa;・最終フルパス用 60分音声を蓄積" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="305" y="190" width="255" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="app-dispatch" value="ジョブディスパッチャ&#xa;Celery / RQ + Redis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="305" y="305" width="255" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="app-quick" value="🔥 Quickレーン トリガ&#xa;30秒チャンク到着のたびに発火" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="305" y="370" width="255" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="app-refine" value="🔄 Refinementレーン トリガ&#xa;5〜10分ごと（cron / chunk count）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="305" y="430" width="255" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="app-final" value="🏁 Finalレーン トリガ&#xa;セッション END イベント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="305" y="490" width="255" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="app-merger" value="📑 トランスクリプトマージャ&#xa;・Quick出力をライブストリーム&#xa;・Refinement出力で同区間を上書き&#xa;・Final出力で全体を確定&#xa;・タイムスタンプで整合性を保つ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="305" y="555" width="255" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="app-postproc" value="後処理&#xa;・ホットワード適用&#xa;・話者ロール紐付け&#xa;・SRT/VTT/Markdown 整形" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="305" y="670" width="255" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="app-pubsub" value="Pub/Sub (Redis Streams)&#xa;暫定→補正→確定 を順次配信" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="305" y="765" width="255" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ========= 3 Inference Lanes ========= -->
+        <!-- Lane 1: Quick -->
+        <mxCell id="quick-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="600" y="80" width="290" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="quick-title" value="🔥 Quick レーン（暫定字幕）" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#b58e00;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="610" y="86" width="280" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="quick-desc" value="30秒チャンク→暫定トランスクリプト" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#b58e00;fontStyle=2;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="610" y="106" width="280" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="quick-asr" value="VibeVoice-ASR-7B (短文脈モード)&#xa;・入力: 直近30秒+5秒重複&#xa;・出力: テキスト+話者ID+タイムスタンプ&#xa;・推論時間目安: チャンク長の0.1〜0.3倍" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#d6b656;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="615" y="135" width="270" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="quick-out" value="出力 → Pub/Sub&#xa;キャプション 1 行ずつ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#d6b656;fontSize=9;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="615" y="225" width="270" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="quick-latency" value="⏱ 体感遅延: 30〜35 秒&#xa;（チャンク長 + 推論時間）" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#b58e00;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="615" y="275" width="270" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane 2: Refinement -->
+        <mxCell id="refine-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="600" y="335" width="290" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="refine-title" value="🔄 Refinement レーン（文脈補正）" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#5b8c3f;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="610" y="341" width="280" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="refine-desc" value="累積5〜10分ウィンドウで再推論" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#5b8c3f;fontStyle=2;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="610" y="361" width="280" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="refine-asr" value="VibeVoice-ASR-7B (中文脈モード)&#xa;・入力: 直近5〜10分のスライディング&#xa;・話者識別の一貫性が向上&#xa;・固有名詞・代名詞が正しく解決される" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="615" y="390" width="270" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="refine-out" value="出力 → Merger&#xa;同区間を Quick 結果に上書き" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;fontSize=9;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="615" y="480" width="270" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="refine-latency" value="⏱ 更新間隔: 5〜10 分&#xa;（GPU 同居 OK / Quick と非同期）" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#5b8c3f;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="615" y="530" width="270" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane 3: Final -->
+        <mxCell id="final-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="600" y="590" width="290" height="270" as="geometry"/>
+        </mxCell>
+        <mxCell id="final-title" value="🏁 Final レーン（確定議事録）" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#4471a8;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="610" y="596" width="280" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="final-desc" value="セッション終了 → 全音声を1パス" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#4471a8;fontStyle=2;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="610" y="616" width="280" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="final-asr" value="VibeVoice-ASR-7B (フルパス)&#xa;・入力: 最大60分の連続音声 (64K token)&#xa;・話者一貫性とタイムスタンプの最高品質&#xa;・ホットワード全適用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="615" y="645" width="270" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="final-llm" value="LLM 要約 (Claude / GPT)&#xa;・議題ごとのサマリ&#xa;・決定事項の抽出&#xa;・アクションアイテム + 担当者" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="615" y="735" width="270" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="final-latency" value="⏱ 完了時間: 会議終了から1〜数分" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#4471a8;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="615" y="822" width="270" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ========= GPU Pool ========= -->
+        <mxCell id="gpu-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="920" y="80" width="220" height="780" as="geometry"/>
+        </mxCell>
+        <mxCell id="gpu-title" value="🔥 GPU Pool" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#b85450;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="930" y="86" width="200" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="gpu-desc" value="vLLM サーバ + バッチング" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#b85450;fontStyle=2;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="930" y="106" width="200" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gpu-vllm" value="vLLM 推論サーバ&#xa;・Quick / Refinement /&#xa;  Final 共用&#xa;・優先度キュー&#xa;　 Quick(高) > Refine > Final&#xa;・KVキャッシュ再利用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="930" y="135" width="200" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gpu-card1" value="GPU #1&#xa;A10 / L4&#xa;Quick 専用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="930" y="270" width="200" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gpu-card2" value="GPU #2&#xa;A100 / H100&#xa;Refinement + Final" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="930" y="335" width="200" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gpu-llm" value="LLM サーバ&#xa;Claude / GPT-4o / ローカル&#xa;Final レーンの要約専用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=10;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="930" y="400" width="200" height="65" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gpu-cost" value="💰 コスト最適化&#xa;・Quick 用 GPU は常時稼働&#xa;・Refine/Final はオートスケール&#xa;　（会議数に応じてバースト）&#xa;・LLM はマネージド API でも可" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="930" y="480" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gpu-deploy" value="デプロイ先&#xa;・HF Inference Endpoints&#xa;・RunPod / Modal&#xa;・自前 GPU サーバ&#xa;　 + Tailscale" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="930" y="595" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gpu-monitor" value="📊 監視メトリクス&#xa;・キュー深度&#xa;・チャンク遅延 P50/P95&#xa;・WER / cpWER 推定値" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#b85450;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="930" y="710" width="200" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gpu-fallback" value="⚠️ フォールバック&#xa;Quick 渋滞時は端末側&#xa;SFSpeechRecognizer に切替" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#b85450;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="930" y="800" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ========= Storage row at bottom ========= -->
+        <mxCell id="store-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="80" width="200" height="780" as="geometry"/>
+        </mxCell>
+        <mxCell id="store-title" value="💾 Storage" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#9673a6;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="86" width="180" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="store-desc" value="セッションの状態と成果物" style="text;html=1;fontSize=9;align=left;verticalAlign=middle;fontColor=#9673a6;fontStyle=2;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="106" width="180" height="16" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store-audio" value="🎵 音声ストレージ&#xa;S3 / R2 / GCS&#xa;・チャンク（30秒×N）&#xa;・連結フル音声&#xa;・暗号化保存" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="135" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store-trans" value="🗄 PostgreSQL&#xa;・セッションメタ&#xa;・暫定/補正/確定の3版&#xa;　トランスクリプト&#xa;・話者→参加者紐付け&#xa;・タイムスタンプ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="245" width="180" height="115" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store-redis" value="⚡ Redis&#xa;・チャンクバッファ&#xa;・Pub/Sub Streams&#xa;・ジョブキュー&#xa;・WebSocket セッション" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="370" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store-minutes" value="📄 議事録ストレージ&#xa;・Markdown / PDF&#xa;・要約・決定事項&#xa;・アクションアイテム&#xa;・バージョン管理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="480" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store-vault" value="🔐 Vault&#xa;・LLM API キー&#xa;・JWT 署名鍵&#xa;・参加者ホットワード辞書" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="590" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store-policy" value="📋 保存ポリシー&#xa;・暫定: メモリ24h&#xa;・補正: 7日&#xa;・確定: 永続&#xa;・音声: 30日後削除可" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontSize=9;verticalAlign=middle;align=left;spacingLeft=8;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="680" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store-note" value="差分配信で帯域節約" style="text;html=1;fontSize=9;align=center;verticalAlign=middle;fontColor=#9673a6;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="790" width="180" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ========= Arrows ========= -->
+        <!-- Client → App -->
+        <mxCell id="arr-client-app" value="WSS / HTTPS" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;startArrow=blockThin;startFill=1;fontSize=10;fontColor=#6c8ebf;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="client-box" target="app-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- App → Quick -->
+        <mxCell id="arr-app-quick" value="30s chunk" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=blockThin;endFill=1;fontSize=9;fontColor=#b58e00;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="app-box" target="quick-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- App → Refine -->
+        <mxCell id="arr-app-refine" value="5-10min window" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=blockThin;endFill=1;fontSize=9;fontColor=#82b366;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.55;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="app-box" target="refine-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- App → Final -->
+        <mxCell id="arr-app-final" value="full audio (≤60min)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;fontSize=9;fontColor=#4471a8;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.85;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="app-box" target="final-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Quick/Refine/Final → GPU -->
+        <mxCell id="arr-quick-gpu" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=1.5;endArrow=blockThin;endFill=1;startArrow=blockThin;startFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.2;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="quick-box" target="gpu-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-refine-gpu" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=1.5;endArrow=blockThin;endFill=1;startArrow=blockThin;startFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.45;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="refine-box" target="gpu-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-final-gpu" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=1.5;endArrow=blockThin;endFill=1;startArrow=blockThin;startFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="final-box" target="gpu-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- GPU → Storage -->
+        <mxCell id="arr-gpu-store" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=1.5;endArrow=blockThin;endFill=1;startArrow=blockThin;startFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="gpu-box" target="store-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- App → Storage (under) -->
+        <mxCell id="arr-app-store" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=1.5;endArrow=blockThin;endFill=1;startArrow=blockThin;startFill=1;exitX=0.95;exitY=1;exitDx=0;exitDy=0;entryX=0.05;entryY=1;entryDx=0;entryDy=0;dashed=1;" edge="1" parent="1" source="app-box" target="store-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
