@@ -234,6 +234,196 @@ datasources:
 
 「ログだけあればいい」というケースはほぼなく、**3 階層をカバーするにはメトリクスとログの両方が必須**です。
 
+## アラート設計と担当者への通知 — 運用の核
+
+監視スタックは「グラフを見る」のが本体ではなく、**異常を自動検知して担当者に届ける**のが本来の目的です。Prometheus + Grafana スタックは、ルール定義から通知ルーティング、オンコール体制まで OSS で一気通貫で組めます。
+
+### アラートシステムの全体像
+
+```text
+[メトリクス・ログ]
+      ↓
+[アラートルール] ← Prometheus / Grafana / Loki Ruler で定義
+      ↓ 発火
+[Alertmanager または Grafana Alerting]
+      ↓ ルーティング・グループ化・抑制
+[通知チャネル]
+   ├─ Slack / Microsoft Teams / Discord / LINE
+   ├─ メール
+   ├─ PagerDuty / Opsgenie / Grafana OnCall（オンコール）
+   └─ Webhook（任意の API 連携）
+```
+
+### 1. アラートルール定義（PromQL）
+
+Prometheus のアラートは YAML で定義:
+
+```yaml
+# prometheus/rules.yaml
+groups:
+  - name: server-health
+    rules:
+      - alert: HighCpuUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          team: infra
+        annotations:
+          summary: "{{ $labels.instance }} の CPU が高負荷"
+          description: "現在 {{ $value | humanize }}%"
+          runbook: "https://wiki.example.com/runbooks/high-cpu"
+
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m]))
+          /
+          sum(rate(http_requests_total[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "API エラー率 5% 超過"
+```
+
+ポイント:
+
+- **`for: 5m` で短期スパイクを除外** — 瞬間的な揺れでは通知しない
+- **`labels.severity` と `labels.team` がルーティングのキー**
+- **`annotations.runbook` に対処手順 URL** を入れるのが定石
+
+### 2. ログベースアラート（LogQL）
+
+Loki のログでも同じ仕組みでアラートを発火できます:
+
+```yaml
+# loki/rules.yaml
+groups:
+  - name: app-errors
+    rules:
+      - alert: ManyDatabaseErrors
+        expr: |
+          sum by (job) (
+            count_over_time({job="api"} |= "connection pool exhausted" [5m])
+          ) > 10
+        for: 1m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "DB 接続プール枯渇エラーが頻発"
+```
+
+「特定エラー文字列が一定数を超えたら」という運用要件を**コード化して再現可能**にできます。
+
+### 3. Alertmanager によるルーティング
+
+発火したアラートはラベルを見て担当者に振り分けられます:
+
+```yaml
+# alertmanager.yml
+route:
+  receiver: default-slack
+  group_by: [alertname, cluster]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  routes:
+    # critical はオンコールへ + Slack にも
+    - matchers:
+        - severity="critical"
+      receiver: pagerduty-oncall
+      continue: true
+
+    # チーム別ルーティング
+    - matchers: [team="backend"]
+      receiver: slack-backend
+    - matchers: [team="infra"]
+      receiver: slack-infra
+    - matchers: [team="db"]
+      receiver: slack-dba
+
+    # 業務時間外は Slack でなくオンコールへ
+    - matchers:
+        - severity=~"warning|critical"
+      active_time_intervals: [off-hours]
+      receiver: pagerduty-oncall
+
+receivers:
+  - name: slack-backend
+    slack_configs:
+      - api_url: https://hooks.slack.com/services/XXX/YYY/ZZZ
+        channel: "#backend-alerts"
+        title: "{{ .GroupLabels.alertname }}"
+        text: "{{ range .Alerts }}{{ .Annotations.summary }}\n{{ end }}"
+
+  - name: pagerduty-oncall
+    pagerduty_configs:
+      - service_key: <integration_key>
+
+time_intervals:
+  - name: off-hours
+    time_intervals:
+      - weekdays: [saturday, sunday]
+      - times: [{start_time: "18:00", end_time: "09:00"}]
+```
+
+これで以下の運用が実現します:
+
+- **平日昼間**: backend チームの critical → PagerDuty + `#backend-alerts`
+- **夜間・休日**: 全 critical → オンコール担当者へ電話 / SMS
+- **warning**: チーム別 Slack チャンネル
+
+### 4. Grafana Alerting（UI ベース、近年の主流）
+
+Grafana 8 以降の **Unified Alerting** は UI でルール作成・編集が可能で、Alertmanager と同等のルーティング機能を内蔵。
+
+- **Prometheus / Loki / CloudWatch を横断したアラート定義**が可能
+- ダッシュボードのパネルから「このグラフからアラートを作る」が 1 クリック
+- 通知履歴・サイレンス・状態の UI 管理
+- **Grafana OnCall**（OSS / Cloud）と統合してオンコールローテも管理可能
+
+YAML 派は Prometheus 側、UI 派は Grafana 側、**両方を併用**もできます。近年は「Grafana Alerting に集約する」運用が増えています。
+
+### 5. オンコール体制との統合
+
+「夜中に誰が起きるか」を管理するのが On-call 系ツール:
+
+| ツール | 価格目安 | 特徴 |
+|---|---|---|
+| **PagerDuty** | $21〜/ユーザー/月 | 業界標準、エスカレーション豊富 |
+| **Opsgenie** | $9〜/ユーザー/月 | Atlassian 製、Jira 連携 |
+| **Grafana OnCall** | OSS 版無料、Cloud 版あり | Grafana スタックと一体化、コスト最適 |
+| **AWS Incident Manager** | 従量課金 | AWS ネイティブ |
+
+これらが Alertmanager / Grafana Alerting からの webhook を受けて、**ローテーションに従って担当者に SMS / 電話 / プッシュ通知**します。「2 分応答なければ次の人にエスカレーション」のようなルールも組めます。
+
+### 6. 通知に含めるべき情報
+
+良いアラート通知の条件:
+
+1. **何が起きたか**（symptom） — `API エラー率 5% 超過`
+2. **どのリソースか**（context） — `cluster=prod, service=order-api`
+3. **どれくらいの値か** — `現在 8.2%, 閾値 5%`
+4. **対処手順 URL**（runbook） — wiki / Notion / Confluence へのリンク
+5. **関連ダッシュボード URL** — 1 クリックで詳細を見られる
+6. **影響範囲**（business impact） — `ユーザー注文機能が部分的に失敗中`
+
+`annotations` にこれらを構造化して入れると、**通知を見た担当者が 30 秒で状況把握**できます。
+
+### 7. アラート疲れを避ける鉄則
+
+- **発火条件を厳しく** — `for: 5m` で短期フラッピング除外
+- **症状ベース（symptom-based）アラートを優先** — 「ディスク 80%」より「書き込みエラー率上昇」
+- **グループ化** — `group_by: [alertname, cluster]` で同種アラートを 1 通知にまとめる
+- **抑制（inhibition）** — 親アラート発火中は子アラートを抑制（ノードダウン中の Pod 不足は通知しない）
+- **サイレンス** — メンテ時は一時ミュート
+- **SLO ベース** — バーンレート（エラーバジェット消費速度）で「SLO 違反のペース」を見る方が、瞬間値より実用的
+
+このアラート設計が**「監視ダッシュボードはあるが誰も見てない」状態を防ぐ最後の砦**です。逆に言えば、アラート設計が雑だとどんな立派なダッシュボードも実運用では機能しません。
+
 ## メトリクスからログへドリルダウンする実践フロー
 
 王道スタックの真価は「**異常検知 → ログでの原因分析**」が画面遷移なく繋がる点です。
