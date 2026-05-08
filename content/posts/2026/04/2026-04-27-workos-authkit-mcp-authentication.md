@@ -51,6 +51,8 @@ WorkOS AuthKit は、これに最初から対応している。あなたが何�
 
 Auth0 や Clerk でも頑張れば対応できるが、設定や有料プランが必要だったり、ドキュメントを掘る時間がかかったりする。WorkOS はここが標準装備だ。
 
+> RFC 7591 そのものの仕様、および MCP 認証で必ず連動する RFC 9728 / 8414 / 9068 / 8707 / 7636 との関係を仕様レベルで深掘りした補足記事を別途用意した: [Claude Code はなぜ事前登録なしで MCP に繋がるのか — RFC 7591 Dynamic Client Registration と連動 RFC 群]({{< ref "/posts/2026/05/2026-05-08-rfc7591-dynamic-client-registration-mcp" >}})
+
 ### 2. 「個人開発者のためにある」無料枠
 
 WorkOS は AuthKit に関して、**月間アクティブユーザー 1,000,000 人まで無料**だ。
@@ -199,4 +201,5 @@ WorkOS AuthKit は、個人開発者が MCP 認証を実装するうえで現時
 - [WorkOS AuthKit ドキュメント](https://workos.com/docs/authkit)
 - [Model Context Protocol（MCP 公式）](https://modelcontextprotocol.io/)
 - [RFC 7591: OAuth 2.0 Dynamic Client Registration Protocol](https://datatracker.ietf.org/doc/html/rfc7591)
+- [Claude Code はなぜ事前登録なしで MCP に繋がるのか — RFC 7591 Dynamic Client Registration と連動 RFC 群]({{< ref "/posts/2026/05/2026-05-08-rfc7591-dynamic-client-registration-mcp" >}})
 - [元ツイート（@taiyo_ai_gakuse）](https://x.com/taiyo_ai_gakuse/status/2048608961428087111)
