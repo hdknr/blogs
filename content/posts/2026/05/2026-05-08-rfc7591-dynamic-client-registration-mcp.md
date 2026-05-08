@@ -125,7 +125,11 @@ WorkOS AuthKit を含む MCP 対応の認可サーバーは、Open Registration 
 
 ## Claude Code の自動ログインを仕様レベルで追う
 
-WorkOS AuthKit 記事の「Claude Code が勝手にログインする仕組み」を、上の RFC 群にマッピングしてみる。
+WorkOS AuthKit 記事の「Claude Code が勝手にログインする仕組み」を、上の RFC 群にマッピングしてみる。全体像をシーケンス図にすると以下のとおり。
+
+![Claude Code が MCP サーバーに認証付きで繋がるまでの OAuth プロトコルフロー。Phase 1（RFC 9728 でリソース発見）、Phase 2（RFC 8414 で認可サーバーメタデータ取得）、Phase 3（RFC 7591 DCR で client_id を動的発行）、Phase 4（RFC 6749 + 7636 PKCE で認可コードフロー）、Phase 5（RFC 9068 JWT で MCP を Bearer 認証）の 5 フェーズと、audience 検証の罠を含む詳細シーケンス図](/blogs/images/rfc7591-mcp-oauth-flow.png)
+
+5 つのフェーズに分けて読むと整理しやすい。Phase 3（紫枠）が本記事の主役 RFC 7591 だ。以下、各ステップを順に追う。
 
 ### Step 1: 401 + リソースメタデータ URL
 
