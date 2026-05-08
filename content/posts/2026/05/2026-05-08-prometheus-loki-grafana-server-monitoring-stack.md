@@ -4,7 +4,7 @@ date: 2026-05-08
 lastmod: 2026-05-08
 draft: false
 categories: ["クラウド/インフラ"]
-tags: ["Prometheus", "Loki", "Grafana", "Alloy", "オブザーバビリティ", "サーバー監視", "PromQL", "LogQL", "監視", "SRE"]
+tags: ["Prometheus", "Loki", "Grafana", "Alloy", "オブザーバビリティ", "サーバー監視", "PromQL", "LogQL", "監視", "SRE", "AWS", "CloudWatch", "AMP", "AMG"]
 ---
 
 サーバー監視は「死活監視 + リソース監視」の時代から、**「メトリクス + ログ + トレース」を 1 つの画面で相関分析する**オブザーバビリティの時代に移りました。クラウドネイティブ環境では、**Grafana Labs の OSS スタック**（Prometheus + Loki + Grafana + Alloy）が、コスト・自由度・運用ノウハウの蓄積において事実上の王道になっています。
@@ -277,6 +277,112 @@ helm install alloy grafana/alloy
 ```
 
 K8s 環境では Pod のラベルが Prometheus / Loki 両方のラベルにそのまま伝播するため、**ラベル設計を悩む必要がほぼなくなる**のが大きな利点です。
+
+## AWS 環境での選び方 — CloudWatch かハイブリッドか
+
+「AWS なら CloudWatch でいいのでは？」という疑問は当然あります。実用上は **「CloudWatch を捨てる」のではなく「Grafana を上に乗せる」ハイブリッド**が多くの AWS 環境での最適解になります。
+
+### CloudWatch の強みと弱み
+
+**強み:**
+
+- AWS サービス（RDS、Lambda、ECS、ALB、VPC Flow Logs、CloudTrail）のメトリクスがエージェント不要で自動収集
+- IAM ベース認証、AWS SDK との統合
+- インフラ運用不要（CloudWatch 自体が落ちる心配なし）
+- CloudWatch Alarms → SNS → Lambda の連携が AWS ネイティブ
+
+**弱み:**
+
+- **大規模で急激にコスト増**:
+  - CloudWatch Logs ingestion: **$0.50/GB**
+  - Logs Insights クエリ: **$0.005/GB スキャン**
+  - 月 1 TB のログ + 頻繁な検索で簡単に **$1,000/月超**
+- カスタムメトリクスが高い（$0.30/メトリクス/月、ラベル組合せが多いと膨張）
+- ダッシュボードが貧弱（CloudWatch Dashboards は Grafana の自由度に遠く及ばない）
+- クロスアカウント / マルチクラウドが面倒
+- ベンダーロックイン
+
+### コスト比較の実例（100 GB/月のログ）
+
+| 構成 | 月額（概算） |
+|---|---|
+| **CloudWatch Logs**（ingestion + 30 日保管 + クエリ） | $80〜200 |
+| **Loki on S3**（S3 標準 + EC2 t3.medium） | **約 $35** |
+
+TB 級になるほど差が広がります。Loki が S3 にオフロードできるのが効きます。
+
+### 推奨ハイブリッド構成
+
+```text
+[AWS サービス（RDS/Lambda/ALB等）]
+        ↓ ネイティブ
+   CloudWatch（AWS メトリクスはここに残す）
+        ↓ ブリッジ
+[YACE / CloudWatch Exporter / Alloy]
+        ↓
+   Prometheus（自前 or AMP）
+        ↑
+[EC2 / EKS / アプリ]  ← Alloy で直接スクレイプ
+
+[アプリログ・コンテナログ] → Alloy → Loki（S3 バックエンド）
+
+すべて → Grafana（CloudWatch / Prometheus / Loki を統合データソース）
+```
+
+ポイント:
+
+1. **AWS サービスメトリクスは CloudWatch から吸い上げる** — Grafana のデータソースに CloudWatch を追加するか、[`YACE`（Yet Another CloudWatch Exporter）](https://github.com/nerdswords/yet-another-cloudwatch-exporter) で Prometheus にブリッジ
+2. **アプリ・EC2・EKS のメトリクスは Alloy で直接 Prometheus に** — CloudWatch を経由しないことでカスタムメトリクス料金を回避
+3. **ログは Loki に集約** — CloudWatch Logs を捨てて S3 + Loki に統一、コスト数十分の一
+
+### AWS 公式マネージドの選択肢（運用したくない場合）
+
+AWS 自身が **OSS の Prometheus / Grafana をマネージドで提供**しています。これがハイブリッドの中間解です。
+
+#### Amazon Managed Service for Prometheus（AMP）
+
+- 自分で Prometheus を運用しなくていい
+- 100% PromQL 互換、Alertmanager 内蔵
+- AWS IAM / SigV4 認証
+- 価格: ingestion ベース、自前運用より高いが管理不要
+
+#### Amazon Managed Grafana（AMG）
+
+- マネージド Grafana
+- AWS IAM Identity Center で SSO ログイン
+- CloudWatch / AMP / X-Ray などのデータソースが事前設定
+- 価格: ユーザー数ベース（Editor: $9/月、Viewer: $5/月）
+
+#### Loki / Tempo はマネージド版なし
+
+Loki と Tempo の AWS マネージド版は提供されていないため、
+
+- **Grafana Cloud（SaaS）** で Loki / Tempo を SaaS 化
+- または **EKS 上で自前運用**
+
+を選ぶことになります。
+
+#### Managed 中心の組み合わせ例
+
+```text
+AWS リソース → CloudWatch → AMG（直接データソース）
+EC2/EKS    → Alloy → AMP → AMG
+ログ        → Alloy → Grafana Cloud Loki → AMG
+```
+
+「**運用負担最小 + AWS ネイティブ統合 + Grafana の UI**」のバランスが取れた構成です。
+
+### AWS 環境での選び方まとめ
+
+| 環境 | 推奨 |
+|---|---|
+| **小規模 AWS 単一アカウント、ログ量少** | CloudWatch 単体で十分 |
+| **AWS 中規模、ログ TB 級・マルチアカウント** | **ハイブリッド（CloudWatch + Grafana + Loki）** |
+| **EKS / コンテナ中心、メトリクス多い** | **AMP + AMG + Loki**（K8s 王道） |
+| **マルチクラウド or 将来移行検討** | **自前 Grafana Labs スタック**（移植性最大） |
+| **運用したくないが OSS 互換が欲しい** | **Grafana Cloud**（フル SaaS） |
+
+純粋に CloudWatch を捨てる構成より、**「AWS サービスは CloudWatch、それ以外は Grafana スタック、画面は Grafana で統合」**が最も多い実装パターンです。
 
 ## 本番運用での注意点
 
