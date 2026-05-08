@@ -1,0 +1,277 @@
+---
+title: "Warp がオープンソース化 — ターミナルから生まれた Agentic Development Environment（ADE）の全貌"
+date: 2026-04-30
+lastmod: 2026-04-30
+draft: false
+description: "AI ターミナル Warp が 2026-04-28 に Rust 製クライアントを AGPL v3 / MIT のデュアルライセンスでオープンソース化。OpenAI 設立スポンサー、Claude Code・Codex・Gemini CLI 連携、クラウドエージェント基盤 Oz まで含めた ADE の全貌を解説。"
+source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349378460"
+categories: ["AI/LLM"]
+tags: ["warp", "agent", "claude-code", "openai", "rust", "terminal", "agpl"]
+---
+
+AI ターミナルとして知られる **Warp** が 2026 年 4 月 28 日にクライアントコードのオープンソース化を発表しました。発表からわずか 1 日あまりで GitHub Star が 34,000 を突破し、本記事執筆時点（2026-04-30）では **45,000 Star 超**という勢いで成長しています。
+
+Warp は単なるターミナルから、開発者と AI エージェントが協働する **Agentic Development Environment（ADE）** へと進化しています。本記事ではオープンソース化の概要、ライセンス構成、内蔵エージェントと外部 CLI エージェント連携、そして OpenAI が「設立スポンサー」として参加した意味を整理します。
+
+## TL;DR
+
+- Warp クライアント（Rust 製）が [warpdotdev/warp](https://github.com/warpdotdev/warp) でオープンソース化
+- ライセンスは **デュアル**: UI フレームワーク（`warpui_core` / `warpui` クレート）が **MIT**、それ以外が **AGPL v3**
+- **OpenAI が設立スポンサー**。新しい Agent 駆動の管理ワークフローは GPT モデルで動作
+- 内蔵コーディングエージェントに加え、**Claude Code / Codex / Gemini CLI** などの外部 CLI エージェントを呼び出せる
+- クラウドエージェント基盤 **Oz** が Issue トリアージから Spec 作成・実装・PR レビューまでを担う
+
+## Warp とは何か — Agentic Development Environment（ADE）
+
+Warp は当初、macOS 向けに登場した Rust 製の高速・モダンなターミナルです。現在は Linux にも対応しており、リッチな UI、ブロックベースの履歴、AI コマンド補完を特徴としています。
+
+ここ数年の Agent 化トレンドを背景に、Warp は単なるターミナルから「開発者と AI エージェントが共同でソフトウェアを作る場」へと位置づけを変えました。これが **Agentic Development Environment（ADE）** です。Warp 公式は ADE を「IDE の次に来る形態」として打ち出しており、「**通常 10 分かかるタスクが数秒で完了する**」という現場の声を紹介しています。
+
+## オープンソース化の概要
+
+公式リポジトリ [warpdotdev/warp](https://github.com/warpdotdev/warp) の README には次のように書かれています。
+
+> OpenAI is the founding sponsor of the new, open-source Warp repository, and the new agentic management workflows are powered by GPT models.
+
+ポイントを整理するとこうなります。
+
+| 項目 | 内容 |
+|------|------|
+| 公開日 | 2026 年 4 月 28 日 |
+| 開発元 | Warp（CEO: Zach Lloyd） |
+| 言語 | Rust |
+| 設立スポンサー | OpenAI |
+| 管理ワークフロー駆動モデル | GPT モデル |
+| Star 数（本記事執筆時点） | 45,000+ |
+
+商用 SaaS ではなく **クライアントコード本体** を公開した点が特徴で、Tokio・NuShell・Alacritty・Fig Completion Specs などの OSS 依存先も README に明示されています。
+
+## デュアルライセンス: MIT と AGPL v3
+
+Warp は単一ライセンスではなく、コンポーネントごとにライセンスを使い分けるデュアル方式を採用しています。
+
+- **MIT**: `warpui_core` および `warpui` クレート（UI フレームワーク部分）
+- **AGPL v3**: その他すべてのコード
+
+UI 部分を MIT にしているのは、他のアプリケーションが Warp の UI コンポーネントを取り込みやすくするためと推測できます。一方、本体に AGPL v3 を選んだ意図は明確です。「**ネットワーク経由でサービスとして提供される派生物にもソースコード開示義務が及ぶ**」という強力なコピーレフトにより、競合が Warp をフォークして SaaS で囲い込むことを防ぐ狙いがあります。
+
+AGPL v3 は GPL v3 をベースに「サービス提供（SaaS）でも改変ソースの公開義務を負う」という条項（13 条）を加えた厳格なコピーレフトライセンスです。商用利用そのものは禁止されていませんが、**派生物の公開義務がネットワーク越しのユーザーにも適用される**点で MIT/Apache のような寛容ライセンスとは大きく異なります。
+
+## 内蔵エージェント + 外部 CLI エージェント
+
+README によれば Warp は「内蔵コーディングエージェント」と「外部 CLI エージェント」の **両方** をファーストクラスでサポートします。
+
+> Use Warp's built-in coding agent, or bring your own CLI agent (Claude Code, Codex, Gemini CLI, and others).
+
+OpenAI のスポンサーシップは GPT モデル駆動の管理ワークフローに紐付いていますが、開発者個人が日々のコーディングで使うエージェントは自由に選べる設計です。
+
+- **内蔵エージェント**: 起動直後から利用可能。Warp 内部で完結
+- **Claude Code**（Anthropic）: 外部 CLI エージェント
+- **Codex**（OpenAI）: 外部 CLI エージェント
+- **Gemini CLI**（Google）: 外部 CLI エージェント
+- その他 CLI Agent も対応
+
+ターミナルがエージェント実行の「ホスト」になることで、複数の AI ベンダーを横断して使うワークフローがそのまま Warp 上に乗ります。**「どのモデルを使うか」が日々変わる時代における共通レイヤー** を狙った設計と読めます。
+
+## Oz — クラウドエージェントオーケストレーション
+
+Warp のもうひとつの中核が **Oz** と呼ばれるクラウドエージェントオーケストレーションプラットフォームです。GitHub の OSS 開発フローを Oz が自動化します。
+
+[build.warp.dev](https://build.warp.dev) では以下を確認できます。
+
+- 数千の Oz エージェントが Issue をトリアージし、Spec 作成・実装・PR レビューを進める様子を観察できる
+- トップコントリビューターやリリース直前の機能を閲覧できる
+- GitHub サインインで自分の Issue を追跡できる
+- アクティブなエージェントセッションを、ブラウザ上で動作する WebAssembly 版 Warp ターミナルから直接クリックして覗ける
+
+Issue ラベルは `ready-to-spec`（仕様検討の段階）と `ready-to-implement`（実装受付中）の 2 段階で進行し、コミュニティ貢献者がいつ介入すべきかを明示しています。**人間とエージェントが同じ Issue を共有しながら開発する** 設計です。いわゆる「OSS リポジトリで AI エージェントを大量に走らせる」未来形を現実のフローに落とし込んだ事例といえます。
+
+## ローカルでビルドして動かす
+
+オープンソース化により、自分のマシンで Warp をビルド・実行できるようになりました。リポジトリ直下のスクリプトで完結します。
+
+```bash
+git clone https://github.com/warpdotdev/warp.git
+cd warp
+
+./script/bootstrap   # プラットフォーム依存セットアップ
+./script/run         # ビルドして Warp を起動
+./script/presubmit   # fmt / clippy / tests
+```
+
+詳細なエンジニアリングガイドは `WARP.md` に集約されており、コーディングスタイル、テスト、プラットフォーム依存の注意点などが整理されています。
+
+なお、すぐに使いたいだけなら従来通り [Warp 公式サイトのダウンロードページ](https://www.warp.dev/download) からインストーラーで導入できます。
+
+## どう貢献するか — Issue to PR フロー
+
+README が示す貢献フローはシンプルです。
+
+1. **既存 Issue 検索**: `is:issue is:open sort:reactions-+1-desc` で既知の要望を確認
+2. **Issue 作成**: テンプレートに沿って起票（セキュリティ脆弱性は CONTRIBUTING.md の私的報告チャネル経由）
+3. **メンテナによるレビュー** → 準備完了ラベル付与
+   - `ready-to-spec`: コミュニティが仕様策定可能
+   - `ready-to-implement`: 仕様が固まり PR 受付中
+4. **PR 提出**
+
+ラベル付与のリクエストや問題エスカレーションは、Issue 上で `@oss-maintainers` をメンションして行います。「**仕様策定からコードまでコミュニティが関与できる**」設計で、PR を投げる前に Spec レビューで方向性を合わせられるのが特徴です。
+
+## OpenAI 設立スポンサーが意味すること
+
+OpenAI が「設立スポンサー」として関与し、管理ワークフローが GPT モデル駆動だという点は注目に値します。
+
+- Warp は内蔵エージェントの選択肢として OpenAI 製モデルだけに縛らない（Claude Code / Gemini CLI も併記）
+- 一方で、Oz が走らせるクラウドエージェントは GPT モデルで動く
+
+つまり **「個別開発者の手元では好きなエージェント、共有 OSS 運営では GPT」** というすみ分けです。これは「クラウド側のオーケストレーションコストを GPT で賄う」というスポンサーシップの構造として理解できます。Anthropic の Claude Code を使う開発者にとっても、Warp 経由でターミナル UX を共有しつつ Oz の OSS 運営に貢献できる、という二重の入口が用意されているわけです。
+
+## 料金プラン — OSS 化されたのは「クライアント本体」
+
+オープンソース化されたのは **Warp クライアント本体** であり、AI 機能・クラウドエージェント実行基盤（Oz）・チーム機能などは引き続き SaaS の有料プランで提供されています。2026-04-30 時点の主要プランを整理します。
+
+| プラン | 料金 | 主な特徴 |
+|--------|------|---------|
+| **Free** | $0/月 | AI クレジット 150/月（最初 2 ヶ月、その後 60/月）、インデックス 3 リポジトリ・各 3,000 ファイル、クラウド会話 30 回、同時クラウドエージェント 4（2 vCPU / 4 GiB） |
+| **Build**（推奨） | $18/月〜 | AI クレジット 1,500/月、OpenAI / Anthropic / Google のフロンティアモデル解禁、インデックス 40 リポジトリ・各 100,000 ファイル、クラウド会話無制限、同時エージェント 20（4 vCPU / 8 GiB）、Bring Your Own API Key、メールサポート |
+| **Max** | $180/月〜 | クレジット 12 倍（18,000/月）、同時エージェント 40（8 vCPU / 16 GiB）、Build の全機能 |
+| **Business** | $45/ユーザー/月〜（最大 50 席） | チーム全体への Zero Data Retention 強制、SAML SSO、Build の全機能 |
+| **Enterprise** | カスタム | Bring Your Own LLM、セルフホスト版クラウドエージェント、専任アカウントマネージャー、エンタープライズ管理機能 |
+
+有料化で得られる主な価値は次の 5 点です。
+
+1. **モデル選択の自由度**: 無料プランは限定モデルのみ。Build 以上で GPT / Claude / Gemini のフロンティアモデルが解禁されます
+2. **クラウドエージェントのスペックと並列度**: Free の 4 並列・2 vCPU から Max の 40 並列・8 vCPU まで段階的に拡張
+3. **大規模コードベース対応**: Free は 3 リポジトリ × 3,000 ファイル上限、Build で 40 × 10 万ファイルへ
+4. **BYOK / BYOLLM**: Build で API キー持ち込み、Enterprise で LLM 自体の持ち込みが可能
+5. **エンタープライズガバナンス**: Business で SSO・Zero Data Retention、Enterprise でセルフホスト
+
+「クライアント本体は OSS、AI クラウド基盤は有償 SaaS」というハイブリッド戦略は、AGPL v3 で競合の SaaS フォークを抑止しつつ、自社の AI バックエンドで収益化するという [Open Core](https://en.wikipedia.org/wiki/Open-core_model) 系の現代的アレンジといえます。最新の料金とクレジット消費の詳細は [warp.dev/pricing](https://www.warp.dev/pricing) で確認できます。
+
+### 外部 CLI エージェントだけを使うなら Free で十分
+
+「Warp 自身の AI 機能は使わず、Claude Code / Codex / Gemini CLI といった外部 CLI エージェントを動かすホストとしてのみ使いたい」というケースでは、**Free プランで実用上問題ありません**。理由を整理します。
+
+#### Warp の AI クレジットを消費するのは「内蔵 AI 機能」のみ
+
+Free の「AI クレジット 60〜150/月」「クラウド会話 30 回」「インデックス 3 リポジトリ」といったクォータは、すべて **Warp 自身が提供する AI 機能** に対するものです。
+
+- ⌘+I の自然言語コマンド生成
+- Agent Mode（Warp 内蔵エージェント）
+- AI ブロック解説 / エラー修正提案
+- Warp 内蔵 AI 用のコードベースインデックス検索
+
+これらを使わない限りクレジットは減りません。
+
+#### 外部 CLI エージェントは Warp の課金とは独立
+
+Claude Code や Codex CLI は Warp の中で動く独立プロセスです。
+
+- 課金は **各ベンダー側**（Anthropic API/サブスク、OpenAI Plus/Pro/API、Google）
+- Warp は単に「PTY と UI を提供するターミナル」として振る舞う
+- Warp 側の AI クレジットは一切消費しない
+
+つまり「Warp Free の上で Claude Code Pro を使う」構成では、課金は Anthropic 側だけで完結します。
+
+#### Free 制限の影響度
+
+外部 CLI エージェント中心の使い方では、Free の各制限はほぼ無視できます。
+
+| Free 制限 | 影響度 |
+|----------|-------|
+| AI クレジット 60/月 | 内蔵 AI を使わなければ消費 0 |
+| インデックス対象 3 リポジトリ | Warp 内蔵 AI 用なので関係なし |
+| クラウド会話 30 回 | 同上 |
+| 同時クラウドエージェント 4 | Oz を使う時のみ。Claude Code 等はローカル実行なので関係なし |
+
+#### Build プランへ移るべき分岐点
+
+以下のいずれかに該当したら Build（$18/月）の出番です。
+
+- Warp の **Agent Mode** や **⌘+I** をある程度使いたい（AI クレジット 1,500/月）
+- **Warp Drive のチーム共有**（Workflows / Notebooks の共同編集）を使う
+- **Bring Your Own API Key** で自分の OpenAI/Anthropic キーを Warp 内蔵 AI に繋ぎたい
+- **Oz クラウドエージェント** を 5 並列以上で動かしたい
+
+「Warp はターミナル UX だけ欲しい、AI は Claude Code に任せる」という運用なら、**Free のまま快適に使える** というのが妥当な答えになります。
+
+### 有料プランを使う目的は「Oz だけ」ではない
+
+「Oz を使わないなら有料プランは不要」と単純化したくなりますが、Warp の有料化動機は実際には 3 系統に分かれます。
+
+| # | 目的 | 主に該当するプラン |
+|---|------|-----------------|
+| 1 | **Oz クラウドエージェントの並列度・スペック拡張** | Build（20 並列）/ Max（40 並列・8 vCPU） |
+| 2 | **Warp 内蔵 AI 機能のヘビーユース** | Build 以上（クレジット 1,500/月 + フロンティアモデル解禁） |
+| 3 | **チーム / エンタープライズ機能** | Business（SSO・ZDR）/ Enterprise（BYOLLM・セルフホスト） |
+
+注意したいのは次の 3 点です。
+
+- **Oz は Free でも 4 並列・2 vCPU まで触れる**: 「Oz が完全有料」ではなく、「Oz を本気で並列に走らせる」段階で初めて Build 以上が必要になります
+- **内蔵 AI のクォータは Oz と独立**: Agent Mode や ⌘+I を一日に何度も呼ぶ、複数リポジトリで使う、といったケースは Free の 60 クレジット/月では即枯渇します。これは Oz とは別軸の課金理由です
+- **業務利用ではチーム機能が決め手になることが多い**: SAML SSO や Zero Data Retention（Warp の学習に自社データを使わせない設定）が必須なら、Oz の利用有無に関わらず Business 以上が必要です
+
+つまり「有料プランの目的 = Oz 利用」という理解は半分正解で、実際は **「Oz をスケールさせる」「Warp 内蔵 AI を本気で使う」「チーム/企業として安全に展開する」の 3 つの軸** が独立して存在する、と捉えるのが正確です。
+
+## i18n / 日本語サポート状況
+
+日本人開発者にとって気になる UI の多言語対応について、2026-04-30 時点の状況をリポジトリ上の Issue / PR から整理します。**結論から言うと「インフラは入りつつあるが、まだ仕上がっていない」段階です。**
+
+### i18n インフラは整備済み・拡張中
+
+- 設定画面の国際化を完成させる PR [#9458](https://github.com/warpdotdev/warp/pull/9458) が 2026-04-29 に提出されました（記事執筆時点で open）
+- 対応予定言語: **英語 / 簡体中国語 / 日本語 / 韓国語 / ドイツ語 / ブラジルポルトガル語** の 6 言語
+- 各言語ファイルが 1,055 キーで同期される計画。日本語 (`ja.rs`) は既存 635 キーから 420 キー追加され、設定 UI 全領域をカバー
+- ロケール検出は `WARP_LOCALE` / `LANGUAGE` / `LC_ALL` / `LC_MESSAGES` / `LANG` の環境変数経由
+
+つまり **「Warp は最初から日本語をターゲット言語の一つに含めて多言語化を進めている」** ことが OSS 化されたコードベースから読み取れます。
+
+### 日本語 UI 対応 Issue は完了扱いで close
+
+- Issue [#6581 "Support for Japanese language UI / 日本語UI対応の追加希望"](https://github.com/warpdotdev/warp/issues/6581) は 2026-04-18 に **completed として close** されています
+- ただしメインの i18n Issue [#1194](https://github.com/warpdotdev/warp/issues/1194)（191 リアクション）は依然 open で、**ユーザー向けの言語切り替え UI 自体はまだ実装途中**
+- 現時点で正式リリース版の Warp に「設定画面で日本語を選択する」UI があるわけではなく、環境変数や開発中ビルドでの利用が前提
+
+### 日本語入力（IME）には未解決の課題が多い
+
+UI ローカライズとは別に、**日本語の入力体験**に関するバグが複数 open のままです。
+
+- [#9145](https://github.com/warpdotdev/warp/issues/9145) IME 変換候補ポップアップがカーソル位置とずれる
+- [#6623](https://github.com/warpdotdev/warp/issues/6623) コマンド入力中に日本語キーボードへ切り替えると文字が見えなくなる
+- [#8566](https://github.com/warpdotdev/warp/issues/8566) Ctrl+H が IME 編成中に余分な文字を削除する
+- [#3944](https://github.com/warpdotdev/warp/issues/3944) マルチバイト日本語が確定するまで表示されない
+- [#7261](https://github.com/warpdotdev/warp/issues/7261) IME 変換確定後の Enter が意図せずフォーム送信になる
+- [#9161](https://github.com/warpdotdev/warp/issues/9161) Windows 版で CJK ワイド文字によりクラッシュ
+- [#2777](https://github.com/warpdotdev/warp/issues/2777) ターミナルログを中国語/日本語で検索できない
+
+### 実用上の落としどころ
+
+現時点（2026-04-30）で Warp を日本語環境で使う場合の現実的な期待値は次の通りです。
+
+| 項目 | 状況 |
+|------|------|
+| メニュー / 設定 UI の日本語化 | ⏳ インフラ整備中（PR #9458 マージ後に完成見込み） |
+| 言語切り替え UI | ❌ 未実装（環境変数で間接的に切替） |
+| 日本語入力（IME） | ⚠️ 部分的に動作するが既知バグ複数残存 |
+| AI 応答の日本語化 | ✅ Issue [#5622](https://github.com/warpdotdev/warp/issues/5622) は close 済み（モデル次第で日本語応答可能） |
+| ターミナル出力の UTF-8 / 全角文字表示 | ⚠️ macOS Sequoia 系で文字化け事例あり、改善継続中 |
+
+OSS 化により、**日本語訳の改善や IME バグ修正をコミュニティから PR で投げられる** ようになったのは大きな前進です。`ja.rs` の翻訳改善や IME バグ修正は、まさに README が示す Issue to PR フロー（`ready-to-spec` → `ready-to-implement` → 実装）で関与できる領域といえます。
+
+## 開発者にとっての示唆
+
+Warp のオープンソース化は単なる「OSS 化トピック」を超えて、**ターミナルがエージェント実行のハブになる** 流れを象徴しています。
+
+- 複数 AI ベンダーを横断してコーディングする時代における **ホスト UX** が標準化される可能性
+- AGPL v3 によるエコシステム保護は、似た領域（Cursor / Zed / Continue など）の競合戦略と一線を画す
+- Oz のような「クラウド側でエージェントが OSS を運営する」モデルは、他の OSS プロジェクトにも波及する可能性
+
+Claude Code をはじめとする CLI エージェントを既に使っている開発者にとって、Warp は「自分のエージェントをそのまま使える、より生産的なターミナル」という導入動機になります。クライアント側の利用であれば AGPL v3 の条項を過度に気にする必要はありません。**今すぐ手元にクローンして試せる**——これが今回のオープンソース化最大の価値といえるでしょう。
+
+## 関連リンク
+
+- GitHub: [warpdotdev/warp](https://github.com/warpdotdev/warp)
+- 公式サイト: [warp.dev](https://www.warp.dev)
+- ドキュメント: [docs.warp.dev](https://docs.warp.dev)
+- ダッシュボード: [build.warp.dev](https://build.warp.dev)
+- ダウンロード: [warp.dev/download](https://www.warp.dev/download)
+- 料金プラン: [warp.dev/pricing](https://www.warp.dev/pricing)
