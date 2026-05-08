@@ -122,6 +122,88 @@ PagerDuty が $21〜/ユーザー/月 程度なので、**1 ユーザーあた�
 - フル機能を欲しいが Grafana Cloud IRM の価格は高すぎる場合の中間解
 - Zenduty（$7〜）が新興だが機能十分
 
+## 代替選択肢は Grafana プラグインとして追加できるのか
+
+「Karma や Apprise を Grafana サーバーにプラグインとして組み込めばいいのでは」という疑問が出てきます。**正確な答え: 大半は Grafana プラグインではなく独立サービス**です。プラグイン化できるかどうかは、種類によってまったく違います。
+
+### Grafana のプラグインアーキテクチャ
+
+Grafana のプラグインは 3 種類:
+
+1. **Panel plugin** — ダッシュボード内のカスタムパネル
+2. **Data source plugin** — 新しいデータソース接続
+3. **App plugin** — Grafana 内に独自ページを持つフルアプリ
+
+OnCall 系の機能を提供できるのは **App plugin** ですが、現実にはほとんどの代替が「プラグインではなく外部サービス」です。
+
+### 各代替選択肢のプラグイン化可否
+
+| 選択肢 | プラグイン化 | 形態 |
+|---|---|---|
+| **Grafana OnCall（過去）** | ◯（App plugin） | `grafana-oncall-app` + 別エンジンの 2 層、**アーカイブ済** |
+| **Grafana Cloud IRM** | ✕（Cloud 限定） | Grafana Cloud 上でのみ動作、OSS サーバーには入らない |
+| **Karma** | ✕ | Alertmanager 専用 Web UI、別プロセス・別ポート |
+| **Apprise** | ✕ | Python ライブラリ / CLI、Webhook 中継として配置 |
+| **Signoz** | ✕ | Grafana 競合の独立 OSS プラットフォーム |
+| **PagerDuty / Opsgenie / Zenduty** | ✕ | SaaS、Webhook 連携で繋ぐ |
+
+つまり **「Grafana サーバーに何かを追加するだけで OnCall 相当が手に入る」道は、OnCall OSS のアーカイブで完全に閉じた**のが現状です。
+
+### Grafana 標準機能だけでどこまでできるか（プラグイン不要）
+
+Grafana 8 以降の **Unified Alerting** には、実はかなりの機能が標準装備されています。
+
+#### 標準で使える機能
+
+- **アラートルール定義**（PromQL / LogQL / SQL ベース）
+- **Contact Points**（通知先）— 標準で 20 種類以上対応:
+  - Slack / Microsoft Teams / Discord / Telegram / LINE Notify
+  - Email / Webhook
+  - PagerDuty / Opsgenie（SaaS と連携）
+  - Pushover / Pushbullet
+  - SNS（AWS）/ Google Chat
+- **Notification Policies**（ルーティングツリー）— ラベルベースでチーム分け
+- **Mute Timings**（時間帯ベースのミュート）
+- **Silences**（一時ミュート）
+- **Templates**（通知テンプレート）
+
+これだけで「**チーム別 Slack 通知 + critical は PagerDuty + 業務時間外は別ルーティング**」までは **プラグインなしで完結**します。
+
+#### 標準では足りない機能
+
+- **シフト管理 / オンコールローテーション** — 「今週は田中さん、来週は佐藤さん」の時間切替
+- **エスカレーションポリシー** — 「2 分応答なければ次の人へ」
+- **音声通話通知** — SMS は webhook で可能だが、自動電話には専用サービスが必要
+- **モバイルプッシュ通知の専用アプリ** — Grafana Mobile はあるがオンコール特化機能は薄い
+- **Acknowledge / Resolve のワークフロー管理**
+- **ポストインシデントタイムライン**
+
+これらは**プラグインでは実装できない領域**で、専用サービス（IRM / PagerDuty 等）が必要になる根本理由です。シフト管理だけでも、カレンダー・タイムゾーン・休暇管理・ユーザー在不在の追跡が必要で、これを Grafana のアプリプラグインだけで完結させるのは設計上難しい。
+
+### プラグイン形式の限界と現実解
+
+「プラグインで済ませたい」という発想自体が、OnCall OSS が成立していたからこそ可能だったものです。アーカイブ後の現実解は **「Grafana 標準アラート + 外部サービスの Webhook 連携」のハイブリッド**:
+
+```text
+[Grafana OSS サーバー]          ← プラグインで賄う部分
+   ├─ アラートルール定義
+   ├─ Contact Points
+   └─ Notification Policies
+        ↓ webhook
+[外部サービス]                   ← プラグインでは賄えない部分
+   ├─ Karma（Alertmanager UI 補完、別プロセス）
+   ├─ Apprise（通知ハブ、別プロセス）
+   ├─ シフト管理（自作 or Zenduty 等の安価 SaaS）
+   └─ 音声通話・モバイルプッシュ（Twilio / SaaS）
+```
+
+判断基準:
+
+- **アラート発火 + ルーティング + チャット通知まで** → Grafana 標準のみで OK、プラグイン不要
+- **シフト管理 + エスカレーション + 音声通話まで** → 外部サービス必須、プラグインでは足りない
+
+中規模以上のチームで本格的なオンコール運用を組むなら、**「シフト管理は SaaS に任せ、Grafana 側はアラート発火に専念」**が最もコスト効率が良い構成です。
+
 ## アーキテクチャ的な位置付け
 
 [前回の記事](/blogs/posts/2026/05/2026-05-08-prometheus-loki-grafana-server-monitoring-stack/)のスタックに IRM（または代替）を組み込んだ全体像:
