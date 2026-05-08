@@ -94,34 +94,108 @@ solver.Solve(model)
 
 ### 3. Google Calendar + Python + Apprise（最も実用的）
 
-実は**最も手軽で広く使われている**のはこの組み合わせ:
+実は**最も手軽で広く使われている**のはこの組み合わせ。「ガチガチのシフトソフト」より、Google Calendar を共有してそこで運用する方が圧倒的に現場で機能します。
+
+#### 「個別予定の共有」ではなく「1 つの共有カレンダー」が基本
+
+よくある誤解として「担当者ごとに予定を作って共有するのか？」がありますが違います。**「OnCall シフト」という 1 つの専用カレンダーを作り、シフトイベントを並べて、チーム全員に閲覧権限で共有する**のが標準パターンです。
+
+```text
+[「Engineering OnCall」というカレンダー（1 つだけ）]
+   ├─ 2026-05-08 09:00 〜 2026-05-15 09:00  「[Primary] 田中」
+   ├─ 2026-05-15 09:00 〜 2026-05-22 09:00  「[Primary] 佐藤」
+   ├─ 2026-05-22 09:00 〜 2026-05-29 09:00  「[Primary] 鈴木」
+   ├─ 2026-05-08 09:00 〜 2026-05-15 09:00  「[Secondary] 山田」 ← 別イベント
+   └─ ...
+
+   ↓ チーム全員に「閲覧権限」で共有
+   ↓ 編集権限は管理者のみ
+
+[Web サービス（Apprise + 自作）]
+   API で「今この時刻に該当するイベント」を取得
+   → イベントから担当者メールを抽出
+   → Apprise で通知
+```
+
+| やり方 | 特徴 |
+|---|---|
+| ❌ **個別の予定を各担当者と共有** | 1 件ずつ招待を送る運用、シフト変更が面倒、全体像が見えない |
+| ✅ **1 つの共有カレンダーに当番イベントを並べる** | カレンダー全体を見れば全シフトが俯瞰、編集も 1 箇所 |
+
+#### セットアップ手順
+
+1. **専用カレンダーを作成** — `Engineering OnCall` などの名前で、個人予定とは分離
+2. **権限を設定** — チーム全員は閲覧、シフト管理者のみ編集、API 連携用にサービスアカウントを読み取り権限で追加
+3. **シフトイベントを作成** — タイトルや説明欄に担当者のメールアドレスを入れる
+4. **階層分けは「カレンダーを分ける」のが最も実装が楽** — `OnCall-Primary`、`OnCall-Secondary` の 2 つに分けると API も読みやすい
+
+#### 「今の当番」を取得する Python コード
 
 ```python
 from googleapiclient.discovery import build
-import apprise
+from google.oauth2 import service_account
+from datetime import datetime, timezone
 
+# サービスアカウントで認証
+creds = service_account.Credentials.from_service_account_file(
+    "sa-key.json",
+    scopes=["https://www.googleapis.com/auth/calendar.readonly"],
+)
 calendar = build("calendar", "v3", credentials=creds)
-# 「今この時刻のオンコール担当者」をカレンダーから取得
-events = calendar.events().list(
-    calendarId="oncall@example.com",
-    timeMin=now.isoformat(),
-    timeMax=(now + timedelta(minutes=1)).isoformat(),
-).execute()
-oncall_email = events["items"][0]["summary"]  # 例: "tanaka@example.com"
 
+def get_current_oncall(calendar_id: str) -> str | None:
+    """カレンダーから「今この時刻の当番者」のメールを返す"""
+    now = datetime.now(timezone.utc)
+    events = calendar.events().list(
+        calendarId=calendar_id,
+        timeMin=now.isoformat(),
+        timeMax=now.isoformat(),  # 開始 ≤ now < 終了 が拾える
+        singleEvents=True,
+    ).execute()
+
+    for event in events.get("items", []):
+        summary = event.get("summary", "")
+        if "@" in summary:
+            return summary.split()[-1]  # "[Primary] tanaka@example.com" → "tanaka@example.com"
+    return None
+
+primary   = get_current_oncall("primary-oncall@group.calendar.google.com")
+secondary = get_current_oncall("secondary-oncall@group.calendar.google.com")
+
+# Apprise で通知
+import apprise
 apobj = apprise.Apprise()
-apobj.add(f"mailto://{oncall_email}")
+apobj.add(f"mailto://{primary}")
 apobj.notify(title="Alert", body="...")
 ```
 
-メリット:
+#### メリット
 
-- **シフト管理 UI が Google Calendar そのもの** — 全員が使い慣れている
-- **休暇・代理対応**もカレンダーで普通に編集できる
-- **モバイル / Web の確認**も Calendar アプリで完結
-- API 連携が簡単
+1. **担当者がカレンダーを「自分の予定」として確認できる** — 「来週は当番だ」を Calendar アプリが通知してくれる
+2. **シフト変更がドラッグ&ドロップ** — 「来週入院するから誰か変わって」を 30 秒で対応
+3. **休暇・代理対応**もカレンダーで普通に編集
+4. **過去ログが残る** — 「あのインシデント時の当番は誰だったか」が後から正確にわかる
+5. **モバイルで全員が見られる** — Calendar アプリを入れればすぐ
+6. **API 連携が簡単** — Google 公式
+7. **追加コストゼロ** — Workspace に既に含まれている
 
-「ガチガチのシフトソフト」より、Google Calendar を共有してそこで運用する方が圧倒的に現場で機能するパターンは多いです。
+#### 落とし穴
+
+- **タイトルから担当者を抽出するのは脆弱** — 表記ゆれで失敗する。説明欄や `attendees` フィールドに正規化して入れるか、Extended Properties を使うと堅牢
+- **タイムゾーンの扱い** — UTC と JST が混ざるので API では明示的に指定（`datetime.now(timezone.utc)`）
+- **「終日」イベントは避ける** — 時刻判定が曖昧になるので必ず時刻付きイベント
+- **シフト境界の瞬間** — 月曜 09:00:00 ぴったりは前後どちらか、`timeMin = now - 1秒` などで安全側に倒す
+- **「今の」イベントが複数返る** — 階層別カレンダーで分けるか、優先度ルールを決める
+
+#### 代理対応のパターン
+
+「田中さんが来週休みなので佐藤さんに代わる」場合:
+
+- **カレンダーで田中のイベントを佐藤に書き換える** — 最も簡単
+- **田中のイベントを「OOO」に変更し、佐藤の代理イベントを追加** — 履歴を残したい場合
+- **`OnCall-Override` 専用カレンダーを別に持つ** — そちらに該当者がいればそちらを優先
+
+「予定をひとりずつに送る」のではなく、**「全員が見られる単一のシフト表 = カレンダー」**がポイントです。
 
 ## シフト管理 + 通知が「最初から統合された」OSS
 
