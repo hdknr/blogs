@@ -1,0 +1,154 @@
+<mxfile host="app.diagrams.net" modified="2026-05-08T00:00:00.000Z" agent="claude" version="24.0.0">
+  <diagram id="loki-stack" name="Loki Grafana Alloy Stack">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Loki + Grafana + Alloy ログ監視スタック (ALG)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="600" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="servers_group" value="監視対象サーバー / コンテナ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;verticalAlign=top;align=center" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="320" height="640" as="geometry" />
+        </mxCell>
+
+        <mxCell id="server1" value="Web サーバー (web-01)&#10;&#10;/var/log/nginx/access.log&#10;/var/log/nginx/error.log&#10;app stdout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;verticalAlign=top;spacingLeft=10;spacingTop=10" vertex="1" parent="1">
+          <mxGeometry x="90" y="130" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="alloy1" value="Grafana Alloy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="200" y="190" width="140" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="server2" value="API サーバー (api-01)&#10;&#10;app log (JSON)&#10;/var/log/syslog" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;verticalAlign=top;spacingLeft=10;spacingTop=10" vertex="1" parent="1">
+          <mxGeometry x="90" y="270" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="alloy2" value="Grafana Alloy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="200" y="330" width="140" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="server3" value="DB サーバー (db-01)&#10;&#10;PostgreSQL log&#10;slow query log" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;verticalAlign=top;spacingLeft=10;spacingTop=10" vertex="1" parent="1">
+          <mxGeometry x="90" y="410" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="alloy3" value="Grafana Alloy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="200" y="470" width="140" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="k8s" value="Kubernetes Pod&#10;&#10;DaemonSet で各 Node に Alloy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;verticalAlign=top;spacingLeft=10;spacingTop=10" vertex="1" parent="1">
+          <mxGeometry x="90" y="550" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="alloy4" value="Grafana Alloy (DaemonSet)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="160" y="610" width="220" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="loki_box" value="Loki クラスタ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;verticalAlign=top;align=center" vertex="1" parent="1">
+          <mxGeometry x="500" y="180" width="320" height="240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="loki_distributor" value="Distributor&#10;（受信・分配）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="520" y="220" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="loki_ingester" value="Ingester&#10;（チャンク化）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="670" y="220" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="loki_querier" value="Querier&#10;（LogQL 実行）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="520" y="290" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="loki_compactor" value="Compactor&#10;（圧縮・統合）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="670" y="290" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="loki_index" value="ラベルのみインデックス&#10;（本文は圧縮保存）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="540" y="360" width="240" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="storage" value="オブジェクトストレージ&#10;(S3 / GCS / Azure Blob / ローカル)&#10;圧縮ログチャンク" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="560" y="450" width="200" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="prom_box" value="Prometheus" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="600" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="prom_label" value="メトリクス収集&#10;（同じラベル思想）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="500" y="660" width="150" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tempo_box" value="Tempo&#10;（トレース）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="670" y="600" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="grafana_box" value="Grafana&#10;&#10;ダッシュボード&#10;LogQL クエリ&#10;アラート" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9c6;strokeColor=#d79b00;fontSize=14;fontStyle=1;verticalAlign=top;spacingTop=20" vertex="1" parent="1">
+          <mxGeometry x="940" y="220" width="260" height="200" as="geometry" />
+        </mxCell>
+
+        <mxCell id="user" value="運用者&#10;（人間）" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1020" y="500" width="40" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="alert" value="Slack / メール&#10;アラート通知" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="1100" y="540" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=classic;html=1;rounded=0;strokeColor=#d79b00;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" edge="1" parent="1" source="alloy1" target="loki_distributor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="endArrow=classic;html=1;rounded=0;strokeColor=#d79b00;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" edge="1" parent="1" source="alloy2" target="loki_distributor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="endArrow=classic;html=1;rounded=0;strokeColor=#d79b00;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" edge="1" parent="1" source="alloy3" target="loki_distributor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="endArrow=classic;html=1;rounded=0;strokeColor=#d79b00;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" edge="1" parent="1" source="alloy4" target="loki_distributor">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_push_label" value="ラベル付きログ&#10;HTTP push" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="380" y="135" width="120" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e5" style="endArrow=classic;html=1;rounded=0;strokeColor=#82b366;strokeWidth=2" edge="1" parent="1" source="loki_ingester" target="storage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="endArrow=classic;html=1;rounded=0;strokeColor=#82b366;strokeWidth=2;startArrow=classic;startFill=1" edge="1" parent="1" source="loki_querier" target="storage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e7" style="endArrow=classic;html=1;rounded=0;strokeColor=#9673a6;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" edge="1" parent="1" source="loki_box" target="grafana_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7_label" value="LogQL" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="840" y="270" width="80" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e8" style="endArrow=classic;html=1;rounded=0;strokeColor=#9673a6;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" edge="1" parent="1" source="prom_box" target="grafana_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8_label" value="PromQL" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="800" y="540" width="80" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e9" style="endArrow=classic;html=1;rounded=0;strokeColor=#9673a6;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" edge="1" parent="1" source="tempo_box" target="grafana_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e10" style="endArrow=classic;html=1;rounded=0;strokeColor=#000000;strokeWidth=2;startArrow=classic;startFill=1" edge="1" parent="1" source="user" target="grafana_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e11" style="endArrow=classic;html=1;rounded=0;strokeColor=#d6b656;strokeWidth=2;edgeStyle=orthogonalEdgeStyle" edge="1" parent="1" source="grafana_box" target="alert">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e12" style="endArrow=classic;html=1;rounded=0;strokeColor=#9673a6;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;dashed=1" edge="1" parent="1" source="alloy4" target="prom_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12_label" value="メトリクス&#10;(Alloy 統合)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="380" y="610" width="100" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend" value="設計の核：&#10;• Alloy 1 つで Logs / Metrics / Traces を収集&#10;• Loki はラベルのみインデックス、本文は圧縮&#10;• Prometheus と同じラベル思想で相関分析" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;verticalAlign=top;spacingLeft=10;spacingTop=10" vertex="1" parent="1">
+          <mxGeometry x="940" y="450" width="320" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
