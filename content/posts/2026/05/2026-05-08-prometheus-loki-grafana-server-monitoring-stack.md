@@ -372,6 +372,79 @@ EC2/EKS    → Alloy → AMP → AMG
 
 「**運用負担最小 + AWS ネイティブ統合 + Grafana の UI**」のバランスが取れた構成です。
 
+### EKS / コンテナ中心環境で AMP + AMG が王道な理由
+
+K8s 環境は**メトリクスが爆発的に増える典型例**です。
+
+- Pod 数 × エクスポーター数で時系列が膨大
+- `kube-state-metrics`、`cAdvisor`、`node-exporter`、各 Controller のメトリクスが標準で出る
+- HPA でスケール変動するため、タグ・ラベルの組合せが動的に増える
+- マルチクラスタ・マルチテナント運用ではさらに増える
+
+CloudWatch Container Insights もあるが、**Prometheus エコシステム（コミュニティダッシュボード、エクスポーター、PromQL）が使えない**ため、K8s 運用ノウハウとの親和性で AMP + AMG が選ばれます。
+
+#### AMP（Amazon Managed Service for Prometheus）の EKS 統合
+
+1. **IAM Roles for Service Accounts（IRSA）** — Pod から AMP への書き込み認証を IAM ロールで付与（kube2iam 等が不要）
+2. **`remote_write` で送信** — Prometheus / Alloy / ADOT が AMP のエンドポイントに書き込み、AWS SigV4 で認証
+3. **`kube-prometheus-stack` をそのまま使える** — `prometheus.remoteWrite` に AMP エンドポイントを設定するだけで OSS 構成と互換
+4. **PromQL 100% 互換** — オンプレ Prometheus からの移行コストがほぼゼロ
+
+設定例（Helm values.yaml）:
+
+```yaml
+prometheus:
+  prometheusSpec:
+    remoteWrite:
+      - url: https://aps-workspaces.ap-northeast-1.amazonaws.com/workspaces/ws-XXXX/api/v1/remote_write
+        sigv4:
+          region: ap-northeast-1
+        queueConfig:
+          maxSamplesPerSend: 1000
+          maxShards: 200
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/AMPIngestRole
+```
+
+#### AMG（Amazon Managed Grafana）の EKS 統合
+
+1. **IAM Identity Center（旧 AWS SSO）** で組織 SSO ログイン — 個別ユーザー管理不要
+2. **AMP / CloudWatch / X-Ray のデータソースが事前統合** — Workspace 作成時に自動セットアップ
+3. **AWS PrivateLink** で VPC からのプライベート接続可能 — オフィス → VPN → AMG が現実的
+4. **Plugin インストール** はマネージド版で許可されたものに限定 — エンタープライズプラグイン（Splunk 等）は別途課金
+
+#### 収集エージェントの選択: ADOT vs Alloy
+
+EKS では収集エージェントが 2 系統:
+
+| 選択肢 | 強み | 弱み |
+|---|---|---|
+| **AWS Distro for OpenTelemetry（ADOT）** | AWS 公式、AMP / X-Ray / CloudWatch にネイティブ統合、AWS サポート対象 | ログ収集（Loki 連携）は弱い、設定が冗長 |
+| **Grafana Alloy** | メトリクス・ログ・トレースを 1 エージェント、Loki / Tempo と一貫性、Promtail からの移行ツールあり | AWS サポート対象外、AMP への送信は SigV4 で別途設定必要 |
+
+**メトリクスだけなら ADOT、ログも Loki に集約するなら Alloy** が選択基準です。
+
+#### 料金感（東京リージョンの目安）
+
+- **AMP**: $0.90 / 1 億サンプル ingestion + $0.03 / GB クエリスキャン
+  - 100 ノードクラスタで月 50M サンプル/時間 ingestion = **約 $32/月**
+- **AMG**: Editor $9 / ユーザー、Viewer $5 / ユーザー
+  - Editor 5 名 + Viewer 20 名 = **$145/月**
+- **Loki**: マネージド版なし → Grafana Cloud Loki または EKS 自前運用
+  - Grafana Cloud Free tier: 50 GB ログ/月まで無料
+
+CloudWatch Container Insights のフル運用や、Datadog などの SaaS と比較すると**圧倒的に安く**、かつ OSS 互換で移行性も高い構成です。
+
+#### AMP + AMG の制約
+
+- **AMP のクエリ性能チューニング余地が小さい** — マネージドゆえにパラメータ制限あり、超大規模クラスタでは自前 Mimir / Thanos を検討
+- **AMG のダッシュボード API 自動化に制限** — Terraform / Crossplane で扱いにくいケースあり
+- **リージョン・VPC 横断**は AWS Transit Gateway / PrivateLink で別途設計
+- **ログは AMP の対象外** — Loki は別途自前 / Grafana Cloud で構成する必要あり
+
+これらの制約を許容できるなら、**EKS 環境では AMP + AMG + Loki（Grafana Cloud or 自前）が運用負担と機能のバランスで最適**です。
+
 ### AWS 環境での選び方まとめ
 
 | 環境 | 推奨 |
