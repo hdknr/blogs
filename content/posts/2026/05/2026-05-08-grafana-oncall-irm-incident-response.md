@@ -204,6 +204,244 @@ Grafana 8 以降の **Unified Alerting** には、実はかなりの機能が標
 
 中規模以上のチームで本格的なオンコール運用を組むなら、**「シフト管理は SaaS に任せ、Grafana 側はアラート発火に専念」**が最もコスト効率が良い構成です。
 
+## Apprise + 自作 Web サービスで「ack URL + エスカレーション」を組む
+
+「**メール通知に承認 URL を埋め、一定時間踏まれなかったら次の担当へ自動エスカレーション**」というシンプルなフローなら、Apprise + 軽量な Web サービスで素直に実装できます。OSS 諦めない派にとって、自作の現実的な落としどころです。
+
+### 全体フロー
+
+```text
+[Grafana Alerting]
+      ↓ webhook
+[自作 Web サービス（Ack & Escalation）]
+   ├─ アラート受信 → DB に登録
+   ├─ ユニークな ack URL 発行
+   └─ Apprise で通知送信
+        ↓
+[1次担当者にメール]
+   "障害発生。承認するには ↓ をクリック
+    https://oncall.example.com/ack/abc123"
+        ↓
+   ┌─ N 分以内にクリック → 解決済みに更新、終了
+   └─ N 分タイムアウト  → 2次担当者にメール（新 URL）
+                            → さらに N 分待つ → 3次担当 → ...
+```
+
+### 最小実装サンプル（FastAPI + Apprise + SQLite + APScheduler）
+
+```python
+# main.py（抜粋、全体で 150 行程度で動く）
+import secrets
+from datetime import datetime, timedelta
+from fastapi import FastAPI, HTTPException
+from sqlmodel import SQLModel, Field, Session, create_engine
+from apscheduler.schedulers.background import BackgroundScheduler
+import apprise
+
+ESCALATION_POLICY = [
+    "mailto://primary@example.com",
+    "mailto://secondary@example.com",
+    "mailto://manager@example.com",
+]
+ESCALATION_TIMEOUT_MIN = 5
+BASE_URL = "https://oncall.example.com"
+
+class Alert(SQLModel, table=True):
+    id: str = Field(primary_key=True)
+    title: str
+    message: str
+    status: str = "pending"   # pending / acknowledged / closed
+    level: int = 0
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+engine = create_engine("sqlite:///alerts.db")
+SQLModel.metadata.create_all(engine)
+scheduler = BackgroundScheduler()
+scheduler.start()
+app = FastAPI()
+
+def send_notification(alert_id: str):
+    with Session(engine) as session:
+        alert = session.get(Alert, alert_id)
+        if not alert or alert.status != "pending":
+            return
+        if alert.level >= len(ESCALATION_POLICY):
+            alert.status = "closed"
+            session.add(alert); session.commit()
+            return
+
+        target = ESCALATION_POLICY[alert.level]
+        ack_url = f"{BASE_URL}/ack/{alert.id}"
+        apobj = apprise.Apprise()
+        apobj.add(target)
+        apobj.notify(
+            title=f"[L{alert.level + 1}] {alert.title}",
+            body=(
+                f"{alert.message}\n\n"
+                f"承認 URL（{ESCALATION_TIMEOUT_MIN} 分以内にクリック）:\n{ack_url}\n\n"
+                f"応答がなければ次の担当者へエスカレーションします。"
+            ),
+        )
+        scheduler.add_job(
+            escalate, "date",
+            run_date=datetime.utcnow() + timedelta(minutes=ESCALATION_TIMEOUT_MIN),
+            args=[alert_id],
+            id=f"escalate-{alert_id}-{alert.level}",
+            replace_existing=True,
+        )
+
+def escalate(alert_id: str):
+    with Session(engine) as session:
+        alert = session.get(Alert, alert_id)
+        if not alert or alert.status != "pending":
+            return
+        alert.level += 1
+        session.add(alert); session.commit()
+    send_notification(alert_id)
+
+@app.post("/webhook")
+async def receive(payload: dict):
+    """Grafana Alerting / Alertmanager の webhook を受ける"""
+    alert_id = secrets.token_urlsafe(16)
+    alert = Alert(
+        id=alert_id,
+        title=payload.get("title", "Alert"),
+        message=payload.get("message", ""),
+    )
+    with Session(engine) as session:
+        session.add(alert); session.commit()
+    send_notification(alert_id)
+    return {"alert_id": alert_id}
+
+@app.get("/ack/{alert_id}")
+async def acknowledge(alert_id: str):
+    with Session(engine) as session:
+        alert = session.get(Alert, alert_id)
+        if not alert:
+            raise HTTPException(404, "Alert not found")
+        if alert.status != "pending":
+            return {"message": f"Already {alert.status}"}
+        alert.status = "acknowledged"
+        session.add(alert); session.commit()
+    for job in scheduler.get_jobs():
+        if job.id.startswith(f"escalate-{alert_id}-"):
+            job.remove()
+    return {"message": "Acknowledged. ありがとうございます。"}
+```
+
+これだけで「webhook 受信 → メール送信 → ack URL → 5 分タイムアウト → 次担当者」が動きます。
+
+### Grafana 側の設定
+
+Grafana Alerting の Contact Point を **Webhook** にして、自作サービスの `/webhook` を指定:
+
+```yaml
+# Grafana Alerting Contact Point
+type: webhook
+settings:
+  url: https://oncall.example.com/webhook
+  httpMethod: POST
+  username: oncall-webhook   # オプション: Basic 認証
+  password: <secret>
+```
+
+通知ペイロードのテンプレートを Grafana 側で整形して、`title` と `message` を送れば自作サービス側で扱いやすくなります。
+
+### 設計上のポイントと落とし穴
+
+#### 1. ack URL は「推測不能 + 単発 + 期限付き」に
+
+- `secrets.token_urlsafe(32)` で推測困難なトークン
+- 1 回 ack されたら無効化
+- 24 時間で自動失効
+- HTTPS 必須、メール件名には書かない（プレビューでバレるため）
+
+#### 2. SPOF（単一障害点）対策
+
+「監視通知を司るサービス自身が落ちたら気づけない」という致命的な問題:
+
+- **dead man's switch** — 別の監視（Grafana や UptimeRobot など）でこのサービス自体の死活監視
+- 落ちたら Slack に直接投げる別経路を用意
+- 可能なら 2 インスタンス冗長 + Postgres / Redis 共有
+
+#### 3. メール配信遅延
+
+メールは平均 10〜30 秒、最大数分の遅延があります。
+
+- タイムアウトは「メール到達」ではなく「ack 受信」基準
+- エスカレーション間隔は **最低 3〜5 分推奨**（短すぎると誤エスカレーション増）
+- 急ぎなら Slack や Telegram も併用（Apprise なら多重送信が容易）
+
+#### 4. シフト管理を組み込むなら
+
+`ESCALATION_POLICY` を時間帯で動的に切り替える:
+
+```python
+def get_policy_for_now():
+    now = datetime.now()
+    if now.weekday() < 5 and 9 <= now.hour < 18:
+        return ["mailto://team-a@example.com", "mailto://manager@example.com"]
+    else:
+        return ["mailto://oncall-tonight@example.com", "mailto://manager@example.com"]
+```
+
+カレンダー連携が必要なら Google Calendar API でシフト表を読むのが現実的。
+
+#### 5. 永続化と再起動耐性
+
+`APScheduler` のデフォルトはメモリベース。プロセス再起動でジョブが消えるので、本番では DB に永続化:
+
+```python
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+scheduler = BackgroundScheduler(jobstores={
+    "default": SQLAlchemyJobStore(url="sqlite:///jobs.db")
+})
+```
+
+または Celery + Redis で別プロセス化。
+
+#### 6. 監査ログ
+
+「誰がいつ ack したか」を残しておくと、ポストインシデント分析や運用改善で役立ちます。`Alert` テーブルに `acknowledged_by_ip`, `acknowledged_at`, `user_agent` を追加。
+
+### メリット・デメリット
+
+#### メリット
+
+- **超軽量** — 1 VM / Docker で動く、月 $5 程度の VPS で十分
+- **完全に自分の支配下** — 外部 SaaS 依存ゼロ、データ主権
+- **柔軟** — 業務固有のルール（特定 alert は別ルート、お盆休みは特別ローテ）を素直に書ける
+- **Apprise で 70 種類の通知先に対応可能** — 後から Slack / LINE / Pushover 追加も容易
+
+#### デメリット・限界
+
+- **モバイルプッシュ通知**はメール頼みなので深夜の確実な起床は弱い → Pushover / Pushbullet を Apprise 経由で組み合わせると改善
+- **音声通話**はできない → Twilio API を組み込めば可能だがコード追加必要
+- **GUI でのシフト管理**はない — 設定は YAML / コード管理になる
+- **ポストインシデントテンプレート**などは無い
+- **SPOF リスク**が大きい — マネージド SaaS と違い自分で可用性を確保する必要
+
+### 規模別の判断
+
+| 規模 | 推奨 |
+|---|---|
+| **1〜3 人体制、週数件のアラート** | この自作サービスで十分 |
+| **5〜10 人、エスカレーション + 簡易シフト** | 自作 + シフト管理を YAML / Calendar 連携で拡張 |
+| **10 人超、24/7 シフト + 電話通知** | Zenduty（$7〜）など安価 SaaS の方がトータルコスト低 |
+| **エンタープライズ、コンプライアンス必須** | PagerDuty / Grafana Cloud IRM |
+
+### 既存 OSS で似たアプローチ
+
+ゼロから作るのが面倒なら、近い思想の OSS:
+
+- **[Alerta](https://github.com/alerta/alerta)** — アラート集約 + ack / 手動シェルブ機能
+- **[OneUptime](https://oneuptime.com/)** — オンコール + インシデント + ステータスページの OSS
+- **[Cabot](https://github.com/cabotapp/cabot)** — シンプルな OSS 監視 + 通知（やや古い）
+
+これらは「自作」と「フル SaaS」の中間に位置します。
+
+「**Apprise + FastAPI 150 行で OnCall の核を再現**」できることが分かると、OnCall OSS のアーカイブ後の心理的インパクトはかなり下がります。中身をブラックボックスにせず、自分の手で組める範囲で済ませる選択肢が現実的に存在します。
+
 ## アーキテクチャ的な位置付け
 
 [前回の記事](/blogs/posts/2026/05/2026-05-08-prometheus-loki-grafana-server-monitoring-stack/)のスタックに IRM（または代替）を組み込んだ全体像:
