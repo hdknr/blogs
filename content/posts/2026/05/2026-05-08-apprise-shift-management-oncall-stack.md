@@ -4,7 +4,7 @@ date: 2026-05-08
 lastmod: 2026-05-08
 draft: false
 categories: ["クラウド/インフラ"]
-tags: ["Apprise", "シフト管理", "オンコール", "PyShift", "GoAlert", "OR-Tools", "PuLP", "Python", "OSS", "オブザーバビリティ"]
+tags: ["Apprise", "シフト管理", "オンコール", "PyShift", "GoAlert", "OR-Tools", "PuLP", "Python", "OSS", "オブザーバビリティ", "Microsoft Teams", "Microsoft Graph", "Outlook", "Microsoft Shifts"]
 ---
 
 [前回の記事](/blogs/posts/2026/05/2026-05-08-grafana-oncall-irm-incident-response/)で「Apprise + 自作 Web サービスで OnCall 相当を組む」例を示しました。この記事ではよくある誤解を整理し、**シフト管理を含めた自作 OnCall スタックの現実的な選択肢**を深掘りします。
@@ -196,6 +196,146 @@ apobj.notify(title="Alert", body="...")
 - **`OnCall-Override` 専用カレンダーを別に持つ** — そちらに該当者がいればそちらを優先
 
 「予定をひとりずつに送る」のではなく、**「全員が見られる単一のシフト表 = カレンダー」**がポイントです。
+
+### 4. Microsoft 365 / Teams 環境で同じ運用を行う
+
+「Google Calendar 運用」を Microsoft 365 / Teams 環境でやりたい場合、**完全に同じパターンが成立**します。コンポーネントを差し替えるだけで思想は同じです。
+
+#### コンポーネントの対応関係
+
+| 役割 | Google Workspace | Microsoft 365 / Teams |
+|---|---|---|
+| シフト表 | Google Calendar 共有カレンダー | **Outlook/Exchange 共有カレンダー** |
+| API | Google Calendar API | **Microsoft Graph API**（統一 API） |
+| 認証 | サービスアカウント | **Azure AD アプリ登録 + クライアント資格情報フロー（msal）** |
+| チャット通知 | Google Chat / Slack | **Teams Incoming Webhook** |
+| 専用シフト管理アプリ | — | **Microsoft Shifts**（Teams 内蔵、別パターン） |
+
+#### パターン A: Outlook 共有カレンダー（最も直接的な移植）
+
+Google Calendar 版とほぼ同じ構造。
+
+セットアップ:
+
+1. **Outlook で「Engineering OnCall」共有カレンダーを作成** — Microsoft 365 グループに紐付けるのが一般的
+2. **チームに閲覧権限で共有**
+3. **Azure AD でアプリ登録** — `Calendars.Read.Shared` または `Calendars.Read` の **Application permission** を付与
+4. **管理者同意（admin consent）** を取得 — テナント全体への読み取り権限
+
+Microsoft Graph API での実装:
+
+```python
+from msal import ConfidentialClientApplication
+import requests
+from datetime import datetime, timezone, timedelta
+import apprise
+
+TENANT_ID     = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+CLIENT_ID     = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
+CLIENT_SECRET = "zzzzzzzzzzzzzzzzzzzzzzzz"
+GROUP_ID      = "engineering-oncall@example.onmicrosoft.com"
+
+# クライアント資格情報フローでトークン取得
+app = ConfidentialClientApplication(
+    CLIENT_ID,
+    authority=f"https://login.microsoftonline.com/{TENANT_ID}",
+    client_credential=CLIENT_SECRET,
+)
+result = app.acquire_token_for_client(scopes=["https://graph.microsoft.com/.default"])
+token = result["access_token"]
+
+def get_current_oncall(group_email: str) -> str | None:
+    """グループカレンダーから「今の当番」のメールを返す"""
+    now = datetime.now(timezone.utc)
+    end = now + timedelta(seconds=1)
+    url = (
+        f"https://graph.microsoft.com/v1.0/groups/{group_email}/calendarView"
+        f"?startDateTime={now.isoformat()}&endDateTime={end.isoformat()}"
+    )
+    r = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+    r.raise_for_status()
+    for event in r.json().get("value", []):
+        subject = event.get("subject", "")
+        if "@" in subject:
+            return subject.split()[-1]
+        for a in event.get("attendees", []):
+            return a["emailAddress"]["address"]
+    return None
+
+# Apprise で通知（メール + Teams 同時送信）
+oncall = get_current_oncall(GROUP_ID)
+apobj = apprise.Apprise()
+apobj.add(f"mailto://{oncall}")
+apobj.add("msteams://TOKEN_A/TOKEN_B/TOKEN_C/")  # Teams Incoming Webhook
+apobj.notify(title="Alert", body=f"On-call: {oncall}")
+```
+
+#### パターン B: Microsoft Shifts（Teams 内蔵のシフト管理）
+
+Teams には **Shifts** というシフト管理専用アプリが標準で組み込まれています。
+
+特徴:
+
+- **Teams の左サイドバーに常駐** — 担当者は Teams を開くたびに自分のシフトが見える
+- **シフト交換・申請・承認**のワークフロー内蔵
+- **タイムクロック機能**（出退勤打刻）
+- **Power Automate** 連携可能
+- **Microsoft Graph API（`/teams/{id}/schedule`）** でシフトデータ取得可能
+
+```python
+url = f"https://graph.microsoft.com/v1.0/teams/{TEAM_ID}/schedule/shifts"
+r = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+shifts = r.json()["value"]
+current = next(
+    s for s in shifts
+    if s["sharedShift"]["startDateTime"] <= now.isoformat() <= s["sharedShift"]["endDateTime"]
+)
+user_id = current["userId"]
+```
+
+要求権限: `Schedule.Read.All`（管理者同意必要）
+
+#### A vs B の使い分け
+
+| 用途 | Outlook 共有カレンダー（A） | Microsoft Shifts（B） |
+|---|---|---|
+| シフト表の編集 UI | カレンダーアプリ | 専用 UI（直感的） |
+| シフト交換ワークフロー | なし（手動編集） | あり（依頼・承認） |
+| タイムクロック | なし | あり |
+| API の単純さ | 簡単（Calendar API） | やや複雑（Schedule API） |
+| 適合用途 | **IT オンコール、軽量運用** | フロントライン勤務（小売・医療等） |
+
+**IT のオンコール用途**なら Outlook 共有カレンダー（A）で十分。**交代制勤務の本格運用**なら Shifts（B）。
+
+#### Apprise の Teams 通知連携
+
+```python
+apobj.add("msteams://TokenA/TokenB/TokenC/")
+```
+
+Teams チャネルの設定で Incoming Webhook コネクタを有効化し、生成された URL の token 部分を Apprise URL に変換するだけ。
+
+> ⚠️ **注意**: Microsoft は Connector ベースの Incoming Webhook を **Power Automate Workflow** に段階的に移行しています。最新環境では Workflow 用 Webhook を使う必要がある場合あり。Apprise 側も `msteamswrapper` プラグインで対応中。
+
+#### Azure AD アプリ登録時の落とし穴
+
+- **Application permission を選ぶ**（Delegated ではない） — サービスとして動かすため
+- 必要スコープ: `Calendars.Read.Shared`（A）or `Schedule.Read.All`（B）
+- **管理者同意（admin consent）が必須** — テナント管理者にお願いして承認
+- Client secret は Azure Key Vault などで管理、コード直書きは厳禁
+- **タイムゾーン**は `Prefer: outlook.timezone="Tokyo Standard Time"` ヘッダで指定可能
+- Microsoft Graph はレート制限が厳しめ — `429 Too Many Requests` のリトライ実装必須
+
+#### 選択指針
+
+| 状況 | 推奨 |
+|---|---|
+| Google Workspace 中心 | Google Calendar + Calendar API + Apprise |
+| **Microsoft 365 / Teams 中心** | **Outlook 共有カレンダー + Graph API + Apprise（msteams 通知）** |
+| シフト交換ワークフローも本格運用したい | **Microsoft Shifts** + Graph API + Apprise |
+| シフト管理 UI を Teams に統合したい | **Channel Calendar アプリ**（バックエンドは Outlook と同じ）+ Graph API |
+
+エンタープライズで M365 を既に契約している場合、追加コストゼロでこの構成が組めるのが大きな利点です。
 
 ## シフト管理 + 通知が「最初から統合された」OSS
 
