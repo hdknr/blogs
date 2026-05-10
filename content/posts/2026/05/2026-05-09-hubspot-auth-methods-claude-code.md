@@ -473,6 +473,173 @@ HubSpot ポータル → Development → Keys → Service keys
 
 「**人間が触る = OAuth、システムが動かす = Service Key**」という棲み分けは、こうした内部動作の違いから来ています。
 
+## 利用者への権限設定 — 2 つのフローでの設計の違い
+
+OAuth と Service Key では「誰が何にアクセスできるか」を制御する仕組みが根本的に違います。**OAuth は HubSpot のユーザー権限管理がそのまま効く**のに対し、**Service Key は Key 単位で固定された権限**を持つだけで、ユーザー概念がありません。
+
+### OAuth（MCP）フローの権限が決まる 3 レイヤー
+
+実際にユーザーが操作できる範囲は、以下の **3 つの交差点** で決まります。
+
+```text
+┌──────────────────────────────┐
+│ ① アプリ（MCP サーバー）の   │
+│    declared scope            │ ← HubSpot にアプリ登録時に宣言
+│    例: contacts.read,        │
+│        contacts.write,       │
+│        deals.read            │
+└──────────────────────────────┘
+              ∩
+┌──────────────────────────────┐
+│ ② ユーザーが OAuth 画面で    │
+│    同意した scope            │ ← ログイン時に granted
+│    （減らせるが、増やせない）│
+└──────────────────────────────┘
+              ∩
+┌──────────────────────────────┐
+│ ③ ユーザー本人の HubSpot     │
+│    ロール / 権限             │ ← HubSpot 管理者が設定
+│    例: Super Admin /         │
+│        Sales / View-only     │
+└──────────────────────────────┘
+              ↓
+       実際の API アクセス権
+```
+
+**① アプリ側の declared scope** — MCP サーバー提供者の設計に依存:
+
+- 公式 MCP（`https://mcp.hubspot.com/anthropic`）は CRM 操作に必要な汎用 scope セットを要求
+- ユーザー側でアプリの scope を変更することはできない
+- 「このアプリは何を要求しているか」は同意画面で確認できる
+
+**② ユーザーが同意する scope** — OAuth 同意画面で:
+
+```
+このアプリは以下のアクセスを要求しています:
+✅ コンタクトの読み取り
+✅ コンタクトの書き込み
+✅ ディールの読み取り
+☐  ディールの書き込み（任意）
+```
+
+任意 scope は外せる場合がある（HubSpot Public App の設計次第）。同意しなければ認証は完了しない。
+
+**③ ユーザー本人のロール** — HubSpot 管理者が事前に設定:
+
+```text
+HubSpot ポータル → Settings → Users & Teams
+  → 個別ユーザーの Permissions タブ
+  - CRM access (Contacts/Companies/Deals/Tickets) を細かく
+  - Marketing access
+  - Sales access
+  - Reports access
+  - Account access (Settings 操作可否)
+  → Permission Sets でテンプレ化して使い回し
+```
+
+#### OAuth フローの重要な特性
+
+- **同じ MCP 接続でもユーザーごとに操作可能範囲が違う** — Aさん（Super Admin）は全部、Bさん（Sales）はコンタクトのみ、というのが自動で実現
+- **ユーザー追加・削除・ロール変更が即座に反映** — HubSpot 側で View-only に降格したら、その瞬間から書き込み API が 403 を返すようになる
+- **監査ログがユーザー単位** — 「誰がどのコンタクトを更新したか」を HubSpot 側で追跡できる
+- **退職者のアクセスは HubSpot ユーザー削除で即無効化** — 個別 Key 管理が不要
+
+### Service Key フローの権限設定
+
+```text
+┌──────────────────────────────┐
+│ ① Key 発行時に選択した scope │ ← Key 作成者（HubSpot 管理者）が設定
+│    例:                        │
+│    crm.objects.contacts.read  │
+│    crm.objects.contacts.write │
+│    crm.objects.deals.read     │
+└──────────────────────────────┘
+              ↓
+┌──────────────────────────────┐
+│ ② ユーザー概念が「ない」     │
+│    Key 自体が API クライアント│
+│    どのユーザーが叩いても同じ │
+│    権限                       │
+└──────────────────────────────┘
+              ↓
+       実際の API アクセス権
+```
+
+OAuth と違って **「ユーザーロールでの絞り込み」が機能しない**。Key の scope = そのまま実権限になる。
+
+#### 設定手順
+
+```text
+1. HubSpot ポータル → Development → Keys → Service keys
+2. Create service key
+3. Name を入力（例: "Nightly Lead Sync Job"）
+4. Permissions（scope）を選択:
+   - CRM
+     ☐ crm.objects.contacts.read
+     ☐ crm.objects.contacts.write
+     ☐ crm.objects.companies.read
+     ☐ crm.objects.deals.read
+     ☐ ... 必要なものだけチェック
+   - Marketing
+     ☐ marketing.campaigns.read
+     ☐ marketing.emails.read
+   - Settings / Schemas / etc.
+5. Create を押すと Key が生成される（1 度しか表示されない）
+```
+
+#### 「ユーザーごとに違う権限」を実現するパターン
+
+Service Key はそのままでは **全ユーザー共通の権限** になる。「Aさんはコンタクトのみ、Bさんは全データ」のような分離をしたい場合は、**Key を複数発行して配り分ける** のが基本パターン:
+
+| パターン | 設計 |
+|---|---|
+| **全社共通の単一 Key** | 1 Key、最小権限。全ジョブが共有 |
+| **チーム / 用途別** | Sales 用 / Marketing 用 / 分析用と複数 Key |
+| **マルチテナント SaaS** | テナントごとに別 Key を発行・管理 |
+| **環境別** | Dev / Staging / Prod でそれぞれ別 Key |
+
+それぞれの Key を**シークレットストレージで分離管理**し、アプリ起動時に環境変数で必要な Key だけ読み込む。
+
+#### アプリ層で「ユーザー権限」を独自実装するパターン
+
+Service Key 経由で動く SaaS が「エンドユーザーごとに違う HubSpot データを見せたい」場合は、**アプリ側で独自の権限管理層を実装**します:
+
+```python
+# 例: SaaS のユーザー A はコンタクト 1〜100 だけ見られる
+def get_contacts_for_user(user_id: str):
+    # アプリ側の認可ロジック
+    allowed_contact_ids = check_user_permissions(user_id)
+    # Service Key で全データにアクセス可能だが、フィルタしてから返す
+    return hubspot_api.fetch_contacts(ids=allowed_contact_ids)
+```
+
+これは HubSpot 側の権限ではなく、**アプリ側の責任**で実装する点が OAuth と決定的に違う。
+
+#### Service Key の運用上の注意
+
+- **権限変更 = Key を新しく発行** — 既存 Key の scope は後から変更できない。要件が変わったら新規発行 → 旧 Key を revoke
+- **退職対応** — Key を revoke するだけ（HubSpot ユーザーアカウントとは独立）
+- **監査ログは Key 単位** — 「どの Key が叩いたか」は分かるが「実際に裏で誰が指示したか」はアプリ側のログで補完が必要
+- **共有される秘密** — 1 つの Key を複数のチームメンバーが使うと「漏洩したら誰の責任か」が曖昧になる。可能ならユーザー / 用途ごとに Key を分離
+
+### 設計判断のポイント
+
+| 観点 | OAuth（MCP） | Service Key |
+|---|---|---|
+| 権限の単位 | **ユーザー単位**（HubSpot ロール経由） | **Key 単位**（発行時に固定） |
+| 権限変更 | HubSpot 管理者がユーザーロールを変えるだけ | 新 Key 発行 + 旧 Key revoke + アプリ更新 |
+| 退職対応 | HubSpot ユーザー削除で即無効 | Key を revoke |
+| 監査ログ | ユーザー個人に紐づく | Key（アプリ）に紐づく |
+| 「ユーザーごとに違う権限」の実現 | ◎ 自動 | △ Key を分けるか、アプリ層で独自実装 |
+| 利用者が増えた時の管理 | ◎ HubSpot 側の管理に集約 | △ Key の数が増えて管理コスト増 |
+| 適合シナリオ | 多数のユーザーが個別に HubSpot を触る | システムがバックグラウンドで動く |
+
+判断基準を簡潔にまとめると:
+
+- **「人間がそれぞれ違う権限で触る」なら OAuth（MCP）** — HubSpot のユーザー権限管理がそのまま効く
+- **「システムが裏で動く、権限はアプリ単位で固定」なら Service Key** — Key 単位の最小権限管理 + ローテーション運用
+- **「SaaS のエンドユーザーに見せる範囲を制御したい」なら Service Key + アプリ層認可** — HubSpot の権限機能は使えないので自前で
+
 ## 用途別の推奨
 
 | やりたいこと | 推奨認証 |
