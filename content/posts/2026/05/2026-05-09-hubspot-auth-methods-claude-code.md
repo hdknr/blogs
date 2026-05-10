@@ -640,6 +640,165 @@ def get_contacts_for_user(user_id: str):
 - **「システムが裏で動く、権限はアプリ単位で固定」なら Service Key** — Key 単位の最小権限管理 + ローテーション運用
 - **「SaaS のエンドユーザーに見せる範囲を制御したい」なら Service Key + アプリ層認可** — HubSpot の権限機能は使えないので自前で
 
+## 制約と前提条件 — MCP / OAuth が使えないケース
+
+ここまで「OAuth は 3 レイヤー」「Service Key は 2 レイヤー」と説明しましたが、実運用では**さらに上のレイヤー**が制約として効いてきます。「同意画面で `contents` scope を追加できない」「MCP に接続できない」といった現象の多くは、ユーザー権限ではなく**契約・組織レベルの設定**で弾かれているケースです。
+
+### 真の権限階層は 5 レイヤー
+
+```text
+┌───────────────────────────────────────┐
+│ ⓪ HubSpot サブスクリプション層        │ ← 契約プランで使える機能が決まる
+│    Free / Starter / Pro / Enterprise │
+│    + 各 Hub (CMS Hub, Sales Hub …)   │
+└───────────────────────────────────────┘
+              ↓
+┌───────────────────────────────────────┐
+│ ① アプリの declared scope             │ ← アプリ登録時に「契約上利用可能な
+│    （契約していない scope は         │    scope のみ」が選択肢に出る
+│    そもそも UI に出てこない）         │
+└───────────────────────────────────────┘
+              ↓
+┌───────────────────────────────────────┐
+│ ② アカウント管理者のマーケットプレイス │ ← 「ユーザーが任意のアプリを
+│    制限                               │    入れていいか」を Super Admin が
+│    （App approval setting）          │    制御可能
+└───────────────────────────────────────┘
+              ↓
+┌───────────────────────────────────────┐
+│ ③ ユーザーが OAuth 画面で同意         │
+└───────────────────────────────────────┘
+              ↓
+┌───────────────────────────────────────┐
+│ ④ ユーザー本人の HubSpot ロール       │
+└───────────────────────────────────────┘
+              ↓
+       実際の API アクセス権
+```
+
+### 「`contents` scope を追加できない」はなぜ起きるか
+
+`contents` 系の scope（`content`、`hubdb`、`files` など）は **CMS Hub の機能** に紐づいています。アプリ登録画面で追加できない原因として考えられるのは:
+
+1. **CMS Hub を契約していない** — Marketing Hub だけ契約している場合、CMS 側の scope はそもそもアプリ登録画面に出てこない
+2. **CMS Hub Free しかない** — 一部 scope は Pro 以上で開放される
+3. **アプリ登録画面でのリスト不足** — Public App と Private App で利用可能な scope セットが違う
+4. **「旧アプリ」だから** — 古いアプリ登録形式で、新規 scope の追加が deprecated path にある可能性
+
+確認方法:
+
+```text
+HubSpot Developer ポータル
+  → 該当アプリ → Auth タブ
+  → "Scopes" セクションで利用可能 scope の一覧
+  → grayed out / 表示されないものは契約 or 設定で制限されている
+```
+
+ポータルで `contents` が灰色表示 / 表示されない場合は、**ユーザーレベルの権限ではなくアカウント契約レベルの問題**です。アカウントの Super Admin に問い合わせて:
+
+- CMS Hub を契約に追加するか
+- アカウント設定で対象機能を有効化するか
+- 別のアプリ形式（Private App、Project App、Service Key）で代替するか
+
+を判断する必要があります。
+
+### MCP がそもそも使えないケース
+
+公式 HubSpot MCP も**同じ階層の制約を受けます**。
+
+#### ⓪ HubSpot サブスクリプション層
+
+- **HubSpot Free** ではマーケットプレイスアプリの一部機能が制限される
+- 公式 MCP がアクセスする CRM オブジェクトの一部（Custom Objects、Workflows など）は **Pro / Enterprise** が前提
+- HubSpot 側が「MCP は Free / Starter では非対応」とした場合、API 呼び出しが 403 で失敗
+
+#### ① アプリのインストール権限
+
+- 公式 MCP（`https://mcp.hubspot.com/anthropic`）は HubSpot アカウントに「アプリ」としてインストールされる
+- HubSpot のアカウント設定で **「Marketplace アプリの追加」** が制限されている場合、Super Admin の承認が必要
+- ユーザーが OAuth 同意画面まで進めても、最終的に「Admin Approval Required」で止まる
+
+確認:
+
+```text
+HubSpot ポータル → Settings → Account Setup → Permissions
+→ "App Marketplace install requests" の設定
+- 全ユーザー OK
+- Super Admin 承認が必要
+- Super Admin のみインストール可能
+```
+
+#### ② Anthropic 側のサブスクリプション
+
+- 公式 MCP の利用には **Anthropic Pro / Max / Team / Enterprise** の有料プランが必要
+- Free プランでは公式 MCP は接続できない
+
+#### ③ Claude Code の MCP scope 制限
+
+- `claude mcp add ... --scope user` はユーザー単位、`--scope project` はプロジェクト単位
+- 共有マシン / チーム環境で「project scope」の MCP を入れたい場合、リポジトリオーナー / 管理者の承認が必要なことがある
+
+#### ④ ネットワーク / セキュリティポリシー
+
+- 企業ネットワークで `mcp.hubspot.com` への外向き通信が遮断されている
+- 認証時のリダイレクト URL（OAuth コールバック）が localhost だが、企業プロキシで弾かれる
+- ZTNA / SASE 製品が MCP のトラフィックを未知のものとして遮断
+
+### 使えないときの判断フロー
+
+```text
+MCP に接続できない / scope が足りない
+            ↓
+[ Super Admin に確認 ]
+   - HubSpot 契約プランは何か？
+   - 必要な Hub（CMS / Sales / Marketing）を契約しているか？
+   - Marketplace アプリのインストール制限はあるか？
+            ↓
+   ┌────────┴────────┐
+契約・制限あり        契約・制限なし
+   ↓                       ↓
+[ 代替案 ]              [ Anthropic プラン確認 ]
+- 契約アップグレード     - Pro 以上を契約済みか
+- Private App 利用       ↓
+  （既存契約内で         [ ネットワーク確認 ]
+   発行可能）            - mcp.hubspot.com に到達可能か
+- Service Key 利用       - OAuth コールバック OK か
+  （Super Admin に
+   依頼して発行）
+```
+
+### 実用的な対処パターン
+
+#### パターン A: Super Admin と相談できる
+
+- 必要な scope / Hub を伝えて契約 or 設定変更を依頼
+- 一時的なものなら Super Admin に **Service Key を発行してもらう**（必要な scope だけチェック）→ そのキーを使って自分の用途を実装
+
+#### パターン B: Super Admin に依頼できない / 即座にやりたい
+
+- 自分のロールで作れる **Private App**（Settings → Integrations → Private Apps）を使う
+- Private App は通常 Super Admin / Admin ロールでないと作れないが、組織によっては緩いことも
+- 利用できる scope は自分のロール権限の範囲内に限定される
+
+#### パターン C: 個人でテストしたい / 検証用
+
+- **無料の HubSpot Developer Account** で Test Account を作成
+- そこで Super Admin として全 scope を試せる
+- 本番アカウントへの切替時に同じ scope が利用可能かを別途確認
+
+#### パターン D: MCP がブロックされて使えない
+
+- **方法 2（REST API 直叩き + Private App / Service Key）に切り替える**
+- ヘッドレス環境で完結するので OAuth リダイレクトの問題は出ない
+- ネットワーク的には `api.hubapi.com` への HTTPS 通信のみ必要
+- 自社マシン内で完結するので情シスの承認も得やすい
+
+### なぜ「2 択でほぼ十分」が現実的なのか — 改めて
+
+冒頭で「MCP と Service Key の 2 択でほぼ十分」と書きましたが、**MCP 経由は契約・組織・ネットワーク・サブスクリプションの全レイヤーをクリアする必要があり**、企業環境では実は使えないことが珍しくありません。「アドホック調査用に MCP も使える」と読み替えるのが現実的で、**業務統合の本命は方法 2（REST API + Service Key / Private App）になりがち**です。
+
+つまり「MCP は使えれば便利だが、組織条件次第で使えないことも多い」という事実が、**方法 2 を実質的な本命**にしている根拠です。MCP に接続できない場合の Plan B として、必ず Service Key / Private App の運用ルートも準備しておくのが安全です。
+
 ## 用途別の推奨
 
 | やりたいこと | 推奨認証 |
