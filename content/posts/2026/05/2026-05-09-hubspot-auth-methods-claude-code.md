@@ -20,7 +20,12 @@ HubSpot は API 認証の選択肢が多く、「**結局どれを使えばい�
 
 この記事では、それぞれの違い・推奨用途・Claude Code から使う場合の選び方を整理します。なお旧 API Key は廃止済みですが、参考情報として記事末尾で触れます（実質的な選択肢は **6 つ**です）。
 
-**結論を先に言うと**: Claude Code から自然言語で HubSpot 操作したいなら**公式 MCP サーバー**、自前スクリプトを書くなら**新登場の Service Key**（既存は **Private App** を継続）、の 2 択でほぼ十分です。
+**結論を先に言うと**: 用途で 2 軸に分かれます。
+
+- **アドホックに自然言語で操作したい**（営業・マーケが Claude Code から HubSpot を触る等） → **公式 MCP サーバー**
+- **本番運用・バッチ・Webhook など継続的なシステム統合** → **REST API 直叩き + Service Key（新規）/ Private App（既存）**
+
+両者は競合ではなく補完関係で、実務では併用するのが現実解です。
 
 ## 早見表
 
@@ -193,7 +198,26 @@ curl -H "Authorization: Bearer hsk-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" \
 
 ## Claude Code から HubSpot を操作する 3 通りの方法
 
-### 方法 1: HubSpot 公式 MCP サーバー（最推奨）
+3 つの方法は競合ではなく、**用途が違います**。「人間がアドホックに触る」なら方法 1、「システムが本番で継続的に動かす」なら方法 2、「Project / UI Extension の開発」なら方法 3、と棲み分けるのが正しい理解です。
+
+### 方法 1 vs 方法 2 の比較
+
+| 観点 | 方法 1: 公式 MCP | 方法 2: REST API 直叩き |
+|---|---|---|
+| セットアップ | ◎ 1 行で接続 | ○ 環境変数 + コード |
+| 自然言語操作 | ◎ そのまま指示 | △ コード生成は可だが実行は手動 |
+| **本番運用（バッチ・cron）** | △ Claude Code を都度起動は非現実的 | ◎ 純粋な Python スクリプトとして安定動作 |
+| **ランタイムコスト** | ✕ Claude API トークンが毎回かかる | ◎ HubSpot API のレート制限のみ |
+| **外部依存** | ✕ Anthropic + HubSpot MCP インフラ | ◎ HubSpot だけ |
+| **エラー処理・リトライ** | △ Claude 任せ、細かい制御が難しい | ◎ コードで完全制御 |
+| **可能な操作の範囲** | △ MCP サーバーが提供する範囲 | ◎ HubSpot API 全エンドポイント |
+| **デバッグ容易性** | △ Claude 経由でブラックボックス気味 | ◎ ログ・スタックトレースが普通に取れる |
+| **CI/CD 組み込み** | △ non-interactive 実行が要る | ◎ そのまま組み込める |
+| **必要なサブスク** | ✕ Anthropic 有料プラン必須 | ◎ なし |
+
+つまり**「人間が触る入口は MCP、システムが動かす中核は REST API」**が補完関係です。
+
+### 方法 1: HubSpot 公式 MCP サーバー（アドホック操作・対話的な作業向け）
 
 ```bash
 claude mcp add --transport http hubspot --scope user https://mcp.hubspot.com/anthropic
@@ -207,6 +231,13 @@ claude mcp add --transport http hubspot --scope user https://mcp.hubspot.com/ant
 「このメールを読んで HubSpot のコンタクトにメモを追加して」
 ```
 
+**向いている場面**:
+
+- アドホックな調査・分析（営業・マーケが「直近 30 日の新規コンタクトを業界別に集計」）
+- 対話的な仮説検証
+- コードを書きたくないユーザー
+- 1 回限りで再現性不要なタスク
+
 **メリット**:
 
 - 認証が OAuth で安全
@@ -215,7 +246,7 @@ claude mcp add --transport http hubspot --scope user https://mcp.hubspot.com/ant
 
 **前提**: Anthropic 有料サブスクリプション
 
-### 方法 2: REST API 直叩き（Private App / Service Key）
+### 方法 2: REST API 直叩き（Private App / Service Key）— 本番運用の本命
 
 ```bash
 # Claude Code に「このトークンを使って ... する Python スクリプトを書いて」と指示
@@ -225,16 +256,28 @@ export HUBSPOT_TOKEN=pat-na1-...
 # 必要に応じて HubSpot Python SDK (hubspot-api-client) も使う
 ```
 
+**向いている場面（本番運用ではこちらが最有力）**:
+
+- **定期バッチ**: 毎朝 9 時に新規リードを別 DB に同期
+- **Webhook 受信処理**: HubSpot からのイベントに反応
+- **大量データ処理**: 100 万件のコンタクトをスクリプトで一気に更新
+- **本番アプリケーション**: SaaS の HubSpot 連携機能
+- **コスト最適化**: Claude API トークンを毎回消費したくない
+- **再現性・監査が必要**: コード化された手続きが必要
+
 **メリット**:
 
-- MCP サーバーが対応していない細かい操作も可能
+- HubSpot API の全エンドポイントにアクセス可能（MCP の範囲外も含む）
 - 自社内で完結（外部 SaaS 経由しない）
 - バッチ処理・定期実行に組み込みやすい
+- Anthropic 有料プラン不要、ランタイムコストが極小
 
 **Private App or Service Key**:
 
-- **新規** → Service Key
+- **新規構築** → Service Key
 - **Webhook も併用** → Private App
+
+Claude Code は**コード生成器**として使い、生成されたスクリプトは Claude を介さず単独で動かす — このパターンが本番運用では最も実用的です。
 
 ### 方法 3: HubSpot CLI 経由（Personal Access Key）
 
@@ -244,7 +287,7 @@ hubspot auth personal-access-key
 hubspot project upload
 ```
 
-CRM データ操作には不向きで、**Project App / UI Extension のローカル開発・デプロイ**で使う。
+CRM データ操作には不向きで、**Project App / UI Extension のローカル開発・デプロイ**で使います。
 
 ## 用途別の推奨
 
@@ -277,12 +320,18 @@ CRM データ操作には不向きで、**Project App / UI Extension のロー�
 
 - 現時点で**最も将来性があるのは Service Key**（新規 system-to-system 統合）
 - **Webhook が必要なら Private App / Project App** を引き続き使用
-- **Claude Code から最も簡単に使えるのは公式 MCP Server** — 1 行で接続、自然言語で操作
+- **Claude Code でアドホックに自然言語操作するなら公式 MCP Server** — 1 行で接続して即座に使える
+- **本番運用（バッチ・Webhook・大量処理）は REST API 直叩き（Service Key / Private App）が最有力** — Claude Code はコード生成器として使い、生成されたスクリプトは Claude を介さず単独で動かす
 - **旧 API Key は廃止済み** — 残っていれば即移行
 - **OAuth は Marketplace アプリと複数アカウント連携の標準**
 - **Personal Access Key と Developer API Key は特定用途専用**
 
-「6 つもある」と聞くと混乱しますが、実際の選択は「**Claude Code から使うなら MCP、自前スクリプトなら Service Key（新規）/ Private App（既存）**」の 2 択でほぼ十分です。
+「6 つもある」と聞くと混乱しますが、用途で割り切ると 2 軸で済みます:
+
+- **人間が触る入口（探索・対話）** → **MCP サーバー**
+- **システムが動かす中核（本番・バッチ）** → **REST API + Service Key（新規）/ Private App（既存）**
+
+両者は**競合ではなく補完関係**で、多くの組織では併用するのが現実解です。
 
 ## 参考リンク
 
