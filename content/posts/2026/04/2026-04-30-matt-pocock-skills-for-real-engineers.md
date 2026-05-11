@@ -50,6 +50,51 @@ AI 開発で誰もがハマる以下の問題を解決するために設計さ�
 - 数十年のエンジニアリング経験が凝縮されている
 - 自由にカスタマイズして自分のものにできる
 
+## 収録スキル一覧
+
+リポジトリは 4 カテゴリ・計 19 スキルで構成されている。
+
+### Engineering — コード作業向け（10 スキル）
+
+日々のコード作業で使うコアスキル群。
+
+- **diagnose** — 難しいバグ・性能劣化に対する規律ある診断ループ（再現 → 最小化 → 仮説 → 計測 → 修正 → 回帰テスト）
+- **grill-with-docs** — ドメインモデルに照らして計画を厳しく検証し、`CONTEXT.md` と ADR をその場で更新する高機能版グリル
+- **triage** — Issue をステートマシン状のトリアージロールで分類整理
+- **improve-codebase-architecture** — `CONTEXT.md` と `docs/adr/` を参照してコードベースの深化機会を発見
+- **setup-matt-pocock-skills** — リポジトリごとの設定（Issue tracker、ラベル語彙、ドメインドキュメント構成）を初期化。他スキルの基盤
+- **tdd** — RED-GREEN-REFACTOR で 1 縦割りスライスずつ機能/バグ修正を進める TDD ループ
+- **to-issues** — 計画/仕様/PRD を独立して着手可能な GitHub Issue に分解
+- **to-prd** — 現在の会話コンテキストを PRD にまとめ、GitHub Issue として投稿
+- **zoom-out** — エージェントに視野を広げさせ、コードの高レベルな全体像を語らせる
+- **prototype** — 使い捨てのプロトタイプ（ターミナルアプリ、もしくは複数 UI バリエーション）で設計を炙り出す
+
+### Productivity — 一般的なワークフロー（3 スキル）
+
+コード以外の作業効率を上げる汎用スキル。
+
+- **caveman** — 雑語を削ぎ落とした超圧縮コミュニケーションモード。技術的正確性を保ったままトークン消費を約 75% 削減
+- **grill-me** — 計画/設計について決定木を全て潰すまで容赦なくインタビューを受ける
+- **write-a-skill** — 新しいスキルを正しい構造（プログレッシブ・ディスクロージャ、同梱リソース）で作成
+
+### Misc — 保持しているがほぼ使わない（4 スキル）
+
+特定状況で役立つユーティリティ群。
+
+- **git-guardrails-claude-code** — Hooks で危険な git コマンド（push、reset --hard、clean など）の実行をブロック
+- **migrate-to-shoehorn** — テストファイルの `as` 型アサーションを `@total-typescript/shoehorn` に移行
+- **scaffold-exercises** — 演習用ディレクトリ（sections / problems / solutions / explainers）の雛形を生成
+- **setup-pre-commit** — Husky + lint-staged + Prettier + 型チェック + テストの pre-commit を構築
+
+### Personal — 自分用（プラグインで宣伝されない、2 スキル）
+
+Matt Pocock 自身のセットアップに紐付くスキル。
+
+- **edit-article** — 記事の構成・明瞭さ・文章を改善（節再構成、引き締め）
+- **obsidian-vault** — Obsidian vault のノートを wikilink/index ノート付きで検索・作成・管理
+
+中核は Engineering の `diagnose` / `tdd` / `grill-with-docs` / `to-prd` / `to-issues` あたり。これが「現場のエンジニアリング作法を Markdown スキルに落としたもの」の本体だ。Productivity の `caveman`（トークン削減）と `grill-me`（要件詰問）は単独で導入する価値が大きく、SNS でもよく話題に上がっている。
+
 ## 導入方法（30 秒セットアップ）
 
 ```bash
