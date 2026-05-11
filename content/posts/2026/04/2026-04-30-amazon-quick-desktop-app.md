@@ -21,7 +21,15 @@ Amazon Quick は AWS が提供するデスクトップ AI アシスタントで�
 
 ### パーソナル知識グラフによるコンテキスト学習
 
-Amazon Quick はバックグラウンドで常時動作し、ユーザーの作業パターン・人間関係・プロジェクトを学習する「パーソナル知識グラフ」を構築する。会話のたびにゼロから始めるのではなく、蓄積したコンテキストを活用して返答するのが特徴だ。
+Amazon Quick はバックグラウンドで動作するデスクトップ常駐アプリで、**ユーザーが明示的に接続した SaaS 統合（Slack・メール等）と、許可したローカルフォルダ**からエンティティ（人物・組織・プロジェクト・イベント・ドキュメント等）を抽出して「パーソナル知識グラフ」を構築する。会話のたびにゼロから始めるのではなく、蓄積したグラフを参照して返答するのが特徴だ。
+
+データ取得経路は次の 3 つに限定されており、画面録画・キー入力フック・アクセシビリティ API といった OS レベルの「横取り」は行わない:
+
+- **Auto-ingest from integrations** — 接続済み SaaS の正規 API 経由でメッセージ・送受信者などを取り込む。Slack / Email / その他のソースタイプごとに個別トグルで ON/OFF
+- **ローカルフォルダ（オプトイン）** — `Settings > My computer` でフォルダ単位に「Knowledge graph extraction」を明示的に有効化したフォルダだけをローカルでインデックス化（クラウドにアップロードはしない）
+- **チャット内での手動追加** — 会話中にユーザーが指示してエンティティを追加
+
+抽出した知識グラフは `~/.quickwork/` にローカル保存され、クロスデバイス継続のため AWS アカウントへバックアップされる。AI モデルの学習には一切使用されない。
 
 ### 広範なエンタープライズアプリ統合
 
@@ -63,3 +71,4 @@ Amazon Quick デスクトップアプリは、エンタープライズのセキ�
 - 公式サイト: [Amazon Quick](https://aws.amazon.com/quick/)
 - デスクトップアプリダウンロード: [Download Amazon Quick](https://aws.amazon.com/quick/download/)
 - AWS ブログ: [Top announcements of the What's Next with AWS, 2026](https://aws.amazon.com/blogs/aws/top-announcements-of-the-whats-next-with-aws-2026/)
+- 知識グラフ仕様: [Knowledge graph - Amazon Quick User Guide](https://docs.aws.amazon.com/quick/latest/userguide/knowledge-graph-desktop.html)
