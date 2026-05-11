@@ -1,0 +1,63 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="bakery-reservation-system" name="テイクアウト予約管理システム構成">
+    <mxGraphModel dx="900" dy="420" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="420" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="テイクアウト予約管理システム（運用時の構成）" style="text;html=1;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="150" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- User -->
+        <mxCell id="user" value="店主・スタッフ" style="shape=mxgraph.basic.person;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=bottom;align=center;" vertex="1" parent="1">
+          <mxGeometry x="60" y="160" width="60" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Google Sheets -->
+        <mxCell id="sheets" value="Google スプレッドシート" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="140" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="sheets-desc" value="UI・データ管理&#xa;注文データ / 商品設定 / 在庫" style="text;html=1;fontSize=10;align=center;verticalAlign=top;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="240" y="205" width="200" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- GAS -->
+        <mxCell id="gas" value="Google Apps Script（GAS）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="560" y="140" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="gas-desc" value="ロジック・自動化&#xa;注文受付 / メール送信 / データ保存" style="text;html=1;fontSize=10;align=center;verticalAlign=top;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="560" y="205" width="220" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Development note -->
+        <mxCell id="dev-box" value="開発フェーズ（バイブコーディング）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="320" width="240" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="gemini-label" value="Gemini AI — 自然言語でコードを生成・修正" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="290" y="370" width="320" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows: User -> Sheets -->
+        <mxCell id="arr-user-sheets" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="user" target="sheets">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows: Sheets <-> GAS -->
+        <mxCell id="arr-sheets-gas" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2.5;endArrow=blockThin;endFill=1;startArrow=blockThin;startFill=1;" edge="1" parent="1" source="sheets" target="gas">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Dev arrow (dashed) -->
+        <mxCell id="arr-dev" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=1.5;dashed=1;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="dev-box" target="gas">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-dev2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=1.5;dashed=1;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="dev-box" target="sheets">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
