@@ -93,6 +93,39 @@ Matt Pocock 自身のセットアップに紐付くスキル。
 - **edit-article** — 記事の構成・明瞭さ・文章を改善（節再構成、引き締め）
 - **obsidian-vault** — Obsidian vault のノートを wikilink/index ノート付きで検索・作成・管理
 
+#### 補足: obsidian-vault の正体
+
+「コミット時に自動でメモが登録される」ようなフックではなく、**対話型のメモ操作スキル**だ。`SKILL.md` の `description` が用途を端的に表している:
+
+> Search, create, and manage notes in the Obsidian vault with wikilinks and index notes. Use when user wants to find, create, or organize notes in Obsidian.
+
+ユーザーが Claude Code に明示的に「あのノートを探して」「これをメモして」「関連ノートを整理して」と頼んだ時に発動する。仕込まれているのは Matt 個人の vault ルール:
+
+- **vault パス**: `/mnt/d/Obsidian Vault/AI Research/`（WSL パス、ハードコード）
+- **構造**: フラット（フォルダで分けない）
+- **命名**: Title Case
+- **索引**: フォルダの代わりに `Ralph Wiggum Index.md` / `Skills Index.md` / `RAG Index.md` のような **Index ノート** を作り、`[[wikilink]]` のリストで集約
+- **リンク**: 各ノートの末尾に `[[wikilink]]` で関連ノートを並べる
+
+ワークフローは 4 つに集約されている:
+
+1. **検索** — `find … -name "*.md" | grep -i keyword` または `grep -rl keyword` で vault スキャン
+2. **新規作成** — Title Case ファイル名 + 末尾に `[[wikilink]]` を書く
+3. **バックリンク発見** — `grep -rl "\[\[Note Title\]\]"` で被リンクを引く
+4. **Index ノート発見** — `find … -name "*Index*"`
+
+「personal」カテゴリでプラグインに宣伝されないのは、vault パスと命名規則が Matt 個人のものだから。流用するなら `SKILL.md` の vault パスと運用ルールを自分用に書き換えるのが前提だ。
+
+post-commit で自動的に知識を登録したい場合は、別途仕組みを組む必要がある:
+
+- **git の `post-commit` フック** で `claude` CLI を蹴り、コミット内容を要約して vault に書かせる
+- Claude Code の `Stop` / `PostToolUse` フックで「対話で得た知見を vault に書け」と発火させる
+- `obsidian-vault` スキルはその「書く先のルール（フラット構造・Title Case・Index ノート）」を提供する
+
+つまりこのスキルは「自動化機構」ではなく「Obsidian に書く時の作法集」だ。
+
+---
+
 中核は Engineering の `diagnose` / `tdd` / `grill-with-docs` / `to-prd` / `to-issues` あたり。これが「現場のエンジニアリング作法を Markdown スキルに落としたもの」の本体だ。Productivity の `caveman`（トークン削減）と `grill-me`（要件詰問）は単独で導入する価値が大きく、SNS でもよく話題に上がっている。
 
 ## 導入方法（30 秒セットアップ）
