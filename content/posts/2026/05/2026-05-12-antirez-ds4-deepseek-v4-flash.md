@@ -16,6 +16,7 @@ tags: ["deepseek-v4-flash", "antirez", "ローカルLLM", "apple-silicon", "clau
 - 公式ベンチで **Mac Studio M3 Ultra 512GB / Q4 / 12k context** で **26.62 token/sec**、Q2 なら 96/128GB の MacBook でも動作
 - **OpenAI 互換 + Anthropic 互換** API を持ち、Claude Code から `ANTHROPIC_BASE_URL` を差し替えるだけでローカルモデルとして使える
 - **KV キャッシュをディスクに永続化**するなど、ローカル推論の常識を更新する設計思想が随所に光る
+- 実運用報告では **コンテキスト 100K → 1M、KV ディスク 8GB → 64GB に拡張して Think Max モードを Claude Code 上でアンロック** した例も登場
 
 ## きっかけ: 「ds4 凄すぎるな」というツイート
 
@@ -201,6 +202,43 @@ DeepSeek V4 Flash はツールコールを DSML というテキスト形式で�
 
 加えて、生成中に DSML タグ・パラメータヘッダー・JSON 句読点といった「構造」を出力している間は `temperature=0` に強制し、引数 payload（文字列・ファイル内容など）は通常のサンプリング設定を維持する、というハイブリッド戦略も採用されている。
 
+## 実運用例: 100K → 1M コンテキストへの拡張
+
+ローカル LLM 運用者の都乃健 [@Tono_Ken3](https://x.com/Tono_Ken3/status/2053630984256659669) 氏（RTX Pro 6000 クラスターで「off-grid home AGI」を運用中）が、ds4 の KV キャッシュ SSD 永続化機能を活かした実用例を報告している。
+
+> おぉぉ！DS4 によって KV キャッシュは SSD 容量を使うことができたのでコンテキスト長さを大きい値に設定しても大丈夫なはず
+>
+> ClaudeCode で DeepSeek V4 Flash Q4 (Anthropic 互換 API)
+>
+> -c100K → -c1M
+> 8192MB → 65536MB
+>
+> DeepSeek V4 Flash + Think Max モードアンロック！
+
+ポイントを整理すると以下のようになる。
+
+| 項目 | 変更前 | 変更後 |
+| --- | --- | --- |
+| コンテキスト長（`--ctx`） | 100,000 トークン | **1,000,000 トークン**（DeepSeek V4 Flash の上限） |
+| KV ディスク領域（`--kv-disk-space-mb`） | 8,192 MB（8 GB） | **65,536 MB（64 GB）** |
+| 思考モード | 通常 | **Think Max モード** |
+
+ds4-server の起動例で言えば次のような変化に相当する。
+
+```sh
+# 標準的な設定
+./ds4-server --ctx 100000 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192
+
+# Tono_Ken3 氏の「全部入り」設定
+./ds4-server --ctx 1000000 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 65536
+```
+
+これは **DeepSeek V4 Flash の最大コンテキスト 1M トークンを実運用で使い切る** 設定であり、KV キャッシュ全体がメモリではなく SSD に逃がせるからこそ成立する。README には「1M コンテキストの圧縮 KV インデクサだけで 26GB ほどメモリを使う」と書かれており、128GB クラスのマシンでは正攻法で 1M を回そうとすると圧迫されるが、ds4 の SSD 永続化で 64GB の KV ディスクを割り当てれば、メモリは推論本体に温存できる。
+
+さらに注目すべきは「**Think Max モードのアンロック**」だ。DeepSeek V4 Flash は通常の thinking モードでも問題複雑度に比例した可変長の思考を出すが、Think Max では思考量の上限を取り払う。普通なら思考トークンだけで数万〜数十万に膨れあがり、コンテキストが現実的に持たないところを、**1M コンテキスト + KV ディスク永続化のセットで初めて Claude Code 上の最大思考が実用に乗る** ということだ。
+
+「Mac 一台でローカル Claude Code + 1M コンテキスト + Think Max」という、つい数か月前まで非現実だった構成が、ds4 という narrow bet のおかげで動いてしまっている。
+
 ## 「narrow bet」という設計思想
 
 README の以下の一節が ds4 のすべてを物語っている。
@@ -244,6 +282,7 @@ ds4 は単なる「速い推論エンジン」ではなく、**ローカル推�
 - [antirez/ds4 (GitHub)](https://github.com/antirez/ds4)
 - [antirez/deepseek-v4-gguf (Hugging Face)](https://huggingface.co/antirez/deepseek-v4-gguf)
 - [ツイート: @m_sigepon の動作報告](https://x.com/m_sigepon/status/2053882891487391976)
+- [ツイート: @Tono_Ken3 の 1M コンテキスト + Think Max アンロック報告](https://x.com/Tono_Ken3/status/2053630984256659669)
 - [llama.cpp (謝辞先)](https://github.com/ggml-org/llama.cpp)
 
 ### 関連記事
