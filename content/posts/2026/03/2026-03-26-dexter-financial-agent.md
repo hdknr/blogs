@@ -2,6 +2,7 @@
 title: "Dexter: 約200行で動く自律型金融リサーチエージェント"
 date: 2026-03-26
 lastmod: 2026-03-26
+slug: "dexter-financial-agent"
 draft: false
 description: "約200行のTypeScriptで動くオープンソースの金融リサーチAIエージェント Dexter の仕組み、アーキテクチャ、始め方を解説"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4132000585"

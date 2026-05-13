@@ -2,6 +2,7 @@
 title: "深圳が世界初の OpenClaw・一人企業支援策を発表 — AI エージェント時代のソロ起業を後押し"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "shenzhen-openclaw-opc"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4026522698"
 categories: ["AI/LLM"]
@@ -59,7 +60,7 @@ OpenClaw はオーストリアの Peter Steinberger 氏が開発したオープ�
 
 深圳の政策は、AI エージェントが「ツール」から「事業基盤」へと位置づけを変えつつあることを象徴している。一人企業モデルが制度的に後押しされる時代に、日本の開発者やスタートアップがどう対応するかは重要な問題だ。
 
-技術的な観点では、[ハーネスエンジニアリング](/posts/2026-03-09-harness-engineering/)の考え方 — AI エージェントを安定稼働させるための「外側の仕組み」の設計 — が、一人企業における品質担保の鍵になるだろう。
+技術的な観点では、[ハーネスエンジニアリング](/posts/2026/03/harness-engineering/)の考え方 — AI エージェントを安定稼働させるための「外側の仕組み」の設計 — が、一人企業における品質担保の鍵になるだろう。
 
 ## 参考
 

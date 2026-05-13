@@ -5,8 +5,8 @@ date: 2026-04-28
 lastmod: 2026-04-28
 aliases: ["hubspot crm", "hubspot pro"]
 related_posts:
-  - "/posts/2026/04/2026-04-23-hubspot-hscachebuster/"
-  - "/posts/2026/04/2026-04-28-hubspot-pro-merits/"
+  - "/posts/2026/04/hubspot-hscachebuster/"
+  - "/posts/2026/04/hubspot-pro-merits/"
 tags: ["hubspot", "crm", "ma", "インバウンドマーケティング", "営業"]
 ---
 
@@ -46,5 +46,5 @@ CMS Hub のテーマ開発では **`hsCacheBuster`** などの内部キャッシ
 
 ## ソース記事
 
-- [HubSpot Pro プランの実用メリット](/blogs/posts/2026/04/2026-04-28-hubspot-pro-merits/) — 2026-04-28
-- [HubSpot CMS の hsCacheBuster](/blogs/posts/2026/04/2026-04-23-hubspot-hscachebuster/) — 2026-04-23
+- [HubSpot Pro プランの実用メリット](/blogs/posts/2026/04/hubspot-pro-merits/) — 2026-04-28
+- [HubSpot CMS の hsCacheBuster](/blogs/posts/2026/04/hubspot-hscachebuster/) — 2026-04-23

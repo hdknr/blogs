@@ -2,12 +2,13 @@
 title: "Graphite 徹底解説 — スタックドPRとマージキューがAIファースト開発を加速する理由"
 date: 2026-04-19
 lastmod: 2026-04-19
+slug: "graphite-stacked-prs-merge-queue"
 draft: false
 categories: ["ツール/開発環境"]
 tags: ["Graphite", "GitHub", "スタックドPR", "マージキュー", "AIコードレビュー", "CI/CD", "ハーネスエンジニアリング"]
 ---
 
-[CreaoAI が25名で6週間のリリースサイクルを1日に短縮した事例](/blogs/posts/2026/04/2026-04-17-ai-first-harness-engineering-creao/)では、PR 管理ツールとして **Graphite** が採用されていた。1日8回デプロイ・AI が大量に PR を量産する運用で、素の GitHub PR フローは何が詰まり、Graphite は何を解決するのか。本記事では Graphite の3本柱（スタックドPR・マージキュー・AIレビュー）を、CLI コマンドと具体的な運用シナリオで解説する。
+[CreaoAI が25名で6週間のリリースサイクルを1日に短縮した事例](/blogs/posts/2026/04/ai-first-harness-engineering-creao/)では、PR 管理ツールとして **Graphite** が採用されていた。1日8回デプロイ・AI が大量に PR を量産する運用で、素の GitHub PR フローは何が詰まり、Graphite は何を解決するのか。本記事では Graphite の3本柱（スタックドPR・マージキュー・AIレビュー）を、CLI コマンドと具体的な運用シナリオで解説する。
 
 ## Graphite とは
 
@@ -150,7 +151,7 @@ CreaoAI の事例で「PR ごとに Claude Opus 4.6 を3並列で走らせる」
 
 ## ハーネスエンジニアリングとの相性
 
-[AIファースト戦略](/blogs/posts/2026/04/2026-04-17-ai-first-harness-engineering-creao/)でも触れたように、AI がコードを書く速度に対するレビュー・マージの律速を解消することが Harness 全体のスループットを決める。Graphite がその律速に対して提供する解は明快だ。
+[AIファースト戦略](/blogs/posts/2026/04/ai-first-harness-engineering-creao/)でも触れたように、AI がコードを書く速度に対するレビュー・マージの律速を解消することが Harness 全体のスループットを決める。Graphite がその律速に対して提供する解は明快だ。
 
 - **スタックドPR**: レビュー粒度を小さく保ち、人間と AI の両方のレビュー精度を上げる
 - **マージキュー**: main を壊さずに並列マージを捌き、1日8回デプロイを構造的に成立させる
@@ -168,7 +169,7 @@ CreaoAI の事例で「PR ごとに Claude Opus 4.6 を3並列で走らせる」
 
 ## 関連記事
 
-- [「AIファースト」戦略の本当の意味 — ハーネスエンジニアリングで25人チームが6週間を1日に短縮した方法](/blogs/posts/2026/04/2026-04-17-ai-first-harness-engineering-creao/)
+- [「AIファースト」戦略の本当の意味 — ハーネスエンジニアリングで25人チームが6週間を1日に短縮した方法](/blogs/posts/2026/04/ai-first-harness-engineering-creao/)
 
 ## 参考リンク
 

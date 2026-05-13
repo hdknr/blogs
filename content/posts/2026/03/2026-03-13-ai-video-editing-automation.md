@@ -2,6 +2,7 @@
 title: "AI動画編集 自動化のカラクリ — 自動カット・自動テロップで編集時間を劇的に短縮する方法"
 date: 2026-03-13
 lastmod: 2026-03-13
+slug: "ai-video-editing-automation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4058462947"
 categories: ["AI/LLM"]

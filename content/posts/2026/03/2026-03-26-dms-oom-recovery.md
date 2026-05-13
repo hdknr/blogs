@@ -2,6 +2,7 @@
 title: "AWS DMS Serverless の OOM 障害と監視の盲点 — 検知漏れの根本原因と対策"
 date: 2026-03-26
 lastmod: 2026-03-26
+slug: "dms-oom-recovery"
 draft: false
 categories: ["クラウド/インフラ"]
 tags: ["aws", "dms", "serverless", "eventbridge", "cloudwatch", "terraform", "監視"]

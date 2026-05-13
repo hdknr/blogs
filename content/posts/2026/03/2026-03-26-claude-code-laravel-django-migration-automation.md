@@ -2,13 +2,14 @@
 title: "Claude Code で Laravel→Django 全自動移行をやってみた（2/3）自動化基盤編"
 date: 2026-03-26
 lastmod: 2026-03-26
+slug: "claude-code-laravel-django-migration-automation"
 draft: false
 description: "Claude Code を自律実行させるための Bash フレームワーク run-issue.sh の設計を解説。Issue 駆動の実行フロー、サブエージェント活用、Pre-commit Hook と CI による品質保証の実装。"
 categories: ["AI/LLM"]
 tags: ["Claude Code", "Laravel", "Django", "Python", "自動化"]
 ---
 
-[前回の計画編](/posts/2026/03/2026-03-26-claude-code-laravel-django-migration-plan/)では、移行の方針とフェーズ設計を紹介しました。本記事では、計画を実際に自律実行するためのフレームワーク設計を解説します。
+[前回の計画編](/posts/2026/03/claude-code-laravel-django-migration-plan/)では、移行の方針とフェーズ設計を紹介しました。本記事では、計画を実際に自律実行するためのフレームワーク設計を解説します。
 
 ---
 
@@ -326,4 +327,4 @@ services:
 
 自動化基盤編では「どう動かすか」の設計を解説しました。
 
-次の[実行結果・教訓編](/posts/2026/03/2026-03-26-claude-code-laravel-django-migration-lessons/)では、実際に 15 Issue を自律実行した結果 — 成功パターン、発生した問題（ブランチ分岐問題）、そして次回のプロジェクトに活かすべき教訓を紹介します。
+次の[実行結果・教訓編](/posts/2026/03/claude-code-laravel-django-migration-lessons/)では、実際に 15 Issue を自律実行した結果 — 成功パターン、発生した問題（ブランチ分岐問題）、そして次回のプロジェクトに活かすべき教訓を紹介します。

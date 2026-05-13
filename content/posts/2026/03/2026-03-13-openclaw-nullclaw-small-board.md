@@ -2,6 +2,7 @@
 title: "OpenClawをMac miniなしで1500円の小型基板に導入してAI組織を構築する方法"
 date: 2026-03-13
 lastmod: 2026-04-14
+slug: "openclaw-nullclaw-small-board"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4058302625"
 categories: ["AI/LLM"]

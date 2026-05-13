@@ -2,6 +2,7 @@
 title: "「研究コミュニティをまるごとエミュレートせよ」— Karpathy が示す AI エージェント協調の未来"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "ai-research-community"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4027631113"
 categories: ["AI/LLM"]
@@ -40,7 +41,7 @@ Karpathy の言葉を借りれば、エージェントの「知性、注意力�
 
 ## ハーネスエンジニアリングとの接点
 
-この議論は、[ハーネスエンジニアリング](/posts/2026-03-09-harness-engineering/)の文脈ともつながる。autoresearch の `program.md` はまさに AGENTS.md / CLAUDE.md に相当する入力層であり、5 分間の固定時間予算と val_bpb による自動評価は検証層だ。
+この議論は、[ハーネスエンジニアリング](/posts/2026/03/harness-engineering/)の文脈ともつながる。autoresearch の `program.md` はまさに AGENTS.md / CLAUDE.md に相当する入力層であり、5 分間の固定時間予算と val_bpb による自動評価は検証層だ。
 
 単一エージェントのハーネスでさえ設計が難しいのに、複数エージェントが並列で動く環境では、ハーネスの重要性はさらに増す。「何を読ませるか」「品質をどう強制するか」「結果をどう検証するか」という 3 層構造を、分散環境でどうスケールさせるかが次の課題になるだろう。
 

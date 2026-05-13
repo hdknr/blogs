@@ -2,6 +2,7 @@
 title: "dmux：Claude Code / Codex を安全に並列実行するための git worktree 管理ツール"
 date: 2026-04-15
 lastmod: 2026-04-15
+slug: "dmux-parallel-ai-agents"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250488257"
 categories: ["ツール/開発環境"]
@@ -96,7 +97,7 @@ dmux は tmux ベースの TUI で、キーボードショートカットで操�
 
 ## 関連ツール：cmux との違いと使い分け
 
-AI エージェントの並列実行を支援するツールとして [cmux](/blogs/posts/2026/02/2026-02-26-5017f19e6544b679fb98156a068b72d5/) もある。dmux と名前が似ているが、役割が異なる。
+AI エージェントの並列実行を支援するツールとして [cmux](/blogs/posts/2026/02/5017f19e6544b679fb98156a068b72d5/) もある。dmux と名前が似ているが、役割が異なる。
 
 - **dmux** — tmux ベースの CLI ツール。git worktree の自動作成・管理によるファイル競合の防止が主な役割
 - **cmux** — macOS ネイティブのターミナルアプリ（iTerm2 や Terminal.app の代替）。縦タブ、通知リング、インアプリブラウザなど、複数エージェントの視覚的な管理が主な役割

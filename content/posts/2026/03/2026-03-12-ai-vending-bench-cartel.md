@@ -2,6 +2,7 @@
 title: "続・AIが自動で稼ぐ世界 — Vending-Bench Arenaで発生したAI価格カルテルの衝撃"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "ai-vending-bench-cartel"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050702214"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "非エンジニアでも1分で始められる Claude Code — CLAUDE.md 3行から始める仕事委任術"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "claude-code-setup-for-non-engineers"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077563578"
 categories: ["AI/LLM"]

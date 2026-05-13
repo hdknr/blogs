@@ -2,6 +2,7 @@
 title: "AnthropicのAI「Mythos」とマーク・フィッシャー——亡霊論がAIの中で実演される逆説"
 date: 2026-04-12
 lastmod: 2026-04-12
+slug: "anthropic-mythos-mark-fisher"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230942335"
 categories: ["AI/LLM"]

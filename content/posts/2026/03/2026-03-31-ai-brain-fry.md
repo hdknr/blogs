@@ -2,6 +2,7 @@
 title: "AI Brain Fry: AIの使いすぎで脳が焼ける現象とその対策"
 date: 2026-03-31
 lastmod: 2026-03-31
+slug: "ai-brain-fry"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4165294463"
 categories: ["AI/LLM"]

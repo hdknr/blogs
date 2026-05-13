@@ -2,6 +2,7 @@
 title: "Onyx（旧 Danswer）完全ガイド — 無料で使えるオープンソース AI プラットフォーム"
 date: 2026-04-03
 lastmod: 2026-04-03
+slug: "onyx-open-source-ai-platform"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4182307312"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "SaaS is Dead? AIに代替される層と残り続ける層"
 date: 2026-03-14
 lastmod: 2026-03-14
+slug: "saas-is-dead-perspective"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4061228769"
 categories: ["AI/LLM"]

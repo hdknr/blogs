@@ -2,6 +2,7 @@
 title: "Matt Pocock の「Skills for Real Engineers」— Claude Code に現場のエンジニアリング作法を仕込む Markdown スキル集"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "matt-pocock-skills-for-real-engineers"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349316259"
 categories: ["AI/LLM"]

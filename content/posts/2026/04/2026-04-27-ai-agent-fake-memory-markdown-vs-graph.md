@@ -2,6 +2,7 @@
 title: "90%のAI Agentの記憶は偽物？Markdownダンプが崩壊する理由とMem0・GraphRAGによる設計"
 date: 2026-04-27
 lastmod: 2026-04-28
+slug: "ai-agent-fake-memory-markdown-vs-graph"
 draft: false
 description: "会話履歴をMarkdownファイルに溜めるだけでは長期記憶にならない。重複排除・セマンティック検索・時系列重み付け・関係モデリングの4つの欠陥を解説し、Mem0・memsearchによるグラフ×ベクトル埋め込みの本物の記憶設計を紹介する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4326307631"

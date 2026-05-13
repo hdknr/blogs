@@ -2,6 +2,7 @@
 title: "Claude Code に Auto Mode が登場 — 許可プロンプトなしで長時間タスクを実行"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "claude-code-auto-mode"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050723505"
 categories: ["AI/LLM"]

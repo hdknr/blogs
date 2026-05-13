@@ -2,6 +2,7 @@
 title: "Claude Code の Auto Mode から見える AGI への道筋"
 date: 2026-03-26
 lastmod: 2026-03-26
+slug: "claude-code-auto-mode-agi"
 draft: false
 description: "Claude Code の auto mode はパーミッションの自動判断に留まらず、Claude 実行自体の自動化、つまり AGI への一歩と捉えられる。開発ツールの自律性がどこまで進むかを考察する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4136299255"

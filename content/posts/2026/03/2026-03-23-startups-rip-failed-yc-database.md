@@ -2,6 +2,7 @@
 title: "Startups.RIP：5,700社以上の失敗したYCスタートアップから学ぶデータベース"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "startups-rip-failed-yc-database"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4107525358"
 categories: ["ビジネス/キャリア"]

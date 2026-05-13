@@ -2,6 +2,7 @@
 title: "「toA」時代の到来 — AIエージェント向けサービス200超が示す新市場の全体像"
 date: 2026-03-30
 lastmod: 2026-03-30
+slug: "toa-services-for-ai-agents"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4152193070"
 categories: ["AI/LLM"]

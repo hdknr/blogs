@@ -2,6 +2,7 @@
 title: "Gemma 4 31Bの脱獄モデル「CRACK」登場 — Abliteration技術でセーフティを除去"
 date: 2026-04-06
 lastmod: 2026-04-06
+slug: "gemma4-31b-abliterated-crack"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4194462489"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Karpathy の autoresearch — AIが寝ている間に100回実験を回す仕組み"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "karpathy-autoresearch"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4026634592"
 categories: ["AI/LLM"]

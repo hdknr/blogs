@@ -2,6 +2,7 @@
 title: "Obsidian × Claude Code で「24時間365日動く AI 秘書」を構築する — Greg Isenberg の 10 ステップ"
 date: 2026-04-22
 lastmod: 2026-04-22
+slug: "obsidian-claude-code-personal-os"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304026053"
 categories: ["AI/LLM"]

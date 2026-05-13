@@ -2,6 +2,7 @@
 title: "Gemini Agentモード：Google Workspaceを丸ごと自動化するAIエージェントの実力"
 date: 2026-04-07
 lastmod: 2026-04-07
+slug: "gemini-agent-mode"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4201963572"
 categories: ["AI/LLM"]

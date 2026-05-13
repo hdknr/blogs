@@ -2,6 +2,7 @@
 title: "開発サーバーの Let's Encrypt 証明書が切れたので自動更新できるようにした"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "letsencrypt-certbot-dns-route53"
 draft: false
 categories: ["クラウド/インフラ"]
 tags: ["aws", "nginx"]

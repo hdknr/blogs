@@ -5,8 +5,6 @@ date: 2026-04-06
 lastmod: 2026-04-06
 aliases: ["celery"]
 related_posts:
-  - "/posts/2023/04/celery/"
-  - "/posts/2023/07/celery-on-ecs/"
 tags: ["Python", "Django", "タスクキュー", "Redis"]
 ---
 
@@ -17,8 +15,3 @@ Redis や RabbitMQ をブローカーに、非同期タスク実行・定期タ�
 ## 関連ページ
 
 - [Redis](/blogs/wiki/tools/redis/) — Celery のブローカー/バックエンド
-
-## ソース記事
-
-- [Celery](/blogs/posts/2023/04/celery/) — 2023-04
-- [Celery on ECS](/blogs/posts/2023/07/celery-on-ecs/) — 2023-07

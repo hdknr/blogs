@@ -2,6 +2,7 @@
 title: "Claude + YouTube Shorts で顔出しなし・編集なしの自動収益化 — バイラル動画を量産する実践プロンプト術"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "claude-youtube-shorts-automation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349371563"
 categories: ["AI/LLM"]

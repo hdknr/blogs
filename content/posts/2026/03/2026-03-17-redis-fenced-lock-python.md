@@ -83,7 +83,6 @@ redis-py の [`Lock` クラス](https://redis.readthedocs.io/en/stable/_modules/
 import redis
 from redis.lock import Lock
 
-
 class FencedLock(Lock):
     """フェンシングトークン付き分散ロック。
 

@@ -2,6 +2,7 @@
 title: "ハーネスエンジニアリングとの向き合い方 — ルールファイルを超えて開発プロセスを設計する"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "harness-engineering-beyond-rule-files"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304022715"
 categories: ["AI/LLM"]

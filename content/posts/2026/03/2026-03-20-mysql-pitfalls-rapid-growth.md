@@ -2,6 +2,7 @@
 title: "急成長でぶつかったMySQLの罠とその向き合い方 - 7つの実践的な教訓"
 date: 2026-03-20
 lastmod: 2026-03-20
+slug: "mysql-pitfalls-rapid-growth"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4095054896"
 categories: ["データベース"]

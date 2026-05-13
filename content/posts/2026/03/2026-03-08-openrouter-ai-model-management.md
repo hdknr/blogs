@@ -2,6 +2,7 @@
 title: "OpenRouter で AI モデルを一元管理する — コスト削減と効率化の実践"
 date: 2026-03-08
 lastmod: 2026-03-08
+slug: "openrouter-ai-model-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4018915580"
 categories: ["AI/LLM"]

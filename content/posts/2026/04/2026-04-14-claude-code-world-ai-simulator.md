@@ -2,6 +2,7 @@
 title: "Claude Code で作る「世界AIシミュレーター」— 20カ国AIエージェントが自律外交・紛争するリアルタイム地政学ゲーム"
 date: 2026-04-14
 lastmod: 2026-04-14
+slug: "claude-code-world-ai-simulator"
 draft: false
 description: "Claude Code を使い20カ国AIエージェントが自律外交・同盟・経済制裁を判断する世界AIシミュレーターの技術解説。マルチエージェントシステムの設計パターン、3Dビジュアライゼーション、LLMストリーミングの実装例を紹介。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4326327015"

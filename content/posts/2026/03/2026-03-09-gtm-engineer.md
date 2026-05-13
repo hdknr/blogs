@@ -2,6 +2,7 @@
 title: "GTMエンジニア — AI時代に生まれた「1人で3チーム分」の新職種"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "gtm-engineer"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4020352621"
 categories: ["ビジネス/キャリア"]

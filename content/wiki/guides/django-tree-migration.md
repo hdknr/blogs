@@ -5,7 +5,7 @@ date: 2026-04-27
 lastmod: 2026-04-27
 aliases: ["django-mptt", "django-tree-queries", "MPTT 移行"]
 related_posts:
-  - "/posts/2026/04/2026-04-20-django-mptt-unmaintained-tree-queries/"
+  - "/posts/2026/04/django-mptt-unmaintained-tree-queries/"
 tags: ["Django", "Python", "django-mptt", "django-tree-queries", "MPTT", "Recursive CTE", "ORM"]
 ---
 
@@ -122,4 +122,4 @@ python manage.py makemigrations
 
 ## ソース記事
 
-- [django-mptt はなぜ「unmaintained」と書かれているのか — そして django-tree-queries への移行](/blogs/posts/2026/04/2026-04-20-django-mptt-unmaintained-tree-queries/) — 2026-04-20
+- [django-mptt はなぜ「unmaintained」と書かれているのか — そして django-tree-queries への移行](/blogs/posts/2026/04/django-mptt-unmaintained-tree-queries/) — 2026-04-20

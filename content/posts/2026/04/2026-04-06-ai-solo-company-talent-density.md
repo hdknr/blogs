@@ -2,6 +2,7 @@
 title: "AIが変える企業規模の常識——「才能密度」と少人数で100億を狙う時代"
 date: 2026-04-06
 lastmod: 2026-04-06
+slug: "ai-solo-company-talent-density"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4194412788"
 categories: ["ビジネス/キャリア"]

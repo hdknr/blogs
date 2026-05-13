@@ -2,6 +2,7 @@
 title: "Cloudflare Agents × AI が実現する次世代メールクライアント"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "cloudflare-agents-ai-email-client"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078661550"
 categories: ["AI/LLM"]

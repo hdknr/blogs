@@ -2,6 +2,7 @@
 title: "22歳の学生が $5 から 370 万ドルを稼いだ Polymarket アルゴトレーディング戦略の全解析"
 date: 2026-04-29
 lastmod: 2026-04-29
+slug: "polymarket-algo-trading-22yo-student"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340875892"
 description: "22歳の学生が Polymarket で $5 から 370 万ドルを稼いだアルゴトレーディング戦略を逆エンジニアリング。NO ポジションのスキャン、ロジック裁定、スポーツ市場攻略の3つのロジックを解説。"

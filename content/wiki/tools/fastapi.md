@@ -5,7 +5,6 @@ date: 2026-04-06
 lastmod: 2026-04-06
 aliases: ["fastapi"]
 related_posts:
-  - "/posts/2024/06/fastapi/"
 tags: ["Python", "API", "Web フレームワーク", "ASGI"]
 ---
 
@@ -16,7 +15,3 @@ Asyncio ネイティブで、型ヒント活用による自動バリデーショ
 ## 関連ページ
 
 - [DRF](/blogs/wiki/tools/drf/) — Django 側の REST API フレームワーク
-
-## ソース記事
-
-- [FastAPI](/blogs/posts/2024/06/fastapi/) — 2024-06

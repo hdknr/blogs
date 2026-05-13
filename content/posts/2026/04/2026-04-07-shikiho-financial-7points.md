@@ -2,6 +2,7 @@
 title: "四季報の財務欄から「安心な投資先」を探す7つのポイント — 自己資本の増減に注目"
 date: 2026-04-07
 lastmod: 2026-04-07
+slug: "shikiho-financial-7points"
 draft: false
 description: "会社四季報の財務欄に載る8つの数字（ROE・自己資本比率・有利子負債など）から安心な投資先を見つける7つのチェックポイントを解説。債務超過の見分け方やROICの活用法も紹介"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4198377479"

@@ -2,6 +2,7 @@
 title: "OpenClaw で月400ドルの AI チームを構築 — 18歳がコーディング経験ゼロで実現した方法"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "openclaw-ai-team"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4026629734"
 categories: ["AI/LLM"]

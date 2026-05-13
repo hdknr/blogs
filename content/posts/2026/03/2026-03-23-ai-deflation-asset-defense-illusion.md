@@ -2,6 +2,7 @@
 title: "「資産防衛」という幻想：AI時代のデフレと金融リセットの先に本当に備えるべきこと"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "ai-deflation-asset-defense-illusion"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4113573965"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Anthropic AI Academy: Claude を体系的に学べる無料公式コース"
 date: 2026-03-14
 lastmod: 2026-03-14
+slug: "anthropic-ai-academy"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4061231014"
 categories: ["AI/LLM"]

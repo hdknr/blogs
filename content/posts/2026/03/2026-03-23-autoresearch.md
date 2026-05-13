@@ -2,6 +2,7 @@
 title: "autoresearch：Karpathyが公開した「寝ている間にAIが100実験を自律実行する」630行のスクリプト"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "autoresearch"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4113445430"
 categories: ["AI/LLM"]

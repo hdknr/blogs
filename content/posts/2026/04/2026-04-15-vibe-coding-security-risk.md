@@ -2,6 +2,7 @@
 title: "バイブコーディングの怖い話：AI丸投げ開発が招いた医療データ流出事件"
 date: 2026-04-15
 lastmod: 2026-04-15
+slug: "vibe-coding-security-risk"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250464657"
 categories: ["セキュリティ"]

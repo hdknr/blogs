@@ -3,6 +3,7 @@ title: "SOPS で AI エージェントのシークレット管理 — Claude Cod
 description: "Claude Code などの AI エージェントに SOPS で暗号化されたシークレットを安全に扱わせるための3つのガードレール（平文をコンテキストに載せない／コミットさせない／復号鍵を分離する）と、Linux / macOS / Windows それぞれでの sops exec-env を使ったランタイム注入の具体例、permissions.deny の設定例を解説します。"
 date: 2026-05-12
 lastmod: 2026-05-12
+slug: "sops-ai-agent-secrets-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4426426904"
 categories: ["セキュリティ"]
@@ -25,7 +26,7 @@ AI エージェントとの相性で見ると、特に次の3点でメリット�
 
 特に「キー名は平文・値だけ暗号化」という設計は、AI エージェントに「設定の存在は知らせるが値は見せない」運用と非常に親和性が高い構造です。
 
-なお、マネージド型のクラウドサービスでシークレットを集中管理したい場合は、[Infisical](/blogs/posts/2026/04/2026-04-21-infisical-secret-management/) のような選択肢もあります。「Git で持つか／サービスで持つか」は採用判断のポイントになります。
+なお、マネージド型のクラウドサービスでシークレットを集中管理したい場合は、[Infisical](/blogs/posts/2026/04/infisical-secret-management/) のような選択肢もあります。「Git で持つか／サービスで持つか」は採用判断のポイントになります。
 
 ## AI エージェント特有のリスク
 
@@ -309,7 +310,7 @@ Claude Code は「AI が頭脳・Bash が手足」のプロセスなので、Cla
 
 `Read` だけでなく `Bash(sops:*)` も deny に入れておくのがポイントです。ファイルを直接読まれなくても、`sops -d` を呼ばれてしまえばコンテキストに平文が乗ります。`Bash(sops:*)` で全 `sops` コマンドを禁止しておき、必要に応じて `allow` 側で限定的に許可する設計が安全です。
 
-なお、Claude Code のセキュリティ設定全般は [Claude Code を使うなら最低限やっておきたい『7つのセキュリティ設定』](/blogs/posts/2026/03/2026-03-23-claude-code-7-security-settings/) もあわせて参照してください。
+なお、Claude Code のセキュリティ設定全般は [Claude Code を使うなら最低限やっておきたい『7つのセキュリティ設定』](/blogs/posts/2026/03/claude-code-7-security-settings/) もあわせて参照してください。
 
 ## まとめ
 

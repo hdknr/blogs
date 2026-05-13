@@ -2,6 +2,7 @@
 title: "Google Gemini Embedding 2：テキスト・画像・動画・音声を統一ベクトル空間に埋め込むマルチモーダル埋め込みモデル"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "gemini-embedding-2"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4042051334"
 categories: ["AI/LLM"]

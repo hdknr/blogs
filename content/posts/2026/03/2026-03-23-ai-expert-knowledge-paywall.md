@@ -2,6 +2,7 @@
 title: "AI が壊す「専門知識のペイウォール」: Claude で床下除湿システムを設計した事例から考える"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "ai-expert-knowledge-paywall"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4110437991"
 categories: ["AI/LLM"]

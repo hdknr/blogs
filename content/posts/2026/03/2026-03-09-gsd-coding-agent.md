@@ -2,6 +2,7 @@
 title: "GSD — AI コーディングエージェントを「本当に使えるレベル」にするプロジェクト管理システム"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "gsd-coding-agent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4020357429"
 categories: ["AI/LLM"]

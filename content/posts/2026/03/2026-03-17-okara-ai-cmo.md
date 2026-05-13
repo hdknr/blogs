@@ -2,6 +2,7 @@
 title: "OkaraのAI CMO——マーケティング業務を自律実行するAIエージェント"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "okara-ai-cmo"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078669274"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "OpenClaw × 小紅書 — AI エージェントが SNS アカウントを完全自動運営する時代"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "openclaw-xiaohongshu-agent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4034084623"
 categories: ["AI/LLM"]

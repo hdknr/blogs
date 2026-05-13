@@ -2,6 +2,7 @@
 title: "claw-code-local — Claude Code風のAIコーディングエージェントをローカルLLMで動かす"
 date: 2026-04-05
 lastmod: 2026-04-05
+slug: "claw-code-local"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4188029033"
 categories: ["AI/LLM"]

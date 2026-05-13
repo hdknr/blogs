@@ -2,6 +2,7 @@
 title: "オープンロジ（OPENLOGI）とは — 固定費ゼロの物流フルフィルメントプラットフォーム"
 date: 2026-04-08
 lastmod: 2026-04-08
+slug: "openlogi-ec-fulfillment"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/217#issuecomment-4204449185"
 categories: ["ビジネス/キャリア"]

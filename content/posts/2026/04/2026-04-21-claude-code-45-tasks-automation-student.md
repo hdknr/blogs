@@ -2,6 +2,7 @@
 title: "東大院生が Claude Code で日常タスクを 45 個自動化した全記録"
 date: 2026-04-21
 lastmod: 2026-04-21
+slug: "claude-code-45-tasks-automation-student"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4291437148"
 categories: ["AI/LLM"]

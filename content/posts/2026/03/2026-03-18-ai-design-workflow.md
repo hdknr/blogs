@@ -2,6 +2,7 @@
 title: "デザイナーのためのAI活用術5選 — 制作スピードを劇的に上げる実践テクニック"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "ai-design-workflow"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4081016108"
 categories: ["AI/LLM"]

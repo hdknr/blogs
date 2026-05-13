@@ -2,6 +2,7 @@
 title: "2026年に求められるAIエンジニアのロードマップ — 350万インプレッション超の話題スレッドを解説"
 date: 2026-04-14
 lastmod: 2026-04-14
+slug: "2026-ai-engineer-roadmap"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4246800127"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Hermes Agent — Telegram × AI で個人専属エージェントを構築、使うほど成長する「資産型 AI」"
 date: 2026-04-29
 lastmod: 2026-04-29
+slug: "hermes-agent-telegram-personal-ai"
 draft: false
 description: "Nous Research 製の自己進化型 AI エージェント Hermes Agent を Telegram 連携で 24 時間運用する方法。インストール・ゲートウェイ設定・OpenClaw 移行手順を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4347270853"

@@ -2,6 +2,7 @@
 title: "Claude Code で動く「SEO エージェント」が海外で大バズ — 月額 2 万円のツールをプロンプト 1 つでゼロコスト代替"
 date: 2026-04-27
 lastmod: 2026-04-27
+slug: "claude-code-seo-agent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324224105"
 description: "Claude Code の SEO エージェントで Google Search Console 連携・キーワード分析・競合スクレイピング・記事生成を全自動化。Semrush・Ahrefs などの月額課金ツールをゼロコストで代替する方法を解説。"

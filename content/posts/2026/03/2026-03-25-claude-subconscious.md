@@ -2,6 +2,7 @@
 title: "Claude Subconscious：Claude Code にセッション横断の記憶力を与える Letta AI のオープンソースツール"
 date: 2026-03-25
 lastmod: 2026-03-25
+slug: "claude-subconscious"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4122425202"
 categories: ["AI/LLM"]

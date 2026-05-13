@@ -2,6 +2,7 @@
 title: "ClaudeのEQとは？「脳内トレース能力」が変えるAI対話の本質"
 date: 2026-04-13
 lastmod: 2026-04-13
+slug: "claude-eq-thought-tracing"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4239451950"
 categories: ["AI/LLM"]

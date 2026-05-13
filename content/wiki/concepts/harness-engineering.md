@@ -10,12 +10,12 @@ related_posts:
   - "/posts/2026/03/claude-code-review/"
   - "/posts/2026/04/anthropic-vs-openai-harness-strategy/"
   - "/posts/2026/04/agent-harness-memory-lock-in/"
-  - "/posts/2026/04/2026-04-16-ai-agent-harness-confusion/"
-  - "/posts/2026/04/2026-04-17-ai-first-harness-engineering-creao/"
-  - "/posts/2026/04/2026-04-17-agent-harness-rag-context-size/"
-  - "/posts/2026/04/2026-04-14-claude-harness-v4-hokage/"
-  - "/posts/2026/04/2026-04-23-harness-engineering-agent-vs-user-harness/"
-  - "/posts/2026/04/2026-04-23-harness-engineering-beyond-rule-files/"
+  - "/posts/2026/04/ai-agent-harness-confusion/"
+  - "/posts/2026/04/ai-first-harness-engineering-creao/"
+  - "/posts/2026/04/agent-harness-rag-context-size/"
+  - "/posts/2026/04/claude-harness-v4-hokage/"
+  - "/posts/2026/04/harness-engineering-agent-vs-user-harness/"
+  - "/posts/2026/04/harness-engineering-beyond-rule-files/"
 tags: ["agent", "品質保証", "CLAUDE.md", "設計パターン", "ロックイン"]
 ---
 
@@ -106,7 +106,7 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 - [AI エージェント QA 手法](/blogs/posts/2026/03/ai-agent-qa/) — 2026-03
 - [Anthropic vs OpenAI：Harness 戦略はなぜ真逆なのか](/blogs/posts/2026/04/anthropic-vs-openai-harness-strategy/) — 2026-04-13
 - [エージェントハーネスとメモリのロックイン問題](/blogs/posts/2026/04/agent-harness-memory-lock-in/) — 2026-04-12
-- [AI エージェントの「ハーネス」を巡る混乱](/blogs/posts/2026/04/2026-04-16-ai-agent-harness-confusion/) — 2026-04-16
-- [「AIファースト」戦略の本当の意味 — ハーネスエンジニアリングで 25 人チームが 6 週間を 1 日に短縮した方法](/blogs/posts/2026/04/2026-04-17-ai-first-harness-engineering-creao/) — 2026-04-17
-- [RAG なしでも高精度に動く Agent Harness の秘密](/blogs/posts/2026/04/2026-04-17-agent-harness-rag-context-size/) — 2026-04-17
-- [Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に](/blogs/posts/2026/04/2026-04-14-claude-harness-v4-hokage/) — 2026-04-14
+- [AI エージェントの「ハーネス」を巡る混乱](/blogs/posts/2026/04/ai-agent-harness-confusion/) — 2026-04-16
+- [「AIファースト」戦略の本当の意味 — ハーネスエンジニアリングで 25 人チームが 6 週間を 1 日に短縮した方法](/blogs/posts/2026/04/ai-first-harness-engineering-creao/) — 2026-04-17
+- [RAG なしでも高精度に動く Agent Harness の秘密](/blogs/posts/2026/04/agent-harness-rag-context-size/) — 2026-04-17
+- [Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に](/blogs/posts/2026/04/claude-harness-v4-hokage/) — 2026-04-14

@@ -5,7 +5,6 @@ date: 2026-04-06
 lastmod: 2026-04-06
 aliases: ["DRF", "django-rest-framework"]
 related_posts:
-  - "/posts/2023/05/drf/"
 tags: ["Django", "API", "REST", "Python"]
 ---
 
@@ -16,7 +15,3 @@ ModelSerializer で ORM↔API マッピング自動化。ViewSet で CRUD 一括
 ## 関連ページ
 
 - [FastAPI](/blogs/wiki/tools/fastapi/) — Python の別の API フレームワーク
-
-## ソース記事
-
-- [DRF](/blogs/posts/2023/05/drf/) — 2023-05

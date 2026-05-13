@@ -2,6 +2,7 @@
 title: "Mistral Voxtral TTS: ElevenLabs に匹敵するオープンウェイト音声AI"
 date: 2026-03-30
 lastmod: 2026-03-30
+slug: "mistral-voxtral-tts"
 draft: false
 description: "Mistral AI が公開した Voxtral TTS は 4B パラメータのオープンウェイト音声合成モデル。ElevenLabs 級の品質をローカル GPU で実現。動作要件・音声クローン機能・ライセンスを解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4158762368"

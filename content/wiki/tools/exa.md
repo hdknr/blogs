@@ -5,7 +5,7 @@ date: 2026-04-25
 lastmod: 2026-04-25
 aliases: ["exa search", "exa for claude", "exa mcp"]
 related_posts:
-  - "/posts/2026/04/2026-04-25-exa-for-claude-mcp-plugin/"
+  - "/posts/2026/04/exa-for-claude-mcp-plugin/"
 tags: ["search", "mcp", "claude-code", "rag", "semantic-search"]
 ---
 
@@ -43,4 +43,4 @@ Exa は LLM/AI エージェント向けに最適化されたセマンティッ�
 
 ## ソース記事
 
-- [Exa for Claude MCP プラグイン](/blogs/posts/2026/04/2026-04-25-exa-for-claude-mcp-plugin/) — 2026-04-25
+- [Exa for Claude MCP プラグイン](/blogs/posts/2026/04/exa-for-claude-mcp-plugin/) — 2026-04-25

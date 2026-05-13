@@ -91,6 +91,9 @@ Issue 本文を取得してブログ記事のソースにする:
 
 ## フロントマターのテンプレート
 
+**重要: `slug:` は必須。** ファイル名から日付プレフィックス（`YYYY-MM-DD-`）を除いた値と一致させる。
+未指定だと Hugo が日本語タイトルから URL を生成してしまい、Wiki や記事間リンクと不整合になる。
+
 GitHub URL ソースの場合:
 
 ```yaml
@@ -98,6 +101,7 @@ GitHub URL ソースの場合:
 title: "記事タイトル"
 date: YYYY-MM-DD
 lastmod: YYYY-MM-DD
+slug: "<slug>"
 draft: false
 source_url: "https://github.com/..."
 categories: ["カテゴリ"]
@@ -112,6 +116,7 @@ tags: ["tag1", "tag2"]
 title: "記事タイトル"
 date: YYYY-MM-DD
 lastmod: YYYY-MM-DD
+slug: "<slug>"
 draft: false
 categories: ["カテゴリ"]
 tags: ["tag1", "tag2"]

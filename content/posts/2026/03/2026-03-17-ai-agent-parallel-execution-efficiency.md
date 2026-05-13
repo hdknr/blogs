@@ -2,6 +2,7 @@
 title: "AI時代の「ダラダラ働き」のすすめ — AIエージェント並列実行の落とし穴"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "ai-agent-parallel-execution-efficiency"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078690143"
 categories: ["AI/LLM"]

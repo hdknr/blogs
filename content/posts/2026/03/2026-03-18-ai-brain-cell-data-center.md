@@ -2,6 +2,7 @@
 title: "人間の脳細胞で動く「データセンター」— Cortical Labs の生体コンピューティング革命"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "ai-brain-cell-data-center"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4079198048"
 categories: ["AI/LLM"]

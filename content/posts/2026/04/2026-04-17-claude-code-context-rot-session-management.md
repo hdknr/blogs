@@ -2,6 +2,7 @@
 title: "Claude Code のコンテキスト管理術 — Context Rot を防ぐ5つの選択肢"
 date: 2026-04-17
 lastmod: 2026-04-17
+slug: "claude-code-context-rot-session-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4266527444"
 categories: ["AI/LLM"]

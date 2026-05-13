@@ -2,6 +2,7 @@
 title: "Gemma 4 31B vs Qwen3.5-27B — ローカルLLM最強はどちらか"
 date: 2026-04-07
 lastmod: 2026-04-07
+slug: "gemma4-vs-qwen35-local-llm"
 draft: false
 description: "Google Gemma 4 31BとAlibaba Qwen3.5-27Bをローカル実行の観点で徹底比較。ベンチマーク、メモリ要件、マルチモーダル、日本語対応、推論速度を検証する。"
 categories: ["AI/LLM"]

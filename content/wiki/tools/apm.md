@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["Agent Package Manager", "エージェントパッケージマネージャー"]
 related_posts:
-  - "/posts/2026/04/2026-04-17-apm-agent-package-manager/"
+  - "/posts/2026/04/apm-agent-package-manager/"
 tags: ["AI エージェント", "Claude Code", "開発ツール", "パッケージ管理"]
 ---
 
@@ -30,4 +30,4 @@ AI コーディングエージェントのセットアップは現状、開発�
 
 ## ソース記事
 
-- [APM（Agent Package Manager）— AI エージェント設定を npm のように管理するツール](/blogs/posts/2026/04/2026-04-17-apm-agent-package-manager/) — 2026-04-17
+- [APM（Agent Package Manager）— AI エージェント設定を npm のように管理するツール](/blogs/posts/2026/04/apm-agent-package-manager/) — 2026-04-17

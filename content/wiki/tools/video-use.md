@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["video-use", "ビデオユース"]
 related_posts:
-  - "/posts/2026/04/2026-04-17-video-use-claude-code-video-editing/"
+  - "/posts/2026/04/video-use-claude-code-video-editing/"
 tags: ["Claude Code", "動画編集", "browser-use", "オープンソース", "ElevenLabs"]
 ---
 
@@ -54,4 +54,4 @@ brew install ffmpeg
 
 ## ソース記事
 
-- [Video Use — Claude Code で動画編集を完全自動化するオープンソーススキル](/blogs/posts/2026/04/2026-04-17-video-use-claude-code-video-editing/) — 2026-04-17
+- [Video Use — Claude Code で動画編集を完全自動化するオープンソーススキル](/blogs/posts/2026/04/video-use-claude-code-video-editing/) — 2026-04-17

@@ -2,6 +2,7 @@
 title: "Claude Managed Agents: Anthropicが本番運用可能なエージェント基盤をパブリックベータで公開"
 date: 2026-04-10
 lastmod: 2026-04-10
+slug: "claude-managed-agents"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4214253259"
 description: "Anthropic が公開した Claude Managed Agents のパブリックベータを解説。セキュアなサンドボックス、長時間実行セッション、MCP 統合などの機能、料金体系、導入事例を紹介。"

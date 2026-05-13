@@ -2,6 +2,7 @@
 title: "VS Code AI コーディングアシスタントのインストール数推移：GitHub Copilot の急落と競合の台頭"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "ai-coding-assistant-vscode-installs"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041973646"
 categories: ["AI/LLM"]

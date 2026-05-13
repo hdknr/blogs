@@ -2,6 +2,7 @@
 title: "Microsoft BitNet完全オープンソース化：GPUなしで1000億パラメータLLMをCPUで動かす時代へ"
 date: 2026-04-07
 lastmod: 2026-04-07
+slug: "microsoft-bitnet-open-source-1bit-llm"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4202483765"
 categories: ["AI/LLM"]

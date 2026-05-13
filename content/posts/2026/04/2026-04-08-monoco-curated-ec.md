@@ -2,6 +2,7 @@
 title: "MONOCO（モノコ）：「使い惚れ」だけを届けるキュレーションECの実力"
 date: 2026-04-08
 lastmod: 2026-04-08
+slug: "monoco-curated-ec"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/217#issuecomment-4204443372"
 categories: ["ビジネス/キャリア"]

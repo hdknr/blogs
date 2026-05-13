@@ -2,6 +2,7 @@
 title: "Claude Cowork 完全ガイド — 機能解説・料金・活用事例20選まとめ"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "claude-cowork-guide"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4107400485"
 categories: ["AI/LLM"]

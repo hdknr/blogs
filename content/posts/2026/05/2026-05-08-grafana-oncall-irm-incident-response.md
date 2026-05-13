@@ -2,12 +2,13 @@
 title: "Grafana OnCall は終わった、Grafana Cloud IRM が始まった — オンコール体制の現代的選択肢を整理する"
 date: 2026-05-08
 lastmod: 2026-05-08
+slug: "grafana-oncall-irm-incident-response"
 draft: false
 categories: ["クラウド/インフラ"]
 tags: ["Grafana OnCall", "Grafana Cloud IRM", "PagerDuty", "Opsgenie", "オンコール", "インシデント対応", "SRE", "監視", "オブザーバビリティ"]
 ---
 
-[前回の記事](/blogs/posts/2026/05/2026-05-08-prometheus-loki-grafana-server-monitoring-stack/)で「サーバー監視の王道スタック」として Prometheus + Loki + Grafana + Alloy を整理しました。アラート設計のセクションで触れた **Grafana OnCall** について、改めて単独で深掘りします。
+[前回の記事](/blogs/posts/2026/05/prometheus-loki-grafana-server-monitoring-stack/)で「サーバー監視の王道スタック」として Prometheus + Loki + Grafana + Alloy を整理しました。アラート設計のセクションで触れた **Grafana OnCall** について、改めて単独で深掘りします。
 
 ただし重要な注意点があります — **Grafana OnCall OSS（grafana/oncall リポジトリ）は 2026 年 3 月 24 日にアーカイブされました**。後継は **Grafana Cloud IRM（Incident Response Management）**で、OnCall と Incident の両アプリが 1 つに統合されています。
 
@@ -444,7 +445,7 @@ scheduler = BackgroundScheduler(jobstores={
 
 ## アーキテクチャ的な位置付け
 
-[前回の記事](/blogs/posts/2026/05/2026-05-08-prometheus-loki-grafana-server-monitoring-stack/)のスタックに IRM（または代替）を組み込んだ全体像:
+[前回の記事](/blogs/posts/2026/05/prometheus-loki-grafana-server-monitoring-stack/)のスタックに IRM（または代替）を組み込んだ全体像:
 
 ```text
 [アプリ・サーバー]

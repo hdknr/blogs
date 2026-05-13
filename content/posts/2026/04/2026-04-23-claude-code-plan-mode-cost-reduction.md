@@ -2,6 +2,7 @@
 title: "CLAUDE.md に1行追加するだけで Claude Code のコストが 1/3 に — plan モード強制テクニック"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "claude-code-plan-mode-cost-reduction"
 draft: false
 description: "CLAUDE.md に plan モード強制の1行を追加するだけでトークン消費を 64%、コストを 69% 削減できる設定方法と仕組みを解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4303991805"

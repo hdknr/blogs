@@ -2,6 +2,7 @@
 title: "AIモデルは意図的に性能を低下させている？ OpenAI・Google・Anthropicに共通するパターン"
 date: 2026-04-11
 lastmod: 2026-04-11
+slug: "ai-model-performance-degradation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4229044659"
 categories: ["AI/LLM"]

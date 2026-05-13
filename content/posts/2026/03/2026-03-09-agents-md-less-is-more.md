@@ -2,6 +2,7 @@
 title: "AGENTS.md は詳しすぎると逆効果 — ETH Zurich の138リポジトリ研究が示す「書かない」原則"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "agents-md-less-is-more"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4020353773"
 categories: ["AI/LLM"]

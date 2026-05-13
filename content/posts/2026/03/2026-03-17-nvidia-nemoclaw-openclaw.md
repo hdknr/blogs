@@ -2,6 +2,7 @@
 title: "NVIDIA、OpenClaw向けオープンソーススタック「NemoClaw」を発表"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "nvidia-nemoclaw-openclaw"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077677869"
 categories: ["AI/LLM"]

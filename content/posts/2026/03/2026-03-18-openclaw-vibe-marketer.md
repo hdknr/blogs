@@ -2,6 +2,7 @@
 title: "OpenClawを「バイブマーケター」に変えた方法 — AI広告自動化の実践ワークフロー"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "openclaw-vibe-marketer"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4085418385"
 categories: ["AI/LLM"]

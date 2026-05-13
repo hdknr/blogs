@@ -2,6 +2,7 @@
 title: "Claude Code スキル活用の知見：Anthropic 社内での実践から学んだこと"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "claude-code-skills-lessons"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078708049"
 categories: ["AI/LLM"]

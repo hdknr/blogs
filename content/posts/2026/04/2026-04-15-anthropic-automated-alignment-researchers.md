@@ -2,6 +2,7 @@
 title: "Anthropic の自動アライメント研究者（AAR）：AIがAIのアライメントを加速する時代"
 date: 2026-04-15
 lastmod: 2026-04-15
+slug: "anthropic-automated-alignment-researchers"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250503446"
 categories: ["AI/LLM"]

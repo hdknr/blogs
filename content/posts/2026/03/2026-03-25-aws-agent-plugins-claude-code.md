@@ -2,6 +2,7 @@
 title: "Agent Plugins for AWS: Claude Code から AWS アーキテクチャ設計・デプロイまで一気通貫"
 date: 2026-03-25
 lastmod: 2026-03-25
+slug: "aws-agent-plugins-claude-code"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4126127772"
 categories: ["クラウド/インフラ"]

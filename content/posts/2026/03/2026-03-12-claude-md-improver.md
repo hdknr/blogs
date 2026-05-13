@@ -2,6 +2,7 @@
 title: "CLAUDE.mdを採点・改善してくれるClaude Code公式プラグイン claude-md-improver"
 date: 2026-03-12
 lastmod: 2026-03-13
+slug: "claude-md-improver"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050693809"
 categories: ["ツール/開発環境"]

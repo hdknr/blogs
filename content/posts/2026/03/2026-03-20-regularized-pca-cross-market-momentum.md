@@ -2,6 +2,7 @@
 title: "正則化PCAで米国→日本の業種モメンタムを捉える — 時差を利用したクロスマーケット戦略"
 date: 2026-03-20
 lastmod: 2026-03-20
+slug: "regularized-pca-cross-market-momentum"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4095060591"
 categories: ["AI/LLM"]

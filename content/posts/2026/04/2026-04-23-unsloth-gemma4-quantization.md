@@ -2,6 +2,7 @@
 title: "Unsloth で Gemma 4 26B を極限まで量子化 — 16〜18GB VRAM で動く最強ローカル LLM"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "unsloth-gemma4-quantization"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4303995463"
 categories: ["AI/LLM"]

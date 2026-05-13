@@ -2,6 +2,7 @@
 title: "OpenClaw で保有銘柄の情報収集を完全自動化する — 決算通知・株価アラート・ニュース収集の実装例"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "openclaw-stock-monitoring"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4043402411"
 categories: ["AI/LLM"]

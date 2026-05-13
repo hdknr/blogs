@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["オブシディアン", "PKM", "Personal Knowledge Management", "第二の脳"]
 related_posts:
-  - "/posts/2026/04/2026-04-17-obsidian-pkm-second-brain/"
+  - "/posts/2026/04/obsidian-pkm-second-brain/"
 tags: ["PKM", "ナレッジ管理", "Markdown", "ツール"]
 ---
 
@@ -36,4 +36,4 @@ Obsidian はローカルファイルベースの Markdown エディタであり�
 
 ## ソース記事
 
-- [Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する](/blogs/posts/2026/04/2026-04-17-obsidian-pkm-second-brain/) — 2026-04-17
+- [Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する](/blogs/posts/2026/04/obsidian-pkm-second-brain/) — 2026-04-17

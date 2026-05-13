@@ -2,6 +2,7 @@
 title: "OpenClaw + Ollama + Gemma4 でローカル無料AIエージェントを構築する"
 date: 2026-04-06
 lastmod: 2026-04-06
+slug: "openclaw-gemma4-local-setup"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4194457096"
 categories: ["AI/LLM"]

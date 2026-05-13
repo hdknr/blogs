@@ -2,6 +2,7 @@
 title: "Claude Code のデフォルト設定でトークンを無駄にしていた話"
 date: 2026-04-06
 lastmod: 2026-04-17
+slug: "claude-code-token-optimization"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4194459252"
 categories: ["AI/LLM"]

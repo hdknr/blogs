@@ -2,6 +2,7 @@
 title: "Agentic Coding時代のドキュメント配置: /docs ディレクトリはもう限界？"
 date: 2026-03-13
 lastmod: 2026-03-17
+slug: "agentic-coding-docs-colocation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4058450348"
 categories: ["AI/LLM"]

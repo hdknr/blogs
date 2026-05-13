@@ -2,6 +2,7 @@
 title: "freee MCP × Claude Code で確定申告の仕訳1,428件を20分で終わらせた話"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "freee-mcp-claude-code"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4030378160"
 categories: ["AI/LLM"]
@@ -47,7 +48,7 @@ freee MCP と Claude Code の組み合わせは、確定申告の仕訳以外に
 - **年末調整の漏れチェック** — freee のデータを分析して未計上の調整項目を検出
 - **経理業務の自動化** — 日次の仕訳入力から月次の帳簿確認まで
 
-[ハーネスエンジニアリング](/posts/2026-03-09-harness-engineering/)の観点では、MCP サーバーは AI エージェントと外部システムをつなぐ**実行制御層**のインフラとなる。freee MCP のように公式にメンテナンスされた MCP サーバーが増えることで、エージェントの活用範囲は業務システム全体に広がりつつある。
+[ハーネスエンジニアリング](/posts/2026/03/harness-engineering/)の観点では、MCP サーバーは AI エージェントと外部システムをつなぐ**実行制御層**のインフラとなる。freee MCP のように公式にメンテナンスされた MCP サーバーが増えることで、エージェントの活用範囲は業務システム全体に広がりつつある。
 
 ## 参考
 

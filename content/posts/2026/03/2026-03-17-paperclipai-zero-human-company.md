@@ -2,6 +2,7 @@
 title: "Paperclip オープンソース化：0人会社を動かすエージェントオーケストレーション層"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "paperclipai-zero-human-company"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078654700"
 categories: ["AI/LLM"]

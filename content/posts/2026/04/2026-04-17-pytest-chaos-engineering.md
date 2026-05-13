@@ -2,6 +2,7 @@
 title: "pytest.mark.chaos で始めるカオスエンジニアリング — Python テストに障害注入を組み込む"
 date: 2026-04-17
 lastmod: 2026-04-17
+slug: "pytest-chaos-engineering"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4265898247"
 categories: ["プログラミング言語"]
@@ -68,7 +69,6 @@ def test_api_timeout_fallback():
         result = app.client.fetch_user_profile(user_id=123)
     assert result == app.client.get_cached_profile(user_id=123)
 
-
 @pytest.mark.chaos
 def test_api_connection_refused():
     """接続拒否時にリトライ後にエラーハンドリングされるか"""
@@ -92,7 +92,6 @@ def test_db_connection_lost():
     with patch("app.db.get_primary_connection", mock_primary):
         result = app.db.query_user(user_id=123)
     assert result is not None  # リードレプリカから取得できている
-
 
 @pytest.mark.chaos
 def test_db_slow_query():
@@ -131,7 +130,6 @@ def chaos_network(monkeypatch):
 
     monkeypatch.setattr("requests.get", unstable_get)
 
-
 @pytest.mark.chaos
 def test_service_under_unstable_network(chaos_network):
     """不安定なネットワーク環境でもサービスが応答を返すか"""
@@ -155,7 +153,6 @@ def test_disk_full():
         # ログ書き込み失敗がアプリケーションをクラッシュさせないことを確認
         app.logger.write("test message")
         assert app.service.is_running()
-
 
 @pytest.mark.chaos
 def test_memory_pressure():
@@ -264,7 +261,6 @@ def test_cache_backend_failure(client):
     with patch("django.core.cache.cache.get", side_effect=Exception("Redis down")):
         response = client.get("/api/users/1/")
     assert response.status_code == 200  # キャッシュなしでも正常応答
-
 
 @pytest.mark.chaos
 @pytest.mark.django_db

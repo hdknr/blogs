@@ -2,6 +2,7 @@
 title: "Claude Code + Celery: LLMが決定論的処理を動的に委譲するオーケストレーション"
 date: 2026-03-30
 lastmod: 2026-03-30
+slug: "claude-code-celery-orchestration"
 draft: false
 description: "Claude Code を Celery タスクキューと組み合わせ、LLM が判断・計画を行い、決定論的処理をワーカーに委譲するオーケストレーションアーキテクチャを解説。"
 categories: ["AI/LLM"]

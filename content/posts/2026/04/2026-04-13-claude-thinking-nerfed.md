@@ -2,6 +2,7 @@
 title: "Claude の思考深度が67%低下？AMD AIディレクターの分析が示す「サイレント・ダウングレード」問題"
 date: 2026-04-13
 lastmod: 2026-04-13
+slug: "claude-thinking-nerfed"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4239449664"
 categories: ["AI/LLM"]

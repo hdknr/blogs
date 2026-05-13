@@ -2,6 +2,7 @@
 title: "ClawRouter — OpenClaw の API コストを最大92%削減するオープンソース LLM ルーター"
 date: 2026-03-21
 lastmod: 2026-03-21
+slug: "clawrouter-openclaw-cost"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4102696274"
 categories: ["AI/LLM"]

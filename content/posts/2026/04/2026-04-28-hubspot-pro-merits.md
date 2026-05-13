@@ -2,6 +2,7 @@
 title: "HubSpot Professional にアップグレードするメリットを 6 Hub 別に整理（Marketing/Sales/Service/Content/Data/Commerce）"
 date: 2026-04-28
 lastmod: 2026-04-28
+slug: "hubspot-pro-merits"
 draft: false
 description: "HubSpot を Starter から Professional にアップグレードするとき、Marketing / Sales / Service / Content / Data / Commerce の 6 Hub で何が変わるのか。AEO 対応、ナーチャリング、予実管理、シーケンス、類似オーディエンス配信など、Pro 化の代表的なメリットと検討時の論点を実務目線でまとめた。"
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4332009670"

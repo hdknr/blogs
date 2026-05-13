@@ -2,6 +2,7 @@
 title: "TERAFAB：イーロン・マスクが発表した世界最大のチップ製造施設まとめ"
 date: 2026-03-22
 lastmod: 2026-03-22
+slug: "terafab-musk-chip-factory"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4113581245"
 categories: ["AI/LLM"]

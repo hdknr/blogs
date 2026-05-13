@@ -2,6 +2,7 @@
 title: "Claude Cowork スターターパック：プラグイン・スキル・ワークフロー完全ガイド"
 date: 2026-03-16
 lastmod: 2026-03-16
+slug: "claude-cowork-starter-pack"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4065904115"
 categories: ["AI/LLM"]

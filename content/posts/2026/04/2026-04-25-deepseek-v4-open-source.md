@@ -2,6 +2,7 @@
 title: "DeepSeek-V4 Preview — Claude Opus 4.6 匹敵・100万トークン対応のオープンソース LLM が無償公開"
 date: 2026-04-25
 lastmod: 2026-04-25
+slug: "deepseek-v4-open-source"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4320800640"
 categories: ["AI/LLM"]

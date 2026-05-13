@@ -2,6 +2,7 @@
 title: "django-mptt はなぜ「unmaintained」と書かれているのか — そして django-tree-queries への移行"
 date: 2026-04-20
 lastmod: 2026-04-20
+slug: "django-mptt-unmaintained-tree-queries"
 draft: false
 source_url: "https://gist.github.com/hdknr/83ba1f9b683a871a176d9110036364ad"
 categories: ["Web開発", "データベース"]

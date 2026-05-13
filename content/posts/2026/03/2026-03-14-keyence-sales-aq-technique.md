@@ -2,6 +2,7 @@
 title: "キーエンスで学んだ「A&Q」という商談の武器"
 date: 2026-03-14
 lastmod: 2026-03-14
+slug: "keyence-sales-aq-technique"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4061225843"
 categories: ["ビジネス/キャリア"]

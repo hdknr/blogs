@@ -2,6 +2,7 @@
 title: "Warp がオープンソース化 — AI エージェントが主役を担う新しい開発協働モデル"
 date: 2026-04-29
 lastmod: 2026-04-29
+slug: "warp-open-source-ai-native"
 draft: false
 description: "2026年4月、Rust製AIターミナルWarpがAGPL-3.0でオープンソース化。注目はコード公開よりOzエージェント基盤の存在だ。Cal.comとの対比から読み解くAIネイティブOSS開発の新パラダイム。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340895764"

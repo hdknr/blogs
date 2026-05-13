@@ -2,6 +2,7 @@
 title: "OpenClaw で YouTube 運用を全自動化? 「月1000万円」の主張を技術的に検証する"
 date: 2026-03-27
 lastmod: 2026-03-27
+slug: "openclaw-youtube-automation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4144410842"
 categories: ["AI/LLM"]

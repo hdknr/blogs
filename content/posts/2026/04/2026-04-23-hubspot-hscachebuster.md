@@ -2,6 +2,7 @@
 title: "HubSpot CMS のキャッシュをバイパスする hsCacheBuster の使い方と注意点"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "hubspot-hscachebuster"
 draft: false
 description: "HubSpot CMS のページ変更が反映されないときに使える ?hsCacheBuster クエリパラメータの使い方と、自分のリクエストだけ最新になる挙動の注意点、公開ユーザーへ反映するための再保存テクニックまでまとめた。"
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4300962242"

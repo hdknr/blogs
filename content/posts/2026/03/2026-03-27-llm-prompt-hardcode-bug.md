@@ -2,6 +2,7 @@
 title: "「値は計算されていた。ただ届いていなかっただけ」— LLMエージェントプロンプトのハードコード問題"
 date: 2026-03-27
 lastmod: 2026-03-27
+slug: "llm-prompt-hardcode-bug"
 draft: false
 description: "LLMエージェントのプロンプトにリスクパラメータがハードコードされていたため、動的調整が反映されなかったバグの原因と修正。テンプレート変数化、結合テスト、CLAUDE.mdルール追加による再発防止策を解説。"
 categories: ["AI/LLM"]
@@ -101,7 +102,6 @@ def _get_safety_params() -> tuple[float, float]:
     evaluation = evaluate_goal(...)
     proposal = propose_adjustment(evaluation.pace_status)
     return proposal.exposure_limit, proposal.cash_ratio_min
-
 
 def _load_prompt(filename: str) -> str:
     text = path.read_text(encoding="utf-8")

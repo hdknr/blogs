@@ -2,6 +2,7 @@
 title: "HubSpot を Claude Code から操作する 6 つの認証方式の違い — Private App / OAuth / MCP / PAK / Developer Key / Service Key"
 date: 2026-05-09
 lastmod: 2026-05-09
+slug: "hubspot-auth-methods-claude-code"
 draft: false
 description: "HubSpot 認証方式 6 つ（Private App / OAuth 2.0 / 公式 MCP / Personal Access Key / Developer API Key / Service Key）の違いを Claude Code 文脈で整理。新規構築は Service Key（2026-02 Beta）、Claude Code から自然言語で操作するなら公式 MCP サーバーが推奨。"
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4411663173"
@@ -355,7 +356,7 @@ CRM データ操作には不向きで、**Project App / UI Extension のロー�
 - **OAuth が始まるのは `add` ではなく初回呼び出し時**: `claude mcp add` は設定ファイル更新だけのオフライン操作。
 - **保存されるトークンは 2 種類**: 短命の `access_token`（30 分）と長期の `refresh_token`。後者がある限り自動更新で再ログイン不要。
 - **保存先は OS 依存**: macOS は Keychain、Linux は libsecret（Secret Service）、Windows は Credential Manager。実装によっては `~/.claude/` 内の設定ファイルに直書きされる場合もあるので、機密性が気になるなら実際の保存先を確認するのが確実。
-- **Dynamic Client Registration (RFC 7591)** で Claude Code が動的に自身をクライアントとして登録。事前のアプリ登録不要で接続できるのが MCP HTTP transport の大きな利点。詳しくは [RFC 7591 Dynamic Client Registration を MCP で活用する記事](/blogs/posts/2026/05/2026-05-08-rfc7591-dynamic-client-registration-mcp/)。
+- **Dynamic Client Registration (RFC 7591)** で Claude Code が動的に自身をクライアントとして登録。事前のアプリ登録不要で接続できるのが MCP HTTP transport の大きな利点。詳しくは [RFC 7591 Dynamic Client Registration を MCP で活用する記事](/blogs/posts/2026/05/rfc7591-dynamic-client-registration-mcp/)。
 
 #### トークンを失効させるには
 

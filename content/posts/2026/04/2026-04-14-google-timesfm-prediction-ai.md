@@ -2,6 +2,7 @@
 title: "Googleが1000億の実データで学習した予測AI「TimesFM」をひっそり公開していた"
 date: 2026-04-14
 lastmod: 2026-04-14
+slug: "google-timesfm-prediction-ai"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4246789955"
 categories: ["AI/LLM"]

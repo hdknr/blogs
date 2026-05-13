@@ -160,7 +160,6 @@ return token
 
 lock_with_token = r.register_script(LOCK_SCRIPT)
 
-
 def acquire_lock(resource, ttl_ms=10000):
     client_id = str(uuid.uuid4())
     token = lock_with_token(
@@ -170,7 +169,6 @@ def acquire_lock(resource, ttl_ms=10000):
     if token is None:
         return None, None
     return client_id, int(token)
-
 
 def process_order(order_id):
     client_id, token = acquire_lock(f"order:{order_id}")

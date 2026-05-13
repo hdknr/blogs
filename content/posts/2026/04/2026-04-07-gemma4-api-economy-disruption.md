@@ -2,6 +2,7 @@
 title: "Gemma 4がAPI経済を破壊する — オープンモデルがSaaS課金モデルを変える理由"
 date: 2026-04-07
 lastmod: 2026-04-07
+slug: "gemma4-api-economy-disruption"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4201926023"
 categories: ["AI/LLM"]

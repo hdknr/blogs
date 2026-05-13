@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["Context Rot", "コンテキスト腐敗", "コンテキスト劣化"]
 related_posts:
-  - "/posts/2026/04/2026-04-17-claude-code-context-rot-session-management/"
+  - "/posts/2026/04/claude-code-context-rot-session-management/"
 tags: ["Claude Code", "コンテキスト管理", "LLM", "セッション管理", "プロンプトエンジニアリング"]
 ---
 
@@ -45,4 +45,4 @@ Anthropic テクニカルスタッフの Thariq 氏が整理した「ターン�
 
 ## ソース記事
 
-- [Claude Code のコンテキスト管理術 — Context Rot を防ぐ 5 つの選択肢](/blogs/posts/2026/04/2026-04-17-claude-code-context-rot-session-management/) — 2026-04-17
+- [Claude Code のコンテキスト管理術 — Context Rot を防ぐ 5 つの選択肢](/blogs/posts/2026/04/claude-code-context-rot-session-management/) — 2026-04-17

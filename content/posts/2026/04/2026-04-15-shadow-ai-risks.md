@@ -2,6 +2,7 @@
 title: "シャドーAIがもたらす見えないリスク：IT承認外のAIツール利用が企業に生む新たな盲点"
 date: 2026-04-15
 lastmod: 2026-04-15
+slug: "shadow-ai-risks"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250490679"
 categories: ["セキュリティ"]

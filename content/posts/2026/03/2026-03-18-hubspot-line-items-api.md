@@ -2,6 +2,7 @@
 title: "HubSpot Line Items API：取引・見積もりに紐づく商品項目を管理する"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "hubspot-line-items-api"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4078866649"
 categories: ["Web開発"]

@@ -2,6 +2,7 @@
 title: "Everything Claude Code の instinct システム — Claude がセッションをまたいでパターンを学習する仕組み"
 date: 2026-04-26
 lastmod: 2026-04-26
+slug: "ecc-instinct-system"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324217939"
 categories: ["AI/LLM"]

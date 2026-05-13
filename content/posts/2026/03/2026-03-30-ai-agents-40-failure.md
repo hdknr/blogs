@@ -2,6 +2,7 @@
 title: "AI社員40人を作って1ヶ月で全部やめた話 — 壊れない設計のために知っておくべきこと"
 date: 2026-03-30
 lastmod: 2026-03-30
+slug: "ai-agents-40-failure"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4152191071"
 categories: ["AI/LLM"]

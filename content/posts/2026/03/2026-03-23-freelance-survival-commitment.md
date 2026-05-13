@@ -2,6 +2,7 @@
 title: "フリーランスが1年以内に4割廃業する現実：月収100万の壁を超える「覚悟」とは"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "freelance-survival-commitment"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4113456196"
 categories: ["ビジネス/キャリア"]

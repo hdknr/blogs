@@ -2,6 +2,7 @@
 title: "Claude Cowork DispatchとOpenClawで見えてきた「Mind Uploading」への道筋"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "claude-cowork-dispatch-mind-uploading"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4085495219"
 categories: ["AI/LLM"]

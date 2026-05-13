@@ -2,6 +2,7 @@
 title: "移動平均線との乖離で順張り・逆張りを使い分ける — 月100万稼ぐトレーダーのシンプルな戦略"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "moving-average-divergence-trading"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349346767"
 description: "移動平均線との乖離が大きければ逆張り、小さければ順張りという2択ルールを機械的に繰り返すトレード戦略を解説。複利効果の仕組みと、移動平均線の期間・閾値設定の注意点も紹介。"

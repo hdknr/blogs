@@ -2,6 +2,7 @@
 title: "ANOLISA とは — Alibaba が公開した AI Agent 向け Linux OS（Copilot Shell / Agent Sec Core / AgentSight / OS Skills）"
 date: 2026-04-21
 lastmod: 2026-04-21
+slug: "alibaba-anolisa-agentic-os"
 draft: false
 description: "Alibaba が 2026 年 3 月に公開した Agentic OS プロジェクト ANOLISA の全体像を解説。Copilot Shell / Agent Sec Core / AgentSight / OS Skills の 4 コンポーネントと導入手順をまとめます。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4286240942"

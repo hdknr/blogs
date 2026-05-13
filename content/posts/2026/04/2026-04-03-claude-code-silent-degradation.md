@@ -2,6 +2,7 @@
 title: "Claude Code 開発で機能が静かにデグレードする — 出力品質テストで防ぐ方法"
 date: 2026-04-03
 lastmod: 2026-04-03
+slug: "claude-code-silent-degradation"
 draft: false
 source_url: "https://gist.github.com/hdknr/b3fbb36d80ee881172cff7395f482290"
 categories: ["AI/LLM"]

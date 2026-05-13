@@ -2,6 +2,7 @@
 title: "Paperclip — AIエージェントで会社を自律運営するオープンソースOS"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "paperclip-ai-company-os"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4026638699"
 categories: ["AI/LLM"]

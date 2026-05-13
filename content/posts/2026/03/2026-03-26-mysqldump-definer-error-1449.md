@@ -2,6 +2,7 @@
 title: "mysqldump エラー 1449: DEFINER が存在しないユーザーを参照している場合の対処法"
 date: 2026-03-26
 lastmod: 2026-03-26
+slug: "mysqldump-definer-error-1449"
 draft: false
 categories: ["データベース"]
 tags: ["mysql", "mysqldump", "definer", "view", "トラブルシューティング"]

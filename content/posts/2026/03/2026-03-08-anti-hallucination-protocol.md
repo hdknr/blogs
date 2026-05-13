@@ -2,6 +2,7 @@
 title: "Claude Codeのハルシネーション対策 — Anti-Hallucination Protocolという考え方"
 date: 2026-03-08
 lastmod: 2026-03-08
+slug: "anti-hallucination-protocol"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4018466325"
 categories: ["AI/LLM"]

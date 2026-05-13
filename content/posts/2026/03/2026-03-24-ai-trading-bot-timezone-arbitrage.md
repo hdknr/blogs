@@ -2,6 +2,7 @@
 title: "AI トレーディングボットとタイムゾーン裁定取引：24時間自律稼働で稼ぐ仕組みとリスク"
 date: 2026-03-24
 lastmod: 2026-03-24
+slug: "ai-trading-bot-timezone-arbitrage"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4116535372"
 categories: ["AI/LLM"]

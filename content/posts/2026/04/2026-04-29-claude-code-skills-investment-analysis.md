@@ -2,6 +2,7 @@
 title: "Claude Code Skills × 投資分析シリーズ — スクリプト自動化からマルチ AI エージェントへの進化"
 date: 2026-04-29
 lastmod: 2026-04-29
+slug: "claude-code-skills-investment-analysis"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340870228"
 categories: ["AI/LLM"]

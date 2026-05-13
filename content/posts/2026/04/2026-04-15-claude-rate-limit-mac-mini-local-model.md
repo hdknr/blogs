@@ -2,6 +2,7 @@
 title: "Claude のレート制限対策に Mac Mini とローカルモデルを活用する — Agent を指揮する時代へ"
 date: 2026-04-15
 lastmod: 2026-04-16
+slug: "claude-rate-limit-mac-mini-local-model"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250484856"
 categories: ["AI/LLM"]

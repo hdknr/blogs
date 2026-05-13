@@ -2,6 +2,7 @@
 title: "Claude Code の Skills でプロンプト履歴を分析し、新人教育に活用する"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "claude-code-skills-training"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050698184"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Claude Codeを使うなら最低限やっておきたい「7つのセキュリティ設定」"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "claude-code-7-security-settings"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4109770395"
 categories: ["AI/LLM"]

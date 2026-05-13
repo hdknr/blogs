@@ -2,6 +2,7 @@
 title: "アメリカがイスラエルと「心中」する本当の理由 — 福音派4400万人の宗教的圧力"
 date: 2026-03-12
 lastmod: 2026-03-13
+slug: "us-israel-evangelical"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050713900"
 categories: ["その他"]

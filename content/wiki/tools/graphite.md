@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["グラファイト", "スタックドPR", "Graphite Agent"]
 related_posts:
-  - "/posts/2026/04/2026-04-19-graphite-stacked-prs-merge-queue/"
+  - "/posts/2026/04/graphite-stacked-prs-merge-queue/"
 tags: ["開発ツール", "GitHub", "CI/CD", "AI コードレビュー", "ハーネスエンジニアリング"]
 ---
 
@@ -44,4 +44,4 @@ CreaoAI の事例では、Graphite 採用により 25 名チームで 6 週間�
 
 ## ソース記事
 
-- [Graphite 徹底解説 — スタックドPRとマージキューがAIファースト開発を加速する理由](/blogs/posts/2026/04/2026-04-19-graphite-stacked-prs-merge-queue/) — 2026-04-19
+- [Graphite 徹底解説 — スタックドPRとマージキューがAIファースト開発を加速する理由](/blogs/posts/2026/04/graphite-stacked-prs-merge-queue/) — 2026-04-19

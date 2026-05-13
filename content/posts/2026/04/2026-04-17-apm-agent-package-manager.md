@@ -2,6 +2,7 @@
 title: "APM（Agent Package Manager）— AI エージェント設定を npm のように管理するツール"
 date: 2026-04-17
 lastmod: 2026-04-17
+slug: "apm-agent-package-manager"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4266529068"
 categories: ["AI/LLM"]

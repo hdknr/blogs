@@ -2,6 +2,7 @@
 title: "OpenClawで月売上1,200万円・従業員ゼロの会社を実現したAIエージェント「Felix」"
 date: 2026-03-21
 lastmod: 2026-03-21
+slug: "openclaw-felix-ai-agent-company"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4102443276"
 categories: ["AI/LLM"]

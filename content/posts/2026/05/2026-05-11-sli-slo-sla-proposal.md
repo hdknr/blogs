@@ -2,6 +2,7 @@
 title: "SLI / SLO / SLA の違いと使い分け — 提案書で失敗しないサービスレベル設計入門"
 date: 2026-05-11
 lastmod: 2026-05-11
+slug: "sli-slo-sla-proposal"
 draft: false
 source_url: "https://gist.github.com/hdknr/f23c06b2006ce70df78d6702ddc9f3db"
 categories: ["クラウド/インフラ", "ビジネス/キャリア"]
@@ -96,9 +97,9 @@ SLA は **法的拘束力** があるので、SLO より **必ず緩く** 設定
 
 ## 関連記事
 
-- [現代的サーバー監視の王道スタック — Prometheus + Loki + Grafana + Alloy](/blogs/posts/2026/05/2026-05-08-prometheus-loki-grafana-server-monitoring-stack/) — SLI の実測手段（Prometheus / PromQL）
-- [Grafana OnCall は終わった、Grafana Cloud IRM が始まった](/blogs/posts/2026/05/2026-05-08-grafana-oncall-irm-incident-response/) — SLO 違反時のオンコール体制
-- [Google シニア SRE 面接 2026 — Coding/System Design/Behavioral 対策](/blogs/posts/2026/04/2026-04-30-google-senior-sre-interview-2026/) — SRE の体系的な知識を問う面接
+- [現代的サーバー監視の王道スタック — Prometheus + Loki + Grafana + Alloy](/blogs/posts/2026/05/prometheus-loki-grafana-server-monitoring-stack/) — SLI の実測手段（Prometheus / PromQL）
+- [Grafana OnCall は終わった、Grafana Cloud IRM が始まった](/blogs/posts/2026/05/grafana-oncall-irm-incident-response/) — SLO 違反時のオンコール体制
+- [Google シニア SRE 面接 2026 — Coding/System Design/Behavioral 対策](/blogs/posts/2026/04/google-senior-sre-interview-2026/) — SRE の体系的な知識を問う面接
 
 ## 参考
 

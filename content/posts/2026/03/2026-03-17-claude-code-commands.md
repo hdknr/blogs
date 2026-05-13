@@ -2,6 +2,7 @@
 title: "Claude Code で使える神コマンド10選 — 知らないと時間を溶かす"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "claude-code-commands"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078720726"
 categories: ["AI/LLM"]

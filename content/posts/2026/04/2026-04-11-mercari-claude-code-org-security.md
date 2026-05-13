@@ -2,6 +2,7 @@
 title: "メルカリのClaude Code企業導入ガイド：セキュリティ設定と組織配布の実践戦略"
 date: 2026-04-11
 lastmod: 2026-04-16
+slug: "mercari-claude-code-org-security"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230044318"
 categories: ["AI/LLM"]

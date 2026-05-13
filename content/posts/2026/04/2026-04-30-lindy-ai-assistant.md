@@ -2,6 +2,7 @@
 title: "Lindy Assistant — Mac Mini 不要、iMessage で話せるクラウド型 AI アシスタント"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "lindy-ai-assistant"
 draft: false
 description: "Lindy Assistant は Mac Mini や API 管理不要で、iMessage から使えるクラウド型 AI アシスタント。メール自動分類・会議要約・スケジュール調整など 100 以上のアプリと連携し、1 日 2 時間の節約を実現。スタートアップ創業者向けの活用例も紹介。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349327999"

@@ -2,6 +2,7 @@
 title: "期限切れ特許を Claude に食わせて Amazon で売る — 420万件のパブリックドメイン特許から商品を発掘するパイプライン"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "claude-expired-patents-product-discovery"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349314496"
 categories: ["AI/LLM"]

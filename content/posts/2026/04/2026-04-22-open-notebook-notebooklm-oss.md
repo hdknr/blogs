@@ -2,6 +2,7 @@
 title: "Open-notebook — NotebookLM をセルフホストできる完全ローカル OSS"
 date: 2026-04-22
 lastmod: 2026-04-22
+slug: "open-notebook-notebooklm-oss"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4303873480"
 description: "NotebookLM の完全ローカル実装 OSS「open-notebook」の機能・導入手順・NotebookLM との比較を解説。Ollama 対応でゼロコスト運用も可能。"

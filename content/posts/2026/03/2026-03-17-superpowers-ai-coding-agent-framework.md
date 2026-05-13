@@ -2,6 +2,7 @@
 title: "AIコーディングエージェント開発フレームワーク「superpowers」— 7段階ワークフローとTDDで精度を高める"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "superpowers-ai-coding-agent-framework"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077626995"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "AIのスケーリングだけではAGIに届かない — 必要なのは新しいアーキテクチャ"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "ai-scaling-architecture-limits"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4085489052"
 categories: ["AI/LLM"]
