@@ -2,6 +2,7 @@
 title: "MCP のセキュリティが OAuth 2.1 で大幅進化：AI エージェントと社内データを安全に接続する仕組み"
 date: 2026-03-22
 lastmod: 2026-03-22
+slug: "mcp-oauth21-security"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4106918372"
 categories: ["AI/LLM"]

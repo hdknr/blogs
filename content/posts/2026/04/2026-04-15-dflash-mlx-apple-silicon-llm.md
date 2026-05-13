@@ -2,6 +2,7 @@
 title: "MacのローカルLLMが4.1倍速に！Apple Silicon向け新技術「DFlash」"
 date: 2026-04-15
 lastmod: 2026-04-15
+slug: "dflash-mlx-apple-silicon-llm"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250469862"
 categories: ["AI/LLM"]

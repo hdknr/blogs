@@ -2,6 +2,7 @@
 title: "AIエージェント記憶検索の限界とSuperLocalMemory V3が挑む3つの数学的解決策"
 date: 2026-03-27
 lastmod: 2026-03-27
+slug: "superlocalmemory-v3-ai-agent-memory"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4144401868"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Exbrain — Claude Code × Obsidian で「外付けAI脳」を構築する"
 date: 2026-04-09
 lastmod: 2026-04-17
+slug: "exbrain-claude-code-obsidian-ai-brain"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4217201303"
 categories: ["AI/LLM"]

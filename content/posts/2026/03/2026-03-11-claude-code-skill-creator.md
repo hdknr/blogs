@@ -2,6 +2,7 @@
 title: "Claude Code のスキルを作るなら skill-creator プラグインを使おう"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "claude-code-skill-creator"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4042055345"
 categories: ["AI/LLM"]

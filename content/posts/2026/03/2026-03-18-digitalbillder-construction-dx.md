@@ -2,6 +2,7 @@
 title: "燈（Akari Inc.）の建設業向け管理業務DXサービス「Digital Billder」"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "digitalbillder-construction-dx"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/72#issuecomment-4078882891"
 categories: ["ビジネス/キャリア"]

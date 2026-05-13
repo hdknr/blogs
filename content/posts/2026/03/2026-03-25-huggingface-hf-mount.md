@@ -2,6 +2,7 @@
 title: "HuggingFace hf-mount: AIモデルをダウンロードせずに仮想ファイルシステムとしてマウント"
 date: 2026-03-25
 lastmod: 2026-03-25
+slug: "huggingface-hf-mount"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4129195588"
 categories: ["AI/LLM"]

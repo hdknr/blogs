@@ -2,6 +2,7 @@
 title: "insanely-fast-whisper: 150分の音声を98秒で文字起こしする CLI ツール"
 date: 2026-03-25
 lastmod: 2026-03-25
+slug: "insanely-fast-whisper"
 draft: false
 description: "OpenAI Whisper をベースに Flash Attention 2 とバッチ処理で高速化した文字起こし CLI ツール insanely-fast-whisper の紹介。150分の音声を98秒で処理できる。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4129395791"

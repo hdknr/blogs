@@ -2,6 +2,7 @@
 title: "NotebookLMで「20人の専門家」を雇う方法：専門特化型ノートブックの作り方"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "notebooklm-20-experts"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4113387733"
 categories: ["AI/LLM"]

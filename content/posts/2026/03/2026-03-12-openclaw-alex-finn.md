@@ -2,6 +2,7 @@
 title: "OpenClaw界隈でまず追うべき発信者 Alex Finn とは"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "openclaw-alex-finn"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050690154"
 categories: ["AI/LLM"]

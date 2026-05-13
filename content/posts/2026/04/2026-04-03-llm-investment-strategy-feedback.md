@@ -2,6 +2,7 @@
 title: "LLMで株式投資戦略を自動生成 — 松尾研のフィードバック設計実験が示す「モデル選択」の重要性"
 date: 2026-04-03
 lastmod: 2026-04-03
+slug: "llm-investment-strategy-feedback"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4183330138"
 categories: ["AI/LLM"]

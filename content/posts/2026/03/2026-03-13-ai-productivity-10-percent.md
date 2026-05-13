@@ -2,6 +2,7 @@
 title: "AIによる生産性向上は10倍ではなく10% — DXの400社調査が示す現実"
 date: 2026-03-13
 lastmod: 2026-03-13
+slug: "ai-productivity-10-percent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4058456608"
 categories: ["AI/LLM"]

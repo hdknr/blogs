@@ -2,6 +2,7 @@
 title: "Claude Mythos Preview とは？数千件のゼロデイ脆弱性を発見した AI モデルの衝撃"
 date: 2026-04-12
 lastmod: 2026-04-12
+slug: "claude-mythos-preview"
 draft: false
 description: "Anthropic が発表した Claude Mythos Preview は、主要 OS の数千件のゼロデイ脆弱性を自律的に発見できる AI モデル。一般公開を見送り Project Glasswing で限定提供される理由と金融業界への影響を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4232653095"

@@ -2,6 +2,7 @@
 title: "Renoise：Claude Code + Seedance 2.0 で動画広告制作を100倍スケールさせるAIツール"
 date: 2026-03-24
 lastmod: 2026-03-24
+slug: "renoise-claude-code-seedance"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4121767768"
 categories: ["AI/LLM"]

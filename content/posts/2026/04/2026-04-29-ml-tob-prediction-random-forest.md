@@ -2,6 +2,7 @@
 title: "機械学習で他社株TOBを予測し TOPIX を上回るリターン — Random Forest と SHAP 分析"
 date: 2026-04-29
 lastmod: 2026-04-29
+slug: "ml-tob-prediction-random-forest"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340905066"
 categories: ["AI/LLM"]

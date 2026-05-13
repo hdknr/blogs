@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["anolisa", "Agentic OS", "Alibaba Anolisa"]
 related_posts:
-  - "/posts/2026/04/2026-04-21-alibaba-anolisa-agentic-os/"
+  - "/posts/2026/04/alibaba-anolisa-agentic-os/"
 tags: ["alibaba", "agent", "ebpf", "agentic-os", "security", "linux"]
 ---
 
@@ -58,4 +58,4 @@ SSE（Server-Sent Events）解析でストリーミング応答のトークン�
 
 ## ソース記事
 
-- [ANOLISA とは — Alibaba が公開した AI Agent 向け Linux OS](/blogs/posts/2026/04/2026-04-21-alibaba-anolisa-agentic-os/) — 2026-04-21
+- [ANOLISA とは — Alibaba が公開した AI Agent 向け Linux OS](/blogs/posts/2026/04/alibaba-anolisa-agentic-os/) — 2026-04-21

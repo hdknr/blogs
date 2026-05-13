@@ -2,6 +2,7 @@
 title: "AIエージェント同士をつなぐRelay基盤 — 会話とtransportを分離するアーキテクチャ"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "agent-relay-transport"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4045606715"
 categories: ["AI/LLM"]

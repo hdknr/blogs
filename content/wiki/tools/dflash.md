@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["dflash-mlx", "Block Diffusion Flash Speculative Decoding"]
 related_posts:
-  - "/posts/2026/04/2026-04-15-dflash-mlx-apple-silicon-llm/"
+  - "/posts/2026/04/dflash-mlx-apple-silicon-llm/"
 tags: ["Apple Silicon", "MLX", "ローカルLLM", "推論高速化", "推測デコード"]
 ---
 
@@ -32,4 +32,4 @@ uv run dflash-mlx --max-new-tokens 128
 
 ## ソース記事
 
-- [MacのローカルLLMが4.1倍速に！Apple Silicon向け新技術「DFlash」](/blogs/posts/2026/04/2026-04-15-dflash-mlx-apple-silicon-llm/) — 2026-04-15
+- [MacのローカルLLMが4.1倍速に！Apple Silicon向け新技術「DFlash」](/blogs/posts/2026/04/dflash-mlx-apple-silicon-llm/) — 2026-04-15

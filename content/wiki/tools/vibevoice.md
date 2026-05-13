@@ -5,7 +5,7 @@ date: 2026-04-29
 lastmod: 2026-04-29
 aliases: ["microsoft vibevoice", "vibevoice-asr", "vibevoice-tts"]
 related_posts:
-  - "/posts/2026/04/2026-04-29-vibevoice-microsoft-voice-ai/"
+  - "/posts/2026/04/vibevoice-microsoft-voice-ai/"
 tags: ["microsoft", "音声認識", "音声合成", "asr", "tts", "oss"]
 ---
 
@@ -51,4 +51,4 @@ ASR は 64K トークン長で **60 分の連続音声を 1 パスで処理**で
 
 ## ソース記事
 
-- [Microsoft VibeVoice 徹底解説](/blogs/posts/2026/04/2026-04-29-vibevoice-microsoft-voice-ai/) — 2026-04-29
+- [Microsoft VibeVoice 徹底解説](/blogs/posts/2026/04/vibevoice-microsoft-voice-ai/) — 2026-04-29

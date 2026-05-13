@@ -2,6 +2,7 @@
 title: "OpenClawを使いこなす鍵は「情報の一元管理」にある"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "openclaw-knowledge-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4049844370"
 categories: ["AI/LLM"]

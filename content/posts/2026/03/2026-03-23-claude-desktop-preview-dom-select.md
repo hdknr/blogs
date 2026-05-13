@@ -2,6 +2,7 @@
 title: "Claude Desktop Preview: 画面クリックでDOM要素を直接指定してUI修正できる新機能"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "claude-desktop-preview-dom-select"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4113385416"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "NTTデータが半年間、設計書・コード・テストを全部 AI に書かせて開発してみた"
 date: 2026-04-20
 lastmod: 2026-04-20
+slug: "ntt-data-ai-native-development"
 draft: false
 description: "NTTデータが2025年10月〜2026年3月の6ヶ月間、GitHub Copilot を用いて設計書・ソースコード・テストケースを全て AI に生成させた商用システム開発の実践報告。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4283874424"

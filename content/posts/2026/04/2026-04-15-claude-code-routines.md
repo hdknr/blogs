@@ -2,6 +2,7 @@
 title: "Claude Code Routines リリース — 常駐しないエージェントという新しい設計思想"
 date: 2026-04-15
 lastmod: 2026-04-15
+slug: "claude-code-routines"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250460330"
 categories: ["AI/LLM"]

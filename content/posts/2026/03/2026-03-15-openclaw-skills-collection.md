@@ -2,6 +2,7 @@
 title: "OpenClawスキルの厳選コレクション — AIエージェントを即戦力にするスキル集"
 date: 2026-03-15
 lastmod: 2026-03-15
+slug: "openclaw-skills-collection"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4062012721"
 categories: ["AI/LLM"]

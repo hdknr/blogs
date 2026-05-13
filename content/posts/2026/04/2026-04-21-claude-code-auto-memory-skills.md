@@ -2,6 +2,7 @@
 title: "Claude Code の Skills が会話ごとにずれる原因は auto-memory だった — 1行で直す方法"
 date: 2026-04-21
 lastmod: 2026-04-21
+slug: "claude-code-auto-memory-skills"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4291440274"
 categories: ["AI/LLM"]

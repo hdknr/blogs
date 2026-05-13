@@ -2,6 +2,7 @@
 title: "OpenClaw のマークダウン駆動エージェント運用スタック：40日間の実践から学ぶ設計パターン"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "openclaw-markdown-agent-stack"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041964289"
 categories: ["AI/LLM"]

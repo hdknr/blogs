@@ -2,6 +2,7 @@
 title: "Claude Code から Microsoft Teams を操作する3つの方法 — Workflows Webhook / M365 Connector / ms-365-mcp-server"
 date: 2026-04-27
 lastmod: 2026-04-27
+slug: "claude-code-teams-integration"
 draft: false
 description: "Claude Code から Microsoft Teams を操作する3つの方法を初心者向けに解説。Workflows Webhook（5分セットアップ）、Microsoft 365 Connector（公式・読み取り）、ms-365-mcp-server（投稿+ファイル DL）を難易度順に比較し、2026年5月の Incoming Webhook 廃止にも対応。"
 categories: ["ツール/開発環境"]
@@ -358,8 +359,6 @@ claude mcp add ms365 -- npx -y @softeria/ms-365-mcp-server --org-mode
 ## まとめ
 
 Claude Code から Microsoft Teams を操作する方法は、用途別に 3 つに整理できます。
-
-
 
 1. **通知だけなら Workflows Webhook**（5分セットアップ）
 2. **読み取りは Microsoft 365 Connector**（公式・無料・全プラン）

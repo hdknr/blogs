@@ -2,6 +2,7 @@
 title: "月商100〜300万の作り方は2パターンしかない — 「1本で100万」vs「20万×5本」"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "monthly-revenue-two-patterns"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050710903"
 categories: ["ビジネス/キャリア"]

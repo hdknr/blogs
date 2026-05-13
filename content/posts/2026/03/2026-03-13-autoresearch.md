@@ -2,6 +2,7 @@
 title: "Karpathy の autoresearch — LLMに「このLLMを訓練して」と丸投げしたら一晩で公式チームを超えた話"
 date: 2026-03-13
 lastmod: 2026-03-13
+slug: "autoresearch"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4058506995"
 categories: ["AI/LLM"]

@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["インフィジカル", "シークレット管理", "Vault 代替"]
 related_posts:
-  - "/posts/2026/04/2026-04-21-infisical-secret-management/"
+  - "/posts/2026/04/infisical-secret-management/"
 tags: ["セキュリティ", "シークレット管理", "DevSecOps", "オープンソース"]
 ---
 
@@ -54,4 +54,4 @@ Machine Identity により、AI エージェントや MCP サーバーが必要�
 
 ## ソース記事
 
-- [Infisical — .env に別れを告げるオープンソース・シークレット管理プラットフォーム](/blogs/posts/2026/04/2026-04-21-infisical-secret-management/) — 2026-04-21
+- [Infisical — .env に別れを告げるオープンソース・シークレット管理プラットフォーム](/blogs/posts/2026/04/infisical-secret-management/) — 2026-04-21

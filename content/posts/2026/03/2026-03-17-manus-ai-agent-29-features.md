@@ -2,6 +2,7 @@
 title: "Manus（マナス）の全29機能を完全解説——AIエージェントが「仕事を丸投げできる」時代へ"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "manus-ai-agent-29-features"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078716085"
 categories: ["AI/LLM"]

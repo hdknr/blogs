@@ -2,6 +2,7 @@
 title: "Amazon Quick デスクトップアプリ登場 — エンタープライズ向け AI アシスタントが Claude Code とも連携"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "amazon-quick-desktop-app"
 draft: false
 description: "AWS が 2026 年 4 月に発表した Amazon Quick デスクトップアプリの概要。エンタープライズ向けセキュリティ、Claude Code との ACP 連携、Microsoft Copilot との競合関係を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349319466"

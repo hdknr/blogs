@@ -2,6 +2,7 @@
 title: "株式投資の短期売買とは — デイトレード/スイングトレード/スキャルピング/中長期投資の違いとメリット・デメリット"
 date: 2026-04-21
 lastmod: 2026-04-21
+slug: "day-trade-swing-trade"
 draft: false
 description: "株式投資の 4 つの売買スタイル（スキャルピング・デイトレード・スイングトレード・中長期投資）を保有期間・取引回数・メリット・デメリットで比較し、自分に合うスタイルの選び方を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4285865231"

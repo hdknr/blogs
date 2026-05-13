@@ -2,6 +2,7 @@
 title: "CAMPFIRE 個人情報漏洩から学ぶ — GitHub アカウント侵害が招く CI/CD セキュリティリスク"
 date: 2026-04-25
 lastmod: 2026-04-25
+slug: "campfire-github-cd-security"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4317754599"
 categories: ["セキュリティ"]

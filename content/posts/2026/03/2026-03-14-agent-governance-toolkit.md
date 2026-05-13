@@ -2,6 +2,7 @@
 title: "Microsoft Agent Governance Toolkit：AIエージェントのセキュリティを4つの柱で守るOSSツールキット"
 date: 2026-03-14
 lastmod: 2026-03-14
+slug: "agent-governance-toolkit"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4061220341"
 categories: ["セキュリティ"]

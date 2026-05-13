@@ -2,6 +2,7 @@
 title: "OpenClawでX運用を自動化する鍵は「ナレッジ管理」にある"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "openclaw-x-knowledge-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4042874314"
 categories: ["AI/LLM"]

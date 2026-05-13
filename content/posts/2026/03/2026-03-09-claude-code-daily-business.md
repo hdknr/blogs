@@ -2,6 +2,7 @@
 title: "Claude Codeですべての日常業務を爆速化する — コーディング以外の活用術"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "claude-code-daily-business"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4026530149"
 categories: ["AI/LLM"]

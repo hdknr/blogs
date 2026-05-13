@@ -2,6 +2,7 @@
 title: "エージェントハーネスとユーザーハーネス — ハーネスエンジニアリングの全体像を正しく理解する"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "harness-engineering-agent-vs-user-harness"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304066838"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Anthropic の3エージェント・ハーネス設計: Claude が6時間でフルアプリを自律構築する仕組み"
 date: 2026-03-27
 lastmod: 2026-03-27
+slug: "anthropic-harness-design-three-agents"
 draft: false
 description: "Anthropic が公開した3エージェント・ハーネス設計を解説。Planner・Generator・Evaluator の役割分担と、Playwright による実アプリテストで、Claude が6時間でフルアプリを自律構築する仕組み。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4140667658"

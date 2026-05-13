@@ -2,6 +2,7 @@
 title: "現代的サーバー監視の王道スタック — Prometheus + Loki + Grafana + Alloy で始めるオブザーバビリティ基盤"
 date: 2026-05-08
 lastmod: 2026-05-08
+slug: "prometheus-loki-grafana-server-monitoring-stack"
 draft: false
 categories: ["クラウド/インフラ"]
 tags: ["Prometheus", "Loki", "Grafana", "Alloy", "オブザーバビリティ", "サーバー監視", "PromQL", "LogQL", "監視", "SRE", "AWS", "CloudWatch", "AMP", "AMG"]

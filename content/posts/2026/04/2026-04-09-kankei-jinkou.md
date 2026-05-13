@@ -2,6 +2,7 @@
 title: "関係人口とは？観光以上・移住未満の新しい地域との関わり方"
 date: 2026-04-09
 lastmod: 2026-04-09
+slug: "kankei-jinkou"
 draft: false
 description: "関係人口の定義、定住人口・交流人口との違い、ふるさと住民登録制度、成功事例、課題までを包括的に解説。地方創生2.0の鍵を握る概念を理解する。"
 source_url: "https://github.com/hdknr/blogs/issues/217#issuecomment-4204443372"

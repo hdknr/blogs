@@ -2,6 +2,7 @@
 title: "Claude Code × 1,255体のAIで歌舞伎町の夜をシミュレーション — 予算超過53.7%、ぼったくり被害23人の衝撃結果"
 date: 2026-04-27
 lastmod: 2026-04-27
+slug: "claude-code-kabukicho-ai-simulation"
 draft: false
 description: "Claude Code と1,255体のAIエージェントで歌舞伎町の夜4時間をシミュレーション。予算超過53.7%・観光客の11.5%がぼったくり被害という衝撃データが示すマルチエージェント社会シミュレーションの可能性。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4326322861"

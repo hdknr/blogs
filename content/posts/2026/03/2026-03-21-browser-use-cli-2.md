@@ -2,6 +2,7 @@
 title: "Browser Use CLI 2.0 — Playwrightを超える次世代ブラウザ自動化ツール"
 date: 2026-03-21
 lastmod: 2026-03-21
+slug: "browser-use-cli-2"
 draft: false
 description: "Browser Use CLI 2.0 は Playwright より2倍速く、コスト半減のブラウザ自動化ツール。CDP直接接続、既存Chromeセッションの再利用、AIエージェント連携に対応。セットアップ方法とPlaywrightとの使い分けを解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4102360362"

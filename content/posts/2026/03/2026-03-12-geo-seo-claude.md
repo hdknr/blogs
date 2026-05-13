@@ -2,6 +2,7 @@
 title: "geo-seo-claude：AI検索時代のSEO最適化をClaude Codeで自動化するオープンソースツール"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "geo-seo-claude"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4043632679"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Claude Code のソースコードが npm のソースマップから全公開された件"
 date: 2026-03-31
 lastmod: 2026-03-31
+slug: "claude-code-source-map-leak"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4165302030"
 categories: ["セキュリティ"]

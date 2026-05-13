@@ -2,6 +2,7 @@
 title: "AIが自分で調べ方を選ぶRAG — モデル推論能力でスケールする新手法"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "rag-adaptive-search-strategy"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078717496"
 categories: ["AI/LLM"]

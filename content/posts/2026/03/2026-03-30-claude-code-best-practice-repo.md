@@ -2,6 +2,7 @@
 title: "Claude Codeベストプラクティス疲れに終止符 — claude-code-best-practiceリポジトリ一本で運用する方法"
 date: 2026-03-30
 lastmod: 2026-03-30
+slug: "claude-code-best-practice-repo"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4151383423"
 categories: ["AI/LLM"]

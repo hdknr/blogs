@@ -2,6 +2,7 @@
 title: "利確はセンスではなく、設計で上手くなる"
 date: 2026-03-30
 lastmod: 2026-03-30
+slug: "profit-taking-by-design"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4151756782"
 categories: ["ビジネス/キャリア"]

@@ -9,29 +9,29 @@ related_posts:
   - "/posts/2026/04/claude-code-silent-degradation/"
   - "/posts/2026/04/karpathy-llm-wiki/"
   - "/posts/2026/04/claude-thinking-nerfed/"
-  - "/posts/2026/04/2026-04-15-claude-code-routines/"
-  - "/posts/2026/04/2026-04-15-claude-code-routines-desktop-update/"
-  - "/posts/2026/04/2026-04-16-claude-code-team-onboarding/"
-  - "/posts/2026/04/2026-04-17-claude-caveman-token-reduction/"
-  - "/posts/2026/04/2026-04-17-claude-code-context-rot-session-management/"
-  - "/posts/2026/04/2026-04-17-video-use-claude-code-video-editing/"
-  - "/posts/2026/04/2026-04-17-apm-agent-package-manager/"
-  - "/posts/2026/04/2026-04-21-claude-code-45-tasks-automation-student/"
-  - "/posts/2026/04/2026-04-21-claude-code-auto-memory-skills/"
-  - "/posts/2026/04/2026-04-21-claude-code-level5/"
-  - "/posts/2026/04/2026-04-21-claude-code-zero-handwritten-code-49-features/"
-  - "/posts/2026/04/2026-04-23-claude-code-local-llm-vllm/"
-  - "/posts/2026/04/2026-04-23-claude-code-obsidian-second-brain/"
-  - "/posts/2026/04/2026-04-23-claude-code-plan-mode-cost-reduction/"
-  - "/posts/2026/04/2026-04-23-claude-code-sns-automation-affiliate/"
-  - "/posts/2026/04/2026-04-25-exa-for-claude-mcp-plugin/"
-  - "/posts/2026/04/2026-04-27-claude-code-creator-setup/"
-  - "/posts/2026/04/2026-04-27-claude-code-kabukicho-ai-simulation/"
-  - "/posts/2026/04/2026-04-27-claude-code-stock-trading-automation/"
-  - "/posts/2026/04/2026-04-14-claude-code-world-ai-simulator/"
-  - "/posts/2026/04/2026-04-17-pytest-chaos-engineering/"
-  - "/posts/2026/03/2026-03-17-claude-code-auto-mode/"
-  - "/posts/2026/03/2026-03-17-claude-code-commands/"
+  - "/posts/2026/04/claude-code-routines/"
+  - "/posts/2026/04/claude-code-routines-desktop-update/"
+  - "/posts/2026/04/claude-code-team-onboarding/"
+  - "/posts/2026/04/claude-caveman-token-reduction/"
+  - "/posts/2026/04/claude-code-context-rot-session-management/"
+  - "/posts/2026/04/video-use-claude-code-video-editing/"
+  - "/posts/2026/04/apm-agent-package-manager/"
+  - "/posts/2026/04/claude-code-45-tasks-automation-student/"
+  - "/posts/2026/04/claude-code-auto-memory-skills/"
+  - "/posts/2026/04/claude-code-level5/"
+  - "/posts/2026/04/claude-code-zero-handwritten-code-49-features/"
+  - "/posts/2026/04/claude-code-local-llm-vllm/"
+  - "/posts/2026/04/claude-code-obsidian-second-brain/"
+  - "/posts/2026/04/claude-code-plan-mode-cost-reduction/"
+  - "/posts/2026/04/claude-code-sns-automation-affiliate/"
+  - "/posts/2026/04/exa-for-claude-mcp-plugin/"
+  - "/posts/2026/04/claude-code-creator-setup/"
+  - "/posts/2026/04/claude-code-kabukicho-ai-simulation/"
+  - "/posts/2026/04/claude-code-stock-trading-automation/"
+  - "/posts/2026/04/claude-code-world-ai-simulator/"
+  - "/posts/2026/04/pytest-chaos-engineering/"
+  - "/posts/2026/03/claude-code-auto-mode/"
+  - "/posts/2026/03/claude-code-commands/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント"]
 ---
 
@@ -101,9 +101,9 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude Code のサイレントな性能劣化を見逃すな](/blogs/posts/2026/04/claude-code-silent-degradation/) — 2026-04-03
 - [Karpathy の LLM Wiki](/blogs/posts/2026/04/karpathy-llm-wiki/) — 2026-04-05
 - [Claude の思考深度が 67% 低下？サイレント・ダウングレード問題](/blogs/posts/2026/04/claude-thinking-nerfed/) — 2026-04-13
-- [Claude Code Routines リリース — 常駐しないエージェントという新しい設計思想](/blogs/posts/2026/04/2026-04-15-claude-code-routines/) — 2026-04-15
-- [Claude Code、1日でアプデ3連発 — Routines・新 Desktop・ストリーム安定性](/blogs/posts/2026/04/2026-04-15-claude-code-routines-desktop-update/) — 2026-04-15
-- [Claude Code の /team-onboarding コマンド](/blogs/posts/2026/04/2026-04-16-claude-code-team-onboarding/) — 2026-04-16
-- [Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/2026-04-17-claude-caveman-token-reduction/) — 2026-04-17
-- [Claude Code のコンテキスト管理術 — Context Rot を防ぐ 5 つの選択肢](/blogs/posts/2026/04/2026-04-17-claude-code-context-rot-session-management/) — 2026-04-17
-- [Video Use — Claude Code で動画編集を完全自動化するオープンソーススキル](/blogs/posts/2026/04/2026-04-17-video-use-claude-code-video-editing/) — 2026-04-17
+- [Claude Code Routines リリース — 常駐しないエージェントという新しい設計思想](/blogs/posts/2026/04/claude-code-routines/) — 2026-04-15
+- [Claude Code、1日でアプデ3連発 — Routines・新 Desktop・ストリーム安定性](/blogs/posts/2026/04/claude-code-routines-desktop-update/) — 2026-04-15
+- [Claude Code の /team-onboarding コマンド](/blogs/posts/2026/04/claude-code-team-onboarding/) — 2026-04-16
+- [Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/claude-caveman-token-reduction/) — 2026-04-17
+- [Claude Code のコンテキスト管理術 — Context Rot を防ぐ 5 つの選択肢](/blogs/posts/2026/04/claude-code-context-rot-session-management/) — 2026-04-17
+- [Video Use — Claude Code で動画編集を完全自動化するオープンソーススキル](/blogs/posts/2026/04/video-use-claude-code-video-editing/) — 2026-04-17

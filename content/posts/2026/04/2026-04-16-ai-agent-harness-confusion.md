@@ -2,6 +2,7 @@
 title: "AIエージェントの「ハーネス」を巡る混乱 — 同じ言葉が指す異なるスコープ"
 date: 2026-04-16
 lastmod: 2026-04-16
+slug: "ai-agent-harness-confusion"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4266530376"
 categories: ["AI/LLM"]

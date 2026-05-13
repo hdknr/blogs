@@ -2,6 +2,7 @@
 title: "OpenClaw狂想曲：中国で巻き起こるAIエージェント・ゴールドラッシュと「ツルハシ売り」たち"
 date: 2026-03-20
 lastmod: 2026-03-20
+slug: "openclaw-gold-rush"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4095189072"
 categories: ["AI/LLM"]

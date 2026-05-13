@@ -2,6 +2,7 @@
 title: "「言語税」対策として CLAUDE.md を英語化する — 日本語境界を残したまま prompt caching を効かせる部分英語化パターン"
 date: 2026-05-13
 lastmod: 2026-05-13
+slug: "claude-md-english-prompt-caching"
 draft: false
 categories: ["AI/LLM", "ツール/開発環境"]
 tags: ["claude-code", "prompt-caching", "CLAUDE.md", "日本語", "トークン削減", "ハーネスエンジニアリング"]

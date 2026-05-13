@@ -2,6 +2,7 @@
 title: "寝る前の2分指示で3,000万円分の仕事をこなす Claude Code の衝撃"
 date: 2026-03-16
 lastmod: 2026-03-16
+slug: "claude-code-overnight-tasks"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078680188"
 categories: ["AI/LLM"]

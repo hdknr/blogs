@@ -2,6 +2,7 @@
 title: "ForceMemo: GitHub アカウントを乗っ取り Python リポジトリにバックドアを仕込む新型攻撃"
 date: 2026-03-19
 lastmod: 2026-03-19
+slug: "forcememo-github-attack"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4088498941"
 categories: ["セキュリティ"]

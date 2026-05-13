@@ -2,6 +2,7 @@
 title: "6ヶ月でAIエンジニアになるロードマップ — 無料リソースだけで学ぶ完全ガイド"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "ai-engineer-6-months-roadmap"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4079195726"
 categories: ["AI/LLM"]

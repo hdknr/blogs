@@ -2,6 +2,7 @@
 title: "HubSpotを活用したレストランのディナータイム集客戦略"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "restaurant-marketing-hubspot"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4079530590"
 categories: ["ビジネス/キャリア"]

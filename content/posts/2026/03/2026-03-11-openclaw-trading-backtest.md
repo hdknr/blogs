@@ -2,6 +2,7 @@
 title: "OpenClaw エージェントでトレーディング戦略を自動バックテスト"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "openclaw-trading-backtest"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041982166"
 categories: ["AI/LLM"]

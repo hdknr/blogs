@@ -2,6 +2,7 @@
 title: "Claude AI で投資銀行レベルの財務モデルを作成する 12 のプロンプト"
 date: 2026-03-30
 lastmod: 2026-03-30
+slug: "claude-financial-modeling"
 draft: false
 description: "ゴールドマン・サックスも採用した Claude AI を使い、DCF・LBO・3ステートメントモデルなど投資銀行レベルの財務モデルを 12 の構造化プロンプトで構築する方法を解説"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4157763766"

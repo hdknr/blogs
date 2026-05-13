@@ -2,6 +2,7 @@
 title: "Claude Code にカオスエンジニアリングエージェントを導入してリポジトリの弱点を発見する"
 date: 2026-04-07
 lastmod: 2026-04-07
+slug: "claude-code-chaos-engineer-agent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4198086645"
 categories: ["ツール/開発環境"]

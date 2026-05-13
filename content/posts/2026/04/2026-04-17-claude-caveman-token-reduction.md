@@ -2,6 +2,7 @@
 title: "Claude を「原始人」口調にするとトークンが 80% 減る話"
 date: 2026-04-17
 lastmod: 2026-04-19
+slug: "claude-caveman-token-reduction"
 draft: false
 description: "一行のシステムプロンプトで Claude のトークン消費を最大80%削減する「原始人」テクニック。英語版 Caveman との比較、日本語で効果が大きい理由、CLAUDE.md への適用方法まで解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4269198079"

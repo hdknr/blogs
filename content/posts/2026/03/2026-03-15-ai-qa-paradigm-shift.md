@@ -2,6 +2,7 @@
 title: "AI時代のQA：「決定論から確率論へ」のパラダイムシフト"
 date: 2026-03-15
 lastmod: 2026-03-16
+slug: "ai-qa-paradigm-shift"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4062007521"
 categories: ["AI/LLM"]

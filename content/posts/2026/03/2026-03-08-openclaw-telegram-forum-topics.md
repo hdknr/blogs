@@ -2,6 +2,7 @@
 title: "OpenClaw × Telegram Forum Topics — AIとの対話を構造化して生産性を上げる方法"
 date: 2026-03-08
 lastmod: 2026-03-08
+slug: "openclaw-telegram-forum-topics"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4022919307"
 categories: ["AI/LLM"]

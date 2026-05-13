@@ -2,6 +2,7 @@
 title: "Claude Code をローカル LLM（vLLM + MiniMax-M2.7）で爆速稼働させる方法"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "claude-code-local-llm-vllm"
 draft: false
 description: "vLLM + MiniMax-M2.7 を使い Claude Code をローカル LLM で動かす方法。4× GPU / 8× GPU 構成のサーバー起動コマンド、環境変数設定、Prefix Caching による高速化、旧バージョン対応まで一通り解説する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4303875610"

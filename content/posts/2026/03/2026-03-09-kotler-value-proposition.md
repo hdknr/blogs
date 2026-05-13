@@ -2,6 +2,7 @@
 title: "コトラー マーケティングの価値提案 — 顧客が時間を割く4つの理由"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "kotler-value-proposition"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4020985083"
 categories: ["ビジネス/キャリア"]

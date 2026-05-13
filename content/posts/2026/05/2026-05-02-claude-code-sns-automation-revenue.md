@@ -2,6 +2,7 @@
 title: "Claude Code で Instagram を自律運用 — 月3万ドルを稼ぐ AI 自動化ビジネスの実態"
 date: 2026-05-02
 lastmod: 2026-05-02
+slug: "claude-code-sns-automation-revenue"
 draft: false
 description: "Claude Code を自律エージェントとして活用し、数十の Instagram アカウントを24時間自動運用して月3万ドルを稼ぐ事例を解説。MCP 連携や自動化パイプラインの構成と、プラットフォームポリシー上の注意点もあわせて紹介します。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363253493"

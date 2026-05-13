@@ -2,6 +2,7 @@
 title: "ChatGPTのコード実行環境にDNSトンネリングによるデータ漏洩の脆弱性が発覚"
 date: 2026-03-31
 lastmod: 2026-03-31
+slug: "chatgpt-dns-tunneling-data-leak"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4165256986"
 categories: ["セキュリティ"]

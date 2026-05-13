@@ -2,6 +2,7 @@
 title: "バイブコーディングで成果を上げる人の共通点——CS基礎知識と文章力がカギ"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "vibe-coding-cs-writing-skills"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077632474"
 categories: ["AI/LLM"]

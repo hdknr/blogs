@@ -2,6 +2,7 @@
 title: "CLAUDE.md+SKILL.md 英語化で 37.6% トークン削減 — tiktoken による実測結果と内訳"
 date: 2026-05-13
 lastmod: 2026-05-13
+slug: "claude-md-english-tiktoken-measurement"
 draft: false
 categories: ["AI/LLM", "ツール/開発環境"]
 tags: ["claude-code", "prompt-caching", "CLAUDE.md", "tiktoken", "トークン削減", "実測"]

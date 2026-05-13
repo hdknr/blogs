@@ -5,7 +5,7 @@ date: 2026-04-27
 lastmod: 2026-04-27
 aliases: ["claude-code-harness", "Claude Code Harness"]
 related_posts:
-  - "/posts/2026/04/2026-04-14-claude-harness-v4-hokage/"
+  - "/posts/2026/04/claude-harness-v4-hokage/"
 tags: ["Claude Code", "Claude Harness", "AI開発", "OSS", "Go", "ハーネスエンジニアリング"]
 ---
 
@@ -68,4 +68,4 @@ Claude Code v2.1.92 以上が必要。
 
 ## ソース記事
 
-- [Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に](/blogs/posts/2026/04/2026-04-14-claude-harness-v4-hokage/) — 2026-04-14
+- [Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に](/blogs/posts/2026/04/claude-harness-v4-hokage/) — 2026-04-14

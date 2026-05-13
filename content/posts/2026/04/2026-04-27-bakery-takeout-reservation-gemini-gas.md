@@ -2,6 +2,7 @@
 title: "パン屋がAI（Gemini）と500時間かけて作ったテイクアウト予約管理システムを無料公開"
 date: 2026-04-27
 lastmod: 2026-04-27
+slug: "bakery-takeout-reservation-gemini-gas"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324253493"
 categories: ["AI/LLM"]

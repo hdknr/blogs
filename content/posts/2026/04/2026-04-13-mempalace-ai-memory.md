@@ -2,6 +2,7 @@
 title: "MemPalace とは？LongMemEval 96.6%を記録したオープンソース AI メモリシステムの仕組みと論争"
 date: 2026-04-13
 lastmod: 2026-04-13
+slug: "mempalace-ai-memory"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4239444953"
 categories: ["AI/LLM"]

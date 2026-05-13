@@ -2,6 +2,7 @@
 title: "個人開発アプリの認証は「絶対に」WorkOS を使え — MCP 化で知った最強の選択肢"
 date: 2026-04-27
 lastmod: 2026-04-27
+slug: "workos-authkit-mcp-authentication"
 draft: false
 description: "個人開発アプリの MCP 化で避けられない認証問題を WorkOS AuthKit で解決する方法を解説。Dynamic Client Registration（RFC 7591）対応・月間 100 万 MAU 無料。Next.js App Router での実装を 4 ステップ・50 行以内で完成させる手順と、JWT audience / issuer のハマりポイントも紹介。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4326314467"

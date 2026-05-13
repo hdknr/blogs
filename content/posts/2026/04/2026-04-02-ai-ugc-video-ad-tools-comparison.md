@@ -2,6 +2,7 @@
 title: "AI UGC動画広告ツール徹底比較 — Arcads・Creatify・HeyGen・Synthesia の選び方"
 date: 2026-04-02
 lastmod: 2026-04-02
+slug: "ai-ugc-video-ad-tools-comparison"
 draft: false
 categories: ["AI/LLM"]
 tags: ["AI広告", "UGC", "動画生成", "マーケティング自動化", "ツール比較"]

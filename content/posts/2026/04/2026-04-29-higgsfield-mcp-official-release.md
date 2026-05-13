@@ -2,6 +2,7 @@
 title: "Higgsfield MCP 正式リリース — 1つのコネクタで30以上のAI動画・画像モデルをエージェントから使う"
 date: 2026-04-29
 lastmod: 2026-04-29
+slug: "higgsfield-mcp-official-release"
 draft: false
 description: "Higgsfield MCP は Claude・Cursor などの MCP クライアントから Seedance 2.0・Sora 2・Veo 3.1 など30以上の AI 動画・画像生成モデルを1つのコネクタで呼び出せるホスト型 MCP サーバー。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340888308"

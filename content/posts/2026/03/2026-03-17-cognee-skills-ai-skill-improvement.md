@@ -2,6 +2,7 @@
 title: "cognee-skills：AIスキルを自動改善する5ステップの考え方"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "cognee-skills-ai-skill-improvement"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077629102"
 categories: ["AI/LLM"]

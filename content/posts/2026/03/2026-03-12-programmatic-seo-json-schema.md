@@ -2,6 +2,7 @@
 title: "AIプログラマティックSEO：JSON Schemaで13,000ページを3時間で生成し、トラフィックを5.7倍にした手法"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "programmatic-seo-json-schema"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050652885"
 categories: ["AI/LLM"]

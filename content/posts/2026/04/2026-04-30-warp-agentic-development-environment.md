@@ -2,6 +2,7 @@
 title: "Warp がオープンソース化 — ターミナルから生まれた Agentic Development Environment（ADE）の全貌"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "warp-agentic-development-environment"
 draft: false
 description: "AI ターミナル Warp が 2026-04-28 に Rust 製クライアントを AGPL v3 / MIT のデュアルライセンスでオープンソース化。OpenAI 設立スポンサー、Claude Code・Codex・Gemini CLI 連携、クラウドエージェント基盤 Oz まで含めた ADE の全貌を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349378460"

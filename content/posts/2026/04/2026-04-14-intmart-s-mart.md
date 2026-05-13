@@ -2,6 +2,7 @@
 title: "S_mart（エスマート）とは？買物困難者を救うデジタル店舗サービスの仕組みと評価"
 date: 2026-04-14
 lastmod: 2026-04-14
+slug: "intmart-s-mart"
 draft: false
 description: "int mart design のデジタルディスプレイお買い物システム「S_mart（エスマート）」を解説。買物困難者対策としての仕組み、4つのコンポーネント構成、月額料金、活用パターンと評価ポイントを紹介。"
 source_url: "https://github.com/hdknr/blogs/issues/217#issuecomment-4240384303"

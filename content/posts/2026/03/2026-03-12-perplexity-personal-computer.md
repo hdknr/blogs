@@ -2,6 +2,7 @@
 title: "Perplexity Personal Computer — Mac mini を常時稼働AIエージェントに変える新サービス"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "perplexity-personal-computer"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4044242848"
 categories: ["AI/LLM"]

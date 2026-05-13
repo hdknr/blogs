@@ -2,6 +2,7 @@
 title: "Claude Code + Self-hosted Runner: 「Auto mode is unavailable for your plan」エラーの原因と対処"
 date: 2026-03-31
 lastmod: 2026-03-31
+slug: "claude-code-self-hosted-runner-auto-mode"
 draft: false
 categories: ["AI/LLM"]
 tags: ["claude-code", "github-actions"]

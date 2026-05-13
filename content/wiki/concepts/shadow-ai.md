@@ -5,8 +5,8 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["Shadow AI", "シャドーIT AI版"]
 related_posts:
-  - "/posts/2026/04/2026-04-15-shadow-ai-risks/"
-  - "/posts/2026/04/2026-04-15-vibe-coding-security-risk/"
+  - "/posts/2026/04/shadow-ai-risks/"
+  - "/posts/2026/04/vibe-coding-security-risk/"
 tags: ["セキュリティ", "データガバナンス", "企業リスク", "AI"]
 ---
 
@@ -41,5 +41,5 @@ tags: ["セキュリティ", "データガバナンス", "企業リスク", "AI"
 
 ## ソース記事
 
-- [シャドーAIがもたらす見えないリスク](/blogs/posts/2026/04/2026-04-15-shadow-ai-risks/) — 2026-04-15
-- [バイブコーディングの怖い話](/blogs/posts/2026/04/2026-04-15-vibe-coding-security-risk/) — 2026-04-15
+- [シャドーAIがもたらす見えないリスク](/blogs/posts/2026/04/shadow-ai-risks/) — 2026-04-15
+- [バイブコーディングの怖い話](/blogs/posts/2026/04/vibe-coding-security-risk/) — 2026-04-15

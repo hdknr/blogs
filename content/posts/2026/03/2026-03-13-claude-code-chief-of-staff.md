@@ -2,6 +2,7 @@
 title: "Claude Codeで「AI チーフ・オブ・スタッフ」を構築する ― Jim Prosserの36時間実験"
 date: 2026-03-13
 lastmod: 2026-03-13
+slug: "claude-code-chief-of-staff"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4054427520"
 categories: ["AI/LLM"]

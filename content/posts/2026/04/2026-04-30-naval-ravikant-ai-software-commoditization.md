@@ -2,6 +2,7 @@
 title: "ソフトウェアだけで勝てた時代の終わり — Naval Ravikant が語る AI 時代の「コピーされない壁」"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "naval-ravikant-ai-software-commoditization"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349373727"
 categories: ["ビジネス/キャリア"]

@@ -2,6 +2,7 @@
 title: "Zapier を使った HubSpot と Asana の連携：集計ロジックも追加する方法"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "zapier-hubspot-asana"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4079051187"
 categories: ["ビジネス/キャリア"]

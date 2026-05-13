@@ -2,6 +2,7 @@
 title: "Claude Code Security — AI がコードベースの脆弱性を発見・修正提案する新機能"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "claude-code-security"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4026437431"
 categories: ["AI/LLM"]

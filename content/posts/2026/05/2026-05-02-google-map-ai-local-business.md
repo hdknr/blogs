@@ -2,6 +2,7 @@
 title: "「Google マップ × AI」で月230万稼ぐ方法 — 海外話題のひとり社長プレイブック全文和訳"
 date: 2026-05-02
 lastmod: 2026-05-02
+slug: "google-map-ai-local-business"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363257776"
 categories: ["ビジネス/キャリア"]

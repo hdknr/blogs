@@ -2,6 +2,7 @@
 title: "Pay2Key の Linux ランサムウェアが x64/ARM64 サーバーを標的に — 防御機構を無効化する高度な手口"
 date: 2026-03-30
 lastmod: 2026-03-30
+slug: "pay2key-linux-ransomware"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4157822211"
 categories: ["セキュリティ"]

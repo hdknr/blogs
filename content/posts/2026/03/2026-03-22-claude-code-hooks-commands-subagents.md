@@ -2,6 +2,7 @@
 title: "Claude Code を「自分専用の開発チーム」に変える3つの機能 — フック・カスタムコマンド・サブエージェント"
 date: 2026-03-22
 lastmod: 2026-03-22
+slug: "claude-code-hooks-commands-subagents"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4107205979"
 description: "Claude Code のフック（Hooks）、カスタムスラッシュコマンド、サブエージェントの3機能を解説。settings.json の設定例やコマンド定義の実例付きで、導入後の次のステップが分かる。"

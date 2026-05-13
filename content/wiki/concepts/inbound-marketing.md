@@ -5,9 +5,9 @@ date: 2026-04-15
 lastmod: 2026-04-28
 aliases: ["inbound marketing", "インバウンド"]
 related_posts:
-  - "/posts/2026/04/2026-04-15-inbound-marketing-guide/"
-  - "/posts/2026/04/2026-04-28-hubspot-pro-merits/"
-  - "/posts/2026/04/2026-04-23-hubspot-hscachebuster/"
+  - "/posts/2026/04/inbound-marketing-guide/"
+  - "/posts/2026/04/hubspot-pro-merits/"
+  - "/posts/2026/04/hubspot-hscachebuster/"
 tags: ["マーケティング", "ma", "crm", "コンテンツマーケティング", "seo"]
 ---
 
@@ -53,6 +53,6 @@ tags: ["マーケティング", "ma", "crm", "コンテンツマーケティン�
 
 ## ソース記事
 
-- [HubSpot Pro プランの実用メリット](/blogs/posts/2026/04/2026-04-28-hubspot-pro-merits/) — 2026-04-28
-- [HubSpot CMS の hsCacheBuster](/blogs/posts/2026/04/2026-04-23-hubspot-hscachebuster/) — 2026-04-23
-- [インバウンドマーケティング徹底入門](/blogs/posts/2026/04/2026-04-15-inbound-marketing-guide/) — 2026-04-15
+- [HubSpot Pro プランの実用メリット](/blogs/posts/2026/04/hubspot-pro-merits/) — 2026-04-28
+- [HubSpot CMS の hsCacheBuster](/blogs/posts/2026/04/hubspot-hscachebuster/) — 2026-04-23
+- [インバウンドマーケティング徹底入門](/blogs/posts/2026/04/inbound-marketing-guide/) — 2026-04-15

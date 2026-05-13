@@ -2,6 +2,7 @@
 title: "OpenClaw に動画生成機能が正式搭載へ — AI エージェントが制作まで完結する時代"
 date: 2026-04-07
 lastmod: 2026-04-07
+slug: "openclaw-video-generation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4197924774"
 categories: ["AI/LLM"]

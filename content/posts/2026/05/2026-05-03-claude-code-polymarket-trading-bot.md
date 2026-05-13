@@ -2,6 +2,7 @@
 title: "Anthropicエンジニアとされる人物が Claude Code で Polymarket 取引 bot を構築 — $200 → $14,300 の仕組みを解説"
 date: 2026-05-03
 lastmod: 2026-05-03
+slug: "claude-code-polymarket-trading-bot"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4365901423"
 categories: ["AI/LLM"]

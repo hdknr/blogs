@@ -5,7 +5,7 @@ date: 2026-04-22
 lastmod: 2026-04-22
 aliases: ["open notebook lm", "notebooklm oss"]
 related_posts:
-  - "/posts/2026/04/2026-04-22-open-notebook-notebooklm-oss/"
+  - "/posts/2026/04/open-notebook-notebooklm-oss/"
 tags: ["oss", "notebooklm", "rag", "プライバシー", "ai-notebook"]
 ---
 
@@ -31,4 +31,4 @@ NotebookLM は Google が提供する**ソース駆動の AI ノート**で、PD
 
 ## ソース記事
 
-- [Open Notebook — NotebookLM の OSS 代替](/blogs/posts/2026/04/2026-04-22-open-notebook-notebooklm-oss/) — 2026-04-22
+- [Open Notebook — NotebookLM の OSS 代替](/blogs/posts/2026/04/open-notebook-notebooklm-oss/) — 2026-04-22

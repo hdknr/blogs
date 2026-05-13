@@ -2,6 +2,7 @@
 title: "Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する"
 date: 2026-04-17
 lastmod: 2026-04-17
+slug: "obsidian-pkm-second-brain"
 draft: false
 categories: ["ツール/開発環境"]
 tags: ["Obsidian", "PKM", "ナレッジ管理", "Markdown", "AI連携", "プラグイン"]

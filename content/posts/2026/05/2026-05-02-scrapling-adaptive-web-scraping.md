@@ -2,6 +2,7 @@
 title: "Scrapling — BeautifulSoup比784倍速い適応型Webスクレイピング・Cloudflare突破・MCP対応まとめ"
 date: 2026-05-02
 lastmod: 2026-05-02
+slug: "scrapling-adaptive-web-scraping"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363538280"
 categories: ["ツール/開発環境"]

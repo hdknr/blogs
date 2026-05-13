@@ -2,6 +2,7 @@
 title: "Claude Code × ローカルLLM で KVキャッシュが毎回無効化される問題と対策"
 date: 2026-03-13
 lastmod: 2026-03-13
+slug: "claude-code-local-llm-kv-cache"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4051391820"
 categories: ["AI/LLM"]

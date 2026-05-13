@@ -2,6 +2,7 @@
 title: "AWS が明かした AI エージェント導入失敗の構造と「AI BPR」組み直しの方法論"
 date: 2026-04-22
 lastmod: 2026-04-27
+slug: "aws-ai-bpr-methodology"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304020634"
 categories: ["AI/LLM"]

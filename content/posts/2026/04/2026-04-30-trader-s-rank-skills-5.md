@@ -2,6 +2,7 @@
 title: "トレーダーのSランクスキル5選 — 11年・資産1億超のベテランが語る地味だが本質的な能力"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "trader-s-rank-skills-5"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349365963"
 categories: ["ビジネス/キャリア"]

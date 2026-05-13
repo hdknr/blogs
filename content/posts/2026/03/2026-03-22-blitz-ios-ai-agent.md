@@ -2,6 +2,7 @@
 title: "iOS開発が完全自動化される時代が来た：オープンソースmacOSアプリ「Blitz」とは"
 date: 2026-03-22
 lastmod: 2026-03-22
+slug: "blitz-ios-ai-agent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4106914372"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "AWS Japan AI チームが draw.io 図解自動生成を arXiv 論文化——GenAI-DrawIO-Creator の概要"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "genai-drawio-creator"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078673005"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "英語圏のClaude Codeガチ勢が月50万〜200万円稼ぐ手法 — Anthropic公式が語った5つのテクニック"
 date: 2026-05-02
 lastmod: 2026-05-02
+slug: "claude-code-freelance-gachisei-anthropic-techniques"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363539764"
 categories: ["AI/LLM"]

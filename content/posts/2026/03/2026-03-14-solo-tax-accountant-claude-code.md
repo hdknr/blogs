@@ -2,6 +2,7 @@
 title: "スタッフ0人の税理士がClaude Codeで顧問先60社を1人で回す全手法"
 date: 2026-03-14
 lastmod: 2026-03-14
+slug: "solo-tax-accountant-claude-code"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4061222103"
 categories: ["AI/LLM"]

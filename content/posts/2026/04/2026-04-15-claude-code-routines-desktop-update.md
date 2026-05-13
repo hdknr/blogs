@@ -2,6 +2,7 @@
 title: "Claude Code、1日でアプデ3連発 — Routines・新 Desktop・ストリーム安定性"
 date: 2026-04-15
 lastmod: 2026-04-15
+slug: "claude-code-routines-desktop-update"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250590914"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Exa for Claude — Web・論文・企業情報を標準検索より高速・高精度に扱う MCP プラグイン"
 date: 2026-04-25
 lastmod: 2026-04-27
+slug: "exa-for-claude-mcp-plugin"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324637258"
 description: "Claude に本格的なニューラル検索を付与する MCP サーバー「Exa」の使い方を解説。企業情報・LinkedIn・コード検索など多様なツールを Claude Desktop と Claude Code で利用する方法を紹介。"

@@ -2,12 +2,13 @@
 title: "Apprise + シフト管理ツールで OnCall 自作スタックを組む — PyShift・OR-Tools・GoAlert の役割と選び方"
 date: 2026-05-08
 lastmod: 2026-05-08
+slug: "apprise-shift-management-oncall-stack"
 draft: false
 categories: ["クラウド/インフラ"]
 tags: ["Apprise", "シフト管理", "オンコール", "PyShift", "GoAlert", "OR-Tools", "PuLP", "Python", "OSS", "オブザーバビリティ", "Microsoft Teams", "Microsoft Graph", "Outlook", "Microsoft Shifts"]
 ---
 
-[前回の記事](/blogs/posts/2026/05/2026-05-08-grafana-oncall-irm-incident-response/)で「Apprise + 自作 Web サービスで OnCall 相当を組む」例を示しました。この記事ではよくある誤解を整理し、**シフト管理を含めた自作 OnCall スタックの現実的な選択肢**を深掘りします。
+[前回の記事](/blogs/posts/2026/05/grafana-oncall-irm-incident-response/)で「Apprise + 自作 Web サービスで OnCall 相当を組む」例を示しました。この記事ではよくある誤解を整理し、**シフト管理を含めた自作 OnCall スタックの現実的な選択肢**を深掘りします。
 
 ## まずは Apprise の正しい位置付けを確認
 
@@ -370,7 +371,7 @@ GoAlert の標準範囲で足りる組織なら、自作よりずっと楽。
 
 ## 自作スタックの完成形
 
-[前回記事](/blogs/posts/2026/05/2026-05-08-grafana-oncall-irm-incident-response/)の Apprise + FastAPI 自作サービスに、シフト管理を組み込んだ完成形:
+[前回記事](/blogs/posts/2026/05/grafana-oncall-irm-incident-response/)の Apprise + FastAPI 自作サービスに、シフト管理を組み込んだ完成形:
 
 ```text
 [Grafana Alerting]

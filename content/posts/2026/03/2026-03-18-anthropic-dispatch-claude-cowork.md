@@ -2,6 +2,7 @@
 title: "Anthropic Dispatch：スマホからPCのClaudeに仕事を投げる新機能"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "anthropic-dispatch-claude-cowork"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4085477100"
 categories: ["AI/LLM"]

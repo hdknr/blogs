@@ -2,6 +2,7 @@
 title: "CanIRun.ai — ブラウザだけで自分のPCがどのローカルAIを動かせるか即判定"
 date: 2026-04-22
 lastmod: 2026-04-22
+slug: "canirun-ai-local-model-checker"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304017679"
 categories: ["AI/LLM"]

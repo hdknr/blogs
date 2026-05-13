@@ -2,6 +2,7 @@
 title: "ByteDance DeerFlow — オープンソースの SuperAgent 基盤でAIエージェントを自律運用する"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "bytedance-deerflow"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4035407734"
 categories: ["AI/LLM"]

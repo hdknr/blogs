@@ -2,6 +2,7 @@
 title: "DeNA+GOのAIコミュニティが4年間の社内勉強会資料120本超をSpeakerDeckで無料公開"
 date: 2026-04-28
 lastmod: 2026-04-28
+slug: "dena-ai-community-speakerdeck"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340907847"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "opencli-rs: Rust製の爆速Webスクレイピングツールで55以上のサイトをCLI化する"
 date: 2026-03-27
 lastmod: 2026-03-27
+slug: "opencli-rs"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4140834709"
 categories: ["ツール/開発環境"]

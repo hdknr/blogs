@@ -2,6 +2,7 @@
 title: "Karpathy の autoresearch — 寝ている間にAIが100回実験して朝にはモデルが賢くなっている世界"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "karpathy-autoresearch"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4030998838"
 categories: ["AI/LLM"]

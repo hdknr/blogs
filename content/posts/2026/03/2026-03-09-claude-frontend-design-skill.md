@@ -2,6 +2,7 @@
 title: "Claudeのデザインが急に良くなった理由 ― frontend-design スキルと「一般的」から離れるプロンプト"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "claude-frontend-design-skill"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4026451095"
 categories: ["AI/LLM"]

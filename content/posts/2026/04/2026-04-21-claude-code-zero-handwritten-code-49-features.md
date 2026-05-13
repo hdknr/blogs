@@ -2,6 +2,7 @@
 title: "Claude Code で 2 日間に 49 PR を出荷 — 手書きコードゼロを実現する AI 開発ワークフロー"
 date: 2026-04-21
 lastmod: 2026-04-21
+slug: "claude-code-zero-handwritten-code-49-features"
 draft: false
 description: "Claude Code の生みの親 Boris Cherny は 2 ヶ月以上手書きコードゼロ。2 日間で 49 PR を出荷した実績から、AI ファースト開発ワークフローの実態と開発生産性の変化を解説する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4291432968"

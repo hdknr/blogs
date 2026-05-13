@@ -1,6 +1,7 @@
 ---
 title: "はじめての記事"
 date: 2026-03-08
+slug: "hello"
 categories: ["お知らせ"]
 tags: ["hugo", "github-pages"]
 summary: "Hugo + GitHub Pages でブログサイトを構築しました"

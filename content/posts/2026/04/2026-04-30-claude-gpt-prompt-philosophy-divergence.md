@@ -2,6 +2,7 @@
 title: "Claude と GPT のプロンプト哲学が真逆に進化した — 古いプロンプトが通じなくなった本当の理由"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "claude-gpt-prompt-philosophy-divergence"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4357001866"
 description: "OpenAI と Anthropic が2026年4月に相次いで公開した公式ガイドラインを比較。Claude が字義通り解釈に、GPT が自律判断に進化した結果、古いプロンプトパターンが機能しなくなった理由を解説する。"

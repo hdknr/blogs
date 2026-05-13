@@ -2,6 +2,7 @@
 title: "MacBook Pro M4 + llama.cpp で実現した太平洋横断フライトのオフライン AI ワークフロー"
 date: 2026-05-02
 lastmod: 2026-05-02
+slug: "macbook-m4-llama-cpp-offline-ai-workflow"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363255074"
 categories: ["AI/LLM"]

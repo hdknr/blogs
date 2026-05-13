@@ -2,6 +2,7 @@
 title: "RBAC 入門 — ロールベースアクセス制御の仕組み・ABAC との違い・実装例（AWS / Kubernetes）"
 date: 2026-05-11
 lastmod: 2026-05-11
+slug: "rbac-role-based-access-control"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4417016793"
 categories: ["セキュリティ"]

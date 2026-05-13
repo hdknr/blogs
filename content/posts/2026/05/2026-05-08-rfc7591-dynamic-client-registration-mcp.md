@@ -2,6 +2,7 @@
 title: "Claude Code はなぜ事前登録なしで MCP に繋がるのか — RFC 7591 Dynamic Client Registration と連動 RFC 群"
 date: 2026-05-08
 lastmod: 2026-05-08
+slug: "rfc7591-dynamic-client-registration-mcp"
 draft: false
 description: "MCP クライアントが事前登録なしで認可サーバーに繋がる仕組みを RFC 7591（Dynamic Client Registration）と RFC 9728 / 8414 / 9068 / 8707 / 7636 の連動から解説。Claude Code の自動ログインフローと JWT audience 検証でハマる構造を仕様レベルで追える。"
 categories: ["セキュリティ"]

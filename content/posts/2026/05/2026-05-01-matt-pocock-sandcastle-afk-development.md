@@ -2,6 +2,7 @@
 title: "Sandcastle — AI コーディングエージェントを夜間並列実行して朝にレビューするだけにする OSS"
 date: 2026-05-01
 lastmod: 2026-05-01
+slug: "matt-pocock-sandcastle-afk-development"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4358352789"
 description: "TypeScript の OSS ライブラリ Sandcastle を使い、AI コーディングエージェントを Docker/Vercel サンドボックスで並列実行するオーケストレーション手法を解説。夜間並列タスク・朝レビューの AFK 開発ワークフローを実現する。"

@@ -2,6 +2,7 @@
 title: "Figma プラグイン Image Translator：画像からテキストを抽出して多言語翻訳"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "figma-image-translator-plugin"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041960375"
 categories: ["ツール/開発環境"]

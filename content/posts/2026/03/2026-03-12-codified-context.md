@@ -2,6 +2,7 @@
 title: "Codified Context — 10万行規模の開発でもAIに一貫したコードを書かせる3層メモリ手法"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "codified-context"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050706670"
 categories: ["AI/LLM"]

@@ -92,6 +92,9 @@ Fetch the issue body and use it as the post source:
 
 ## Frontmatter templates
 
+**`slug:` is mandatory.** It must match the filename with the `YYYY-MM-DD-` date prefix removed.
+Without an explicit slug, Hugo derives the URL from the Japanese title, which breaks wiki and cross-post links.
+
 GitHub-URL-sourced post:
 
 ```yaml
@@ -99,6 +102,7 @@ GitHub-URL-sourced post:
 title: "記事タイトル"
 date: YYYY-MM-DD
 lastmod: YYYY-MM-DD
+slug: "<slug>"
 draft: false
 source_url: "https://github.com/..."
 categories: ["カテゴリ"]
@@ -113,6 +117,7 @@ Text-topic post:
 title: "記事タイトル"
 date: YYYY-MM-DD
 lastmod: YYYY-MM-DD
+slug: "<slug>"
 draft: false
 categories: ["カテゴリ"]
 tags: ["tag1", "tag2"]

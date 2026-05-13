@@ -2,6 +2,7 @@
 title: "NemoClaw触ってみた：OpenClawのセキュリティ問題を解消できるのか？"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "nemoclaw-openclaw-security"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078659280"
 categories: ["AI/LLM"]

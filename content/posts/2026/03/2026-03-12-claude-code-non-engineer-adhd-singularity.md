@@ -2,6 +2,7 @@
 title: "非エンジニア(ADHD)が2ヶ月間Claude Codeに夢中になった結果、分身が生まれてシンギュラリティーに入った話"
 date: 2026-03-12
 lastmod: 2026-03-12
+slug: "claude-code-non-engineer-adhd-singularity"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4049839698"
 categories: ["AI/LLM"]

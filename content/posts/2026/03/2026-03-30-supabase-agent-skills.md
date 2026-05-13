@@ -2,6 +2,7 @@
 title: "Supabase × Claude Code: agent-skills でパフォーマンスと RLS の正確性を高める"
 date: 2026-03-30
 lastmod: 2026-04-17
+slug: "supabase-agent-skills"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4157861135"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "Claude Code の sensitive file チェックを回避する — git worktree の配置場所を .claude/ の外に移す"
 date: 2026-03-31
 lastmod: 2026-03-31
+slug: "claude-code-worktree-permission"
 draft: false
 categories: ["AI/LLM"]
 tags: ["Claude Code", "git worktree", "自動化", "パーミッション"]

@@ -2,6 +2,7 @@
 title: "Video Use — Claude Code で動画編集を完全自動化するオープンソーススキル"
 date: 2026-04-17
 lastmod: 2026-04-17
+slug: "video-use-claude-code-video-editing"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4265198555"
 categories: ["AI/LLM"]

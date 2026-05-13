@@ -2,6 +2,7 @@
 title: "Claude Code: dangerously-skip-permissions をやめて auto mode に移行する"
 date: 2026-03-25
 lastmod: 2026-03-25
+slug: "claude-code-skip-permissions-to-auto"
 draft: false
 description: "Claude Code の dangerously-skip-permissions は権限チェックを完全無視する危険なオプション。auto mode なら安全性チェック付きでツールを自動承認できる。設定方法と違いを解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4129378712"

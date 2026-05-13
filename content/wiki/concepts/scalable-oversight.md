@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["Scalable Oversight", "自動アライメント研究", "AAR"]
 related_posts:
-  - "/posts/2026/04/2026-04-15-anthropic-automated-alignment-researchers/"
+  - "/posts/2026/04/anthropic-automated-alignment-researchers/"
 tags: ["Anthropic", "AI安全性", "アライメント", "スケーラブルオーバーサイト", "Claude"]
 ---
 
@@ -52,4 +52,4 @@ Anthropic が 2026年4月に発表した研究成果。Claude Opus 4.6 を 9 体
 
 ## ソース記事
 
-- [Anthropic の自動アライメント研究者（AAR）: AI が AI のアライメントを加速する時代](/blogs/posts/2026/04/2026-04-15-anthropic-automated-alignment-researchers/) — 2026-04-15
+- [Anthropic の自動アライメント研究者（AAR）: AI が AI のアライメントを加速する時代](/blogs/posts/2026/04/anthropic-automated-alignment-researchers/) — 2026-04-15

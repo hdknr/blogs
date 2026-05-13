@@ -2,6 +2,7 @@
 title: "Anthropic vs OpenAI：Coding Agent の Harness 戦略はなぜ真逆なのか"
 date: 2026-04-13
 lastmod: 2026-04-13
+slug: "anthropic-vs-openai-harness-strategy"
 draft: false
 description: "Anthropic（Managed Agent）と OpenAI（Codex + Symphony）の Harness 戦略を比較。AI コーディングエージェントの設計思想がなぜ真逆なのか、両社が目指す未来像を分析する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4239418055"

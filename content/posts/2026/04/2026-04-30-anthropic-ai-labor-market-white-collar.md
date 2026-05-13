@@ -2,6 +2,7 @@
 title: "高所得・高学歴ほどAIに代替される — Anthropicの実測データが示す労働市場の逆転"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "anthropic-ai-labor-market-white-collar"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349369997"
 categories: ["AI/LLM"]

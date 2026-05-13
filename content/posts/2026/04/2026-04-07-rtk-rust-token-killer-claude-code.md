@@ -2,6 +2,7 @@
 title: "RTK（Rust Token Killer）でClaude Codeのトークン使用量を60〜90%削減する"
 date: 2026-04-07
 lastmod: 2026-04-17
+slug: "rtk-rust-token-killer-claude-code"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4198171626"
 categories: ["ツール/開発環境"]

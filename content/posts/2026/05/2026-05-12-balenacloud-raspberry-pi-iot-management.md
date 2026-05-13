@@ -2,6 +2,7 @@
 title: "balenaCloud で Raspberry Pi を遠隔管理 — Docker コンテナと A/B パーティションで実現する安全な OTA 更新"
 date: 2026-05-12
 lastmod: 2026-05-12
+slug: "balenacloud-raspberry-pi-iot-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4428585092"
 description: "balenaCloud は Raspberry Pi などの IoT デバイスを Docker コンテナと A/B パーティションで安全に遠隔管理できるマネージドプラットフォーム。OTA 更新、フリート管理、料金体系まで解説。"

@@ -2,6 +2,7 @@
 title: "LLM で日本語を使うと英語の 1.48 倍トークンを消費する「言語税」の実態"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "llm-japanese-token-language-tax"
 draft: false
 description: "6社・9言語の比較データが示すLLM日本語コストの実態。日本語は英語より平均1.48倍、Claudeでは約2倍のトークンを消費する「言語税」の仕組みと、プロバイダー選択・プロンプト設計・キャッシュ活用によるコスト削減策を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349375315"

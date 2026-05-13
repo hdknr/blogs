@@ -2,6 +2,7 @@
 title: "Anthropic が Claude 専用の認定資格試験を公開 — AI アーキテクト認定でスキルを証明する時代へ"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "anthropic-claude-certification-exam"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077560663"
 categories: ["AI/LLM"]

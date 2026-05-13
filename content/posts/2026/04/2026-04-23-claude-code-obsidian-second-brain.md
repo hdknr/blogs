@@ -2,6 +2,7 @@
 title: "Claude Code × Obsidian で「第二の脳」を構築する完全解説 — 海外1,240万views超え、AI記憶設計の新標準"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "claude-code-obsidian-second-brain"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304039550"
 categories: ["AI/LLM"]

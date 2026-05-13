@@ -2,6 +2,7 @@
 title: "AI駆動開発で変わるコスト構造：技術力からドメイン知識へのシフト"
 date: 2026-03-15
 lastmod: 2026-03-15
+slug: "ai-driven-dev-domain-knowledge"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4064203312"
 categories: ["AI/LLM"]

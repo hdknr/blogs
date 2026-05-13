@@ -2,6 +2,7 @@
 title: "RAGなしでも高精度に動くAgent Harnessの秘密 — コンテキストサイズと「100ファイル」の目安"
 date: 2026-04-17
 lastmod: 2026-04-21
+slug: "agent-harness-rag-context-size"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4274638923"
 categories: ["AI/LLM"]

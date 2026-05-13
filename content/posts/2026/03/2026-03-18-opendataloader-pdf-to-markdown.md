@@ -2,6 +2,7 @@
 title: "OpenDataLoader PDF — CPUだけで毎秒100ページ、PDFをMarkdownに超高速変換するOSSツール"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "opendataloader-pdf-to-markdown"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4082929222"
 categories: ["AI/LLM"]

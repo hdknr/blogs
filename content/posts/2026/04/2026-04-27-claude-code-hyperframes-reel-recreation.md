@@ -2,6 +2,7 @@
 title: "Claude Code × HyperFrames でバズった Instagram リールを AI 完全再現 — 問われる「企画力」と「言語化力」"
 date: 2026-04-27
 lastmod: 2026-04-27
+slug: "claude-code-hyperframes-reel-recreation"
 draft: false
 description: "Claude Code に Instagram リールの URL を渡すだけで HyperFrames が 60 秒の縦型動画を自動生成。ショート動画制作の新しいワークフローと、AI 時代に必要な「企画力・言語化力」を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324247908"

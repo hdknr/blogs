@@ -5,7 +5,6 @@ date: 2026-04-06
 lastmod: 2026-04-16
 aliases: ["supabase"]
 related_posts:
-  - "/posts/2025/01/supabase/"
   - "/posts/2026/03/supabase-agent-skills/"
 tags: ["BaaS", "PostgreSQL", "API", "RLS", "Claude Code"]
 ---
@@ -60,5 +59,4 @@ agent-skills をインストールすると、Claude がこの最適な形式で
 
 ## ソース記事
 
-- [Supabase](/blogs/posts/2025/01/supabase/) — 2025-01
 - [Supabase × Claude Code: agent-skills でパフォーマンスと RLS の正確性を高める](/blogs/posts/2026/03/supabase-agent-skills/) — 2026-03-30

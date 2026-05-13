@@ -2,6 +2,7 @@
 title: "ローカルQwenに個人知識を覚えさせたい — ファインチューニング vs RAG"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "qwen-finetuning-vs-rag"
 draft: false
 categories: ["AI/LLM"]
 tags: ["qwen", "ollama", "llm", "rag"]

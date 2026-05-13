@@ -2,6 +2,7 @@
 title: "エンジニアのためのインバウンドマーケティング入門：Attract/Engage/Delight と MA の基本"
 date: 2026-04-15
 lastmod: 2026-04-15
+slug: "inbound-marketing-guide"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4248583317"
 categories: ["ビジネス/キャリア"]

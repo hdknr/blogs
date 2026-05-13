@@ -2,6 +2,7 @@
 title: "AIツールを作っている人たちが怖がっていること — 米Sequoia「Services: The New Software」の要点"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "sequoia-services-new-software"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4079188712"
 categories: ["AI/LLM"]

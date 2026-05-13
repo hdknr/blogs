@@ -2,6 +2,7 @@
 title: "Palo Alto Cortex XDR の振る舞い検知ルールが解読・バイパスされた脆弱性の全容"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "cortex-xdr-bioc-bypass"
 draft: false
 description: "Cortex XDR エージェントの BIOC ルールが AES 暗号化キーのハードコードにより解読可能だった脆弱性の技術解説。ccmcache 許可リストによる検知バイパスの手口と修正内容を詳述。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4079193872"

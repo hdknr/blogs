@@ -2,6 +2,7 @@
 title: "Claude Code でツール実行前にセキュリティリスクをパーセンテージ表示させる CLAUDE.md 設定"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "claude-code-security-risk-prompt"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4026444705"
 categories: ["AI/LLM"]

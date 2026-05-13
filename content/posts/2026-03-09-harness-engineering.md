@@ -2,6 +2,7 @@
 title: "Harness Engineering ベストプラクティス 2026 — AI コーディングエージェントを安定稼働させる設計術"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "harness-engineering"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4022922774"
 categories: ["AI/LLM"]

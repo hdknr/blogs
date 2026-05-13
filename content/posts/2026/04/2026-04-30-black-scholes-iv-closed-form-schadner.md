@@ -2,6 +2,7 @@
 title: "ブラック・ショールズの IV：50年来の難問に閉形式の陽解法が登場"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "black-scholes-iv-closed-form-schadner"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349360681"
 categories: ["その他"]

@@ -2,6 +2,7 @@
 title: "Arcads 完全ガイド — AIで UGC 動画広告を大量生成するプラットフォーム"
 date: 2026-04-02
 lastmod: 2026-04-02
+slug: "arcads-ai-ugc-ads"
 draft: false
 categories: ["AI/LLM"]
 tags: ["AI広告", "UGC", "マーケティング自動化", "動画生成", "Arcads"]

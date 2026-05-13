@@ -2,6 +2,7 @@
 title: "OpenAI Symphony — AI エージェントを自律的にオーケストレーションするオープンソースフレームワーク"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "openai-symphony"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4027391441"
 categories: ["AI/LLM"]

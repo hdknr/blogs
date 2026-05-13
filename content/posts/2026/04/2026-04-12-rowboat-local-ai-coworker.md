@@ -2,6 +2,7 @@
 title: "Rowboat：100%ローカルで動くオープンソースAI同僚ツール"
 date: 2026-04-12
 lastmod: 2026-04-12
+slug: "rowboat-local-ai-coworker"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230730521"
 categories: ["AI/LLM"]

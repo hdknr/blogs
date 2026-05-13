@@ -2,6 +2,7 @@
 title: "Google シニア SRE 面接を突破する5つのポイント（2026年版）"
 date: 2026-04-30
 lastmod: 2026-04-30
+slug: "google-senior-sre-interview-2026"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349338814"
 categories: ["ビジネス/キャリア"]

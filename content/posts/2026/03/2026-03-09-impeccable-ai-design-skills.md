@@ -2,6 +2,7 @@
 title: "Impeccable — AI コーディングツールのフロントエンド設計を底上げするスキルライブラリ"
 date: 2026-03-09
 lastmod: 2026-03-09
+slug: "impeccable-ai-design-skills"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4020349617"
 categories: ["AI/LLM"]
@@ -144,10 +145,10 @@ Impeccable には、LLM が陥りがちな設計のアンチパターンも含�
 
 Impeccable は「ツールで設計品質を自動改善する」アプローチだが、本ブログではコーディングエージェントと UI/UX の関係をさまざまな角度から取り上げてきた：
 
-- **[バイブコーディングでデザインを劇的に改善する方法](/blogs/posts/2026-03-01-44d3e82b0c355de783233377c5f8fcff/)** — UI コンポーネント名で「構造」を指示するテクニック。Impeccable の `/normalize` や `/extract` が自動化する領域を、プロンプトの工夫で実現するアプローチ
-- **[Claude-Native Designer — Figma MCP × Claude Code ワークフロー](/blogs/posts/2026-03-05-1f81385148befa3ee0e980408c174676/)** — デザイナーが Figma と Claude Code を組み合わせて「作る人」になるワークフロー。Impeccable はこのワークフローの仕上げ工程（`/polish`, `/audit`）を強化できる
-- **[「Figmaは100%不要」宣言の真意](/blogs/posts/2026-03-04-4a6596b99ae8da9028f432e6c8d0b7f5/)** — Claude Code がデザインとコードの境界を溶かすという議論。Impeccable はまさにこの「コードの中でデザイン品質を担保する」ツール
-- **[Claude Code 時代、UI デザイナーの仕事は軽くならない](/blogs/posts/2026-03-05-b03527dbe6ad00bfac9b4b431248b524/)** — 「整える仕事」の自動化と評価軸の変化。Impeccable のようなツールが「整える仕事」を自動化する一方、デザイナーに求められる判断力は変わらないという視点
+- **[バイブコーディングでデザインを劇的に改善する方法](/blogs/posts/2026/03/44d3e82b0c355de783233377c5f8fcff/)** — UI コンポーネント名で「構造」を指示するテクニック。Impeccable の `/normalize` や `/extract` が自動化する領域を、プロンプトの工夫で実現するアプローチ
+- **[Claude-Native Designer — Figma MCP × Claude Code ワークフロー](/blogs/posts/2026/03/1f81385148befa3ee0e980408c174676/)** — デザイナーが Figma と Claude Code を組み合わせて「作る人」になるワークフロー。Impeccable はこのワークフローの仕上げ工程（`/polish`, `/audit`）を強化できる
+- **[「Figmaは100%不要」宣言の真意](/blogs/posts/2026/03/4a6596b99ae8da9028f432e6c8d0b7f5/)** — Claude Code がデザインとコードの境界を溶かすという議論。Impeccable はまさにこの「コードの中でデザイン品質を担保する」ツール
+- **[Claude Code 時代、UI デザイナーの仕事は軽くならない](/blogs/posts/2026/03/b03527dbe6ad00bfac9b4b431248b524/)** — 「整える仕事」の自動化と評価軸の変化。Impeccable のようなツールが「整える仕事」を自動化する一方、デザイナーに求められる判断力は変わらないという視点
 
 ## Impeccable が埋める「構造と仕上げ」のギャップ
 

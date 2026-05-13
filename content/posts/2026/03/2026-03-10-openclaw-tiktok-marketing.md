@@ -2,6 +2,7 @@
 title: "OpenClaw × TikTok — AIエージェントでショート動画マーケティングを自動化する方法"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "openclaw-tiktok-marketing"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4030479459"
 categories: ["AI/LLM"]

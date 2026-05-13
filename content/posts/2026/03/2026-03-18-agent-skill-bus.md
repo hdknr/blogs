@@ -2,6 +2,7 @@
 title: "agent-skill-bus: AIエージェントのスキル劣化を自動検知・修復するOSSランタイム"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "agent-skill-bus"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4079182847"
 categories: ["AI/LLM"]

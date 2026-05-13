@@ -2,6 +2,7 @@
 title: "Claude Code のスキルで「マージ後」の指示が PR 作成中に発火する罠 — バッチ並行実行で起きた wiki コンフリクトの原因と修正"
 date: 2026-05-13
 lastmod: 2026-05-13
+slug: "claude-skill-post-merge-trap"
 draft: false
 categories: ["AI/LLM", "ツール/開発環境"]
 tags: ["claude-code", "skill", "SKILL.md", "ハーネスエンジニアリング", "バッチ処理", "ハマりどころ"]

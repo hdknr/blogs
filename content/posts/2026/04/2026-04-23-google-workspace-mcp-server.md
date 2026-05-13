@@ -2,6 +2,7 @@
 title: "Google Workspace 公式 MCP サーバー登場 — Gmail・Drive・Calendar を AI エージェントから直接操作"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "google-workspace-mcp-server"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304029563"
 description: "Google Cloud Next 2026 で発表された Workspace 公式 MCP サーバーの対応サービスと設定手順を解説。Claude Desktop や Gemini CLI から Gmail・Drive・Calendar を自然言語で操作できる。"

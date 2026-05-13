@@ -2,6 +2,7 @@
 title: "Claude Code 作者直伝のワークフロー設計術 — 計画モード・CLAUDE.md・検証ループで品質を上げる"
 date: 2026-04-27
 lastmod: 2026-04-27
+slug: "claude-code-creator-setup"
 draft: false
 description: "Claude Code 作者が30分動画で公開したワークフロー設計術。計画モード（Plan Mode）・CLAUDE.md へのフィードバック・検証ループの3テクニックで出力品質を高める実践ガイド。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4326295822"

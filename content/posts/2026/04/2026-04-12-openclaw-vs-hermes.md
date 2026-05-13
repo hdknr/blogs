@@ -2,6 +2,7 @@
 title: "OpenClaw vs Hermes: AIエージェントプラットフォームの勢力図に変化"
 date: 2026-04-12
 lastmod: 2026-04-12
+slug: "openclaw-vs-hermes"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230947705"
 categories: ["AI/LLM"]

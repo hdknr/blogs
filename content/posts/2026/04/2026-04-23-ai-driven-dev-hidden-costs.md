@@ -2,6 +2,7 @@
 title: "AI 駆動開発の生産性向上、現場が静かに支払っているコストの話"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "ai-driven-dev-hidden-costs"
 draft: false
 description: "AI 駆動開発で速度は上がったのに現場が疲弊する構造的な理由を解説。意思決定疲労・やり直し増加・評価の不可視化という3つの問題と、経営・PM・開発者それぞれの対策を整理します。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304028482"

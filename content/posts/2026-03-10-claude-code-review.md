@@ -2,6 +2,7 @@
 title: "Claude Code Review — エージェントチームが PR のバグを狩る新機能"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "claude-code-review"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4028055781"
 categories: ["AI/LLM"]
@@ -53,7 +54,7 @@ Code Review はこの問題に対する Anthropic 自身の解答だ。まず社
 
 ## ハーネスエンジニアリングとの接点
 
-[ハーネスエンジニアリング](/posts/2026-03-09-harness-engineering/)の文脈で見ると、Code Review は**検証層**の強力なツールとなる。従来のリンターやフォーマッターが「決定論的に検出可能な問題」を扱うのに対し、Code Review は「文脈を理解した上でのバグ検出」という、これまで人間にしかできなかった領域をカバーする。
+[ハーネスエンジニアリング](/posts/2026/03/harness-engineering/)の文脈で見ると、Code Review は**検証層**の強力なツールとなる。従来のリンターやフォーマッターが「決定論的に検出可能な問題」を扱うのに対し、Code Review は「文脈を理解した上でのバグ検出」という、これまで人間にしかできなかった領域をカバーする。
 
 ただし検証フェーズで偽陽性をフィルタリングしている点は、ハーネスエンジニアリングの原則「決定論的ツールで品質を強制する」と通底する。AI の出力を AI 自身が検証するという再帰的な構造が、精度 99% 超という結果につながっている。
 

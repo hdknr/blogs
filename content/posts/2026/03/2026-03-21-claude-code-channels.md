@@ -2,6 +2,7 @@
 title: "Claude Code Channels で変わる AI 開発ワークフロー：OpenClaw との組み合わせが最適解か"
 date: 2026-03-21
 lastmod: 2026-03-21
+slug: "claude-code-channels"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4102565274"
 categories: ["AI/LLM"]

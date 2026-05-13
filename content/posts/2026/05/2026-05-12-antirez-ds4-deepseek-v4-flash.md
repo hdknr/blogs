@@ -2,6 +2,7 @@
 title: "Redis 作者 antirez の \"ds4\" — DeepSeek V4 Flash 専用ローカル推論エンジンが M3 Ultra 512GB で 26 token/sec を叩き出す"
 date: 2026-05-12
 lastmod: 2026-05-12
+slug: "antirez-ds4-deepseek-v4-flash"
 draft: false
 description: "Redis 作者 antirez が公開した DeepSeek V4 Flash 専用ローカル推論エンジン ds4（DwarfStar 4）を解説。Mac Studio M3 Ultra 512GB で 26 token/sec、KV キャッシュのディスク永続化、OpenAI / Anthropic 互換 API、Claude Code からの利用方法、2bit 非対称量子化、Exact Replay 設計まで網羅。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4429298637"

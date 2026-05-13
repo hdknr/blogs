@@ -5,7 +5,7 @@ date: 2026-04-23
 lastmod: 2026-04-23
 aliases: ["Social Simulation", "マルチエージェントシミュレーション"]
 related_posts:
-  - "/posts/2026/04/2026-04-15-ai-agents-virtual-shibuya-simulation/"
+  - "/posts/2026/04/ai-agents-virtual-shibuya-simulation/"
 tags: ["AIエージェント", "マルチエージェント", "創発", "都市開発", "シミュレーション"]
 ---
 
@@ -44,4 +44,4 @@ tags: ["AIエージェント", "マルチエージェント", "創発", "都市�
 
 ## ソース記事
 
-- [仮想渋谷に AI エージェントを解き放つ — 社会シミュレーションが都市・安全保障・月面開発に活きる理由](/blogs/posts/2026/04/2026-04-15-ai-agents-virtual-shibuya-simulation/) — 2026-04-15
+- [仮想渋谷に AI エージェントを解き放つ — 社会シミュレーションが都市・安全保障・月面開発に活きる理由](/blogs/posts/2026/04/ai-agents-virtual-shibuya-simulation/) — 2026-04-15

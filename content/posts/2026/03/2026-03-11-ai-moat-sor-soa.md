@@ -2,6 +2,7 @@
 title: "AI が生み出す新たな Moat：SoR から SoA への構造転換"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "ai-moat-sor-soa"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041956516"
 categories: ["AI/LLM"]

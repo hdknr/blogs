@@ -2,6 +2,7 @@
 title: "JAFCO VCが語るAI時代の市場選択：「丸ごと委託ニーズ × 内製AI軽量化」が同時成立する市場を狙え"
 date: 2026-05-02
 lastmod: 2026-05-02
+slug: "ai-market-selection-delegation-and-inhouse-ai"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363259413"
 description: "JAFCO VCの堀ノ内友馬氏が提唱するAI時代の市場選択フレームワーク。「顧客の丸ごと委託ニーズ」と「事業者の内製AI軽量化」が同時成立する市場がスケールしやすい理由を解説。"

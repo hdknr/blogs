@@ -2,6 +2,7 @@
 title: "Claude Code で Laravel→Django 全自動移行をやってみた（1/3）計画編"
 date: 2026-03-26
 lastmod: 2026-03-26
+slug: "claude-code-laravel-django-migration-plan"
 draft: false
 description: "Laravel 6 から Django 4.2 への全自動移行プロジェクトの計画編。inspectdb 方式によるモデル生成、8フェーズの段階設計、CLAUDE.md を活用した Claude Code への設計書作成手法を解説。"
 categories: ["AI/LLM"]
@@ -18,8 +19,8 @@ tags: ["Claude Code", "Laravel", "Django", "Python", "自動化"]
 本記事は 3 部構成です。
 
 1. **計画編**（本記事）— なぜやったか、どう計画したか
-2. [**自動化基盤編**](/posts/2026/03/2026-03-26-claude-code-laravel-django-migration-automation/) — Claude Code を自律実行させるフレームワークの設計
-3. [**実行結果・教訓編**](/posts/2026/03/2026-03-26-claude-code-laravel-django-migration-lessons/) — 実際に何が起きたか、次回への教訓
+2. [**自動化基盤編**](/posts/2026/03/claude-code-laravel-django-migration-automation/) — Claude Code を自律実行させるフレームワークの設計
+3. [**実行結果・教訓編**](/posts/2026/03/claude-code-laravel-django-migration-lessons/) — 実際に何が起きたか、次回への教訓
 
 ---
 
@@ -150,7 +151,7 @@ Claude Code はプロジェクトルートの `CLAUDE.md` を自動的に読み�
 - gh pr create / merge を実行しない
 ```
 
-特に重要だったのは **「やってはいけないこと」の明示** です。Claude Code は指示がなければ自律判断しますが、禁止事項がないと予期しない操作（ブランチ切替、main への直接 push 等）を行うことがあります。これは[実行結果・教訓編](/posts/2026/03/2026-03-26-claude-code-laravel-django-migration-lessons/)で紹介する「ブランチ分岐問題」の原因にもなりました。
+特に重要だったのは **「やってはいけないこと」の明示** です。Claude Code は指示がなければ自律判断しますが、禁止事項がないと予期しない操作（ブランチ切替、main への直接 push 等）を行うことがあります。これは[実行結果・教訓編](/posts/2026/03/claude-code-laravel-django-migration-lessons/)で紹介する「ブランチ分岐問題」の原因にもなりました。
 
 ---
 
@@ -190,4 +191,4 @@ Claude Code 内部で別の Claude インスタンスをコードレビュアー
 
 計画編では「何を、なぜ、どう設計したか」を紹介しました。
 
-次の[自動化基盤編](/posts/2026/03/2026-03-26-claude-code-laravel-django-migration-automation/)では、この計画を実際に自律実行するためのフレームワーク — `run-issue.sh` の設計と、Claude Code をどう制御するかを解説します。
+次の[自動化基盤編](/posts/2026/03/claude-code-laravel-django-migration-automation/)では、この計画を実際に自律実行するためのフレームワーク — `run-issue.sh` の設計と、Claude Code をどう制御するかを解説します。

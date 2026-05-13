@@ -2,6 +2,7 @@
 title: "AI疲れへのアンサー: Claude Code のハーネス機能は本当に必要か"
 date: 2026-03-26
 lastmod: 2026-03-26
+slug: "ai-fatigue-claude-code-simplicity"
 draft: false
 description: "Claude CodeのSkill・Agent・MCP・Memoryは不要でCLIで十分という主張を検証。AI疲れを避けながらハーネス機能を実用的に使い分ける方法を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4137811256"

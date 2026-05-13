@@ -2,6 +2,7 @@
 title: "Microsoft VibeVoice 徹底解説 — 60分の文字起こしと長尺音声合成をローカル無料で（OSS音声AI）"
 date: 2026-04-29
 lastmod: 2026-04-29
+slug: "vibevoice-microsoft-voice-ai"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4341243694"
 categories: ["AI/LLM"]

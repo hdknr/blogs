@@ -2,6 +2,7 @@
 title: "Claude Code のトークン消費を最大90%削減する10のGitHubリポジトリ"
 date: 2026-05-02
 lastmod: 2026-05-02
+slug: "claude-code-token-reduction-10-repos"
 draft: false
 description: "Claude Code のトークン消費を最大90%削減できる10のOSSツールを、出力フィルタリング・シンボル単位参照・プロンプト制御・MCPサーバーの4アプローチで分類・解説。導入コストの低い順にも整理。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363251305"

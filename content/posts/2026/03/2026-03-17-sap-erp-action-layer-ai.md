@@ -2,6 +2,7 @@
 title: "a16z「なぜ世界はいまだにSAPで動いているのか」の考察：ERPとアクションレイヤーの時代"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "sap-erp-action-layer-ai"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078713067"
 categories: ["AI/LLM"]

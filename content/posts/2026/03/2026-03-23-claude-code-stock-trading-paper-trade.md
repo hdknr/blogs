@@ -2,6 +2,7 @@
 title: "Claude Codeで東証の株取引を半自動化する【ペーパートレードで-19万円編】"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "claude-code-stock-trading-paper-trade"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4114086121"
 categories: ["AI/LLM"]

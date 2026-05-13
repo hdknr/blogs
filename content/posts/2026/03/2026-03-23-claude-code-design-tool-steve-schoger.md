@@ -2,6 +2,7 @@
 title: "Claude Codeをメインのデザインツールに：Tailwind CSSデザイナーSteve Schogerの1時間解説動画"
 date: 2026-03-23
 lastmod: 2026-03-23
+slug: "claude-code-design-tool-steve-schoger"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4113577162"
 categories: ["AI/LLM"]

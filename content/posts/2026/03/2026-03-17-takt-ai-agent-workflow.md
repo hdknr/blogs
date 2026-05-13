@@ -2,6 +2,7 @@
 title: "takt — AIコーディングエージェントのワークフローをYAMLで定義するCLIツール"
 date: 2026-03-17
 lastmod: 2026-03-17
+slug: "takt-ai-agent-workflow"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078664295"
 categories: ["AI/LLM"]

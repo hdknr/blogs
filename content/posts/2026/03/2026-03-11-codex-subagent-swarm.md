@@ -2,6 +2,7 @@
 title: "OpenAI Codex の SubAgent（Swarm）が変える AI コーディングの未来"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "codex-subagent-swarm"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041979554"
 categories: ["AI/LLM"]

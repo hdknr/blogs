@@ -2,6 +2,7 @@
 title: "Claude CodeからShopifyストアを直接操作できる「Shopify AI Toolkit」"
 date: 2026-04-12
 lastmod: 2026-04-12
+slug: "claude-code-shopify-ai-toolkit"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230949842"
 categories: ["ツール/開発環境"]

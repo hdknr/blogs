@@ -2,6 +2,7 @@
 title: "マッキンゼーの社内AI「Lilli」がSQLインジェクションで完全突破された件"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "mckinsey-lilli-sql-injection"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4037463475"
 categories: ["セキュリティ"]

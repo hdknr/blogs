@@ -2,6 +2,7 @@
 title: "エージェントハーネスとメモリのロックイン問題 ― Harrison Chase「Your harness, your memory」を読む"
 date: 2026-04-12
 lastmod: 2026-04-12
+slug: "agent-harness-memory-lock-in"
 draft: false
 description: "LangChain創設者Harrison ChaseがAIエージェントのハーネスとメモリの不可分性、クローズドハーネスによるベンダーロックインの危険性を指摘。オープンハーネスによる解決策とエージェント開発者が取るべき対策を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4232679972"

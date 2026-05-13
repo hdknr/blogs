@@ -2,6 +2,7 @@
 title: "opik-openclaw — OpenClaw の AIエージェント動作を可視化するオブザーバビリティツール"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "opik-openclaw"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041953408"
 categories: ["AI/LLM"]

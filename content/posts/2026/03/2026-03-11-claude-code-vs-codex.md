@@ -2,6 +2,7 @@
 title: "Claude Code vs Codex：AI コーディングエージェント徹底比較 2026"
 date: 2026-03-11
 lastmod: 2026-03-11
+slug: "claude-code-vs-codex"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4042856024"
 categories: ["AI/LLM"]

@@ -2,6 +2,7 @@
 title: "moomoo証券が米国株API取引に対応 — moomoo OpenAPIで個人投資家も自動売買が可能に"
 date: 2026-03-18
 lastmod: 2026-03-18
+slug: "moomoo-openapi"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4079207344"
 categories: ["Web開発"]

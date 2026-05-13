@@ -2,6 +2,7 @@
 title: "Claude Code で月50万円も夢じゃない？ SNS自動化×AI アフィリエイトというブルーオーシャン"
 date: 2026-04-23
 lastmod: 2026-04-23
+slug: "claude-code-sns-automation-affiliate"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304031640"
 description: "Claude Code をエージェントとして活用し、SNS 複数アカウントのコンテンツ自動生成とアフィリエイト収益化を自動化する仕組みを解説。各 SNS 規約リスク・景品表示法の注意点も網羅。"

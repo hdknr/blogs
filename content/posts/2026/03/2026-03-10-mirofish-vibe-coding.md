@@ -2,6 +2,7 @@
 title: "MiroFish — 20歳の学生が10日間の Vibe Coding で作った AI 未来予測エンジンが GitHub Trending 1位に"
 date: 2026-03-10
 lastmod: 2026-03-10
+slug: "mirofish-vibe-coding"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4030252864"
 categories: ["AI/LLM"]

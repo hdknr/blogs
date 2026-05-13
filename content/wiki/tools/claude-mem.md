@@ -5,7 +5,6 @@ date: 2026-04-13
 lastmod: 2026-04-16
 aliases: ["claude-mem persistent memory", "claude code memory"]
 related_posts:
-  - "/posts/2026/04/claude-mem-persistent-memory/"
 tags: ["Claude Code", "MCP", "メモリ", "トークン最適化", "オープンソース"]
 ---
 
@@ -62,7 +61,3 @@ npx claude-mem install
 - [エージェントメモリのロックイン](/blogs/wiki/concepts/agent-memory-lock-in/) — メモリ管理の設計上の課題
 - [Claude Code](/blogs/wiki/tools/claude-code/) — claude-mem の動作環境
 - [MCP](/blogs/wiki/concepts/mcp/) — プラグインの接続プロトコル
-
-## ソース記事
-
-- [claude-mem: Claude Code に永続的な記憶を追加し、48 時間で 46,000 スター](/blogs/posts/2026/04/claude-mem-persistent-memory/) — 2026-04-13

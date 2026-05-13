@@ -2,6 +2,7 @@
 title: "Infisical — .env に別れを告げるオープンソース・シークレット管理プラットフォーム"
 date: 2026-04-21
 lastmod: 2026-04-23
+slug: "infisical-secret-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4287249404"
 categories: ["セキュリティ"]
