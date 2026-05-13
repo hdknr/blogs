@@ -1,0 +1,239 @@
+<mxfile host="draw.io">
+  <diagram name="MCP OAuth DCR Flow" id="rfc7591-mcp-flow">
+    <mxGraphModel dx="1200" dy="1400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="Claude Code が MCP サーバーに認証付きで繋がるまでの OAuth プロトコルフロー" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="20" width="1080" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Lifeline headers (boxes at top) -->
+        <mxCell id="actor-cc" value="Claude Code&#xa;(MCP クライアント)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="70" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-mcp" value="MCP サーバー&#xa;(リソースサーバー)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="340" y="70" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-as" value="認可サーバー&#xa;(AuthKit など)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="640" y="70" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-br" value="ブラウザ / ユーザー" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="940" y="70" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Lifelines (vertical dashed lines) -->
+        <mxCell id="ll-cc" style="endArrow=none;html=1;rounded=0;dashed=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="120" as="sourcePoint" />
+            <mxPoint x="150" y="1340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll-mcp" style="endArrow=none;html=1;rounded=0;dashed=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="120" as="sourcePoint" />
+            <mxPoint x="430" y="1340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll-as" style="endArrow=none;html=1;rounded=0;dashed=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="120" as="sourcePoint" />
+            <mxPoint x="730" y="1340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ll-br" style="endArrow=none;html=1;rounded=0;dashed=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="120" as="sourcePoint" />
+            <mxPoint x="1030" y="1340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Phase 1 box: Resource Discovery (RFC 9728) -->
+        <mxCell id="phase1" value="Phase 1: リソース発見 (RFC 9728)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=#666666;dashed=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="1100" height="180" as="geometry" />
+        </mxCell>
+
+        <!-- Step 1: CC -> MCP: initialize -->
+        <mxCell id="s1" value="① POST /mcp (initialize)" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#6c8ebf;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="170" as="sourcePoint" />
+            <mxPoint x="430" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 2: MCP -> CC: 401 + WWW-Authenticate -->
+        <mxCell id="s2" value="② 401 + WWW-Authenticate: Bearer resource_metadata=&quot;.../&#xa;.well-known/oauth-protected-resource&quot;" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#82b366;fontStyle=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="210" as="sourcePoint" />
+            <mxPoint x="150" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 3: CC -> MCP: GET resource metadata -->
+        <mxCell id="s3" value="③ GET /.well-known/oauth-protected-resource" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#6c8ebf;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="260" as="sourcePoint" />
+            <mxPoint x="430" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 4: MCP -> CC: authorization_servers -->
+        <mxCell id="s4" value="④ { resource, authorization_servers: [&quot;https://auth.example.com&quot;], ... }" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#82b366;fontStyle=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="300" as="sourcePoint" />
+            <mxPoint x="150" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Phase 2 box: AS Metadata (RFC 8414) -->
+        <mxCell id="phase2" value="Phase 2: 認可サーバーのメタデータ取得 (RFC 8414)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=#666666;dashed=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="1100" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Step 5: CC -> AS: GET /.well-known/oauth-authorization-server -->
+        <mxCell id="s5" value="⑤ GET /.well-known/oauth-authorization-server" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#6c8ebf;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="370" as="sourcePoint" />
+            <mxPoint x="730" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 6: AS -> CC: metadata -->
+        <mxCell id="s6" value="⑥ { registration_endpoint, authorization_endpoint, token_endpoint, jwks_uri, ... }" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#d6b656;fontStyle=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="410" as="sourcePoint" />
+            <mxPoint x="150" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Phase 3 box: DCR (RFC 7591) -->
+        <mxCell id="phase3" value="Phase 3: Dynamic Client Registration (RFC 7591) — この記事の主役" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=0;verticalAlign=top;fillOpacity=20;" vertex="1" parent="1">
+          <mxGeometry x="40" y="460" width="1100" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Step 7: CC -> AS: POST /register -->
+        <mxCell id="s7" value="⑦ POST /register { client_name, redirect_uris, token_endpoint_auth_method: &quot;none&quot; }" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#6c8ebf;fontStyle=1;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="490" as="sourcePoint" />
+            <mxPoint x="730" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 8: AS -> CC: client_id (動的発行) -->
+        <mxCell id="s8" value="⑧ 201 Created { client_id, registration_access_token, ... } ← 動的発行" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#d6b656;fontStyle=1;dashed=1;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="530" as="sourcePoint" />
+            <mxPoint x="150" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Phase 4 box: Authorization (RFC 6749 + 7636) -->
+        <mxCell id="phase4" value="Phase 4: 認可コードフロー + PKCE (RFC 6749 + RFC 7636)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=#666666;dashed=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="580" width="1100" height="280" as="geometry" />
+        </mxCell>
+
+        <!-- Step 9: CC -> Browser: open URL -->
+        <mxCell id="s9" value="⑨ ブラウザ起動&#xa;authorize?client_id=...&amp;code_challenge=...&amp;code_challenge_method=S256" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#6c8ebf;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="620" as="sourcePoint" />
+            <mxPoint x="1030" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 10: Browser -> AS: GET /authorize -->
+        <mxCell id="s10" value="⑩ GET /authorize" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#b85450;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="660" as="sourcePoint" />
+            <mxPoint x="730" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 11: AS <-> User: ログイン -->
+        <mxCell id="s11" value="⑪ ログイン画面表示 → ユーザーが認証 / 同意" style="endArrow=classic;startArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#d6b656;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="710" as="sourcePoint" />
+            <mxPoint x="1030" y="710" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 12: AS -> Browser: 302 redirect -->
+        <mxCell id="s12" value="⑫ 302 Redirect → http://localhost:.../callback?code=...&amp;state=..." style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#d6b656;fontStyle=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="760" as="sourcePoint" />
+            <mxPoint x="1030" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 13: Browser -> CC: callback with code -->
+        <mxCell id="s13" value="⑬ callback で code を Claude Code に渡す" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#b85450;fontStyle=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="810" as="sourcePoint" />
+            <mxPoint x="150" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Phase 5: Token exchange + use -->
+        <mxCell id="phase5" value="Phase 5: トークン交換と利用 (RFC 9068 JWT Profile)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=none;strokeColor=#666666;dashed=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="880" width="1100" height="180" as="geometry" />
+        </mxCell>
+
+        <!-- Step 14: CC -> AS: POST /token -->
+        <mxCell id="s14" value="⑭ POST /token { grant_type: authorization_code, code, code_verifier, client_id }" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#6c8ebf;fontStyle=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="910" as="sourcePoint" />
+            <mxPoint x="730" y="910" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 15: AS -> CC: access_token (JWT) -->
+        <mxCell id="s15" value="⑮ { access_token (JWT, RFC 9068), refresh_token, expires_in }" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#d6b656;fontStyle=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="950" as="sourcePoint" />
+            <mxPoint x="150" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 16: CC -> MCP: POST /mcp + Bearer -->
+        <mxCell id="s16" value="⑯ POST /mcp&#xa;Authorization: Bearer &lt;JWT&gt;" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#6c8ebf;fontStyle=1;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="1000" as="sourcePoint" />
+            <mxPoint x="430" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 17: MCP -> CC: 200 OK -->
+        <mxCell id="s17" value="⑰ 200 OK (JWKS で署名検証 → sub をユーザー特定 → 通常レスポンス)" style="endArrow=classic;html=1;rounded=0;fontSize=11;strokeColor=#82b366;fontStyle=1;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="1040" as="sourcePoint" />
+            <mxPoint x="150" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Note: audience trap -->
+        <mxCell id="note-aud" value="⚠️ audience の罠&#xa;JWT の aud は『動的発行された client_id』が入りがち。&#xa;MCP サーバーは事前に知らないので検証式に書けない。&#xa;対処: resource indicator (RFC 8707) を使うか、aud 検証をスキップ" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;verticalAlign=middle;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="1090" width="600" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend-title" value="凡例" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1190" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-req" value="―→ リクエスト" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1215" width="160" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-res" value="- - → レスポンス" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1215" width="160" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-bold" value="太線 = RFC 7591 (DCR) ステップ" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1215" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-purple" value="紫枠 = この記事の主題 (RFC 7591)" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fontStyle=0;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="660" y="1215" width="240" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
