@@ -351,10 +351,11 @@ gh api /repos/{owner}/{repo}/issues/{issue_number}/comments \
    git worktree remove --force "$WORKTREE_DIR"
    ```
 3. **Wiki auto-ingest check**: after merge, decide whether to run `/wiki-ingest`:
-   1. Read the last ingest date from `.claude/wiki-last-ingest.txt` (default `1970-01-01` if missing).
-   2. Count posts in `content/posts/` whose frontmatter `date` is on or after that date.
-   3. **≥ 20 posts**: auto-run `/wiki-ingest all`, then update `.claude/wiki-last-ingest.txt` to today.
-   4. **< 20 posts**: just report "Wiki update in N more posts" (do not run ingest).
+   1. **Skip-condition check first**: if the caller (e.g. the prompt itself) has explicitly told you to skip Wiki auto-ingest — for example by including text like "Wiki auto-ingest check は実行しないでください" or "/wiki-ingest はスキップ" — do not execute this step at all. This applies whenever `/blog` is invoked from `scripts/blog-batch.sh` or any other automation, because running `/wiki-ingest` inside the same blog branch causes wiki commits to be bundled into every blog PR and creates merge conflicts when multiple blog PRs run in parallel.
+   2. Read the last ingest date from `.claude/wiki-last-ingest.txt` (default `1970-01-01` if missing).
+   3. Count posts in `content/posts/` whose frontmatter `date` is on or after that date.
+   4. **≥ 20 posts**: auto-run `/wiki-ingest all`, then update `.claude/wiki-last-ingest.txt` to today.
+   5. **< 20 posts**: just report "Wiki update in N more posts" (do not run ingest).
 
    ```bash
    # Read the last ingest date
@@ -364,3 +365,5 @@ gh api /repos/{owner}/{repo}/issues/{issue_number}/comments \
    # After running ingest, use the Write tool to set
    # .claude/wiki-last-ingest.txt to today's date.
    ```
+
+   > **Why the skip-condition matters**: a single `/blog` run that triggers `/wiki-ingest all` will add commits to the current blog branch that modify shared wiki files like `content/wiki/concepts/harness-engineering.md` and `content/wiki/tools/claude-code.md`. When `blog-batch.sh` produces many blog branches in parallel, each carrying its own wiki commit, those branches conflict with each other and with `main`. Always let the batch driver decide when to run wiki ingest (via `--final-wiki-ingest`).
