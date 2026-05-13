@@ -1,84 +1,86 @@
 ---
 name: wiki-ingest
-description: ブログ記事を読み込んで Wiki ページを自動生成・更新する
+description: Auto-generate or update wiki pages by ingesting blog posts
 arguments:
   - name: target
-    description: "対象の指定。記事パス（content/posts/...）、カテゴリ名、または 'all'（全記事一括）"
+    description: "Target: a post path (`content/posts/...`), a category name, or `all` (batch over every post)"
     required: true
 ---
 
-指定されたブログ記事を読み込み、Wiki ページ（コンセプト・ツール・ガイド）を自動生成・更新します。
+Read the specified blog posts and auto-generate or update the wiki pages (concepts / tools / guides).
 
-## Wiki ページの分類基準
+## Wiki page classification
 
-### concepts/ — 技術概念・用語
+### `concepts/` — technical concepts and terminology
 
-- 技術的な概念、パターン、アーキテクチャの解説
-- 例: RAG、プロンプトエンジニアリング、ゼロトラスト、マイクロサービス
-- ファイル名: `<concept-slug>.md`
+- Explanations of technical concepts, patterns, and architectures.
+- Examples: RAG, prompt engineering, zero trust, microservices.
+- Filename: `<concept-slug>.md`
 
-### tools/ — ツール・サービス・ライブラリ
+### `tools/` — tools, services, libraries
 
-- 具体的なツール、サービス、フレームワーク、ライブラリの情報
-- 例: Claude Code、Hugo、Docker、Terraform
-- ファイル名: `<tool-slug>.md`
+- Concrete tools, services, frameworks, libraries.
+- Examples: Claude Code, Hugo, Docker, Terraform.
+- Filename: `<tool-slug>.md`
 
-### guides/ — How-to・手順まとめ
+### `guides/` — how-tos / consolidated procedures
 
-- 複数記事にまたがる実践的な手順や設定のまとめ
-- 例: Hugo + GitHub Pages セットアップ、Claude Code カスタマイズ
-- ファイル名: `<guide-slug>.md`
+- Practical procedures and configuration sequences that span multiple posts.
+- Examples: Hugo + GitHub Pages setup, Claude Code customisation.
+- Filename: `<guide-slug>.md`
 
-## Wiki ページのフロントマター
+## Wiki page frontmatter
 
 ```yaml
 ---
 title: "ページタイトル"
 description: "1行の概要説明"
-date: YYYY-MM-DD        # 初回作成日
-lastmod: YYYY-MM-DD     # 最終更新日
-aliases: ["別名1", "別名2"]  # 検索用の別名（オプション）
-related_posts:           # ソースとなったブログ記事
+date: YYYY-MM-DD        # creation date
+lastmod: YYYY-MM-DD     # last update date
+aliases: ["別名1", "別名2"]  # search aliases (optional)
+related_posts:          # source blog posts
   - "/posts/YYYY/MM/slug/"
-tags: ["tag1", "tag2"]   # 関連タグ
+tags: ["tag1", "tag2"]  # related tags
 ---
 ```
 
-## Ingest 処理の手順
+> Frontmatter string fields (`title`, `description`, `aliases`) are written in Japanese — wiki pages themselves are Japanese.
 
-### 1. 対象記事を特定する
+## Ingest procedure
 
-- **記事パス指定**: そのファイルを読み込む
-- **カテゴリ指定**: `content/posts/` から該当カテゴリの記事を検索
-- **`all`**: `content/posts/` の全記事を対象にする（バッチ処理）
+### 1. Identify the target posts
 
-### 2. 記事を分析する
+- **Post-path arg**: read that file.
+- **Category arg**: scan `content/posts/` for posts in that category.
+- **`all`**: target every post under `content/posts/` (batch mode).
 
-各記事について以下を抽出する:
+### 2. Analyse each post
 
-- **キーエンティティ**: 記事で主に扱っている概念、ツール、手順
-- **カテゴリとタグ**: フロントマターから取得
-- **要約**: 記事の主要な情報を3-5文で要約
+For each post, extract:
 
-### 3. Wiki ページを生成・更新する
+- **Key entities**: the concepts, tools, and procedures the post is mainly about.
+- **Category and tags**: read from the frontmatter.
+- **Summary**: a 3–5 sentence summary of the main information.
 
-抽出したエンティティごとに:
+### 3. Generate / update wiki pages
 
-1. **既存ページの確認**: `content/wiki/` 内に該当ページが既にあるか検索
-2. **新規作成**: なければ適切なサブディレクトリにページを作成
-3. **更新**: あれば `related_posts` に記事を追加し、内容を補完・更新
-4. **相互参照**: 関連する Wiki ページ同士をリンクで繋ぐ
+For each extracted entity:
 
-### 4. Wiki ページの内容構成
+1. **Check for an existing page** under `content/wiki/` matching the entity.
+2. **Create** a new page in the appropriate subdirectory if none exists.
+3. **Update** by appending to `related_posts` and merging new information into the body.
+4. **Cross-link** related wiki pages to each other.
+
+### 4. Wiki page body structure
 
 ```markdown
 ## 概要
 
-{エンティティの簡潔な説明 — 2-3文}
+{2–3 sentence concise description of the entity}
 
 ## 詳細
 
-{記事群から抽出した詳細情報}
+{detailed information distilled from the source posts}
 
 ## 関連ページ
 
@@ -89,22 +91,24 @@ tags: ["tag1", "tag2"]   # 関連タグ
 - [記事タイトル](/blogs/posts/YYYY/MM/slug/) — YYYY-MM-DD
 ```
 
-### 5. インデックスの更新
+> Section headings inside wiki pages stay Japanese (`概要`, `詳細`, `関連ページ`, `ソース記事`) — they are reader-facing.
 
-処理完了後、各セクションの `_index.md` のリンクが最新状態であることを確認する。
+### 5. Index update
 
-## バッチ処理（`all` 指定時）
+After processing, verify that each section's `_index.md` reflects the latest links.
 
-全記事を一括処理する場合:
+## Batch mode (`all`)
 
-1. カテゴリごとにグループ化して処理する
-2. 1カテゴリ処理するごとに進捗を報告する
-3. 重複するエンティティは統合する
-4. 処理完了後に全体の統計を報告する（作成ページ数、更新ページ数）
+When processing every post:
 
-## 注意事項
+1. Group by category before processing.
+2. Report progress after finishing each category.
+3. Merge duplicate entities.
+4. Report final statistics (pages created / updated).
 
-- Wiki ページは日本語で記述する
-- 記事の内容を丸ごとコピーしない — 要約・統合して知識として再構成する
-- 1つの Wiki ページが長くなりすぎないようにする（目安: 200行以内）
-- `hugo --gc` でビルドが通ることを確認する
+## Notes
+
+- **Wiki pages are written in Japanese.**
+- Do NOT copy whole post bodies verbatim — summarise and integrate into reusable knowledge.
+- Keep a single wiki page from growing too long (rule of thumb: ≤ 200 lines).
+- Verify the Hugo build with `hugo --gc`.

@@ -1,97 +1,98 @@
 ---
 name: blog
-description: Hugo ブログ記事を新規作成し、PR を作成する
+description: Create a new Hugo blog post and open a pull request
 arguments:
   - name: topic
-    description: "記事のトピック、タイトル、または GitHub Issue コメント URL"
+    description: "Post topic, title, or a GitHub issue/comment URL"
     required: true
   - name: date
-    description: "記事の日付（YYYY-MM-DD 形式）。省略時は本日"
+    description: "Post date (YYYY-MM-DD). Defaults to today."
     required: false
 ---
 
-指定されたトピックで Hugo ブログ記事を作成し、PR を作成してください。
+Create a Hugo blog post from the given topic and open a PR.
 
-## URL 制限（セキュリティ）
+## URL allowlist (security)
 
-**重要: トピックとして GitHub URL が指定された場合、`https://github.com/hdknr/blogs/` 配下の URL のみ受け付ける。**
+**Important: when the topic is a GitHub URL, only URLs under `https://github.com/hdknr/blogs/` are accepted.**
 
-- 許可: `https://github.com/hdknr/blogs/issues/...`, `https://github.com/hdknr/blogs/pull/...` など
-- 拒否: 上記以外のすべての GitHub URL（他のリポジトリ、他のオーナー）
-- 拒否された場合はエラーメッセージを表示して処理を中断する:
+- Allowed: `https://github.com/hdknr/blogs/issues/...`, `https://github.com/hdknr/blogs/pull/...`, etc.
+- Rejected: any other GitHub URL (different repo, different owner)
+- On rejection, abort and show this error message **in Japanese**:
   「エラー: このスキルで受け付ける URL は https://github.com/hdknr/blogs/ 配下のみです。」
 
-## 手順
+## Procedure
 
-### 1. トピックの種類を判定する
+### 1. Classify the topic
 
-トピック引数が以下のいずれかを判定する:
+Decide which of the following the argument is:
 
-- **GitHub Issue コメント URL**: `https://github.com/hdknr/blogs/issues/{number}#issuecomment-{id}` 形式
-- **GitHub Issue URL**: `https://github.com/hdknr/blogs/issues/{number}` 形式
-- **テキストトピック**: 上記以外のテキスト（URL でないもの）
-- **許可されていない URL**: 上記以外の URL → エラーで中断
+- **GitHub issue-comment URL**: `https://github.com/hdknr/blogs/issues/{number}#issuecomment-{id}`
+- **GitHub issue URL**: `https://github.com/hdknr/blogs/issues/{number}`
+- **Text topic**: anything that is not a URL
+- **Disallowed URL**: anything else → abort with the error above
 
-### 2. GitHub Issue コメント URL の場合
+### 2. GitHub issue-comment URL
 
-URL からコメント内容を取得してブログ記事のソースにする:
+Fetch the comment body and use it as the post source:
 
-1. URL をパースして `owner`, `repo`, `issue_number`, `comment_id` を抽出する
-2. コメント本文を取得する:
+1. Parse the URL into `owner`, `repo`, `issue_number`, `comment_id`.
+2. Fetch the comment:
    ```bash
    gh api /repos/{owner}/{repo}/issues/comments/{comment_id} --jq '{body, created_at, html_url}'
    ```
-3. Issue のタイトルも取得する:
+3. Fetch the issue title too:
    ```bash
    gh api /repos/{owner}/{repo}/issues/{issue_number} --jq '{title, body}'
    ```
-4. コメント本文をブログ記事の内容として使用する
-5. 記事タイトルはコメント内容の最初の見出し（`#` or `##`）から取得する。見出しがなければ Issue タイトルを使用する
-6. 日付はコメントの `created_at` から取得する（引数で上書き可能）
-7. フロントマターに `source_url` としてコメントの `html_url` を記録する
+4. Use the comment body as the post content.
+5. Take the post title from the first heading (`#` or `##`) in the comment body. If absent, fall back to the issue title.
+6. Take the date from the comment's `created_at` (overridable by the `date` argument).
+7. Record the comment's `html_url` in the frontmatter as `source_url`.
 
-### 3. GitHub Issue URL の場合
+### 3. GitHub issue URL
 
-Issue 本文を取得してブログ記事のソースにする:
+Fetch the issue body and use it as the post source:
 
-1. URL をパースして `owner`, `repo`, `issue_number` を抽出する
-2. Issue の情報を取得する:
+1. Parse the URL into `owner`, `repo`, `issue_number`.
+2. Fetch the issue:
    ```bash
    gh api /repos/{owner}/{repo}/issues/{issue_number} --jq '{title, body, created_at, html_url}'
    ```
-3. Issue 本文をブログ記事の内容として使用する
-4. 記事タイトルは Issue タイトルを使用する
-5. フロントマターに `source_url` として Issue の `html_url` を記録する
+3. Use the issue body as the post content.
+4. Use the issue title as the post title.
+5. Record the issue's `html_url` in the frontmatter as `source_url`.
 
-### 4. テキストトピックの場合
+### 4. Text topic
 
-- トピックに基づいて、技術ブログ記事としてふさわしい内容を作成する
-- ユーザーがトピックのみ指定した場合は、WebSearch で最新情報を調査して記事を作成する
-- ユーザーが内容も指定した場合は、その内容をベースに記事を整形する
+- Compose a technical blog post that fits the topic.
+- If the user only provided a topic, use WebSearch to research the latest information first.
+- If the user also supplied content, use that as the base and reshape it into a post.
 
-### 5. 対象日付を決定する
+### 5. Decide the target date
 
-- 引数で日付（YYYY-MM-DD）が指定されている場合はその日付を使用する
-- GitHub URL の場合はコメント/Issue の `created_at` を使用する
-- それ以外の場合は今日の日付を使用する（`date +%Y-%m-%d`）
+- If the `date` argument is given (YYYY-MM-DD), use it.
+- For a GitHub URL, use the comment/issue `created_at`.
+- Otherwise, use today (`date +%Y-%m-%d`).
 
-### 6. 記事ファイルを作成する
+### 6. Create the post file
 
-- ファイルパス: `content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md`
-- `<slug>` はトピックから生成する（英数字・ハイフンのみ、小文字）
-- 同名ファイルが既に存在する場合はサフィックスを追加する（例: `-2`）
+- Path: `content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md`
+- `<slug>`: derived from the topic (lowercase, alphanumerics and hyphens only)
+- If the file already exists, add a suffix (e.g. `-2`).
 
-### 7. カテゴリとタグを自動付与する
+### 7. Auto-assign categories and tags
 
-- `scripts/categorize.py` のルールに基づいて、記事の内容からカテゴリとタグを判定する
-- カテゴリは以下から最適なものを1つ選択する:
+- Follow the rules in `scripts/categorize.py` to derive the category and tags from the post body.
+- Pick exactly **one** category from:
   - AI/LLM, セキュリティ, クラウド/インフラ, Web開発, プログラミング言語,
     モバイル, データベース, ツール/開発環境, ビジネス/キャリア, 地域/グルメ, その他
-- タグは内容に関連するものを最大5つ選択する
+  - (Category names stay in Japanese — they are literal frontmatter values consumed by `scripts/categorize.py`.)
+- Pick up to 5 tags relevant to the content.
 
-## フロントマターのテンプレート
+## Frontmatter templates
 
-GitHub URL ソースの場合:
+GitHub-URL-sourced post:
 
 ```yaml
 ---
@@ -105,7 +106,7 @@ tags: ["tag1", "tag2"]
 ---
 ```
 
-テキストトピックの場合:
+Text-topic post:
 
 ```yaml
 ---
@@ -118,219 +119,221 @@ tags: ["tag1", "tag2"]
 ---
 ```
 
-## 外部 URL のフェッチ方針
+> The title field is written in Japanese — the post body is Japanese, and so is the user-facing title.
 
-記事作成・ファクトチェックを問わず、外部 URL のコンテンツを取得する際は以下の優先順位に従う:
+## External URL fetching
 
-1. **`aegis_fetch` を優先使用する**
-   - セキュリティスキャン（verdict: allow/warn/block）付きでコンテンツを取得できる
-   - verdict が "warn" → ユーザーに警告を表示して確認を求める
-   - verdict が "block" → コンテンツを使用せず、ユーザーに報告する
-   - 取得した HTML/JSON の解析は Claude が直接行う
+When fetching external URLs (for either drafting or fact-checking), follow this priority order:
 
-2. **`aegis_fetch` が利用できない場合は `WebFetch` にフォールバック**
-   - MCP 未接続、aegis 未起動などの場合
+1. **Prefer `aegis_fetch`**
+   - Returns content together with a security verdict (`allow`/`warn`/`block`).
+   - verdict `warn` → show the warning to the user and ask for confirmation.
+   - verdict `block` → do not use the content; report to the user.
+   - Claude parses the returned HTML/JSON directly.
 
-3. **`aegis_fetch` の大きな結果の扱い**
-   - 結果がトークン上限を超えると、Claude Code が自動的に `~/.claude/projects/.../tool-results/` に保存する
-   - このパスは保護対象（sensitive file）のため、`cp` や `Grep` でアクセスすると同意確認が発生する
-   - **対処: `.claude/temp/` にコピーしてから Read/Grep する**
+2. **Fall back to `WebFetch` if `aegis_fetch` is unavailable**
+   - MCP not connected, aegis not running, etc.
+
+3. **Handling large `aegis_fetch` results**
+   - If the result exceeds the token limit, Claude Code auto-saves it under `~/.claude/projects/.../tool-results/`.
+   - That path is treated as a sensitive file, so `cp` or `Grep` against it triggers a consent prompt.
+   - **Workaround: copy it into `.claude/temp/` first, then Read/Grep there.**
      ```bash
      cp /Users/hdknr/.claude/projects/.../tool-results/mcp-aegis-aegis_fetch-XXXX.txt .claude/temp/aegis-result.txt
      ```
-   - 作業完了後は `.claude/temp/` 内のコピーを削除する
-   - **同意プロンプトの恒久対策**: 初回の同意プロンプトで「Yes, and always allow access to tool-results/ from this project」を選択すれば、以降の `tool-results/` へのアクセスは自動許可される
+   - Delete the copy from `.claude/temp/` when done.
+   - **Permanent fix for the consent prompt**: on the first prompt, choose "Yes, and always allow access to tool-results/ from this project". After that, accesses to `tool-results/` are auto-approved.
 
-4. **SPA（JavaScript 描画）サイトの場合**
-   - `aegis_fetch` / `WebFetch` どちらでも生 HTML からコンテンツを取得できない場合がある
-   - X (Twitter) の場合: URL を `api.fxtwitter.com` に変換して JSON API 経由で取得する
-   - その他の SPA: `WebSearch` で該当ページの情報を検索する
+4. **SPA (JavaScript-rendered) sites**
+   - Sometimes neither `aegis_fetch` nor `WebFetch` can extract content from the raw HTML.
+   - X (Twitter): rewrite the URL to `api.fxtwitter.com` and fetch via its JSON API.
+   - Other SPAs: use `WebSearch` to retrieve information about the page.
 
-## 記事の構成ガイドライン
+## Post-structure guidelines
 
-- 見出し（##）を使って構造化する
-- コード例がある場合はシンタックスハイライト付きのコードブロックを使用する
-- 日本語で記述する
-- 冒頭に概要・導入を書く
-- 実用的な情報を含める（コマンド例、設定例、コードサンプルなど）
-- GitHub コメント/Issue からの内容はそのまま活かしつつ、ブログ記事として読みやすく整形する
+- Structure the post with `##` headings.
+- Use syntax-highlighted code blocks for code examples.
+- **Write the post body in Japanese.**
+- Open with an overview / introduction.
+- Include practical material (commands, configuration snippets, code samples).
+- When the source is a GitHub comment/issue, preserve its content but reshape it into readable blog prose.
 
-### ダイアグラム（図）の作成ルール
+### Diagram rules
 
-アーキテクチャ図やフロー図が必要な場合、**アスキーアートは使わず drawio で画像化する**。
+When an architecture or flow diagram is needed, **do not use ASCII art** — render it with drawio.
 
-1. drawio ファイルを作成する: `static/images/<slug>-<diagram-name>.drawio`
-2. PNG にエクスポートする（`--scale 2` で高解像度）:
+1. Create a drawio source file: `static/images/<slug>-<diagram-name>.drawio`
+2. Export to PNG (`--scale 2` for high resolution):
    ```bash
    /Applications/draw.io.app/Contents/MacOS/draw.io --export --format png --scale 2 --output static/images/<name>.png static/images/<name>.drawio
    ```
-3. 記事内で絶対パスで参照する:
+3. Reference it from the post using an absolute path:
    ```markdown
    ![図の内容を自然文で記述した alt テキスト](/blogs/images/<name>.png)
    ```
-4. **alt テキスト**: 図の内容を自然文で記述する（SEO の画像検索露出 + アクセシビリティ向上）
-5. **相対パス（`../../images/`）は使わない**: Hugo のパーマリンク構造で 404 になるため、必ず `/blogs/images/` の絶対パスを使う
-6. 既存の drawio ファイル（`static/images/openclaw-gateway-architecture.drawio` 等）のスタイルを参考にする
+4. **alt text**: describe the diagram in natural Japanese prose (improves image-search SEO + accessibility).
+5. **Do not use relative paths (`../../images/`)** — Hugo's permalink layout turns them into 404s. Always use the absolute `/blogs/images/` form.
+6. Match the visual style of existing drawio files (e.g. `static/images/openclaw-gateway-architecture.drawio`).
 
-## ファクトチェック（情報検証）
+## Fact-checking
 
-記事をコミットする前に、以下の手順で記事内の事実関係を検証する。
-**このステップは省略してはならない。**
+Before committing the post, verify the facts it contains.
+**This step is mandatory.**
 
-### 検証対象
+### What to verify
 
-記事内の以下の項目をすべて抽出して検証する:
+Extract and verify every item in the following categories:
 
-1. **ツール・サービス・ライブラリの存在確認**
-   - 記事で言及しているツール、プラグイン、ライブラリ、サービスが実在するか
-   - GitHub リポジトリの URL が記載されている場合、`gh api` で存在を確認する:
+1. **Existence of tools / services / libraries**
+   - Verify that any tool, plugin, library, or service mentioned actually exists.
+   - For GitHub repo URLs, confirm with `gh api`:
      ```bash
      gh api /repos/{owner}/{repo} --jq '.full_name' 2>&1
      ```
-   - 公式サイトの URL がある場合、「外部 URL のフェッチ方針」に従って取得・検証する
+   - For official-site URLs, fetch and verify according to "External URL fetching".
 
-2. **コマンド・APIの正確性**
-   - 記事に記載されているインストールコマンドや CLI コマンドが正しい構文か
-   - WebSearch で公式ドキュメントを検索し、コマンド構文を照合する
+2. **Command / API correctness**
+   - Confirm that install commands and CLI commands in the post use the correct syntax.
+   - Cross-check against official documentation via WebSearch.
 
-3. **機能・仕様の正確性**
-   - 記事で説明している機能や仕様が実際に存在するか
-   - WebSearch で公式ドキュメントやリリースノートを確認する
+3. **Feature / spec correctness**
+   - Confirm that the features and specs described actually exist.
+   - Check official docs and release notes via WebSearch.
 
-4. **バージョン・日付の正確性**
-   - 記載されているバージョン番号やリリース日が正しいか
+4. **Version / date accuracy**
+   - Confirm version numbers and release dates are correct.
 
-### 検証手順
+### Verification procedure
 
-1. 記事から検証すべき事実（claims）をリストアップする
-2. 各事実について WebSearch または `gh api` で裏付けを取る
-3. 検証結果を以下の形式で整理する:
-   - ✅ **確認済み**: 裏付けが取れた事実
-   - ⚠️ **要修正**: 部分的に正しいが修正が必要な事実
-   - ❌ **誤り**: 裏付けが取れなかった事実（ハルシネーションの可能性）
-   - ℹ️ **未確認**: 検証できなかったが重大なリスクは低い事実
-4. ⚠️ または ❌ の項目がある場合は、記事を修正してから次のステップに進む
-5. 検証結果をユーザーに報告し、修正内容の確認を求める
+1. List every claim that needs verification.
+2. Back each one up via WebSearch or `gh api`.
+3. Tag the results:
+   - ✅ **Confirmed** — verified
+   - ⚠️ **Needs fix** — partially correct, needs adjustment
+   - ❌ **Wrong** — could not be verified (possible hallucination)
+   - ℹ️ **Unverified** — could not verify but low risk
+4. If any ⚠️ or ❌ remains, fix the post before moving on.
+5. Report the verification result to the user and ask for confirmation.
 
-### 検証の重点ポイント
+### Verification focus areas
 
-- **GitHub リポジトリの存在**: 記事内の GitHub URL は必ず `gh api` で確認する
-- **コマンド構文**: インストールコマンドや設定コマンドは公式ドキュメントと照合する
-- **プラグイン・拡張機能**: 「公式」と謳っている場合、本当に公式かを確認する
-- **ソースがない独自の主張**: ソース元にない情報を記事作成時に追加した場合、特に慎重に検証する
+- **GitHub repo existence**: every GitHub URL in the post must be checked via `gh api`.
+- **Command syntax**: cross-check install/configuration commands against official docs.
+- **"Official" plugins/extensions**: when the post claims something is "official", verify it.
+- **Original claims without a source**: be especially strict on any claim added during drafting that is not in the source material.
 
-## エージェントレビュー（品質向上）
+## Agent review (quality)
 
-ファクトチェック完了後、コミット前に以下の 2 つのカスタムエージェントを **並列実行** して記事の品質を高める。
-**このステップは省略してはならない。**
+After fact-checking and before committing, **run two custom agents in parallel** to raise post quality.
+**This step is mandatory.**
 
-### 実行方法
+### How to run
 
-Agent ツールで `tech-writer` と `seo-advisor` を同時に起動する:
+Trigger `tech-writer` and `seo-advisor` simultaneously via the Agent tool:
 
 ```
 Agent(subagent_type="tech-writer", prompt="以下の記事をレビューしてください: $WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md")
 Agent(subagent_type="seo-advisor", prompt="以下の記事を分析してください: $WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md")
 ```
 
-- 2 つのエージェントは独立しているため、必ず **1 つのメッセージで並列起動** する
-- エージェントは記事を読み取ってレビュー結果を返すだけで、ファイルは編集しない
+- The two agents are independent, so launch them **in a single message** in parallel.
+- The agents only read the post and return review notes; they do not edit files.
 
-### レビュー結果の反映
+### Acting on review results
 
-1. 両エージェントの結果を受け取る
-2. 改善提案を以下の基準でフィルタリングする:
-   - **即座に反映**: 誤字脱字、表記揺れ、明らかな構成の問題、タグの過不足
-   - **ユーザーに確認**: タイトルの変更提案、カテゴリの変更提案、大幅な構成変更
-   - **スキップ**: 好みの問題（文体の微調整など）、既存記事への内部リンク追加（別 PR で対応）
-3. 反映した改善内容をユーザーに簡潔に報告する
+1. Collect both agents' outputs.
+2. Filter the suggestions by priority:
+   - **Apply immediately**: typos, inconsistent spelling, obvious structural issues, missing/extraneous tags
+   - **Ask the user**: title changes, category changes, large structural rewrites
+   - **Skip**: stylistic taste calls (minor wording), adding internal links to existing posts (handle in a separate PR)
+3. Report the applied changes concisely to the user.
 
-## コミット・ブランチ・PR 作成（worktree 方式）
+## Commit / branch / PR creation (worktree pattern)
 
-記事作成後、以下の手順で PR を作成する。
-**重要: git worktree を使い、メインの作業ディレクトリのブランチを汚さないようにする。**
-**重要: コマンドを `&&` で繋がないこと。** `&&` で繋いだ複合コマンドは許可パターンにマッチせず、毎回確認が求められる。各コマンドは個別の Bash 呼び出しとして実行する。
+After drafting the post, open a PR following this procedure.
+**Important: use a git worktree so the main working tree stays clean.**
+**Important: do not chain commands with `&&`.** Chained commands break the allowlist patterns and trigger a confirmation prompt every time. Issue each command as a separate Bash call.
 
-1. ブランチ名を決定する: `blog/YYYY-MM-DD-<slug>`
-2. worktree を作成する:
+1. Decide the branch name: `blog/YYYY-MM-DD-<slug>`
+2. Create the worktree:
    ```bash
-   # メインリポジトリのルートで実行（main ブランチのまま）
+   # Run from the main repo root (stay on main)
    BRANCH_NAME="blog/YYYY-MM-DD-<slug>"
    git worktree add -b "$BRANCH_NAME" ".worktrees/<slug>" main
    ```
-3. **worktree の絶対パスを取得する（重要）:**
+3. **Get the absolute path of the worktree (important):**
    ```bash
    git worktree list
    ```
-   出力から worktree の絶対パスを読み取り、以降はその絶対パスを `$WORKTREE_DIR` として使う。
-   **相対パスから絶対パスを推測してはならない。** Write ツールは存在しないパスにもファイルを作成するため、パスを間違えてもエラーにならず手戻りが発生する。
-4. worktree 内で記事ファイルを作成する:
-   - 記事の書き込み先: `$WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md`
-5. worktree 内で Hugo ビルド確認（`cd` を使わず `--source` で指定）:
+   Read the absolute path from the output and use it as `$WORKTREE_DIR` for everything that follows.
+   **Do not guess the absolute path from a relative one.** The Write tool happily creates files at non-existent paths, so a wrong path will silently fail with no error and force a redo.
+4. Create the post file inside the worktree:
+   - Path: `$WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md`
+5. Check the Hugo build inside the worktree (use `--source` instead of `cd`):
    ```bash
    hugo --source "$WORKTREE_DIR" --gc 2>&1 | tail -5
    ```
-6. worktree 内でコミット・プッシュ（`cd` を使わず `git -C` で指定）:
+6. Commit and push inside the worktree (use `git -C` instead of `cd`):
    ```bash
    git -C "$WORKTREE_DIR" add content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md
-   git -C "$WORKTREE_DIR" commit -m "Add blog post: <記事タイトル>"
+   git -C "$WORKTREE_DIR" commit -m "Add blog post: <post-title-in-Japanese>"
    git -C "$WORKTREE_DIR" push -u origin "$BRANCH_NAME"
    ```
-7. PR を作成する（`--head` でブランチを明示指定し、`cd` を使わない）:
-   PR 本文は worktree 内に書き出し、`--body-file` で渡す。worktree は `.claude/` の外にあるため、Write ツールで直接書き込める。
+7. Create the PR (explicitly pin the branch with `--head` and avoid `cd`):
+   Write the PR body to a file inside the worktree, then pass it via `--body-file`. The worktree is outside `.claude/`, so the Write tool can write to it directly.
    ```bash
-   # Write ツールで $WORKTREE_DIR/pr_body.md に PR 本文を書き出す
-   gh pr create --repo hdknr/blogs --head "$BRANCH_NAME" --title "Add blog: <記事タイトル>" --body-file "$WORKTREE_DIR/pr_body.md"
+   # Use the Write tool to write the PR body to $WORKTREE_DIR/pr_body.md
+   gh pr create --repo hdknr/blogs --head "$BRANCH_NAME" --title "Add blog: <post-title-in-Japanese>" --body-file "$WORKTREE_DIR/pr_body.md"
    ```
-   **注意: `cd "$WORKTREE_DIR" && gh pr create` は使わないこと。** `cd` で始まるコマンドは `Bash(gh:*)` の許可パターンにマッチせず、毎回確認が求められる。`--head` フラグでブランチを指定すれば worktree 内にいる必要はない。
-   **注意: `--body "$(cat <<'EOF'...)"` 方式は使わないこと。** HEREDOC 内の `#` 付き行がセキュリティチェック（"quoted newline followed by #-prefixed line"）に引っかかり、毎回確認が求められる。
-8. PR の URL を控える（ソース元への追記に使用する）
-9. **PR がマージされたら worktree を削除する。** ユーザーがマージを指示・確認した直後に `git worktree remove --force "$WORKTREE_DIR"` を実行する（`pr_body.md` 等の未追跡ファイルが残るため `--force` が必要）。
+   **Note: do not use `cd "$WORKTREE_DIR" && gh pr create`.** Commands that start with `cd` do not match the `Bash(gh:*)` allowlist pattern and trigger a prompt every time. As long as you pass `--head`, you do not need to be inside the worktree.
+   **Note: do not use the `--body "$(cat <<'EOF'...)"` style.** Lines starting with `#` inside the HEREDOC trip a security check ("quoted newline followed by #-prefixed line") and trigger a prompt every time.
+8. Note the PR URL (used when linking back to the source).
+9. **Remove the worktree once the PR is merged.** When the user confirms the merge, run `git worktree remove --force "$WORKTREE_DIR"` (the `--force` is needed because of untracked files like `pr_body.md`).
 
-## ソース元への PR リンク追記とブログ化マーク
+## Link back to source + 🚀-reaction mark
 
-PR 作成後、トピックが GitHub URL だった場合はソース元にブログ PR のリンクを追記し、🚀 リアクションでブログ化済みをマークする。
+After the PR is created, if the topic came from a GitHub URL, post the PR link back to the source and mark it as blogged with a 🚀 reaction.
 
-### Issue コメント URL がソースの場合
+### Source is an issue-comment URL
 
-元のコメントを更新して、末尾にブログ PR リンクを追記する。
-**スクリプト `.claude/scripts/update-issue-comment.sh` を使用すること。**
+Edit the source comment and append the blog PR link at the end.
+**Use the helper script `.claude/scripts/update-issue-comment.sh`.**
 
-PR URL を一時ファイルに書き出してからスクリプトに渡す（URL を直接引数に含めるとセキュリティチェックが発動するため）。
-**書き出し先は worktree 内（`$WORKTREE_DIR/pr-url.txt`）にすること。** `.claude/temp/` に書くと既存ファイルの上書き確認が発生する場合がある。worktree 内なら `Write(//.worktrees/**)` の許可パターンにマッチし、worktree 削除時にまとめてクリーンアップされる。
+Write the PR URL to a temp file first, then pass that file to the script (passing the URL as a literal argument trips a security check).
+**Place the temp file inside the worktree (`$WORKTREE_DIR/pr-url.txt`).** Putting it under `.claude/temp/` may cause an overwrite-confirmation prompt; placing it inside the worktree matches the `Write(//.worktrees/**)` allowlist and gets cleaned up automatically when the worktree is removed.
 
 ```bash
-# 1. Write ツールで $WORKTREE_DIR/pr-url.txt に PR URL を書き出す
-# 2. スクリプトにファイルパスを渡す
+# 1. Use the Write tool to write the PR URL to $WORKTREE_DIR/pr-url.txt
+# 2. Pass the file path to the script
 bash .claude/scripts/update-issue-comment.sh {owner} {repo} {comment_id} $WORKTREE_DIR/pr-url.txt
 ```
 
-例:
+Example:
 ```bash
-# Write ツールで $WORKTREE_DIR/pr-url.txt に "https://github.com/hdknr/blogs/pull/141" を書き出す
+# Use Write to put "https://github.com/hdknr/blogs/pull/141" into $WORKTREE_DIR/pr-url.txt
 bash .claude/scripts/update-issue-comment.sh hdknr blogs 4126127772 $WORKTREE_DIR/pr-url.txt
 ```
 
-このスクリプトは以下を自動実行する:
-1. `gh api` でコメント本文を取得
-2. PR リンクを末尾に追記
-3. `jq` で JSON を構築
-4. `gh api --method PATCH` でコメントを更新
-5. 一時ファイルをクリーンアップ
+The script:
+1. fetches the comment body via `gh api`
+2. appends the PR link
+3. builds the JSON with `jq`
+4. updates the comment via `gh api --method PATCH`
+5. cleans up the temp file
 
-### 🚀 リアクションでブログ化済みをマーク
+### Mark as blogged with 🚀
 
-PR リンク追記後、ソースコメントに 🚀 リアクションを付けてブログ化済みをマークする:
+After appending the PR link, add a 🚀 reaction on the source comment to mark it as blogged:
 
 ```bash
 gh api repos/{owner}/{repo}/issues/comments/{comment_id}/reactions -f content=rocket
 ```
 
-**重要:** 重複トピック等でブログ化を見送った場合も、手動で 🚀 を付けて「対応済み」を示す。
+**Important:** when a comment is intentionally skipped (e.g. duplicate topic), still add 🚀 manually to mark it as "handled".
 
-### Issue URL がソースの場合
+### Source is an issue URL
 
-Issue に新しいコメントを追加して PR リンクを通知する:
+Add a new comment on the issue announcing the PR link:
 
 ```bash
 gh api /repos/{owner}/{repo}/issues/{issue_number}/comments \
@@ -338,24 +341,29 @@ gh api /repos/{owner}/{repo}/issues/{issue_number}/comments \
   --field body="📝 この Issue からブログ記事を作成しました: <PR_URL>"
 ```
 
-## 後処理
+> The announcement comment body is written in Japanese — it is user-facing.
 
-1. 作成した PR の URL をユーザーに伝える
-2. PR マージ後、worktree を自動削除する（`pr_body.md` 等の未追跡ファイルが残るため `--force` が必要）:
+## Post-merge follow-up
+
+1. Send the PR URL to the user.
+2. After merge, auto-remove the worktree (force-remove because of untracked files like `pr_body.md`):
    ```bash
    git worktree remove --force "$WORKTREE_DIR"
    ```
-3. **Wiki 自動 Ingest チェック**: PR マージ後、以下の手順で Wiki 更新の要否を判定する:
-   1. `.claude/wiki-last-ingest.txt` から最終 ingest 日付を読み取る（ファイルがなければ `1970-01-01`）
-   2. `content/posts/` 内で最終 ingest 日付以降に作成された記事数をカウントする（フロントマターの `date` を参照）
-   3. **20件以上** の場合: `/wiki-ingest all` を自動実行し、完了後に `.claude/wiki-last-ingest.txt` を今日の日付で更新する
-   4. **20件未満** の場合: 「Wiki 更新まであと N 件」とだけ報告する（ingest は実行しない）
+3. **Wiki auto-ingest check**: after merge, decide whether to run `/wiki-ingest`:
+   1. **Skip-condition check first**: if the caller (e.g. the prompt itself) has explicitly told you to skip Wiki auto-ingest — for example by including text like "Wiki auto-ingest check は実行しないでください" or "/wiki-ingest はスキップ" — do not execute this step at all. This applies whenever `/blog` is invoked from `scripts/blog-batch.sh` or any other automation, because running `/wiki-ingest` inside the same blog branch causes wiki commits to be bundled into every blog PR and creates merge conflicts when multiple blog PRs run in parallel.
+   2. Read the last ingest date from `.claude/wiki-last-ingest.txt` (default `1970-01-01` if missing).
+   3. Count posts in `content/posts/` whose frontmatter `date` is on or after that date.
+   4. **≥ 20 posts**: auto-run `/wiki-ingest all`, then update `.claude/wiki-last-ingest.txt` to today.
+   5. **< 20 posts**: just report "Wiki update in N more posts" (do not run ingest).
 
    ```bash
-   # 最終 ingest 日付の読み取り例
+   # Read the last ingest date
    cat .claude/wiki-last-ingest.txt
    # → 2026-04-06
 
-   # ingest 完了後の更新例（Write ツールで書き込む）
-   # .claude/wiki-last-ingest.txt に今日の日付を書き込む
+   # After running ingest, use the Write tool to set
+   # .claude/wiki-last-ingest.txt to today's date.
    ```
+
+   > **Why the skip-condition matters**: a single `/blog` run that triggers `/wiki-ingest all` will add commits to the current blog branch that modify shared wiki files like `content/wiki/concepts/harness-engineering.md` and `content/wiki/tools/claude-code.md`. When `blog-batch.sh` produces many blog branches in parallel, each carrying its own wiki commit, those branches conflict with each other and with `main`. Always let the batch driver decide when to run wiki ingest (via `--final-wiki-ingest`).
