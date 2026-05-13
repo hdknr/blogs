@@ -1,52 +1,52 @@
 ---
 name: wiki-lint
-description: Wiki の健全性チェック（矛盾検出、孤立ページ、欠落リンク、古い記述）
+description: Health-check the wiki — inconsistencies, orphan pages, broken links, stale entries
 arguments: []
 ---
 
-Wiki ナレッジベースの健全性をチェックし、問題を報告・修正します。
+Inspect the wiki knowledge base for problems and report (and optionally fix) them.
 
-## チェック項目
+## Checks
 
-### 1. 孤立ページ検出
+### 1. Orphan page detection
 
-他のどの Wiki ページからもリンクされていないページを検出する。
+Find wiki pages that no other wiki page links to.
 
-- `content/wiki/` 内の全ページを走査
-- 各ページの「関連ページ」セクションのリンク先を収集
-- どこからもリンクされていないページをリストアップ
+- Scan every page under `content/wiki/`.
+- Collect the link targets in each page's "関連ページ" section.
+- List the pages that nobody links to.
 
-### 2. 欠落リンク検出
+### 2. Broken link detection
 
-Wiki ページ内のリンクが存在しないページを指している場合を検出する。
+Find wiki-internal links that point at non-existent pages.
 
-- 各ページの内部リンク（`/blogs/wiki/...`）を抽出
-- リンク先のファイルが `content/wiki/` に存在するか確認
-- 存在しないリンクをリストアップ
+- Extract internal links (`/blogs/wiki/...`) from each page.
+- Confirm the target file exists under `content/wiki/`.
+- List the dangling links.
 
-### 3. related_posts の検証
+### 3. `related_posts` validation
 
-`related_posts` フロントマターで参照しているブログ記事が実在するか確認する。
+Confirm that every `related_posts` entry refers to an existing blog post.
 
-- 各 Wiki ページの `related_posts` を抽出
-- 対応する `content/posts/` のファイルが存在するか確認
-- 存在しない参照をリストアップ
+- Extract `related_posts` from each wiki page's frontmatter.
+- Confirm the corresponding `content/posts/` file exists.
+- List the dangling references.
 
-### 4. 古い記述の検出
+### 4. Staleness detection
 
-`lastmod` が古い Wiki ページで、ソース記事が更新されている可能性があるものを検出する。
+Find wiki pages whose `lastmod` is older than their source posts.
 
-- Wiki ページの `lastmod` と `related_posts` の記事の `lastmod` を比較
-- 記事のほうが新しい場合、Wiki ページの更新が必要な可能性をフラグ
+- For each wiki page, compare its `lastmod` against the `lastmod` of every post in `related_posts`.
+- Flag any wiki page that is older than its source — it likely needs refreshing.
 
-### 5. フロントマター整合性
+### 5. Frontmatter completeness
 
-必須フロントマター項目が欠落しているページを検出する。
+Find pages missing required frontmatter fields.
 
-- 必須: title, description, date, lastmod, related_posts, tags
-- 推奨: aliases
+- Required: `title`, `description`, `date`, `lastmod`, `related_posts`, `tags`.
+- Recommended: `aliases`.
 
-## 出力フォーマット
+## Output format
 
 ```markdown
 ## Wiki Lint レポート
@@ -71,14 +71,16 @@ Wiki ページ内のリンクが存在しないページを指している場合
 - concepts: XX / tools: XX / guides: XX
 ```
 
-## 修正の提案
+> The report is user-facing, so its headings and prose stay Japanese.
 
-問題が見つかった場合、以下の対応を提案する:
+## Suggested fixes
 
-- **孤立ページ**: 関連する Wiki ページに相互リンクを追加
-- **欠落リンク**: リンク先ページの作成、またはリンクの削除
-- **related_posts 不整合**: 正しいパスに修正、または参照を削除
-- **古いページ**: `/wiki-ingest` でソース記事を再読み込みして更新
-- **フロントマター不備**: 欠落項目を補完
+When problems are found, suggest:
 
-ユーザーの確認後に修正を実施する。
+- **Orphan page** → add a reciprocal link from a related wiki page.
+- **Broken link** → create the missing target page, or remove the link.
+- **`related_posts` mismatch** → correct the path, or drop the reference.
+- **Stale page** → re-run `/wiki-ingest` against the source post.
+- **Missing frontmatter** → fill in the missing fields.
+
+Apply fixes only after the user confirms.
