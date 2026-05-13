@@ -5,24 +5,32 @@
 #   ./scripts/blog-batch.sh <issue_number> [options]
 #
 # Options:
-#   --dry-run         ツイート内容を一覧表示するのみ（ブログ作成しない）
-#   --limit N         処理件数の上限（デフォルト: 全件）
-#   --skip-review     ファクトチェック・エージェントレビューを省略（高速化）
-#   --model MODEL     使用モデル（デフォルト: sonnet）
-#   --interval SECS   処理間のインターバル秒数（デフォルト: 5）
-#   --overnight       夜間バッチモード（nohup 相当 + インターバル60秒 + PRサマリー出力）
+#   --dry-run             ツイート内容を一覧表示するのみ（ブログ作成しない）
+#   --limit N             処理件数の上限（デフォルト: 全件）
+#   --skip-review         ファクトチェック・エージェントレビューを省略（高速化）
+#   --model MODEL         使用モデル（デフォルト: sonnet）
+#   --interval SECS       処理間のインターバル秒数（デフォルト: 5）
+#   --overnight           夜間バッチモード（nohup 相当 + インターバル60秒 + PRサマリー出力）
+#   --final-wiki-ingest   全件処理完了後に /wiki-ingest all を 1 回だけ実行
+#
+# Wiki 集約処理について:
+#   /blog スキルの "Post-merge follow-up" には Wiki 自動 ingest チェックが含まれるが、
+#   バッチ実行中はこれを必ずスキップする（各ブランチに wiki コミットが混入し、
+#   並行 PR で同じ wiki ファイル更新が衝突するため）。
+#   バッチ完了後に Wiki を更新したい場合は --final-wiki-ingest を指定する。
 #
 # Examples:
-#   ./scripts/blog-batch.sh 1 --dry-run                     # 未ブログ化一覧を確認
-#   ./scripts/blog-batch.sh 1 --limit 3                     # 3件だけ処理
-#   ./scripts/blog-batch.sh 1 --skip-review --limit 5       # レビュー省略で5件処理
-#   ./scripts/blog-batch.sh 1 --overnight                   # 全件を夜間バッチで処理
-#   ./scripts/blog-batch.sh 1 --overnight --interval 120    # 2分間隔で夜間バッチ
+#   ./scripts/blog-batch.sh 1 --dry-run                            # 未ブログ化一覧を確認
+#   ./scripts/blog-batch.sh 1 --limit 3                            # 3件だけ処理（wiki skip）
+#   ./scripts/blog-batch.sh 1 --skip-review --limit 5              # レビュー省略で5件処理
+#   ./scripts/blog-batch.sh 1 --overnight                          # 全件を夜間バッチで処理
+#   ./scripts/blog-batch.sh 1 --overnight --final-wiki-ingest      # 全件 + バッチ後に wiki ingest
+#   ./scripts/blog-batch.sh 1 --overnight --interval 120           # 2分間隔で夜間バッチ
 
 set -euo pipefail
 
 REPO="hdknr/blogs"
-ISSUE_NUMBER="${1:?Usage: blog-batch.sh <issue_number> [--dry-run] [--limit N] [--skip-review] [--model MODEL] [--interval SECS] [--overnight]}"
+ISSUE_NUMBER="${1:?Usage: blog-batch.sh <issue_number> [--dry-run] [--limit N] [--skip-review] [--model MODEL] [--interval SECS] [--overnight] [--final-wiki-ingest]}"
 shift
 
 # --- オプション解析 ---
@@ -32,16 +40,18 @@ SKIP_REVIEW=false
 MODEL="sonnet"
 INTERVAL=5
 OVERNIGHT=false
+FINAL_WIKI_INGEST=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --dry-run)      DRY_RUN=true; shift ;;
-    --limit)        LIMIT="$2"; shift 2 ;;
-    --skip-review)  SKIP_REVIEW=true; shift ;;
-    --model)        MODEL="$2"; shift 2 ;;
-    --interval)     INTERVAL="$2"; shift 2 ;;
-    --overnight)    OVERNIGHT=true; shift ;;
-    *)              echo "Unknown option: $1"; exit 1 ;;
+    --dry-run)            DRY_RUN=true; shift ;;
+    --limit)              LIMIT="$2"; shift 2 ;;
+    --skip-review)        SKIP_REVIEW=true; shift ;;
+    --model)              MODEL="$2"; shift 2 ;;
+    --interval)           INTERVAL="$2"; shift 2 ;;
+    --overnight)          OVERNIGHT=true; shift ;;
+    --final-wiki-ingest)  FINAL_WIKI_INGEST=true; shift ;;
+    *)                    echo "Unknown option: $1"; exit 1 ;;
   esac
 done
 
@@ -107,6 +117,11 @@ if [[ "$SKIP_REVIEW" == "true" ]]; then
   SKIP_REVIEW_PROMPT="ファクトチェックとエージェントレビュー（tech-writer, seo-advisor）は省略してください。"
 fi
 
+# バッチ実行中は Wiki auto-ingest を必ずスキップする。
+# 各ブランチに wiki ingest コミットが混入すると、同じ wiki ファイルを
+# 複数 PR が並行更新してマージコンフリクトが発生するため。
+SKIP_WIKI_INGEST_PROMPT="重要: SKILL.md の 'Post-merge follow-up' ステップ 3（Wiki auto-ingest check）は実行しないでください。バッチ処理中なので個別 ingest は不要です。Wiki 更新はバッチ完了後にまとめて行います。"
+
 SUCCESS=0
 FAILED=0
 SKIPPED=0
@@ -151,7 +166,8 @@ for i in $(seq 0 $((PROCESS_COUNT - 1))); do
   echo "    ${BODY_PREVIEW}"
 
   # claude -p でブログ作成
-  PROMPT="/blog ${COMMENT_URL}"
+  PROMPT="/blog ${COMMENT_URL}
+${SKIP_WIKI_INGEST_PROMPT}"
   if [[ -n "$SKIP_REVIEW_PROMPT" ]]; then
     PROMPT="${PROMPT}
 ${SKIP_REVIEW_PROMPT}"
@@ -253,4 +269,34 @@ if [[ ${#PR_URLS[@]} -gt 0 ]]; then
   for pr in "${PR_URLS[@]}"; do
     echo "  ${pr}"
   done
+fi
+
+# --- 最終 Wiki ingest（オプション） ---
+if [[ "$FINAL_WIKI_INGEST" == "true" ]] && [[ "$SUCCESS" -gt 0 ]]; then
+  echo ""
+  echo "=== 最終 Wiki ingest 実行中 $(date '+%H:%M:%S') ==="
+  WIKI_RESULT_FILE=".claude/temp/blog-batch-wiki-${TIMESTAMP}.txt"
+  if claude -p \
+    --model "$MODEL" \
+    --dangerously-skip-permissions \
+    --max-budget-usd 5.00 \
+    "/wiki-ingest all" \
+    > "$WIKI_RESULT_FILE" 2>&1; then
+    echo "✅ Wiki ingest 完了"
+    echo "" >> "$REPORT_FILE"
+    echo "## Wiki ingest" >> "$REPORT_FILE"
+    echo "" >> "$REPORT_FILE"
+    echo "- ステータス: ✅ 成功" >> "$REPORT_FILE"
+    echo "- 完了時刻: $(date '+%Y-%m-%d %H:%M:%S')" >> "$REPORT_FILE"
+  else
+    EXIT_CODE=$?
+    echo "❌ Wiki ingest 失敗 (exit code: ${EXIT_CODE})"
+    echo "" >> "$REPORT_FILE"
+    echo "## Wiki ingest" >> "$REPORT_FILE"
+    echo "" >> "$REPORT_FILE"
+    echo "- ステータス: ❌ 失敗 (exit ${EXIT_CODE})" >> "$REPORT_FILE"
+    echo "- 結果ログ: ${WIKI_RESULT_FILE}" >> "$REPORT_FILE"
+  fi
+  echo "=== Wiki ingest ログ ===" >> "$LOG_FILE"
+  cat "$WIKI_RESULT_FILE" >> "$LOG_FILE" 2>/dev/null
 fi
