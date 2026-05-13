@@ -1,0 +1,120 @@
+<mxfile host="app.diagrams.net" modified="2026-04-28T00:00:00.000Z" agent="Claude" version="22.0.0">
+  <diagram name="rag-recommended-architecture" id="rag-arch-1">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="推奨スタートライン: pgvector + LLM 抽出 + timestamp による時間減衰" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="100" y="20" width="900" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="write-label" value="【書き込み経路】 Ingest" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;fontColor=#1A5490" vertex="1" parent="1">
+          <mxGeometry x="60" y="70" width="320" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="read-label" value="【検索経路】 Retrieve" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;fontColor=#7F0000" vertex="1" parent="1">
+          <mxGeometry x="720" y="70" width="320" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="w1" value="ユーザー会話 / 文書" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="100" y="110" width="240" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="w2" value="① LLM 抽出&#10;(Claude Haiku 4.5)&#10;• fact / entity を抽出&#10;• entity_id を採番" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="100" y="190" width="240" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="w3" value="② 正規化・重複検出&#10;• 埋め込み近傍検索&#10;• 表記揺れを統合" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="100" y="310" width="240" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="w4" value="③ created_at を付与して upsert" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="100" y="420" width="240" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ew1" style="endArrow=classic;html=1;strokeColor=#1A5490;strokeWidth=2" edge="1" parent="1" source="w1" target="w2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ew2" style="endArrow=classic;html=1;strokeColor=#1A5490;strokeWidth=2" edge="1" parent="1" source="w2" target="w3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ew3" style="endArrow=classic;html=1;strokeColor=#1A5490;strokeWidth=2" edge="1" parent="1" source="w3" target="w4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="storage" value="PostgreSQL + pgvector" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;verticalAlign=top;spacingTop=10" vertex="1" parent="1">
+          <mxGeometry x="430" y="200" width="240" height="280" as="geometry" />
+        </mxCell>
+
+        <mxCell id="schema" value="memory テーブル&#10;&#10;id          BIGSERIAL&#10;text        TEXT&#10;embedding   vector(1536)&#10;entity_id   TEXT&#10;predicate   TEXT&#10;created_at  TIMESTAMPTZ ⏰&#10;source_ref  TEXT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=11;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fontFamily=Courier New" vertex="1" parent="1">
+          <mxGeometry x="450" y="240" width="200" height="180" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ingest-arrow" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=3;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0" edge="1" parent="1" source="w4" target="storage">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="445" />
+              <mxPoint x="400" y="396" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ingest-label" value="INSERT" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;fontColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="360" y="410" width="60" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r1" value="検索クエリ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="760" y="110" width="240" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r2" value="① クエリ埋め込み生成&#10;(Embedding API)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="760" y="190" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r3" value="② ベクトル類似度検索&#10;(pgvector / top-K)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="760" y="280" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r4" value="③ 時間減衰リランキング&#10;score = sim × exp(-λ × age)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="760" y="370" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r5" value="④ LLM (Sonnet 4.6) に context 注入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="760" y="460" width="240" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r6" value="応答" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="760" y="540" width="240" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="er1" style="endArrow=classic;html=1;strokeColor=#7F0000;strokeWidth=2" edge="1" parent="1" source="r1" target="r2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er2" style="endArrow=classic;html=1;strokeColor=#7F0000;strokeWidth=2" edge="1" parent="1" source="r2" target="r3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er3" style="endArrow=classic;html=1;strokeColor=#7F0000;strokeWidth=2" edge="1" parent="1" source="r3" target="r4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er4" style="endArrow=classic;html=1;strokeColor=#7F0000;strokeWidth=2" edge="1" parent="1" source="r4" target="r5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er5" style="endArrow=classic;html=1;strokeColor=#7F0000;strokeWidth=2" edge="1" parent="1" source="r5" target="r6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="search-arrow" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#b85450;strokeWidth=3;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.4;entryDx=0;entryDy=0" edge="1" parent="1" source="r3" target="storage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="search-label" value="SELECT&#10;ORDER BY embedding &lt;-&gt; query" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=1;fontColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="680" y="270" width="190" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend" value="【4欠陥カバー範囲】&#10;✓ ① 重複排除（②正規化フェーズ）&#10;✓ ② セマンティック検索（pgvector）&#10;✓ ③ 時系列重み付け（created_at + 減衰）&#10;△ ④ 関係モデリング（entity_id 経由で将来 Graph DB に接続可能）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;dashed=1" vertex="1" parent="1">
+          <mxGeometry x="100" y="630" width="900" height="100" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

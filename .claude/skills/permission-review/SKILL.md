@@ -1,118 +1,118 @@
 ---
 name: permission-review
-description: セッション中に同意を求められたコマンドのログを分析し、許可設定やワークフローの改善提案を行う
+description: Analyse commands that triggered consent prompts during the session and propose changes to allowlist rules or workflow
 arguments:
   - name: log_file
-    description: "同意ログファイルのパス（省略時はセッションの会話コンテキストから分析）"
+    description: "Path to a consent-log file. If omitted, analyse the current session's conversation context."
     required: false
 ---
 
-セッション中に同意（permission prompt）を求められたコマンドのログを分析し、次回以降の同意を減らすための改善提案を行ってください。
+Analyse the commands that triggered permission prompts during the session and propose changes that reduce future prompts.
 
-## 入力
+## Input
 
-### 入力ソースの優先順位
+### Input-source priority
 
-1. **引数 `log_file` が指定された場合**: そのファイルを読み取る
-2. **引数なしの場合（デフォルト）**: 現在のセッションの会話コンテキストから同意プロンプトを分析する
+1. **`log_file` argument given**: read that file.
+2. **No argument (default)**: analyse the consent prompts in the current session's conversation context.
 
-### ファイルからの入力
+### File-based input
 
-ログファイルには以下のような形式で同意プロンプトが記録されている想定:
+A consent-log file is expected to contain entries shaped roughly like:
 
 ```
 Bash command
-  <コマンド内容>
-  <説明>
+  <command body>
+  <description>
 
 Do you want to proceed?
 ```
 
-形式が多少異なっていても、「Bash command」「Do you want to proceed?」等のキーワードから同意プロンプトを抽出すること。
+Even if the exact format differs, extract consent prompts based on signals such as `Bash command` and `Do you want to proceed?`.
 
-### 会話コンテキストからの入力（デフォルト）
+### Conversation-context input (default)
 
-ファイルが指定されていない場合は、現在の会話の中でユーザーが同意を求められた場面を分析する。以下の手がかりから同意プロンプトを特定する:
+When no file is supplied, analyse the current conversation. Use these signals to spot consent prompts:
 
-- ツール呼び出しがユーザーによって拒否・承認された記録
-- `Do you want to proceed?` のようなプロンプト
-- ユーザーが許可操作について言及したメッセージ
-- セッション中に実行されたコマンドのうち、`settings.local.json` の許可パターンにマッチしないもの
+- Tool calls that the user explicitly denied or approved.
+- Prompts that look like `Do you want to proceed?`.
+- User messages mentioning permission decisions.
+- Commands executed during the session that do not match any allowlist pattern in `settings.local.json`.
 
-**同意プロンプトが見つからない場合**: 「このセッションでは同意を求められたコマンドはありませんでした」と報告して終了する。
+**If no consent prompts are found**: report "このセッションでは同意を求められたコマンドはありませんでした" and exit.
 
-## 分析手順
+## Analysis procedure
 
-### 1. 同意プロンプトの抽出
+### 1. Extract consent prompts
 
-入力ソース（ファイルまたは会話コンテキスト）から、同意を求められた各コマンドを抽出し、以下の情報を整理する:
+From the input source (file or conversation), extract every consenting command and collect:
 
-- **コマンド内容**: 実行しようとしたコマンド
-- **説明**: コマンドの説明テキスト
-- **警告メッセージ**: セキュリティチェックの警告があれば記録（例: "Command contains a quoted newline..."）
+- **Command body**: the command that was about to run.
+- **Description**: the descriptive text.
+- **Warning message**: any security-check warning (e.g. "Command contains a quoted newline...").
 
-### 2. 原因の分類
+### 2. Classify the cause
 
-各コマンドについて、同意が求められた原因を以下のカテゴリに分類する:
+Classify each command's cause into one of the following:
 
-| カテゴリ | 説明 | 例 |
+| Category | Description | Example |
 |---|---|---|
-| **パターン未登録** | 許可パターンに該当するものがない | `git worktree add` |
-| **セキュリティチェック** | コマンド内容がセキュリティルールに抵触 | HEREDOC 内の `#` 行、`$()` 置換 |
-| **パス制限** | アクセス先のパスが許可されていない | `/tmp` への書き込み |
-| **複合コマンド** | `&&` や `\|` で繋いだコマンドがパターンにマッチしない | `rm ... && git worktree remove ...` |
-| **外部通信** | 外部サービスへの書き込み操作 | `gh api --method PATCH` |
+| **Pattern missing** | No allowlist pattern matches | `git worktree add` |
+| **Security check** | Triggered a security rule | `#`-prefixed line inside a HEREDOC, `$()` substitution |
+| **Path restriction** | Target path is not allowed | write to `/tmp` |
+| **Compound command** | Command chained with `&&` / `\|` does not match a pattern | `rm ... && git worktree remove ...` |
+| **External write** | Write operation to an external service | `gh api --method PATCH` |
 
-### 3. 現在の許可設定の確認
+### 3. Inspect the current allowlist
 
-以下のファイルを読み取り、現在の許可パターンを把握する:
+Read these to understand the current permissions:
 
-- `.claude/settings.local.json` の `permissions.allow` 配列
-- CLAUDE.md のルール
-- `.claude/skills/` 配下のスキル定義
+- `permissions.allow` array in `.claude/settings.local.json`
+- Rules in `CLAUDE.md`
+- Skill definitions under `.claude/skills/`
 
-### 4. 改善提案の作成
+### 4. Build improvement proposals
 
-各コマンドについて、以下の優先順位で改善策を提案する:
+For each command, suggest improvements in this priority order:
 
-#### 優先度1: 許可パターンの追加（最もシンプル）
+#### Priority 1: Add an allowlist pattern (simplest)
 
-コマンドが安全であり、今後も繰り返し使う場合は `settings.local.json` に許可パターンを追加する。
+If the command is safe and likely to recur, add a pattern to `settings.local.json`.
 
 ```json
 "Bash(git worktree:*)"
 ```
 
-**提案時の注意:**
-- パターンは必要最小限の範囲にする（`Bash(*)` のような広すぎるパターンは提案しない）
-- 外部への書き込み操作（PATCH、POST、DELETE）は慎重に判断する
+**Cautions:**
+- Make the pattern as narrow as possible (do not propose anything as broad as `Bash(*)`).
+- Be conservative about external write operations (PATCH, POST, DELETE).
 
-#### 優先度2: ワークフローの変更（根本対策）
+#### Priority 2: Workflow change (root cause)
 
-コマンド自体を変更することで同意を回避できる場合:
+If changing the command itself avoids the prompt:
 
-- HEREDOC → `--body-file` 方式（`#` 行の問題を回避）
-- `$()` コマンド置換 → 一時ファイル + `--input` 方式
-- `/tmp` → `.claude/temp/`（プロジェクト内の一時ディレクトリ）
-- `&&` で繋いだコマンド → 個別実行
+- HEREDOC → `--body-file` (avoids the `#`-line trigger)
+- `$()` substitution → temp file + `--input`
+- `/tmp` → `.claude/temp/` (in-project scratch dir)
+- `&&` chain → split into separate calls
 
-#### 優先度3: スキル定義の更新
+#### Priority 3: Update skill definitions
 
-スキル定義（SKILL.md）のコマンド例を修正し、次回から問題のあるパターンを使わないようにする。
+Edit the relevant `SKILL.md` so future runs do not produce the problematic pattern.
 
-### 5. リスク評価
+### 5. Risk assessment
 
-各改善提案について、セキュリティリスクを評価する:
+For each proposal, assess the security risk:
 
-- **低リスク**: ローカルのみの操作（ファイル読み書き、git 操作）
-- **中リスク**: 外部サービスへの読み取り操作（gh api GET）
-- **高リスク**: 外部サービスへの書き込み操作（gh api PATCH/POST）
+- **Low**: local-only operations (file read/write, git)
+- **Medium**: external read operations (`gh api` GET)
+- **High**: external write operations (`gh api` PATCH / POST)
 
-高リスクの操作に対しては、許可パターン追加ではなくワークフロー改善を優先する。
+For high-risk operations, prefer a workflow fix over a new allowlist entry.
 
-## 出力形式
+## Output format
 
-以下の形式でレポートを出力する:
+Emit a report in this shape:
 
 ```markdown
 ## Permission Review レポート
@@ -141,13 +141,15 @@ Do you want to proceed?
 - ...
 ```
 
-## 適用
+> The report is user-facing, so the prose stays Japanese.
 
-レポートを提示した後、ユーザーの承認を得てから改善を適用する。
-適用する場合は以下のファイルを更新する:
+## Applying changes
 
-1. `.claude/settings.local.json` — 許可パターンの追加
-2. `.claude/skills/*/SKILL.md` — コマンド例の修正
-3. `CLAUDE.md` — 必要に応じてルールの追記
+After presenting the report, get user approval before applying any change.
+When applying, update the appropriate file(s):
 
-**重要: 適用前に必ずユーザーの確認を取ること。** 許可パターンの変更はセキュリティに直結するため、自動適用しない。
+1. `.claude/settings.local.json` — add allowlist patterns
+2. `.claude/skills/*/SKILL.md` — adjust command examples
+3. `CLAUDE.md` — add rules as needed
+
+**Important: never auto-apply.** Allowlist changes affect security, so confirm with the user first.
