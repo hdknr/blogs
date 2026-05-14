@@ -110,8 +110,330 @@ AWS 顧客にとっては「ネイティブ API を直接叩く（= AWS 外の�
 
 エージェント開発、特に Claude Managed Agents や Skills を中核に据えた本番システムを AWS で動かす場合、これからのデフォルトは Claude Platform on AWS になるだろう。
 
+## セットアップとデスクトップ PC からの利用方法
+
+ここからは、実際に Claude Platform on AWS を有効化し、デスクトップ PC から SDK や Claude Code で叩くまでの手順を詳しく解説する。出典は AWS 公式ユーザーガイド、`platform.claude.com` の API ドキュメント、Claude Code ドキュメントの 3 点。
+
+### 前提条件
+
+| 必須 | 内容 |
+| --- | --- |
+| AWS アカウント | サインアップ権限のある管理者アカウント |
+| AWS CLI | バージョン 2 系をローカルにインストール |
+| IAM 権限 | サインアップ・ロール引き受け・IAM ポリシー作成権限 |
+| エンドポイント | `https://aws-external-anthropic.{region}.api.aws`（自動算出） |
+
+注意: AWS Console からサインアップすると **AWS アカウント専用の新しい Anthropic 組織** がプロビジョニングされる。既存の Anthropic 直契約組織や Claude Console の API キーは引き継がれない。
+
+### Step 1: AWS Console でサインアップ
+
+1. AWS Console にログインし、サービス一覧から **Claude Platform on AWS** を開く
+2. **Sign up** をクリック
+3. 利用規約（Anthropic EULA、AWS Privacy Notice、AWS Customer Agreement）に同意して **Continue**
+4. 「Sign-up in progress」バナーが出るので**そのまま待機**（数分かかる）。AWS Marketplace サブスクリプションが自動処理される
+5. 既存の Bedrock プライベートオファーがある場合は、**サインアップ前**に営業担当へ連絡する（割引はさかのぼり不可）
+
+### Step 2: Anthropic 組織を作成
+
+サインアップ完了後、`platform.claude.com/partner-signup` にリダイレクトされる。
+
+1. 組織オーナーのメールアドレスを入力 → **Get started**
+2. 招待メールのリンクを開く（「Signed in as a different account」が出たら **Log out and continue**）
+3. 組織情報（組織名、エンティティタイプ、国、利用目的）を入力 → **Complete setup**
+
+完了すると AWS Console 側に **Home / API keys / Quickstart / Workspaces** のナビゲーションが表示される。
+
+### Step 3: Workspace ID をメモする
+
+- デフォルト Workspace が自動作成される
+- **Workspaces** ページから `wrkspc_01AbCdEf23GhIj` 形式の ID をコピー
+- Workspace は **AWS リージョンに紐づく**（`us-west-2` で作った Workspace は `us-west-2` のエンドポイントからしか使えない）
+
+### Step 4: Claude Console にサインイン
+
+1. IAM ロールに `aws-external-anthropic:AssumeConsole` 権限を付与
+2. AWS Console の **Claude Platform on AWS** ページから **Open Claude Console**
+3. AWS が JWT を発行し `platform.claude.com` にリダイレクト
+4. 初回は職場メールを入力 → ユーザーが自動プロビジョニング
+
+サイドバー左下に **Account managed by AWS** インジケーターが表示されれば成功。
+
+### API 呼び出し前の必須準備（最重要）
+
+**Outbound Web Identity Federation の有効化** は AWS アカウントごとに 1 回必要。これを忘れると全リクエストが失敗する（最も多いセットアップエラー）。
+
+```bash
+aws iam enable-outbound-web-identity-federation
+```
+
+すでに有効なら `[ERROR] (FeatureEnabled) ... already enabled` が返る。確認は次のコマンド。
+
+```bash
+aws iam get-outbound-web-identity-federation-info
+```
+
+環境変数を設定する。
+
+```bash
+export ANTHROPIC_AWS_WORKSPACE_ID='wrkspc_01AbCdEf23GhIj'
+export AWS_REGION='us-west-2'   # Workspace の AWS リージョン
+```
+
+### 認証方式
+
+Claude Platform on AWS は 2 種類の認証をサポートする。
+
+**A. AWS IAM (SigV4) — エンタープライズ向けの推奨方式**
+
+標準の AWS クレデンシャルチェーンが使える。
+
+| ソース | 用途 |
+| --- | --- |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_SESSION_TOKEN` | 環境変数 |
+| `~/.aws/credentials` / `~/.aws/config` | 共有プロファイル（SSO・`credential_process` 含む） |
+| Web Identity (`AWS_WEB_IDENTITY_TOKEN_FILE`) | IRSA、GitHub Actions |
+| ECS / EC2 IMDS | コンテナ・インスタンス |
+
+動作確認:
+
+```bash
+aws sts get-caller-identity
+```
+
+SSO ログイン例:
+
+```bash
+aws sso login --profile my-profile
+export AWS_PROFILE=my-profile
+```
+
+**B. API キー — 開発・スクリプト向け**
+
+1. AWS Console → **Claude Platform on AWS → API keys → Generate a key** でキー生成
+2. IAM プリンシパルに `aws-external-anthropic:CallWithBearerToken` アクションを付与
+3. 環境変数にセット:
+
+```bash
+export ANTHROPIC_AWS_API_KEY='sk-ant-xxxxx'
+```
+
+注意: 通常の Claude Console で発行した API キーは Claude Platform on AWS では使えない。必ず AWS Console の API keys から発行する。
+
+### デスクトップ PC から SDK で使う
+
+**Python SDK の例**:
+
+```bash
+pip install anthropic
+```
+
+```python
+from anthropic import AnthropicAWS
+
+client = AnthropicAWS()  # 環境変数から自動読み込み
+
+message = client.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=1024,
+    messages=[{"role": "user", "content": "Hello!"}],
+)
+print(message)
+```
+
+**TypeScript SDK の例**:
+
+```bash
+npm install @anthropic-ai/sdk
+```
+
+```typescript
+import { AnthropicAWS } from "@anthropic-ai/sdk";
+
+const client = new AnthropicAWS();
+const message = await client.messages.create({
+  model: "claude-sonnet-4-6",
+  max_tokens: 1024,
+  messages: [{ role: "user", content: "Hello!" }],
+});
+console.log(message);
+```
+
+**cURL で生 API を叩く**:
+
+```bash
+curl https://aws-external-anthropic.us-west-2.api.aws/v1/messages \
+  --aws-sigv4 "aws:amz:us-west-2:aws-external-anthropic" \
+  --user "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" \
+  -H "x-amz-security-token: $AWS_SESSION_TOKEN" \
+  -H "anthropic-workspace-id: $ANTHROPIC_AWS_WORKSPACE_ID" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 1024,
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+- `--aws-sigv4` の形式: `aws:amz:<region>:aws-external-anthropic`
+- `x-amz-security-token` は STS / SSO / IAM Role などの一時クレデンシャルのときだけ必要
+- `anthropic-workspace-id` ヘッダーは**必須**
+
+**利用可能モデル ID**（Bedrock の ARN 形式ではなくネイティブと同じ）:
+
+| モデル | ID |
+| --- | --- |
+| Claude Opus 4.7 | `claude-opus-4-7` |
+| Claude Opus 4.6 | `claude-opus-4-6` |
+| Claude Sonnet 4.6 | `claude-sonnet-4-6` |
+| Claude Haiku 4.5 | `claude-haiku-4-5` |
+
+### デスクトップ PC から Claude Code で使う
+
+日常のデスクトップ利用では、この Claude Code 経由のセットアップが最も実用的だ。
+
+**Step 1: Claude Code のインストール**
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+**Step 2: AWS クレデンシャルを準備**
+
+SigV4 を使う場合（推奨）:
+
+```bash
+aws sso login --profile my-profile
+export AWS_PROFILE=my-profile
+```
+
+API キーを使う場合:
+
+```bash
+export ANTHROPIC_AWS_API_KEY='sk-ant-xxxxx'
+```
+
+**Step 3: Claude Code を Claude Platform on AWS に向ける**
+
+3 つの環境変数が必須。
+
+```bash
+export CLAUDE_CODE_USE_ANTHROPIC_AWS=1
+export ANTHROPIC_AWS_WORKSPACE_ID='wrkspc_01ABCDEFGHIJKLMN'
+export AWS_REGION='us-east-1'
+```
+
+- `CLAUDE_CODE_USE_ANTHROPIC_AWS=1` がないと従来通り `api.anthropic.com` に行ってしまう
+- `CLAUDE_CODE_USE_BEDROCK` や `CLAUDE_CODE_USE_FOUNDRY` がセットされていると**そちらが優先**されるので `unset` する
+
+**Step 4: モデルバージョンの固定（チーム展開向け推奨）**
+
+```bash
+export ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-4-7
+export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-sonnet-4-6
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5
+```
+
+**Step 5: SSO セッション自動更新（任意）**
+
+`~/.claude/settings.json` に追記すると SSO 期限切れ時に自動再ログイン:
+
+```json
+{
+  "awsAuthRefresh": "aws sso login --profile my-profile"
+}
+```
+
+**Step 6: 起動確認**
+
+```bash
+claude
+```
+
+起動後にプロンプトで `/status` を実行し、`Provider: Claude Platform on AWS` になっていれば成功。
+
+**OS 別の永続設定例**
+
+macOS / Linux（zsh / bash）:
+
+```bash
+# ~/.zshrc
+export CLAUDE_CODE_USE_ANTHROPIC_AWS=1
+export ANTHROPIC_AWS_WORKSPACE_ID='wrkspc_01ABCDEFGHIJKLMN'
+export AWS_REGION='us-east-1'
+export AWS_PROFILE='my-profile'
+```
+
+Windows PowerShell:
+
+```powershell
+# $PROFILE
+$env:CLAUDE_CODE_USE_ANTHROPIC_AWS = "1"
+$env:ANTHROPIC_AWS_WORKSPACE_ID = "wrkspc_01ABCDEFGHIJKLMN"
+$env:AWS_REGION = "us-east-1"
+$env:AWS_PROFILE = "my-profile"
+```
+
+**企業プロキシ / LLM ゲートウェイ経由**:
+
+```bash
+export CLAUDE_CODE_USE_ANTHROPIC_AWS=1
+export ANTHROPIC_AWS_WORKSPACE_ID='wrkspc_01ABCDEFGHIJKLMN'
+export ANTHROPIC_AWS_BASE_URL='https://anthropic-proxy.example.com'
+# ゲートウェイ側で SigV4 を付けるなら Claude Code 側はスキップ
+export CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH=1
+```
+
+### データレジデンシー（推論リージョン指定）
+
+リクエストごとに `inference_geo` を指定可能（Opus 4.6 / Sonnet 4.6 以降のみ対応）:
+
+```python
+client.messages.create(
+    model="claude-sonnet-4-6",
+    inference_geo="us",  # "us" or "global"
+    ...
+)
+```
+
+- `us`: 米国内データセンターに固定（**1.1 倍課金**）
+- `global`: 全世界（デフォルト、標準価格）
+
+AWS リージョンは IAM / CloudTrail / 課金のスコープにすぎず、**推論経路は別軸**で制御する。
+
+### トラブルシューティング
+
+| 症状 | 原因と対処 |
+| --- | --- |
+| `Outbound web identity federation is disabled` | `aws iam enable-outbound-web-identity-federation` を実行 |
+| `403 Forbidden / AccessDenied` | IAM ロールに `aws-external-anthropic:*` 権限がない、または API キーが古い |
+| `missing-workspace error` | `ANTHROPIC_AWS_WORKSPACE_ID` が未設定 |
+| Claude Code が `api.anthropic.com` に行く | `CLAUDE_CODE_USE_ANTHROPIC_AWS=1` 未設定、または `CLAUDE_CODE_USE_BEDROCK` が干渉 |
+| 署名拒否エラー | `--aws-sigv4` の region と URL の region が不一致 |
+| Usage ページにデータが出ない | 数分のラグ。通常は自然に解消 |
+
+### デスクトップ利用の最短経路まとめ
+
+1. AWS Console から Claude Platform on AWS にサインアップ
+2. `aws iam enable-outbound-web-identity-federation` を 1 回実行
+3. Workspace ID をメモ
+4. `aws sso login --profile <name>` で AWS 認証
+5. シェル設定に 3 つの環境変数を追記:
+   ```bash
+   export CLAUDE_CODE_USE_ANTHROPIC_AWS=1
+   export ANTHROPIC_AWS_WORKSPACE_ID='wrkspc_xxx'
+   export AWS_REGION='us-east-1'
+   ```
+6. `claude` を起動して `/status` で Provider 確認 → 完了
+
+これで日常の Claude Code 利用が、AWS の IAM / CloudTrail / 単一請求書のフレームの中で完結する。
+
 ## 参考リンク
 
 - [Introducing the Claude Platform on AWS（Anthropic 公式ブログ）](https://claude.com/blog/claude-platform-on-aws)
 - [Claude Platform on AWS（AWS ランディングページ）](https://aws.amazon.com/jp/claude-platform/)
+- [Set up your account - Claude Platform on AWS（AWS 公式ユーザーガイド）](https://docs.aws.amazon.com/claude-platform/latest/userguide/setup.html)
+- [Claude Platform on AWS - Claude API Docs](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws)
+- [Claude Code on Claude Platform on AWS（Claude Code 公式ドキュメント）](https://code.claude.com/docs/en/claude-platform-on-aws)
+- [Actions, resources, and condition keys for Claude Platform on AWS（IAM リファレンス）](https://docs.aws.amazon.com/service-authorization/latest/reference/list_claudeplatformonaws.html)
 - [元ポスト（X / @hata_AI_master）](https://x.com/hata_AI_master/status/2053968293283979694)
