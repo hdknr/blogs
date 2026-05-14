@@ -428,6 +428,127 @@ AWS リージョンは IAM / CloudTrail / 課金のスコープにすぎず、**
 
 これで日常の Claude Code 利用が、AWS の IAM / CloudTrail / 単一請求書のフレームの中で完結する。
 
+## 利用料金
+
+Claude Platform on AWS の料金体系は **「単価はネイティブ Claude API と同一、課金単位は CCU（Claude Consumption Unit）」** が要点だ。Bedrock とも単価は同じだが、請求書上の見え方が大きく異なる。
+
+### モデル別の基本料金（2026 年 5 月時点）
+
+ネイティブ Claude API の公式価格表と同じレートで請求される。1M トークン（100 万トークン）あたりの USD 単価で示すと:
+
+| モデル | 入力 | 出力 | 備考 |
+| --- | --- | --- | --- |
+| Claude Opus 4.7 | $5 | $25 | 最上位。複雑な推論・自律エージェント向け |
+| Claude Opus 4.6 | $5 | $25 | 旧世代だが同単価 |
+| Claude Sonnet 4.6 | $3 | $15 | 本番推論のデフォルト |
+| Claude Haiku 4.5 | $1 | $5 | 分類・ルーティング・抽出など軽量タスク |
+
+注意点として、**Opus 4.7 は新トークナイザを採用しており、同じ日本語テキストでも Opus 4.6 比で最大 35% 多くトークンが消費される**ケースがある。単価は変わらないが、リクエストあたりの実コストが増える可能性があるため、移行前に実プロンプトでトークン数を比較することが推奨される。
+
+### Claude Consumption Unit (CCU) という独特の課金単位
+
+Claude Platform on AWS では、トークン課金を **CCU** という単位に変換して AWS Marketplace に請求が立つ。換算は単純で:
+
+- **1 CCU = $0.01 USD**（100 CCU = $1.00）
+- Anthropic がトークン使用量を USD で算出 → 交渉済み割引を適用 → CCU に換算 → AWS Marketplace に **1 時間単位で報告**
+
+具体例: Sonnet 4.6 で入力 10M トークン、出力 2M トークンを消費した場合、料金は $60。これは AWS の請求書上では **6,000 CCU** という単一行で表示される。
+
+### Bedrock 経由との請求書の違い
+
+単価は同じでも、コスト可視性の粒度が大きく異なる。
+
+| 観点 | Claude on Amazon Bedrock | Claude Platform on AWS |
+| --- | --- | --- |
+| 請求単位 | モデル別トークンの個別行 | **CCU の単一行** |
+| Cost Explorer での内訳 | モデル別・リージョン別に分解可能 | 集約済み（CCU のみ） |
+| タグ・コスト配分 | AWS ネイティブのタグ運用が効く | チーム・プロジェクト別の自動分解は不可 |
+| エンジニアリング帰属 | 直接見える | Anthropic 側（Claude Console）で個別分析が必要 |
+| 調達向き | やや煩雑 | シンプル |
+
+つまり Claude Platform on AWS は**調達・経理にはやさしいが、エンジニアリングの細かいコスト帰属には不向き**だ。「どのチーム・どのモデル・どの機能で使ったか」を AWS 側だけで切り分けるのは難しい。Claude Console の Usage / Cost ページや Workspace 分割で補完する設計が必要になる。
+
+### 推論リージョン（inference_geo）による割増
+
+データレジデンシーを米国に固定する `inference_geo="us"` を指定すると、**標準価格の 1.1 倍（10% 増し）** が適用される。
+
+| 設定 | 価格倍率 | 用途 |
+| --- | --- | --- |
+| `global`（デフォルト） | 1.0x | 全世界の Anthropic データセンターを使用 |
+| `us` | **1.1x** | 米国内データセンターに固定 |
+
+リクエスト単位で指定でき、Opus 4.6 / Sonnet 4.6 以降でのみサポートされる（Opus 4.5 / Sonnet 4.5 / Haiku 4.5 で `inference_geo` を渡すと 400 エラー）。Workspace レベルの強制設定（`default_inference_geo`、`allowed_inference_geos`）は Claude Platform on AWS では使えないため、アプリケーション側で必ず指定する運用が必要。
+
+### コスト削減の主要レバー
+
+ネイティブ API と同じ最適化機能が day-one で利用できる。
+
+**1. Prompt Caching（プロンプトキャッシュ）— 最大 90% オフ**
+
+繰り返し使うシステムプロンプトや大きな文書をキャッシュすると、**キャッシュヒット時の入力単価が標準の約 10%（90% 引き）** になる。50K トークンのシステムプロンプトを 1,000 リクエスト送るような構成では、キャッシュ未使用と比較して劇的にコストが減る。
+
+- 5 分 TTL（デフォルト）
+- 1 時間 TTL（書き込み時の単価がやや高め。`ENABLE_PROMPT_CACHING_1H=1` で有効化）
+- 自動キャッシュ機能も利用可能
+
+**2. Batch API — 一律 50% オフ**
+
+24 時間以内に応答が返ればよいワークロード（コンテンツ生成、データ分類、ドキュメント分析など）は Batch API に流すと **全モデル一律 50% 引き**。Claude Platform on AWS でもネイティブ API と同じ仕様で利用可能。
+
+**3. キャッシュ × Batch の組み合わせ**
+
+両者を組み合わせると、理論上は **最大約 95% のコスト削減**が可能（90% キャッシュ + 残り 10% に対して 50% Batch 割引）。
+
+**4. モデルルーティング**
+
+タスクに応じてモデルを切り替える設計。Haiku 4.5（$1/$5）で分類・抽出、Sonnet 4.6（$3/$15）で本番推論、Opus 4.7（$5/$25）は本当に複雑な推論やエージェント実行のみ、という階層化が効く。
+
+### ツール・機能の追加料金
+
+Messages API のトークン料金とは別に発生する代表的なものは次のとおり。
+
+- **Web Search**: $10 / 1,000 検索（ツール経由で実行された Web 検索の回数で課金）
+- **Code Execution**: Anthropic マネージドサンドボックスでの Python 実行。専用課金あり（公式ドキュメント参照）
+- **Files API**: アップロード・参照可能。Workspace ストレージとして課金
+- **Managed Agents のセッション**: 自律実行時間に応じた課金（最大 6 時間まで連続自律実行、それ以降は再認証必要）
+
+### Tier 1 レート制限（初期割り当て）
+
+サインアップ時に自動的に **Tier 1 レート制限**が割り当てられる。ネイティブ Claude API と同じレートで、初期はリクエスト数・トークン数とも控えめ。大規模ワークロードを想定する場合は、Anthropic 担当に上限引き上げ（Tier 2 以降）を申請する。
+
+### 既存 AWS コミットメントの消化（EDP retire）
+
+Claude Platform on AWS の請求は **AWS Marketplace 経由**のため、AWS の **Enterprise Discount Program (EDP)** や **Private Pricing Agreement (PPA)** のコミットメントを消化できる。Anthropic に別途支払いを起こす必要がなく、既存の AWS 予算枠で運用可能。
+
+ただし、Anthropic 側で別途締結されている **Bedrock プライベートオファー**がある場合は注意が必要。
+
+> Discounts cannot be applied retroactively to usage incurred before a Claude Platform private offer is accepted.
+> （訳: Claude Platform プライベートオファーを受諾する前に発生した利用分には、割引をさかのぼって適用できない）
+
+サインアップ前に必ず Anthropic / AWS の営業担当に連絡し、割引を Claude Platform on AWS 側にも適用する手続きを取ること。
+
+### Zero Data Retention (ZDR)
+
+データ保持を一切しない **Zero Data Retention** がリクエストベースで提供される（要申請）。ZDR 自体に追加料金は明示されていないが、機能制限がかかる場合があるため、Anthropic 担当に確認が必要。
+
+### コスト可視化のベストプラクティス
+
+Claude Platform on AWS は CCU の単一行になるため、運用上は以下の併用が推奨される。
+
+1. **AWS Cost Explorer**: 全体支出のトレンドとアラート（CCU 単位）
+2. **Claude Console の Usage / Cost ページ**: モデル別・Workspace 別のトークン使用量と内訳
+3. **Workspace 分割**: チーム・環境（dev/stg/prod）・プロダクト別に Workspace を切り、Console 側で粒度を確保
+4. **CloudTrail**: 認証・API 呼び出しの監査ログ（コスト直接ではないが異常検知に有用）
+
+「AWS の請求書だけ見れば全部わかる」状態にはならないため、**Workspace 設計を最初に丁寧に行う**ことが FinOps の鍵になる。
+
+### 料金の確認先
+
+公式の最新料金は次の 2 か所で確認できる。
+
+- [Anthropic 公式 Pricing ページ](https://platform.claude.com/docs/en/about-claude/pricing) — モデル単価、キャッシュ・Batch 割引、ツール料金
+- [AWS Marketplace の Claude Platform on AWS リスティング](https://aws.amazon.com/jp/claude-platform/) — CCU 換算、プライベートオファー、EDP 適用条件
+
 ## 参考リンク
 
 - [Introducing the Claude Platform on AWS（Anthropic 公式ブログ）](https://claude.com/blog/claude-platform-on-aws)
@@ -436,4 +557,6 @@ AWS リージョンは IAM / CloudTrail / 課金のスコープにすぎず、**
 - [Claude Platform on AWS - Claude API Docs](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws)
 - [Claude Code on Claude Platform on AWS（Claude Code 公式ドキュメント）](https://code.claude.com/docs/en/claude-platform-on-aws)
 - [Actions, resources, and condition keys for Claude Platform on AWS（IAM リファレンス）](https://docs.aws.amazon.com/service-authorization/latest/reference/list_claudeplatformonaws.html)
+- [Anthropic 公式 Pricing ページ](https://platform.claude.com/docs/en/about-claude/pricing)
+- [Claude On AWS: Bedrock Vs. Claude Platform Costs Compared（CloudZero 解説）](https://www.cloudzero.com/blog/claude-on-aws-bedrock/)
 - [元ポスト（X / @hata_AI_master）](https://x.com/hata_AI_master/status/2053968293283979694)
