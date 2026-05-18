@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-04-29
+lastmod: 2026-05-18
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -32,7 +32,11 @@ related_posts:
   - "/posts/2026/04/pytest-chaos-engineering/"
   - "/posts/2026/03/claude-code-auto-mode/"
   - "/posts/2026/03/claude-code-commands/"
-tags: ["claude-code", "claude", "anthropic", "AIエージェント"]
+  - "/posts/2026/05/claude-code-obsidian-vault-project-config/"
+  - "/posts/2026/05/claude-code-obsidian-vault-writeback/"
+  - "/posts/2026/05/claude-code-vault-writeback-automation/"
+  - "/posts/2026/05/self-hosted-runner-vault-writeback/"
+tags: ["claude-code", "claude", "anthropic", "AIエージェント", "Hooks", "MCP"]
 ---
 
 ## 概要
@@ -84,6 +88,12 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 
 詳細: [Context Rot](/blogs/wiki/concepts/context-rot/)
 
+## Obsidian Vault との統合
+
+`~/.claude/settings.json` や `<proj>/.claude/settings.local.json` に MCP filesystem サーバを登録することで、個人 Obsidian Vault を AI Agent の文脈として常時参照させられる。読み取り用 (`vault-readonly`) と書き込み用 (`vault-inbox`) を別サーバとして分離するのが基本パターン。`PostToolUse` / `Stop` フックや GitHub Actions self-hosted runner と組み合わせると、PR マージや日次のタイミングで自動的に書き戻しを発火させ、Vault が時間とともに自己強化されるループを実装できる。
+
+詳細: [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) / [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) / [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/)
+
 ## 関連ページ
 
 - [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/) — Claude Code のコンテキスト管理戦略
@@ -94,6 +104,10 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/) — Anthropic のマネージドエージェント基盤
 - [Video Use](/blogs/wiki/tools/video-use/) — Claude Code スキルとして動作する動画編集自動化ツール
 - [Claude Harness](/blogs/wiki/tools/claude-harness/) — Claude Code の拡張機構をワンパッケージで提供する外装プラグイン
+- [Obsidian](/blogs/wiki/tools/obsidian/) — 個人ナレッジ層として連携する PKM ツール
+- [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/) — ライフサイクルイベントへのフック仕組み
+- [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) — Vault との循環設計パターン
+- [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) — 5 段階の実装手順
 
 ## ソース記事
 
