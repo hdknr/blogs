@@ -1,0 +1,70 @@
+# GitHub Actions: PR マージ通知（cloud, 漏れ拾い用）。
+#
+# cloud-hosted runner からは Vault に触れないため、ここでは
+# 「マージ済み PR を検出して通知する」だけに留める。
+# 通知の届け先は SLACK_WEBHOOK / 自前 Webhook などに jq -n でペイロードを組み立てて送る。
+#
+# 配置先: 各プロジェクトの .github/workflows/vault-writeback.yml
+#
+# Phase 5 で self-hosted runner を用意すれば、ここから claude -p で Vault に書き戻せる。
+
+name: vault-writeback (notify)
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  notify:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compose payload safely
+        id: payload
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY:  ${{ github.event.pull_request.body }}
+          PR_URL:   ${{ github.event.pull_request.html_url }}
+          PR_NUM:   ${{ github.event.pull_request.number }}
+          REPO:     ${{ github.repository }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at }}
+        run: |
+          # jq -n でペイロード組み立て（PR 本文に " や \ が混ざっても壊れない）
+          jq -n \
+            --arg repo "$REPO" \
+            --arg num "$PR_NUM" \
+            --arg title "$PR_TITLE" \
+            --arg body "$PR_BODY" \
+            --arg url "$PR_URL" \
+            --arg merged_at "$MERGED_AT" \
+            '{
+              event: "pr_merged",
+              repo: $repo,
+              pr: ($num | tonumber),
+              title: $title,
+              body: $body,
+              url: $url,
+              merged_at: $merged_at
+            }' > payload.json
+          echo "Composed payload:"
+          jq -c . payload.json
+
+      - name: Send notification
+        if: env.NOTIFY_WEBHOOK != ''
+        env:
+          NOTIFY_WEBHOOK: ${{ secrets.NOTIFY_WEBHOOK }}
+        run: |
+          # -d @file でファイル渡し（本文に " や \ が混ざっても安全）
+          curl -fsS -X POST \
+            -H "Content-Type: application/json" \
+            -d @payload.json \
+            "$NOTIFY_WEBHOOK"
+
+      - name: Summary
+        run: |
+          echo "PR #${{ github.event.pull_request.number }} merged at ${{ github.event.pull_request.merged_at }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Next: trigger \`/summary-back-to-vault\` in Claude Code locally." >> "$GITHUB_STEP_SUMMARY"
