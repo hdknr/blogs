@@ -5,8 +5,9 @@ lastmod: 2026-05-21
 slug: "bytedance-ui-tars-desktop-ai-agent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4504061323"
+description: "ByteDanceが公開したオープンソースAIエージェントUI-TARS-desktopの全機能を解説。PC画面を視覚的に認識して自律操作するAgent TARSとUI-TARS Desktopの仕組み、MCP統合、インストール方法をまとめます。"
 categories: ["AI/LLM"]
-tags: ["ByteDance", "AIエージェント", "GUI自動化", "マルチモーダルAI", "オープンソース"]
+tags: ["AIエージェント", "GUI自動化", "マルチモーダルAI", "mcp", "agent"]
 ---
 
 TikTokの親会社として知られるByteDanceが、オープンソースのマルチモーダルAIエージェントスタック「**UI-TARS-desktop**」を公開した。GitHub上でスター数が3万5千を超えており、「PC画面を直接見て操作するAI」という次世代のコンピュータ操作パラダイムを提示している。
