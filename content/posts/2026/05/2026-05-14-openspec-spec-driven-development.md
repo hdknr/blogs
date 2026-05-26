@@ -174,37 +174,33 @@ docs/
 
 つまり「OpenSpec をフレームワークとして導入する」より、**「OpenSpec の構造を mkdocs 上で真似る」** ほうが、すでに docs/ 運用が回っているプロジェクトには合っている。OpenSpec を導入するかどうかの判断は「フレームワークを入れるか」ではなく、「変更単位の隔離と why/what/how/do の物理分離を、自分のプロジェクトに取り込むか」で考えるとよい。
 
-### 実践例: docs/ 初期化用 GitHub Issue テンプレート
+### 実践例: docs-structure.md + GitHub Issue で初期化する
 
 mkdocs ベースで開発を始めるとき、リポジトリ作成直後の典型的なフローはこうなる。
 
 1. main ブランチで `PLAN.md` にプロジェクトの目的・手段・要件を記載
-2. GitHub Issue で「docs/ 以下に mkdocs で仕様書を作ってください」を立てる
-3. AI コーディングアシスタントに着手させる
+2. リポジトリルートに **`docs-structure.md`** を置いてルールを定義
+3. GitHub Issue は「`docs-structure.md` に従って docs/ を作って」と一行で立てる
+4. AI コーディングアシスタントに着手させる
 
-このときの Issue 本文を、本記事のプラクティス(変更単位の隔離 + why/what/how/do の物理分離 + AI コンテキスト戦略の標準化)を織り込んだ形にすると、以下のようになる。
+**ポイントは「規約はリポジトリに、依頼は短く」**。Issue にルール全文を毎回コピペするのではなく、リポジトリ内の固定ファイルとして外出しする。これは `CLAUDE.md` / `AGENTS.md` / `openspec/AGENTS.md` と同じパターンで、
+
+- 1箇所更新すれば全 Issue に伝播
+- AI コーディングアシスタントが固定パスでコンテキストに投入できる
+- `git log` で規約自体の変遷も追える
+- Issue が肥大化しない
+
+という利点がある。
+
+#### ① リポジトリルートに置く `docs-structure.md`
 
 ````markdown
-## 概要
+# docs-structure.md — 仕様書ディレクトリの規約
 
-本プロジェクトに mkdocs ベースの仕様書環境を初期化する。
-OpenSpec の構造を docs/ 上で再現し、AI コーディングアシスタントが
-「コンテキストクリア → 該当 change だけ読む」運用を可能にすることを目的とする。
+このリポジトリの `docs/` は mkdocs + 以下のルールで運用する。
+新規プロジェクト初期化時、および新機能追加時はこのファイルに従うこと。
 
-## 前提
-
-- `PLAN.md` にプロジェクトの目的・手段・要件は記載済み
-- main ブランチで作業開始
-- mkdocs-material を採用
-
-## 成果物
-
-### 1. mkdocs プロジェクト初期化
-- [ ] `pip install mkdocs mkdocs-material` を README に追記
-- [ ] `mkdocs.yml` をプロジェクト直下に作成
-- [ ] `mkdocs serve` でローカルプレビュー可能にする
-
-### 2. ディレクトリ構造の初期化
+## ディレクトリ構造
 
 ```text
 docs/
@@ -221,60 +217,35 @@ docs/
     └── .gitkeep
 ```
 
-### 3. テンプレート (`docs/changes/_template/`)
+## アーティファクトの責務
 
-**proposal.md** (なぜやるか / 何が変わるか)
+| ファイル | 役割 | 書く内容 |
+|---|---|---|
+| `proposal.md` | Why | 背景・課題、提案する変更、スコープ外、関連 issue/PR |
+| `design.md` | How | 採用するアプローチ、代替案と却下理由、依存・前提、影響範囲 |
+| `tasks.md` | Do | 実装チェックリスト(`- [ ]` 形式、機械可読) |
+| `specs/` 配下 | What(最新の正) | 合意済みの要件・仕様 |
 
-```markdown
-# Proposal: <feature-name>
+1ファイル内で why/how/do を混在させない。
 
-## 背景・課題
-## 提案する変更
-## スコープ外
-## 関連 issue / PR
-```
+## 運用フロー
 
-**design.md** (どう実現するか)
+1. 新機能を追加するときは `docs/changes/YYYY-MM-DD-<feature>/` を作り、`_template/` からコピーする
+2. **proposal → design → tasks の順で人間がレビュー**してから実装に入る
+3. 実装完了後、当該ディレクトリを `docs/changes/archive/` に移送し、`docs/specs/` を更新する
+4. AI に作業させるときは **「該当 change のディレクトリだけ」をコンテキストに入れる**(他の change のファイルは読ませない)
+5. `docs/specs/` は常に「最新の正」のみを置く。履歴は archive と git に任せる
 
-```markdown
-# Design: <feature-name>
+## 初期化時の受け入れ条件
 
-## 採用するアプローチ
-## 代替案と却下理由
-## 依存・前提
-## 影響範囲(変更ファイル / API / DB)
-```
-
-**tasks.md** (何をやるか・チェックリスト)
-
-```markdown
-# Tasks: <feature-name>
-
-- [ ] 1.1 ...
-- [ ] 1.2 ...
-- [ ] 2.1 ...
-```
-
-### 4. 運用ルールを `CONTRIBUTING.md` に追記
-
-- 新機能を追加するときは `docs/changes/YYYY-MM-DD-<feature>/` を作り `_template/` からコピーする
-- **proposal → design → tasks の順で人間がレビュー**してから実装に入る
-- 実装完了後は当該ディレクトリを `docs/changes/archive/` に移送し、`docs/specs/` を更新する
-- AI に作業させるときは **「該当 change のディレクトリだけ」をコンテキストに入れる**運用を徹底する
-- `docs/specs/` は常に「最新の正」のみを置く(履歴は archive と git に任せる)
-
-### 5. CI チェック(任意)
-- [ ] `mkdocs build --strict` を CI に追加
-- [ ] markdown lint (markdownlint-cli2 など)
-
-## 受け入れ条件
-
+- [ ] `pip install mkdocs mkdocs-material` の手順が README にある
+- [ ] `mkdocs.yml` がプロジェクト直下にある
 - [ ] `mkdocs serve` でローカル閲覧できる
 - [ ] `docs/specs/` `docs/changes/` `docs/changes/archive/` `docs/changes/_template/` が初期化されている
 - [ ] `_template/` に proposal.md / design.md / tasks.md が配置されている
-- [ ] `CONTRIBUTING.md` に運用ルールが記載されている
+- [ ] (任意) `mkdocs build --strict` が CI に組み込まれている
 
-## 補足: なぜこの構造にするのか
+## なぜこの構造にするのか
 
 - **変更単位の物理隔離** — 並行開発で AI が読むべき範囲が `docs/changes/<feature>/` に絞られる
 - **why/what/how/do の分離** — 1ファイル混在による AI の混乱を防ぐ
@@ -282,7 +253,30 @@ docs/
 - 履歴は git の commit log・PR・issue で十分残るため、archive は AI から読みやすい位置に固定する目的に絞る
 ````
 
-この Issue を最初に立てておくと、後続の「機能 X を追加」系の Issue も同じ枠で運用できる。プロジェクトが育っても OpenSpec を導入するかどうかは選択肢として残しつつ、AI コーディング時代の最低限の構造は最初から確保できる。
+#### ② GitHub Issue 本文(短縮版)
+
+```markdown
+## 課題
+`docs-structure.md` のルールに従って、`docs/` 以下に mkdocs で仕様書を作ってください。
+
+## 前提
+- `PLAN.md` にプロジェクトの目的・手段・要件は記載済み
+- main ブランチで作業
+
+## 完了条件
+- [ ] `docs-structure.md` の「初期化時の受け入れ条件」をすべて満たしている
+- [ ] PR を出す
+```
+
+Issue はこれだけ。後続の「機能 X を追加」系の Issue も「`docs-structure.md` に従って `docs/changes/YYYY-MM-DD-feature-x/` を作って」の一行で発注できる。
+
+#### 注意点
+
+- **`docs-structure.md` 自体が「契約」になる**ので、曖昧さは AI が文字通り解釈して事故る。受け入れ条件は機械的に判定できる形で書く
+- **`PLAN.md` と `docs-structure.md` の責務分離を明確に** — `PLAN.md` は「何を作るか」、`docs-structure.md` は「どう書くか」
+- 後から OpenSpec を導入する場合も、`docs-structure.md` は `openspec/AGENTS.md` に変換しやすい
+
+この形にしておくと、プロジェクトが育っても OpenSpec を導入するかどうかは選択肢として残しつつ、AI コーディング時代の最低限の構造は最初から確保できる。
 
 ## まとめ
 
