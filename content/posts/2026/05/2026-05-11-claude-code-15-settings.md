@@ -1,7 +1,7 @@
 ---
 title: "ほとんどの人が知らない Claude Code の 15 設定 — 思考深度デフォルト変更の真相と本来の性能を取り戻す方法"
 date: 2026-05-11
-lastmod: 2026-05-11
+lastmod: 2026-05-26
 slug: "claude-code-15-settings"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4424520058"
@@ -238,6 +238,41 @@ claude -p "auth モジュールをリファクタ" --max-budget-usd 5.00
 
 接続中のサーバーと各サーバーがロードするツール数を確認する。積極的に使っていないサーバーは削除する。1 サーバー削除するだけでセッションあたり数千トークンを節約できる。
 
+## アカウント設定とプロジェクト設定の使い分け
+
+15 の設定は性質が混在している。1 つの `settings.json` に全部押し込むのではなく、**「個人の好み」と「プロジェクト固有」で分ける**のが運用上の正解だ。
+
+Claude Code の設定ファイルには 2 つのスコープがある。
+
+- **アカウントレベル：** `~/.claude/settings.json`（および `~/.zshrc` / `~/.bashrc` 内の環境変数）
+- **プロジェクトレベル：** リポジトリ直下の `.claude/settings.json`
+
+両方が存在する場合、プロジェクト側がアカウント側を上書きする。各設定の推奨配置は次の通り。
+
+| # | 設定 | 推奨配置 | 理由 |
+|---|---|---|---|
+| 1 | `CLAUDE_CODE_EFFORT_LEVEL=high` | アカウント (`~/.zshrc`) | 思考深度は個人の好み・全プロジェクト共通 |
+| 2 | `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1` | アカウント (`~/.zshrc`) | 同上 |
+| 3 | `defaultMode` | アカウント (`~/.claude/settings.json`) | 個人の作業スタイル |
+| 4 | allow / deny ルール | **両方** | `.env` / `.ssh` の deny はアカウント、`npm run *` などプロジェクト依存の allow は `.claude/settings.json` |
+| 5 | `/model` 切替 | セッション内コマンド | 設定ファイル不要 |
+| 6 | `/compact` カスタム指示 | セッション内コマンド | 設定ファイル不要 |
+| 7 | `/memory` | プロジェクト固有 | リポジトリの慣習を記録するため |
+| 8 | フォーマット用 Hooks (prettier 等) | プロジェクト (`.claude/settings.json`) | フォーマッタはプロジェクト依存 |
+| 9 | ログ前処理 Hooks | プロジェクト (`.claude/settings.json`) | ログ形式はプロジェクト依存 |
+| 10 | `claude -w`（worktree） | 起動フラグ | 設定ファイル不要 |
+| 11 | `claude --bare` | 起動フラグ | 設定ファイル不要 |
+| 12 | `--max-budget-usd` | 起動フラグ | タスク単位で指定 |
+| 13 | `showThinkingSummaries` | アカウント (`~/.claude/settings.json`) | 個人の表示好み |
+| 14 | サブエージェント数の制限 | プロンプト内で指定 | タスクごとに調整 |
+| 15 | MCP サーバーの整理 | プロジェクト (`.mcp.json` / `.claude/settings.json`) | プロジェクトごとに必要な MCP は異なる |
+
+### 切り分けの原則
+
+- **「自分のマシンならどのプロジェクトでも欲しい」→ アカウント** （思考深度・基本 deny ルール・表示設定）
+- **「このリポジトリでだけ意味がある」→ プロジェクト** （prettier hooks・プロジェクト固有の allow ルール・MCP サーバー）
+- **秘密情報の deny ルール** は両方に書く価値がある（多重防御）。アカウント側に書いておけばリポジトリをまたいでも `.env` / `.ssh` / `.aws` を守れるし、プロジェクト側にも書けばチームで共有できる。
+
 ## 1 分でできる基本設定
 
 まず `.zshrc` または `.bashrc` に以下の 2 行を追記してリロードする。
@@ -247,6 +282,7 @@ export CLAUDE_CODE_EFFORT_LEVEL=high
 export CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1
 ```
 
-次に `settings.json` に permission ルールと hooks を追記する（設定 3・4・8 を参照）。
+次に `~/.claude/settings.json`（アカウント）に permission のデフォルトモードと共通 deny ルールを書く（設定 3・4 を参照）。
+プロジェクト固有の allow ルールやフォーマッタ hook は、リポジトリ直下の `.claude/settings.json` に分けて書く（設定 4・8 を参照）。
 
-環境変数 2 本 + 設定ファイル 1 枚。それが Claude Code を「自分の邪魔をするツール」から「自分のために動くツール」に変える分岐点だ。
+環境変数 2 本 + アカウント設定 1 枚 + プロジェクト設定 1 枚。それが Claude Code を「自分の邪魔をするツール」から「自分のために動くツール」に変える分岐点だ。
