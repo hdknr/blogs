@@ -174,6 +174,116 @@ docs/
 
 つまり「OpenSpec をフレームワークとして導入する」より、**「OpenSpec の構造を mkdocs 上で真似る」** ほうが、すでに docs/ 運用が回っているプロジェクトには合っている。OpenSpec を導入するかどうかの判断は「フレームワークを入れるか」ではなく、「変更単位の隔離と why/what/how/do の物理分離を、自分のプロジェクトに取り込むか」で考えるとよい。
 
+### 実践例: docs/ 初期化用 GitHub Issue テンプレート
+
+mkdocs ベースで開発を始めるとき、リポジトリ作成直後の典型的なフローはこうなる。
+
+1. main ブランチで `PLAN.md` にプロジェクトの目的・手段・要件を記載
+2. GitHub Issue で「docs/ 以下に mkdocs で仕様書を作ってください」を立てる
+3. AI コーディングアシスタントに着手させる
+
+このときの Issue 本文を、本記事のプラクティス(変更単位の隔離 + why/what/how/do の物理分離 + AI コンテキスト戦略の標準化)を織り込んだ形にすると、以下のようになる。
+
+````markdown
+## 概要
+
+本プロジェクトに mkdocs ベースの仕様書環境を初期化する。
+OpenSpec の構造を docs/ 上で再現し、AI コーディングアシスタントが
+「コンテキストクリア → 該当 change だけ読む」運用を可能にすることを目的とする。
+
+## 前提
+
+- `PLAN.md` にプロジェクトの目的・手段・要件は記載済み
+- main ブランチで作業開始
+- mkdocs-material を採用
+
+## 成果物
+
+### 1. mkdocs プロジェクト初期化
+- [ ] `pip install mkdocs mkdocs-material` を README に追記
+- [ ] `mkdocs.yml` をプロジェクト直下に作成
+- [ ] `mkdocs serve` でローカルプレビュー可能にする
+
+### 2. ディレクトリ構造の初期化
+
+```text
+docs/
+├── index.md           # PLAN.md の要約を載せる
+├── specs/             # 合意済みの「最新の正」を集約
+│   └── .gitkeep
+└── changes/
+    ├── _template/     # 新規 change 作成時にコピーする雛形
+    │   ├── proposal.md
+    │   ├── design.md
+    │   └── tasks.md
+    ├── archive/       # 実装完了した change の保管先
+    │   └── .gitkeep
+    └── .gitkeep
+```
+
+### 3. テンプレート (`docs/changes/_template/`)
+
+**proposal.md** (なぜやるか / 何が変わるか)
+
+```markdown
+# Proposal: <feature-name>
+
+## 背景・課題
+## 提案する変更
+## スコープ外
+## 関連 issue / PR
+```
+
+**design.md** (どう実現するか)
+
+```markdown
+# Design: <feature-name>
+
+## 採用するアプローチ
+## 代替案と却下理由
+## 依存・前提
+## 影響範囲(変更ファイル / API / DB)
+```
+
+**tasks.md** (何をやるか・チェックリスト)
+
+```markdown
+# Tasks: <feature-name>
+
+- [ ] 1.1 ...
+- [ ] 1.2 ...
+- [ ] 2.1 ...
+```
+
+### 4. 運用ルールを `CONTRIBUTING.md` に追記
+
+- 新機能を追加するときは `docs/changes/YYYY-MM-DD-<feature>/` を作り `_template/` からコピーする
+- **proposal → design → tasks の順で人間がレビュー**してから実装に入る
+- 実装完了後は当該ディレクトリを `docs/changes/archive/` に移送し、`docs/specs/` を更新する
+- AI に作業させるときは **「該当 change のディレクトリだけ」をコンテキストに入れる**運用を徹底する
+- `docs/specs/` は常に「最新の正」のみを置く(履歴は archive と git に任せる)
+
+### 5. CI チェック(任意)
+- [ ] `mkdocs build --strict` を CI に追加
+- [ ] markdown lint (markdownlint-cli2 など)
+
+## 受け入れ条件
+
+- [ ] `mkdocs serve` でローカル閲覧できる
+- [ ] `docs/specs/` `docs/changes/` `docs/changes/archive/` `docs/changes/_template/` が初期化されている
+- [ ] `_template/` に proposal.md / design.md / tasks.md が配置されている
+- [ ] `CONTRIBUTING.md` に運用ルールが記載されている
+
+## 補足: なぜこの構造にするのか
+
+- **変更単位の物理隔離** — 並行開発で AI が読むべき範囲が `docs/changes/<feature>/` に絞られる
+- **why/what/how/do の分離** — 1ファイル混在による AI の混乱を防ぐ
+- **コンテキスト戦略の標準化** — 「change ディレクトリだけ読ませる」が運用ルールとして明文化される
+- 履歴は git の commit log・PR・issue で十分残るため、archive は AI から読みやすい位置に固定する目的に絞る
+````
+
+この Issue を最初に立てておくと、後続の「機能 X を追加」系の Issue も同じ枠で運用できる。プロジェクトが育っても OpenSpec を導入するかどうかは選択肢として残しつつ、AI コーディング時代の最低限の構造は最初から確保できる。
+
 ## まとめ
 
 | ポイント | 内容 |
