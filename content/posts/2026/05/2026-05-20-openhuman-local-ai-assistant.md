@@ -1,14 +1,16 @@
 ---
 title: "OpenHuman — 完全ローカルで動くパーソナルAIアシスタント：プライバシー最優先でChatGPT級の体験を自分のPCで"
 date: 2026-05-20
-lastmod: 2026-05-20
+lastmod: 2026-05-27
 slug: "openhuman-local-ai-assistant"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4494575313"
-description: "OpenHumanはRust製オープンソースのローカルAIアシスタント。Memory Tree・Ollama連携・118サービスAuto-fetchでChatGPT級の体験を完全ローカルで実現する。"
+description: "OpenHumanはRust製オープンソースのローカルAIアシスタント。Memory Tree・Ollama連携・118サービスAuto-fetchでChatGPT級の体験を実現する。ただしデフォルト構成ではTinyHumansへのサブスク課金が前提で、本当に「完全ローカル」にするには追加設定が必要——その構造を解説。"
 categories: ["AI/LLM"]
-tags: ["OpenHuman", "ローカルAI", "ollama", "AIエージェント", "プライバシー"]
+tags: ["OpenHuman", "ローカルAI", "ollama", "AIエージェント", "プライバシー", "TinyHumans"]
 ---
+
+> **2026-05-27 追記**: 実際にインストールしてみたところ、デフォルトのままでは TinyHumans へのサブスク課金（=有料アカウント）が必要なことが判明した。GPL-3 のオープンソースなのになぜ有料なのか、本記事に「[なぜ TinyHumans への課金が必要なのか](#なぜ-tinyhumans-への課金が必要なのか--オープンソースなのに有料な構造の正体)」セクションを追加した。「完全ローカル」を額面どおりに実現するための回避ルートも併記している。
 
 「クラウドAIに自分の悩みを打ち明けるのが不安」という声をよく聞く。仕事の機密、家族の話、健康上の悩み——ChatGPTに投げてはみるものの、その会話がサーバーに残り続けることへの抵抗感は根強い。
 
@@ -36,12 +38,12 @@ ChatGPTをはじめとするクラウドAIの課題は、会話が外部サー�
 
 OpenHumanが解決しようとしているのはこの点だ。
 
-- **会話が外に出ない** — ローカルLLM（Ollama経由）を選べば推論まで完結する
-- **自分のPCだけで動く** — プライバシー最優先の設計思想
+- **会話を外に出さない構成が選べる** — ローカルLLM（Ollama / LM Studio経由）を選択すれば推論まで自機で完結する
+- **データは自分のPCに保存される** — Memory Tree DB と Markdown Vault はローカルファイルとして残る
 - **日本語README完備** — 日本語ユーザーへの配慮も行き届いている
 - **Rust製で爆速** — コアがRustで書かれており、動作が軽快
 
-もちろん、デフォルト構成ではモデルルーティングやOAuth連携の一部にOpenHuman側のマネージドバックエンドを使う。完全オフラインにしたい場合はローカルモデルとComposio直接モードを組み合わせる設定が必要だ。
+ただし注意点がある。**デフォルト構成では「サインイン」「モデルルーティング」「Web検索プロキシ」「Composio経由のOAuth/ツール連携」がすべてOpenHuman（TinyHumans）社のマネージドバックエンドを経由する**。つまり初回起動時に TinyHumans アカウントを作って有料サブスクに入らないと、せっかくのMemory TreeもAuto-fetchも動かない。「完全オフライン」を額面どおりに実現するには、ローカルモデル＋Composio直接モード＋自前のWeb検索APIキー、といった追加設定が必要になる。詳細は後述する。
 
 ## 主な機能
 
@@ -136,10 +138,79 @@ pnpm dev
 pnpm --filter openhuman-app dev:app
 ```
 
+## なぜ TinyHumans への課金が必要なのか — オープンソースなのに有料な構造の正体
+
+実際にインストールしてみるとすぐに気付くのが、初回起動で「Sign in! Let's Cook」というサインイン画面が出てくることだ。READMEには **「One subscription includes all models」**（ひとつのサブスクで全モデル込み）とサラッと書いてあり、その「ひとつのサブスク」がTinyHumansへの月額課金を指している。
+
+GitHubのREADME（[tinyhumansai/openhuman](https://github.com/tinyhumansai/openhuman)）と公式ドキュメントを読み込むと、課金が必要な理由は4つに整理できる。
+
+### 1. 30以上のLLMプロバイダーをまとめて請求するため
+
+OpenHumanのモデルルーティング機能は、タスクのヒント（`reasoning` / `fast` / `vision`）に応じて Claude・GPT-4o・Gemini・Llama などを自動で切り替える。これを自前で構築するには、Anthropic・OpenAI・Google・Cohere・Mistral……と**個別にAPIキーを発行して個別に課金カードを登録**する必要がある。
+
+TinyHumansはこれを**「30+ providers needed to build your AI assistant」**として束ね、1枚のサブスクで全プロバイダーへ送るプロキシを担っている。実態は LLM 課金のアグリゲーター／プロキシだ。利用者から見れば「課金カード1枚で全モデル」、TinyHumans から見れば「ユーザーに代わって裏で各社へ支払い、その差額＋取扱手数料で食う」というビジネスモデルになっている。
+
+### 2. Composio（118連携の本体）への支払いを巻き取るため
+
+Gmail / Notion / GitHub / Slack ……といった118以上のOAuth連携は、OpenHumanが自前で書いているわけではなく、[Composio](https://composio.dev/) というSaaSにOAuth ハンドシェイクとツール呼び出しを委譲している。Composio自体が有料サービスであり、そのコストはTinyHumansのサブスクに含まれる。
+
+「Composio直接モード」を選べば自分のComposio APIキーで動かせる代わりに、**今度はComposioに直接課金が発生する**。OpenHumanへの課金を回避してもComposio側の課金は残るので、無料化したいなら連携の数を絞るか、OAuth連携自体を諦めるしかない。
+
+### 3. リアルタイムWebhookの受け口がクラウド前提だから
+
+Auto-fetch を「20分ごとのポーリング」だけで使うなら自宅PCで完結する。しかし Gmail の新着メールや GitHub のPRイベントを**リアルタイムで拾う「triggers」**機能は、外部サービスからのwebhookを受け取る公開URLが必要になる。デスクトップアプリ単体ではNAT越えできないため、TinyHumans のクラウドが webhook 受信エンドポイントを代行する。
+
+公式ドキュメントは Composio 直接モードでも明示している。
+
+> If you want to run Composio directly instead, configure direct mode with your own Composio API key; **real-time trigger webhooks then need to be hosted and wired by you.**
+
+「自分でWebhook受信サーバを立てて、Composioに登録して、ngrokなりCloudflare Tunnelなりで繋いでください」と。自前ホスティングできるユーザーは少ないので、現実的にはTinyHumansに課金して任せたほうが楽——というのが製品設計上の落とし所になっている。
+
+### 4. ライセンスと商用モデルが分離されている（GPL-3 + Managed Service モデル）
+
+OpenHumanのソースコードは **GPL-3.0** で公開されており、誰でも fork して自前ビルドできる。ただし「コードが自由」と「マネージドサービスが無料」はイコールではない。これは Mattermost / Cal.com / Plausible / Supabase など近年のOSS製品で一般化したパターンで、
+
+- **コード（フロント＋ローカルランタイム）= GPL-3 で公開**
+- **裏側のSaaS（モデル仲介・OAuth代行・Webhook 受信）= 商用サブスク**
+
+という二層構造になっている。OSSとして検証可能・自前ホスト可能であることを担保しつつ、開発の財布はマネージドサービスで持つ、というハイブリッドだ。「Open source」「Local-first」「Private」というキーワードと、「Sign in to start」「Subscription required」のあいだのギャップはここから生まれる。
+
+### 課金を回避して本当に「完全ローカル」で動かす設定
+
+GPL-3 のおかげで、覚悟があれば課金ゼロ運用は可能だ。必要な設定をまとめると次のようになる。
+
+| レイヤー | デフォルト（要課金） | 完全ローカル化の代替 |
+|---------|---------------------|---------------------|
+| 認証 | TinyHumans アカウントでサインイン | 自前ビルド＋サインインスキップ（ソース改変 or 設定で `local-only` モード） |
+| Chat / Reasoning LLM | TinyHumans プロキシ経由（Claude / GPT 等） | Ollama / LM Studio のローカルモデル（Llama 3.1 8B、Qwen2.5 14B など） |
+| Embeddings / Memory Tree要約 | プロキシ経由 | Ollama に `all-minilm` と `gemma3:1b-it-qat` を pull |
+| Web検索 | TinyHumans 経由のプロキシ | 自前で Brave Search / SearXNG / Tavily の APIキーを設定 |
+| OAuth連携 | Composio（TinyHumans経由） | Composio 直接モード（要自前APIキー）または OAuth連携を捨てる |
+| リアルタイムtrigger | TinyHumans クラウドが受信 | 自前Webhookサーバ＋トンネリング、または triggers を諦める |
+
+設定の手間と、Composio直接モードでのComposio側課金、Webhookホスティング費を考えると、**「完全に無料・完全にローカル」を選んだ瞬間、エンタープライズ向けセルフホスト製品を1人で運用するのと同じ複雑度**になる。これがTinyHumansが「一回課金してくれれば全部やる」と提示する価値の本体だ。
+
+### 「Local-First」の正しい読み方
+
+OpenHumanのマーケティング表現は「Local-first」であって「Local-only」ではない、と読むのが正確だ。
+
+- **Local-first**: あなたのデータ（Memory Tree DB / Obsidian Vault / 会話履歴）は**あなたのマシン**に保存される。再起動・OS再インストール・サブスク解約後も手元に残る。
+- **そのうえで** モデル推論・OAuth・Web検索といった**外部API呼び出しのプロキシは TinyHumans 経由**になっており、その費用がサブスクとして請求される。
+
+「会話そのものが TinyHumans のサーバを通る（プロキシされる）」点は重要で、ローカルLLMを選ばない限り**プロンプト本文はTinyHumansを経由して各LLMプロバイダーに転送される**。Anthropic や OpenAI に直接送るのと、TinyHumans を一段挟むのとでは、リスクモデルが変わることに注意したい。
+
 ## まとめ
 
 OpenHumanは「クラウドAIに頼らずに、自分専用のAIアシスタントを持ちたい」というニーズに対する現時点での最も完成度の高い回答のひとつだ。
 
 Memory Tree・Auto-fetch・TokenJuiceという3つの機能が組み合わさることで、「インストールしたその日からコンテキストを持ったAI」が実現する。アーリーベータの荒削りさはあるものの、週1,000スター超のペースは本物の需要を反映している。
 
-プライバシーを重視するユーザーや、企業の機密情報をクラウドへ出したくないチームにとって、OpenHumanは試す価値のある選択肢だ。
+ただし**製品としてのデフォルト体験は TinyHumans への有料サブスクが前提**だ。「OSS だから無料で完全ローカル」とそのまま受け取ると期待外れになる。実態は、
+
+- **コード**: GPL-3 で完全オープン、自前ビルド・自前ホスト可能
+- **既定運用**: TinyHumans のマネージドSaaSに月額を払い、30+ LLMプロバイダーと118 OAuth連携をひとまとめにする「課金一本化サービス」
+- **本気の完全ローカル**: 可能だが、Composio直接モード／自前Webhook／ローカルLLM／自前検索APIまで揃える必要があり、複雑度が一気に上がる
+
+という三段階の選択肢があるOSS+SaaSハイブリッド製品、と理解するのが正しい。
+
+プライバシーを重視するユーザーや、企業の機密情報をクラウドへ出したくないチームにとって、OpenHumanは試す価値のある選択肢だ。ただし試す前に、自分が払える「複雑度の予算」と「金額の予算」を見極めておくと、起動して即「サインインしてください」「Subscribeしてください」と出てきても落胆せずに済む。
