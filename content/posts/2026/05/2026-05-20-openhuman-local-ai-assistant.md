@@ -71,6 +71,20 @@ OpenHumanにはAIに「顔」がある。デスクトップ上に常駐するマ
 
 OpenHumanの単一プランの中で、タスクに応じて推論・高速・ビジョンなど複数のLLMを自動選択する。Ollamaを使ったローカルAIも選択肢のひとつとして統合されている。
 
+#### 「ローカルLLM」の中身
+
+OpenHuman自身はモデルweightsを同梱せず、**OllamaまたはLM Studioにpullを委譲する**設計だ。公式ドキュメント（[Local AI](https://tinyhumans.gitbook.io/openhuman/features/model-routing/local-ai)）でデフォルト/推奨として挙げられているモデルは次のとおり。
+
+| 用途 | デフォルト/推奨モデル | サイズ |
+|------|---------------------|--------|
+| Memory embeddings（記憶の埋め込み） | `all-minilm:latest` | 約23 MB |
+| Summary-tree 構築（Memory Tree要約） | `gemma3:1b-it-qat` | 約700 MB |
+| Chat / Reasoning | ユーザー設定（既定なし） | — |
+
+チャット推論用のモデルは固定されておらず、ドキュメントの設定例では `ollama:llama3.1:8b` や `ollama:qwen2.5:14b` といった指定が示されている。つまり「ローカルLLM」の正体は、埋め込みに all-MiniLM、Memory Tree の階層要約に Google の Gemma 3 1B 量子化版が使われ、チャットは Llama 3.1 8B や Qwen2.5 14B などユーザーが pull した小〜中型モデルに委ねる構成だ。
+
+「ChatGPT級のローカル体験」と謳われるが、実態は**フロンティアモデル級の推論性能を1台のPCで再現するのではなく、Memory Tree・Auto-fetch・TokenJuiceでコンテキストを最大化し、小型モデルでも実用ラインに引き上げる**というアプローチに近い。
+
 ## 他のAIアシスタントとの比較
 
 以下は、公式READMEが競合として挙げているClaude Cowork（AnthropicのデスクトップAIエージェント製品。コーディングアシスタントのClaude Codeとは別製品）との比較だ。
