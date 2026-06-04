@@ -155,7 +155,41 @@ hbspt.forms.create({
 | 公開 URL | 接続済みドメインで公開し、スラッグを確定（LIFF エンドポイントになるため後から変えない） |
 | 検索エンジン | 「インデックスさせない」を推奨（LINE 限定配布のため）。sitemap からも除外 |
 | Cookie 同意バナー | LIFF ブラウザ内でも表示される。回答の妨げになる場合は調整 |
-| 流入計測 | `https://liff.line.me/{liffId}?utm_source=line&utm_medium=broadcast` のようにクエリを付けると LIFF がエンドポイント URL に引き継ぐため、UTM 計測がそのまま効く |
+| 流入計測 | `https://liff.line.me/{liffId}?utm_source=line&utm_medium=broadcast` のようにクエリを付けると LIFF がエンドポイント URL に引き継ぐため、UTM 計測がそのまま効く（[LIFF アプリを開く](https://developers.line.biz/ja/docs/liff/opening-liff-app/)の 2 次リダイレクト仕様） |
+
+## 運用: アンケート LP を追加するときの作業
+
+2 本目以降の LP を追加する際は、初回構築時の資産の大半をそのまま再利用できます。
+
+| 資産 | 再利用できる理由 |
+|---|---|
+| LINE Login チャネル | チャネル 1 つに複数の LIFF アプリを登録できる |
+| `line_user_id` カスタムプロパティ | コンタクト共通のプロパティなので 1 回作れば終わり |
+| CMS テーマのモジュール | `liffId` / `formId` をモジュールフィールドにしてあればコード変更ゼロ |
+
+LP 追加ごとの作業は「実装手順」の縮小版になります。
+
+1. フォーム作成（`line_user_id` hidden + email 必須）
+2. LP 作成・公開（モジュールの `liffId` は空のまま → URL を確定）
+3. `POST /liff/v1/apps` に手順 2 の URL を渡して新しい `liffId` を取得
+4. モジュールに `liffId` / `formId` を設定して再公開
+5. `https://liff.line.me/{liffId}` から E2E 確認
+
+手動が必須なのは HubSpot 上のフォーム・LP 作成くらいで、手順 3 はトークン発行 → アプリ作成のスクリプトを 1 本用意しておけばワンコマンド化できます。
+
+### 共有 LIFF アプリ方式 — LIFF を LP ごとに増やさない選択肢
+
+LIFF URL には追加のパスやクエリを付けられ、[2 次リダイレクト先 URL](https://developers.line.biz/ja/docs/liff/opening-liff-app/) は「エンドポイント URL のドメイン + エンドポイント URL のパス/クエリ + LIFF URL の追加情報」を連結した URL になります。たとえばエンドポイント URL が `https://example.com` なら、`https://liff.line.me/{liffId}/lp-2/` は `https://example.com/lp-2/` を開きます。
+
+これを使うと、エンドポイント URL を LP 共通のベースパスにした **共有 LIFF アプリを 1 つ**だけ作り、LP 追加時は手順 3〜4 を丸ごと省略して「フォーム + LP を作って配布 URL のパスを変えるだけ」にできます。
+
+ただしトレードオフもあります。
+
+- **エンドポイント URL のページにも LIFF SDK + `liff.init()` が必要** — 追加パスは一旦 `liff.state` クエリとしてエンドポイント URL に渡り、`liff.init()` が 2 次リダイレクトを実行する仕組みのため、エンドポイント直下のページが LIFF 初期化を行わないと LP まで到達しない
+- `scope` や `botPrompt` などの設定が全 LP で共通になる
+- LIFF 単位での出し分け・差し替え（特定アンケートだけ URL を無効化する等）ができなくなる
+
+アンケートを頻繁に増やす運用なら共有 LIFF 方式、LP ごとに挙動を変えたいなら「1 LP = 1 LIFF」が向いています。
 
 ## この方式の制約
 
@@ -179,6 +213,7 @@ hbspt.forms.create({
 - LINE 友だちと HubSpot リードの紐づけは、**LIFF で userId をフォームの hidden フィールドに同乗させる**のが最小構成
 - LP・フォームとも HubSpot ネイティブで完結し、**追加サーバー不要**
 - 手動作業は LINE Login チャネル作成の 1 回だけ。LIFF の作成・管理は API で自動化できる
+- LP の追加はフォーム + LP の作成だけ。LIFF は API でワンコマンド追加するか、共有 LIFF + パス連結で省略できる
 - **同一プロバイダー**と**チャネル公開**の 2 点だけは絶対に外さないこと
 
 ## 参考リンク
