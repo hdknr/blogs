@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="guardrails" name="cost-guardrails">
+    <mxGraphModel dx="1100" dy="720" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Claude Platform on AWS の課金ガードレール" style="text;html=1;align=center;fontSize=18;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="500" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dev" value="開発者 / Claude Code&#10;（ループ・暴走の可能性）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cp" value="Claude Platform on AWS&#10;（Anthropic Messages API）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="90" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ratelimit" value="① Rate Limit（Tier 1）&#10;1分あたりトークン/リクエスト上限&#10;= 物理的なスピードキャップ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="200" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mp" value="AWS Marketplace 課金&#10;（CCU・従量 / 後払い）&#10;Spend Limit は提供されない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="90" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="budget" value="② AWS Budgets&#10;80% / 100% 到達でメール・Slack 通知&#10;※ 自動遮断は不可（アラートのみ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="220" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="bedrock" value="厳格に止めたい場合の選択肢：Amazon Bedrock&#10;Budget Actions → SCP/IAM 適用、または Lambda で IAM 権限剥奪 → 物理的に強制停止" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="400" width="780" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#6c8ebf;" edge="1" parent="1" source="dev" target="cp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#82b366;" edge="1" parent="1" source="cp" target="ratelimit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#b85450;" edge="1" parent="1" source="cp" target="mp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#d6b656;" edge="1" parent="1" source="mp" target="budget">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
