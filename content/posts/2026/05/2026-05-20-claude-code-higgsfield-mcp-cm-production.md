@@ -79,6 +79,43 @@ claude mcp list
 
 Higgsfield のプラットフォーム上では `higgsfield.ai/seedance/2.0` からアクセスでき、MCP 経由でも呼び出せる。
 
+## Higgsfield と Adobe Firefly — 対応AIの違い
+
+「複数の生成AIを単一インターフェースから呼び出す」という発想自体は、Higgsfield の専売特許ではない。Adobe も **Firefly** を「全部入りのクリエイティブAIスタジオ」として再設計し、自社モデルに加えて多数のパートナーモデルを束ねている。両者は同じ「アグリゲーター型」でありながら、**取り込むモデルの系統がほぼ正反対**だ。
+
+### 動画生成モデル
+
+| モデル | Higgsfield | Adobe Firefly |
+|------|:---:|:---:|
+| Sora 2 / 2 Pro (OpenAI) | ✅ | ✅ |
+| Google Veo 3.1 | ✅ | ✅ |
+| Kling 3.0 (快手) | ✅ | ❌ |
+| Seedance 2.0 (ByteDance) | ✅ | ❌ |
+| Wan 2.7 (Alibaba) | ✅ | ❌ |
+| MiniMax Hailuo 02 | ✅ | ❌ |
+| Runway Gen-4 / Aleph | ❌ | ✅ |
+| Luma Ray2 / Ray3 | ❌ | ✅ |
+| Pika 2.2 | ❌ | ✅ |
+| Moonvalley Marey | ❌ | ✅ |
+
+### 画像生成モデル
+
+| モデル | Higgsfield | Adobe Firefly |
+|------|:---:|:---:|
+| Nano Banana / Gemini Image (Google) | ✅ | ✅ |
+| GPT Image (OpenAI) | ✅ | ✅ |
+| FLUX (Black Forest Labs) | ✅ | ✅ |
+| Seedream 4.0 / 5.0 (ByteDance) | ✅ | ❌ |
+| Ideogram 3.0 | ❌ | ✅ |
+| Adobe Firefly Image（自社） | ❌ | ✅ |
+
+### 思想の違い
+
+- **Higgsfield** は Kling・Seedance・Wan・MiniMax・Seedream といった**中国系の最先端モデルを積極的に取り込む**。さらに本記事のように MCP / CLI でエージェント（Claude Code）から叩ける点が決定的で、「絵コンテ→動画を一撃生成」のような**自動化・パイプライン志向**が強い。
+- **Adobe Firefly** は Runway・Luma・Pika・Ideogram など**欧米系を網羅**し、中国系モデルは扱わない。最大の武器は**自社 Firefly モデルの商用利用安全性**（学習データがクリーン）と、Photoshop / Premiere Pro を含む Creative Cloud への統合、タイムライン編集との地続きさだ。
+
+つまり「**中国系最新モデル × エージェント自動化**」を取りに行くなら Higgsfield、「**欧米系網羅 × 商用安全 × 既存CCワークフロー統合**」を重視するなら Adobe Firefly、という住み分けになる。今回のCM制作フローが Higgsfield で成立するのは、Seedance や Kling といったモデル群と MCP 自動化の両方が揃っているからだ。
+
 ## 「構想力」の時代へ
 
 このワークフローが示唆することは、技術的なスキルよりも **演出・コンセプトを言語化する力** が制作の核になるという変化だ。
