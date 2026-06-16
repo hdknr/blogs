@@ -6,7 +6,7 @@ slug: "claude-code-tradingview-mcp"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4462499338"
 categories: ["AI/LLM"]
-tags: ["claude-code", "TradingView", "mcp", "トレーディング", "自動売買", "Pine Script", "BitGet"]
+tags: ["claude-code", "tradingview", "mcp", "CDP", "自動売買", "Pine Script", "バックテスト"]
 description: "TradingView Desktop を MCP サーバー経由で Claude Code から操作する方法を解説。78個のツールによるチャート取得・Pine Script 開発・BitGet 自動発注まで、オープンソース実装3種を比較紹介。"
 ---
 
@@ -31,7 +31,7 @@ MCP を介して Claude Code と接続すると、この操作が一変する。
 
 メインの実装は [tradesdontlie/tradingview-mcp](https://github.com/tradesdontlie/tradingview-mcp) だ。
 
-TradingView Desktop は Electron（Chromium ベース）で動いている。CDP（Chrome DevTools Protocol）とは、Chromium ベースのアプリにデバッグ・操作用の WebSocket インターフェースを公開するプロトコルだ。Electron アプリは `--remote-debugging-port` フラグを付けて起動すると CDP が有効になり、外部プロセスがブラウザ内部を操作できる。VS Code や Discord が同じ仕組みで拡張機能を動かしているのと同じ発想だ。
+TradingView Desktop は Electron（Chromium ベース）で動いている。CDP（Chrome DevTools Protocol）は、Chromium ベースのアプリにデバッグ・操作用の WebSocket インターフェースを公開するプロトコルだ。Electron アプリは `--remote-debugging-port` フラグを付けて起動すると CDP が有効になり、外部プロセスがブラウザ内部を操作できるようになる。VS Code や Playwright がこのプロトコルを使ってブラウザ自動化・デバッグを実現しているのと同じ仕組みだ。
 
 ![Claude Code → MCP Server → CDP → TradingView Desktop の接続フロー。すべてローカル完結でTradingViewサーバーへの外部接続なし](/blogs/images/claude-code-tradingview-mcp-architecture.png)
 
@@ -45,7 +45,7 @@ cd tradingview-mcp
 npm install
 ```
 
-`~/.claude/.mcp.json` に追記する。
+Claude Code の MCP 設定ファイルに追記する（ユーザースコープは `~/.claude.json`、プロジェクトスコープはリポジトリルートの `.mcp.json`）。tradesdontlie/tradingview-mcp の README では `~/.claude/.mcp.json` と記載されているが、公式の正しいパスは以下のいずれかだ。
 
 ```json
 {
