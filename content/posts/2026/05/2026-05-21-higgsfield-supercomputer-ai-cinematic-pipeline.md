@@ -1,7 +1,7 @@
 ---
 title: "Higgsfield「Supercomputer」— GPT-5.5・Claude Opus 4.7・Seedance・Veo・Kling を指揮するマルチモデル映像制作ハブの衝撃"
 date: 2026-05-21
-lastmod: 2026-05-25
+lastmod: 2026-06-16
 slug: "higgsfield-supercomputer-ai-cinematic-pipeline"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4504096594"
@@ -56,6 +56,23 @@ Claude Code が複数の MCP サーバーを組み合わせて「思考・コー
 
 **モデルを単体で使うのではなく、『組み合わせて指揮するハブ』として捉える**という発想は、AI システム設計における重要なトレンドです。1つのモデルの能力限界を超えるために、専門化されたモデルをタスク特性に基づいて自動ルーティングする「モデル・オーケストレーション」は、映像制作に限らず今後の AI 活用の主流になっていくでしょう。
 
+## 他社の類似動向 — Adobe Firefly のマルチモデル・オーケストレーション
+
+「複数モデルを 1 つのハブで指揮する」という発想は Higgsfield 固有のものではありません。最も近い動きをしているのが **Adobe Firefly** です。
+
+Adobe は Firefly を「単一の生成ツール」から「**複数の生成モデルを束ねる創作環境**」へと再定義しました。2026 年時点で Firefly は OpenAI（GPT Image）、Google（Nano Banana 2、Veo 3.1）、Runway（Gen-4.5）、Luma（Ray3）、Black Forest Labs（FLUX.2）、Pika、ElevenLabs、Topaz など 30 以上のモデルを同一環境に取り込み、「あるモデルで生成 → 別モデルで仕上げ → 出力を比較 → そのまま編集を継続」を 1 か所で完結できる点を打ち出しています。
+
+| 観点 | Higgsfield Supercomputer | Adobe Firefly（2026） |
+|---|---|---|
+| 思想 | 複数モデルを 1 本の制作ラインへ自動ルーティング | 30+ モデルを単一の創作環境に集約し横断利用 |
+| 搭載モデル例 | GPT-5.5 / Claude Opus 4.7 / Seedance / Veo / Kling | GPT Image / Veo 3.1 / Runway Gen-4.5 / Luma / FLUX.2 / Pika ほか |
+| 指揮レイヤー | Supercomputer が 61 スキルで自動選定 | **Firefly Creative Agent**（2026/4 発表）が agentic にワークフローを指揮 |
+| プロ編集統合 | スタンドアロンの映像制作ハブ | **Premiere Pro / After Effects** に直結（Premiere UI 内でサードパーティモデルを選択可能） |
+
+特に 2026 年 4 月に発表された **Firefly Creative Agent** は、Supercomputer の「自動ルーティング／指揮」に最も近い agentic レイヤーです。また Adobe は 2025 年 12 月に Runway と戦略提携を結び、Premiere Pro / After Effects への深い統合を 2026 年に展開すると表明しています。
+
+両者の最大の違いは立ち位置です。Higgsfield は**映像生成に特化したスタンドアロンのハブ**であるのに対し、Adobe は **Creative Cloud というプロ編集基盤の中にマルチモデルを統合**し、「生成後の本格編集まで地続き」にしている点が強みです。「モデルを単体で使うのではなく、組み合わせて指揮するハブとして捉える」という潮流が、スタートアップと既存大手の双方で同時に進んでいることがわかります。
+
 ## まとめ
 
 Higgsfield「Supercomputer」は、マルチモデル・オーケストレーションを映像制作に応用した画期的なプロダクトです。
@@ -73,3 +90,6 @@ Higgsfield「Supercomputer」は、マルチモデル・オーケストレーシ
 - [Higgsfield × OpenAI の取り組み（OpenAI 公式）](https://openai.com/index/higgsfield/)
 - [Cinema Studio 3.0 発表（Higgsfield Blog）](https://higgsfield.ai/blog/cinema-studio-3)
 - [元ツイート（X / @ClaudeCode_love）](https://x.com/ClaudeCode_love/status/2056993348599300376)
+- [Third-Party AI Models in Firefly（Adobe 公式）](https://www.adobe.com/products/firefly/partner-models.html)
+- [Adobe Ushers in a New Era of Creativity with New Creative Agent（Adobe News, 2026/4）](https://news.adobe.com/news/2026/04/adobe-new-creative-agent)
+- [Adobe and Runway partner to deliver the next generation of AI video（2025/12）](https://markets.financialcontent.com/observernewsonline/article/bizwire-2025-12-18-adobe-and-runway-partner-to-deliver-the-next-generation-of-ai-video-for-creators-studios-and-brands)
