@@ -4,9 +4,10 @@ date: 2026-06-09
 lastmod: 2026-06-09
 slug: "claude-code-loop-design-agents"
 draft: false
+description: "Claude Code の /loop コマンドを使ってAIエージェントのループを設計する方法を解説。終了条件の定義、トークンコスト管理のベストプラクティスをまとめた実践ガイド。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4654881676"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "AIエージェント", "ループ設計", "OpenClaw", "自動化"]
+tags: ["Claude Code", "AIエージェント", "ループ設計", "自動化", "Anthropic"]
 ---
 
 Peter Steinberger（OpenClaw 創設者）のこのポストが、AIエンジニアリングの世界で急速に広まっている。
