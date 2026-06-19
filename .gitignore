@@ -6,3 +6,6 @@ resources/_gen/
 .claude/temp/
 .worktrees/
 .mcp.json
+# knowl: Claude Code 個人環境依存
+.claude/knowledge
+.claude/settings.local.json

@@ -36,6 +36,9 @@ related_posts:
   - "/posts/2026/05/claude-code-obsidian-vault-writeback/"
   - "/posts/2026/05/claude-code-vault-writeback-automation/"
   - "/posts/2026/05/self-hosted-runner-vault-writeback/"
+  - "/posts/2026/05/anthropic-claude-code-html-over-markdown/"
+  - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
+  - "/posts/2026/05/claude-btc-trading-montecarlo/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "Hooks", "MCP"]
 ---
 

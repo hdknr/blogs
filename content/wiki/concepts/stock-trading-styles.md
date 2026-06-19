@@ -6,6 +6,10 @@ lastmod: 2026-04-27
 aliases: ["デイトレード", "スイングトレード", "スキャルピング", "短期売買"]
 related_posts:
   - "/posts/2026/04/day-trade-swing-trade/"
+  - "/posts/2026/05/max-murai-us-stock-4months/"
+  - "/posts/2026/05/sp500-gamma-squeeze-call-option-casino/"
+  - "/posts/2026/05/claude-btc-trading-montecarlo/"
+  - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
 tags: ["株式投資", "デイトレード", "スイングトレード", "スキャルピング", "中長期投資"]
 ---
 
