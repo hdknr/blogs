@@ -67,4 +67,4 @@ jobs:
       - name: Summary
         run: |
           echo "PR #${{ github.event.pull_request.number }} merged at ${{ github.event.pull_request.merged_at }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "Next: trigger \`/summary-back-to-vault\` in Claude Code locally." >> "$GITHUB_STEP_SUMMARY"
+          echo "Next: trigger \`/knowl-summary\` in Claude Code locally." >> "$GITHUB_STEP_SUMMARY"
