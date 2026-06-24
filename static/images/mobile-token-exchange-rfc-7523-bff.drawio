@@ -1,0 +1,48 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="token-exchange-bff" name="BFF">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="public client の落とし穴 — 「誰が RP の /token を呼ぶか」を BFF / Token Broker が肩代わり" style="text;html=1;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="16" width="840" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Actors -->
+        <mxCell id="app" value="モバイルアプリ&#xa;(秘密鍵を持てない)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="bff" value="BFF / Token Broker&#xa;(秘密鍵を安全に保持)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="380" y="200" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="rp" value="各 RP&#xa;(経費/マスタ/店舗)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="700" y="200" width="200" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- app -> bff : pass JWT -->
+        <mxCell id="e1" value="① ログイン結果の JWT を渡す" style="endArrow=block;html=1;rounded=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;exitX=1;exitY=0.3;entryX=0;entryY=0.3;" edge="1" parent="1" source="app" target="bff">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <!-- bff -> rp : call /token -->
+        <mxCell id="e2" value="② JWT を各 RP の /token へ (7523)" style="endArrow=block;html=1;rounded=1;strokeColor=#82b366;strokeWidth=2;fontSize=11;exitX=1;exitY=0.3;entryX=0;entryY=0.3;" edge="1" parent="1" source="bff" target="rp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <!-- rp -> bff : token -->
+        <mxCell id="e3" value="RP が発行したトークン" style="endArrow=block;html=1;rounded=1;strokeColor=#82b366;strokeWidth=2;fontSize=11;dashed=1;exitX=0;exitY=0.7;entryX=1;entryY=0.7;" edge="1" parent="1" source="rp" target="bff">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <!-- bff -> app : httpOnly cookie -->
+        <mxCell id="e4" value="③ httpOnly Cookie 等で安全に橋渡し" style="endArrow=block;html=1;rounded=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;dashed=1;exitX=0;exitY=0.7;entryX=1;entryY=0.7;" edge="1" parent="1" source="bff" target="app">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Note -->
+        <mxCell id="note" value="新規開発は「発行ロジック」ではなく「誰が /token を呼ぶか = クライアント構成・BFF の配線」だけ。&#xa;トークンは localStorage / sessionStorage に置かない（XSS 対策）。OS のセキュアストレージや in-memory + httpOnly Cookie を使う。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;verticalAlign=middle;align=left;spacingLeft=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="360" width="840" height="70" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
