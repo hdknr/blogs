@@ -25,4 +25,5 @@ Google 8億+アカウント、Amazon 1.75億人が利用。日本証券業協会
 ## 関連ページ
 
 - [メール認証（SPF/DKIM/DMARC）](/blogs/wiki/concepts/email-authentication/) — 別のなりすまし防止技術
+- [RFC 7523 / JWT Bearer Grant](/blogs/wiki/concepts/jwt-bearer-grant/) — 署名付き JWT を提示してトークンを得る OAuth のアサーション認可
 
