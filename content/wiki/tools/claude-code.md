@@ -109,6 +109,7 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude Harness](/blogs/wiki/tools/claude-harness/) — Claude Code の拡張機構をワンパッケージで提供する外装プラグイン
 - [Obsidian](/blogs/wiki/tools/obsidian/) — 個人ナレッジ層として連携する PKM ツール
 - [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/) — ライフサイクルイベントへのフック仕組み
+- [Trellis](/blogs/wiki/tools/trellis/) — `.trellis/` にプロジェクトの文脈を永続化する AI コーディングフレームワーク
 - [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) — Vault との循環設計パターン
 - [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) — 5 段階の実装手順
 
