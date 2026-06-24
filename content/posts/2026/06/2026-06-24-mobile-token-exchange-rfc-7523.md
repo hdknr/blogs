@@ -147,7 +147,7 @@ grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
 
 本来この仕組みは、トークンが欲しい側のバックエンド（confidential client）が**秘密鍵を持って RP の `/token` を呼ぶ**サーバー間パターンが基本だった。ところがモバイルは public client で**秘密鍵を安全に保持できない**。
 
-解決策は **BFF / Token Broker（サーバー側の仲介役）** を置くことだ。
+解決策は **BFF / Token Broker（サーバー側の仲介役）** を置くことだ。**BFF** は **Backend for Frontend**（フロントエンド専用に用意するバックエンド）の略で、特定のフロント（ここではモバイルアプリ）だけに対応するサーバー側の薄い層を指す。**Token Broker** はそのうちトークンの取得・保管・受け渡しを担う役割を強調した呼び方だ。要は **「秘密鍵を安全に持てるサーバーを1枚かませ、そこに RP の `/token` 呼び出しを肩代わりさせる」** という発想である。
 
 ![BFF / Token Broker パターンの図。モバイルアプリ（秘密鍵を持てない）がログイン結果の JWT を BFF / Token Broker（秘密鍵を安全に保持）に渡し、BFF が各 RP の /token に JWT を提示してトークンを取得、httpOnly Cookie 等で安全にアプリへ橋渡しする。新規開発は発行ロジックではなく『誰が /token を呼ぶか』の配線だけで、トークンは localStorage に置かない](/blogs/images/mobile-token-exchange-rfc-7523-bff.png)
 
