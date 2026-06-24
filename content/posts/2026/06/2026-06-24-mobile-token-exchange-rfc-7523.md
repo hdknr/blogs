@@ -182,15 +182,19 @@ grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
 2. **外部 IdP・API ゲートウェイ・SaaS との相互運用**がしやすい
 3. **デスクトップ/モバイルのクライアントが標準フローに乗る**
 
-実装の現実解は段階的だ。
+実装の現実解は段階的だ。**いきなり認可サーバーを別ライブラリへ全面移行する必要はない**——まずは既存の AS にカスタムグラントを足す、が基本線になる。
 
 | 段階 | やること | コスト |
 | --- | --- | --- |
-| **最小移行（推奨）** | 自作グラントの**名前・パラメータを RFC 7523 相当に寄せる**。中身は既存実装のままでも「標準準拠の見た目」になり、クライアントは標準ライブラリで叩ける | 小 |
-| **ライブラリ移行** | 認可サーバーを Authlib 等へ寄せ、7523・PKCE・OIDC discovery・introspection をまとめて標準対応 | 大（コア差し替え） |
+| **最小移行（推奨）** | **既存の認可サーバーにカスタムグラントを追加**し、`grant_type`・パラメータを RFC 7523（`jwt-bearer`）相当へ寄せる。中身は既存実装のままでも「標準準拠の見た目」になり、クライアントは標準ライブラリで叩ける | 小 |
+| **ライブラリ移行（必要時のみ）** | 既存 AS では表現しきれない要件にぶつかったときに限り、認可サーバーを Authlib 等へ寄せ、7523・PKCE・OIDC discovery・introspection をまとめて標準対応 | 大（コア差し替え） |
 | **8693 を採用** | 中央でトークンを束ねる／委任・代理まで含めて標準化したいときのみ。専用 IdP 導入 or 自作が前提 | 大 |
 
 > 内部完結で十分なら、機能上は現行のままでも問題ない。標準化は基盤刷新・IdP 整備のタイミングと合わせて判断するのが現実的だ。
+
+> **既存スタック（例: Django）からの現実解**
+>
+> たとえば認可サーバーに [django-oauth-toolkit](https://github.com/django-oauth/django-oauth-toolkit)（`oauthlib` ベース）、ログイン側に [django-allauth](https://docs.allauth.org/) を使っている場合、**両者をそのまま活かしたまま**最小移行できる。allauth は「認証（ログイン）」、django-oauth-toolkit は「OAuth2 認可サーバー」と役割が分かれており、RFC 7523 の `jwt-bearer` で不足するのは後者だけだ。しかもそれは **django-oauth-toolkit を捨てずにカスタムグラントとして追加**できる（[oauthlib + DOT を RFC 7523 へ拡張した先例](https://github.com/GreenBuildingRegistry/jwt-oauth2)もある）。Authlib への差し替えは AS を丸ごと入れ替える話なので、本格的な RFC 8693 Token Exchange などライブラリの限界にぶつかってから検討すれば十分だ。
 
 ## まとめ
 
