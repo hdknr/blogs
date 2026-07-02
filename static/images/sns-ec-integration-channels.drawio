@@ -1,0 +1,72 @@
+<mxfile host="app.diagrams.net" modified="2026-07-02T00:00:00.000Z" agent="Claude" version="24.0.0">
+  <diagram name="SNS EC Channels" id="sns-ec-integration-channels">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1040" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="SNS 系 EC 連動チャネルのポジショニング" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="20" width="600" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="購入を外部 EC サイトへ送客するか、アプリ内で完結させるか" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="220" y="52" width="600" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Zone A: 送客型 -->
+        <mxCell id="zoneA" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eefb;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="470" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneA-t" value="① 送客型（外部 EC サイトへ誘導）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#3b5998;" vertex="1" parent="1">
+          <mxGeometry x="50" y="122" width="450" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneA-d" value="SNS はショーケース。決済・出荷は自社 EC / モール側" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="50" y="148" width="450" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="insta" value="Instagram ショッピング&#10;投稿・ストーリーに商品タグ → 自社 EC へ&#10;カタログ連携（Meta）・審査あり・利用料無料" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="185" width="430" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="youtube" value="YouTube ショッピング アフィリエイト&#10;動画・ショートに商品タグ → 楽天市場へ&#10;2026/2 日本導入・国内初パートナーは楽天市場" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="270" width="430" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneA-note" value="強み：既存 EC 資産をそのまま活用／集客チャネルとして追加しやすい&#10;弱み：離脱が起きやすい（アプリ → 外部サイトの遷移）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#5a6a8a;" vertex="1" parent="1">
+          <mxGeometry x="60" y="360" width="430" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Zone B: 完結型 -->
+        <mxCell id="zoneB" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="540" y="110" width="460" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneB-t" value="② 完結型（アプリ / チャネル内で購入完結）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#4a7a3a;" vertex="1" parent="1">
+          <mxGeometry x="550" y="122" width="440" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneB-d" value="発見から決済まで離脱なし。手数料・在庫連携が課題" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="550" y="148" width="440" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="tiktok" value="TikTok Shop&#10;動画・ライブから離脱なしで購入完結&#10;2025/6/30 日本開始・3ヶ月で流通額 約30億円" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="560" y="185" width="420" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lineup" value="Lineup（LINE 公式アカウント EC）&#10;LINE 内にショップ構築・トークで再来訪促進&#10;LINE 公式パートナー・月額 3,000 円〜" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="560" y="270" width="420" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneB-note" value="強み：離脱ゼロ／衝動購入・ライブ販売に強い／リピート導線&#10;弱み：チャネル手数料・受注/在庫を既存システムと連携する運用負荷" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#4a7a3a;" vertex="1" parent="1">
+          <mxGeometry x="560" y="360" width="420" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Spectrum arrow -->
+        <mxCell id="arrow" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#999999;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="60" y="535" as="sourcePoint" />
+            <mxPoint x="980" y="535" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-l" value="SNS は入口（送客）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="60" y="545" width="200" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow-r" value="SNS で購入まで完結" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="780" y="545" width="200" height="24" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
