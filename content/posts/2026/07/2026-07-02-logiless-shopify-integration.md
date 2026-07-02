@@ -12,7 +12,7 @@ tags: ["Shopify", "LOGILESS", "EC", "在庫管理", "API連携"]
 
 Shopify で EC サイトを運営していると、注文が増えるほど「受注確認 → 在庫引き当て → 倉庫への出荷指示 → 追跡番号の登録」という一連の作業が重くのしかかってきます。この物流バックオフィスを丸ごと自動化するのが **[LOGILESS（ロジレス）](https://www.logiless.com/)** です。OMS（受注管理）と WMS（倉庫管理）を一体化した EC 自動出荷システムです。
 
-この記事では、LOGILESS と Shopify を API 連携させると何が起きるのか、その仕組みと連携手順、そして運用上のハマりどころを整理します。
+この記事では、LOGILESS と Shopify を API 連携させると何が起きるのか、その仕組みと連携手順、運用上のハマりどころを整理します。さらに記事後半では、**WooCommerce や独自 EC サーバーを開発者向け API で連携する方法**にも触れます。
 
 ## LOGILESS とは何か
 
@@ -86,6 +86,45 @@ LOGILESS には受注取込を一定時間待機させる機能があります�
 
 在庫のリアルタイム性と受注処理のバッファをどうバランスさせるかは、店舗の販売特性に応じた設計判断になります。
 
+## Shopify 以外のカート・独自EC と連携するには
+
+ここまでは Shopify 公式アプリを前提に説明してきましたが、**WordPress（WooCommerce）や独自開発の EC サーバー**でも LOGILESS と連携できます。ただし Shopify のような「アプリを入れるだけ」の連携ではなく、**自分で連携部分を作る**のが基本になります。
+
+LOGILESS は Shopify・BASE・makeshop・ecforce・futureshop・EC-CUBE など主要カートには専用の API 連携を用意していますが、WooCommerce や独自 EC は公式の対応リストには含まれていません。一方で公式は「記載のないプラットフォームとの連携も、**CSV レイアウト機能と LOGILESS API で統合が可能なケースがほとんど**」と明言しています。手段は次の2つです。
+
+### 方法① 開発者向け API（REST）で連携する
+
+LOGILESS は **「LOGILESS Developers」** という公開の開発者向け API を提供しています。この API は「LOGILESS 側のデータを読み書きする」ものなので、EC カートとの間をつなぐ**中継処理（ミドルウェア）を自分で実装**する構成になります。
+
+![WooCommerce や独自ECとLOGILESSをAPI連携する構成図。左のECカートのREST API/Webhookと右のLOGILESS Developers API（OAuth2認証）の間に自作ミドルウェアを置き、注文を受注伝票としてPOSTし、出荷伝票と在庫をGETしてECへ反映する双方向のデータフローを示している](/blogs/images/logiless-custom-cart-api.png)
+
+API の主な仕様は次の通りです。
+
+| 項目 | 内容 |
+|---|---|
+| 認証 | **OAuth 2.0**（`Authorization: Bearer {token}`） |
+| ベース URL | `https://app2.logiless.com/api/`（TLS 1.2 以上） |
+| メソッド | GET / POST / PUT / DELETE（JSON ボディ） |
+| 扱えるリソース | 受注伝票・出荷伝票・入荷予定・倉庫間移動、商品マスタ・商品対応表・仕入先・店舗・倉庫、論理在庫・保管状況・在庫操作ログ |
+| レート制限 | **約 1 リクエスト/秒** 推奨、超過で `429`（`X-RateLimit` ヘッダーで残量を確認可能） |
+| 利用開始 | 開発者コンソールでアプリ登録を申請 → **3〜5 営業日の審査**後にクライアント ID / シークレットを取得 |
+
+WooCommerce は標準で REST API と Webhook を備えているため、次のような流れで双方向連携を組めます。
+
+- **受注（EC → LOGILESS）**：WooCommerce の Webhook で新規注文を検知し、LOGILESS API で**受注伝票を POST** する
+- **出荷通知（LOGILESS → EC）**：LOGILESS API で出荷伝票（配送会社・追跡番号）を取得し、WooCommerce の注文ステータスを更新する
+- **在庫連動（LOGILESS → EC）**：LOGILESS API で論理在庫を取得し、WooCommerce の在庫数を更新する（Shopify 公式アプリの「約10分ごと」に相当する同期を自前でスケジュールする）
+
+### 方法② CSV 連携で連携する
+
+API を実装するリソースが割けない場合は、**CSV レイアウト機能**で受注データをインポートし、出荷データをエクスポートする運用も可能です。バッチ処理になるためリアルタイム性は API に劣りますが、開発コストを抑えられる現実的な選択肢です。
+
+### 独自連携で注意すること
+
+- Shopify のような**双方向の自動同期は自作範囲**になる（同期間隔・オーバーセル対策・SKU の突合も自分で設計する）
+- API には**レート制限（約 1 req/秒）**があるため、多店舗・多商品では同期設計に注意する
+- WooCommerce / 独自 EC は公式サポート対象外の連携になるため、**事前に LOGILESS へ要件を問い合わせる**のが安全
+
 ## 料金の考え方
 
 LOGILESS の利用料金は、次のような構成になっています。
@@ -103,6 +142,7 @@ LOGILESS × Shopify 連携の要点は次の通りです。
 - **OMS + WMS 一体型**なので、受注情報と倉庫の実在庫が同じ基盤で扱われ、出荷までを高い自動化率で回せる
 - 公式アプリで **受注取込・在庫連動（約10分ごと）・出荷通知** の3つが自動化される
 - ハマりどころは **Lite プラン非対応・商品対応表の必須化・31日ルール・待機とオーバーセルの兼ね合い** の4点
+- **WooCommerce や独自 EC** は公式アプリこそないが、**開発者向け API（OAuth 2.0）や CSV レイアウト機能**で自作連携できる
 - 料金は **基本料金 + 出荷数の従量課金** で、無料枠つき
 
 Shopify 単体では手作業に頼りがちな物流バックオフィスを、コードを書かずに自動化できるのが LOGILESS の強みです。出荷件数が増えて「人手で回すのが限界」になってきた EC 事業者にとって、有力な選択肢になるでしょう。
@@ -115,3 +155,6 @@ Shopify 単体では手作業に頼りがちな物流バックオフィスを、
 - [Shopify API で連携 – LOGILESS ヘルプセンター](https://support.logiless.com/platforms/shopping-cart/shopify/shopify-api/)
 - [LOGILESS - Shopify App Store](https://apps.shopify.com/logiless-app)
 - [EC自動出荷システム「LOGILESS」がShopify公式アプリをリリース（プレスリリース）](https://corp.logiless.com/news/press-release/shopify-app/)
+- [基本仕様 - LOGILESS Developers](https://app2.logiless.com/developer/documents/specifications)
+- [外部連携サービス一覧 | LOGILESS](https://www.logiless.com/platforms/)
+- [開発者向けAPIは公開されていますか？ – LOGILESS ヘルプセンター](https://support.logiless.com/faq/7557/)
