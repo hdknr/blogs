@@ -1,0 +1,104 @@
+<mxfile>
+  <diagram name="Page-1" id="page1">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Header: 3 perspectives -->
+        <mxCell id="h1" value="&lt;b&gt;Relevance&lt;/b&gt;&lt;br&gt;（関連性）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="280" y="30" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="&lt;b&gt;Benefit&lt;/b&gt;&lt;br&gt;（便益）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="500" y="30" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="h3" value="&lt;b&gt;Urgency&lt;/b&gt;&lt;br&gt;（緊急性）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="720" y="30" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: 切実な不満の解消 -->
+        <mxCell id="v1" value="&lt;b&gt;1. 切実な不満の解消&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v1r" value="◎&lt;br&gt;自明" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="110" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v1b" value="◎&lt;br&gt;直接的" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="540" y="110" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v1u" value="◎&lt;br&gt;痛みが持続" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="750" y="110" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v1note" value="→ 3要素が自然に揃う&lt;br&gt;（最強の動機づけ）" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="880" y="115" width="180" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 2: 自己実現 -->
+        <mxCell id="v2" value="&lt;b&gt;2. 自己実現&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v2r" value="◎&lt;br&gt;憧れ" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="200" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v2b" value="◎&lt;br&gt;成長" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="540" y="200" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v2u" value="△&lt;br&gt;弱い" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="200" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v2note" value="→ Urgency の演出が鍵&lt;br&gt;「今だけ」「取り残される」" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="880" y="205" width="200" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 3: 物語 -->
+        <mxCell id="v3" value="&lt;b&gt;3. 物語&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="290" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v3r" value="◎→&lt;br&gt;入口を拡大" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="290" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v3b" value="○&lt;br&gt;間接的" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="540" y="290" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v3u" value="○&lt;br&gt;没入で持続" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="750" y="290" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v3note" value="→ Relevance を創出する装置&lt;br&gt;「自分事化」させる力" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="880" y="295" width="200" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 4: 信頼 -->
+        <mxCell id="v4" value="&lt;b&gt;4. 信頼&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="380" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v4r" value="↑&lt;br&gt;判断を省略" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="380" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v4b" value="↑&lt;br&gt;疑いを除去" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="540" y="380" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v4u" value="↑&lt;br&gt;受容を加速" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="380" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v4note" value="→ 全要素を増幅する&lt;br&gt;レバレッジ" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="880" y="385" width="180" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows from values to perspectives -->
+        <mxCell id="a1r" style="edgeStyle=none;strokeColor=#999999;" edge="1" source="v1" target="v1r" parent="1"/>
+        <mxCell id="a1b" style="edgeStyle=none;strokeColor=#999999;" edge="1" source="v1" target="v1b" parent="1"/>
+        <mxCell id="a1u" style="edgeStyle=none;strokeColor=#999999;" edge="1" source="v1" target="v1u" parent="1"/>
+        <mxCell id="a2r" style="edgeStyle=none;strokeColor=#999999;" edge="1" source="v2" target="v2r" parent="1"/>
+        <mxCell id="a2b" style="edgeStyle=none;strokeColor=#999999;" edge="1" source="v2" target="v2b" parent="1"/>
+        <mxCell id="a2u" style="edgeStyle=none;strokeColor=#999999;dashed=1;" edge="1" source="v2" target="v2u" parent="1"/>
+        <mxCell id="a3r" style="edgeStyle=none;strokeColor=#999999;" edge="1" source="v3" target="v3r" parent="1"/>
+        <mxCell id="a3b" style="edgeStyle=none;strokeColor=#999999;dashed=1;" edge="1" source="v3" target="v3b" parent="1"/>
+        <mxCell id="a3u" style="edgeStyle=none;strokeColor=#999999;dashed=1;" edge="1" source="v3" target="v3u" parent="1"/>
+        <mxCell id="a4r" style="edgeStyle=none;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="v4" target="v4r" parent="1"/>
+        <mxCell id="a4b" style="edgeStyle=none;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="v4" target="v4b" parent="1"/>
+        <mxCell id="a4u" style="edgeStyle=none;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" source="v4" target="v4u" parent="1"/>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

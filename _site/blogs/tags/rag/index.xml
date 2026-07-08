@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Rag on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/rag/</link><description>Recent content in Rag on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 20 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/rag/index.xml" rel="self" type="application/rss+xml"/><item><title>ViMax</title><link>https://hdknr.github.io/blogs/wiki/tools/vimax/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/vimax/</guid><description>香港大学 HKUDS が開発したオープンソースのマルチエージェント動画生成フレームワーク。1行のアイデアから脚本・絵コンテ・動画までを自動生成する</description></item><item><title>GitHubで全部完結する開発者にObsidianは本当に必要か？ — AI Agent時代に効く「知識の繋ぎ方」の決定的な違い</title><link>https://hdknr.github.io/blogs/posts/2026/05/github-vs-obsidian-ai-agent/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/github-vs-obsidian-ai-agent/</guid><description>GitHub完結派の開発者は本当にObsidianを併用すべきか？ AI Agent時代のナレッジ管理として、リポジトリ単位の構造とVaultネットワーク型の違いを、Claude CodeやMCP経由での文脈共有まで含めて比較する。</description></item><item><title>Karpathy の LLM Wiki — 公開48時間で5000スターを集めた「LLMが維持するパーソナル知識ベース」パターン</title><link>https://hdknr.github.io/blogs/posts/2026/05/karpathy-llm-wiki/</link><pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/karpathy-llm-wiki/</guid><description>&lt;p&gt;Andrej Karpathy が2026年4月に公開した GitHub gist「LLM Wiki」が、公開から48時間以内に5000スターを超えた。コード一行も含まない、純粋にアイデアだけを記述したドキュメントがここまで反響を呼んだ理由はシンプルだ。「RAGの次」を具体的かつ実践的に示していたからである。&lt;/p&gt;
+&lt;h2 id="ragとの決定的な違い"&gt;RAGとの決定的な違い&lt;/h2&gt;
+&lt;p&gt;多くの人がLLMとドキュメントを組み合わせるとき、最初に試みるのが &lt;strong&gt;RAG（Retrieval-Augmented Generation）&lt;/strong&gt; だ。ChatGPTのファイルアップロード、NotebookLM、LangChainで構築するベクトルDB検索 — これらはすべて「質問が来たときにドキュメントから関連部分を取ってきて回答する」という設計思想に基づいている。&lt;/p&gt;
+&lt;p&gt;この方式には根本的な問題がある。&lt;strong&gt;知識が蓄積されない&lt;/strong&gt;。5つのドキュメントを横断する微妙な問いに対しても、LLMは毎回ゼロから関連箇所を探し出し、推論し直す。「矛盾」も「文脈」も「先週気づいた発見」も、次の質問では消えてしまう。&lt;/p&gt;
+&lt;p&gt;LLM Wiki が提案するのは根本的に異なるアプローチだ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LLM が incrementally に永続的な wiki を構築・維持する。新しいソースを追加するたびに、LLM はそれを読み込んで既存 wiki に統合し、エンティティページを更新し、矛盾を記録し、進化する合成の全体を強化する。知識は毎回再導出されるのではなく、一度コンパイルされてから最新に保たれる。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この「コンパイルされた知識ベース」こそが LLM Wiki の本質である。&lt;/p&gt;
+&lt;h2 id="3層アーキテクチャ"&gt;3層アーキテクチャ&lt;/h2&gt;
+&lt;p&gt;LLM Wiki は3つの層で構成される。&lt;/p&gt;
+&lt;h3 id="1-raw-sources生ソース"&gt;1. Raw Sources（生ソース）&lt;/h3&gt;
+&lt;p&gt;記事、論文、画像、データファイルなど自分がキュレートしたソースドキュメントの置き場。&lt;strong&gt;不変（immutable）&lt;/strong&gt; — LLMはここから読むだけで決して書き換えない。これが「真実の源泉」となる。&lt;/p&gt;
+&lt;h3 id="2-the-wikiwiki本体"&gt;2. The Wiki（wiki本体）&lt;/h3&gt;
+&lt;p&gt;LLM が生成・維持するマークダウンファイルの集合。概要、エンティティページ、概念ページ、比較、合成。この層は &lt;strong&gt;LLM が完全に所有&lt;/strong&gt; する。あなたは読む側で、LLM が書く側だ。&lt;/p&gt;
+&lt;h3 id="3-the-schemaスキーマ"&gt;3. The Schema（スキーマ）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt;（Claude Code用）や &lt;code&gt;AGENTS.md&lt;/code&gt;（Codex用）など、LLMに wiki の構造・規約・ワークフローを伝えるドキュメント。これが LLM を「汎用チャットボット」から「規律あるwikiメンテナ」に変える鍵だ。このファイルはあなたと LLM が協力しながら進化させていく。&lt;/p&gt;
+&lt;h2 id="3つの操作"&gt;3つの操作&lt;/h2&gt;
+&lt;h3 id="ingest取り込み"&gt;Ingest（取り込み）&lt;/h3&gt;
+&lt;p&gt;新しいソースを生コレクションに追加して、LLMに処理を依頼する。LLMはソースを読み込み、重要な情報を抽出し、wikiに統合する。一つのソースが10〜15のwikiページを更新することもある。一度に大量のソースをバッチ処理することも可能だが、Karpathy 自身は「一つずつ取り込み、要約を確認しながら進める」スタイルを好むと述べている。&lt;/p&gt;
+&lt;h3 id="queryクエリ"&gt;Query（クエリ）&lt;/h3&gt;
+&lt;p&gt;wikiに対して質問する。LLMは関連ページを検索・読み込み、引用付きで回答を合成する。回答の形式は問いによって変わる — マークダウンページ、比較表、Marpスライド、matplotlibグラフなど。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;重要な洞察&lt;/strong&gt;: 良い回答はwikiに新しいページとして追記できる。「あの比較をお願いした結果」「見つけた新しい接続」— これらをチャット履歴に埋もれさせるのではなく、wikiに蓄積させることで探求が複利的に積み重なる。&lt;/p&gt;</description></item><item><title>ViMax — 1行のアイデアから脚本・絵コンテ・動画まで自動生成する香港大学発マルチエージェントフレームワーク</title><link>https://hdknr.github.io/blogs/posts/2026/05/vimax-hku-agentic-video-generation/</link><pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/vimax-hku-agentic-video-generation/</guid><description>香港大学 HKUDS が開発したオープンソース動画生成フレームワーク ViMax の全機能を解説。Idea2Video・Novel2Video・Script2Video・AutoCameo の4モードと、RAG ベースのマルチエージェントアーキテクチャを日本語で詳しく紹介します。</description></item><item><title>「ベクトルDB不要」でRAG精度を上げるCorpus2Skill — 文書を階層的スキルに変換してエージェントがナビゲートする新手法</title><link>https://hdknr.github.io/blogs/posts/2026/04/corpus2skill-rag-hierarchical-navigation/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/corpus2skill-rag-hierarchical-navigation/</guid><description>ベクトルDBを使わずRAGの網羅性問題を解決するCorpus2Skill手法を解説。文書コーパスを階層的スキルディレクトリに変換しLLMエージェントがナビゲートすることで、WixQAおよびRAGBench全ベースラインを上回る精度を達成した2026年arXiv論文のまとめ。</description></item><item><title>Claude Code + Obsidian で「AI 第二の脳」をたった 5 分で構築する方法</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-ai-second-brain/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-ai-second-brain/</guid><description>&lt;p&gt;Andrej Karpathy（元 OpenAI・元 Tesla AI ディレクター）が提唱した「Claude Code での第二の脳の作り方」。
+この記事では、&lt;strong&gt;Claude Code + Obsidian を組み合わせて知識を蓄積・進化させる「AI 第二の脳」システム&lt;/strong&gt;の仕組みとセットアップ手順を解説します。&lt;/p&gt;
+&lt;h2 id="普通の-rag-と何が違うのか"&gt;普通の RAG と何が違うのか&lt;/h2&gt;
+&lt;p&gt;ChatGPT へのファイルアップロードや NotebookLM のような一般的な RAG は、以下のように動きます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;ファイルを渡す&lt;/li&gt;
+&lt;li&gt;質問のたびに AI が関連部分を探す&lt;/li&gt;
+&lt;li&gt;毎回ゼロから答えを生成する&lt;/li&gt;
+&lt;li&gt;次の質問がきたら、また同じことをゼロから繰り返す&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;何も積み重ならない&lt;/strong&gt;のが問題です。&lt;/p&gt;
+&lt;p&gt;Karpathy が提唱したシステムは根本的に異なり、**AI が「Wiki を育て続ける」**仕組みです。新しい資料を入れるたびに、AI がその内容を読んで既存の知識と統合し、矛盾があれば修正し、関連ページを更新します。知識が一度まとめられると、常に最新状態に保たれます。&lt;/p&gt;
+&lt;h2 id="システムの全体像"&gt;システムの全体像&lt;/h2&gt;
+&lt;p&gt;このシステムには 4 つの動く部品があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;あなたのデータ&lt;/strong&gt; — 記事・ノート・文字起こし・アイデアなど&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;整理&lt;/strong&gt; — Claude Code が Obsidian に自動で整理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;即座の質問&lt;/strong&gt; — 育てたデータベースにいつでも質問可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;進化する記憶&lt;/strong&gt; — 使えば使うほど賢くなる仕組み&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="3-つの層構造"&gt;3 つの層構造&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;層&lt;/th&gt;
+&lt;th&gt;名称&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;層 1&lt;/td&gt;
+&lt;td&gt;生のソース（immutable）&lt;/td&gt;
+&lt;td&gt;記事・論文・画像・データファイル。AI は読むだけで書き換えない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;層 2&lt;/td&gt;
+&lt;td&gt;Wiki&lt;/td&gt;
+&lt;td&gt;要約・人物・概念・比較・総合分析ページ。AI が作成・更新し続ける&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;層 3&lt;/td&gt;
+&lt;td&gt;スキーマ（CLAUDE.md）&lt;/td&gt;
+&lt;td&gt;Wiki の構造・ルール・ワークフローを AI に教える設定ファイル&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この 3 層構造により、AI が「汎用チャットボット」ではなく「規律を持った Wiki 管理者」として動きます。&lt;/p&gt;</description></item><item><title>90%のAI Agentの記憶は偽物？Markdownダンプが崩壊する理由とMem0・GraphRAGによる設計</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-agent-fake-memory-markdown-vs-graph/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-agent-fake-memory-markdown-vs-graph/</guid><description>会話履歴をMarkdownファイルに溜めるだけでは長期記憶にならない。重複排除・セマンティック検索・時系列重み付け・関係モデリングの4つの欠陥を解説し、Mem0・memsearchによるグラフ×ベクトル埋め込みの本物の記憶設計を紹介する。</description></item><item><title>Exa</title><link>https://hdknr.github.io/blogs/wiki/tools/exa/</link><pubDate>Sat, 25 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/exa/</guid><description>AI/LLM のためのセマンティック検索エンジン。Claude MCP プラグインとしても提供</description></item><item><title>Open Notebook</title><link>https://hdknr.github.io/blogs/wiki/tools/open-notebook/</link><pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/open-notebook/</guid><description>Google NotebookLM のオープンソース代替。プライバシー重視のローカル運用も可能</description></item><item><title>RAGなしでも高精度に動くAgent Harnessの秘密 — コンテキストサイズと「100ファイル」の目安</title><link>https://hdknr.github.io/blogs/posts/2026/04/agent-harness-rag-context-size/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/agent-harness-rag-context-size/</guid><description>&lt;p&gt;Claude CodeやCodexのようなAgent Harnessは、RAG（Retrieval-Augmented Generation）をほとんど使わないにもかかわらず、高精度なコード生成や理解を実現している。一方、RAGに依存しすぎたAgentはハルシネーションを起こしやすいという逆説がある。なぜこのような違いが生まれるのか？Software Engineer兼Database ResearcherのTaro L. Saito（&lt;a href="https://x.com/taroleo"&gt;@taroleo&lt;/a&gt;）氏のポストが、その本質を簡潔に説明している。&lt;/p&gt;
+&lt;h2 id="コンテキストウィンドウの拡大がragの必要性を変えた"&gt;コンテキストウィンドウの拡大がRAGの必要性を変えた&lt;/h2&gt;
+&lt;p&gt;現行のAIモデルのコンテキストサイズは&lt;strong&gt;20k〜1Mトークン&lt;/strong&gt;に達している。これは、目安として&lt;strong&gt;およそ100ファイル以下&lt;/strong&gt;のコードベースであれば、RAGを介さずそのままコンテキストに収めて処理できることを意味する。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;モデル&lt;/th&gt;
+&lt;th&gt;コンテキストサイズ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;GPT-4o&lt;/td&gt;
+&lt;td&gt;128k tokens&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Claude Sonnet 4.x&lt;/td&gt;
+&lt;td&gt;200k tokens&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Gemini 1.5 Pro&lt;/td&gt;
+&lt;td&gt;1M tokens&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Claude CodeやCodexなどのAgent Harnessは、この大きなコンテキストウィンドウを活かして、必要なファイルを直接読み込みながらタスクを実行する。ベクトル検索による「関連しそうな断片」の取得ではなく、「実際に必要なコード全体」を参照できる。&lt;/p&gt;
+&lt;h2 id="ragの弱点断片的な情報がハルシネーションを生む"&gt;RAGの弱点：断片的な情報がハルシネーションを生む&lt;/h2&gt;
+&lt;p&gt;RAGは「大量の文書から関連部分を検索して取得する」ことで、LLMに外部知識を与える仕組みだ。ドキュメント検索や広範な知識ベースへのアクセスには有効だが、コードベースのような&lt;strong&gt;相互依存が強い構造的情報&lt;/strong&gt;に対しては課題がある。&lt;/p&gt;
+&lt;p&gt;RAG特有の問題点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;断片的なコンテキスト&lt;/strong&gt;: ベクトル類似度で取得したチャンクは、実際の依存関係を無視している場合がある&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;欠落した情報&lt;/strong&gt;: 関連するが類似度スコアが低いコードが検索から漏れる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;矛盾した断片&lt;/strong&gt;: 異なるバージョンや関連する別モジュールの断片が混在する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;こうした不完全な情報でコードを生成させると、存在しない関数を呼び出したり、実際のインターフェースと合わない実装を生成したりするハルシネーションが発生しやすい。&lt;/p&gt;
+&lt;h2 id="agent-harnessが100ファイル以下で高精度な理由"&gt;Agent Harnessが「100ファイル以下」で高精度な理由&lt;/h2&gt;
+&lt;p&gt;Claude CodeのようなAgent Harnessが高精度に動く理由は、コンテキストウィンドウの有効活用にある。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;プロジェクト構造の把握（&lt;code&gt;ls&lt;/code&gt;、&lt;code&gt;find&lt;/code&gt; など）&lt;/li&gt;
+&lt;li&gt;関連ファイルの直接読み込み（&lt;code&gt;cat&lt;/code&gt;、&lt;code&gt;read&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;完全なコンテキストを持った上でコード生成・編集&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;RAGのように「類似チャンク」を取得するのではなく、&lt;strong&gt;ツールを使って必要なファイルを選択的に読み込む&lt;/strong&gt;というアプローチだ。ファイル数が100程度であれば、現行のコンテキストサイズに収まるため、コードベース全体を「見た上で」タスクを実行できる。&lt;/p&gt;
+&lt;p&gt;これにより：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;実際に存在する関数・型・インターフェースのみを参照する&lt;/li&gt;
+&lt;li&gt;インポート関係や依存構造を正確に把握する&lt;/li&gt;
+&lt;li&gt;プロジェクト固有の命名規則や設計パターンに従う&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ベクトル検索が有効なケースと直接読み込みが有効なケース"&gt;ベクトル検索が有効なケースと直接読み込みが有効なケース&lt;/h2&gt;
+&lt;p&gt;NTT DATAのエンジニアリングブログ「&lt;a href="https://zenn.dev/nttdata_tech/articles/694e39ceff58b7/"&gt;ベクトル検索は不要なのか？&lt;/a&gt;」では、生成AI時代にRAGやベクトル検索をどう捉えるべきかを整理している。Taro氏のポストはこの記事を引用しており、「100ファイル以下という目安」はコンテキストサイズとトークン換算から導き出せる経験則だ。&lt;/p&gt;
+&lt;p&gt;ベクトル検索が有効なケース：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;100ファイルを超える大規模コードベース&lt;/strong&gt;（モノレポ、大企業の内部リポジトリ）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;広範なドキュメント検索&lt;/strong&gt;（社内ナレッジベース、技術文書）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;リアルタイム情報の取得&lt;/strong&gt;（外部ドキュメント、最新の仕様）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;コンテキストに収まる場合に直接読み込みが有効なケース：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;中小規模のプロジェクト&lt;/strong&gt;（スタートアップのコードベース、個人プロジェクト）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;特定モジュールへの集中作業&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;正確な依存関係の把握が必要な場合&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="rag自体を強化する方向-graphrag-という選択肢"&gt;RAG自体を強化する方向: GraphRAG という選択肢&lt;/h2&gt;
+&lt;p&gt;「RAGを捨てて直接読み込み」ではなく、「RAGの断片性を補う」方向の研究もある。代表的なのがMicrosoft Researchが2024年に発表した &lt;a href="https://github.com/microsoft/graphrag"&gt;GraphRAG&lt;/a&gt; だ。&lt;/p&gt;
+&lt;p&gt;GraphRAGの基本アイデアは次の通り：&lt;/p&gt;</description></item><item><title>Onyx（旧 Danswer）</title><link>https://hdknr.github.io/blogs/wiki/tools/onyx/</link><pubDate>Thu, 16 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/onyx/</guid><description>MIT ライセンスのオープンソース AI プラットフォーム。RAG・AIエージェント・50以上のコネクタを備え、セルフホストで社内ナレッジ検索を実現</description></item><item><title>RAG (Retrieval-Augmented Generation)</title><link>https://hdknr.github.io/blogs/wiki/concepts/rag/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/rag/</guid><description>外部データベースから情報検索し、それを基に LLM が応答を生成する技術</description></item><item><title>Karpathy の LLM Wiki — AIエージェントが育てる個人ナレッジベースという新パターン</title><link>https://hdknr.github.io/blogs/posts/2026/04/karpathy-llm-wiki/</link><pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/karpathy-llm-wiki/</guid><description>Andrej Karpathy が公開した LLM Wiki は、RAG の限界を超えて AI エージェントに個人ナレッジベースを継続的に構築・保守させるパターン。三層構造と3つの基本操作を解説。</description></item><item><title>LLM Wiki パターン</title><link>https://hdknr.github.io/blogs/wiki/concepts/llm-wiki-pattern/</link><pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/llm-wiki-pattern/</guid><description>AI エージェントに個人ナレッジベースを継続的に構築・保守させるパターン</description></item><item><title>Onyx（旧 Danswer）完全ガイド — 無料で使えるオープンソース AI プラットフォーム</title><link>https://hdknr.github.io/blogs/posts/2026/04/onyx-open-source-ai-platform/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/onyx-open-source-ai-platform/</guid><description>Onyx（旧 Danswer）は MIT ライセンスの無料 AI プラットフォーム。RAG・AIエージェント・50以上のコネクタを備え、Docker でセルフホスト可能。インストール手順やエディション比較を解説。</description></item><item><title>MiroFish その後: 3週間で GitHub Star 4.7万超へ — コミュニティの広がりと今後の展望</title><link>https://hdknr.github.io/blogs/posts/2026/03/mirofish-ai-prediction-engine/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/mirofish-ai-prediction-engine/</guid><description>AI 予測エンジン MiroFish が公開3週間で GitHub Star 4.7万超に急成長。オフライン版やデモサイトなどコミュニティの展開と、群体知能アプローチの可能性を追う。</description></item><item><title>OpenDataLoader PDF — CPUだけで毎秒100ページ、PDFをMarkdownに超高速変換するOSSツール</title><link>https://hdknr.github.io/blogs/posts/2026/03/opendataloader-pdf-to-markdown/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/opendataloader-pdf-to-markdown/</guid><description>&lt;p&gt;GPUなしで毎秒100ページ以上のPDF→Markdown変換を実現するオープンソースツール「OpenDataLoader PDF」が話題になっている。Apache 2.0ライセンスで完全無料、CPUのみで動作するため、高価なGPUハードウェアは不要だ。&lt;/p&gt;
+&lt;h2 id="opendataloader-pdf-とは"&gt;OpenDataLoader PDF とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/opendataloader-project/opendataloader-pdf"&gt;OpenDataLoader PDF&lt;/a&gt; は、PDFドキュメントをAI活用に適した構造化データ（Markdown、JSON、HTML等）に変換するオープンソースのパーサーだ。Java で実装されており、Python・Node.js・Java から利用できる。&lt;/p&gt;
+&lt;p&gt;主な特徴:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;超高速処理&lt;/strong&gt;: ローカルモードで 0.05秒/ページ（CPUのみ）、8コア以上のマシンでマルチプロセスバッチ処理すると毎秒100ページ以上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GPU不要&lt;/strong&gt;: CPUだけで高速に動作するため、導入コストが低い&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;高精度&lt;/strong&gt;: ベンチマークで総合精度0.90を達成し、読み順・テーブル・見出し抽出で1位&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Apache 2.0ライセンス&lt;/strong&gt;: 商用利用可能な完全オープンソース&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストール"&gt;インストール&lt;/h2&gt;
+&lt;p&gt;Python パッケージは Java CLI のラッパーのため、&lt;strong&gt;Java 11以上&lt;/strong&gt;と&lt;strong&gt;Python 3.10以上&lt;/strong&gt;が必要だ。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Python&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install -U opendataloader-pdf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Node.js&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install @opendataloader/pdf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Java の場合は Maven で &lt;code&gt;opendataloader-pdf-core&lt;/code&gt; を依存関係に追加する。&lt;/p&gt;
+&lt;h2 id="基本的な使い方"&gt;基本的な使い方&lt;/h2&gt;
+&lt;h3 id="python-でのシンプルな変換"&gt;Python でのシンプルな変換&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; opendataloader_pdf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opendataloader_pdf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;convert(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; input_path&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;file1.pdf&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;file2.pdf&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;folder/&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; output_dir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;output/&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; format&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;markdown,json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;フォルダを指定すれば一括変換も可能だ。出力形式は Markdown、JSON、HTML、プレーンテキスト、注釈付きPDFから選べる。&lt;/p&gt;</description></item><item><title>AIが自分で調べ方を選ぶRAG — モデル推論能力でスケールする新手法</title><link>https://hdknr.github.io/blogs/posts/2026/03/rag-adaptive-search-strategy/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/rag-adaptive-search-strategy/</guid><description>&lt;p&gt;社内資料をRAGで検索しているのに「欲しい情報に限って見つけてくれない」「関係ない文書ばかり読んで的外れな回答をする」という経験はないでしょうか。AIDB が紹介する新しいRAG手法は、&lt;strong&gt;検索方法そのものをモデル自身に判断させる&lt;/strong&gt;というアプローチで、この問題に正面から取り組んでいます。&lt;/p&gt;
+&lt;h2 id="従来ragの限界一本調子の検索"&gt;従来RAGの限界：一本調子の検索&lt;/h2&gt;
+&lt;p&gt;従来のRAGはシンプルです。あらかじめ決まった方法（主にベクトル類似度検索）で文書チャンクを引っ張ってきて、まとめてLLMに渡す。検索がハズれたら、その時点でもう正解にはたどり着けません。&lt;/p&gt;
+&lt;p&gt;どんなに優れたモデルを使っても、読む資料がズレていれば回答の質は上がりません。問題は「LLMの能力」ではなく「検索戦略の固定化」にあります。&lt;/p&gt;
+&lt;h2 id="3つの検索戦略を状況に応じて使い分ける"&gt;3つの検索戦略を状況に応じて使い分ける&lt;/h2&gt;
+&lt;p&gt;この新手法では、モデルが以下の3つの検索戦略から最適なものを選択し、必要に応じて組み合わせます。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;検索戦略&lt;/th&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;th&gt;向いているケース&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;キーワード検索&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;特定の語句・コードをピンポイントで探す&lt;/td&gt;
+&lt;td&gt;固有名詞、型番、コマンドなどを調べるとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;意味検索（セマンティック検索）&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;意味的に近い文書を探す&lt;/td&gt;
+&lt;td&gt;概念的な質問、言い換えが多い文書を扱うとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;チャンク全文読み&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;対象範囲を丸ごと読み込む&lt;/td&gt;
+&lt;td&gt;文脈が重要な長文、前後関係が必要なとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;重要なのは、&lt;strong&gt;どの順番で、どの検索を使うか&lt;/strong&gt;をモデル自身が推論して決定する点です。固定のパイプラインではなく、質問の性質や文書の構造に合わせて動的に戦略を切り替えます。&lt;/p&gt;
+&lt;h2 id="なぜこれが機能するのか"&gt;なぜこれが機能するのか&lt;/h2&gt;
+&lt;h3 id="読み込むテキスト量は同等以下"&gt;読み込むテキスト量は同等以下&lt;/h3&gt;
+&lt;p&gt;従来のRAGと比較して、読み込むテキストの量は同等かそれ以下です。にもかかわらず、回答精度は大きく向上します。これはトークン数の節約にもつながります。&lt;/p&gt;
+&lt;h3 id="モデル進化と共にスケールする構造"&gt;モデル進化と共にスケールする構造&lt;/h3&gt;
+&lt;p&gt;この手法の特筆すべき点は&lt;strong&gt;モデルの推論能力と性能が比例する&lt;/strong&gt;ことです。モデルの推論能力が高いほど、「どの検索を、どの順番で使うか」という判断精度が上がり、RAG全体の性能が向上します。&lt;/p&gt;
+&lt;p&gt;つまり、将来より優れたモデルが登場すれば、RAGのフレームワーク自体を改修しなくても自然に性能が底上げされます。&lt;/p&gt;
+&lt;h2 id="実装への示唆"&gt;実装への示唆&lt;/h2&gt;
+&lt;p&gt;この手法を自社のRAGシステムに取り入れる場合、以下の点が設計のポイントになります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 検索ツールの整備&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;モデルが選択できるよう、複数の検索エンドポイントを用意する必要があります。BM25（キーワード）、ベクトルDB（意味）、ドキュメント取得（全文）の3種を揃えるのが基本構成です。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. ツール呼び出し（Function Calling）の活用&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;OpenAI / Anthropic / Google などの主要LLMはFunction Callingをサポートしています。検索戦略の選択をFunction Callingで実装することで、モデルが自律的に検索を制御できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tools &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;keyword_search&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;固有名詞・型番・コマンドなど特定のキーワードで文書を検索する&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;query&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;semantic_search&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;意味・概念の近さで関連文書を検索する&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;query&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;read_document&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;指定した文書チャンクを全文読み込む&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;document_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;3. 推論能力の高いモデルを選ぶ&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Google Gemini Embedding 2：テキスト・画像・動画・音声を統一ベクトル空間に埋め込むマルチモーダル埋め込みモデル</title><link>https://hdknr.github.io/blogs/posts/2026/03/gemini-embedding-2/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/gemini-embedding-2/</guid><description>&lt;p&gt;Google が 2026年3月に公開した &lt;strong&gt;Gemini Embedding 2&lt;/strong&gt; は、テキスト・画像・動画・音声・ドキュメントを同一のベクトル空間に埋め込める、初のネイティブマルチモーダル埋め込みモデルだ。RAG パイプラインやマルチモーダル検索を構築する開発者にとって注目すべきモデルとなっている。&lt;/p&gt;
+&lt;h2 id="主な特徴"&gt;主な特徴&lt;/h2&gt;
+&lt;h3 id="ネイティブマルチモーダル対応"&gt;ネイティブマルチモーダル対応&lt;/h3&gt;
+&lt;p&gt;従来の埋め込みモデルはテキスト専用か、別モデルで画像を処理する必要があった。Gemini Embedding 2 は全モダリティを &lt;strong&gt;3072次元の統一ベクトル空間&lt;/strong&gt; に直接埋め込む。これにより、テキストで検索して関連する画像や動画を取得するといったクロスモーダル検索が自然に実現できる。&lt;/p&gt;
+&lt;p&gt;対応モダリティと制限:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;モダリティ&lt;/th&gt;
+&lt;th&gt;制限&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;テキスト&lt;/td&gt;
+&lt;td&gt;最大 8,192 トークン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;画像&lt;/td&gt;
+&lt;td&gt;1リクエストあたり最大 6枚（PNG, JPEG）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;動画&lt;/td&gt;
+&lt;td&gt;最大 120秒（MP4, MOV）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;音声&lt;/td&gt;
+&lt;td&gt;ネイティブ対応（テキスト変換不要）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;インターリーブ入力にも対応しており、1つのリクエストに画像とテキストを混在させて渡すことができる。&lt;/p&gt;
+&lt;h3 id="matryoshka-表現学習mrl"&gt;Matryoshka 表現学習（MRL）&lt;/h3&gt;
+&lt;p&gt;Matryoshka Representation Learning（マトリョーシカ表現学習）により、重要な意味情報がベクトルの先頭次元に集約される設計になっている。デフォルトの 3,072次元から 1,536 や 768次元に切り詰めても、検索品質の大部分を維持できる。&lt;/p&gt;
+&lt;p&gt;Google の推奨次元数:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;3,072次元&lt;/strong&gt;：最高品質&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1,536次元&lt;/strong&gt;：高品質（コスト削減向け）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;768次元&lt;/strong&gt;：バランスの良い推奨値&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;768次元に切り詰めた場合でも、同サイズの固定次元モデルを上回る性能を発揮するとされている。&lt;/p&gt;
+&lt;h3 id="多言語対応と性能"&gt;多言語対応と性能&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;100以上の言語をサポート&lt;/li&gt;
+&lt;li&gt;MTEB 多言語リーダーボードで 69.9 を記録しトップランク&lt;/li&gt;
+&lt;li&gt;MTEB コード検索でも 84.0 と高スコア&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="料金"&gt;料金&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;プラン&lt;/th&gt;
+&lt;th&gt;料金&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;リアルタイム API&lt;/td&gt;
+&lt;td&gt;$0.20 / 100万トークン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;バッチ API&lt;/td&gt;
+&lt;td&gt;$0.10 / 100万トークン（50% OFF）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;OpenAI の text-embedding-3-small（$0.02/100万トークン）と比較すると高価だが、マルチモーダル対応を単一モデルで実現している点が差別化要因となる。&lt;/p&gt;</description></item><item><title>ローカルQwenに個人知識を覚えさせたい — ファインチューニング vs RAG</title><link>https://hdknr.github.io/blogs/posts/2026/03/qwen-finetuning-vs-rag/</link><pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/qwen-finetuning-vs-rag/</guid><description>&lt;p&gt;ローカルで Ollama + Qwen を動かしている Mac Studio（M3 Ultra / 96GB）に、NAS 上の PDF やテキストなどのドキュメントを学習させて「個人の知識ベース」として活用したい——そんなとき、ファインチューニングと RAG のどちらを選ぶべきかを整理する。&lt;/p&gt;
+&lt;h2 id="やりたいこと"&gt;やりたいこと&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;NAS に蓄積された個人ドキュメント（PDF、テキスト等）の知識を Qwen に覚えさせたい&lt;/li&gt;
+&lt;li&gt;自分の PC を使った活動に関する知識を、AI が把握している状態にしたい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="選択肢1-ファインチューニングqlora"&gt;選択肢1: ファインチューニング（QLoRA）&lt;/h2&gt;
+&lt;p&gt;モデル自体の重みを更新し、知識を「記憶」させるアプローチ。&lt;/p&gt;
+&lt;h3 id="mac-studio-での実現可能性"&gt;Mac Studio での実現可能性&lt;/h3&gt;
+&lt;p&gt;M3 Ultra / 96GB 統合メモリなら、QLoRA でのファインチューニングは技術的に可能。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;手法&lt;/th&gt;
+&lt;th&gt;必要メモリ目安（7B）&lt;/th&gt;
+&lt;th&gt;ツール&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;QLoRA (4bit)&lt;/td&gt;
+&lt;td&gt;6-8 GB&lt;/td&gt;
+&lt;td&gt;Unsloth, LLaMA-Factory, MLX&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LoRA (16bit)&lt;/td&gt;
+&lt;td&gt;14-16 GB&lt;/td&gt;
+&lt;td&gt;LLaMA-Factory, PEFT&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;フル FT&lt;/td&gt;
+&lt;td&gt;60+ GB&lt;/td&gt;
+&lt;td&gt;非現実的&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Apple Silicon では &lt;strong&gt;MLX&lt;/strong&gt; ベースが最もパフォーマンスが良い。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# MLX での QLoRA 実行例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install mlx-lm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mlx_lm.lora &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --model Qwen/Qwen2.5-Coder-14B-Instruct &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --data ./training_data &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --train &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --batch-size &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --lora-layers &lt;span style="color:#ae81ff"&gt;16&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --iters &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="ファインチューニングの課題"&gt;ファインチューニングの課題&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;最大のボトルネックはデータ準備&lt;/strong&gt;。NAS の生ファイルはそのまま学習データにはならず、instruction 形式への変換が必要になる。&lt;/p&gt;</description></item><item><title>Agentic AI 学習ロードマップ — 「フルスタックインテリジェンス」を9ヶ月で習得する体系的な道筋</title><link>https://hdknr.github.io/blogs/posts/2026/03/cb9c696dbeb648e3286f2976b9a3eac6/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cb9c696dbeb648e3286f2976b9a3eac6/</guid><description>&lt;h1 id="agentic-ai-学習ロードマップ--フルスタックインテリジェンスを9ヶ月で習得する体系的な道筋"&gt;Agentic AI 学習ロードマップ — 「フルスタックインテリジェンス」を9ヶ月で習得する体系的な道筋&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ingliguori/status/2029184341893337547"&gt;@ingliguori 氏（Giuliano Liguori）のポスト&lt;/a&gt;が、Agentic AI を学ぶためのロードマップを共有しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Roadmap to learn Agentic AI:
+AI fundamentals → Python + frameworks → LLMs → Agents architecture → Memory + RAG → Planning &amp;amp; decision-making → RL &amp;amp; self-improvement → Deployment → Real-world automation
+Agentic AI = full-stack intelligence.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「Agentic AI = フルスタックインテリジェンス」というフレーズが示すように、AI エージェントの開発には基礎数学からデプロイまで、フルスタックの知識が求められます。本記事では、このロードマップを複数の学習リソースと照合しながら、各段階で何を学び、どのツールを使い、どこまでを目指すのかを体系的に解説します。&lt;/p&gt;
+&lt;h2 id="ロードマップの全体像"&gt;ロードマップの全体像&lt;/h2&gt;
+&lt;p&gt;Liguori 氏が示した9ステップを、&lt;a href="https://www.scaler.com/blog/agentic-ai-roadmap/"&gt;Scaler の9ヶ月ロードマップ&lt;/a&gt;と &lt;a href="https://roadmap.sh/ai-agents"&gt;roadmap.sh の AI Agents ロードマップ&lt;/a&gt;を参考に、時系列で整理します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;月0-1 AI Fundamentals ← 数学 + ML 基礎
+月1-2 Python + Frameworks ← API + ライブラリ
+月2-3 LLMs ← Transformer + プロンプト
+月3-4 Agents Architecture ← ReAct + ツール使用
+月4-5 Memory + RAG ← ベクトル DB + 検索拡張
+月5-6 Planning &amp;amp; Decision ← 計画 + マルチエージェント
+月6-7 RL &amp;amp; Self-improvement ← フィードバック + 自律性
+月7-8 Deployment ← MLOps + 監視
+月8-9 Real-world Automation ← ポートフォリオ + 実案件
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="step-1-ai-fundamentals月0-1"&gt;Step 1: AI Fundamentals（月0-1）&lt;/h2&gt;
+&lt;h3 id="学ぶこと"&gt;学ぶこと&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;分野&lt;/th&gt;
+&lt;th&gt;具体的な内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;線形代数&lt;/td&gt;
+&lt;td&gt;ベクトル、行列演算、固有値分解、SVD&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;微積分&lt;/td&gt;
+&lt;td&gt;勾配、偏微分、最適化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;確率・統計&lt;/td&gt;
+&lt;td&gt;ベイズの定理、分布、仮説検定&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ML 基礎&lt;/td&gt;
+&lt;td&gt;教師あり/なし学習、評価指標&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="推奨リソース"&gt;推奨リソース&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.khanacademy.org/"&gt;Khan Academy&lt;/a&gt; — 数学基礎&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;Mathematics for Machine Learning&amp;rdquo;（書籍）&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/@StatQuest"&gt;StatQuest&lt;/a&gt; — 統計の直感的理解&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="この段階のゴール"&gt;この段階のゴール&lt;/h3&gt;
+&lt;p&gt;「なぜニューラルネットワークが動くのか」を数学的に説明できること。数式を書ける必要はないが、勾配降下法やベイズ推論の直感を持つことが重要です。&lt;/p&gt;</description></item><item><title>Agentic AIの周期表 — 66要素で読み解くAIエージェント構築の全体像</title><link>https://hdknr.github.io/blogs/posts/2026/03/783efe7ccb15ece292b5d6210664c397/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/783efe7ccb15ece292b5d6210664c397/</guid><description>&lt;h1 id="agentic-ai-の周期表--66-要素で読み解く-ai-エージェント構築の全体像"&gt;Agentic AI の周期表 — 66 要素で読み解く AI エージェント構築の全体像&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ingliguori/status/2028899473653469308"&gt;@ingliguori（Giuliano Liguori）氏のポスト&lt;/a&gt;が話題になっています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Agentic AI now has its own &amp;ldquo;Periodic Table&amp;rdquo;. From: LLM, RAG, RL to PLAN, MAS, LTM to SAFE, HUMAN oversight to HR, MKT, LEGAL use cases. Autonomous AI = memory + planning + tools + safety + collaboration. It&amp;rsquo;s a system, not a prompt.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Capital One の Chief Scientist である Prem Natarajan 氏が、AI エージェント構築に必要な &lt;strong&gt;66 の要素&lt;/strong&gt;を化学の周期表のように体系化した「Agentic AI Periodic Table」を公開しました。LLM や RAG といった基盤技術から、メモリシステム、安全性プロトコル、業務適用まで、エージェント開発の全領域を一枚の表に凝縮しています。&lt;/p&gt;</description></item><item><title># コンテキストエンジニアリング — AI を「使う人」と「使いこなす人」の違い</title><link>https://hdknr.github.io/blogs/posts/2026/02/066b5a501b99b2a36e1e5e4496d1ead0/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/066b5a501b99b2a36e1e5e4496d1ead0/</guid><description>&lt;h1 id="コンテキストエンジニアリング--ai-を使う人と使いこなす人の違い"&gt;コンテキストエンジニアリング — AI を「使う人」と「使いこなす人」の違い&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;紹介ポスト: &lt;a href="https://x.com/7_eito_7/status/2025953809030406420"&gt;えいと @7_eito_7&lt;/a&gt;
+「AIを使っている人と、本当にAIを使いこなしている人の違いは何か。結論はコンテキストエンジニアリングができるかどうか。簡単に言えば、指示の出し方ではなく&lt;strong&gt;どんな文脈を渡しているか&lt;/strong&gt;。」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;2025年半ば、Shopify CEO の Tobi Lütke が次のように発言した:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;「&amp;ldquo;プロンプトエンジニアリング&amp;quot;より&amp;quot;コンテキストエンジニアリング&amp;quot;という言葉の方がずっと好きだ。LLM がタスクを解決できるだけの十分な文脈を与える技術 — これこそが核心的スキルだ。」&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;AI 研究者の Andrej Karpathy もこれに同意し、「コンテキストエンジニアリング」という概念は一気に広まった。2026年現在、プロンプトエンジニアリングの時代は終わり、&lt;strong&gt;コンテキストエンジニアリングが AI 活用の新しい標準&lt;/strong&gt;になりつつある。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="プロンプトエンジニアリング-vs-コンテキストエンジニアリング"&gt;プロンプトエンジニアリング vs コンテキストエンジニアリング&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;観点&lt;/th&gt;
+&lt;th&gt;プロンプトエンジニアリング&lt;/th&gt;
+&lt;th&gt;コンテキストエンジニアリング&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スコープ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;1つの入力テキストの書き方&lt;/td&gt;
+&lt;td&gt;モデルが見る情報の全体設計&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;焦点&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;指示の言い回し・構造&lt;/td&gt;
+&lt;td&gt;情報の選択・順序・形式・量&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;対象&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;単発の質疑応答&lt;/td&gt;
+&lt;td&gt;複雑な推論、マルチターン、エージェント&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;複雑さ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;文章レベル&lt;/td&gt;
+&lt;td&gt;システムレベルのパイプライン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;例え&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;「質問の仕方を工夫する」&lt;/td&gt;
+&lt;td&gt;「解答に必要な教科書・資料・道具を揃える」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;プロンプトエンジニアリングは&lt;strong&gt;コンテキストエンジニアリングの一部&lt;/strong&gt;にすぎない。質問の質ではなく、&lt;strong&gt;AI に渡す情報の質と構造&lt;/strong&gt;が結果を決める。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="なぜプロンプトだけでは不十分なのか"&gt;なぜプロンプトだけでは不十分なのか&lt;/h2&gt;
+&lt;p&gt;よくある問題: RAG で正確な情報を取得し、プロンプトも丁寧に書いた。&lt;strong&gt;それでも AI がハルシネーションを起こす&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;原因はプロンプトでも検索でもなく、&lt;strong&gt;コンテキストの構造&lt;/strong&gt;にある。&lt;/p&gt;
+&lt;h3 id="プロンプトの-3-つの限界"&gt;プロンプトの 3 つの限界&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;情報不足&lt;/strong&gt;: 質問は完璧でも、判断に必要な背景情報が足りない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情報過多&lt;/strong&gt;: 関連情報を全部詰め込むと、かえって精度が落ちる（ノイズに埋もれる）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情報の無秩序&lt;/strong&gt;: 重要な情報とそうでない情報が区別なく並んでいる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;コンテキストエンジニアリングは、この 3 つを体系的に解決する。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="コンテキストエンジニアリングの-4-つの柱"&gt;コンテキストエンジニアリングの 4 つの柱&lt;/h2&gt;
+&lt;h3 id="1-構成composition-何を渡すか"&gt;1. 構成（Composition）— 何を渡すか&lt;/h3&gt;
+&lt;p&gt;タスクに必要な「材料」を選択する:&lt;/p&gt;</description></item><item><title>Apple: App Store Connect</title><link>https://hdknr.github.io/blogs/posts/2024/09/9cf54ef9f8504f942ceeb40789d4fbe7/</link><pubDate>Tue, 03 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/9cf54ef9f8504f942ceeb40789d4fbe7/</guid><description>&lt;h1 id="app-store-connect"&gt;App Store Connect&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://developer.apple.com/jp/help/app-store-connect/reference/screenshot-specifications/"&gt;スクリーンショットの仕様&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="アップデート"&gt;アップデート&lt;/h2&gt;
+&lt;p&gt;✓ Built IPA to build/ios/ipa (46.7MB)
+To upload to the App Store either:
+1. Drag and drop the &amp;ldquo;build/ios/ipa/&lt;em&gt;.ipa&amp;rdquo; bundle into the Apple Transporter macOS app &lt;a href="https://apps.apple.com/us/app/transporter/id1450874784"&gt;https://apps.apple.com/us/app/transporter/id1450874784&lt;/a&gt;
+2. Run &amp;ldquo;xcrun altool &amp;ndash;upload-app &amp;ndash;type ios -f build/ios/ipa/&lt;/em&gt;.ipa &amp;ndash;apiKey your_api_key &amp;ndash;apiIssuer your_issuer_id&amp;rdquo;.
+See &amp;ldquo;man altool&amp;rdquo; for details about how to authenticate with the App Store Connect API key.&lt;/p&gt;
+&lt;h2 id="xcrun-altool-での-apikey-と-apiissuer-の取得方法"&gt;xcrun altool での apiKey と apiIssuer の取得方法&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;xcrun altool&lt;/strong&gt; を使用して App Store Connect にアプリをアップロードする際に、&lt;strong&gt;apiKey&lt;/strong&gt; と &lt;strong&gt;apiIssuer&lt;/strong&gt; の値が必要になりますね。これらの値は、App Store Connect で API キーを作成することで取得できます。&lt;/p&gt;</description></item><item><title>ColPali</title><link>https://hdknr.github.io/blogs/posts/2024/08/9e4638d4420bcf5b99ba203726921888/</link><pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/08/9e4638d4420bcf5b99ba203726921888/</guid><description>&lt;h1 id="colpali"&gt;ColPali&lt;/h1&gt;
+&lt;h2 id="arxiv"&gt;arXiv&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://ja.wikipedia.org/wiki/ArXiv"&gt;アーカイブ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/kun432/scraps/7841793c270e80"&gt;ColPali： PaliGemma-3B と ColBERT ストラテジーに基づくビジュアルレトリバー&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://arxiv.org/abs/2407.01449"&gt;ColPali: Efficient Document Retrieval with Vision Language Models&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/knowledgesense/articles/08cfc3de7464cb"&gt;テキスト抽出不要の RAG を実現する ColPali&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>GetAI: RAG</title><link>https://hdknr.github.io/blogs/posts/2024/04/7495152700831224546a8c1630d54138/</link><pubDate>Fri, 12 Apr 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/04/7495152700831224546a8c1630d54138/</guid><description>&lt;h1 id="rag"&gt;RAG&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://note.com/daichi_mu/n/n11cdd94d33d6"&gt;【勉強メモ】RAG But Better: Cohere AI によるリランカー　 RAG But Better: Rerankers with Cohere AI&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: Bedrock: KnowlegeBase</title><link>https://hdknr.github.io/blogs/posts/2024/03/05df197941702710ea55013287157a16/</link><pubDate>Thu, 14 Mar 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/03/05df197941702710ea55013287157a16/</guid><description>&lt;h1 id="aws-bedrock-knowlege-base"&gt;AWS: Bedrock: Knowlege Base&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://wp-kyoto.net/create-a-new-rag-knowledgebase-using-appflow-and-stripe/"&gt;AppFlow と Amazon Bedrock を利用して Stripe の商品・料金情報についての RAG を作ってみる&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://wp-kyoto.net/get-started-with-bedrock-knowledge-base-with-pinecone/"&gt;Amazon Bedrock に新登場した「Knowledge base」を試してみた（Pinecone 利用編）&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://zenn.dev/kun432/scraps/c3d65c44e60755"&gt;Amazon Bedrock for Knowledge base を試す&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://dev.classmethod.jp/articles/try-bedrock-knowledge-base/"&gt;[やってみた]Amazon Bedrock の Knowledge base を触ってみた #AWSreInvent&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://blog.serverworks.co.jp/easy-rag-setup-knowledge-base-for-amazon-bedrock-aurora-serverless"&gt;【コピペで RAG 構築】Knowledge Base for Amazon Bedrock(Aurora Serverless v2 for PostgreSQL)&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://blog.serverworks.co.jp/bedrock-knowledge-base"&gt;【re:Invent 2023】Knowledge base for Amazon Bedrock が GA したので解説します&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://qiita.com/t_tsuchida/items/7596e2d8384999e24c61"&gt;Amazon Bedrock の Knowledge base を試す&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://dev.classmethod.jp/articles/update-reinvent2023-bedrock-rag/"&gt;[アップデート] Amazon Bedrock で簡単に RAG が実現できる、Retrieval Augmented Generation (RAG) with Knowledge Base がとうとう GA になりました！！ #AWSreinvent&lt;/a&gt;&lt;/p&gt;</description></item><item><title>生成AI: RAG</title><link>https://hdknr.github.io/blogs/posts/2024/02/d1d192cc863cb9fbb1417f49a3067e53/</link><pubDate>Mon, 12 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/d1d192cc863cb9fbb1417f49a3067e53/</guid><description>&lt;h1 id="rag検索拡張生成"&gt;RAG(検索拡張生成)&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;大規模な言語モデルの出力を最適化するプロセスです。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;応答を生成する前に、トレーニングデータソース以外の信頼できる知識ベースを参照します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;大規模言語モデル (LLM) は、膨大な量のデータに基づいてトレーニングされ、何十億ものパラメーターを使用して、質問への回答、言語の翻訳、文章の完成などのタスクのためのオリジナルの出力を生成します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;LLM の既に強力な機能を、モデルを再トレーニングすることなく、特定の分野や組織の内部ナレッジベースに拡張します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;LLM のアウトプットを改善するための費用対効果の高いアプローチであるため、さまざまな状況で関連性、正確性、有用性を維持できます。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;外部ソースから取得した情報を用いて、生成 AI モデルの精度と信頼性を向上させるテクノロジです。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="基盤モデルfm"&gt;基盤モデル(FM)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/what-is/foundation-models/"&gt;基盤モデルとは何ですか?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;BERT&lt;/li&gt;
+&lt;li&gt;GPT(OpenAI)&lt;/li&gt;
+&lt;li&gt;Titan(Amazon)&lt;/li&gt;
+&lt;li&gt;Jurassic(AI21)&lt;/li&gt;
+&lt;li&gt;Claude(Anthropic)&lt;/li&gt;
+&lt;li&gt;Cohere&lt;/li&gt;
+&lt;li&gt;Stable Diffusion&lt;/li&gt;
+&lt;li&gt;BLOOM&lt;/li&gt;
+&lt;li&gt;Hugging Face&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="bedlock"&gt;Bedlock&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.insurtechlab.net/use_amazon_bedrock/"&gt;Amazon Bedrock 使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Amazon SageMaker は機械学習の包括的なライフサイクル（構築、訓練、展開）をサポートする&lt;/li&gt;
+&lt;li&gt;Bedrock は Fine-tuning は出来るものの基本的には Amazon Titan や AI スタートアップの基盤モデル（FM）を API から利用することに重きを置いています。&lt;/li&gt;
+&lt;li&gt;自分たちで最初から構築したモデルでなければビジネスとして成り立たないシーンでは、Amazon Bedrock を選択してはいけません。&lt;/li&gt;
+&lt;li&gt;非常に厳しいセキュリティ要件がある場合にも避けた方が良い&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

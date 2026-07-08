@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Naval Ravikant on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/naval-ravikant/</link><description>Recent content in Naval Ravikant on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/naval-ravikant/index.xml" rel="self" type="application/rss+xml"/><item><title>ソフトウェアだけで勝てた時代の終わり — Naval Ravikant が語る AI 時代の「コピーされない壁」</title><link>https://hdknr.github.io/blogs/posts/2026/04/naval-ravikant-ai-software-commoditization/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/naval-ravikant-ai-software-commoditization/</guid><description>&lt;p&gt;AI が「作る難しさ」を急速に消し去っている今、SaaS の価値を支えていた「ソフトウェアの参入障壁」はもはや機能しない。Naval Ravikant はポッドキャストでこう言い切った ―― &lt;strong&gt;「純粋なソフトウェアは投資対象にならない（pure software is uninvestable）」&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;この発言が注目を集めたのは、Naval が単なる評論家ではなく、AngelList 共同創業者であり Twitter・Uber・Notion など 200 社以上への初期投資家だからだ。言葉を慎重に選ぶ人物が「条件なし」で言い切ったこの一言は、示唆に富む。&lt;/p&gt;
+&lt;h2 id="apple-でさえ安全ではない"&gt;Apple でさえ安全ではない&lt;/h2&gt;
+&lt;p&gt;Naval の議論の核心は Apple の「構造的な死」にある。&lt;/p&gt;
+&lt;p&gt;Apple の時価総額 3 兆ドルは、プレミアムハードウェアの利益率を支えている「優れたソフトウェア体験」によって正当化されてきた。ところが AI はその体験レイヤーをコモディティ化しつつある。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;24 ヶ月以内に、多くのユーザーはアプリを「開く」のではなく「AI エージェントに話しかける」ようになる&lt;/li&gt;
+&lt;li&gt;エージェントがリアルタイムでインターフェースを生成するようになれば、App Store・デザインポリッシュ・エコシステムロックインはすべて意味を失う&lt;/li&gt;
+&lt;li&gt;Apple 自身の AI 投資は期待を下回り、ライバルである Google の Gemini をライセンスするという、自社のアイデンティティを自ら否定する行動をとっている&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これは Microsoft がモバイル時代に犯したミスと同じ構図だ。タッチネイティブ OS を一から作ることを拒み、前の時代の支配的地位への過信で新パラダイムに乗り遅れた。&lt;/p&gt;
+&lt;h2 id="saas-の18-ヶ月の猶予"&gt;SaaS の「18 ヶ月の猶予」&lt;/h2&gt;
+&lt;p&gt;ソフトウェア製品の価値は「作る難しさ」に依存してきた。しかし今やその前提が崩れている。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2 人チームが Claude Code を使えば、多くの B2B SaaS 製品の 80% を 90 日以内に複製できる。おもちゃではなく、適切なアーキテクチャ・基本的なセキュリティ・スケールアップ余地を備えた動作する製品として。（Naval の発言を引用した Mustufa Khan による試算）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この動きはすでに現実だ。Figma の核心機能の 70% を持つデザインツールをソロ開発者が数ヶ月で出荷している。AI ネイティブの CRM が Salesforce の中小市場を侵食し始めている。&lt;/p&gt;</description></item></channel></rss>

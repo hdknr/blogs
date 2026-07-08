@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="oidc-keyless-deploy-flow" name="OIDC Keyless Deploy Flow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="680" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="キーを持たずに AWS へデプロイする OIDC の信頼関係" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="540" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Box 1: GitHub Actions job -->
+        <mxCell id="box1" value="GitHub Actions の job&#xa;&#xa;permissions: id-token: write&#xa;→ 「この run は repo:&lt;ORG&gt;/&lt;REPO&gt; で&#xa;動いている」と GitHub が署名した&#xa;短命の JWT (id-token) を発行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="260" y="80" width="380" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Box 2: configure-aws-credentials -->
+        <mxCell id="box2" value="aws-actions/configure-aws-credentials&#xa;(role-to-assume: デプロイ用ロール ARN)&#xa;&#xa;その JWT を AWS STS に提示して&#xa;sts:AssumeRoleWithWebIdentity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="260" y="230" width="380" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Box 3: AWS STS -->
+        <mxCell id="box3" value="AWS STS&#xa;&#xa;IAM の OIDC IdP + ロールの信頼ポリシー条件&#xa;(aud / sub) を検証し、デプロイ用ロールの&#xa;「一時クレデンシャル (数十分で失効)」を発行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="260" y="370" width="380" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Box 4: tofu apply -->
+        <mxCell id="box4" value="tofu apply が一時クレデンシャルで AWS を操作&#xa;&#xa;保管する秘密 (アクセスキー) はどこにも無い" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="260" y="510" width="380" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows -->
+        <mxCell id="arr-12" value="① id-token" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="box1" target="box2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-23" value="② JWT を提示" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="box2" target="box3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-34" value="③ 一時クレデンシャル" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d79b00;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="box3" target="box4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Side note: claim -->
+        <mxCell id="note" value="信頼ポリシーの条件&#xa;aud = sts.amazonaws.com&#xa;sub = repo:&lt;ORG&gt;/&lt;REPO&gt;:*&#xa;→ 特定リポからの run のみ assume 可" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;verticalAlign=middle;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="370" width="220" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-note" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;strokeWidth=1;dashed=1;endArrow=none;" edge="1" parent="1" source="note" target="box3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

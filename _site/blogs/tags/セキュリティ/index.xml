@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>セキュリティ on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3/</link><description>Recent content in セキュリティ on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 20 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3/index.xml" rel="self" type="application/rss+xml"/><item><title>バイブコーディングの落とし穴 — AIで爆速アプリを作っても、セキュリティを無視したら法廷行き</title><link>https://hdknr.github.io/blogs/posts/2026/05/vibecoding-security-checklist/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/vibecoding-security-checklist/</guid><description>AIで高速開発したアプリを本番公開する前に必ず確認すべき5つのセキュリティチェックリスト。SQLインジェクション・.env漏洩・プライバシーポリシー整備・レートリミット・APIキー隔離を、OWASP ZAP・slowapi・Next.jsのコード例とともに解説。</description></item><item><title>コードを1行も読ませずに AI で脆弱性を100%特定する — AST Deep Structure Map アプローチ（理論編）</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-ast-vulnerability-detection/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-ast-vulnerability-detection/</guid><description>Python の ast モジュールで生成した Deep Structure Map を LLM に渡す脆弱性検出アプローチを解説。Taint Analysis の理論とともに、AI コードレビューの精度を上げる手法を紹介します。</description></item><item><title>CAMPFIRE 個人情報漏洩から学ぶ — GitHub アカウント侵害が招く CI/CD セキュリティリスク</title><link>https://hdknr.github.io/blogs/posts/2026/04/campfire-github-cd-security/</link><pubDate>Sat, 25 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/campfire-github-cd-security/</guid><description>&lt;p&gt;クラウドファンディングプラットフォーム CAMPFIRE が、GitHub アカウントへの不正アクセスを起点に最大 22 万 5,846 件の個人情報が漏洩した可能性があると発表しました（2026 年 4 月 24 日）。単なる「パスワード流出」ではなく、&lt;strong&gt;CD パイプラインを悪用してインフラを乗っ取るという、現代の DevOps が抱えるリスクを象徴するインシデント&lt;/strong&gt;です。本記事ではエンジニア視点で攻撃経路を分析し、再発防止策を考えます。&lt;/p&gt;
+&lt;h2 id="インシデントの経緯"&gt;インシデントの経緯&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;日時&lt;/th&gt;
+&lt;th&gt;出来事&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-02 22:50&lt;/td&gt;
+&lt;td&gt;GitHub アカウントへの不正アクセスを検知。一部ソースコードが閲覧された可能性（初報）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-14&lt;/td&gt;
+&lt;td&gt;第二報：社員・取引先情報の閲覧可能状態を確認&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-22&lt;/td&gt;
+&lt;td&gt;第三報：顧客情報管理システムへの不正アクセス痕跡を確認&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-24&lt;/td&gt;
+&lt;td&gt;個人情報漏洩の可能性を正式発表（最大 22 万 5,846 件）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;漏洩した可能性がある情報は以下のとおりです:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;プロジェクト実行者&lt;/strong&gt; 12 万 929 件：氏名・住所・電話番号・口座情報など（2021 年 2 月以降）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;支援者&lt;/strong&gt; 13 万 155 件：氏名・住所・口座情報など（PayPal 決済、後払い、口座送金返金ユーザー）&lt;/li&gt;
+&lt;li&gt;うち &lt;strong&gt;8 万 2,465 件&lt;/strong&gt;が口座情報を含む&lt;/li&gt;
+&lt;li&gt;クレジットカード情報は対象外（CAMPFIRE 公式発表）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="推定される攻撃経路"&gt;推定される攻撃経路&lt;/h2&gt;
+&lt;p&gt;エンジニア向け技術解説として、@poly_soft（勝又健太）氏が X（旧 Twitter）で以下の攻撃チェーンを推察しています。この分析は公式発表を補完する形で、攻撃者が具体的にどう動いたかを示しています（以下はあくまで推定です）。&lt;/p&gt;
+&lt;h3 id="step-1-cd-権限を持つ-github-アカウントの侵害推定"&gt;Step 1: CD 権限を持つ GitHub アカウントの侵害（推定）&lt;/h3&gt;
+&lt;p&gt;攻撃者が最初に侵害したのは、&lt;strong&gt;単独で CD（継続的デプロイ）をトリガーできる権限を持つ GitHub アカウント&lt;/strong&gt;であったと推定されます。&lt;/p&gt;
+&lt;p&gt;問題の設定として考えられるのは:&lt;/p&gt;</description></item><item><title>Infisical</title><link>https://hdknr.github.io/blogs/wiki/tools/infisical/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/infisical/</guid><description>.env ファイルに依存しないオープンソースのシークレット・証明書・特権アクセス管理プラットフォーム</description></item><item><title>シャドーAI</title><link>https://hdknr.github.io/blogs/wiki/concepts/shadow-ai/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/shadow-ai/</guid><description>IT 部門の承認を経ずに従業員が業務で使用する未承認の AI ツール・サービス</description></item><item><title>シャドーAIがもたらす見えないリスク：IT承認外のAIツール利用が企業に生む新たな盲点</title><link>https://hdknr.github.io/blogs/posts/2026/04/shadow-ai-risks/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/shadow-ai-risks/</guid><description>&lt;p&gt;生成 AI ツールの急速な普及により、IT 部門の承認を経ずに従業員が独自に AI を活用する「シャドー AI」が企業セキュリティの新たな盲点として注目されている。本記事では、シャドー AI が引き起こすリスクと、その対策について整理する。&lt;/p&gt;
+&lt;h2 id="シャドー-ai-とは"&gt;シャドー AI とは&lt;/h2&gt;
+&lt;p&gt;「シャドー IT」は以前からある概念だが、生成 AI の登場でその問題は一段と深刻になった。**シャドー AI（Shadow AI）**とは、IT 部門や情報セキュリティ部門の審査・承認を受けずに、従業員が業務で使用する AI ツールやサービスのことを指す。&lt;/p&gt;
+&lt;p&gt;ChatGPT・Gemini・Claude・Copilot などの生成 AI サービスは、個人アカウントで無料または低コストで利用できる。利便性が高いため、IT 部門の手続きを待たずに「とりあえず使ってみる」ケースが後を絶たない。&lt;/p&gt;
+&lt;p&gt;調査によれば、&lt;strong&gt;従業員の約 40% が業務で非承認の生成 AI ツールを使用している&lt;/strong&gt;とされており、多くの企業でシャドー AI が組織的な管理の外に広がっている。&lt;/p&gt;
+&lt;h2 id="シャドー-ai-が生む具体的なリスク"&gt;シャドー AI が生む具体的なリスク&lt;/h2&gt;
+&lt;h3 id="1-機密情報個人情報の漏洩"&gt;1. 機密情報・個人情報の漏洩&lt;/h3&gt;
+&lt;p&gt;最も深刻なリスクは、社内の機密情報が AI サービス側に送信されることによるデータ漏洩だ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;実例: Samsung の機密漏洩事件（2023年）&lt;/strong&gt;&lt;br&gt;
+Samsung の半導体部門の社員が、ChatGPT に機密のソースコードを貼り付けてデバッグを依頼したり、社内会議の音声を要約させたりした結果、社内機密が外部サーバーに送信されたインシデントが発生した。この件が発覚した後、Samsung は社内での ChatGPT 利用を一時禁止している。&lt;/p&gt;
+&lt;p&gt;社員が AI に入力する情報として問題になりやすいのは:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ソースコード・設計仕様書&lt;/li&gt;
+&lt;li&gt;顧客情報・個人情報（氏名、メールアドレス、契約情報など）&lt;/li&gt;
+&lt;li&gt;財務データ・未公開の経営情報&lt;/li&gt;
+&lt;li&gt;社内メール・会議議事録&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;多くの商用 AI サービスは、無料プランやデフォルト設定では入力データをモデルの学習・改善に利用する場合がある。エンタープライズ契約や特定のオプト設定が必要だが、シャドー利用ではそのような設定は行われていない。&lt;/p&gt;
+&lt;h3 id="2-コンプライアンス規制違反"&gt;2. コンプライアンス・規制違反&lt;/h3&gt;
+&lt;p&gt;個人情報保護法（GDPR、日本の個人情報保護法）や業界固有の規制（医療分野の HIPAA、金融分野の各種規制）では、個人情報の取り扱いに厳しい要件がある。IT 部門の審査を通じて利用規約・データ処理契約を確認せずに AI ツールを使用すると、意図せず法令違反を犯す可能性がある。&lt;/p&gt;
+&lt;h3 id="3-ai-の出力に対する品質責任管理の欠如"&gt;3. AI の出力に対する品質・責任管理の欠如&lt;/h3&gt;
+&lt;p&gt;生成 AI はハルシネーション（事実と異なる情報の生成）を起こす。IT 部門・品質管理部門が把握していないツールを使って作成された成果物がそのままリリースや提案書に使われると、品質問題に発展しうる。&lt;/p&gt;</description></item><item><title>バイブコーディングの怖い話：AI丸投げ開発が招いた医療データ流出事件</title><link>https://hdknr.github.io/blogs/posts/2026/04/vibe-coding-security-risk/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/vibe-coding-security-risk/</guid><description>&lt;p&gt;海外で発生した実際のインシデント「An AI Vibe Coding Horror Story」を元に、AI に開発を丸投げするリスクを解説します。技術的リテラシーのないまま本番環境を構築した結果、患者データが完全露出するという深刻な事態が起きました。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h2 id="何が起きたのか"&gt;何が起きたのか&lt;/h2&gt;
+&lt;p&gt;専門知識のない医療従事者が、AI を使って自分専用の患者管理システムをゼロから自作しました。業界で実績のある既存ソフトウェアを使わず、「自分のバイブ（感覚）」で開発を進めたのです。&lt;/p&gt;
+&lt;p&gt;元記事: &lt;a href="https://www.tobru.ch/an-ai-vibe-coding-horror-story/"&gt;An AI Vibe Coding Horror Story&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="システムの問題点"&gt;システムの問題点&lt;/h2&gt;
+&lt;p&gt;AI が生成したこのアプリには、致命的なセキュリティ上の欠陥が多数ありました。&lt;/p&gt;
+&lt;h3 id="アーキテクチャの問題"&gt;アーキテクチャの問題&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;単一 HTML ファイル構成&lt;/strong&gt;: すべてのプログラムが 1 つの HTML ファイルに詰め込まれた簡素な構造&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;クライアントサイド認証&lt;/strong&gt;: パスワードなどの認証機能がブラウザ側の処理だけで実装されていた&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;アクセス制御なし&lt;/strong&gt;: データベースへのアクセス制限が全くなく、誰でも中身を閲覧できる状態&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="データ管理の問題"&gt;データ管理の問題&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;蓄積されていた大量の患者データをそのまま自作アプリに移行&lt;/li&gt;
+&lt;li&gt;全データが暗号化されず、無防備な状態で公開サーバーに配置&lt;/li&gt;
+&lt;li&gt;適切なセキュリティ設定をしないままインターネット上に公開&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="プライバシーの問題"&gt;プライバシーの問題&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;診察中の会話を録音し、外部の AI サービスに送信して要約させる機能を実装&lt;/li&gt;
+&lt;li&gt;患者の個人情報や音声データが、事前の同意なく海外のサーバーへ転送&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="被害の深刻さ"&gt;被害の深刻さ&lt;/h2&gt;
+&lt;p&gt;わずか &lt;strong&gt;30 分の調査&lt;/strong&gt; で、全ての患者データに対する読み書き権限が奪取されました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;患者の個人情報が完全に露出&lt;/li&gt;
+&lt;li&gt;音声データも含めた機密情報が外部に流出&lt;/li&gt;
+&lt;li&gt;現地の個人情報保護法や医療従事者の守秘義務に違反している可能性が極めて高い状況&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="問題の本質"&gt;問題の本質&lt;/h2&gt;
+&lt;p&gt;不備を指摘された本人は、&lt;strong&gt;AI が生成した定型文で回答&lt;/strong&gt;し、問題の深刻さを理解していませんでした。&lt;/p&gt;
+&lt;p&gt;これはバイブコーディングの本質的なリスクを示しています：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AI はコードを生成できるが、&lt;strong&gt;セキュリティ要件の判断はできない&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;開発者が仕組みを理解していないと、問題が起きても原因を特定できない&lt;/li&gt;
+&lt;li&gt;「動いているように見える」と「安全に動いている」は全く別の話&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="開発の民主化とリテラシーのトレードオフ"&gt;開発の民主化とリテラシーのトレードオフ&lt;/h2&gt;
+&lt;p&gt;AI によって開発の民主化が進み、非エンジニアでもアプリケーションを作れる時代になりました。一方で、最低限の技術的リテラシーがないと重大な事故を招くリスクも同時に高まっています。&lt;/p&gt;
+&lt;p&gt;特に以下の領域では、専門知識なしの AI 開発は高リスクです：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;領域&lt;/th&gt;
+&lt;th&gt;リスク&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;医療・健康データ&lt;/td&gt;
+&lt;td&gt;個人情報保護法・医療法違反&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;金融データ&lt;/td&gt;
+&lt;td&gt;金融規制・顧客情報保護&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;個人認証システム&lt;/td&gt;
+&lt;td&gt;なりすまし・不正アクセス&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;本番環境のインフラ&lt;/td&gt;
+&lt;td&gt;サービス停止・データ消失&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;バイブコーディングは強力なツールですが、&lt;strong&gt;「AI に生成させたコードを理解できる人間が監督する」&lt;/strong&gt; という原則なしには危険です。&lt;/p&gt;</description></item><item><title>メルカリのClaude Code企業導入ガイド：セキュリティ設定と組織配布の実践戦略</title><link>https://hdknr.github.io/blogs/posts/2026/04/mercari-claude-code-org-security/</link><pubDate>Sat, 11 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/mercari-claude-code-org-security/</guid><description>&lt;p&gt;メルカリが「Claude Code Meetup Japan #4」で公開した資料が注目を集めている。エンジニアだけでなく非エンジニアにもClaude Codeを全社展開するにあたって実施したセキュリティ設定と、MDMを活用した組織配布の実践的な戦略が体系的にまとめられている。&lt;/p&gt;
+&lt;h2 id="claude-codeがもたらすリスク"&gt;Claude Codeがもたらすリスク&lt;/h2&gt;
+&lt;p&gt;Claude Codeは非常に強力なツールだが、その強力さゆえにセキュリティリスクも伴う。具体的には以下の操作が可能なため、適切な制限なしに利用すると重大な問題につながりかねない。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ファイルの検索・読み書き・編集&lt;/li&gt;
+&lt;li&gt;Webページの取得・検索&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;任意のコマンドの実行&lt;/strong&gt;（&lt;code&gt;rm -rf&lt;/code&gt; や &lt;code&gt;curl&lt;/code&gt; など）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;PCに保存されている認証情報（APIキー、AWSクレデンシャルなど）や重要なファイルに、LLMが直接アクセスできてしまう状態は大きなリスクとなる。&lt;/p&gt;
+&lt;h2 id="メルカリが実施した5つのセキュリティ対策"&gt;メルカリが実施した5つのセキュリティ対策&lt;/h2&gt;
+&lt;p&gt;メルカリのAI Security Teamはこれらのリスクに対し、以下の5つの対策を実施した。&lt;/p&gt;
+&lt;h3 id="1-バイパスモードの禁止"&gt;1. バイパスモードの禁止&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;--dangerously-skip-permissions&lt;/code&gt; などのバイパスオプションを利用禁止にし、ユーザーによる確認ステップを必ず経由させる。LLMが自律的に危険な操作を実行できないようにする基本的な設定だ。&lt;/p&gt;
+&lt;h3 id="2-危険コマンドの確認必須化"&gt;2. 危険コマンドの確認必須化&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;bash&lt;/code&gt; の実行や &lt;code&gt;curl&lt;/code&gt; による外部通信など、影響範囲の大きいコマンドは都度ユーザーの確認を求めるように設定する。自動承認させずに人間が内容を確認してから実行させる。&lt;/p&gt;
+&lt;h3 id="3-危険な操作の禁止"&gt;3. 危険な操作の禁止&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;環境変数の読み込み（APIキー等の漏洩を防ぐ）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo&lt;/code&gt; によるシステム管理者権限での操作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらを設定レベルで禁止することで、意図しない権限昇格やクレデンシャルの流出を防ぐ。&lt;/p&gt;
+&lt;h3 id="4-sandboxによる操作範囲の制限"&gt;4. Sandboxによる操作範囲の制限&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;作業ディレクトリ外へのファイルアクセスを制限&lt;/li&gt;
+&lt;li&gt;不要なネットワークアクセスを制限&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Sandboxを活用することで、Claude Codeの操作範囲を必要最小限に絞り込む。&lt;/p&gt;
+&lt;h3 id="5-セキュリティポリシーのシステムプロンプトへの組み込み"&gt;5. セキュリティポリシーのシステムプロンプトへの組み込み&lt;/h3&gt;
+&lt;p&gt;社内のセキュリティポリシーをClaude Codeのシステムプロンプト（&lt;code&gt;CLAUDE.md&lt;/code&gt; など）に直接記述する。LLM自体にセキュリティ意識を持たせる「教育」的なアプローチだ。&lt;/p&gt;
+&lt;h2 id="組織配布の課題と解決策"&gt;組織配布の課題と解決策&lt;/h2&gt;
+&lt;p&gt;全社員に安全な設定を届けるうえで、メルカリが直面した課題がある。エンジニアと非エンジニアで求める設定のニーズが相反するという点だ。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;対象&lt;/th&gt;
+&lt;th&gt;ニーズ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;エンジニア&lt;/td&gt;
+&lt;td&gt;柔軟にカスタマイズできる設定&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;非エンジニア&lt;/td&gt;
+&lt;td&gt;何も考えなくても安全な初期設定&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="mdmを活用した属性別の設定配布"&gt;MDMを活用した属性別の設定配布&lt;/h3&gt;
+&lt;p&gt;メルカリはMDM（Mobile Device Management：端末管理システム）と連携し、社員属性（エンジニア / 非エンジニア）に応じて配布する設定を分離した。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;非エンジニア向け&lt;/strong&gt;: 最も制限が強い安全な設定を自動適用。ユーザー側での変更を不要にする&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エンジニア向け&lt;/strong&gt;: 基本的な安全性を担保しつつ、業務に応じたカスタマイズを許容する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これにより、全社員が「最初から安全な環境でClaude Codeを使える」状態を実現している。&lt;/p&gt;
+&lt;h2 id="企業でclaude-codeを導入する際のポイント"&gt;企業でClaude Codeを導入する際のポイント&lt;/h2&gt;
+&lt;p&gt;メルカリの事例から、企業導入に際して押さえておきたいポイントをまとめる。&lt;/p&gt;</description></item><item><title>Claude Code にカオスエンジニアリングエージェントを導入してリポジトリの弱点を発見する</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-chaos-engineer-agent/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-chaos-engineer-agent/</guid><description>&lt;p&gt;Claude Code のカスタムエージェント機能を使って「カオスエンジニア」を導入すると、リポジトリの潜在的な弱点を自動的に発見できる。&lt;code&gt;.md&lt;/code&gt; ファイルを1つ置くだけで有効化でき、驚くほど多くの問題が見つかることで話題になっている。&lt;/p&gt;
+&lt;h2 id="カオスエンジニアリングとは"&gt;カオスエンジニアリングとは&lt;/h2&gt;
+&lt;p&gt;カオスエンジニアリングは、本番システムに意図的に障害を注入してシステムの耐障害性を検証する手法だ。Netflix が提唱した概念で、&lt;code&gt;Chaos Monkey&lt;/code&gt; のような自動障害注入ツールが知られている。&lt;/p&gt;
+&lt;p&gt;Claude Code にカオスエンジニアリングの思考を持ったエージェントを持ち込むと、コードベースに対して「もし〇〇が壊れたら？」という視点で弱点分析を行ってくれる。&lt;/p&gt;
+&lt;h2 id="導入方法"&gt;導入方法&lt;/h2&gt;
+&lt;p&gt;Claude Code のカスタムエージェントは &lt;code&gt;.claude/agents/&lt;/code&gt; ディレクトリに &lt;code&gt;.md&lt;/code&gt; ファイルを置くだけで使える。&lt;/p&gt;
+&lt;p&gt;以下が chaos-engineer エージェントの定義例だ:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# chaos-engineer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたはカオスエンジニアリングの専門家です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;システムに意図的に障害を起こす視点でリポジトリを分析し、
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;潜在的な弱点・単一障害点・エラーハンドリングの欠如を特定してください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 分析観点
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 単一障害点（SPOF）の特定
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; エラーハンドリングの欠如箇所
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; タイムアウト設定の不備
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; リトライ処理の欠如
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 環境変数・設定値のハードコーディング
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 依存サービスがダウンした場合の挙動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; データ整合性が保証されない処理
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; テストカバレッジが低い重要処理
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 出力形式
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;各問題について以下を明記する:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 問題箇所（ファイルパス・行番号）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 障害シナリオ
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 影響範囲
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 推奨する対策
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このファイルを &lt;code&gt;.claude/agents/chaos-engineer.md&lt;/code&gt; として保存する。&lt;/p&gt;</description></item><item><title>AI エージェント時代のシークレット管理</title><link>https://hdknr.github.io/blogs/wiki/guides/ai-agent-secret-management/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/guides/ai-agent-secret-management/</guid><description>AI エージェントが平文の .env にアクセスする問題への対策ガイド</description></item><item><title>Exposure Management</title><link>https://hdknr.github.io/blogs/wiki/concepts/exposure-management/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/exposure-management/</guid><description>脆弱性×資産重要度×攻撃可能性を統合的に評価する新しいセキュリティアプローチ</description></item><item><title>FIDO2/パスキー認証</title><link>https://hdknr.github.io/blogs/wiki/concepts/fido2-passkey/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/fido2-passkey/</guid><description>秘密を送信しない公開鍵ベースの認証で、フィッシング耐性を構造的に実現する次世代認証</description></item><item><title>GitHub Actions スクリプトインジェクション対策</title><link>https://hdknr.github.io/blogs/wiki/guides/github-actions-security/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/guides/github-actions-security/</guid><description>GitHub Actions で ${{ }} テンプレート式の不適切な使用による攻撃を防ぐガイド</description></item><item><title>メール認証（SPF/DKIM/DMARC）</title><link>https://hdknr.github.io/blogs/wiki/concepts/email-authentication/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/email-authentication/</guid><description>なりすまし防止のためのメール認証技術3層：送信元IP検証・電子署名・ポリシー決定</description></item><item><title>プロンプトインジェクション</title><link>https://hdknr.github.io/blogs/wiki/concepts/prompt-injection/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/prompt-injection/</guid><description>ユーザー入力にシステムプロンプトを改ざんするコードを混在させる攻撃手法</description></item><item><title>NemoClaw触ってみた：OpenClawのセキュリティ問題を解消できるのか？</title><link>https://hdknr.github.io/blogs/posts/2026/03/nemoclaw-openclaw-security/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/nemoclaw-openclaw-security/</guid><description>&lt;p&gt;NVIDIAがGTC 2026（2026年3月16日）で発表した「NemoClaw」は、OpenClawのセキュリティ・プライバシー層を強化するオープンソーススタックです。OpenClawの競合ではなく、OpenClawを包み込む構造になっており、企業や業務利用での安全なAIエージェント運用を実現することを目指しています。&lt;/p&gt;
+&lt;p&gt;本記事では、NemoClawとは何か、OpenClawとの関係、ポリシーファイルの設定方法、導入フロー、実際に触れてみての所感をまとめます。&lt;/p&gt;
+&lt;h2 id="nemoclawとは"&gt;NemoClawとは&lt;/h2&gt;
+&lt;p&gt;NemoClawはNVIDIAが発表したOpenClaw専用のセキュリティプラグインです。内部では &lt;strong&gt;OpenShell&lt;/strong&gt; というサンドボックスランタイムを使い、AIエージェントをLinuxコンテナで隔離します。ファイルシステム・ネットワーク・プロセスをポリシーで制御し、OpenClaw単体では防ぎきれなかったセキュリティ上の問題に対処します。&lt;/p&gt;
+&lt;p&gt;構成は以下の3層です:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;OpenShell&lt;/strong&gt;: 汎用サンドボックスランタイム。AIエージェントをLinuxコンテナで隔離&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;NemoClaw&lt;/strong&gt;: OpenClaw専用プラグイン（セキュリティ・プライバシー層）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenClaw&lt;/strong&gt;: サンドボックス内で動作するエージェント本体&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="openclawのセキュリティ問題とは"&gt;OpenClawのセキュリティ問題とは&lt;/h2&gt;
+&lt;p&gt;OpenClawには &lt;code&gt;tools.deny&lt;/code&gt; による制限機能がありますが、アプリケーション層での制御であるため、バグや迂回経路が発見されると突破されてしまうリスクがあります。プロンプトインジェクション攻撃によるデータ漏洩や、意図しないシステムコールの実行が代表的な懸念点です。&lt;/p&gt;
+&lt;h2 id="セキュリティの4層防御"&gt;セキュリティの4層防御&lt;/h2&gt;
+&lt;p&gt;NemoClawは以下の4層でセキュリティを確保します:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;層&lt;/th&gt;
+&lt;th&gt;技術&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ファイルシステム&lt;/td&gt;
+&lt;td&gt;Landlock LSM（カーネルモジュール）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ネットワーク&lt;/td&gt;
+&lt;td&gt;egress proxy + アプリケーション単位制御&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プロセス&lt;/td&gt;
+&lt;td&gt;seccomp + コンテナ隔離&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;推論&lt;/td&gt;
+&lt;td&gt;ゲートウェイ経由ルーティング&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最大の特徴は「&lt;strong&gt;アプリ層ではなくカーネル層で強制される&lt;/strong&gt;」点です。OpenClawの &lt;code&gt;tools.deny&lt;/code&gt; と異なり、バグや迂回方法が発見されても突破できません。&lt;/p&gt;
+&lt;h2 id="ネットワーク制御の仕組み"&gt;ネットワーク制御の仕組み&lt;/h2&gt;
+&lt;p&gt;NemoClawのネットワーク制御は &lt;strong&gt;Deny by default&lt;/strong&gt; が原則で、全通信がデフォルトでブロックされます。許可は「アプリケーション×ホスト」の組み合わせで明示的に指定します。&lt;/p&gt;
+&lt;p&gt;例えば:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;git&lt;/code&gt; → GitHub接続を許可&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;curl&lt;/code&gt; → ブロック&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;このような細粒度の制御により、仮にエージェントが悪意あるプロンプトインジェクションを受けても、データの外部流出が不可能になります。&lt;/p&gt;
+&lt;h2 id="ポリシーファイル"&gt;ポリシーファイル&lt;/h2&gt;
+&lt;p&gt;ポリシーはYAML形式で宣言的に記述します。読み書き可能なパス、ネットワーク接続先、許可するバイナリを定義でき、GitOpsでの運用も可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ポリシーファイルの例（概念的な構成）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;filesystem&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;read&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/workspace&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/home/agent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;write&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/workspace/output&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;network&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;allow&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;binary&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;git&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;hosts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;github.com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;api.github.com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;process&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;allow_binaries&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;git&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;python3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;pip&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このようなポリシーファイルをリポジトリで管理することで、セキュリティ要件の変更履歴を追跡し、レビュープロセスを通じて変更を管理できます。&lt;/p&gt;</description></item></channel></rss>

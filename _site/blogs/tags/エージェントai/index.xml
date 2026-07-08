@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>エージェントAI on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88ai/</link><description>Recent content in エージェントAI on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 14 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88ai/index.xml" rel="self" type="application/rss+xml"/><item><title>2026年に求められるAIエンジニアのロードマップ — 350万インプレッション超の話題スレッドを解説</title><link>https://hdknr.github.io/blogs/posts/2026/04/2026-ai-engineer-roadmap/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/2026-ai-engineer-roadmap/</guid><description>&lt;p&gt;Claude Code などで AI 開発が急速に進化する中、「2026年に求められるエンジニア」をまとめたロードマップが 350万インプレッション超で話題になっています。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://x.com/rohit4verse"&gt;@rohit4verse&lt;/a&gt; が投稿した「&lt;strong&gt;the 2026 ai engineer roadmap&lt;/strong&gt;」という記事スレッドを、&lt;a href="https://x.com/7_eito_7"&gt;@えいと&lt;/a&gt; が日本語で紹介・解説したツイートが大きな反響を呼びました。&lt;/p&gt;
+&lt;h2 id="なぜ今このロードマップが注目されるのか"&gt;なぜ今このロードマップが注目されるのか&lt;/h2&gt;
+&lt;p&gt;AI 開発ツールの普及により、「プロンプトを書くだけ」のエンジニアと「AIを使ってシステムを設計・構築できる」エンジニアの間に、急速なスキルギャップが生まれています。&lt;/p&gt;
+&lt;p&gt;原文のロードマップはその格差を端的に表現しています:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;most developers are building toys while the world demands systems. tutorial hell is a comfortable grave for your career. in 2026 the gap between a prompt engineer and a systems architect is 150k.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;（多くの開発者はおもちゃを作っている。しかし世界が求めているのはシステムだ。チュートリアル地獄はキャリアの快適な墓場だ。2026年、プロンプトエンジニアとシステムアーキテクトの年収差は15万ドルになる。）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="2026年に求められるエンジニアの要素"&gt;2026年に求められるエンジニアの要素&lt;/h2&gt;
+&lt;p&gt;ロードマップで強調されているポイントを整理します。&lt;/p&gt;
+&lt;h3 id="1-aiをツールではなくシステムとして扱う能力"&gt;1. AIをツールではなく「システム」として扱う能力&lt;/h3&gt;
+&lt;p&gt;単に LLM API を呼び出すだけでなく、エージェント設計・マルチエージェント協調・状態管理・エラーハンドリングを含む&lt;strong&gt;AIシステム全体を設計・実装する力&lt;/strong&gt;が求められます。&lt;/p&gt;
+&lt;h3 id="2-アプライドai応用aiの実践力"&gt;2. アプライドAI（応用AI）の実践力&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;RAG（検索拡張生成）&lt;/strong&gt;: 適切なチャンキング、埋め込み、検索戦略の設計&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ファインチューニング vs プロンプト設計&lt;/strong&gt;: コストとユースケースに応じた適切な判断&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;評価・モニタリング&lt;/strong&gt;: LLM の出力品質を定量的に評価するパイプラインの構築&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-フルスタック--ai-の統合"&gt;3. フルスタック + AI の統合&lt;/h3&gt;
+&lt;p&gt;バックエンド・フロントエンドの両方に AI を組み込む能力。API 設計からフロントエンドの AI UX まで、エンドツーエンドで実装できるエンジニアの需要が高まっています。&lt;/p&gt;</description></item></channel></rss>

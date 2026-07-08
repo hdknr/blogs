@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ノーコード on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%8E%E3%83%BC%E3%82%B3%E3%83%BC%E3%83%89/</link><description>Recent content in ノーコード on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Sat, 13 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%8E%E3%83%BC%E3%82%B3%E3%83%BC%E3%83%89/index.xml" rel="self" type="application/rss+xml"/><item><title>コードゼロで最初のAIエージェントを作る完全ガイド — Claude Projects・Cowork・スケジュール実行の3ステップ</title><link>https://hdknr.github.io/blogs/posts/2026/06/claude-ai-agent-first-build-no-code/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/claude-ai-agent-first-build-no-code/</guid><description>&lt;p&gt;AIエージェントの話はどこでも聞こえてくる。調査するエージェント、文章を書くエージェント、メールを管理し、スプレッドシートを更新し、レポートをまとめ、あなたが寝ている間にワークフロー全体を実行するエージェントまで登場している。&lt;/p&gt;
+&lt;p&gt;すごそうに聞こえる。テクニカルでなければ不可能にも聞こえる。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;不可能ではない。これから証明する。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;この記事を読み終えるころには、最初から最後まで一切手を触れることなくタスクを実行できる動作するAIエージェントが手元に存在する。コーディング不要。APIキー不要。ターミナルコマンド不要。Claude、明確な指示、そして30分の時間があれば十分だ。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="aiエージェントとは何か難しい言葉を使わずに説明する"&gt;AIエージェントとは何か（難しい言葉を使わずに説明する）&lt;/h2&gt;
+&lt;p&gt;技術的な定義はいったん忘れていい。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AIエージェントとは、あなたが一度に一つずつやっていた複数のステップをClaudeが自動で実行してくれるものだ。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;普通にClaudeを使うと、こんなフローになる:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;トピックを調査するよう指示する&lt;/li&gt;
+&lt;li&gt;結果を読む&lt;/li&gt;
+&lt;li&gt;アウトラインを書くよう指示する&lt;/li&gt;
+&lt;li&gt;確認する&lt;/li&gt;
+&lt;li&gt;記事を書くよう指示する&lt;/li&gt;
+&lt;li&gt;編集する&lt;/li&gt;
+&lt;li&gt;フォーマットするよう指示する&lt;/li&gt;
+&lt;li&gt;コピーする&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これはすべて手動による往復作業の繰り返しだ。それぞれでユーザーが読んで、承認して、次の指示を手動で出さなければならない。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;エージェントはこれらのステップを自動で順番に実行する。&lt;/strong&gt; 「このトピックを調査して、アウトラインを作り、完全な記事を書いて、出版用にフォーマットして」と言うだけで、Claudeは4つのステップを次々と実行し、完成品を届けてくれる。&lt;/p&gt;
+&lt;p&gt;違いはそれだけだ。チャットボットは1つのことをして待つ。エージェントは一連のことをして完成したアウトプットを届ける。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="コードなしで構築できる3種類のエージェント"&gt;コードなしで構築できる3種類のエージェント&lt;/h2&gt;
+&lt;p&gt;APIは不要。Agent SDKも不要。コードを1行も書く必要はない。&lt;/p&gt;
+&lt;p&gt;Claudeの既存ツールだけで3種類のエージェントを構築できる:&lt;/p&gt;
+&lt;h3 id="タイプ1-チャットエージェントclaude-projects"&gt;タイプ1: チャットエージェント（Claude Projects）&lt;/h3&gt;
+&lt;p&gt;マルチステップのワークフローを定義するシステムプロンプトを持つClaude Project。タスクを与えると、システムプロンプトに従うべき順序が明示されているため、フルワークフローを自動実行する。&lt;/p&gt;
+&lt;h3 id="タイプ2-ファイルエージェントclaude-cowork"&gt;タイプ2: ファイルエージェント（Claude Cowork）&lt;/h3&gt;
+&lt;p&gt;コンピュータ上のファイルを処理するCoworkタスク。フォルダを読み込み、各ファイルを処理し、出力を作成して、すべてを整理する。一つの指示から。&lt;/p&gt;
+&lt;h3 id="タイプ3-スケジュール実行エージェントcowork--schedule"&gt;タイプ3: スケジュール実行エージェント（Cowork + /schedule）&lt;/h3&gt;
+&lt;p&gt;スケジュールに従って自動実行するCoworkタスク。朝7時にエージェントが起動し、メールを確認し、重要なものをまとめ、デスクトップにブリーフィングを保存する。あなたからの入力は一切不要。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3つ全部構築する。最もシンプルなものから始める。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="build-1-リサーチ記事エージェント15分"&gt;Build 1: リサーチ→記事エージェント（15分）&lt;/h2&gt;
+&lt;p&gt;これはトピックを受け取り、完成した記事を生成するチャットエージェントだ。インプット1つ、アウトプット1つ。&lt;/p&gt;
+&lt;h3 id="ステップ1-新しいclaude-projectを作る"&gt;ステップ1: 新しいClaude Projectを作る&lt;/h3&gt;
+&lt;p&gt;Claudeを開く。「Projects」をクリック。「Create Project」をクリック。名前を「Article Agent」にする。&lt;/p&gt;
+&lt;h3 id="ステップ2-システムプロンプトを書く"&gt;ステップ2: システムプロンプトを書く&lt;/h3&gt;
+&lt;p&gt;プロジェクトのシステムプロンプトに以下を貼り付ける:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;You are an autonomous article production agent. When the user gives you a topic,
+you execute the following workflow automatically without stopping for approval between steps:
+STEP 1 - RESEARCH
+Search the web for the latest information on this topic. Find 5-7 relevant sources.
+Extract the key insights, statistics, and expert perspectives.
+STEP 2 - ANGLE
+Based on your research, identify the most interesting angle. What does the reader already
+believe about this topic? How can we challenge or expand that belief? Choose the angle
+that would generate the most engagement.
+STEP 3 - OUTLINE
+Create a detailed article outline:
+- Opening hook (contrast between common belief and reality)
+- 5-7 main sections with bold subheadings
+- Specific data points or examples for each section
+- Closing CTA
+STEP 4 - WRITE
+Write the complete article. 2000-3000 words. Short paragraphs (3 sentences max).
+Bold the key insight in every section. Specific numbers over vague claims.
+Direct, conversational tone. Zero filler.
+STEP 5 - REVIEW
+Review the article against these quality criteria:
+- Does every section add new information?
+- Are all claims supported by specific numbers or examples?
+- Would a busy person stop reading at any point? If yes, fix those sections.
+- Is the opening hook genuinely compelling?
+Output the final article. Include a recommended title at the top.
+Execute all 5 steps in one response. Do not ask for approval between steps.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="ステップ3-テストする"&gt;ステップ3: テストする&lt;/h3&gt;
+&lt;p&gt;「Article Agent」プロジェクトで新しい会話を開く。一文を入力する:&lt;/p&gt;</description></item><item><title>Zapier を使った HubSpot と Asana の連携：集計ロジックも追加する方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/zapier-hubspot-asana/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/zapier-hubspot-asana/</guid><description>&lt;p&gt;Zapier を使って HubSpot と Asana を連携させる方法と、Code by Zapier で集計ロジックを追加するテクニックを紹介します。&lt;/p&gt;
+&lt;h2 id="hubspot--asana-連携の基本"&gt;HubSpot × Asana 連携の基本&lt;/h2&gt;
+&lt;p&gt;HubSpot（CRM・マーケティング）と Asana（プロジェクト管理）を連携させることで、営業パイプラインとタスク管理を自動化できます。Zapier を使えばノーコードで連携を構築できます。&lt;/p&gt;
+&lt;h3 id="よくある連携パターン"&gt;よくある連携パターン&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;トリガー（HubSpot）&lt;/th&gt;
+&lt;th&gt;アクション（Asana）&lt;/th&gt;
+&lt;th&gt;ユースケース&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;新規ディールが作成された&lt;/td&gt;
+&lt;td&gt;タスクを作成&lt;/td&gt;
+&lt;td&gt;商談ごとにプロジェクトタスクを自動生成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ディールのステージが変わった&lt;/td&gt;
+&lt;td&gt;タスクを更新&lt;/td&gt;
+&lt;td&gt;進捗をリアルタイムに反映&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;フォーム送信があった&lt;/td&gt;
+&lt;td&gt;タスクを作成&lt;/td&gt;
+&lt;td&gt;問い合わせ対応タスクを自動起票&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;新規チケットが作成された&lt;/td&gt;
+&lt;td&gt;タスクを作成&lt;/td&gt;
+&lt;td&gt;サポート対応を Asana で管理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;逆方向の連携もあります。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;トリガー（Asana）&lt;/th&gt;
+&lt;th&gt;アクション（HubSpot）&lt;/th&gt;
+&lt;th&gt;ユースケース&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;タスクが完了した&lt;/td&gt;
+&lt;td&gt;コンタクトを更新&lt;/td&gt;
+&lt;td&gt;納品完了を CRM に反映&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;タスクにコメントが追加された&lt;/td&gt;
+&lt;td&gt;エンゲージメントを作成&lt;/td&gt;
+&lt;td&gt;活動履歴を CRM に記録&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="zapier-での連携セットアップ"&gt;Zapier での連携セットアップ&lt;/h2&gt;
+&lt;h3 id="1-zap-の作成"&gt;1. Zap の作成&lt;/h3&gt;
+&lt;p&gt;Zapier にログインし、「Create Zap」から新しい Zap を作成します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;トリガーの設定（例: HubSpot → Asana）:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;トリガーアプリに &lt;strong&gt;HubSpot&lt;/strong&gt; を選択&lt;/li&gt;
+&lt;li&gt;トリガーイベントに「New Deal」を選択&lt;/li&gt;
+&lt;li&gt;HubSpot アカウントを接続&lt;/li&gt;
+&lt;li&gt;テストを実行して動作確認&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;アクションの設定:&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

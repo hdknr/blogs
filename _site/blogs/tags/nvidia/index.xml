@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>NVIDIA on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/nvidia/</link><description>Recent content in NVIDIA on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/nvidia/index.xml" rel="self" type="application/rss+xml"/><item><title>NemoClaw触ってみた：OpenClawのセキュリティ問題を解消できるのか？</title><link>https://hdknr.github.io/blogs/posts/2026/03/nemoclaw-openclaw-security/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/nemoclaw-openclaw-security/</guid><description>&lt;p&gt;NVIDIAがGTC 2026（2026年3月16日）で発表した「NemoClaw」は、OpenClawのセキュリティ・プライバシー層を強化するオープンソーススタックです。OpenClawの競合ではなく、OpenClawを包み込む構造になっており、企業や業務利用での安全なAIエージェント運用を実現することを目指しています。&lt;/p&gt;
+&lt;p&gt;本記事では、NemoClawとは何か、OpenClawとの関係、ポリシーファイルの設定方法、導入フロー、実際に触れてみての所感をまとめます。&lt;/p&gt;
+&lt;h2 id="nemoclawとは"&gt;NemoClawとは&lt;/h2&gt;
+&lt;p&gt;NemoClawはNVIDIAが発表したOpenClaw専用のセキュリティプラグインです。内部では &lt;strong&gt;OpenShell&lt;/strong&gt; というサンドボックスランタイムを使い、AIエージェントをLinuxコンテナで隔離します。ファイルシステム・ネットワーク・プロセスをポリシーで制御し、OpenClaw単体では防ぎきれなかったセキュリティ上の問題に対処します。&lt;/p&gt;
+&lt;p&gt;構成は以下の3層です:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;OpenShell&lt;/strong&gt;: 汎用サンドボックスランタイム。AIエージェントをLinuxコンテナで隔離&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;NemoClaw&lt;/strong&gt;: OpenClaw専用プラグイン（セキュリティ・プライバシー層）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenClaw&lt;/strong&gt;: サンドボックス内で動作するエージェント本体&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="openclawのセキュリティ問題とは"&gt;OpenClawのセキュリティ問題とは&lt;/h2&gt;
+&lt;p&gt;OpenClawには &lt;code&gt;tools.deny&lt;/code&gt; による制限機能がありますが、アプリケーション層での制御であるため、バグや迂回経路が発見されると突破されてしまうリスクがあります。プロンプトインジェクション攻撃によるデータ漏洩や、意図しないシステムコールの実行が代表的な懸念点です。&lt;/p&gt;
+&lt;h2 id="セキュリティの4層防御"&gt;セキュリティの4層防御&lt;/h2&gt;
+&lt;p&gt;NemoClawは以下の4層でセキュリティを確保します:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;層&lt;/th&gt;
+&lt;th&gt;技術&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ファイルシステム&lt;/td&gt;
+&lt;td&gt;Landlock LSM（カーネルモジュール）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ネットワーク&lt;/td&gt;
+&lt;td&gt;egress proxy + アプリケーション単位制御&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プロセス&lt;/td&gt;
+&lt;td&gt;seccomp + コンテナ隔離&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;推論&lt;/td&gt;
+&lt;td&gt;ゲートウェイ経由ルーティング&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最大の特徴は「&lt;strong&gt;アプリ層ではなくカーネル層で強制される&lt;/strong&gt;」点です。OpenClawの &lt;code&gt;tools.deny&lt;/code&gt; と異なり、バグや迂回方法が発見されても突破できません。&lt;/p&gt;
+&lt;h2 id="ネットワーク制御の仕組み"&gt;ネットワーク制御の仕組み&lt;/h2&gt;
+&lt;p&gt;NemoClawのネットワーク制御は &lt;strong&gt;Deny by default&lt;/strong&gt; が原則で、全通信がデフォルトでブロックされます。許可は「アプリケーション×ホスト」の組み合わせで明示的に指定します。&lt;/p&gt;
+&lt;p&gt;例えば:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;git&lt;/code&gt; → GitHub接続を許可&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;curl&lt;/code&gt; → ブロック&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;このような細粒度の制御により、仮にエージェントが悪意あるプロンプトインジェクションを受けても、データの外部流出が不可能になります。&lt;/p&gt;
+&lt;h2 id="ポリシーファイル"&gt;ポリシーファイル&lt;/h2&gt;
+&lt;p&gt;ポリシーはYAML形式で宣言的に記述します。読み書き可能なパス、ネットワーク接続先、許可するバイナリを定義でき、GitOpsでの運用も可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ポリシーファイルの例（概念的な構成）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;filesystem&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;read&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/workspace&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/home/agent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;write&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/workspace/output&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;network&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;allow&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;binary&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;git&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;hosts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;github.com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;api.github.com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;process&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;allow_binaries&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;git&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;python3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;pip&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このようなポリシーファイルをリポジトリで管理することで、セキュリティ要件の変更履歴を追跡し、レビュープロセスを通じて変更を管理できます。&lt;/p&gt;</description></item><item><title>NVIDIA、OpenClaw向けオープンソーススタック「NemoClaw」を発表</title><link>https://hdknr.github.io/blogs/posts/2026/03/nvidia-nemoclaw-openclaw/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/nvidia-nemoclaw-openclaw/</guid><description>&lt;p&gt;NVIDIA が OpenClaw 向けのオープンソーススタック「&lt;strong&gt;NemoClaw&lt;/strong&gt;」を発表しました。これまでセキュリティ面での懸念が指摘されてきた OpenClaw に対し、プライバシー保護とセキュリティ制御を加えた形で、常時稼働する AI エージェントの運用を可能にするものです。&lt;/p&gt;
+&lt;h2 id="nemoclaw-とは"&gt;NemoClaw とは&lt;/h2&gt;
+&lt;p&gt;NemoClaw は、OpenClaw 上で動作する AI エージェントをより安全・簡単にデプロイするための NVIDIA 製オープンソースフレームワークです。&lt;/p&gt;
+&lt;p&gt;NVIDIA AI Developer の公式ツイートによると、NemoClaw は以下の特徴を持ちます:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;シングルコマンドでデプロイ&lt;/strong&gt;: OpenClaw の常時稼働アシスタントを 1 コマンドで起動できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全なデプロイ&lt;/strong&gt;: セキュリティ強化された環境でエージェントを稼働させられる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;任意のコーディングエージェントに対応&lt;/strong&gt;: 特定のエージェントに縛られず、さまざまなコーディングエージェントを実行可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;どこでもデプロイ可能&lt;/strong&gt;: クラウド・オンプレミスを問わず柔軟に展開できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;無料の &lt;strong&gt;NVIDIA Brev Launchable&lt;/strong&gt; でお試し環境を立ち上げることもできます。&lt;/p&gt;
+&lt;h2 id="openclaw-のセキュリティ課題への対応"&gt;OpenClaw のセキュリティ課題への対応&lt;/h2&gt;
+&lt;p&gt;OpenClaw はこれまで、外部からのアクセスを受け付けるアーキテクチャ上の特性から、&lt;strong&gt;脆弱性リスク&lt;/strong&gt;が指摘されてきました。NemoClaw はこの課題に正面から取り組み、以下の機能を OpenClaw スタックに追加しています:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;プライバシー保護&lt;/strong&gt;: エージェントが扱うデータの漏洩リスクを低減する仕組み&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セキュリティ制御&lt;/strong&gt;: アクセス制御やサンドボックス化による不正操作の防止&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これにより、企業や開発チームが OpenClaw ベースの AI エージェントを本番環境に安心して導入できるようになります。&lt;/p&gt;
+&lt;h2 id="試してみる"&gt;試してみる&lt;/h2&gt;
+&lt;p&gt;NVIDIA の公式ページ（&lt;code&gt;https://www.nvidia.com/nemoclaw&lt;/code&gt;）から NemoClaw の詳細確認および Brev Launchable による無料トライアルが可能です。&lt;/p&gt;
+&lt;p&gt;OpenClaw を本番運用で活用したいが、セキュリティが不安で踏み切れなかった開発者にとって、NemoClaw は有力な選択肢になりそうです。&lt;/p&gt;</description></item></channel></rss>

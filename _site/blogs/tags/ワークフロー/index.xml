@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ワークフロー on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%AF%E3%83%BC%E3%82%AF%E3%83%95%E3%83%AD%E3%83%BC/</link><description>Recent content in ワークフロー on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 29 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%AF%E3%83%BC%E3%82%AF%E3%83%95%E3%83%AD%E3%83%BC/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code の「Dynamic Workflows」を冷静に検証 — Opus 4.8 + /ultracode で本当に変わること・誇張されていること</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-dynamic-workflows-ultracode/</link><pubDate>Fri, 29 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-dynamic-workflows-ultracode/</guid><description>Claude Code の Dynamic Workflows と /effort ultracode を公式仕様と実機挙動で検証。サブエージェントの並列オーケストレーション・敵対的検証の実体と、&amp;#34;全自動で自走&amp;#34; というバイラル投稿の誇張を切り分ける。</description></item><item><title>英語圏のClaude Codeガチ勢が月50万〜200万円稼ぐ手法 — Anthropic公式が語った5つのテクニック</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-freelance-gachisei-anthropic-techniques/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-freelance-gachisei-anthropic-techniques/</guid><description>&lt;p&gt;2026年5月、SNSで注目を集めた一本のポストがある。会社員として働きながらAI×SNS副業で月30万円を達成したエンジニア・おさぼり（@1osabori）氏が「英語圏のClaude Codeガチ勢がクライアントから月50万〜200万取ってる手法、Anthropic公式が30分でほぼ全部喋っちゃう」と発信した。そのポストは83万インプレッションを超えた。&lt;/p&gt;
+&lt;p&gt;この記事では、Anthropicが公式に公開しているドキュメントとガイドをもとに、英語圏のフリーランサーたちが実践している具体的なテクニックを解説する。&lt;/p&gt;
+&lt;h2 id="なぜ日本人が知らないのか"&gt;なぜ日本人が知らないのか&lt;/h2&gt;
+&lt;p&gt;英語圏では Claude Code を活用した高単価フリーランスという働き方が急速に広まっている。Anthropicは「&lt;a href="https://www-cdn.anthropic.com/58284b19e702b49db9302d5b6f135ad8871e7658.pdf"&gt;How Anthropic teams use Claude Code&lt;/a&gt;」という公式ドキュメントや「&lt;a href="https://code.claude.com/docs/en/best-practices"&gt;Best practices for Claude Code&lt;/a&gt;」で、社内エンジニアが実際に使っているワークフローを詳細に公開している。&lt;/p&gt;
+&lt;p&gt;しかしこれらのコンテンツはすべて英語で書かれており、日本語圏には届いていない。おさぼり氏が「日本人で知ってる人1%もおらん」と指摘するとおり、この情報格差が収益格差に直結している。&lt;/p&gt;
+&lt;h2 id="テクニック1-計画先行ワークフローplan-first-approach"&gt;テクニック1: 計画先行ワークフロー（Plan-First Approach）&lt;/h2&gt;
+&lt;p&gt;Anthropicエンジニアが最も強調するのが「実装より前に計画を立てる」という原則だ。&lt;/p&gt;
+&lt;p&gt;Claude Code には &lt;strong&gt;plan モード&lt;/strong&gt;（&lt;code&gt;Shift+Tab&lt;/code&gt; を2回押して切り替え）があり、このモードでClaudeはコードを書かずに計画だけを提案する。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;# プロンプト例
+「まずコードには触れずに、このAPIの認証機能をどう実装するか
+設計案を提示してください」
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;実装と探索を分離することで「間違った問題を解決する」リスクを排除できる。一度のプロンプトで複雑なタスクを丸ごと投げるのではなく、ステップバイステップで進めることが品質の鍵だと公式ドキュメントは述べている。&lt;/p&gt;
+&lt;h2 id="テクニック2-並列エージェントパターン"&gt;テクニック2: 並列エージェントパターン&lt;/h2&gt;
+&lt;p&gt;英語圏の高単価エンジニアが特に活用しているのが「複数のClaude Codeセッションを同時に立ち上げて並列で動かす」手法だ。&lt;/p&gt;
+&lt;p&gt;Anthropicの社内実践として紹介されているのは以下のようなパターンだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;エージェント1&lt;/strong&gt;: スタイルガイドの確認&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント2&lt;/strong&gt;: プロジェクト履歴のレビュー&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント3&lt;/strong&gt;: バグのフラグ立て&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント4〜8&lt;/strong&gt;: 元の発見の検証&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一人のエンジニアが複数のClaudeインスタンスを「チーム」として運用することで、従来は複数人が必要だったコードレビューや品質保証を一人でこなせるようになる。これがクライアントから高い報酬を得られる直接の理由だ。&lt;/p&gt;
+&lt;h2 id="テクニック3-ストップフックによる自動化"&gt;テクニック3: ストップフックによる自動化&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Stop Hooks&lt;/strong&gt;は、Claudeがタスクを完了したときに自動でアクションを実行する仕組みだ。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;settings.json&lt;/code&gt; の設定例:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;hooks&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Stop&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;matcher&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;hooks&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;command&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;command&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;npm test &amp;amp;&amp;amp; npm run lint&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Claudeがコードを書き終わると自動でテストが実行され、失敗があればClaudeが修正する。このサイクルを人間が介在せずに回すことで、Anthropicエンジニアは「2〜3倍の品質向上」を報告している（プロジェクトによって異なる）。なお &lt;code&gt;npm test&lt;/code&gt; の部分は実際のプロジェクト構成に合わせて変更すること。&lt;/p&gt;</description></item></channel></rss>

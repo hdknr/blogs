@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>AI秘書 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ai%E7%A7%98%E6%9B%B8/</link><description>Recent content in AI秘書 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 22 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ai%E7%A7%98%E6%9B%B8/index.xml" rel="self" type="application/rss+xml"/><item><title>Obsidian × Claude Code で「24時間365日動く AI 秘書」を構築する — Greg Isenberg の 10 ステップ</title><link>https://hdknr.github.io/blogs/posts/2026/04/obsidian-claude-code-personal-os/</link><pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/obsidian-claude-code-personal-os/</guid><description>&lt;p&gt;スタートアップコミュニティで知名度の高い Greg Isenberg が、Obsidian と Claude Code を組み合わせて「24時間365日稼働するパーソナル AI オペレーティングシステム」を構築する方法を公開した。閲覧数 110 万超、ブックマーク 17,000 超と大きな反響を呼んでいる。&lt;/p&gt;
+&lt;h2 id="なぜ-obsidian--claude-code-なのか"&gt;なぜ Obsidian × Claude Code なのか&lt;/h2&gt;
+&lt;p&gt;多くの人は AI を「汎用チャットボット」として使っている。セッションを開くたびに自己紹介し、プロジェクトの背景を説明し直す——この繰り返しが生産性のボトルネックになっている。&lt;/p&gt;
+&lt;p&gt;Greg が提案するアプローチは、&lt;strong&gt;自分の思考・知識・文脈をすべて Obsidian ボルト（ノート群）に蓄積し、Claude Code がそれを読み込んで行動する&lt;/strong&gt;というものだ。人間が書き、AI が読んで実行する、という明確な役割分担がポイントになる。&lt;/p&gt;
+&lt;h2 id="10-ステップで始めるパーソナル-os"&gt;10 ステップで始めるパーソナル OS&lt;/h2&gt;
+&lt;h3 id="ステップ-1-全てを-markdown-で書く"&gt;ステップ 1: 全てを Markdown で書く&lt;/h3&gt;
+&lt;p&gt;日報・プロジェクト概要・自分の信念・人脈・議事録——あらゆる情報を Markdown ファイルとして Obsidian ボルトに記録する。フォーマットを統一することで、Claude Code が構造的に読み取れるようになる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vault/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── daily/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── 2026-04-22.md # 日報
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── projects/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── my-startup.md # プロジェクト概要
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── people/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── john-doe.md # 人脈メモ
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── beliefs/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── product-philosophy.md # 信念・哲学
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── meetings/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └── 2026-04-22-kickoff.md # 議事録
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="ステップ-2-ノート同士を自分の思考回路のようにリンクする"&gt;ステップ 2: ノート同士を自分の思考回路のようにリンクする&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;[[プロジェクト名]]&lt;/code&gt; 形式のウィキリンクでノートを繋ぎ、自分の思考の連鎖を反映させる。単なるメモの集合ではなく、&lt;strong&gt;考え方のグラフ&lt;/strong&gt;を構築することが目的だ。&lt;/p&gt;</description></item></channel></rss>

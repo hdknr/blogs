@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>自律AI on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E8%87%AA%E5%BE%8Bai/</link><description>Recent content in 自律AI on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E8%87%AA%E5%BE%8Bai/index.xml" rel="self" type="application/rss+xml"/><item><title>Paperclip オープンソース化：0人会社を動かすエージェントオーケストレーション層</title><link>https://hdknr.github.io/blogs/posts/2026/03/paperclipai-zero-human-company/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/paperclipai-zero-human-company/</guid><description>&lt;p&gt;AIエージェントを使った「0人会社（zero-human company）」のコンセプトが現実に近づいている。
+&lt;a href="https://github.com/paperclipai/paperclip"&gt;Paperclip&lt;/a&gt; は、そのためのオーケストレーション基盤としてオープンソース化されたツールだ。&lt;/p&gt;
+&lt;h2 id="paperclip-とは"&gt;Paperclip とは&lt;/h2&gt;
+&lt;p&gt;Paperclip は「ゼロヒューマン企業」を動かすためのオーケストレーション層（orchestration layer）。
+人間なしで自律的に業務が進む組織を設計・運用するための基盤として設計されている。&lt;/p&gt;
+&lt;p&gt;GitHubリポジトリ: &lt;a href="https://github.com/paperclipai/paperclip"&gt;paperclipai/paperclip&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;リリース後またたく間にスターが集まり、2026年3月時点で &lt;strong&gt;53,000スター超&lt;/strong&gt; を記録している。&lt;/p&gt;
+&lt;h2 id="主な機能"&gt;主な機能&lt;/h2&gt;
+&lt;p&gt;Paperclip が提供する機能は次の通り:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;組織図（Org Charts）&lt;/strong&gt; — エージェントの役割と階層を定義する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;目標整合（Goal Alignment）&lt;/strong&gt; — 組織全体の目標を各エージェントのタスクに紐付ける&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;タスクの責任者（Task Ownership）&lt;/strong&gt; — どのエージェントが何を担うかを明確に割り当てる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;予算管理（Budgets）&lt;/strong&gt; — エージェントが使用できるリソースや費用に上限を設定する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェントテンプレート（Agent Templates）&lt;/strong&gt; — 役割ごとの標準的なエージェント設定を再利用する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらの仕組みにより、人間のオペレーターが常時介在しなくても「自律的に仕事が進む会社」を実現できる。&lt;/p&gt;
+&lt;h2 id="クイックスタート"&gt;クイックスタート&lt;/h2&gt;
+&lt;p&gt;セットアップは &lt;code&gt;npx&lt;/code&gt; で1コマンド:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx paperclipai onboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このコマンドを実行すると、初期の組織設計のガイドが始まる。TypeScript 製で、Node.js 環境があればすぐに試せる。&lt;/p&gt;
+&lt;h2 id="なぜ注目されるのか"&gt;なぜ注目されるのか&lt;/h2&gt;
+&lt;p&gt;従来の AI エージェントフレームワークの多くは、単一エージェントまたは単純なマルチエージェントの連携を想定している。Paperclip が異なるのは、&lt;strong&gt;企業・組織レベルの構造&lt;/strong&gt;をファーストクラスの概念として扱っている点だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;単なるタスクキューではなく、&lt;strong&gt;組織図と権限委譲&lt;/strong&gt;を持つ&lt;/li&gt;
+&lt;li&gt;エージェント同士の目標が&lt;strong&gt;整合されている&lt;/strong&gt;ことを保証する仕組みがある&lt;/li&gt;
+&lt;li&gt;予算制約により&lt;strong&gt;無限ループや暴走&lt;/strong&gt;を防ぐ設計になっている&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;「AIエージェントに会社を任せる」という考えを本格的にサポートするインフラとして、エンジニアコミュニティの注目を集めている。&lt;/p&gt;
+&lt;h2 id="参考リンク"&gt;参考リンク&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/paperclipai/paperclip"&gt;paperclipai/paperclip - GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://x.com/dotta/status/2029239759428780116"&gt;オープンソース化を告知したツイート（@dotta）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

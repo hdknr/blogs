@@ -1,0 +1,101 @@
+<mxfile host="Electron" modified="2026-05-11T20:00:00.000Z" agent="draw.io" version="21.0.0">
+  <diagram name="ViMax Pipeline" id="vimax-pipeline">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 入力層 -->
+        <mxCell id="2" value="入力層" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="527" y="40" width="600" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="アイデア / スクリプト / 小説 / 参照画像 / スタイル指示 / 設定ファイル" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="527" y="100" width="600" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- 矢印 -->
+        <mxCell id="4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="3" target="5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 中央オーケストレーション -->
+        <mxCell id="5" value="中央オーケストレーション&#xa;エージェントスケジューリング・ステージ遷移・リソース管理・リトライ/フォールバック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="527" y="180" width="600" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- 矢印 -->
+        <mxCell id="6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="5" target="7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7a" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="5" target="8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- スクリプト解析 -->
+        <mxCell id="7" value="スクリプト解析&#xa;キャラクター/環境抽出&#xa;シーン境界検出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="327" y="290" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- シーン & ショット計画 -->
+        <mxCell id="8" value="シーン &amp; ショット計画&#xa;絵コンテステップ・ショットリスト&#xa;キーフレーム＆ビート" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="667" y="290" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 矢印 -->
+        <mxCell id="9" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="7" target="10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9a" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="8" target="10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ビジュアルアセット計画 -->
+        <mxCell id="10" value="ビジュアルアセット計画&#xa;参照画像選択・外観/スタイルガイダンス・プロンプトコンディショニング" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="427" y="410" width="600" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- 矢印 -->
+        <mxCell id="11" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="10" target="12" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="11a" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="10" target="13" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- アセットインデックス -->
+        <mxCell id="12" value="アセットインデックス&#xa;フレーム/参照カタログ&#xa;埋め込み・検索" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="327" y="520" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 一貫性 & 継続性 -->
+        <mxCell id="13" value="一貫性・継続性&#xa;キャラクター/環境追跡&#xa;参照マッチング・時系列一貫性" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="667" y="520" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 矢印 -->
+        <mxCell id="14" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="12" target="15" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="14a" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="13" target="15" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ビジュアル合成 & アセンブリ -->
+        <mxCell id="15" value="ビジュアル合成 &amp; アセンブリ&#xa;画像生成・ベストフレーム選択・動画生成&#xa;カット＆タイムラインアセンブリ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="427" y="640" width="600" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 矢印 -->
+        <mxCell id="16" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="15" target="17" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 出力層 -->
+        <mxCell id="17" value="出力層&#xa;フレーム・クリップ＆最終動画・ログ・作業ディレクトリ成果物" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="427" y="760" width="600" height="60" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

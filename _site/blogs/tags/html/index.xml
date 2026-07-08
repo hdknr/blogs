@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>HTML on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/html/</link><description>Recent content in HTML on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 11 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/html/index.xml" rel="self" type="application/rss+xml"/><item><title>AnthropicエンジニアがMarkdownをやめてHTML出力に切り替えた話 — Claude CodeでのHTMLの圧倒的な有効性</title><link>https://hdknr.github.io/blogs/posts/2026/05/anthropic-claude-code-html-over-markdown/</link><pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/anthropic-claude-code-html-over-markdown/</guid><description>&lt;p&gt;Anthropic で Claude Code を担当するエンジニア &lt;strong&gt;Thariq Shihipar&lt;/strong&gt;（@trq212）が X に記事「Using Claude Code: The Unreasonable Effectiveness of HTML」を投稿しました。公開からわずか16時間で440万ビュー・8,200いいね・15,700ブックマークを集め、開発者コミュニティで大きな議論を巻き起こしています。&lt;/p&gt;
+&lt;p&gt;その主張は一言で言えば「&lt;strong&gt;HTML is the new Markdown&lt;/strong&gt;」。AI が出力するフォーマットとして、もう Markdown に縛られる必要はない、というものです。&lt;/p&gt;
+&lt;h2 id="背景なぜ今-html-なのか"&gt;背景：なぜ今 HTML なのか&lt;/h2&gt;
+&lt;p&gt;Markdown が AI 出力の事実上の標準になったのは GPT-4 の時代、コンテキストウィンドウが小さくトークン節約が最優先だったころの話です。&lt;/p&gt;
+&lt;p&gt;現在の LLM は百万トークン超のコンテキストを扱えます。トークン効率という制約が事実上消えたいま、出力フォーマットとして HTML を選ばない理由はほとんどありません。&lt;/p&gt;
+&lt;p&gt;Thariq はこの変化を踏まえ、Claude Code に依頼する成果物の多くを HTML で生成するよう切り替えました。その体験をまとめた記事と、&lt;a href="https://thariqs.github.io/html-effectiveness/"&gt;20 の実例サイト&lt;/a&gt; を公開したのが今回の反響の発端です。&lt;/p&gt;
+&lt;h2 id="html-が-markdown-より優れている-5-つの理由"&gt;HTML が Markdown より優れている 5 つの理由&lt;/h2&gt;
+&lt;h3 id="1-情報密度information-density"&gt;1. 情報密度（Information Density）&lt;/h3&gt;
+&lt;p&gt;HTML はテーブル・SVG・CSS・JavaScript・画像・インタラクションを &lt;strong&gt;1 つの自己完結ファイル&lt;/strong&gt;に収められます。Markdown には構造的な限界があり、複雑な情報表現には向きません。&lt;/p&gt;
+&lt;h3 id="2-読みやすさの閾値readability-threshold"&gt;2. 読みやすさの閾値（Readability Threshold）&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「100 行を超える Markdown ファイルをちゃんと読んでいる人はほとんどいない」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;HTML であればタブ切替・折りたたみセクション・レスポンシブレイアウトを使い、長大なドキュメントを人が実際に読める形にできます。&lt;/p&gt;
+&lt;h3 id="3-共有の効率sharing-efficiency"&gt;3. 共有の効率（Sharing Efficiency）&lt;/h3&gt;
+&lt;p&gt;ブラウザは HTML をそのままレンダリングします。Markdown ファイルは受け取った側が変換ツールを介さないと読めませんが、HTML は URL を共有するだけで即座に読める状態になります。&lt;/p&gt;</description></item></channel></rss>

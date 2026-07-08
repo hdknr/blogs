@@ -1,0 +1,1496 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>AIエージェント on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ai%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88/</link><description>Recent content in AIエージェント on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 24 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ai%E3%82%A8%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%88/index.xml" rel="self" type="application/rss+xml"/><item><title>Trellis</title><link>https://hdknr.github.io/blogs/wiki/tools/trellis/</link><pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/trellis/</guid><description>Claude Code などコーディングエージェントにプロジェクトの文脈を永続化させる、AI コーディング向けエンジニアリングフレームワーク</description></item><item><title>Claude Code は『賢いが健忘症のプログラマ』— Trellis でプロジェクトの脳を持たせる</title><link>https://hdknr.github.io/blogs/posts/2026/06/trellis-claude-code-project-brain/</link><pubDate>Fri, 19 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/trellis-claude-code-project-brain/</guid><description>Claude Code はセッションをまたいで文脈を保持しない『健忘症のプログラマ』。Trellis は要件・規約・進捗を .trellis/ に沈殿させ、計画→実装→検証→書き戻しのループで AI 開発を仕組み化するフレームワークだ。導入手順まで解説する。</description></item><item><title>コードゼロで最初のAIエージェントを作る完全ガイド — Claude Projects・Cowork・スケジュール実行の3ステップ</title><link>https://hdknr.github.io/blogs/posts/2026/06/claude-ai-agent-first-build-no-code/</link><pubDate>Sat, 13 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/claude-ai-agent-first-build-no-code/</guid><description>&lt;p&gt;AIエージェントの話はどこでも聞こえてくる。調査するエージェント、文章を書くエージェント、メールを管理し、スプレッドシートを更新し、レポートをまとめ、あなたが寝ている間にワークフロー全体を実行するエージェントまで登場している。&lt;/p&gt;
+&lt;p&gt;すごそうに聞こえる。テクニカルでなければ不可能にも聞こえる。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;不可能ではない。これから証明する。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;この記事を読み終えるころには、最初から最後まで一切手を触れることなくタスクを実行できる動作するAIエージェントが手元に存在する。コーディング不要。APIキー不要。ターミナルコマンド不要。Claude、明確な指示、そして30分の時間があれば十分だ。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="aiエージェントとは何か難しい言葉を使わずに説明する"&gt;AIエージェントとは何か（難しい言葉を使わずに説明する）&lt;/h2&gt;
+&lt;p&gt;技術的な定義はいったん忘れていい。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AIエージェントとは、あなたが一度に一つずつやっていた複数のステップをClaudeが自動で実行してくれるものだ。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;普通にClaudeを使うと、こんなフローになる:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;トピックを調査するよう指示する&lt;/li&gt;
+&lt;li&gt;結果を読む&lt;/li&gt;
+&lt;li&gt;アウトラインを書くよう指示する&lt;/li&gt;
+&lt;li&gt;確認する&lt;/li&gt;
+&lt;li&gt;記事を書くよう指示する&lt;/li&gt;
+&lt;li&gt;編集する&lt;/li&gt;
+&lt;li&gt;フォーマットするよう指示する&lt;/li&gt;
+&lt;li&gt;コピーする&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これはすべて手動による往復作業の繰り返しだ。それぞれでユーザーが読んで、承認して、次の指示を手動で出さなければならない。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;エージェントはこれらのステップを自動で順番に実行する。&lt;/strong&gt; 「このトピックを調査して、アウトラインを作り、完全な記事を書いて、出版用にフォーマットして」と言うだけで、Claudeは4つのステップを次々と実行し、完成品を届けてくれる。&lt;/p&gt;
+&lt;p&gt;違いはそれだけだ。チャットボットは1つのことをして待つ。エージェントは一連のことをして完成したアウトプットを届ける。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="コードなしで構築できる3種類のエージェント"&gt;コードなしで構築できる3種類のエージェント&lt;/h2&gt;
+&lt;p&gt;APIは不要。Agent SDKも不要。コードを1行も書く必要はない。&lt;/p&gt;
+&lt;p&gt;Claudeの既存ツールだけで3種類のエージェントを構築できる:&lt;/p&gt;
+&lt;h3 id="タイプ1-チャットエージェントclaude-projects"&gt;タイプ1: チャットエージェント（Claude Projects）&lt;/h3&gt;
+&lt;p&gt;マルチステップのワークフローを定義するシステムプロンプトを持つClaude Project。タスクを与えると、システムプロンプトに従うべき順序が明示されているため、フルワークフローを自動実行する。&lt;/p&gt;
+&lt;h3 id="タイプ2-ファイルエージェントclaude-cowork"&gt;タイプ2: ファイルエージェント（Claude Cowork）&lt;/h3&gt;
+&lt;p&gt;コンピュータ上のファイルを処理するCoworkタスク。フォルダを読み込み、各ファイルを処理し、出力を作成して、すべてを整理する。一つの指示から。&lt;/p&gt;
+&lt;h3 id="タイプ3-スケジュール実行エージェントcowork--schedule"&gt;タイプ3: スケジュール実行エージェント（Cowork + /schedule）&lt;/h3&gt;
+&lt;p&gt;スケジュールに従って自動実行するCoworkタスク。朝7時にエージェントが起動し、メールを確認し、重要なものをまとめ、デスクトップにブリーフィングを保存する。あなたからの入力は一切不要。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3つ全部構築する。最もシンプルなものから始める。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="build-1-リサーチ記事エージェント15分"&gt;Build 1: リサーチ→記事エージェント（15分）&lt;/h2&gt;
+&lt;p&gt;これはトピックを受け取り、完成した記事を生成するチャットエージェントだ。インプット1つ、アウトプット1つ。&lt;/p&gt;
+&lt;h3 id="ステップ1-新しいclaude-projectを作る"&gt;ステップ1: 新しいClaude Projectを作る&lt;/h3&gt;
+&lt;p&gt;Claudeを開く。「Projects」をクリック。「Create Project」をクリック。名前を「Article Agent」にする。&lt;/p&gt;
+&lt;h3 id="ステップ2-システムプロンプトを書く"&gt;ステップ2: システムプロンプトを書く&lt;/h3&gt;
+&lt;p&gt;プロジェクトのシステムプロンプトに以下を貼り付ける:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;You are an autonomous article production agent. When the user gives you a topic,
+you execute the following workflow automatically without stopping for approval between steps:
+STEP 1 - RESEARCH
+Search the web for the latest information on this topic. Find 5-7 relevant sources.
+Extract the key insights, statistics, and expert perspectives.
+STEP 2 - ANGLE
+Based on your research, identify the most interesting angle. What does the reader already
+believe about this topic? How can we challenge or expand that belief? Choose the angle
+that would generate the most engagement.
+STEP 3 - OUTLINE
+Create a detailed article outline:
+- Opening hook (contrast between common belief and reality)
+- 5-7 main sections with bold subheadings
+- Specific data points or examples for each section
+- Closing CTA
+STEP 4 - WRITE
+Write the complete article. 2000-3000 words. Short paragraphs (3 sentences max).
+Bold the key insight in every section. Specific numbers over vague claims.
+Direct, conversational tone. Zero filler.
+STEP 5 - REVIEW
+Review the article against these quality criteria:
+- Does every section add new information?
+- Are all claims supported by specific numbers or examples?
+- Would a busy person stop reading at any point? If yes, fix those sections.
+- Is the opening hook genuinely compelling?
+Output the final article. Include a recommended title at the top.
+Execute all 5 steps in one response. Do not ask for approval between steps.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="ステップ3-テストする"&gt;ステップ3: テストする&lt;/h3&gt;
+&lt;p&gt;「Article Agent」プロジェクトで新しい会話を開く。一文を入力する:&lt;/p&gt;</description></item><item><title>AIコーディングエージェント時代の新常識 — もうプロンプトを打つな、ループを設計せよ</title><link>https://hdknr.github.io/blogs/posts/2026/06/claude-code-loop-design-agents/</link><pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/claude-code-loop-design-agents/</guid><description>Claude Code の /loop コマンドを使ってAIエージェントのループを設計する方法を解説。終了条件の定義、トークンコスト管理のベストプラクティスをまとめた実践ガイド。</description></item><item><title>Claude Code の「Dynamic Workflows」を冷静に検証 — Opus 4.8 + /ultracode で本当に変わること・誇張されていること</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-dynamic-workflows-ultracode/</link><pubDate>Fri, 29 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-dynamic-workflows-ultracode/</guid><description>Claude Code の Dynamic Workflows と /effort ultracode を公式仕様と実機挙動で検証。サブエージェントの並列オーケストレーション・敵対的検証の実体と、&amp;#34;全自動で自走&amp;#34; というバイラル投稿の誇張を切り分ける。</description></item><item><title>AIエージェント時代に再注目される FDE（Forward Deployed Engineer）— 前線配備型エンジニアという働き方</title><link>https://hdknr.github.io/blogs/posts/2026/05/fde-forward-deployed-engineer/</link><pubDate>Tue, 26 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/fde-forward-deployed-engineer/</guid><description>&lt;p&gt;AIエージェントが業務システムに本格導入される時代に入り、「FDE（Forward Deployed Engineer）」というエンジニア職種が改めて注目を集めています。AIエージェントを現場の業務フローに組み込み、「成果が出るまで」を一気通貫で推進する役割です。なぜ今このモデルが再評価されているのか、その役割と重要性を整理します。&lt;/p&gt;
+&lt;h2 id="fdeforward-deployed-engineerとは"&gt;FDE（Forward Deployed Engineer）とは&lt;/h2&gt;
+&lt;p&gt;FDEは「フォワード・デプロイド・エンジニア（前線配備型エンジニア）」の略です。Palantir が2011年に考案したモデルで、エンジニアを顧客環境に直接埋め込む形で生まれました。AIエージェントの実用化が加速する中で、この働き方が改めて脚光を浴びています。&lt;/p&gt;
+&lt;h3 id="役割の核心"&gt;役割の核心&lt;/h3&gt;
+&lt;p&gt;FDEは開発拠点に留まらず、顧客や社内の業務現場に深く入り込みます。&lt;strong&gt;AIエージェントを実際の業務フローに組み込み、「成果が出るまで」を一気通貫で推進する&lt;/strong&gt;ことが役割の核心です。&lt;/p&gt;
+&lt;p&gt;従来のソフトウェアエンジニアとの違いは「配備場所」にあります。FDEは現場の業務担当者と並走しながらAIシステムを実装・調整します。&lt;/p&gt;
+&lt;h3 id="なぜ今重要なのか"&gt;なぜ今重要なのか&lt;/h3&gt;
+&lt;p&gt;AIエージェントは「自律的にタスクを推論して実行する」という強力な特性を持っています。しかし、以下のような課題から、現場での機能不全が起きがちです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;業務ルールの複雑性&lt;/strong&gt;: 現場の暗黙知や例外ルールをAIに正しく反映するのは困難&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;人間との役割分担設計&lt;/strong&gt;: どこまでをAIに任せ、どこから人間が承認・介入するかの線引き&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;段階的な信頼構築&lt;/strong&gt;: いきなり全自動化するのではなく、徐々にAIへの委任範囲を広げるプロセス管理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;FDEは「現場とAIエージェントの橋渡し」を担うコア人材として必要とされています。技術力だけでなく、業務理解力・コミュニケーション力・推進力を兼ね備えることが求められます。&lt;/p&gt;
+&lt;h3 id="なぜaiではとくに現場常駐型が要るのか"&gt;なぜAIではとくに「現場常駐型」が要るのか&lt;/h3&gt;
+&lt;p&gt;従来の業務システムは「仕様通りに動くこと」が正解でした。これに対しAIは、&lt;strong&gt;データの質や現場の環境条件に大きく依存する&lt;/strong&gt;という性質を持ちます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;現場の熟練者が持つ暗黙知はデータ化されていない&lt;/li&gt;
+&lt;li&gt;需要予測AIは入力データの欠損に左右される&lt;/li&gt;
+&lt;li&gt;画像認識（カメラ）AIは照明などの環境条件で精度が変わる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらの要素は、会議室や開発拠点にいるだけでは把握できません。FDEは現場に身を置くことで、&lt;strong&gt;開発と現場のあいだに生じる時間差・認識差を最小化&lt;/strong&gt;します。違和感が出たらその場で修正し、翌日には改善版を届ける——この高速なフィードバックループこそが、AIを「実験」から「現場で使える戦力」へと進化させます。&lt;/p&gt;
+&lt;h2 id="従来のitコンサルseとの違い"&gt;従来のITコンサル・SEとの違い&lt;/h2&gt;
+&lt;p&gt;AI推進体制を検討すると、FDEはITコンサルタントやシステムエンジニア（SE）と混同されがちです。しかし主戦場も付加価値も異なります。AIプロジェクトでは「最初から正解の仕様が存在しない（都度、仕様が変わっていく）」ことが一般的で、FDEは仮説検証を短いサイクルで回しながら最適解を探索する点が決定的に違います。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;観点&lt;/th&gt;
+&lt;th&gt;ITコンサルタント&lt;/th&gt;
+&lt;th&gt;従来のSE／ベンダー&lt;/th&gt;
+&lt;th&gt;FDE&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;主な役割&lt;/td&gt;
+&lt;td&gt;戦略立案・要件定義&lt;/td&gt;
+&lt;td&gt;仕様書に基づく開発・保守&lt;/td&gt;
+&lt;td&gt;現場課題の特定と即時実装・定着&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;主戦場&lt;/td&gt;
+&lt;td&gt;会議室（経営・管理層）&lt;/td&gt;
+&lt;td&gt;開発拠点（リモート中心）&lt;/td&gt;
+&lt;td&gt;現場（フロントライン）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;開発手法&lt;/td&gt;
+&lt;td&gt;設計書作成が中心&lt;/td&gt;
+&lt;td&gt;ウォーターフォール型&lt;/td&gt;
+&lt;td&gt;超高速アジャイル・プロトタイピング&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;付加価値&lt;/td&gt;
+&lt;td&gt;論理的な正解の提示&lt;/td&gt;
+&lt;td&gt;安定したシステムの構築&lt;/td&gt;
+&lt;td&gt;現場での実用性とROIの最大化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="fdeが現場で担うこと"&gt;FDEが現場で担うこと&lt;/h2&gt;
+&lt;p&gt;AIエージェント導入の現場では、FDEは次のような多面的な役割をこなします。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;フェーズ&lt;/th&gt;
+&lt;th&gt;FDEの仕事&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;要件把握&lt;/td&gt;
+&lt;td&gt;現場に入り込み、暗黙知や例外ルールを含む業務フローを理解する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;実装・調整&lt;/td&gt;
+&lt;td&gt;AIエージェントを実際の業務システムに組み込み、現場のデータで動かす&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ガードレール設計&lt;/td&gt;
+&lt;td&gt;どこから人間が承認・介入するか（Human-in-the-loop）の線引きを設計する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;信頼構築&lt;/td&gt;
+&lt;td&gt;委任範囲を段階的に広げ、現場が安心してAIを使える状態をつくる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;ポイントは、単にAIにタスクを委任して終わりにしないことです。&lt;strong&gt;人間が最終判断するガードレールを設計し、職員・現場担当者が自らAIワークフローを調整できる仕組み&lt;/strong&gt;を残すことが、定着するAIエージェント導入の条件になります。&lt;/p&gt;
+&lt;h3 id="高リスク環境ほど価値が出る"&gt;高リスク環境ほど価値が出る&lt;/h3&gt;
+&lt;p&gt;審査・規制・安全監視のような「間違いが許されない」高リスク業務ほど、いきなりの全自動化はできません。だからこそ、現場の複雑なルールを理解しながらAIを少しずつ組み込み、人間の監視を組み込んだ形で運用に乗せていくFDEの役割が効いてきます。段階的な導入とガードレール設計こそが、こうした環境でのAI活用を成功させる鍵です。&lt;/p&gt;
+&lt;h2 id="なぜ今fdeが求められるのか"&gt;なぜ今、FDEが求められるのか&lt;/h2&gt;
+&lt;p&gt;AI投資が活発化するなか、FDEが戦略的に重要視される理由は大きく3つあります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;「使われないAI」を防ぎ、ROIを最大化する&lt;/strong&gt;: AI導入の最大リスクは、数千万円規模の投資をしても現場で使われなくなることです。「入力が煩雑」「通知が遅い」「画面が見づらい」——こうした小さな不満がAI定着を阻みます。FDEは現場ユーザーの声を即座に反映し、UI/UXをその場で改善します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;データ品質の課題を現場で解決する&lt;/strong&gt;: AIの精度はデータに依存しますが、基幹システムのデータが現場の実態を正確に反映していないケースは少なくありません。FDEはデータ生成のプロセスを現場で確認し、必要なら収集方法や入力フロー自体を再設計します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;意思決定から実装までのリードタイムを短縮する&lt;/strong&gt;: 「現場要望 → 実装 → テスト → 改善」のサイクルが、数週間単位から数日、場合によっては数時間単位へと短縮されます。このスピードがDX推進の成否を左右します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="fdeに求められる3つのスキル"&gt;FDEに求められる3つのスキル&lt;/h2&gt;
+&lt;p&gt;FDEとして成果を出すには、技術と業務をまたぐ複合的な力が求められます。&lt;/p&gt;</description></item><item><title>「同僚.skill」が本当に変えるのは引き継ぎではない — 企業は「判断様式」を資産化し始める</title><link>https://hdknr.github.io/blogs/posts/2026/05/colleague-skill-judgment-asset/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/colleague-skill-judgment-asset/</guid><description>退職者・前任者の判断様式を Claude Code 用スキルとして保存する colleague-skill の設計と、企業が直面する人格資産化リスク・属人化可視化・インセンティブ設計問題を解説する。</description></item><item><title>ByteDance製AIエージェント「UI-TARS-desktop」— ⭐3.5万超のPC画面操作AIの全貌</title><link>https://hdknr.github.io/blogs/posts/2026/05/bytedance-ui-tars-desktop-ai-agent/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/bytedance-ui-tars-desktop-ai-agent/</guid><description>ByteDanceが公開したオープンソースAIエージェントUI-TARS-desktopの全機能を解説。PC画面を視覚的に認識して自律操作するAgent TARSとUI-TARS Desktopの仕組み、MCP統合、インストール方法をまとめます。</description></item><item><title>OpenHuman — 完全ローカルで動くパーソナルAIアシスタント：プライバシー最優先でChatGPT級の体験を自分のPCで</title><link>https://hdknr.github.io/blogs/posts/2026/05/openhuman-local-ai-assistant/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/openhuman-local-ai-assistant/</guid><description>OpenHumanはRust製オープンソースのローカルAIアシスタント。Memory Tree・Ollama連携・118サービスAuto-fetchでChatGPT級の体験を実現する。ただしデフォルト構成ではTinyHumansへのサブスク課金が前提で、本当に「完全ローカル」にするには追加設定が必要——その構造を解説。</description></item><item><title>Sandcastle — AI コーディングエージェントを夜間並列実行して朝にレビューするだけにする OSS</title><link>https://hdknr.github.io/blogs/posts/2026/05/matt-pocock-sandcastle-afk-development/</link><pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/matt-pocock-sandcastle-afk-development/</guid><description>TypeScript の OSS ライブラリ Sandcastle を使い、AI コーディングエージェントを Docker/Vercel サンドボックスで並列実行するオーケストレーション手法を解説。夜間並列タスク・朝レビューの AFK 開発ワークフローを実現する。</description></item><item><title>Claude Code × 1,255体のAIで歌舞伎町の夜をシミュレーション — 予算超過53.7%、ぼったくり被害23人の衝撃結果</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-kabukicho-ai-simulation/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-kabukicho-ai-simulation/</guid><description>Claude Code と1,255体のAIエージェントで歌舞伎町の夜4時間をシミュレーション。予算超過53.7%・観光客の11.5%がぼったくり被害という衝撃データが示すマルチエージェント社会シミュレーションの可能性。</description></item><item><title>Claude Code で動く「SEO エージェント」が海外で大バズ — 月額 2 万円のツールをプロンプト 1 つでゼロコスト代替</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-seo-agent/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-seo-agent/</guid><description>Claude Code の SEO エージェントで Google Search Console 連携・キーワード分析・競合スクレイピング・記事生成を全自動化。Semrush・Ahrefs などの月額課金ツールをゼロコストで代替する方法を解説。</description></item><item><title>ハーネスエンジニアリングとの向き合い方 — ルールファイルを超えて開発プロセスを設計する</title><link>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-beyond-rule-files/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-beyond-rule-files/</guid><description>&lt;p&gt;2026 年 4 月、Findy が主催したオンラインイベント「&lt;strong&gt;Harness Engineering 入門 〜 AI エージェントを制御するアプローチ〜&lt;/strong&gt;」が開催された。r.kagaya 氏の登壇「エージェントの開発環境を内製して気づいた『これもハーネス』」は参加者から「レベル高すぎた」と評されるほど反響を呼んだ。本記事では、r.kagaya 氏が公開した SpeakerDeck 資料「ハーネスエンジニアリングにどう向き合うか 〜ルールファイルを超えて開発プロセスを設計する〜」をもとに、ルールファイルを超えたハーネスエンジニアリングの考え方を整理する。&lt;/p&gt;
+&lt;h2 id="イベント概要"&gt;イベント概要&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;【Harness Engineering 入門】AIエージェントを制御するアプローチ&lt;/strong&gt;（&lt;a href="https://findy.connpass.com/event/388471/"&gt;connpass #388471&lt;/a&gt;）は、AI エージェントによる開発が広まる中でハーネス設計がどのような意味を持つかを掘り下げるイベント。対象は AI エージェントを積極的に使っているエンジニア、チーム開発に AI を取り込もうとしているエンジニア層だ。&lt;/p&gt;
+&lt;p&gt;複数の登壇の中で r.kagaya 氏のセッションは、自社でエージェントの開発環境を内製する過程で見えてきた「これもハーネスだ」という気づきを軸に、ルールファイル設定で終わらないハーネスエンジニアリングの本質を語った。&lt;/p&gt;
+&lt;h2 id="ルールファイルから始まるハーネスエンジニアリング"&gt;ルールファイルから始まるハーネスエンジニアリング&lt;/h2&gt;
+&lt;p&gt;多くのエンジニアがハーネスエンジニアリングを始める入り口は &lt;strong&gt;CLAUDE.md などのルールファイル&lt;/strong&gt; だ。「こういうコードを書いてほしい」「このコマンドは使わないで」といった制約を自然言語で記述し、AI の振る舞いをコントロールする。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# CLAUDE.md の例
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Bash コマンドの必須ルール
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`&amp;amp;&amp;amp;`&lt;/span&gt; でコマンドを繋がない
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`/tmp`&lt;/span&gt; を使わない（&lt;span style="color:#e6db74"&gt;`.claude/temp/`&lt;/span&gt; を使う）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この段階では「うまく動くルールを育てる」フェーズであり、試行錯誤でルールを追加・削除していく。しかし、ここで止まってしまうと &lt;strong&gt;本当の意味でのハーネスエンジニアリング&lt;/strong&gt; には到達できない。&lt;/p&gt;
+&lt;h2 id="ルールファイルの限界"&gt;ルールファイルの限界&lt;/h2&gt;
+&lt;p&gt;ルールファイルだけに依存したアプローチには構造的な限界がある。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;課題&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;変更の影響が不透明&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;あるルールを変えたとき、どの程度・どの方向に結果が変わるか測定できない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;劣化の検知が困難&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;モデルのアップデートや使い方の変化でルールの有効性が静かに落ちる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;再現性の欠如&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;同じルールで試しても毎回違う結果が出る場合の原因特定が難しい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スケールしない&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;チームが大きくなるほど「誰がどのルールを管理しているか」が曖昧になる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="ルールファイルを超えた視点開発プロセスとして設計する"&gt;ルールファイルを超えた視点：開発プロセスとして設計する&lt;/h2&gt;
+&lt;p&gt;r.kagaya 氏が提示したのは、ハーネスエンジニアリングを「ルールを書く行為」ではなく &lt;strong&gt;「開発プロセスを設計する行為」&lt;/strong&gt; として捉え直す考え方だ。&lt;/p&gt;</description></item><item><title>エージェントハーネスとユーザーハーネス — ハーネスエンジニアリングの全体像を正しく理解する</title><link>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-agent-vs-user-harness/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-agent-vs-user-harness/</guid><description>&lt;p&gt;r.kagaya 氏（@ry0_kaga、AstarMinds CTO）が Zenn に公開した記事がある。「&lt;a href="https://zenn.dev/r_kaga/articles/329afdc151899f"&gt;ハーネスエンジニアリングとは何で、何ではないのか 〜作る側のハーネス、使う側のハーネス〜&lt;/a&gt;」という記事だ。ハーネスエンジニアリングをめぐる言葉の混乱を整理し、エージェントハーネスとユーザーハーネスという2層の区分を提示している。&lt;/p&gt;
+&lt;p&gt;CLAUDE.md や Skills を書けば「ハーネスエンジニアリングをやっている」と言える。でも、それはハーネスエンジニアリングの全体ではない。この記事ではその全体像を整理する。&lt;/p&gt;
+&lt;h2 id="そもそもハーネスの定義が割れている"&gt;そもそも「ハーネス」の定義が割れている&lt;/h2&gt;
+&lt;p&gt;前提として、ハーネスエンジニアリングという言葉には統一された定義がない。同じ言葉を使いながら、各社・各人が指しているものが違う。&lt;/p&gt;
+&lt;h3 id="用語の来歴"&gt;用語の来歴&lt;/h3&gt;
+&lt;p&gt;「ハーネス」の原義は馬具だ。馬を馬車に繋ぎ、方向を制御し、力を伝達する装備。ソフトウェア文脈では 2020 年の &lt;a href="https://github.com/EleutherAI/lm-evaluation-harness"&gt;lm-eval-harness&lt;/a&gt;（言語モデル評価ハーネス）が初出とされる（r.kagaya 氏による整理）。2024 年に All Hands AI / OpenHands が「エージェントハーネス」に拡張。2026 年に Mitchell Hashimoto（Terraform 創業者）が「Engineer the Harness」と命名し、OpenAI の記事で広まった。&lt;/p&gt;
+&lt;h3 id="各社の定義"&gt;各社の定義&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;誰が&lt;/th&gt;
+&lt;th&gt;何と言っているか&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;LangChain (Vivek Trivedy)&lt;/td&gt;
+&lt;td&gt;「Agent = Model + Harness。モデルでなければハーネス」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Anthropic&lt;/td&gt;
+&lt;td&gt;「LLM を呼び出し、ツールコールをルーティングする制御ループ」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;OpenAI&lt;/td&gt;
+&lt;td&gt;宣言的制約 + サンドボックス + スケーリング&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Böckeler / Martin Fowler&lt;/td&gt;
+&lt;td&gt;サイバネティクス的制御。フィードフォワード × フィードバック&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Phil Schmid (Hugging Face)&lt;/td&gt;
+&lt;td&gt;Model = CPU, Harness = OS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Bedi (Composio CEO)&lt;/td&gt;
+&lt;td&gt;「システムエンジニアリングのサブセットに新しい名前をつけているだけ」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;LangChain の「モデルでなければハーネス」は極めて広い。Anthropic の「制御ループ」はエージェント実装寄り。「そもそも新しい概念ですらない」と言う人もいる。さらにベンダー（作り手）と利用者（使い手）で意味が違うという構造的な問題もある。&lt;/p&gt;</description></item><item><title>社会シミュレーション</title><link>https://hdknr.github.io/blogs/wiki/concepts/social-simulation/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/social-simulation/</guid><description>多数の AI エージェントが相互作用し、創発的な社会ダイナミクスを再現する計算モデル</description></item><item><title>「AIファースト」戦略の本当の意味 — ハーネスエンジニアリングで25人チームが6週間を1日に短縮した方法</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-first-harness-engineering-creao/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-first-harness-engineering-creao/</guid><description>&lt;p&gt;MetaのGenAIチーム（LLaMA）出身のCo-FounderであるPeter Pang（@intuitiveml）が率いるエージェントプラットフォーム企業CreaoAI（25名）が、「AIファースト」を本気で実践した結果、コードの99%をAIが書き、かつてのリリースサイクル6週間を1日に短縮した方法を解説している。&lt;/p&gt;
+&lt;p&gt;元記事タイトルは &amp;ldquo;Why Your &amp;lsquo;AI-First&amp;rsquo; Strategy Is Probably Wrong&amp;rdquo;。@SuguruKun_ai がX（旧Twitter）のスレッドで日本語解説している。&lt;/p&gt;
+&lt;h2 id="aiを導入した会社と前提に組み直した会社の違い"&gt;AIを「導入した」会社と「前提に組み直した」会社の違い&lt;/h2&gt;
+&lt;p&gt;多くの企業は既存のプロセスにAIを乗せています。エンジニアがCursorを開き、PMがChatGPTで仕様書を書く――ワークフローは変わらず、効率が10〜20%上がるだけです。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;AIファーストとはまったく別物&lt;/strong&gt;です。AIファーストとは、「AIがメインのビルダーである」という前提でプロセス・アーキテクチャ・組織を再設計することです。「どうすればAIがエンジニアの役に立てるか？」ではなく、「どう再構築すればAIがビルドし、エンジニアが方向と判断を提供できるか？」という問いです。&lt;/p&gt;
+&lt;h2 id="ハーネスエンジニアリングとは何か"&gt;ハーネスエンジニアリングとは何か&lt;/h2&gt;
+&lt;p&gt;OpenAIが2026年2月に発表した概念で、CreaoAIが実践の中で独自に到達していたアプローチと一致しました。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;エンジニアリングチームの主な仕事はもはやコードを書くことではなく、エージェントが有用な作業を行える「環境（ハーネス）」を整えることである。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;失敗が起きたとき、解決策は「もっと頑張れ」ではなく「どのケイパビリティが欠けているか、エージェントにとって読み解けるようにするにはどうすればよいか」を問うことです。&lt;/p&gt;
+&lt;h2 id="3つのボトルネックを解消した"&gt;3つのボトルネックを解消した&lt;/h2&gt;
+&lt;p&gt;CreaoAIはAI移行前に3つの深刻な問題を抱えていました。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;① プロダクトマネジメントのボトルネック&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;エージェントは2時間でフィーチャーを実装できます。数週間の計画サイクルがボトルネックになります。仕様書レビューではなく、プロトタイプ→リリース→テスト→反復のループで動く必要があります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;② QAのボトルネック&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ビルド時間2時間・テスト時間3日では話になりません。AIが書いたコードをAIが構築したテストプラットフォームで検証し、バリデーションを実装と同速度で動かします。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;③ ヘッドカウントのボトルネック&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;競合は100倍の人員。CreaoAIは25名。採用では追いつけないため、設計で追いつく必要がありました。&lt;/p&gt;
+&lt;h2 id="アーキテクチャ統合モノレポへ移行した理由"&gt;アーキテクチャ統合：モノレポへ移行した理由&lt;/h2&gt;
+&lt;p&gt;複数リポジトリにまたがる変更はAIエージェントにとって「不透明」でした。AIは全体像を把握できず、クロスサービスの影響を推論できません。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;モノレポへ統合した一番の理由：AIがすべてを見られるようにするため。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ハーネスエンジニアリングの原則では「エージェントが検査・検証・変更できる形にコードを引き込むほどレバレッジが増す」とされる。1週間かけて新設計を策定し、さらに1週間でエージェントを使ってコードベース全体をリアーキテクチャした。&lt;/p&gt;
+&lt;h2 id="技術スタック詳細"&gt;技術スタック詳細&lt;/h2&gt;
+&lt;h3 id="インフラaws"&gt;インフラ：AWS&lt;/h3&gt;
+&lt;p&gt;自動スケーリングのコンテナサービスとサーキットブレーカーロールバックで運用。デプロイ後にメトリクスが劣化すると自動でリバートします。CloudWatchを中枢神経系として使い、25以上のアラームとカスタムメトリクスで全サービスから構造化ログを収集します。&lt;/p&gt;
+&lt;h3 id="cicdgithub-actions6フェーズ"&gt;CI/CD：GitHub Actions（6フェーズ）&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Verify CI → Build/Deploy Dev → Test Dev → Deploy Prod → Test Prod → Release
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;CIゲートは型チェック・リント・ユニットテスト・統合テスト・Dockerビルド・Playwright E2Eテスト・環境パリティチェックをすべて必須で実施。手動オーバーライドは存在しない。パイプラインが決定論的であるため、エージェントが結果を予測して障害を推論できる。&lt;/p&gt;
+&lt;h3 id="aiコードレビューclaude-opus-46"&gt;AIコードレビュー：Claude Opus 4.6&lt;/h3&gt;
+&lt;p&gt;PRのたびに3つのClaudeレビューパスを並列実行します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;コード品質&lt;/strong&gt; — ロジックエラー、パフォーマンス問題、保守性&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セキュリティ&lt;/strong&gt; — 脆弱性スキャン、認証境界チェック、インジェクションリスク&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;依存関係スキャン&lt;/strong&gt; — サプライチェーンリスク、バージョン競合、ライセンス問題&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;1日8回デプロイする状況で人間レビュアーがすべてのPRに集中し続けることは不可能だ。これはサジェスチョンではなくレビューゲートである。&lt;/p&gt;</description></item><item><title>pytest.mark.chaos で始めるカオスエンジニアリング — Python テストに障害注入を組み込む</title><link>https://hdknr.github.io/blogs/posts/2026/04/pytest-chaos-engineering/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/pytest-chaos-engineering/</guid><description>&lt;p&gt;「本番で障害が起きてから対処する」のではなく、「テスト段階で意図的に障害を起こして耐性を確認する」。これがカオスエンジニアリングの基本思想だ。Python の pytest には、この考え方をテストコードに組み込むためのシンプルな仕組みがある。&lt;/p&gt;
+&lt;h2 id="pytestmarkchaos-とは"&gt;pytest.mark.chaos とは&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;@pytest.mark.chaos&lt;/code&gt; は、pytest のカスタムマーカー機能を使って「カオステスト」を分類するためのラベルだ。pytest にはビルトインのマーカー（&lt;code&gt;@pytest.mark.skip&lt;/code&gt;、&lt;code&gt;@pytest.mark.parametrize&lt;/code&gt; など）があるが、&lt;code&gt;chaos&lt;/code&gt; は&lt;strong&gt;ユーザーが自由に定義するカスタムマーカー&lt;/strong&gt;に該当する。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pytest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@pytest.mark.chaos&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;test_network_timeout&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;ネットワークタイムアウト時にフォールバックが機能するか&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; call_api_with_timeout(timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.001&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;assert&lt;/span&gt; result &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;fallback_response&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="マーカーの登録"&gt;マーカーの登録&lt;/h3&gt;
+&lt;p&gt;カスタムマーカーは &lt;code&gt;pyproject.toml&lt;/code&gt; または &lt;code&gt;pytest.ini&lt;/code&gt; に登録しておくと、&lt;code&gt;PytestUnknownMarkWarning&lt;/code&gt; 警告を抑制できる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# pyproject.toml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#a6e22e"&gt;tool&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;pytest&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ini_options&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;markers&lt;/span&gt; = [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;chaos: カオスエンジニアリング関連のテスト（障害注入・耐性検証）&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="選択実行"&gt;選択実行&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カオステストだけを実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytest -m chaos
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カオステスト以外を実行（通常の CI）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytest -m &lt;span style="color:#e6db74"&gt;&amp;#34;not chaos&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カオステストと統合テストを実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytest -m &lt;span style="color:#e6db74"&gt;&amp;#34;chaos or integration&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これにより、通常の CI パイプラインではカオステストをスキップし、定期的なレジリエンス検証時にだけ実行するという運用が可能になる。&lt;/p&gt;</description></item><item><title>Onyx（旧 Danswer）</title><link>https://hdknr.github.io/blogs/wiki/tools/onyx/</link><pubDate>Thu, 16 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/onyx/</guid><description>MIT ライセンスのオープンソース AI プラットフォーム。RAG・AIエージェント・50以上のコネクタを備え、セルフホストで社内ナレッジ検索を実現</description></item><item><title>Claude Code Routines リリース — 常駐しないエージェントという新しい設計思想</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-routines/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-routines/</guid><description>&lt;p&gt;Anthropic が「&lt;strong&gt;Claude Code Routines&lt;/strong&gt;」をリリースした。「時間になったら勝手に動く AI」を、誰でも 24 時間クラウド上で完結させられる仕組みだ。&lt;/p&gt;
+&lt;h2 id="何が変わったのか"&gt;何が変わったのか&lt;/h2&gt;
+&lt;p&gt;これまで AI エージェントを自律実行させるには、PC を常時起動させたり、自前のサーバーを用意したり、cron + スクリプトをハック的に組み合わせる必要があった。Claude Code Routines はこの構成を根本から変える。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;セットアップは 2 ステップだけ:&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;プロンプトを設定する&lt;/li&gt;
+&lt;li&gt;リポジトリ・外部連携を接続する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これだけで、Anthropic のクラウド上でエージェントが自律的に動作する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;PC つけっぱなし → &lt;strong&gt;不要&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;自前サーバー → &lt;strong&gt;不要&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;ハック的な構成 → &lt;strong&gt;不要&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;完全に「インフラレス運用」が実現した。&lt;/p&gt;
+&lt;h2 id="トリガー設計"&gt;トリガー設計&lt;/h2&gt;
+&lt;p&gt;Claude Code Routines の最大の特徴は &lt;strong&gt;柔軟なトリガー設計&lt;/strong&gt; にある。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;トリガー種別&lt;/th&gt;
+&lt;th&gt;例&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;cron&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;毎朝 9 時に定期レポートを生成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;API コール&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;外部サービスから HTTP リクエストで起動&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;GitHub イベント&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;PR が開いたら、Issue が立ったら、Webhook が飛んだら&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;これにより、&lt;strong&gt;人間が起動操作をしなくてもよくなる&lt;/strong&gt;。PR を開いた瞬間にコードレビューエージェントが動き出し、Issue が作成されると自動でトリアージが走る、といったワークフローが実現する。&lt;/p&gt;
+&lt;h2 id="常駐しないエージェントという設計思想"&gt;「常駐しないエージェント」という設計思想&lt;/h2&gt;
+&lt;p&gt;Claude Code Routines が体現しているのは、単なる「自動化」ではない。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;必要なときだけ AI が &amp;ldquo;自分で目を覚まし&amp;rdquo;、処理して、また眠る&lt;/p&gt;</description></item><item><title>Claude Code、1日でアプデ3連発 — Routines・新 Desktop・ストリーム安定性</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-routines-desktop-update/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-routines-desktop-update/</guid><description>&lt;p&gt;2026年4月14日、Anthropic が Claude Code に&lt;strong&gt;3つの大型アップデートを同日リリース&lt;/strong&gt;した。それぞれ独立したアップデートながら、組み合わさることで「AI を常時活用するインフラ」としての完成度が大きく高まっている。&lt;/p&gt;
+&lt;h2 id="アップデート1-routines--mac-オフラインでも自動実行"&gt;アップデート1: Routines — Mac オフラインでも自動実行&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Routines&lt;/strong&gt; は、Claude Code エージェントをクラウド上でスケジュール実行できる機能だ。&lt;/p&gt;
+&lt;p&gt;これまで Claude Code をバックグラウンドで自動実行するには、PC を常時起動し続けるか、別途サーバーを用意する必要があった。Routines はその制約を取り払う。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;cron / API / GitHub イベント&lt;/strong&gt;など複数のトリガー方式に対応&lt;/li&gt;
+&lt;li&gt;Anthropic のクラウド上で実行されるため、&lt;strong&gt;Mac がオフラインでも動作する&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;リポジトリや外部サービスとの接続設定のみで即稼働&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;毎朝定時にレポートを生成する、PR が作られたら自動でコードレビューを走らせる——そうしたワークフローが、自前サーバーなしで実現できる。&lt;/p&gt;
+&lt;h2 id="アップデート2-新-desktop--複数セッションの並列管理"&gt;アップデート2: 新 Desktop — 複数セッションの並列管理&lt;/h2&gt;
+&lt;p&gt;Claude Code の Desktop アプリが刷新された。最大の変更点は&lt;strong&gt;複数セッションの同時管理&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;p&gt;従来の Claude Code は基本的に「1つのターミナルで1つのタスク」という使い方が中心だった。新 Desktop ではウィンドウやセッションを切り替えながら、複数の作業を並列で進められるようになった。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;複数のリポジトリや Issue を同時に扱う際のコンテキスト切り替えが容易&lt;/li&gt;
+&lt;li&gt;セッションの状態を保持したまま別タスクに移行可能&lt;/li&gt;
+&lt;li&gt;大規模プロジェクトや複数プロジェクトを掛け持ちするエンジニアに特に有効&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="アップデート3-ストリーム5分タイムアウトの安定性強化"&gt;アップデート3: ストリーム5分タイムアウトの安定性強化&lt;/h2&gt;
+&lt;p&gt;長時間のタスク実行中に接続が切れる問題が、このアップデートで改善された。&lt;/p&gt;
+&lt;p&gt;Claude Code は複雑なコード生成・解析・エージェント処理を行う際、処理時間が数分を超えることがある。従来のストリーム接続はタイムアウトが発生しやすく、長尺タスクの信頼性が課題だった。&lt;/p&gt;
+&lt;p&gt;今回の改善により、&lt;strong&gt;5分を超える処理でも安定してストリームを維持&lt;/strong&gt;できるようになった。Routines による長時間バックグラウンド処理との組み合わせで、より重厚なタスクを任せられる基盤が整った。&lt;/p&gt;
+&lt;h2 id="3つのアップデートが示す方向性"&gt;3つのアップデートが示す方向性&lt;/h2&gt;
+&lt;p&gt;これら3つの変更を並べると、Anthropic の意図が見えてくる。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;アップデート&lt;/th&gt;
+&lt;th&gt;解決する課題&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Routines&lt;/td&gt;
+&lt;td&gt;「人間が起動する」制約の除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;新 Desktop&lt;/td&gt;
+&lt;td&gt;「1タスクずつ」制約の除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ストリーム安定性&lt;/td&gt;
+&lt;td&gt;「短時間タスクのみ」制約の除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;それぞれが「Claude Code を使う上でのボトルネック」を1つずつ潰している。偶然の同日リリースではなく、&lt;strong&gt;統合されたロードマップの一部&lt;/strong&gt;として設計されたアップデートだと考えると納得感がある。&lt;/p&gt;</description></item><item><title>Gemini Agent</title><link>https://hdknr.github.io/blogs/wiki/tools/gemini-agent/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/gemini-agent/</guid><description>Google の Gemini に搭載されたエージェントモード。Gmail・Calendar・Drive など Google Workspace を横断して複雑なマルチステップタスクを自動実行する</description></item><item><title>仮想渋谷にAIエージェントを解き放つ──社会シミュレーションが都市・安全保障・月面開発に活きる理由</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-agents-virtual-shibuya-simulation/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-agents-virtual-shibuya-simulation/</guid><description>&lt;p&gt;スペースデータ社長の佐藤航陽氏が、興味深い社会シミュレーション実験を紹介している。大量のAIエージェントを仮想の渋谷に解き放ち、AI同士が遊んだりLINEしたり飲みに行ったりと自律的に暮らす「人工生態系」を構築するというプロジェクトだ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;大量のAIエージェントを仮想の渋谷に解き放って活動させる社会シミュレーション。AI同士が遊んだりLINEしたり飲みに行ったりと好き勝手に暮らす人工生態系。AI同士の相互作用と創発を観察することで、都市開発・安全保障・月面開発にも活きる。&lt;/p&gt;
+&lt;p&gt;— 佐藤航陽（さとうかつあき）&lt;a href="https://x.com/ka2aki86/status/2043681633262612913"&gt;@ka2aki86&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="仮想渋谷のaiエージェント生態系とは"&gt;仮想渋谷のAIエージェント生態系とは&lt;/h2&gt;
+&lt;p&gt;このシミュレーションの特徴は、AIエージェントを「タスク実行マシン」ではなく「社会的な存在」として扱う点にある。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;自律的な意思決定&lt;/strong&gt;: 各エージェントが自分の判断で行動を選択する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;社会的な相互作用&lt;/strong&gt;: AI同士が会話し、グループを形成し、関係性を構築する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;日常的な活動&lt;/strong&gt;: 飲みに行く、LINEする、遊ぶといった人間の行動を模倣する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;渋谷という舞台&lt;/strong&gt;: 実在の都市を仮想空間に再現し、リアリティを持たせる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;マルチエージェントシミュレーションとしては「Generative Agents」（Stanford大の研究）が先駆的な成果として知られるが、渋谷という具体的な都市空間を舞台にした大規模版という位置付けとなる。&lt;/p&gt;
+&lt;h2 id="なぜ創発の観察が重要なのか"&gt;なぜ「創発」の観察が重要なのか&lt;/h2&gt;
+&lt;p&gt;個々のAIエージェントに与えるルールは単純でも、多数が相互作用することで予測不能なパターン（創発）が生まれる。これがこのシミュレーションの核心だ。&lt;/p&gt;
+&lt;p&gt;たとえば：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;特定のエリアに人が集まりやすい「ホットスポット」が自然発生する&lt;/li&gt;
+&lt;li&gt;情報が口コミのように広がる速度・経路が可視化できる&lt;/li&gt;
+&lt;li&gt;緊急事態（災害など）の際、群衆がどう動くかをシミュレートできる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;こうした現象を観察・分析することで、現実世界の都市設計や政策立案に役立つデータが得られる。&lt;/p&gt;
+&lt;h2 id="3つの応用領域"&gt;3つの応用領域&lt;/h2&gt;
+&lt;p&gt;佐藤氏が挙げる応用領域は、一見すると無関係に見えるが、いずれも「多数の人間（またはエージェント）が限られた空間でどう行動・協調するか」という共通テーマでつながっている。&lt;/p&gt;
+&lt;h3 id="都市開発"&gt;都市開発&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;新しい施設を建てた場合の人流シミュレーション&lt;/li&gt;
+&lt;li&gt;商業エリアの最適配置の検証&lt;/li&gt;
+&lt;li&gt;交通渋滞や混雑を事前に予測するモデリング&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="安全保障"&gt;安全保障&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;情報拡散（デマ・プロパガンダ含む）のシミュレーション&lt;/li&gt;
+&lt;li&gt;サイバー攻撃時の社会的影響のモデリング&lt;/li&gt;
+&lt;li&gt;危機時の住民行動予測と対応策の検討&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="月面開発"&gt;月面開発&lt;/h3&gt;
+&lt;p&gt;スペースデータが手がける宇宙開発の文脈では特に重要だ。月面基地のような閉鎖環境での人間（またはロボット）の行動最適化、限られたリソース配分のシミュレーション、長期的なコミュニティ維持のモデルなど、地球上での社会シミュレーションが直接活用できる。&lt;/p&gt;
+&lt;h2 id="マルチエージェント研究の潮流"&gt;マルチエージェント研究の潮流&lt;/h2&gt;
+&lt;p&gt;2026年現在、AIエージェント研究はツール呼び出しや単一タスク完結から、複数エージェントが協調・競合する「マルチエージェントシステム」へと急速にシフトしている。&lt;/p&gt;
+&lt;p&gt;Anthropicの「Claude」やOpenAIの「GPT-4o」などの大規模言語モデルをベースにしたエージェントは、複雑な状況判断や自然言語コミュニケーションを自律的に行えるようになった。これを多数並列稼働させることで、従来のルールベースシミュレーションでは再現できなかった「人間らしい」社会ダイナミクスの再現が可能になっている。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;仮想渋谷でのAIエージェント社会シミュレーションは、単なる技術的な面白さを超えて、現実世界への応用価値を持つ研究だ。AI同士の相互作用から生まれる創発現象を観察・分析することで、都市計画から宇宙開発まで、広範な領域で人間の意思決定を支援するツールになり得る。&lt;/p&gt;
+&lt;p&gt;佐藤氏のビジョン──「宇宙の民主化」を目指しながら地球上の社会シミュレーションを積み重ねるアプローチ──は、AIエージェント技術の一つの未来像を示している。&lt;/p&gt;</description></item><item><title>Claude Code で作る「世界AIシミュレーター」— 20カ国AIエージェントが自律外交・紛争するリアルタイム地政学ゲーム</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-world-ai-simulator/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-world-ai-simulator/</guid><description>Claude Code を使い20カ国AIエージェントが自律外交・同盟・経済制裁を判断する世界AIシミュレーターの技術解説。マルチエージェントシステムの設計パターン、3Dビジュアライゼーション、LLMストリーミングの実装例を紹介。</description></item><item><title>OpenClaw vs Hermes: AIエージェントプラットフォームの勢力図に変化</title><link>https://hdknr.github.io/blogs/posts/2026/04/openclaw-vs-hermes/</link><pubDate>Sun, 12 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/openclaw-vs-hermes/</guid><description>&lt;p&gt;AIエージェントプラットフォームの世界で、OpenClaw から Hermes への乗り換えが予想以上の速さで進んでいるという観測が SNS 上で広まっている。&lt;/p&gt;
+&lt;h2 id="ポイント"&gt;ポイント&lt;/h2&gt;
+&lt;p&gt;韓国の技術インフルエンサー Cognac（꼬냑）氏が X（旧 Twitter）に投稿した内容によると、最近 OpenClaw から Hermes に切り替えるユーザーが増えているとのこと。その理由として以下の 5 点が挙げられている。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;再帰的メモリの改善で Hermes が圧勝&lt;/strong&gt;&lt;br&gt;
+エージェントが過去の文脈を再帰的に参照して学習・記憶を改善する仕組みが Hermes のほうが優れているとされる。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;チーム単位ではなくエンタープライズ単位での管理&lt;/strong&gt;&lt;br&gt;
+組織全体での一元管理が可能なエンタープライズ向け機能が充実している。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;エンタープライズレベルでのスキル作成で信頼性が向上&lt;/strong&gt;&lt;br&gt;
+大規模組織での運用実績が積み重なり、Hermes のスキル（機能拡張）に対する信頼感が高まっている。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;開発チームおよび会社の対応が非常に迅速&lt;/strong&gt;&lt;br&gt;
+不具合報告や機能要望に対するフィードバックループが速く、ユーザーの信頼を獲得している。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;GitHub からのコピー＆ペースト不要で自動アップデート&lt;/strong&gt;&lt;br&gt;
+OpenClaw では GitHub からスキルや設定を手動でコピーする手間があったが、Hermes は自動更新で手間が少ない。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="openclaw-との比較"&gt;OpenClaw との比較&lt;/h2&gt;
+&lt;p&gt;OpenClaw はこれまで AIエージェントのスキル管理や Claude Code との連携で注目されてきたプラットフォームだが、以下の点でユーザーの不満が蓄積しているようだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;エラーの多さとレスポンスの遅さ&lt;/li&gt;
+&lt;li&gt;スキルの手動管理（GitHub からのコピー＆ペースト作業）&lt;/li&gt;
+&lt;li&gt;エンタープライズ向け機能の不足&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一方 Hermes は、再帰的メモリの技術的優位性とエンタープライズ対応、迅速な開発サイクルを武器に、OpenClaw ユーザーの取り込みを加速させている。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;AIエージェントプラットフォームは機能面だけでなく、&lt;strong&gt;開発チームの対応速度&lt;/strong&gt; や &lt;strong&gt;エンタープライズ対応&lt;/strong&gt; など非技術的な要素でも差がつく時代になっている。今後も Hermes と OpenClaw の競争から目が離せない。&lt;/p&gt;</description></item><item><title>Claude Code にカオスエンジニアリングエージェントを導入してリポジトリの弱点を発見する</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-chaos-engineer-agent/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-chaos-engineer-agent/</guid><description>&lt;p&gt;Claude Code のカスタムエージェント機能を使って「カオスエンジニア」を導入すると、リポジトリの潜在的な弱点を自動的に発見できる。&lt;code&gt;.md&lt;/code&gt; ファイルを1つ置くだけで有効化でき、驚くほど多くの問題が見つかることで話題になっている。&lt;/p&gt;
+&lt;h2 id="カオスエンジニアリングとは"&gt;カオスエンジニアリングとは&lt;/h2&gt;
+&lt;p&gt;カオスエンジニアリングは、本番システムに意図的に障害を注入してシステムの耐障害性を検証する手法だ。Netflix が提唱した概念で、&lt;code&gt;Chaos Monkey&lt;/code&gt; のような自動障害注入ツールが知られている。&lt;/p&gt;
+&lt;p&gt;Claude Code にカオスエンジニアリングの思考を持ったエージェントを持ち込むと、コードベースに対して「もし〇〇が壊れたら？」という視点で弱点分析を行ってくれる。&lt;/p&gt;
+&lt;h2 id="導入方法"&gt;導入方法&lt;/h2&gt;
+&lt;p&gt;Claude Code のカスタムエージェントは &lt;code&gt;.claude/agents/&lt;/code&gt; ディレクトリに &lt;code&gt;.md&lt;/code&gt; ファイルを置くだけで使える。&lt;/p&gt;
+&lt;p&gt;以下が chaos-engineer エージェントの定義例だ:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# chaos-engineer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたはカオスエンジニアリングの専門家です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;システムに意図的に障害を起こす視点でリポジトリを分析し、
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;潜在的な弱点・単一障害点・エラーハンドリングの欠如を特定してください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 分析観点
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 単一障害点（SPOF）の特定
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; エラーハンドリングの欠如箇所
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; タイムアウト設定の不備
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; リトライ処理の欠如
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 環境変数・設定値のハードコーディング
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 依存サービスがダウンした場合の挙動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; データ整合性が保証されない処理
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; テストカバレッジが低い重要処理
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 出力形式
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;各問題について以下を明記する:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 問題箇所（ファイルパス・行番号）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 障害シナリオ
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 影響範囲
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 推奨する対策
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このファイルを &lt;code&gt;.claude/agents/chaos-engineer.md&lt;/code&gt; として保存する。&lt;/p&gt;</description></item><item><title>Gemini Agentモード：Google Workspaceを丸ごと自動化するAIエージェントの実力</title><link>https://hdknr.github.io/blogs/posts/2026/04/gemini-agent-mode/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/gemini-agent-mode/</guid><description>Google Gemini Agentモードの機能・活用事例・料金を解説。Gmail・カレンダー・Driveを横断する自動化、スケジュール実行、OpenClawとの比較まで網羅。</description></item><item><title>OpenClaw に動画生成機能が正式搭載へ — AI エージェントが制作まで完結する時代</title><link>https://hdknr.github.io/blogs/posts/2026/04/openclaw-video-generation/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/openclaw-video-generation/</guid><description>&lt;p&gt;OpenClaw の創業者 Peter 氏が、次のバージョンで&lt;strong&gt;動画生成機能を正式搭載&lt;/strong&gt;することを発表した。これにより、AI エージェントがテキストから動画生成までを一気通貫で完結できるようになる。&lt;/p&gt;
+&lt;h2 id="動画生成の対応プロバイダー"&gt;動画生成の対応プロバイダー&lt;/h2&gt;
+&lt;p&gt;次バージョンでは、以下のプロバイダーが最初からサポートされる予定だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Alibaba&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BytePlus&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;fal&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Google&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MiniMax&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenAI&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Qwen&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Together&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;xAI&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;主要な動画生成 AI サービスをほぼ網羅しており、ユーザーはプロバイダーを選んでワークフロー内で動画を生成できるようになる。&lt;/p&gt;
+&lt;h2 id="これまでとこれからの違い"&gt;これまでとこれからの違い&lt;/h2&gt;
+&lt;p&gt;この機能追加の意義は、ワークフローの断絶をなくすことにある。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;これまで&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;テキスト → 画像生成 → 外部ツールで動画化
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;外部ツールへの手動エクスポートが必要で、エージェントのフローが途切れていた。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;これから&lt;/strong&gt;&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;テキスト指示 → AI エージェントが動画生成まで完結
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;エージェントが動画生成まで一手に担うことで、制作フローをエンド・ツー・エンドで自動化できる。&lt;/p&gt;
+&lt;h2 id="もう-1-人の自分からチームそのものへ"&gt;「もう 1 人の自分」から「チームそのもの」へ&lt;/h2&gt;
+&lt;p&gt;これまで OpenClaw は「もう 1 人の自分」として個人の作業を補助する位置づけだったが、動画生成の搭載によって**「チームそのもの」**として機能し始めていると言える。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;テキスト生成・コード生成に加え、映像制作まで担当&lt;/li&gt;
+&lt;li&gt;複数の動画生成プロバイダーに対応することで、用途に応じた使い分けが可能&lt;/li&gt;
+&lt;li&gt;AIエージェントが「考える」だけでなく「制作する」領域まで拡張&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;OpenClaw への動画生成機能の追加は、AI エージェントの役割が「情報処理・生成支援」から「クリエイティブ制作」へと拡張する大きな転換点だ。9 つの主要プロバイダーへの対応により、動画コンテンツの制作フローを AI エージェント内で完結させられる可能性が開かれた。&lt;/p&gt;
+&lt;p&gt;正式リリース時には、具体的なプロンプト設計や各プロバイダーとの使い分けについても検証していきたい。&lt;/p&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;情報ソース: &lt;a href="https://x.com/ichiaimarketer"&gt;@ichiaimarketer&lt;/a&gt; のポスト（2026-04-07）
+&lt;a href="https://x.com/ichiaimarketer/status/2041306965029331290"&gt;元ツイートを見る&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>Claude Code</title><link>https://hdknr.github.io/blogs/wiki/tools/claude-code/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/claude-code/</guid><description>Anthropic 公式の CLI ベース AI コーディングエージェント</description></item><item><title>OpenClaw + Ollama + Gemma4 でローカル無料AIエージェントを構築する</title><link>https://hdknr.github.io/blogs/posts/2026/04/openclaw-gemma4-local-setup/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/openclaw-gemma4-local-setup/</guid><description>&lt;p&gt;API課金なしで、ローカル環境にAIエージェントを無制限で運用できるセットアップ方法を紹介します。OpenClaw（エージェントインターフェース）+ Ollama（ローカルモデルサーバー）+ Gemma4（推論エンジン）の組み合わせにより、Telegram・Discord・LINEなどの既存チャンネルともシームレスに連携できます。&lt;/p&gt;
+&lt;h2 id="構成概要"&gt;構成概要&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;コンポーネント&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;OpenClaw&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;AIエージェントのインターフェース・オーケストレーション&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Ollama&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ローカルLLMサーバー（モデルの管理・API提供）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Gemma4&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;推論エンジン（Google製オープンモデル）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この3つを組み合わせることで、クラウドAPIへの依存なしにフル機能のAIエージェントが動作します。&lt;/p&gt;
+&lt;h2 id="セットアップ手順"&gt;セットアップ手順&lt;/h2&gt;
+&lt;h3 id="1-ollama-のインストール"&gt;1. Ollama のインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# macOS / Linux&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://ollama.ai/install.sh | sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Windows&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# https://ollama.ai から インストーラーをダウンロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="2-gemma4-モデルの取得"&gt;2. Gemma4 モデルの取得&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama pull gemma4
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3-openclaw-のインストール"&gt;3. OpenClaw のインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install -g openclaw
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="4-オンボーディングウィザードの実行"&gt;4. オンボーディングウィザードの実行&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openclaw onboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;ウィザードに従ってOllama接続設定とチャンネル連携（Telegram・Discord・LINEなど）を行います。&lt;/p&gt;</description></item><item><title>Karpathy の LLM Wiki — AIエージェントが育てる個人ナレッジベースという新パターン</title><link>https://hdknr.github.io/blogs/posts/2026/04/karpathy-llm-wiki/</link><pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/karpathy-llm-wiki/</guid><description>Andrej Karpathy が公開した LLM Wiki は、RAG の限界を超えて AI エージェントに個人ナレッジベースを継続的に構築・保守させるパターン。三層構造と3つの基本操作を解説。</description></item><item><title>LLM Wiki パターン</title><link>https://hdknr.github.io/blogs/wiki/concepts/llm-wiki-pattern/</link><pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/llm-wiki-pattern/</guid><description>AI エージェントに個人ナレッジベースを継続的に構築・保守させるパターン</description></item><item><title>「toA」時代の到来 — AIエージェント向けサービス200超が示す新市場の全体像</title><link>https://hdknr.github.io/blogs/posts/2026/03/toa-services-for-ai-agents/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/toa-services-for-ai-agents/</guid><description>&lt;p&gt;「toC」でも「toB」でもない。AIエージェントそのものがお客さんになる——「toA」という新しい市場が急速に立ち上がっています。paji氏（&lt;a href="https://x.com/paji_a"&gt;@paji_a&lt;/a&gt;）がリサーチした200超のサービスから見えてきた、この新市場の構造を紹介します。&lt;/p&gt;
+&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="ja" dir="ltr"&gt;Claudeヤバい、1日で”toA”デモできた… &lt;a href="https://t.co/olgPwJ1SIr"&gt;https://t.co/olgPwJ1SIr&lt;/a&gt; &lt;a href="https://t.co/P46txbWVHh"&gt;pic.twitter.com/P46txbWVHh&lt;/a&gt;&lt;/p&gt;&amp;mdash; paji.eth (@paji_a) &lt;a href="https://x.com/paji_a/status/2038223706678562979?ref_src=twsrc%5Etfw"&gt;March 29, 2026&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.x.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+&lt;h2 id="なぜtoaが生まれたのか"&gt;なぜ「toA」が生まれたのか&lt;/h2&gt;
+&lt;p&gt;2026年はAIエージェントの普及が一段と進む年です。Claude Cowork / Dispatch、Manus、OpenClawなど、年明けからAIエージェントに関するリリースが途切れることなく続いています。&lt;/p&gt;
+&lt;p&gt;ここで起きている変化は明確です。&lt;strong&gt;エージェントを作るツールに加え、エージェントが実際に使う周辺サービスが急増し始めました。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;メールアドレスの発行、長期記憶の保存、Webサイトの操作手順を教えてくれるサービス、仕事を受注して報酬を受け取るマーケットプレイス。主な導入者は人間の開発者や企業ですが、用途はAIエージェントの運用インフラです。&lt;/p&gt;
+&lt;p&gt;「人間向け」には成熟していたデジタルサービスの領域が、「AIエージェント向け」には別の問題として再出現している——これが「toA」市場の本質です。&lt;/p&gt;
+&lt;h2 id="エージェントの5つの生存条件"&gt;エージェントの「5つの生存条件」&lt;/h2&gt;
+&lt;p&gt;200を超えるtoAサービスを分類すると、ひとつの構造が浮かび上がります。エージェントが自律的に動くには、以下の5つの条件が必要です。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;条件&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;th&gt;代表カテゴリ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;「私は誰か」&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;存在証明&lt;/td&gt;
+&lt;td&gt;メール、ID、SNS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;「安全に作業できる場所」&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;実行環境&lt;/td&gt;
+&lt;td&gt;サンドボックス、GPU推論&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;「外の世界を操作する手段」&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ブラウザ・外部接続&lt;/td&gt;
+&lt;td&gt;Web自動操作、プロキシ、OAuth&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;「経験を蓄積する力」&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;記憶&lt;/td&gt;
+&lt;td&gt;長期記憶、コンテキスト管理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;「対価を受け取る仕組み」&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;経済活動&lt;/td&gt;
+&lt;td&gt;マーケットプレイス、エスクロー、決済&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この5つが揃って初めて、エージェントは自律的に仕事ができます。一つでも欠けると止まります。そして多くのサービスが、この5つのどれかを埋めるために生まれていました。&lt;/p&gt;
+&lt;p&gt;残りのカテゴリ（監視、ガードレール、音声、通信など）は、5つの基盤の上に乗る「運用・拡張レイヤー」として位置づけられます。&lt;/p&gt;
+&lt;h2 id="枯れた領域に次々と新種が生まれている"&gt;枯れた領域に次々と新種が生まれている&lt;/h2&gt;
+&lt;h3 id="メール--agentmail"&gt;メール — AgentMail&lt;/h3&gt;
+&lt;p&gt;人間向けのメールサービスはGmailが圧倒的で、今さら新規参入する余地はなさそうに見えます。でも「AIエージェント専用のメール」となると話は別です。APIで即座にメールボックスが作れて、スレッド管理も添付解析も全部プログラムから操作できて、メールで届くOTP/2FA（ワンタイムパスワード/二要素認証）コードも取得できる。AgentMailはY Combinator出身で、600万ドル（約9億円）を調達しています。&lt;/p&gt;
+&lt;h3 id="記憶--mem0"&gt;記憶 — Mem0&lt;/h3&gt;
+&lt;p&gt;人間はメモ帳やNotionに書き残すことで記憶を補強しますが、エージェントにはそもそもセッションをまたぐ記憶がありません。Mem0は会話からファクトを自動抽出して保存し、次のセッションで関連記憶を自動注入してくれます。人間のメモ帳のエージェント版です。&lt;/p&gt;
+&lt;h3 id="webブラウジング--agent-maps"&gt;Webブラウジング — Agent Maps&lt;/h3&gt;
+&lt;p&gt;人間はGoogle Mapsで店を探してクリックして予約しますが、エージェントは「ボタンがどこにあるか」を毎回スクリーンショットから推測しないといけない。Agent Mapsは主要サイトの操作手順をあらかじめ検証済みの「攻略本」としてエージェントに渡します。&lt;/p&gt;
+&lt;h3 id="外部ツール連携--composio"&gt;外部ツール連携 — Composio&lt;/h3&gt;
+&lt;p&gt;人間はSlackにログインしてメッセージを送りますが、エージェントはOAuth認証のフローを安定してさばくのが難しい。Composioは500以上のアプリ接続とOAuth処理を提供します。&lt;/p&gt;
+&lt;h2 id="稼ぐエージェントと使うエージェント"&gt;「稼ぐエージェント」と「使うエージェント」&lt;/h2&gt;
+&lt;p&gt;さらに踏み込んだ領域もあります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HYRVE AI&lt;/strong&gt;は、AIエージェントが「フリーランサー」として活動するマーケットプレイスです。48時間のエスクロー保護付きで、エージェントが別のエージェントを雇うこともできます。「エージェントが自律的に稼ぐ」というコンセプトは、この先どこかのプレイヤーが必ず大きく育てる領域です。&lt;/p&gt;
+&lt;p&gt;一方、&lt;strong&gt;Anon&lt;/strong&gt;は、ログイン情報そのものではなく認証済みセッションをエージェントに安全に扱わせるサービスです。エージェントに「自分のアカウントで注文しておいて」と頼みたいけど、パスワードを直接渡すのは怖い。Anonはログイン済みの状態だけをエージェントに渡すので、エージェントは操作できるけどパスワード自体には触れられません。&lt;/p&gt;
+&lt;p&gt;「稼ぐエージェント」と「使うエージェント」。この両方のインフラが同時に立ち上がっているのが2026年の面白いところです。&lt;/p&gt;
+&lt;h2 id="toaのエッジがプラットフォームになる"&gt;toAの「エッジ」がプラットフォームになる&lt;/h2&gt;
+&lt;p&gt;AIの時代に本当に価値を持つのは、AIモデルそのものだけではなく、&lt;strong&gt;AIが「動く」ために必要な周辺インフラ&lt;/strong&gt;です。&lt;/p&gt;
+&lt;p&gt;存在証明、実行環境、操作手段、記憶、経済活動。これらのインフラを押さえたサービスが、AI時代の重要なプラットフォームになっていく。枯れ尽くしたデジタルサービスの「エッジ」にいるtoAサービス群に、大きなチャンスがあります。&lt;/p&gt;
+&lt;p&gt;新しいtoAサービスが今後どんなに増えても、「5つの生存条件」＋「運用・拡張」という二層構造の中のどこかに位置づけられるはずです。ここを押さえておくと、新サービスが出てきたときに「これはどの条件を埋めるものか」が即座に判断できます。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;「toA」は既存市場の延長ではなく、新しいカテゴリそのもの&lt;/li&gt;
+&lt;li&gt;エージェントの自律動作には5つの生存条件（存在証明・実行環境・操作手段・記憶・経済活動）が必要&lt;/li&gt;
+&lt;li&gt;人間向けに成熟した領域が、エージェント向けに再発明されている&lt;/li&gt;
+&lt;li&gt;200超のサービスが既に存在し、この市場は急拡大中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;詳細な200サービスのリストは、paji氏の記事「&lt;a href="https://humanadsai.com/blog/agentic-utility-belt-200-services"&gt;AIエージェント向けサービス200選&lt;/a&gt;」で確認できます。&lt;/p&gt;</description></item><item><title>AI社員40人を作って1ヶ月で全部やめた話 — 壊れない設計のために知っておくべきこと</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-agents-40-failure/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-agents-40-failure/</guid><description>Claude Codeでエージェント40体を1ヶ月運用して全部やめた実体験レポート。Context Rot、Compaction、指示の限界という3つの構造的問題と、壊れないAIエージェント設計の考え方を解説。</description></item><item><title>AIエージェント記憶検索の限界とSuperLocalMemory V3が挑む3つの数学的解決策</title><link>https://hdknr.github.io/blogs/posts/2026/03/superlocalmemory-v3-ai-agent-memory/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/superlocalmemory-v3-ai-agent-memory/</guid><description>&lt;p&gt;30以上のAIエージェント記憶システムを調査した結果、Mem0・MemGPT・Letta・Zepを含むすべてのシステムがコサイン類似度を採用していることが明らかになった。さらに2020〜2026年のNeurIPS・ICML・ACLの主要論文を調べても、これを研究上の問題として指摘した論文は1本も存在しないという。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SuperLocalMemory V3（SLM-V3）&lt;/strong&gt; はこの構造的問題に対し、フィッシャー情報量メトリクス・シーフコホモロジー・リーマン多様体上の確率微分方程式という3つの数学で挑むシステムだ。&lt;/p&gt;
+&lt;h2 id="なぜコサイン類似度では不十分なのか"&gt;なぜコサイン類似度では不十分なのか&lt;/h2&gt;
+&lt;p&gt;コサイン類似度の問題は記憶が増えると顕在化する。&lt;/p&gt;
+&lt;p&gt;「コサイン近傍」に入るベクトルの数は記憶の総数に比例して&lt;strong&gt;線形に増える&lt;/strong&gt;。一方、「本当に関係ある記憶」はクエリの情報量に縛られた有限個のまま変わらない。記憶を積み重ねるほど、検索ランキングはノイズに溺れていく。&lt;/p&gt;
+&lt;p&gt;加えて、既存システムには2つの設計上の問題がある。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;忘却が手動設定の半減期に依存&lt;/strong&gt;している（固定パラメータ）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;矛盾した記憶はそのまま放置&lt;/strong&gt;される（検出機構がない）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="slm-v3の3つの数学的アプローチ"&gt;SLM-V3の3つの数学的アプローチ&lt;/h2&gt;
+&lt;h3 id="1-フィッシャー情報量メトリクスによる検索の置き換え"&gt;1. フィッシャー情報量メトリクスによる検索の置き換え&lt;/h3&gt;
+&lt;p&gt;コサイン類似度は埋め込みの全次元を均等に扱う。しかし実際には、次元ごとに信頼性が大きく異なる。意味的区別を鮮明に捉える次元もあれば、ノイズしか拾わない次元もある。&lt;/p&gt;
+&lt;p&gt;論文の具体例が直感的だ。クエリから同じ距離に記憶AとBがあったとする。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;記憶A：埋め込み空間で「似たものが周りにたくさんある」密集ゾーン&lt;/li&gt;
+&lt;li&gt;記憶B：「ここにしかない」希少ゾーン&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;情報として価値があるのはBのはずだが、コサイン類似度はAとBを同等に扱ってしまう。&lt;/p&gt;
+&lt;p&gt;SLM-V3は各次元を&lt;strong&gt;逆分散（信頼度の高さ）で重み付けするフィッシャー情報量メトリクス&lt;/strong&gt;に置き換える。これはCencovの定理が示す「統計多様体上で唯一の数学的に自然な計量」だ。&lt;/p&gt;
+&lt;h3 id="2-シーフコホモロジーによる矛盾の代数的検出"&gt;2. シーフコホモロジーによる矛盾の代数的検出&lt;/h3&gt;
+&lt;p&gt;エージェントが長期間動き続けると、矛盾する記憶が積み重なる。「このAPIはREST」と「このAPIはGraphQL」のような相反する情報が共存しても、既存システムはどちらかを黙って返すだけで矛盾に気づけない。&lt;/p&gt;
+&lt;p&gt;SLM-V3は&lt;strong&gt;シーフコホモロジー&lt;/strong&gt;（代数トポロジーの道具）を使い、矛盾を代数的に検出する。第1コホモロジー群 H¹ が非自明であれば矛盾が存在する。AIエージェント記憶における&lt;strong&gt;初の矛盾検出の数学的保証&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;h3 id="3-ポアンカレ球面上の確率微分方程式による忘却管理"&gt;3. ポアンカレ球面上の確率微分方程式による忘却管理&lt;/h3&gt;
+&lt;p&gt;従来の固定半減期による忘却を廃止し、&lt;strong&gt;ポアンカレ球面上の確率微分方程式（リーマン・ランジュバン動力学）&lt;/strong&gt; で記憶の重要度を管理する。&lt;/p&gt;
+&lt;p&gt;重要度の低い記憶はポアンカレ球の境界に向かってドリフトし、自然に忘却される。フォッカー・プランク方程式による収束保証付きであり、手動パラメータ調整が不要になる。&lt;/p&gt;
+&lt;h2 id="ベンチマーク結果locomoデータセット"&gt;ベンチマーク結果（LoCoMoデータセット）&lt;/h2&gt;
+&lt;p&gt;LoCoMoベンチマーク6会話での比較結果：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;手法&lt;/th&gt;
+&lt;th&gt;スコア&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;コサイン類似度のみ&lt;/td&gt;
+&lt;td&gt;58.9%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;数学的層あり（SLM-V3）&lt;/td&gt;
+&lt;td&gt;71.7%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;差分&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;+12.8ポイント&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;特に注目すべきは、&lt;strong&gt;難しい会話ほど差が広がる&lt;/strong&gt;点だ。最も複雑なconv-44では &lt;strong&gt;+19.9ポイント&lt;/strong&gt;の差を記録している。コサイン類似度が最も苦手なスパース埋め込み領域でフィッシャー計量が効くという理論的予測と一致する。&lt;/p&gt;
+&lt;p&gt;アブレーション分析では、最も効果が大きかったのは&lt;strong&gt;クロスエンコーダ再ランク付け&lt;/strong&gt;（除去すると-30.7ポイント）だった。数学的層の+12.8ポイントはこれと独立して機能する相補的な仕組みであり、どちらかだけで代替できるものではない。&lt;/p&gt;
+&lt;h2 id="ゼロllm構成とeu-ai法対応"&gt;ゼロLLM構成とEU AI法対応&lt;/h2&gt;
+&lt;p&gt;SLM-V3は&lt;strong&gt;ゼロLLM構成&lt;/strong&gt;（クラウドAPI完全不要）で検索品質75%を達成している。これにより、EU AI法（規制2024/1689）のデータ主権要件をアーキテクチャ設計レベルで満たす初の評価となった。2026年8月の完全施行を見据えた設計だ。&lt;/p&gt;
+&lt;h2 id="コードと利用"&gt;コードと利用&lt;/h2&gt;
+&lt;p&gt;コードはMITライセンスで公開されている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a href="https://github.com/qualixar/superlocalmemory"&gt;qualixar/superlocalmemory&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;SLM-V3が提起する問題意識は明快だ。AIエージェントの記憶システムはコサイン類似度という「とりあえず動く」実装のまま止まっており、記憶量の増大・矛盾の蓄積・固定半減期という3つの設計上の欠陥を誰も研究問題として指摘してこなかった。&lt;/p&gt;
+&lt;p&gt;フィッシャー情報量メトリクス・シーフコホモロジー・リーマン・ランジュバン動力学という重厚な数学的道具立ては、記憶システムの「当たり前」を問い直す試みとして注目に値する。&lt;/p&gt;</description></item><item><title>OpenClaw で YouTube 運用を全自動化? 「月1000万円」の主張を技術的に検証する</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-youtube-automation/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-youtube-automation/</guid><description>&lt;p&gt;「1ヶ月後のYouTubeはOpenClawが全て運用し『月1000万円』収益を上げるアカウントが大量発生する」——こんな投稿が X（旧 Twitter）で話題になっています。本当にそこまでできるのか、OpenClaw の技術的な能力と YouTube 運用の現実を照らし合わせて検証します。&lt;/p&gt;
+&lt;h2 id="元の主張の要約"&gt;元の主張の要約&lt;/h2&gt;
+&lt;p&gt;X ユーザー &lt;a href="https://x.com/gagarot200"&gt;@gagarot200&lt;/a&gt; の投稿では、以下のような主張がなされています:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;海外では既に 2000 万円を稼いでいるケースがある&lt;/li&gt;
+&lt;li&gt;勝負のポイントは編集技術ではなく「企画設計」「視聴維持率」「CTR改善」「投稿導線の最適化」&lt;/li&gt;
+&lt;li&gt;OpenClaw で競合分析→台本生成→素材選定→動画編集→サムネイル量産→投稿→数値分析を一気通貫で回せる&lt;/li&gt;
+&lt;li&gt;個人でもチーム運用レベルの全自動化が可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="openclaw-とは"&gt;OpenClaw とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/openclaw/openclaw"&gt;OpenClaw&lt;/a&gt; は、GitHub で 34 万スター以上を獲得しているオープンソースの AI エージェントフレームワークです。ローカルマシン上で動作し、ブラウザ操作・ファイル読み書き・シェルコマンド実行・cron ジョブなどを自律的に実行できます。WhatsApp、Telegram、Slack、Discord など多数のメッセージングプラットフォームに対応しています。&lt;/p&gt;
+&lt;h2 id="技術的にできることとできないこと"&gt;技術的に「できること」と「できないこと」&lt;/h2&gt;
+&lt;h3 id="openclaw-で実現可能な部分"&gt;OpenClaw で実現可能な部分&lt;/h3&gt;
+&lt;p&gt;OpenClaw の Skills（プラグイン）機能とブラウザ自動化を組み合わせると、以下のタスクは技術的に実現可能です:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;タスク&lt;/th&gt;
+&lt;th&gt;実現方法&lt;/th&gt;
+&lt;th&gt;実用度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;競合チャンネル分析&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;YouTube Data API + ブラウザスクレイピング&lt;/td&gt;
+&lt;td&gt;◎&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;台本生成&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;LLM による構成生成&lt;/td&gt;
+&lt;td&gt;◎&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;サムネイル量産&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;画像生成 AI + テンプレート自動適用&lt;/td&gt;
+&lt;td&gt;○&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;投稿スケジューリング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;YouTube Data API / ブラウザ自動化&lt;/td&gt;
+&lt;td&gt;○&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;数値分析・レポート&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;YouTube Analytics API からのデータ取得・分析&lt;/td&gt;
+&lt;td&gt;◎&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;CTR / 視聴維持率の改善提案&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;分析データを LLM にフィードバック&lt;/td&gt;
+&lt;td&gt;○&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="現状では難しい部分"&gt;現状では難しい部分&lt;/h3&gt;
+&lt;p&gt;一方で、以下の部分には大きなハードルがあります:&lt;/p&gt;</description></item><item><title>1Password Unified Access：AIエージェント時代のシークレット管理が本格始動</title><link>https://hdknr.github.io/blogs/posts/2026/03/1password-unified-access-ai-agent/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1password-unified-access-ai-agent/</guid><description>&lt;p&gt;Claude Code や Cursor で開発していると、&lt;code&gt;.env&lt;/code&gt; に書いた API キーを AI が普通にファイルシステムから読みに行く。&lt;code&gt;.gitignore&lt;/code&gt; していても関係ない。この課題に対して、1Password が Anthropic・Cursor・GitHub・Vercel・Perplexity と連携し「AI エージェント時代のシークレット管理」を本気で構築し始めた。&lt;/p&gt;
+&lt;h2 id="何が発表されたのか"&gt;何が発表されたのか&lt;/h2&gt;
+&lt;p&gt;2026年3月17日、1Password は &lt;strong&gt;1Password Unified Access&lt;/strong&gt; を発表した。人間・マシン・AI エージェントにまたがるアクセスを一元的に発見・保護・監査するためのプラットフォームだ。&lt;/p&gt;
+&lt;p&gt;従来のパスワードマネージャーの枠を超え、AI エージェントが本番環境で実際に動作する時代に合わせたクレデンシャル管理を提供する。&lt;/p&gt;
+&lt;h2 id="なぜ必要なのかenv-問題"&gt;なぜ必要なのか：.env 問題&lt;/h2&gt;
+&lt;p&gt;AI コーディングツール（Claude Code、Cursor など）は、タスク遂行のためにローカルファイルシステム上のファイルを読む。&lt;code&gt;.env&lt;/code&gt; ファイルに平文で保存された API キーやトークンは、AI エージェントから直接アクセスできてしまう。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;.gitignore&lt;/code&gt; はリポジトリへのコミットを防ぐだけで、ローカルファイルシステム上での読み取りは防げない。つまり、現状の &lt;code&gt;.env&lt;/code&gt; ベースのシークレット管理は AI エージェント時代には不十分だ。&lt;/p&gt;
+&lt;h2 id="各社との連携内容"&gt;各社との連携内容&lt;/h2&gt;
+&lt;h3 id="anthropicclaude-code--cowork--ブラウザ拡張"&gt;Anthropic（Claude Code / Cowork / ブラウザ拡張）&lt;/h3&gt;
+&lt;p&gt;Anthropic は 1Password を統合し、Claude Code、Cowork、Claude ブラウザ拡張からボールト内のアイテムを安全にオートフィルできるようにする。ユーザーの同意のもと、Claude がサイトやサービスに 1Password から直接クレデンシャルを取得してログインできる仕組みだ。&lt;/p&gt;
+&lt;h3 id="cursorhooks-による-just-in-time-シークレット"&gt;Cursor（Hooks による just-in-time シークレット）&lt;/h3&gt;
+&lt;p&gt;Cursor との連携では、&lt;strong&gt;Cursor Hooks&lt;/strong&gt; を活用した just-in-time なシークレット提供を実現する。&lt;/p&gt;
+&lt;p&gt;仕組みは以下の通り:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;プロジェクトに &lt;code&gt;hooks.json&lt;/code&gt; を設定&lt;/li&gt;
+&lt;li&gt;Cursor がシェルコマンドを実行する前に、1Password Environments Hook Script が起動&lt;/li&gt;
+&lt;li&gt;プロセスがアクセスを要求すると、1Password がユーザーに認証を求める&lt;/li&gt;
+&lt;li&gt;承認されると、必要なシークレットがランタイムセッションのメモリ上にのみ提供される&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これにより、平文キーがディスクやソースコードにコミットされることがなく、環境変数のハードコードやトークンの履歴残留も防げる。&lt;/p&gt;</description></item><item><title>a16z「なぜ世界はいまだにSAPで動いているのか」の考察：ERPとアクションレイヤーの時代</title><link>https://hdknr.github.io/blogs/posts/2026/03/sap-erp-action-layer-ai/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/sap-erp-action-layer-ai/</guid><description>&lt;p&gt;SAP を置き換えるのは現実的ではない——だからこそ、工夫しながら SAP を使い続ける方法を考える必要があります。a16z が公開した「Why the World Still Runs on SAP」というレポートを受けて、Kurashiru CTO の Masato Otake 氏が自社での業務 AI 開発の知見を交えてまとめた考察を紹介します。&lt;/p&gt;
+&lt;h2 id="erpとは何か"&gt;ERPとは何か&lt;/h2&gt;
+&lt;p&gt;ERP は単なるソフトウェアではありません。企業が何十年もかけて蓄積してきた業務ルール、承認フロー、例外処理の集合体です。組織の暗黙知がカスタムコードとして蓄積されており、長年稼働し続けています。&lt;/p&gt;
+&lt;p&gt;System of Record として、受発注・在庫・会計・人事まで、あらゆる業務の「正」のデータが ERP に集約されています。長年にわたって積み重ねられた業務ルールと例外処理は、まさに企業の制度的記憶そのものです。&lt;/p&gt;
+&lt;p&gt;もしリプレイスしようとしたら、数年単位の時間と億単位のコストがかかるでしょう。サンクコストがあまりにも大きいため、顧客側にリプレイスのニーズが強くないことが多い。&lt;/p&gt;
+&lt;p&gt;一方で、複雑化しすぎた ERP はアジリティ高く変更することが難しくなっています。何十年分のカスタマイズが積み重なり、一箇所を変えると別の業務に影響が出る。AI のような最先端を取り入れようにも、変更コストが高すぎてスピードについていけない状況です。&lt;/p&gt;
+&lt;h2 id="アクションレイヤーの登場"&gt;アクションレイヤーの登場&lt;/h2&gt;
+&lt;p&gt;ここに機会があります。ERP そのものを置き換えるのではなく、その上を覆う「アクションレイヤー」を構築することです。&lt;/p&gt;
+&lt;p&gt;System of Action、Action Layer、Agent Layer など呼び方はいろいろありますが、要するに &lt;strong&gt;System of Record の上に被さって業務フローを自動化するレイヤー&lt;/strong&gt; のことです。&lt;/p&gt;
+&lt;p&gt;ERP はデータの正として残り続けます。変わるのは、ユーザーが業務を行うインターフェースです。アクションレイヤーが ERP とユーザーの間に入り、操作を抽象化し、ワークフローを制御する。ERP に手を入れることなく、その上で業務ロジックの追加や変更を柔軟に行えるようになります。&lt;/p&gt;
+&lt;p&gt;これにより：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ERP 自体は安定した System of Record として維持&lt;/strong&gt;しつつ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ビジネス環境の変化にはアクションレイヤー側でアジリティ高く対応&lt;/strong&gt;できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AI のような新しい技術も、ERP の改修なしにアクションレイヤーに組み込めるため、変更リスクとスピードのトレードオフを、レイヤーを分けることで解消する考え方です。&lt;/p&gt;
+&lt;h2 id="アクションレイヤーがもたらす2つの変化"&gt;アクションレイヤーがもたらす2つの変化&lt;/h2&gt;
+&lt;h3 id="1-erpの操作をラップして使いやすくする"&gt;1. ERPの操作をラップして使いやすくする&lt;/h3&gt;
+&lt;p&gt;ERP の画面は複雑で、トランザクションコードや入力フィールドの知識が求められます。アクションレイヤーがこれを抽象化し、意図ベースの操作に変換することで：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ユーザーは ERP の画面構成を覚える必要がなくなる&lt;/li&gt;
+&lt;li&gt;オンボーディングコストや引き継ぎコストが大きく削減される&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-複数システムを横断するオートメーション"&gt;2. 複数システムを横断するオートメーション&lt;/h3&gt;
+&lt;p&gt;「請求書の差異が3%を超えたら説明文を作成し承認にルーティング」のようなイベント駆動型の自動化は、SAP だけ、Salesforce だけでは実現できない、もしくは工数が大きすぎます。アクションレイヤーがシステム横断の制御を接着することで可能になる領域です。&lt;/p&gt;</description></item><item><title>AIコーディングエージェント開発フレームワーク「superpowers」— 7段階ワークフローとTDDで精度を高める</title><link>https://hdknr.github.io/blogs/posts/2026/03/superpowers-ai-coding-agent-framework/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/superpowers-ai-coding-agent-framework/</guid><description>&lt;p&gt;AIコーディングエージェント向けの開発フレームワーク「superpowers」（&lt;code&gt;obra/superpowers&lt;/code&gt;）がGitHubで9万スターを超え、世界中のAI開発者から注目を集めている。Claude Code・Cursor・Codex・OpenCode・Gemini CLIなど主要なAIエージェントに対応した、再利用可能な「スキル」コンポーネントで構成されるワークフローだ。&lt;/p&gt;
+&lt;h2 id="aiに思いつき実装をさせないという設計哲学"&gt;「AIに思いつき実装をさせない」という設計哲学&lt;/h2&gt;
+&lt;p&gt;superpowersの根底にある考え方はシンプルだ。&lt;strong&gt;AIに自由に実装させるのではなく、明確な仕様とプロセスでエージェントを制御する&lt;/strong&gt;。この思想が7段階ワークフロー全体に貫かれている。&lt;/p&gt;
+&lt;h2 id="7段階ワークフロー"&gt;7段階ワークフロー&lt;/h2&gt;
+&lt;p&gt;superpowersは以下の7つのフェーズで開発を進める:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ステップ&lt;/th&gt;
+&lt;th&gt;フェーズ&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Brainstorming&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;対話で要件を詰める&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Git Worktree&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;隔離環境で並列開発&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Write Plan&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;2〜5分単位のタスクに分割&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Execute&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;サブエージェント駆動で実装&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;TDD&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;RED → GREEN → REFACTOR&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Code Review&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;仕様適合性＋品質の2段階チェック&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Branch Complete&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;マージまたはPR作成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="tddがaiエージェントに効く理由"&gt;TDDがAIエージェントに効く理由&lt;/h2&gt;
+&lt;p&gt;TDD（テスト駆動開発）はAIエージェントとの協働において特に威力を発揮する。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;レッドテストを先に書く = AIへの仕様の明示化&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;「何を作るべきか」をテストで定義してからエージェントに渡すことで、エージェントが目標を見失わない。ゴールが曖昧なままエージェントを走らせるのと比べて、実装精度が段違いに向上する。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;❌ 曖昧な指示: 「ユーザー認証機能を実装して」
+✅ TDDアプローチ: まずテストを書き、通過条件を明示してから実装させる
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="git-worktreeで並列開発"&gt;Git Worktreeで並列開発&lt;/h2&gt;
+&lt;p&gt;Git Worktreeを活用することで、自分がメインブランチで作業しながら、AIが別の隔離環境で並行して開発を進められる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;長時間の自律タスクほど恩恵が大きい&lt;/li&gt;
+&lt;li&gt;コンフリクトのリスクを最小化しながら並列作業が可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="タスク粒度の設計"&gt;タスク粒度の設計&lt;/h2&gt;
+&lt;p&gt;計画フェーズ（Write Plan）でタスクを &lt;strong&gt;2〜5分サイズ&lt;/strong&gt; に分割するのがポイントだ。細かく分割することでAIのコンテキスト肥大化を防ぎ、品質を維持できる。&lt;/p&gt;
+&lt;h2 id="こんな人に向いている"&gt;こんな人に向いている&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ハーネス（開発基盤）を自作する時間がない人&lt;/li&gt;
+&lt;li&gt;AI駆動開発の型を学びたい初心者&lt;/li&gt;
+&lt;li&gt;既存のワークフローを体系化したい人&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="導入方法"&gt;導入方法&lt;/h2&gt;
+&lt;p&gt;作者はJesse Vincent（歴戦のOSSベテラン）。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Claude Code&lt;/strong&gt;: 公式マーケットプレイスから導入可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Codex / OpenCode&lt;/strong&gt;: 手動セットアップが必要&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;「スキル」という再利用可能なコンポーネントで構成されているため、自分のプロジェクトに必要な部分だけを取り込むことも可能だ。&lt;/p&gt;</description></item><item><title>AI時代の「ダラダラ働き」のすすめ — AIエージェント並列実行の落とし穴</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-agent-parallel-execution-efficiency/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-agent-parallel-execution-efficiency/</guid><description>&lt;p&gt;AIエージェントを複数並列で動かせば効率が上がる——そう思っていないだろうか。実は、「ダラダラと1つのエージェントと長時間向き合う」方が、最終的に良い成果を出せるかもしれない。K.Ishi氏（&lt;a href="https://x.com/K_Ishi_AI"&gt;@K_Ishi_AI&lt;/a&gt;）がX（旧Twitter）で提唱した、AI時代の新しい働き方の視点を紹介する。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h2 id="並列実行は本当に効率的か"&gt;並列実行は本当に効率的か？&lt;/h2&gt;
+&lt;p&gt;AIエージェントを2つ同時に走らせれば効率は2倍、3つなら3倍——直感的にはそう思える。しかし現実はそうならない。&lt;/p&gt;
+&lt;p&gt;ボトルネックは &lt;strong&gt;人間の脳&lt;/strong&gt; にある。&lt;/p&gt;
+&lt;p&gt;人間の脳はタスクを切り替えるたびに「切り替えコスト（スイッチングオーバーヘッド）」が発生する。エージェントAの結果を確認している最中にエージェントBが返答を返してくる。Bに意識を向けた瞬間、Aの文脈が薄れる。Aに戻ると、また状況を思い出すところからやり直しになる。&lt;/p&gt;
+&lt;p&gt;この繰り返しが積み重なると：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;同時実行するエージェント数が増えるほど、1つあたりの注意力が低下する&lt;/li&gt;
+&lt;li&gt;脳が疲弊し、集中力が落ちる&lt;/li&gt;
+&lt;li&gt;思考の質が悪化し、「浅い判断」が増える&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="浅い判断が生む大きな手戻り"&gt;浅い判断が生む大きな手戻り&lt;/h2&gt;
+&lt;p&gt;表面的な処理速度は上がっても、判断の質が下がれば意味がない。&lt;/p&gt;
+&lt;p&gt;1つのエージェントにじっくり向き合っていれば気づけたはずのミスを見逃す。そのミスが後になって発覚し、大規模な手戻りが発生する——このリスクが、並列実行では増大する。&lt;/p&gt;
+&lt;p&gt;並列実行の「速さ」は、手戻りコストを考慮すると、実は遅くなっている可能性がある。&lt;/p&gt;
+&lt;h2 id="ダラダラ長時間働くという逆張り戦略"&gt;「ダラダラ長時間働く」という逆張り戦略&lt;/h2&gt;
+&lt;p&gt;では、どうすれば良いのか。K.Ishi氏が提案するのは、シンプルな逆張りだ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;AIの実行ログをボーっと眺め、脳のエネルギーを温存し、AIに任せた仕事の分だけ楽になれば良い。そして、楽になった分だけちょっと長く働いた方が、案外最終的には並列実行よりも良質な成果を出すかもしれない。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;つまり：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;エージェントは1つに絞る&lt;/strong&gt; — 並列実行を避け、1つのエージェントの出力に集中する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ログをゆっくり眺める&lt;/strong&gt; — 急いで判断せず、じっくりと結果を吟味する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;脳のエネルギーを温存する&lt;/strong&gt; — タスク切り替えをなくし、深い思考力を保つ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;楽になった分、少し長く働く&lt;/strong&gt; — 集中力を維持しながら、より長い時間作業する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;この結果、「浅くて速い」並列作業より、「深くて丁寧な」直列作業の方が最終的な成果の質が高くなる可能性がある。&lt;/p&gt;
+&lt;h2 id="ai時代の集中の価値"&gt;AI時代の「集中」の価値&lt;/h2&gt;
+&lt;p&gt;AIの登場で「何タスクを並列でこなせるか」が生産性の指標になりつつある。しかし、タスクの数ではなく &lt;strong&gt;タスクの質&lt;/strong&gt; を追求する視点も重要だ。&lt;/p&gt;
+&lt;p&gt;AI時代において、人間に求められる価値が「AIの高速な実行を監督・統制する判断力」にシフトしていくとすれば、その判断力を最大化するために「集中」に投資することは理にかなっている。&lt;/p&gt;
+&lt;p&gt;並列実行を前提としたワークフロー設計が主流になる中、あえて「1エージェント集中型」のワークスタイルを選択するという議論がもっと盛り上がっても良いのかもしれない。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;並列実行型&lt;/th&gt;
+&lt;th&gt;集中型（直列）&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;処理速度&lt;/td&gt;
+&lt;td&gt;速い&lt;/td&gt;
+&lt;td&gt;遅い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;脳への負担&lt;/td&gt;
+&lt;td&gt;大きい&lt;/td&gt;
+&lt;td&gt;小さい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;判断の質&lt;/td&gt;
+&lt;td&gt;浅くなりがち&lt;/td&gt;
+&lt;td&gt;深く保てる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;手戻りリスク&lt;/td&gt;
+&lt;td&gt;高い&lt;/td&gt;
+&lt;td&gt;低い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;最終的な成果の質&lt;/td&gt;
+&lt;td&gt;場合による&lt;/td&gt;
+&lt;td&gt;安定して高い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;AIエージェントが増えた時代だからこそ、「どう使うか」だけでなく「何個使うか」「どのくらい並列にするか」を意識的に設計することが重要になってくる。あなたのAI活用スタイルは、並列型か集中型か、どちらが合っているだろうか。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;元ツイート: &lt;a href="https://x.com/K_Ishi_AI/status/2033892749829967970"&gt;K.Ishi (@K_Ishi_AI) — X, 2026-03-17&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Cloudflare Agents × AI が実現する次世代メールクライアント</title><link>https://hdknr.github.io/blogs/posts/2026/03/cloudflare-agents-ai-email-client/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cloudflare-agents-ai-email-client/</guid><description>&lt;p&gt;Cloudflare の最新インフラ技術「Cloudflare Agents」と AI を組み合わせることで、従来のメールクライアントを大きく超えた「次世代メール体験」が実現しつつあります。本記事では、その仕組みと注目すべきポイントを解説します。&lt;/p&gt;
+&lt;h2 id="cloudflare-agents-とは"&gt;Cloudflare Agents とは&lt;/h2&gt;
+&lt;p&gt;Cloudflare Agents は、Cloudflare のエッジサーバー上で AI エージェントのロジックを動かすためのプラットフォームです。従来のサーバーレス実行基盤（Workers）をベースに、ステートフルな処理や長時間実行が可能となっています。&lt;/p&gt;
+&lt;p&gt;主な特徴は以下の通りです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;エッジで動作&lt;/strong&gt;: 世界中のエッジロケーションで低遅延に処理を実行&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;大規模スケール&lt;/strong&gt;: 数百万アドレス規模まで瞬時に対応可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;インフラ知識不要&lt;/strong&gt;: 複雑なサーバー管理なしに高度な AI ロジックを実装できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ai-メールクライアントのデモ"&gt;AI メールクライアントのデモ&lt;/h2&gt;
+&lt;p&gt;開発者の &lt;a href="https://x.com/charl_dot_dev"&gt;charl.dev&lt;/a&gt; が公開したデモでは、Cloudflare Agents を活用した AI メールクライアントの可能性が示されています。&lt;/p&gt;
+&lt;h3 id="できること"&gt;できること&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;受信メールの自動処理&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;受信メールの内容を AI が自動的に解析&lt;/li&gt;
+&lt;li&gt;要約やキーデータの抽出を自動実行&lt;/li&gt;
+&lt;li&gt;重要度・カテゴリの自動判定と可視化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;高度なメール送信機能&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;API 経由でのプログラマティックなメール送信&lt;/li&gt;
+&lt;li&gt;テンプレートや条件分岐を含む複雑な送信ロジック&lt;/li&gt;
+&lt;li&gt;バルク送信やパーソナライズ対応&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;タスク実行の一気通貫処理&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;メール受信 → 解析 → アクション実行 までをシームレスに自動化&lt;/li&gt;
+&lt;li&gt;外部サービス（カレンダー、CRM、チャットツール等）との連携&lt;/li&gt;
+&lt;li&gt;承認フローや通知の自動化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ビジネスへの応用例"&gt;ビジネスへの応用例&lt;/h2&gt;
+&lt;p&gt;この仕組みはさまざまなビジネスシーンに応用できます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;カスタマーサポートの自動化&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;顧客からの問い合わせメールを AI が解析し、FAQ への自動回答・担当者へのルーティング・チケット発行まで自動で処理。人的コストを大幅に削減できます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;秘書型 SaaS&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;メール受信をトリガーに、スケジュール調整・タスク登録・関係者への通知などを自動実行する「AI 秘書」サービスを低コストで構築できます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;マーケティング自動化&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;顧客の行動メールを解析し、セグメントに応じたフォローアップメールを自動送信するシステムを Cloudflare のグローバルエッジ上で展開できます。&lt;/p&gt;
+&lt;h2 id="エッジ--ai-エージェントの優位性"&gt;エッジ × AI エージェントの優位性&lt;/h2&gt;
+&lt;p&gt;従来のクラウドサーバーで AI 処理を行う場合、レイテンシやスケールの課題がありました。Cloudflare Agents のアプローチは以下の点で優れています。&lt;/p&gt;</description></item><item><title>Manus（マナス）の全29機能を完全解説——AIエージェントが「仕事を丸投げできる」時代へ</title><link>https://hdknr.github.io/blogs/posts/2026/03/manus-ai-agent-29-features/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/manus-ai-agent-29-features/</guid><description>&lt;p&gt;ChatGPTに指示を出して、結果を確認して、また指示を出して——このループに疲れていないだろうか。「こっちが細かく指示しなくても、AIが全部やってくれたらいいのに」という願いは、すでに実現している。その名前が &lt;strong&gt;Manus（マナス）&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;p&gt;この記事では、Manusの全29機能を5つのカテゴリに分けて解説する。料金プランや競合との比較、業種別の活用法まで網羅する。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="manusとは何か"&gt;Manusとは何か&lt;/h2&gt;
+&lt;h3 id="aiチャットボットとaiエージェントの違い"&gt;「AIチャットボット」と「AIエージェント」の違い&lt;/h3&gt;
+&lt;p&gt;まず最も重要な概念の整理から始める。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;種別&lt;/th&gt;
+&lt;th&gt;代表例&lt;/th&gt;
+&lt;th&gt;動作&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;AIチャットボット&lt;/td&gt;
+&lt;td&gt;ChatGPT / Claude / Gemini&lt;/td&gt;
+&lt;td&gt;質問→回答の1往復&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;AIエージェント&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Manus&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;タスクを丸投げ → 自動で完結&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;チャットボットは「辞書」、エージェントは「秘書」だ。Manusに「東京のAIスタートアップを30社調べて、スプレッドシートにまとめて」と指示すれば、AIが自動でブラウザを開き、検索し、情報を整理し、ファイルを作って完成品を届けてくれる。その間、別の仕事をしていてOKだ。&lt;/p&gt;
+&lt;h3 id="無料で試せる"&gt;無料で試せる&lt;/h3&gt;
+&lt;p&gt;最初は招待制だったが、現在は誰でも登録できる。無料プランでも毎日300クレジット分のタスクを実行可能（月1,500上限あり）。&lt;/p&gt;
+&lt;h3 id="実力は"&gt;実力は？&lt;/h3&gt;
+&lt;p&gt;GAIAベンチマーク（実際のタスクをどれだけ正確にこなせるかを測るテスト）において、ManusはOpenAIのDeep Researchに匹敵する高スコアを記録したと複数のメディアが報じている。「実務能力で世界トップクラス」という評価は多くのメディアで一致している。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第1章manusの全29機能"&gt;第1章：Manusの全29機能&lt;/h2&gt;
+&lt;p&gt;Manusには5つのカテゴリ、計29の機能がある。&lt;/p&gt;
+&lt;h3 id="コア機能日常的に使う基本機能"&gt;コア機能（日常的に使う基本機能）&lt;/h3&gt;
+&lt;h4 id="-自律タスク実行autonomous-task-execution"&gt;① 自律タスク実行（Autonomous Task Execution）&lt;/h4&gt;
+&lt;p&gt;Manusの心臓部。指示を出すだけで、AIが計画から納品まで全自動でやる。&lt;/p&gt;
+&lt;p&gt;タスクを入力すると、Manusはまず計画を立てる。「何を調べるか」「どのツールを使うか」「どの順番でやるか」を自分で判断し、ブラウザで検索したりコードを書いて実行したりしながら完了させる。全作業はクラウド上のサンドボックスで行われるため、PCには影響しない。画面を閉じても作業は続き、完了したら通知が届く。&lt;/p&gt;
+&lt;p&gt;実行例：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;「この契約書PDFの要点を抽出して、リスク項目をハイライトして」&lt;/li&gt;
+&lt;li&gt;「A社の過去3年の決算資料を分析して、成長率と利益率の推移をグラフにして」&lt;/li&gt;
+&lt;li&gt;「今月の営業チームの活動データをまとめて、週次ミーティング用の資料を作って」&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="-wide-researchワイドリサーチ"&gt;② Wide Research（ワイドリサーチ）&lt;/h4&gt;
+&lt;p&gt;100体以上のAIを同時に走らせて、大規模リサーチを一気にやる。&lt;/p&gt;
+&lt;p&gt;通常のAIは1つのタスクを1つのエージェントが処理するが、Wide Researchはタスクを細かく分解して100体以上のAIエージェントを同時並行で走らせる。1社調べるのも100社調べるのも、かかる時間はほぼ同じだ。&lt;/p&gt;
+&lt;p&gt;OpenAI Deep Researchとの違い：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Deep Research&lt;/td&gt;
+&lt;td&gt;1つのテーマを深く掘り下げる（深さ重視）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Wide Research&lt;/td&gt;
+&lt;td&gt;多数のテーマを同時に広く調べる（広さ重視）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;注意点：クレジット消費が大きいため、まず10〜20社でテストしてからスケールアップするのが鉄則。最大250件まで対応。&lt;/p&gt;
+&lt;h4 id="-browser-operatorブラウザオペレーター"&gt;③ Browser Operator（ブラウザオペレーター）&lt;/h4&gt;
+&lt;p&gt;ChromeまたはEdgeに拡張機能をインストールすると、Manusがブラウザを直接操作できるようになる。最大のポイントは、既存のログイン情報がそのまま使えること。つまり、ログインが必要な社内ツール、CRM、管理画面も操作可能だ。&lt;/p&gt;
+&lt;p&gt;主な活用例：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;CTO 50人の名前・会社名・プロフィールURLを収集&lt;/li&gt;
+&lt;li&gt;ECサイトで特定商品の価格を毎日モニタリング&lt;/li&gt;
+&lt;li&gt;Wantedlyで求人情報を一括収集&lt;/li&gt;
+&lt;li&gt;競合5社のX（Twitter）アカウント分析&lt;/li&gt;
+&lt;li&gt;Googleフォームへのデータ一括入力&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;セキュリティ面：毎回の操作で許可が必要で、全操作ログが記録される。パスワードは保存されない。&lt;/p&gt;</description></item><item><title>NemoClaw触ってみた：OpenClawのセキュリティ問題を解消できるのか？</title><link>https://hdknr.github.io/blogs/posts/2026/03/nemoclaw-openclaw-security/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/nemoclaw-openclaw-security/</guid><description>&lt;p&gt;NVIDIAがGTC 2026（2026年3月16日）で発表した「NemoClaw」は、OpenClawのセキュリティ・プライバシー層を強化するオープンソーススタックです。OpenClawの競合ではなく、OpenClawを包み込む構造になっており、企業や業務利用での安全なAIエージェント運用を実現することを目指しています。&lt;/p&gt;
+&lt;p&gt;本記事では、NemoClawとは何か、OpenClawとの関係、ポリシーファイルの設定方法、導入フロー、実際に触れてみての所感をまとめます。&lt;/p&gt;
+&lt;h2 id="nemoclawとは"&gt;NemoClawとは&lt;/h2&gt;
+&lt;p&gt;NemoClawはNVIDIAが発表したOpenClaw専用のセキュリティプラグインです。内部では &lt;strong&gt;OpenShell&lt;/strong&gt; というサンドボックスランタイムを使い、AIエージェントをLinuxコンテナで隔離します。ファイルシステム・ネットワーク・プロセスをポリシーで制御し、OpenClaw単体では防ぎきれなかったセキュリティ上の問題に対処します。&lt;/p&gt;
+&lt;p&gt;構成は以下の3層です:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;OpenShell&lt;/strong&gt;: 汎用サンドボックスランタイム。AIエージェントをLinuxコンテナで隔離&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;NemoClaw&lt;/strong&gt;: OpenClaw専用プラグイン（セキュリティ・プライバシー層）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenClaw&lt;/strong&gt;: サンドボックス内で動作するエージェント本体&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="openclawのセキュリティ問題とは"&gt;OpenClawのセキュリティ問題とは&lt;/h2&gt;
+&lt;p&gt;OpenClawには &lt;code&gt;tools.deny&lt;/code&gt; による制限機能がありますが、アプリケーション層での制御であるため、バグや迂回経路が発見されると突破されてしまうリスクがあります。プロンプトインジェクション攻撃によるデータ漏洩や、意図しないシステムコールの実行が代表的な懸念点です。&lt;/p&gt;
+&lt;h2 id="セキュリティの4層防御"&gt;セキュリティの4層防御&lt;/h2&gt;
+&lt;p&gt;NemoClawは以下の4層でセキュリティを確保します:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;層&lt;/th&gt;
+&lt;th&gt;技術&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ファイルシステム&lt;/td&gt;
+&lt;td&gt;Landlock LSM（カーネルモジュール）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ネットワーク&lt;/td&gt;
+&lt;td&gt;egress proxy + アプリケーション単位制御&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プロセス&lt;/td&gt;
+&lt;td&gt;seccomp + コンテナ隔離&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;推論&lt;/td&gt;
+&lt;td&gt;ゲートウェイ経由ルーティング&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最大の特徴は「&lt;strong&gt;アプリ層ではなくカーネル層で強制される&lt;/strong&gt;」点です。OpenClawの &lt;code&gt;tools.deny&lt;/code&gt; と異なり、バグや迂回方法が発見されても突破できません。&lt;/p&gt;
+&lt;h2 id="ネットワーク制御の仕組み"&gt;ネットワーク制御の仕組み&lt;/h2&gt;
+&lt;p&gt;NemoClawのネットワーク制御は &lt;strong&gt;Deny by default&lt;/strong&gt; が原則で、全通信がデフォルトでブロックされます。許可は「アプリケーション×ホスト」の組み合わせで明示的に指定します。&lt;/p&gt;
+&lt;p&gt;例えば:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;git&lt;/code&gt; → GitHub接続を許可&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;curl&lt;/code&gt; → ブロック&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;このような細粒度の制御により、仮にエージェントが悪意あるプロンプトインジェクションを受けても、データの外部流出が不可能になります。&lt;/p&gt;
+&lt;h2 id="ポリシーファイル"&gt;ポリシーファイル&lt;/h2&gt;
+&lt;p&gt;ポリシーはYAML形式で宣言的に記述します。読み書き可能なパス、ネットワーク接続先、許可するバイナリを定義でき、GitOpsでの運用も可能です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ポリシーファイルの例（概念的な構成）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;filesystem&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;read&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/workspace&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/home/agent&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;write&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;/workspace/output&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;network&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;allow&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;binary&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;git&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;hosts&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;github.com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;api.github.com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;process&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;allow_binaries&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;git&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;python3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;pip&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このようなポリシーファイルをリポジトリで管理することで、セキュリティ要件の変更履歴を追跡し、レビュープロセスを通じて変更を管理できます。&lt;/p&gt;</description></item><item><title>NVIDIA、OpenClaw向けオープンソーススタック「NemoClaw」を発表</title><link>https://hdknr.github.io/blogs/posts/2026/03/nvidia-nemoclaw-openclaw/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/nvidia-nemoclaw-openclaw/</guid><description>&lt;p&gt;NVIDIA が OpenClaw 向けのオープンソーススタック「&lt;strong&gt;NemoClaw&lt;/strong&gt;」を発表しました。これまでセキュリティ面での懸念が指摘されてきた OpenClaw に対し、プライバシー保護とセキュリティ制御を加えた形で、常時稼働する AI エージェントの運用を可能にするものです。&lt;/p&gt;
+&lt;h2 id="nemoclaw-とは"&gt;NemoClaw とは&lt;/h2&gt;
+&lt;p&gt;NemoClaw は、OpenClaw 上で動作する AI エージェントをより安全・簡単にデプロイするための NVIDIA 製オープンソースフレームワークです。&lt;/p&gt;
+&lt;p&gt;NVIDIA AI Developer の公式ツイートによると、NemoClaw は以下の特徴を持ちます:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;シングルコマンドでデプロイ&lt;/strong&gt;: OpenClaw の常時稼働アシスタントを 1 コマンドで起動できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全なデプロイ&lt;/strong&gt;: セキュリティ強化された環境でエージェントを稼働させられる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;任意のコーディングエージェントに対応&lt;/strong&gt;: 特定のエージェントに縛られず、さまざまなコーディングエージェントを実行可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;どこでもデプロイ可能&lt;/strong&gt;: クラウド・オンプレミスを問わず柔軟に展開できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;無料の &lt;strong&gt;NVIDIA Brev Launchable&lt;/strong&gt; でお試し環境を立ち上げることもできます。&lt;/p&gt;
+&lt;h2 id="openclaw-のセキュリティ課題への対応"&gt;OpenClaw のセキュリティ課題への対応&lt;/h2&gt;
+&lt;p&gt;OpenClaw はこれまで、外部からのアクセスを受け付けるアーキテクチャ上の特性から、&lt;strong&gt;脆弱性リスク&lt;/strong&gt;が指摘されてきました。NemoClaw はこの課題に正面から取り組み、以下の機能を OpenClaw スタックに追加しています:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;プライバシー保護&lt;/strong&gt;: エージェントが扱うデータの漏洩リスクを低減する仕組み&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セキュリティ制御&lt;/strong&gt;: アクセス制御やサンドボックス化による不正操作の防止&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これにより、企業や開発チームが OpenClaw ベースの AI エージェントを本番環境に安心して導入できるようになります。&lt;/p&gt;
+&lt;h2 id="試してみる"&gt;試してみる&lt;/h2&gt;
+&lt;p&gt;NVIDIA の公式ページ（&lt;code&gt;https://www.nvidia.com/nemoclaw&lt;/code&gt;）から NemoClaw の詳細確認および Brev Launchable による無料トライアルが可能です。&lt;/p&gt;
+&lt;p&gt;OpenClaw を本番運用で活用したいが、セキュリティが不安で踏み切れなかった開発者にとって、NemoClaw は有力な選択肢になりそうです。&lt;/p&gt;</description></item><item><title>OkaraのAI CMO——マーケティング業務を自律実行するAIエージェント</title><link>https://hdknr.github.io/blogs/posts/2026/03/okara-ai-cmo/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/okara-ai-cmo/</guid><description>&lt;p&gt;Okaraが「世界初のAI CMO」を発表した。Webサイトを入力するだけでエージェント群がデプロイされ、X（Twitter）やRedditでのマーケティングタスクを自律的に実行してくれるというサービスだ。&lt;/p&gt;
+&lt;h2 id="okara-ai-cmoとは"&gt;Okara AI CMOとは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://okara.ai/"&gt;Okara&lt;/a&gt; が2026年3月に発表した &lt;strong&gt;AI CMO&lt;/strong&gt;（Chief Marketing Officer）は、自社サイトのURLを入れるとAIエージェントのチームが自動展開され、トラフィック獲得やユーザー獲得のための施策を実行するサービスだ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Today we&amp;rsquo;re introducing the world&amp;rsquo;s first AI CMO.
+Enter your website and it deploys a team of agents to help you get traffic and users.
+— &lt;a href="https://x.com/askOkara/status/2033562024651968657"&gt;@askOkara&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;XやRedditといったプラットフォームでの相談対応やタスク実行が可能とのことで、マーケに関わる業務を幅広くカバーする。&lt;/p&gt;
+&lt;h2 id="日本のマーケターの反応"&gt;日本のマーケターの反応&lt;/h2&gt;
+&lt;p&gt;AI駆使型のスモールビジネスオーナーとして知られる &lt;a href="https://x.com/L_go_mrk"&gt;@L_go_mrk&lt;/a&gt; 氏は、このニュースに対して次のようなコメントを投稿している。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;これまじでやばいだろ。。。&lt;/p&gt;
+&lt;p&gt;OkaraがAI CMOを開発した。
+XもRedditも、マーケに関することなら割となーーーーーーーーーんでも相談とタスク実行ができてしまう。&lt;/p&gt;
+&lt;p&gt;アカウントのBanリスクが怖いけど、本当にそれぐらい。&lt;/p&gt;
+&lt;p&gt;似たようなことを社内ツールで開発しようとしてたけど、それが吹っ飛んでしまった笑&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「社内ツールで自前開発しようとしていたが、それが吹っ飛んだ」という反応は象徴的だ。マーケティング自動化ツールを自社開発するコストを、プロダクトとして提供しきってしまうプレーヤーが登場した、という状況を端的に表している。&lt;/p&gt;
+&lt;h2 id="ai-cmoが示すエージェント時代のマーケ"&gt;AI CMOが示すエージェント時代のマーケ&lt;/h2&gt;
+&lt;p&gt;AI CMOが体現しているのは、&lt;strong&gt;タスク実行まで一貫して担うエージェント型AI&lt;/strong&gt;の台頭だ。&lt;/p&gt;
+&lt;p&gt;従来の「AIによるマーケ支援」は、コピー生成や分析補助といったアシスタント的な役割にとどまることが多かった。しかしOkaraのアプローチは、SNSでの投稿・返信・エンゲージメントといった実際のアクションをエージェントが代替する点で一線を画す。&lt;/p&gt;
+&lt;p&gt;主な特徴として挙げられるのは以下のとおりだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;サイトURLを入力するだけで自動セットアップ&lt;/strong&gt;: 複雑な設定なしにエージェントが起動する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;X・Redditへの直接介入&lt;/strong&gt;: 相談への返答やコンテンツ投稿を自律的に実行する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;複数エージェントの協調&lt;/strong&gt;: 単一モデルではなく「チーム」として機能する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="課題アカウントbanリスク"&gt;課題：アカウントBANリスク&lt;/h2&gt;
+&lt;p&gt;一方で、プラットフォームの利用規約との兼ね合いは課題として残る。XやRedditは自動化ツールによるスパム的な操作を禁止しており、AIエージェントによる大規模な操作がBANの対象になるリスクは現実的だ。&lt;/p&gt;
+&lt;p&gt;L_go_mrk 氏も「アカウントのBanリスクが怖い」と言及しており、実運用上は利用範囲を慎重にコントロールする必要がある。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;OkaraのAI CMOは、マーケティングの実行業務をAIエージェントに委任する、新しい時代の始まりを告げるプロダクトだ。自前のマーケ自動化ツールを開発しようとしていた担当者が「吹っ飛んだ」と感じるほどのインパクトがある。&lt;/p&gt;
+&lt;p&gt;エージェントがSNSに直接介入する時代において、どこまでをAIに任せ、どこに人間のコントロールを置くか——そのバランス設計が、今後のマーケティング戦略の核心になってくるだろう。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;ソース: &lt;a href="https://x.com/L_go_mrk/status/2033848315884851243"&gt;@L_go_mrk on X (2026-03-17)&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</description></item><item><title>OpenClawをMac miniなしで1500円の小型基板に導入してAI組織を構築する方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-nullclaw-small-board/</link><pubDate>Fri, 13 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-nullclaw-small-board/</guid><description>&lt;p&gt;「OpenClawを使うにはMac miniが必要」という誤解が広まっているが、実際には1500円程度の小型基板でも十分に動作する。本記事では、OpenClawの設計と課題を整理したうえで、超軽量な後継インフラ「NullClaw」を使ってAI組織を低コストで構築する方法を解説する。&lt;/p&gt;
+&lt;h2 id="1-aiエージェントインフラの変遷"&gt;1. AIエージェントインフラの変遷&lt;/h2&gt;
+&lt;p&gt;AIの進化は単なるテキスト生成から「自律的な行動」へと移行している。ChatGPT等のLLMは問いに対して答えを返すことに特化していたが、実際の業務では情報の整理、メール送信、資料作成、定期タスクの実行といった「具体的な行動」が求められる。&lt;/p&gt;
+&lt;p&gt;これを実現するのが「AIエージェント」という概念だ。エージェントは外部のAPI、ファイルシステム、データベース、物理デバイスと連携して動作し、自ら道具（ツール）を使いながら目的を達成するステップを組み立てる。&lt;/p&gt;
+&lt;p&gt;複数のプラットフォーム（Slack、Discord、LINE、Webアプリ等）から同じAIを一貫して呼び出すための基盤として登場したのが、OpenClawをはじめとするエージェント実行基盤だ。&lt;/p&gt;
+&lt;h2 id="2-openclawの設計思想と課題"&gt;2. OpenClawの設計思想と課題&lt;/h2&gt;
+&lt;h3 id="21-マルチチャネル対応の共通基盤"&gt;2.1 マルチチャネル対応の共通基盤&lt;/h3&gt;
+&lt;p&gt;OpenClawは中央に「エージェント実行エンジン」を置き、各プラットフォームを「ゲートウェイ」として接続するアーキテクチャを採用している。一度エージェントのロジックを記述すれば、あらゆるチャネルで再利用できる。&lt;/p&gt;
+&lt;h3 id="22-アーキテクチャ構成"&gt;2.2 アーキテクチャ構成&lt;/h3&gt;
+&lt;p&gt;TypeScript / Node.js ベースで実装されており、主に以下のコンポーネントで構成される。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;ゲートウェイ層&lt;/strong&gt; — 各メッセージングアプリからの入力を共通フォーマットに変換&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ランタイム層&lt;/strong&gt; — LLM（OpenAI、Anthropic等）と通信してエージェントの思考を制御&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ツール層&lt;/strong&gt; — Google検索、Python実行、ファイル操作などの具体的なアクションを定義&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セッション・状態管理&lt;/strong&gt; — 会話履歴や実行中タスクの状態を保持&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="23-運用の課題"&gt;2.3 運用の課題&lt;/h3&gt;
+&lt;p&gt;OpenClawは高い柔軟性を持つ一方で、実運用での課題が浮き彫りになった。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;リソース消費&lt;/strong&gt;: Node.js 環境では数GB のRAMを消費することがある。安価なVPSやシングルボードコンピュータでの常駐には重すぎる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;起動速度（コールドスタート）&lt;/strong&gt;: Node.js のランタイム起動に数秒〜十数秒かかり、リアルタイム対話サービスでは致命的な遅延になる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;依存関係の複雑さ&lt;/strong&gt;: 数千の外部パッケージ（node_modules）に依存し、バージョン不一致やセキュリティ脆弱性のリスクが高い&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらの課題はOpenClawが「汎用的な基盤」を目指した結果の宿命的な側面でもある。この限界を突破するために登場したのが、Zig言語で再実装された「NullClaw」だ。&lt;/p&gt;
+&lt;h2 id="3-nullclaw次世代の超軽量インフラ"&gt;3. NullClaw：次世代の超軽量インフラ&lt;/h2&gt;
+&lt;h3 id="31-zig-言語採用の理由"&gt;3.1 Zig 言語採用の理由&lt;/h3&gt;
+&lt;p&gt;NullClaw はシステムプログラミング言語「Zig」を採用している。Zigは C 言語の代替を目指し、メモリ管理の明示性、依存関係の極小化を重視して設計されている。&lt;/p&gt;
+&lt;p&gt;採用の主な技術的メリットは以下の3点だ。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;メモリ管理の透明性&lt;/strong&gt; — ガベージコレクション（GC）なし。メモリの割り当てと解放を開発者が明示的に制御するため、予測不可能なGCポーズを排除し、安定した低メモリフットプリントを実現&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;静的バイナリの生成&lt;/strong&gt; — 外部の共有ライブラリやインタープリタ不要。単一の実行可能ファイルを配置するだけで動作&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全性の担保&lt;/strong&gt; — 境界チェックや未定義動作の検出が組み込まれており、メモリ破壊やバッファオーバーフローを防止&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="32-openclaw-vs-nullclaw-比較"&gt;3.2 OpenClaw vs NullClaw 比較&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;比較項目&lt;/th&gt;
+&lt;th&gt;OpenClaw&lt;/th&gt;
+&lt;th&gt;NullClaw&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;主要言語&lt;/td&gt;
+&lt;td&gt;TypeScript (Node.js)&lt;/td&gt;
+&lt;td&gt;Zig (Native)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;バイナリサイズ&lt;/td&gt;
+&lt;td&gt;数百MB（ランタイム込）&lt;/td&gt;
+&lt;td&gt;約678 KB&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;メモリ使用量&lt;/td&gt;
+&lt;td&gt;数百MB〜数GB&lt;/td&gt;
+&lt;td&gt;約1 MB&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;起動速度&lt;/td&gt;
+&lt;td&gt;数秒〜十数秒&lt;/td&gt;
+&lt;td&gt;2ms以下&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;依存関係&lt;/td&gt;
+&lt;td&gt;node_modules（膨大）&lt;/td&gt;
+&lt;td&gt;ほぼゼロ（libcのみ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;配布形態&lt;/td&gt;
+&lt;td&gt;パッケージ/コンテナ&lt;/td&gt;
+&lt;td&gt;単一バイナリ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;起動速度「2ms以下」は、ユーザーがAIを呼び出した瞬間に処理が開始されることを意味する。オンデマンド実行において圧倒的な優位性だ。&lt;/p&gt;</description></item><item><title>営業向けClaude Code活用術：/mtg-prepで商談準備が5分で終わる世界線</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-sales-mtg-prep/</link><pubDate>Fri, 13 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-sales-mtg-prep/</guid><description>&lt;p&gt;DAIJOBU CEO の山中裕貴（&lt;a href="https://x.com/0xfene"&gt;@0xfene&lt;/a&gt;）氏が、Claude Code のカスタムスキル機能を営業業務に活用し、商談準備を劇的に効率化した事例を紹介している。&lt;/p&gt;
+&lt;h2 id="従来の商談準備の課題"&gt;従来の商談準備の課題&lt;/h2&gt;
+&lt;p&gt;営業担当者の商談サイクルには、以下のような時間のかかるタスクが含まれる：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;商談前&lt;/strong&gt;: 30分〜1時間かけて Gmail・Slack・議事録ツールから過去のやり取りを手動で情報収集&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;商談中&lt;/strong&gt;: 準備不足で焦ることがある&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;商談後&lt;/strong&gt;: 15〜20分かけてフォローメールを作成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="claude-code-スキルによる自動化"&gt;Claude Code スキルによる自動化&lt;/h2&gt;
+&lt;p&gt;山中氏は Claude Code のスキル機能（&lt;code&gt;.claude/skills/&lt;/code&gt; 配下にプロンプトを定義する仕組み）を使い、営業ワークフロー全体を自動化した。&lt;/p&gt;
+&lt;h3 id="mtg-prep--商談準備の自動化"&gt;&lt;code&gt;/mtg-prep&lt;/code&gt; — 商談準備の自動化&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;/mtg-prep&lt;/code&gt; コマンドを実行すると、複数の AI エージェントが並行稼働し、以下の情報を 2〜3分で収集・整理する：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;過去のやり取り&lt;/strong&gt;: Gmail、Slack、Circleback（AI 議事録サービス）から顧客との過去のコミュニケーションを取得&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;顧客調査&lt;/strong&gt;: 企業情報、業界動向のリサーチ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;競合調査&lt;/strong&gt;: 競合他社の状況を自動調査&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;提案ドラフト&lt;/strong&gt;: 確認事項、提案の方向性、想定質問、フォローアップのアクションプランを整理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;結果はマークダウンファイルとしてローカルに保存される。&lt;/p&gt;
+&lt;h3 id="follow-up--商談後フォローの自動化"&gt;&lt;code&gt;/follow-up&lt;/code&gt; — 商談後フォローの自動化&lt;/h3&gt;
+&lt;p&gt;商談終了直後に &lt;code&gt;/follow-up&lt;/code&gt; コマンドを実行すると、商談の内容を踏まえたフォローメールが 2〜3分で自動生成される。記憶が鮮明なうちに具体的な内容を含んだメールを送れるのがポイントだ。&lt;/p&gt;
+&lt;h3 id="export-gdoc--ドキュメント共有"&gt;&lt;code&gt;/export-gdoc&lt;/code&gt; — ドキュメント共有&lt;/h3&gt;
+&lt;p&gt;作成されたマークダウンファイルを Google ドキュメントに変換し、Notion スタイルの統一されたデザインで社内共有やクライアントへの提案に活用できる。&lt;/p&gt;
+&lt;h2 id="導入効果"&gt;導入効果&lt;/h2&gt;
+&lt;p&gt;山中氏によると、Claude Code 導入後は &lt;strong&gt;体感で 3〜5倍の商談量を品質を下げずに捌ける&lt;/strong&gt; ようになったという。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;導入前&lt;/th&gt;
+&lt;th&gt;導入後&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;商談準備&lt;/td&gt;
+&lt;td&gt;30分〜1時間&lt;/td&gt;
+&lt;td&gt;2〜3分（&lt;code&gt;/mtg-prep&lt;/code&gt;）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;商談中&lt;/td&gt;
+&lt;td&gt;準備不足で焦る場面も&lt;/td&gt;
+&lt;td&gt;相手の話に集中できる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;フォローメール&lt;/td&gt;
+&lt;td&gt;15〜20分&lt;/td&gt;
+&lt;td&gt;2〜3分（&lt;code&gt;/follow-up&lt;/code&gt;）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="claude-code-スキルの仕組み"&gt;Claude Code スキルの仕組み&lt;/h2&gt;
+&lt;p&gt;Claude Code のスキル機能は、プロジェクトの &lt;code&gt;.claude/skills/&lt;/code&gt; ディレクトリにマークダウンファイルとしてプロンプトを定義する。&lt;code&gt;/スキル名&lt;/code&gt; でスラッシュコマンドとして呼び出せるため、営業担当者でも簡単に利用できる。&lt;/p&gt;</description></item><item><title>OpenClaw界隈でまず追うべき発信者 Alex Finn とは</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-alex-finn/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-alex-finn/</guid><description>&lt;p&gt;OpenClaw の情報発信者が急増するなか、「誰を追えばいいかわからない」という声も多い。本記事では、いち＠OpenClawガチ勢（&lt;a href="https://x.com/ichiaimarketer"&gt;@ichiaimarketer&lt;/a&gt;）が「まず見るべきたった1人」として紹介する &lt;strong&gt;Alex Finn（@AlexFinn）&lt;/strong&gt; について、その実績・主張・コンテンツをまとめる。&lt;/p&gt;
+&lt;h2 id="この人誰-alex-finn-のプロフィール"&gt;この人、誰？ Alex Finn のプロフィール&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Alex Finn&lt;/strong&gt;（X: &lt;a href="https://x.com/AlexFinn"&gt;@AlexFinn&lt;/a&gt;）&lt;/p&gt;
+&lt;p&gt;本人のプロフィール:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I love vibe coding. Founder/CEO of Creator Buddy, the only AI trained on all of your X posts. Built a 300k ARR app by myself.
+&lt;a href="https://creatorbuddy.io"&gt;https://creatorbuddy.io&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;要するに、&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Vibe Coding&lt;/strong&gt; でプロダクトを作っている人&lt;/li&gt;
+&lt;li&gt;Creator Buddy の創業者・CEO。ARR 30万ドルをひとりで達成&lt;/li&gt;
+&lt;li&gt;その人が OpenClaw にフルベットしている&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="経歴と一発のきっかけ"&gt;経歴と「一発」のきっかけ&lt;/h3&gt;
+&lt;p&gt;元 MongoDB のチームリード。AI を軸にした発信を続け、3年で X フォロワー26万超まで伸ばした。&lt;/p&gt;
+&lt;p&gt;転機は2023年。イーロン・マスクが X のアルゴリズムをオープンソース化したとき、Alex は14時間かけて約40万行のコードを読み、アルゴリズムの仕組みを解説するスレッドを投稿。Elon Musk 本人や Mark Cuban にリツイートされ、一気に認知が広がった。&lt;/p&gt;
+&lt;p&gt;今では X フォロワー43万人以上、YouTube も約14万登録で、vibe coding や Claude、OpenClaw の実践ネタを発信している。&lt;/p&gt;</description></item></channel></rss>

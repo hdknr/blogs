@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>AI開発 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ai%E9%96%8B%E7%99%BA/</link><description>Recent content in AI開発 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 25 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ai%E9%96%8B%E7%99%BA/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code の「毎回ゼロスタート」問題 — CLAUDE.md・メモリ・行動ルールでセッション間の文脈を継続させる</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-session-context-persistence/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-session-context-persistence/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;2026年1月、Google のプリンシパルエンジニア Jaana Dogan 氏が X にこう投稿した。「Claude Code を使ったら、チームが1年かけて構築した分散エージェントオーケストレータを1時間で再現できた」——このツイートは 800 万以上のビューを獲得し、エンジニアリングコミュニティに衝撃を与えた。&lt;/p&gt;
+&lt;p&gt;しかし、その生産性の前提条件がある。&lt;strong&gt;Claude Code を正しく設定すること&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;p&gt;あるアラビア語圏の開発者がX（旧Twitter）で指摘した問題が、多くの開発者の共感を呼んでいる。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code を毎日使っている開発者の 90% は、毎セッション、ゼロから始めている。
+スタックのコンテキストなし、以前の会話の記憶なし、コードスタイルを統一する行動ルールなし。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この「毎回ゼロスタート」問題は、週あたり相当な生産性損失をもたらすという。同氏は正しい設定を導入した結果、月次で &lt;strong&gt;週15時間以上の節約&lt;/strong&gt; と大幅な token コスト削減を実現したと報告している。&lt;/p&gt;
+&lt;p&gt;では、どうすれば解決できるのか？&lt;/p&gt;
+&lt;h2 id="問題の本質-claude-code-はセッションをまたいで記憶しない"&gt;問題の本質: Claude Code はセッションをまたいで記憶しない&lt;/h2&gt;
+&lt;p&gt;Claude Code は強力なツールだが、デフォルトでは&lt;strong&gt;セッションをまたいで文脈を保持しない&lt;/strong&gt;。新しいセッションを開くたびに以下を繰り返すことになる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロジェクトのアーキテクチャを再説明する&lt;/li&gt;
+&lt;li&gt;コーディング規約や好みを再度伝える&lt;/li&gt;
+&lt;li&gt;前回の作業内容や設計上の決定事項を再共有する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この繰り返しは、時間と token の両方の無駄になる。毎日 Claude Code を使う開発者にとって、これは積み重なると無視できないコストになる。&lt;/p&gt;
+&lt;h2 id="解決策-3-つの永続化レイヤー"&gt;解決策: 3 つの永続化レイヤー&lt;/h2&gt;
+&lt;p&gt;Claude Code でセッション間の文脈を維持するには、次の 3 つの仕組みを組み合わせる。&lt;/p&gt;
+&lt;h3 id="1-claudemd--プロジェクトコンテキストの永続化"&gt;1. CLAUDE.md — プロジェクトコンテキストの永続化&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; は、Claude Code がセッション開始時に自動的に読み込む設定ファイルだ。プロジェクトのルートに置いておけば、毎回説明しなくていい情報を一度記載しておける。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# プロジェクト名
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 技術スタック
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; フロントエンド: React + TypeScript
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; バックエンド: FastAPI (Python)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; データベース: PostgreSQL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## コーディング規約
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 変数名はキャメルケース
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 関数は 50 行以内に収める
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; テストは pytest を使用
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## よく使うコマンド
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`npm run dev`&lt;/span&gt; — 開発サーバー起動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`pytest`&lt;/span&gt; — テスト実行
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`docker compose up -d`&lt;/span&gt; — DB 起動
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これだけで、毎セッションの「説明コスト」を大幅に削減できる。&lt;/p&gt;</description></item><item><title>バイブコーディングとエージェンティックエンジニアリング — AIの進化で崩れる境界線をSimon Willisonが考察</title><link>https://hdknr.github.io/blogs/posts/2026/05/vibe-coding-and-agentic-engineering/</link><pubDate>Thu, 07 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/vibe-coding-and-agentic-engineering/</guid><description>Simon Willisonが考察するバイブコーディングとエージェント開発の境界問題。AIへの信頼と責任の所在、品質評価基準の変化、プロエンジニアの価値について解説。</description></item><item><title>Matt Pocock の「Skills for Real Engineers」— Claude Code に現場のエンジニアリング作法を仕込む Markdown スキル集</title><link>https://hdknr.github.io/blogs/posts/2026/04/matt-pocock-skills-for-real-engineers/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/matt-pocock-skills-for-real-engineers/</guid><description>&lt;p&gt;TypeScript 界の著名エンジニア Matt Pocock が公開した「&lt;strong&gt;Skills for Real Engineers&lt;/strong&gt;」が、公開 24 時間で 22,000 スター、現在は 64,000 スター超えという驚異的な勢いで注目を集めている。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/mattpocock/skills"&gt;GitHub: mattpocock/skills&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本記事では、このスキル集の設計思想・解決する問題・導入手順を紹介する。&lt;/p&gt;
+&lt;h2 id="skills-for-real-engineers-とは"&gt;Skills for Real Engineers とは&lt;/h2&gt;
+&lt;p&gt;「Skills for Real Engineers」は、Claude Code や Codex などの AI コーディングエージェントに「&lt;strong&gt;現場のエンジニアリング作法&lt;/strong&gt;」を仕込むための Markdown ファイル集だ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;My agent skills that I use every day to do real engineering - not vibe coding.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Matt Pocock 自身が毎日使っているエージェントスキルをそのままオープンソースとして公開したもので、「ノリでコーディング（vibe coding）」ではなく、現実のアプリケーション開発で機能する設計になっている。&lt;/p&gt;
+&lt;h2 id="なぜ必要なのか--ai-開発-3-大失敗パターン"&gt;なぜ必要なのか — AI 開発 3 大失敗パターン&lt;/h2&gt;
+&lt;p&gt;AI 開発で誰もがハマる以下の問題を解決するために設計されている。&lt;/p&gt;
+&lt;h3 id="1-エージェントが意図を汲まない"&gt;1. エージェントが意図を汲まない&lt;/h3&gt;
+&lt;p&gt;エンジニアと AI の間の「コミュニケーションギャップ」が最大の失敗原因。エージェントは何を作りたいかを正確に理解していないまま実装を進める。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解決スキル:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/grill-me&lt;/code&gt; — コード不要のユースケースで詳細なヒアリングを実施&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/grill-with-docs&lt;/code&gt; — ドキュメント生成も含めた上位版&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-コードがいつまでも動かない"&gt;2. コードがいつまでも動かない&lt;/h3&gt;
+&lt;p&gt;エージェントは「動いている」と思っていても、実際には壊れていることがある。テストと実装の間にギャップが生まれやすい。このスキル集にはテスト駆動の実装フローを強制するスキルも含まれている。&lt;/p&gt;</description></item><item><title>Claude Harness</title><link>https://hdknr.github.io/blogs/wiki/tools/claude-harness/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/claude-harness/</guid><description>Claude Code の拡張機構（hooks / permissions / skills / MCP）をワンパッケージで組み込んだ外装プラグイン。v4.0.0 &amp;#34;Hokage&amp;#34; で Go ネイティブ化・harness.toml 1 本管理を実現</description></item><item><title>Claude Code で 2 日間に 49 PR を出荷 — 手書きコードゼロを実現する AI 開発ワークフロー</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-zero-handwritten-code-49-features/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-zero-handwritten-code-49-features/</guid><description>Claude Code の生みの親 Boris Cherny は 2 ヶ月以上手書きコードゼロ。2 日間で 49 PR を出荷した実績から、AI ファースト開発ワークフローの実態と開発生産性の変化を解説する。</description></item><item><title>Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-harness-v4-hokage/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-harness-v4-hokage/</guid><description>&lt;p&gt;Claude Code の拡張 OSS「Claude Harness」が v4.0.0 &amp;ldquo;Hokage&amp;rdquo; をリリースした。コア全体を Go ネイティブに書き換え、フック実行速度が約 30 倍に向上。設定ファイルも &lt;code&gt;harness.toml&lt;/code&gt; 1 本に集約され、大幅に扱いやすくなった。&lt;/p&gt;
+&lt;h2 id="claude-code-の拡張機構とは"&gt;Claude Code の拡張機構とは&lt;/h2&gt;
+&lt;p&gt;Claude Code には最初から強力な拡張機構が備わっている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;hooks&lt;/strong&gt; — &lt;code&gt;PreToolUse&lt;/code&gt; / &lt;code&gt;PostToolUse&lt;/code&gt; / &lt;code&gt;SessionStart&lt;/code&gt; などのイベントでスクリプトを差し込める&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;permissions&lt;/strong&gt; — &lt;code&gt;settings.json&lt;/code&gt; の deny ルールで危険なコマンドを事前ブロックできる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;plugin system&lt;/strong&gt; — &lt;code&gt;plugin.json&lt;/code&gt; で自作プラグインを作り、チーム配布できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;skills&lt;/strong&gt; — スラッシュコマンドで自作ワークフローを走らせられる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP&lt;/strong&gt; — 外部ツール（DB・Slack・GitHub…）をネイティブ連携できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;「AI がやらかしそうなこと」「自律運用のワークフロー」「危ないコマンドのブロック」はほぼ全部、Claude Code の機能で実現できる。&lt;/p&gt;
+&lt;h2 id="自分で全部セッティングするのは無理ゲー"&gt;自分で全部セッティングするのは無理ゲー&lt;/h2&gt;
+&lt;p&gt;強力だからといって、簡単ではない。&lt;br&gt;
+自作で「AI に危ないコマンドを通させない」ワークフローを組もうとすると、以下を理解しておかなければならない。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;plugin.json&lt;/code&gt; — プラグインマニフェスト&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hooks.json&lt;/code&gt; — PreToolUse に走らせるスクリプトを宣言&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;settings.json&lt;/code&gt; — deny ルールを人力で組み立てる&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.mcp.json&lt;/code&gt; — MCP サーバー設定&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.claude-plugin/hooks.json&lt;/code&gt; — プラグイン経由のフックも別途&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;整合させる JSON が 5〜6 本。どれか 1 つを直すと別がズレる。&lt;br&gt;
+さらに「Plan → Work → Review の自律運用」を乗せようとすると以下も必要になる。&lt;/p&gt;</description></item><item><title>Claude Code 開発で機能が静かにデグレードする — 出力品質テストで防ぐ方法</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-silent-degradation/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-silent-degradation/</guid><description>Claude Code でリファクタリングすると既存機能の出力品質が静かに劣化する問題の事例と、出力仕様テストによる防止策を解説。</description></item></channel></rss>

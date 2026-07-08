@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>トレーディング on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%88%E3%83%AC%E3%83%BC%E3%83%87%E3%82%A3%E3%83%B3%E3%82%B0/</link><description>Recent content in トレーディング on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 01 Jul 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%88%E3%83%AC%E3%83%BC%E3%83%87%E3%82%A3%E3%83%B3%E3%82%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>自律システムはなぜ自分の欠陥に気づけないのか — Claude Code で自律システムを作るときの5つの教訓</title><link>https://hdknr.github.io/blogs/posts/2026/07/autonomous-system-blind-spots/</link><pubDate>Wed, 01 Jul 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/07/autonomous-system-blind-spots/</guid><description>自律トレーディングシステムで起きた「データ凍結による売り遅れ」インシデントを題材に、毎日レビューしても盲点に気づけない5つの構造的理由と、Claude Code で自律システムを作るときの教訓を解説する。</description></item><item><title>ObsidianとN8Nで月$120の「一人ヘッジファンド」を構築 — 6ヶ月で$180,000を稼いだ自動トレーディングAIの全仕組み</title><link>https://hdknr.github.io/blogs/posts/2026/05/obsidian-n8n-trading-ai/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/obsidian-n8n-trading-ai/</guid><description>&lt;p&gt;海外で話題になっているある個人トレーダーの話が、X（旧Twitter）で拡散されている。彼はObsidianとN8Nを組み合わせて「自動トレーディングAI」を構築し、6ヶ月で$180,000（約2,700万円）を稼ぎ出したという。月のAPIコストはたった$120。クラウドサーバーも、アナリストチームも、Bloombergターミナルも不要だ。&lt;/p&gt;
+&lt;p&gt;元ネタのツイートは&lt;a href="https://x.com/browomo"&gt;@browomo&lt;/a&gt;によるもので、4,500以上のいいね、90万回以上の閲覧数を記録している。&lt;/p&gt;
+&lt;h2 id="システムの全体像"&gt;システムの全体像&lt;/h2&gt;
+&lt;p&gt;このシステムの核心は、Obsidianのローカルvaultをナレッジの「中枢」として、N8Nの6本のワークフローパイプラインが情報を自動収集・分析・配信する構造にある。構成要素は次の通りだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ハードウェア&lt;/strong&gt;: 自宅のMac Mini（ローカルでvaultを保管・パイプラインを常時稼働）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;モバイル&lt;/strong&gt;: iPhoneでvaultにアクセス・アイデアをキャプチャ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コスト&lt;/strong&gt;: Readwise・Whisper API・N8Nホスティングのサブスクリプションで月約$120&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;伝統的なクオンツファンドが同等のインサイトフローのために8人のチームを雇っている一方、このシステムはその機能を個人レベルで再現している。&lt;/p&gt;
+&lt;h2 id="vaultmd-に書かれたaiアナリストへの指示"&gt;VAULT.md に書かれた「AIアナリストへの指示」&lt;/h2&gt;
+&lt;p&gt;システムの起点となるのは、Obsidian vaultのルートに置かれた &lt;code&gt;VAULT.md&lt;/code&gt; ファイルだ。ここにAIアナリストへの役割定義と行動指針が記されている：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;you are the AI analyst of a solo trader. you read his vault every morning at 6:00,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find connections between fresh and old notes, and deliver 3 trading ideas he can verify
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;in the hour before the market opens.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipelines:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Reader (pulls every article and highlight from Readwise, Twitter bookmarks, and Kindle into /notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Listener (transcribes podcasts through Airr and voice notes through Whisper, puts them in /notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Catcher (accepts any message from the Telegram bot and writes it to /inbox with a timestamp)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Connector (every night reads across the entire vault and updates the connection graph between 4,000 notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Briefer (at 6:00 AM writes a brief: 3 trading ideas for today plus the emerging thesis of the week, puts it in /inbox)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Mobile (lives in the iPhone, answers any question about the vault by voice, and confirms alerts while the owner is on the go).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;you wake the owner with a push notification only when a fresh note contradicts his active thesis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;or when 1 of the 3 morning ideas has a confidence score above 90%.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この指示が秀逸なのは、AIに「何を自律的にやるか」と「いつ人間を介入させるか」の境界を明確に定義している点だ。&lt;/p&gt;</description></item><item><title>Anthropicエンジニアとされる人物が Claude Code で Polymarket 取引 bot を構築 — $200 → $14,300 の仕組みを解説</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-polymarket-trading-bot/</link><pubDate>Sun, 03 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-polymarket-trading-bot/</guid><description>&lt;p&gt;Anthropic のエンジニアとされる人物が Claude Code を使って Polymarket（予測市場プラットフォーム）向けの取引 bot を構築し、$200（約3万円）を $14,300（約200万円）に成長させたという事例が話題を集めている。ただし本人の公的な確認は取れておらず、複数の紹介ツイートも「伝えられるところによると」という留保を付けている点は注意が必要だ。&lt;/p&gt;
+&lt;p&gt;単純に取引回数を増やすのではなく、&lt;strong&gt;「勝てる場面だけを選ぶ」判断を AI に委ねる&lt;/strong&gt;という設計思想が注目ポイントだ。&lt;/p&gt;
+&lt;h2 id="polymarket-とは"&gt;Polymarket とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://polymarket.com"&gt;Polymarket&lt;/a&gt; は分散型の予測市場プラットフォームで、政治・経済・スポーツなど様々なイベントの結果に対してポジションを取れる。各イベントの結果確率を市場参加者が売買することで価格が形成される仕組みになっている。&lt;/p&gt;
+&lt;h2 id="bot-のアーキテクチャ"&gt;bot のアーキテクチャ&lt;/h2&gt;
+&lt;p&gt;このシステムは Claude Code をベースに、以下の3つの機能を組み合わせて動作する。&lt;/p&gt;
+&lt;h3 id="1-大規模な取引データ分析"&gt;1. 大規模な取引データ分析&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;8,600万件の取引データを AI で分析&lt;/li&gt;
+&lt;li&gt;過去のパターンから「どういう取引が利益を出しやすいか」を学習&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-ウォレットランキング"&gt;2. ウォレットランキング&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Polymarket の 14,000 以上のウォレットを数分でスキャン&lt;/li&gt;
+&lt;li&gt;各ウォレットの勝率・利益率を算出し、ランキング化&lt;/li&gt;
+&lt;li&gt;高勝率ウォレット（クジラ）が動いたタイミングを検出する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-厳選した取引実行"&gt;3. 厳選した取引実行&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;1日あたりわずか 10 回のみ取引を実行&lt;/li&gt;
+&lt;li&gt;勝率の高いクジラが動いた相乗りポジション、かつクジラより早く Exit（手仕舞い）&lt;/li&gt;
+&lt;li&gt;高確率の取引だけに絞ることでドローダウンを最小化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="設計思想勝てる場面だけ選ぶ"&gt;設計思想：「勝てる場面だけ選ぶ」&lt;/h2&gt;
+&lt;p&gt;このシステムが興味深いのは、&lt;strong&gt;取引頻度ではなく取引品質を最大化&lt;/strong&gt;している点だ。&lt;/p&gt;
+&lt;p&gt;多くのアルゴリズムトレードは「できるだけ多くの機会を捉える」方向に走りがちだが、このボットは逆の方針を選んでいる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;力技で数をこなす → 採用しない&lt;/li&gt;
+&lt;li&gt;「勝てる場面だけ選ぶ」判断を AI に任せる → 採用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;1日10回という制約は、シグナルの質を落とさないための意図的な設計といえる。&lt;/p&gt;
+&lt;h2 id="claude-code--skills--mcp-の連携"&gt;Claude Code + Skills + MCP の連携&lt;/h2&gt;
+&lt;p&gt;このような bot を実際に構築するには、Claude Code 単体ではなく、&lt;strong&gt;Skills&lt;/strong&gt; や &lt;strong&gt;MCP（Model Context Protocol）&lt;/strong&gt; を組み合わせた拡張が必要になる。Claude Code だけでは外部 API への接続や大規模データパイプラインを扱いきれないためだ。&lt;/p&gt;</description></item><item><title>AI トレーディングボットとタイムゾーン裁定取引：24時間自律稼働で稼ぐ仕組みとリスク</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-trading-bot-timezone-arbitrage/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-trading-bot-timezone-arbitrage/</guid><description>&lt;p&gt;「寝てる間に稼ぐ」――AI トレーディングボットが24時間タイムゾーン裁定を監視し、海外で確定した市場を見つけて $43,800 を稼いだという投稿が話題になっています。本記事では、タイムゾーン裁定取引（Timezone Arbitrage）の仕組み、AI ボットの役割、そして見落とされがちなリスクについて解説します。&lt;/p&gt;
+&lt;h2 id="暗号通貨予測市場における裁定取引"&gt;暗号通貨予測市場における裁定取引&lt;/h2&gt;
+&lt;p&gt;今回話題になっている「タイムゾーン裁定」は、暗号通貨の&lt;strong&gt;予測市場&lt;/strong&gt;（Prediction Market）と&lt;strong&gt;現物取引所&lt;/strong&gt;の間に生じるレイテンシ（遅延）を利用する戦略です。&lt;/p&gt;
+&lt;h3 id="予測市場とは"&gt;予測市場とは&lt;/h3&gt;
+&lt;p&gt;Polymarket に代表される予測市場では、「BTC は15分後に上がるか？下がるか？」といった短期コントラクトが取引されています。参加者はイベントの結果に対してオッズ付きのポジションを取り、結果確定後に精算されます。&lt;/p&gt;
+&lt;h3 id="裁定の具体的な流れ"&gt;裁定の具体的な流れ&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;現物市場で価格が動く&lt;/strong&gt; — Binance や Coinbase で BTC が急騰し、明確な上昇トレンドが確認される&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;予測市場のオッズが追いつかない&lt;/strong&gt; — Polymarket の「BTC 15分後に上昇」コントラクトのオッズがまだ 50/50 のまま&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ボットが即座にポジションを取る&lt;/strong&gt; — 実際の上昇確率が ~85% なのに、市場価格は 50% を示している。この乖離を突いて「上昇」側を購入&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;結果確定で利益獲得&lt;/strong&gt; — 15分後に BTC が実際に上昇し、コントラクトが精算される&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="なぜタイムゾーンが関係するか"&gt;なぜ「タイムゾーン」が関係するか&lt;/h3&gt;
+&lt;p&gt;暗号通貨市場は24時間稼働ですが、&lt;strong&gt;トレーダーの活動量はタイムゾーンに依存&lt;/strong&gt;します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;アジア時間帯に大きな値動きが発生&lt;/strong&gt; → 欧米のトレーダーが少なく、予測市場の流動性が薄い → オッズ修正が遅れる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;欧米時間帯の急変動&lt;/strong&gt; → アジア圏の参加者が少なく、同様にラグが発生&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この地域ごとの活動時間差が市場の非効率性を生み、24時間稼働するボットがその隙間を突ける構造になっています。&lt;/p&gt;
+&lt;h3 id="実際の規模"&gt;実際の規模&lt;/h3&gt;
+&lt;p&gt;報道ベースでは、この手法の規模は無視できないレベルに達しています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;あるボットが &lt;strong&gt;$313 の元手から1ヶ月で $414,000&lt;/strong&gt; を達成（BTC/ETH/SOL の15分コントラクト、勝率98%）&lt;/li&gt;
+&lt;li&gt;2024年4月〜2025年4月の推定裁定利益は全体で &lt;strong&gt;約 $4,000万&lt;/strong&gt;（約60億円）&lt;/li&gt;
+&lt;li&gt;Polymarket の最も利益を上げているトレーダー上位20のうち &lt;strong&gt;14がボット&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;なお、Polymarket はこのレイテンシ裁定を抑制するため、15分コントラクトに&lt;strong&gt;動的テイカー手数料&lt;/strong&gt;を導入しています。以前のゼロ手数料構造がボットに有利すぎたためです。&lt;/p&gt;
+&lt;h2 id="ai-ボットが果たす役割"&gt;AI ボットが果たす役割&lt;/h2&gt;
+&lt;p&gt;従来の手動アービトラージでは、人間がリアルタイムで複数市場を監視する必要があり、実質的に24時間の稼働は不可能でした。AI ボットはこれを根本的に変えます。&lt;/p&gt;</description></item></channel></rss>

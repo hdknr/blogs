@@ -1,0 +1,60 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="token-exchange-overview" name="Overview">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="IdP は1つ・RP は複数。トークンを発行するのは IdP ではなく各 RP" style="text;html=1;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="120" y="20" width="720" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- IdP -->
+        <mxCell id="idp" value="IdP（統合認証サーバー）&#xa;&#xa;・身分証となる署名付き JWT を発行&#xa;・RP からの「このユーザーで合ってる?」に応答" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;verticalAlign=middle;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="70" width="320" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Mobile app -->
+        <mxCell id="app" value="モバイルアプリ（public client）&#xa;秘密鍵 (client secret) を安全に持てない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="350" y="220" width="260" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- RPs -->
+        <mxCell id="rp1" value="経費サービス（RP）&#xa;&#xa;自分専用の&#xa;入館証を自分で発行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="390" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="rp2" value="マスタサービス（RP）&#xa;&#xa;自分専用の&#xa;入館証を自分で発行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="370" y="390" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="rp3" value="店舗サービス（RP）&#xa;&#xa;自分専用の&#xa;入館証を自分で発行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="670" y="390" width="220" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- app <-> idp -->
+        <mxCell id="e-login" value="① ログイン" style="endArrow=block;html=1;rounded=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;exitX=0.25;exitY=0;entryX=0.25;entryY=1;" edge="1" parent="1" source="app" target="idp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-jwt" value="② 署名付き JWT" style="endArrow=block;html=1;rounded=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;exitX=0.75;exitY=1;entryX=0.75;entryY=0;" edge="1" parent="1" source="idp" target="app">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- app -> each RP : present JWT -->
+        <mxCell id="e-p1" value="③ JWT を /token へ提示" style="endArrow=block;html=1;rounded=1;strokeColor=#82b366;strokeWidth=2;fontSize=11;exitX=0.2;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="app" target="rp1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-p2" value="③" style="endArrow=block;html=1;rounded=1;strokeColor=#82b366;strokeWidth=2;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="app" target="rp2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-p3" value="③" style="endArrow=block;html=1;rounded=1;strokeColor=#82b366;strokeWidth=2;fontSize=11;exitX=0.8;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="app" target="rp3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- RPs -> IdP : user lookup (dashed) -->
+        <mxCell id="e-lookup" value="③&apos; 各 RP が IdP にユーザー照会（RP→IdP の 7523-b）" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;html=1;rounded=1;dashed=1;strokeColor=#9673a6;strokeWidth=1.5;fontSize=11;exitX=0.5;exitY=0;entryX=1;entryY=0.5;" edge="1" parent="1" source="rp3" target="idp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

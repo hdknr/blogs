@@ -1,0 +1,839 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Chatgpt on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/chatgpt/</link><description>Recent content in Chatgpt on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 21 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/chatgpt/index.xml" rel="self" type="application/rss+xml"/><item><title>Netflixの1時間より価値がある — スタンフォードCS336「ゼロからLLMを構築する」2時間講義が無料公開中</title><link>https://hdknr.github.io/blogs/posts/2026/05/stanford-cs336-llm-lecture/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/stanford-cs336-llm-lecture/</guid><description>&lt;p&gt;「NetflixのドラマよりもこのスタンフォードのAI講義を2時間見た方がいい——大手AI企業で働く多くの人がキャリア全体を通じて学ぶより多くのことを学べる。」&lt;/p&gt;
+&lt;p&gt;スペイン語圏最大のAIニュースレター「IAPROACTIV」を率いるSanti Torres（@SantiTorAI）がXに投稿した。そのメッセージは10万ビューを超えて拡散し、彼が紹介しているのは、スタンフォード大学が2026年春学期に開講した &lt;strong&gt;CS336: Language Modeling from Scratch&lt;/strong&gt;（ゼロから言語モデルを構築する）という講義だ。&lt;/p&gt;
+&lt;h2 id="stanford-cs336-とは"&gt;Stanford CS336 とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Stanford CS336: Language Modeling from Scratch&lt;/strong&gt; は、2026年3月30日から6月3日にかけて開講されたスタンフォード大学のコースで、ChatGPTやClaudeのようなLLMを「一から」実装することを目標にしている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;講師&lt;/strong&gt;: Tatsunori Hashimoto / Percy Liang（Stanford NLPの主要研究者）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;公式サイト&lt;/strong&gt;: &lt;a href="https://cs336.stanford.edu/"&gt;cs336.stanford.edu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;YouTube プレイリスト&lt;/strong&gt;: &lt;a href="https://www.youtube.com/playlist?list=PLoROMvodv4rMqXOcazWaTUHhq-yembLCV"&gt;Spring 2026 全講義&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href="https://github.com/stanford-cs336"&gt;stanford-cs336&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;OSの仕組みを学ぶために「OSを自作するコース」があるように、このコースではLLMの仕組みを学ぶために&lt;strong&gt;LLM自体を自作する&lt;/strong&gt;という哲学を貫いている。&lt;/p&gt;
+&lt;h2 id="講義でカバーされる内容"&gt;講義でカバーされる内容&lt;/h2&gt;
+&lt;h3 id="データ収集クリーニング"&gt;データ収集・クリーニング&lt;/h3&gt;
+&lt;p&gt;事前学習に必要なデータをCommon Crawlのダンプから構築する方法を学ぶ。フィルタリングや重複排除など、大規模テキストデータの品質管理も含まれる。&lt;/p&gt;
+&lt;h3 id="トランスフォーマーの実装"&gt;トランスフォーマーの実装&lt;/h3&gt;
+&lt;p&gt;Transformerアーキテクチャの各コンポーネント（Self-Attention、FFN、LayerNorm等）を一から実装し、それぞれの役割を深く理解する。&lt;/p&gt;
+&lt;h3 id="モデルのトレーニング"&gt;モデルのトレーニング&lt;/h3&gt;
+&lt;p&gt;スケーリング則（Scaling Laws）を使ったモデルサイズと学習量の見積もり、分散学習（データ並列・テンソル並列）、GPU最適化まで踏み込む。&lt;/p&gt;
+&lt;h3 id="アライメントと強化学習"&gt;アライメントと強化学習&lt;/h3&gt;
+&lt;p&gt;RLHF（人間のフィードバックによる強化学習）を含むアライメント手法の実装も演習に含まれる。&lt;/p&gt;
+&lt;h3 id="トークナイザーからrl基盤まで"&gt;トークナイザーからRL基盤まで&lt;/h3&gt;
+&lt;p&gt;5つの主要課題を通じて、BPEトークナイザーの実装から始まり、RLベースのアライメント手法まで一気通貫で経験する。「他のコースの少なくとも10倍のコードを書くことが期待される」と公式サイトに記載があるほど実装量が多い。&lt;/p&gt;
+&lt;h2 id="第1回講義-overview-と-tokenization"&gt;第1回講義: Overview と Tokenization&lt;/h2&gt;
+&lt;p&gt;特に話題を集めているのが**第1回講義（Overview, Tokenization）**で、YouTubeで公開されている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;YouTube&lt;/strong&gt;: &lt;a href="https://www.youtube.com/watch?v=JuoVZkPBiKk"&gt;Lecture 1: Overview, Tokenization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;時間: 約1時間44分&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この講義一本で、LLMのアーキテクチャ全体の俯瞰からトークナイザーの実装まで理解できる構成になっている。Xで拡散したのはこの動画（またはその切り抜き）だ。&lt;/p&gt;
+&lt;h2 id="なぜ無料公開されているのか"&gt;なぜ無料公開されているのか&lt;/h2&gt;
+&lt;p&gt;スタンフォードは以前からCS229（機械学習）やCS231n（画像認識）などの人気コースをYouTubeで無料公開してきた。CS336もその流れを受けて全講義がYouTubeで視聴可能だ。&lt;/p&gt;
+&lt;p&gt;ChatGPTが世界中に普及した今、「LLMがどう動くか」を本当に理解しているエンジニアはまだ少ない。CS336はその知識格差を埋める最短ルートの一つだ。&lt;/p&gt;
+&lt;h2 id="どう活用するか"&gt;どう活用するか&lt;/h2&gt;
+&lt;h3 id="エンジニアml実践者向け"&gt;エンジニア・ML実践者向け&lt;/h3&gt;
+&lt;p&gt;全10週分の講義動画とスライド、GitHubのコード課題が揃っているので、自分のペースで独学できる。特に実装課題は「一から実装することでブラックボックスをなくす」という点で非常に価値が高い。&lt;/p&gt;
+&lt;h3 id="勉強会チーム学習"&gt;勉強会・チーム学習&lt;/h3&gt;
+&lt;p&gt;講義動画を見ながら輪読会形式で進めるのも有効だ。プレイリストが整備されているので進捗管理もしやすい。&lt;/p&gt;
+&lt;h3 id="キャッチアップ教材として"&gt;キャッチアップ教材として&lt;/h3&gt;
+&lt;p&gt;「Transformerはなんとなく知っているが内部は追っていない」というエンジニアにとって、CS336の第1講義は最適な入り口になる。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;コース名&lt;/td&gt;
+&lt;td&gt;Stanford CS336: Language Modeling from Scratch&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;講師&lt;/td&gt;
+&lt;td&gt;Tatsunori Hashimoto, Percy Liang&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;期間&lt;/td&gt;
+&lt;td&gt;2026年3月〜6月（Spring 2026）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;公式サイト&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://cs336.stanford.edu/"&gt;cs336.stanford.edu&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;YouTube&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://www.youtube.com/playlist?list=PLoROMvodv4rMqXOcazWaTUHhq-yembLCV"&gt;全講義プレイリスト&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GitHub&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://github.com/stanford-cs336"&gt;stanford-cs336&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;費用&lt;/td&gt;
+&lt;td&gt;無料（視聴のみ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;大手AI企業が公開するブログやドキュメントを読むより、「自分で実装する」というプロセスがLLMの理解を本物にする。スタンフォードがその機会を無料で提供している今、まずは第1講義から視聴してみてほしい。&lt;/p&gt;</description></item><item><title>「Google マップ × AI」で月230万稼ぐ方法 — 海外話題のひとり社長プレイブック全文和訳</title><link>https://hdknr.github.io/blogs/posts/2026/05/google-map-ai-local-business/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/google-map-ai-local-business/</guid><description>&lt;p&gt;海外で話題の「ChatGPT + Google マップ」を組み合わせたひとり社長向け収益化メソッドを全文和訳・解説する。ウェブサイト制作・レビュー管理・コールド営業の 3 本柱で、未経験からでも月38万円スタート、6 か月で月228万〜304万円を目指せる仕組みだ。&lt;/p&gt;
+&lt;h2 id="この記事の背景"&gt;この記事の背景&lt;/h2&gt;
+&lt;p&gt;元記事タイトル: &lt;em&gt;&amp;ldquo;ChatGPT 5.5 found my first clients on Google Maps in 10 minutes. Now it&amp;rsquo;s $15,000 a month.&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;要点は 2 つ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;地球上に 500 万社&lt;/strong&gt;のローカルビジネスが、古いウェブサイト・低評価のせいで毎日顧客を失っている&lt;/li&gt;
+&lt;li&gt;ChatGPT が「見つける → サイトを作る → 評判を管理する → 自動営業する」をすべて代替できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この組み合わせを知っている人は現時点で約 7,000 人、先行者利益がまだ取れる状態だという。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-1-部なぜ今これがひとり社長最強の収益モデルなのか"&gt;第 1 部：なぜ今これが「ひとり社長」最強の収益モデルなのか&lt;/h2&gt;
+&lt;h3 id="狙い目はローカルサービス業"&gt;狙い目はローカル・サービス業&lt;/h3&gt;
+&lt;p&gt;空調（HVAC）・配管・電気工事・害虫駆除・屋根工事など&lt;strong&gt;利益率が極めて高い業種&lt;/strong&gt;は、価格ではなく「信頼と見つけられやすさ」で競争している。ところが大半の業者は現場仕事で忙しく、自分のデジタル上の見え方がいかに悪いかに気づいていない。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;日本に置き換えると:&lt;/strong&gt; リフォーム・外壁塗装・害虫駆除・エアコンクリーニング・不用品回収・歯科医院・整体院・士業事務所・葬儀社など。1 件あたり単価が高く、Web 集客が直接売上になる業種を狙う。&lt;/p&gt;
+&lt;h3 id="最初に-chatgpt-に聞くべき質問"&gt;最初に ChatGPT に聞くべき質問&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;ローカルビジネスで、ホームページがダサいことが多いのに
+利益率が高い業種って、どんな種類がある?
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ChatGPT がリストを出してくれる。そのリスト内で「サイト改善 1 件の費用 &amp;lt; その業者への集客 1 件の売上」が成立する業種が、あなたが狙うべきターゲットだ。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第-2-部案件-ウェブサイト制作1-件-75-万30-万円"&gt;第 2 部：案件① ウェブサイト制作（1 件 7.5 万〜30 万円）&lt;/h2&gt;
+&lt;h3 id="ステップ-1google-マップで金鉱を探す"&gt;ステップ 1：Google マップで「金鉱」を探す&lt;/h3&gt;
+&lt;p&gt;Google マップで「リフォーム ◯◯市」「外壁塗装 ◯◯駅」などを検索し、&lt;strong&gt;★4.0 以上 + レビュー 20 件以上 + ホームページが古い／ない&lt;/strong&gt;の 3 条件で絞る。すぐに 10〜20 社の候補が見つかる。&lt;/p&gt;</description></item><item><title>「Googleマップ × AI」で月230万稼ぐ方法 — ローカルビジネス向けAI活用術の全解説</title><link>https://hdknr.github.io/blogs/posts/2026/05/google-maps-ai-monthly-income/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/google-maps-ai-monthly-income/</guid><description>&lt;h2 id="概要"&gt;概要&lt;/h2&gt;
+&lt;p&gt;「Googleマップを使って月230万円を稼ぐ」という手法が海外で注目を集めている。ソロプレナー（一人起業家）向けのこのアプローチは、AIツールと組み合わせることで、ローカルビジネスのデジタル課題を解決しながら安定した収益を得るというものだ。&lt;/p&gt;
+&lt;p&gt;本記事では、その具体的な3つの戦略と収益シミュレーションを日本語で解説する。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="なぜgoogleマップなのか"&gt;なぜGoogleマップなのか&lt;/h2&gt;
+&lt;p&gt;世界には500万社以上のローカルビジネス（HVAC〈空調・暖房設備〉・配管・電気工事・屋根工事など）が存在し、その多くが：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;古いウェブサイト（またはサイト自体がない）&lt;/li&gt;
+&lt;li&gt;低評価・無返信のGoogleレビュー&lt;/li&gt;
+&lt;li&gt;デジタルマーケティングの知識不足&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;という課題を抱えている。これらのビジネスは毎日顧客を失っているが、自力での解決が難しい。ここにAIを使った支援ビジネスの機会がある。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="戦略1aiでウェブサイトを制作する"&gt;戦略1：AIでウェブサイトを制作する&lt;/h2&gt;
+&lt;h3 id="ターゲットの見つけ方"&gt;ターゲットの見つけ方&lt;/h3&gt;
+&lt;p&gt;Googleマップで以下のような条件のビジネスを探す：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;★4.5以上の高評価&lt;/li&gt;
+&lt;li&gt;ウェブサイトが存在しない、または極めて古い&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;高評価なのにウェブサイトがないビジネスは、すでに口コミで成功しているが、オンライン集客を取りこぼしている。&lt;/p&gt;
+&lt;h3 id="制作フロー"&gt;制作フロー&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;AI（ChatGPTなど）でコンテンツを生成&lt;/strong&gt; — ビジネス名・業種・所在地を入力するだけで、About・サービス・FAQ・CTA（行動喚起ボタン）などのコピーを自動生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ノーコードツールでサイトをビルド&lt;/strong&gt; — Framer・Webflow などを活用し、1時間未満で完成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SEO対応のローカルランディングページ&lt;/strong&gt; — 地域名＋業種のキーワードで検索流入を狙う&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="単価の目安"&gt;単価の目安&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;プラン&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;th&gt;単価&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ベーシック&lt;/td&gt;
+&lt;td&gt;3ページ構成のシンプルサイト&lt;/td&gt;
+&lt;td&gt;¥75,000〜&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;スタンダード&lt;/td&gt;
+&lt;td&gt;5ページ＋フォーム&lt;/td&gt;
+&lt;td&gt;¥150,000〜&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プレミアム&lt;/td&gt;
+&lt;td&gt;多ページ＋予約システム連携&lt;/td&gt;
+&lt;td&gt;¥300,000〜&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="戦略2googleレビュー管理の自動化"&gt;戦略2：Googleレビュー管理の自動化&lt;/h2&gt;
+&lt;h3 id="問題の背景"&gt;問題の背景&lt;/h3&gt;
+&lt;p&gt;多くのローカルビジネスはレビューへの返信を放置している。Googleはレビューへの返信を「顧客フィードバックを重視している姿勢のアピール」として推奨しており、クチコミの数や質を通じて検索での知名度スコアに間接的に影響すると考えられている。&lt;/p&gt;
+&lt;h3 id="ai返信の仕組み"&gt;AI返信の仕組み&lt;/h3&gt;
+&lt;p&gt;Claude API（Anthropic）を使い、レビューテキストを受け取って返信文を生成する関数を実装する例を示す：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; anthropic
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; anthropic&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Anthropic()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;generate_review_reply&lt;/span&gt;(review_text: str, business_name: str, rating: int) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; str:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; prompt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;あなたは&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;business_name&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;のオーナーです。
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;以下のGoogleレビュー（★&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;rating&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;）に対して、
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;自然で温かみのある返信を100文字以内で書いてください。
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;レビュー内容:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;review_text&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; message &lt;span style="color:#f92672"&gt;=&lt;/span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;messages&lt;span style="color:#f92672"&gt;.&lt;/span&gt;create(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;claude-opus-4-7&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; max_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;256&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; messages&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[{&lt;span style="color:#e6db74"&gt;&amp;#34;role&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;content&amp;#34;&lt;/span&gt;: prompt}]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; message&lt;span style="color:#f92672"&gt;.&lt;/span&gt;content[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;text
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="月額サービスとして提供"&gt;月額サービスとして提供&lt;/h3&gt;
+&lt;p&gt;レビュー管理を月額契約で提供することで、安定したストック収益になる：&lt;/p&gt;</description></item><item><title>Claude と GPT のプロンプト哲学が真逆に進化した — 古いプロンプトが通じなくなった本当の理由</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-gpt-prompt-philosophy-divergence/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-gpt-prompt-philosophy-divergence/</guid><description>OpenAI と Anthropic が2026年4月に相次いで公開した公式ガイドラインを比較。Claude が字義通り解釈に、GPT が自律判断に進化した結果、古いプロンプトパターンが機能しなくなった理由を解説する。</description></item><item><title>ChatGPTのコード実行環境にDNSトンネリングによるデータ漏洩の脆弱性が発覚</title><link>https://hdknr.github.io/blogs/posts/2026/03/chatgpt-dns-tunneling-data-leak/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/chatgpt-dns-tunneling-data-leak/</guid><description>ChatGPTのData Analysis環境にDNSトンネリングによるデータ漏洩の脆弱性をCheck Pointが発見。攻撃の仕組み、漏洩リスク、OpenAIの対応、ユーザーの対策を解説。</description></item><item><title>ChatGPT音声モード × 14日間英会話特訓 — 詰まった言葉がスラスラ出る4つの黄金プロンプト</title><link>https://hdknr.github.io/blogs/posts/2026/03/559e4056f42896daf0dce494eb0f68b5/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/559e4056f42896daf0dce494eb0f68b5/</guid><description>&lt;h1 id="chatgpt-音声モード--14-日間英会話特訓--詰まった言葉がスラスラ出る-4-つの黄金プロンプト"&gt;ChatGPT 音声モード × 14 日間英会話特訓 — 詰まった言葉がスラスラ出る 4 つの黄金プロンプト&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/technocrat_s/status/2029343618880938494"&gt;@technocrat_s 氏のポスト&lt;/a&gt;で紹介された記事が話題になっています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;【検証】ChatGPTと14日間、ガチの「英会話」特訓。詰まった言葉がスラスラ出る黄金プロンプト4つ&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://www.lifehacker.jp/article/2603improve-speaking-skills-using-chatgpt-voice-mode-prompts/"&gt;ライフハッカー・ジャパンの記事&lt;/a&gt;（原文: &lt;a href="https://www.makeuseof.com/improve-speaking-skills-using-chatgpt-voice-mode-prompts/"&gt;MakeUseOf / Saikat Basu&lt;/a&gt;）は、在宅勤務でスピーキング力が錆びついたライターが ChatGPT の高度音声モード（Advanced Voice Mode）をコーチに見立て、14 日間の集中特訓を行った検証記事です。思考と発話の間の「0.5 秒の遅れ」を消すために設計された 4 つのプロンプトと、その結果を具体的に報告しています。&lt;/p&gt;
+&lt;h2 id="問題--考えてから話す05-秒の壁"&gt;問題 — 「考えてから話す」0.5 秒の壁&lt;/h2&gt;
+&lt;p&gt;著者の Saikat Basu 氏は MakeUseOf の元編集者で、MBA を持つテクノロジーライターです。在宅勤務が長くなるにつれ、ビデオ会議やチームコールで英語の発話に遅れが生じるようになりました。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;在宅ワーカーのスピーキング劣化:
+思考 → [0.5 秒の遅れ] → 発話
+↑
+・フィラー語（um, uh）の増加
+・語彙が出てこない
+・文法ミスの自己修正ができない
+・発音の曖昧化
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;「知っている英語」と「口から出る英語」の間にギャップがある — これは日本人英語学習者にも共通する課題です。文法や語彙の知識があっても、リアルタイムの発話ではその知識を引き出せない。Basu 氏はこのギャップを ChatGPT の音声モードで埋められるかを検証しました。&lt;/p&gt;
+&lt;h2 id="chatgpt-高度音声モード--ai-が聞いて話して直す"&gt;ChatGPT 高度音声モード — AI が「聞いて、話して、直す」&lt;/h2&gt;
+&lt;p&gt;ChatGPT の Advanced Voice Mode は 2024 年後半に GPT-4o ベースで登場し、2025 年以降は無料ユーザーにも開放されています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;th&gt;従来のテキストチャット&lt;/th&gt;
+&lt;th&gt;高度音声モード&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;応答速度&lt;/td&gt;
+&lt;td&gt;テキスト入力→テキスト出力&lt;/td&gt;
+&lt;td&gt;リアルタイム音声対話&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;発音フィードバック&lt;/td&gt;
+&lt;td&gt;不可能&lt;/td&gt;
+&lt;td&gt;母音・子音レベルで指摘可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;会話の自然さ&lt;/td&gt;
+&lt;td&gt;ターン制&lt;/td&gt;
+&lt;td&gt;割り込み・相槌あり&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;感情表現&lt;/td&gt;
+&lt;td&gt;なし&lt;/td&gt;
+&lt;td&gt;9 種類のアクセント・声質選択&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;練習の心理的障壁&lt;/td&gt;
+&lt;td&gt;低い&lt;/td&gt;
+&lt;td&gt;低い（相手が AI なので恥ずかしくない）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;従来の英会話レッスンとの最大の違いは&lt;strong&gt;予約不要・24 時間・何度でもやり直せる&lt;/strong&gt;ことです。また「相手が AI なので失敗が恥ずかしくない」という心理的安全性も、スピーキング練習では非常に重要です。&lt;/p&gt;</description></item><item><title>「AIに評価されている」と知った人は量を増やし質を落とす — アルゴリズム評価の隠れたコスト</title><link>https://hdknr.github.io/blogs/posts/2026/03/ccef41882a7be254d6180db6ecf6f6e4/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ccef41882a7be254d6180db6ecf6f6e4/</guid><description>&lt;h1 id="aiに評価されていると知った人は量を増やし質を落とす--アルゴリズム評価の隠れたコスト"&gt;「AIに評価されている」と知った人は量を増やし質を落とす — アルゴリズム評価の隠れたコスト&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ai_database/status/2029385915911872782"&gt;@ai_database（AIDB）のポスト&lt;/a&gt;が話題になっています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;提出物をAIでレビューするツールや、実際にそれらを使用する人も増えている中、今回カリフォルニア大学などの研究者らは「&amp;ldquo;AIで仕事を評価されている&amp;quot;と知った人は&amp;quot;アウトプットの量は増えるが中身が薄くなる&amp;rdquo;」という現象が有意にあることを実験で確認しました。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;カリフォルニア大学サンタバーバラ校（UCSB）の David Almog、Lucas Lippman、Daniel Martin らが 2026 年 3 月に発表した論文「When an AI Judges Your Work: The Hidden Costs of Algorithmic Assessment」は、AI 評価が人間の行動を構造的に変えてしまうことを実験で証明しました。量は増えるが質は落ちる、外部ツールへの依存は倍増する、高得点の喜びは薄れる — 「AIがだましやすいから手を抜く」ではなく、&lt;strong&gt;人間の目の有無がモチベーションそのものを変える&lt;/strong&gt;という発見です。&lt;/p&gt;
+&lt;h2 id="実験の設計--208-人の画像説明タスク"&gt;実験の設計 — 208 人の画像説明タスク&lt;/h2&gt;
+&lt;p&gt;研究チームは 208 人の参加者をランダムに 2 グループに分けました。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;グループ&lt;/th&gt;
+&lt;th&gt;人数&lt;/th&gt;
+&lt;th&gt;評価者&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;人間評価グループ&lt;/td&gt;
+&lt;td&gt;103 人&lt;/td&gt;
+&lt;td&gt;人間の評価者が採点すると事前に告知&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ChatGPT 評価グループ&lt;/td&gt;
+&lt;td&gt;105 人&lt;/td&gt;
+&lt;td&gt;ChatGPT が採点すると事前に告知&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;タスクは 20 枚の日常風景画像に対して 150〜400 文字の説明文を書くことです。評価基準は「興味深さ」「努力」「正確さ」の 3 項目で、各 0〜3 点（合計 9 点満点）です。&lt;/p&gt;
+&lt;p&gt;重要なのは、&lt;strong&gt;両グループとも実際の評価方法は同じ&lt;/strong&gt;だったことです。違うのは「誰に評価されると思っているか」だけです。つまり、この実験が測定しているのは AI の評価能力ではなく、&lt;strong&gt;「AI に評価される」という認知が人間の行動をどう変えるか&lt;/strong&gt;です。&lt;/p&gt;
+&lt;h2 id="結果--量は増え質は落ちる"&gt;結果 — 量は増え、質は落ちる&lt;/h2&gt;
+&lt;h3 id="量の増加"&gt;量の増加&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;出力文字数:
+人間評価グループ: 229 文字（平均）
+ChatGPT評価グループ: 251 文字（平均） → +9.6%（p &amp;lt; 0.0001）
+作成時間:
+人間評価グループ: 94 秒（平均）
+ChatGPT評価グループ: 85 秒（平均） → -9.6%（p &amp;lt; 0.0001）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ChatGPT 評価グループは&lt;strong&gt;より短い時間で、より多くの文字数&lt;/strong&gt;を生産しました。一見すると生産性が向上しているように見えます。&lt;/p&gt;</description></item><item><title>NotebookLM 2026年完全ガイド — 9つのStudio機能とハルシネーションを構造的に防ぐ設計</title><link>https://hdknr.github.io/blogs/posts/2026/03/9a79f28c1f2c7ee097e43cfad587b6a3/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/9a79f28c1f2c7ee097e43cfad587b6a3/</guid><description>&lt;h1 id="notebooklm-2026-年完全ガイド--9-つの-studio-機能とハルシネーションを構造的に防ぐ設計"&gt;NotebookLM 2026 年完全ガイド — 9 つの Studio 機能とハルシネーションを構造的に防ぐ設計&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ai_jitan"&gt;えーたん(@ai_jitan)&lt;/a&gt; 氏が「NotebookLM の全機能を、本気で全部書く。【2026 年完全版】」という note 記事を公開し、大きな反響を呼んでいます。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;保存必須！！ってか NotebookLM 使ってない人、マジで損してる。1 日の時間増えますよ。営業マンとかもまじで
+— &lt;a href="https://x.com/via00via/status/2029047906888724689"&gt;@Via00Via&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;渾身の一撃。全 X 民は完全必読で保存必須
+— &lt;a href="https://x.com/shintaro2575/status/2029054787459924012"&gt;@shintaro2575&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;元記事: &lt;a href="https://note.com/ai_jitan"&gt;NotebookLM の全機能を、本気で全部書く。【2026 年完全版】（note）&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;2026 年現在、NotebookLM は単なる「AI チャットツール」ではありません。音声・動画・スライド・マインドマップ・クイズを自動生成する &lt;strong&gt;9 つの Studio 機能&lt;/strong&gt;を備え、「自分のソースだけに基づいて回答する」というハルシネーション抑止の設計を持つ、文書分析・知識整理の実務ツールです。&lt;/p&gt;
+&lt;h2 id="notebooklm-とは"&gt;NotebookLM とは&lt;/h2&gt;
+&lt;p&gt;Google が提供する AI ツールで、&lt;strong&gt;自分がアップロードしたドキュメントだけを情報源として使う&lt;/strong&gt;のが最大の特徴です。ChatGPT や Claude が学習データ全体から回答を生成するのに対し、NotebookLM はアップロードされたソース外の情報を出力しません。&lt;/p&gt;
+&lt;h3 id="基盤技術"&gt;基盤技術&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;基盤モデル&lt;/td&gt;
+&lt;td&gt;Gemini 2.5 Flash（2025 年 5 月移行）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;動作原理&lt;/td&gt;
+&lt;td&gt;ソースグラウンディング（実質的に RAG）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;最大ソース数&lt;/td&gt;
+&lt;td&gt;50 件/ノートブック（Pro 版は 300 件）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;対応形式&lt;/td&gt;
+&lt;td&gt;PDF、Google ドキュメント、スライド、URL、テキスト、音声、YouTube&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Google のエンジニアは「RAG（Retrieval-Augmented Generation）」という用語を意図的に避け、「&lt;strong&gt;ソースグラウンディング&lt;/strong&gt;」と呼んでいます。動作原理は以下の通りです。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;1. アップロードしたドキュメントをベクトル空間にインデックス化
+2. 質問に対して最も関連性の高いチャンクを検索・取得
+3. Gemini が該当チャンクを参照して回答を生成
+4. レスポンスに各ソースへのインライン引用を付与
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;ソース外の情報を出力しない&lt;/strong&gt;設計のため、ハルシネーションリスクが構造的に低く抑えられます。これが法務・医療・内部資料分析など、信頼性が重要な業務で選ばれる理由です。&lt;/p&gt;</description></item><item><title>「Claude Ads」の正体 — Anthropic 公式ではない個人開発スキルが日本でバズった構造を解剖する</title><link>https://hdknr.github.io/blogs/posts/2026/03/6648ce53fd0768e75cefc260e48fbbf6/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/6648ce53fd0768e75cefc260e48fbbf6/</guid><description>&lt;h1 id="claude-adsの正体--anthropic-公式ではない個人開発スキルが日本でバズった構造を解剖する"&gt;「Claude Ads」の正体 — Anthropic 公式ではない個人開発スキルが日本でバズった構造を解剖する&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/lapper_s_high/status/2028735162608169371"&gt;@lapper_s_high 氏のポスト&lt;/a&gt;が、「Claude Ads」の名前が引き起こした混乱を端的に指摘しています（いいね 482）。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;開発者も日本でこんなに話題になるなんて思わなかったのでは・・&lt;/p&gt;
+&lt;p&gt;Claude Adsなんて名前つけるから。。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;引用元の &lt;a href="https://x.com/ryottaman/status/2028668064615801079"&gt;@ryottaman 氏のポスト&lt;/a&gt;（表示 27万、ブックマーク 390）が拡散の起点となり、日本の SNS では「Anthropic が広告運用ツールを出した」という誤解が広がりました。&lt;/p&gt;
+&lt;p&gt;実際には、Claude Ads は **Anthropic の公式製品ではなく、個人開発者が GitHub に公開した Claude Code 向けのスキル（拡張機能）**です。本記事では、なぜこの混乱が起きたのか、Claude Ads の実態は何なのか、そして Claude Code のスキルシステムがどのように機能するのかを解説します。&lt;/p&gt;
+&lt;h2 id="なぜ混乱が起きたのか--3つの偶然の重なり"&gt;なぜ混乱が起きたのか — 3つの偶然の重なり&lt;/h2&gt;
+&lt;h3 id="偶然1-anthropic-のスーパーボウル-cm"&gt;偶然1: Anthropic のスーパーボウル CM&lt;/h3&gt;
+&lt;p&gt;2026年2月、Anthropic はスーパーボウル第60回大会で CM を放映しました。キャッチコピーは &lt;strong&gt;「Ads are coming to AI. But not to Claude.」&lt;/strong&gt;（広告は AI にやって来る。だが、Claude には来ない）。OpenAI が ChatGPT への広告導入を発表した直後のタイミングで、「Claude は広告を入れない」と宣言する内容でした。&lt;/p&gt;
+&lt;p&gt;この CM は大きな話題となり、OpenAI の Sam Altman CEO が「面白いが明らかに不誠実」と反論する事態にまで発展しています。&lt;/p&gt;
+&lt;h3 id="偶然2-claude-adsという名前"&gt;偶然2: 「Claude Ads」という名前&lt;/h3&gt;
+&lt;p&gt;その直後、個人開発者の Daniel Agrici 氏が GitHub に公開したのが &lt;a href="https://github.com/AgriciDaniel/claude-ads"&gt;claude-ads&lt;/a&gt; です。これは Claude Code で広告アカウントを監査するスキルであり、「Claude を使って Ads（広告）を分析する」という意味での命名でした。&lt;/p&gt;</description></item><item><title>AnimaWorks 脳科学5層記憶 × マルチエージェント「文脈崩壊」問題への解答</title><link>https://hdknr.github.io/blogs/posts/2026/03/1414271c913ac644731736187882cee2/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1414271c913ac644731736187882cee2/</guid><description>&lt;h1 id="animaworks-脳科学5層記憶--マルチエージェント文脈崩壊問題への解答"&gt;AnimaWorks 脳科学5層記憶 × マルチエージェント「文脈崩壊」問題への解答&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/AI_masaou"&gt;まさお@AI駆動開発さん&lt;/a&gt;が、マルチエージェントの最大の課題である「長期タスクで文脈が壊れる」問題に対して、脳科学ベースの記憶システムで挑むOSS「AnimaWorks」を紹介しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;マルチエージェントの最大の課題「長期タスクで文脈が壊れる」に、脳科学ベースの記憶システムで挑んでいるOSSがある。それが『AnimaWorks』。エージェントを「ステートレスな関数」ではなく「組織の中の人」として設計するフレームワーク。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://x.com/AI_masaou/status/2029134762447667373"&gt;https://x.com/AI_masaou/status/2029134762447667373&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;21 いいね・2 RT を集めたこのポストが注目するのは、従来のマルチエージェントが抱えるコンテキストウィンドウの限界を、「記憶の蓄積・整理・忘却」というサイクルで乗り越えようとする設計思想です。&lt;/p&gt;
+&lt;h2 id="マルチエージェントの文脈崩壊問題"&gt;マルチエージェントの「文脈崩壊」問題&lt;/h2&gt;
+&lt;h3 id="llm-の記憶の仕組み"&gt;LLM の「記憶」の仕組み&lt;/h3&gt;
+&lt;p&gt;まず前提として、LLM（ChatGPT や Claude など）には人間のような記憶がありません。LLM が「覚えている」ように見えるのは、会話の全履歴を毎回テキストとして入力に含めているからです。この入力テキスト全体を&lt;strong&gt;コンテキストウィンドウ&lt;/strong&gt;と呼びます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;┌─────────────────────────────────────┐
+│ コンテキストウィンドウ（例: 200K トークン） │
+│ │
+│ システム指示 │
+│ ユーザー: こんにちは │
+│ AI: こんにちは！ │
+│ ユーザー: Pythonで関数を書いて │
+│ AI: def hello(): ... │
+│ ...（数百ターンの会話履歴） │ ← 会話が長くなるほど膨らむ
+└─────────────────────────────────────┘
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="ウィンドウの物理的限界"&gt;ウィンドウの物理的限界&lt;/h3&gt;
+&lt;p&gt;コンテキストウィンドウには上限があります（Claude で約 200K トークン、日本語で約 10〜15 万文字）。長期タスクでは会話履歴がこの上限に達し、&lt;strong&gt;古い情報から順に切り捨てられます&lt;/strong&gt;。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;タスク開始時:
+「このプロジェクトでは認証にJWTを使う方針です」 ← 重要な初期方針
+... 200ターン後 ...
+「ログイン機能を実装して」
+→ エージェントは JWT の方針を忘れており、
+セッション認証で実装してしまう
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="注意力の希釈lost-in-the-middle"&gt;注意力の希釈（Lost in the Middle）&lt;/h3&gt;
+&lt;p&gt;ウィンドウ内に収まっていても、情報量が多すぎると LLM の「注意力」が分散します。研究では、コンテキストの&lt;strong&gt;先頭と末尾&lt;/strong&gt;の情報は活用されやすいが、&lt;strong&gt;中間部分は見落とされやすい&lt;/strong&gt;ことが分かっています。&lt;/p&gt;</description></item><item><title>Anthropic、ChatGPT からの移行ツール提供開始 --- メモリインポートと App Store 1位の背景</title><link>https://hdknr.github.io/blogs/posts/2026/03/b8b0f06e9ac13cce154f50e510c2fdc7/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/b8b0f06e9ac13cce154f50e510c2fdc7/</guid><description>&lt;h1 id="anthropicchatgpt-からの移行ツール提供開始--メモリインポートと-app-store-1-位の背景"&gt;Anthropic、ChatGPT からの移行ツール提供開始 &amp;mdash; メモリインポートと App Store 1 位の背景&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/itm_aiplus/status/2028625171997966782"&gt;ITmedia AI+ が X で報じた&lt;/a&gt;ように、Anthropic が ChatGPT などの競合サービスから Claude への移行を支援するツールの提供を開始しました。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Anthropic、ChatGPT などから Claude への移行をしやすくするツール提供開始&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;2026 年 3 月 2 日、Claude は米国 App Store の無料アプリダウンロードチャートで &lt;strong&gt;1 位&lt;/strong&gt;に躍り出ました。この記事では、メモリインポート機能の仕組みと、その背景にある ChatGPT 解約運動について解説します。&lt;/p&gt;
+&lt;h2 id="メモリインポート機能とは"&gt;メモリインポート機能とは&lt;/h2&gt;
+&lt;h3 id="概要"&gt;概要&lt;/h3&gt;
+&lt;p&gt;Anthropic は &lt;a href="https://claude.com/import-memory"&gt;claude.com/import-memory&lt;/a&gt; でメモリインポート機能を公開しました。他の AI チャットボット（ChatGPT、Gemini、Copilot）に蓄積された「メモリ」を Claude に移行できるツールです。&lt;/p&gt;
+&lt;p&gt;AI チャットボットの「メモリ」とは、過去の会話から学習したユーザーの好み・背景情報・利用パターンなどの記憶です。ChatGPT では「Memory」、Gemini では「Gems」として保存されています。&lt;/p&gt;
+&lt;h3 id="移行の手順3-ステップ"&gt;移行の手順（3 ステップ）&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;ステップ 1: Anthropic が提供するプロンプトをコピー
+claude.com/import-memory にアクセス
+移行用プロンプトをコピーする
+ステップ 2: 現在の AI サービスにペースト
+ChatGPT / Gemini / Copilot にプロンプトを貼り付け
+AI が保存しているメモリをテキストブロックとして出力
+ステップ 3: Claude のメモリ設定にペースト
+出力されたテキストを Claude のメモリ設定に貼り付け
+Claude が内容を解析し、メモリとして取り込む
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;インポートしたメモリは約 24 時間で Claude に反映されます。その後、Settings &amp;gt; Capabilities &amp;gt; View and edit your memory から個別に確認・編集・削除が可能です。&lt;/p&gt;</description></item><item><title>Ollama で Qwen3 を動かす初心者ガイド — 日本語最強ローカルLLMを自分のPCで使う方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/9c65e3a8bc648a1493bf0a8fe0fa3bb8/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/9c65e3a8bc648a1493bf0a8fe0fa3bb8/</guid><description>&lt;h1 id="ollama-で-qwen3-を動かす初心者ガイド--日本語最強ローカル-llm-を自分の-pc-で使う方法"&gt;Ollama で Qwen3 を動かす初心者ガイド — 日本語最強ローカル LLM を自分の PC で使う方法&lt;/h1&gt;
+&lt;p&gt;「ChatGPT みたいな AI を、自分の PC だけで動かせたら」と思ったことはありませんか。Ollama と Qwen3 を使えば、それが実現できます。この記事では、&lt;a href="https://saiteki-ai.com/basics/ai-tool/ollama/ollama-qwen/"&gt;Saiteki AI の解説記事&lt;/a&gt;をベースに、初心者でもわかるように Ollama と Qwen3 の導入手順をまとめました。&lt;/p&gt;
+&lt;h2 id="まず知っておきたいllmランタイムエージェントの-3-層構造"&gt;まず知っておきたい：LLM・ランタイム・エージェントの 3 層構造&lt;/h2&gt;
+&lt;p&gt;AI の世界には、混同しやすい 3 つの概念があります。この記事で扱う Ollama と Qwen がどこに位置するかを最初に整理しましょう。&lt;/p&gt;
+&lt;h3 id="レストランに例えると"&gt;レストランに例えると&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;お客さん（あなた）
+↓ 「パスタを作って」
+ウェイター（AI エージェント） ← 注文を聞き、判断し、段取りを組む
+↓ 「この食材でこう調理して」
+キッチン設備（ランタイム） ← オーブンや鍋。料理を物理的に実行する環境
+↓
+シェフの腕＝レシピの知識（LLM） ← 実際に「どう調理するか」を知っている頭脳
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;層&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;th&gt;具体例&lt;/th&gt;
+&lt;th&gt;自分で判断するか&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;LLM&lt;/strong&gt;（AI モデル）&lt;/td&gt;
+&lt;td&gt;言葉を理解し、回答を生成する「頭脳」&lt;/td&gt;
+&lt;td&gt;Qwen3, Llama3, Gemma2&lt;/td&gt;
+&lt;td&gt;しない（聞かれたことに答えるだけ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;ランタイム&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;LLM をメモリに読み込み、動かす「実行環境」&lt;/td&gt;
+&lt;td&gt;Ollama, vLLM, llama.cpp&lt;/td&gt;
+&lt;td&gt;しない（言われた通り動かすだけ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;AI エージェント&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;LLM を使って自律的に「仕事」をこなすプログラム&lt;/td&gt;
+&lt;td&gt;Claude Code, Devin, Dify&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;する&lt;/strong&gt;（目標に向かって複数ステップを自分で組み立てる）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="3-つの関係"&gt;3 つの関係&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;AI エージェント（Claude Code など）
+↓ 「この質問を LLM に投げて」
+ランタイム（Ollama など）
+↓ モデルをメモリに読み込んで推論実行
+LLM（Qwen3 など）
+↓ 回答を生成
+ランタイム → エージェントに結果を返す
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;LLM&lt;/strong&gt; は「頭脳」。質問されたら答えを返すが、自分からは何もしない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ランタイム&lt;/strong&gt; は「エンジン」。LLM を動かすが、何を質問するかは決めない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント&lt;/strong&gt; は「ドライバー」。ランタイム経由で LLM を呼び出し、結果を見て次の行動を自分で決める&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;この記事で扱うのは、LLM（Qwen3）とランタイム（Ollama）の 2 つです。&lt;/strong&gt; エージェントは含みませんが、Ollama で動かした Qwen3 を Claude Code や Dify などのエージェントのバックエンドとして使うことも可能です。&lt;/p&gt;</description></item><item><title>「AIが覚醒する魔法の言葉」は本当に効くのか — プロンプトエンジニアリングの実態と公式ガイドの教え</title><link>https://hdknr.github.io/blogs/posts/2026/03/7531bfaf8041fb404827e0361645b3f7/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/7531bfaf8041fb404827e0361645b3f7/</guid><description>&lt;h1 id="aiが覚醒する魔法の言葉は本当に効くのか--プロンプトエンジニアリングの実態と公式ガイドの教え"&gt;「AIが覚醒する魔法の言葉」は本当に効くのか — プロンプトエンジニアリングの実態と公式ガイドの教え&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/fit_youtubead/status/2028384815486222807"&gt;@fit_youtubead 氏のポスト&lt;/a&gt;が、Claude と ChatGPT で使える「魔法のプロンプト」を紹介し、大きな反響を呼んでいます。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「最高の専門家として、思考プロセスを分解し、初心者にも再現できる形で5ステップで出力してください」&lt;/p&gt;
+&lt;p&gt;これだけ。なぜ強いのか？理由は3つ。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;役割を与える → AIの精度が跳ね上がる&lt;/li&gt;
+&lt;li&gt;思考を分解させる → 中身が薄くならない&lt;/li&gt;
+&lt;li&gt;再現性を指定する → 実用的で使えるアウトプットになる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;確かに、雑な指示よりも構造化された指示の方が良い結果を得られるのは事実です。しかし「魔法の言葉」と呼ぶには、いくつか知っておくべきことがあります。本記事では、ツイートで紹介された3つのテクニックを、Anthropic と OpenAI の公式ガイドおよび研究論文に照らし合わせて検証します。&lt;/p&gt;
+&lt;h2 id="テクニック1-役割を与えるロールプロンプティング"&gt;テクニック1: 役割を与える（ロールプロンプティング）&lt;/h2&gt;
+&lt;p&gt;「最高の専門家として」のように、AI に特定の役割やペルソナを与えるテクニックです。&lt;/p&gt;
+&lt;h3 id="公式ガイドの見解"&gt;公式ガイドの見解&lt;/h3&gt;
+&lt;p&gt;Anthropic は&lt;a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview"&gt;プロンプトエンジニアリングのベストプラクティス&lt;/a&gt;で、ロールプロンプティングを推奨テクニックの1つとして挙げています。「法律アドバイザー」「データアナリスト」「カスタマーサポート担当」のように、具体的な文脈に合わせてモデルの声とふるまいを調整する手法です。&lt;/p&gt;
+&lt;p&gt;OpenAI も&lt;a href="https://platform.openai.com/docs/guides/prompt-engineering"&gt;公式ガイド&lt;/a&gt;でシステムプロンプトによる役割設定を推奨しています。&lt;/p&gt;
+&lt;h3 id="研究が示す実態"&gt;研究が示す実態&lt;/h3&gt;
+&lt;p&gt;ところが、学術的な研究を見ると、ロールプロンプティングの効果は「場合による」というのが正確な答えです。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;研究&lt;/th&gt;
+&lt;th&gt;結果&lt;/th&gt;
+&lt;th&gt;対象モデル&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Better Zero-Shot Reasoning with Role-Play Prompting&lt;/td&gt;
+&lt;td&gt;AQuA データセットで精度が53.5%→63.8%に向上（+10.3pt）&lt;/td&gt;
+&lt;td&gt;GPT-3.5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ExpertPrompting&lt;/td&gt;
+&lt;td&gt;詳細な専門家ペルソナが単純なペルソナを大幅に上回る&lt;/td&gt;
+&lt;td&gt;複数モデル&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;When &amp;ldquo;A Helpful Assistant&amp;rdquo; Is Not Really Helpful&lt;/td&gt;
+&lt;td&gt;追加のペルソナは性能を向上させない&lt;/td&gt;
+&lt;td&gt;4モデルファミリー&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Persona is a Double-edged Sword&lt;/td&gt;
+&lt;td&gt;GPT-4ではペルソナの有無で差は最小限&lt;/td&gt;
+&lt;td&gt;GPT-4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;a href="https://www.prompthub.us/blog/role-prompting-does-adding-personas-to-your-prompts-really-make-a-difference"&gt;PromptHub の検証記事&lt;/a&gt;は、これらの研究を総合して以下のように結論づけています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;創作的なタスク&lt;/strong&gt;（文体の調整、トーンの統一）では効果がある&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;精度ベースのタスク&lt;/strong&gt;（分類、計算、ファクトチェック）では、新しいモデルほど効果が薄い&lt;/li&gt;
+&lt;li&gt;「天才ペルソナが愚か者ペルソナより劣る」という矛盾した結果も報告されている&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり、「専門家として」と付けるだけで「精度が跳ね上がる」わけではありません。効果があるのは、役割指定によってモデルの出力スタイルや視点が適切に制約されるケースです。&lt;/p&gt;</description></item><item><title>AnimaWorks — 「AIだけの会社組織」を作る日本発フレームワークの設計思想</title><link>https://hdknr.github.io/blogs/posts/2026/03/5c67205cc36835eeb883c355278466b4/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/5c67205cc36835eeb883c355278466b4/</guid><description>&lt;h1 id="animaworks--aiだけの会社組織を作る日本発フレームワークの設計思想"&gt;AnimaWorks — 「AIだけの会社組織」を作る日本発フレームワークの設計思想&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ryoma_nakajima/status/2028393374991208742"&gt;りょうま(@ryoma_nakajima)氏のポスト&lt;/a&gt;で紹介された「AnimaWorks」が注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;日本人が開発している「AIだけで作る会社組織」フレームワークを試してみる。AIに性格を指定するところから始まるのが近未来感すごすぎて好き
+— りょうま(@ryoma_nakajima)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;72,000超の表示、447ブックマークという反響は、「AIエージェントに組織を作らせる」というアイデアへの強い関心を示しています。元になった&lt;a href="https://x.com/medmuspg/status/2028393374991208742"&gt;げれげれ(@medmuspg)氏のポスト&lt;/a&gt;では、OpenClawとの違いを「1人の優秀なAI秘書」と「AIだけの会社組織」という対比で説明しています。&lt;/p&gt;
+&lt;p&gt;本記事では &lt;a href="https://github.com/xuiltul/animaworks"&gt;AnimaWorks&lt;/a&gt; の設計思想を掘り下げ、マルチエージェントフレームワークの現在地を整理します。&lt;/p&gt;
+&lt;h2 id="animaworks-とは何か"&gt;AnimaWorks とは何か&lt;/h2&gt;
+&lt;p&gt;AnimaWorks は「Organization-as-Code」を標榜する、自律型AIエージェントチームのためのオープンソースフレームワークです。Apache License 2.0で公開されており、10,600行以上のPythonコードで構成されています。&lt;/p&gt;
+&lt;p&gt;コアの思想は明快です。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Imperfect individuals collaborating through structure outperform any single omniscient actor.&amp;quot;（不完全な個体が構造を通じて協力すれば、単一の全知の存在を凌駕する）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;開発者&lt;/td&gt;
+&lt;td&gt;xuiltul（日本人開発者）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;言語&lt;/td&gt;
+&lt;td&gt;Python（10,600行以上）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ライセンス&lt;/td&gt;
+&lt;td&gt;Apache License 2.0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;対応モデル&lt;/td&gt;
+&lt;td&gt;Claude, GPT-4o, Gemini, Mistral, Ollama 等&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;実行モード&lt;/td&gt;
+&lt;td&gt;4種（Claude Agent SDK / Codex SDK / LiteLLM / Basic）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;UI&lt;/td&gt;
+&lt;td&gt;Webダッシュボード + 3Dワークスペース + 音声チャット&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="openclaw-との決定的な違い"&gt;OpenClaw との決定的な違い&lt;/h2&gt;
+&lt;p&gt;OpenClaw と AnimaWorks は同じ「AIエージェント」カテゴリに分類されますが、設計思想が根本的に異なります。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;観点&lt;/th&gt;
+&lt;th&gt;OpenClaw&lt;/th&gt;
+&lt;th&gt;AnimaWorks&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;設計思想&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;1人の優秀なAI秘書&lt;/td&gt;
+&lt;td&gt;AIだけの会社組織&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;エージェント数&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;基本は1体（拡張でマルチ可）&lt;/td&gt;
+&lt;td&gt;最初からマルチエージェント前提&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;関係性&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ユーザーとエージェントの1対1&lt;/td&gt;
+&lt;td&gt;上司・部下の階層構造&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;記憶&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;コンテキストウィンドウ依存&lt;/td&gt;
+&lt;td&gt;神経科学に着想を得た永続記憶&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;通信&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ユーザーへの応答&lt;/td&gt;
+&lt;td&gt;エージェント間の非同期メッセージング&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;カプセル化&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;なし（透過的）&lt;/td&gt;
+&lt;td&gt;各エージェントの内部は他から不可視&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;開発元&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Peter Steinberger（オーストリア、現OpenAI）&lt;/td&gt;
+&lt;td&gt;xuiltul（日本）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この違いは単なる機能差ではなく、&lt;strong&gt;組織論&lt;/strong&gt;に基づく設計かどうかの差です。AnimaWorks は「不完全な個体の協力」を前提に設計されており、現実の企業組織と同じく、情報の非対称性やコミュニケーションコストを意図的に組み込んでいます。&lt;/p&gt;</description></item><item><title>AIチャットボットのプライバシー問題 — スタンフォード大学の研究が暴いた6社の構造的欠陥</title><link>https://hdknr.github.io/blogs/posts/2026/03/7974809c97ee2b8e77047a7497ef9473/</link><pubDate>Sun, 01 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/7974809c97ee2b8e77047a7497ef9473/</guid><description>&lt;h2 id="aiチャットボットにあなたのプライバシーは存在しない--スタンフォード大学が暴いた構造的欠陥"&gt;AIチャットボットにあなたのプライバシーは存在しない — スタンフォード大学が暴いた構造的欠陥&lt;/h2&gt;
+&lt;p&gt;スタンフォード大学の研究チームが、米国の主要AIチャットボット6社のプライバシーポリシーを体系的に分析した論文 &lt;em&gt;&amp;ldquo;User Privacy and Large Language Models&amp;rdquo;&lt;/em&gt; を発表しました。その結論は明確です——&lt;strong&gt;全6社がユーザーの会話データをデフォルトでモデル学習に利用しており、実効的な保護は極めて限定的&lt;/strong&gt;です。&lt;/p&gt;
+&lt;h3 id="論文概要"&gt;論文概要&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;タイトル&lt;/td&gt;
+&lt;td&gt;User Privacy and Large Language Models: An Analysis of Frontier Developers&amp;rsquo; Privacy Policies&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;著者&lt;/td&gt;
+&lt;td&gt;Jennifer King, Kevin Klyman, Fotis Gaspelos, Tiffany Saade, Victoria Bhatt&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;所属&lt;/td&gt;
+&lt;td&gt;Stanford University&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;発表&lt;/td&gt;
+&lt;td&gt;2025年10月（AAAI AIES 掲載）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;論文&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://arxiv.org/abs/2509.05382"&gt;arXiv:2509.05382&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="対象6社"&gt;対象6社&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;企業&lt;/th&gt;
+&lt;th&gt;チャットボット&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Amazon&lt;/td&gt;
+&lt;td&gt;Nova&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Anthropic&lt;/td&gt;
+&lt;td&gt;Claude&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Google&lt;/td&gt;
+&lt;td&gt;Gemini&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Meta&lt;/td&gt;
+&lt;td&gt;Meta AI&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Microsoft&lt;/td&gt;
+&lt;td&gt;Copilot&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;OpenAI&lt;/td&gt;
+&lt;td&gt;ChatGPT&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h3 id="1-データの統合-会話が資産として再利用される構造"&gt;1. データの「統合」—— 会話が資産として再利用される構造&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;全6社がデフォルトでモデル学習に利用&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Anthropic は長らく「消費者の会話データを学習に使わない」と差別化していましたが、2025年9月にオプトイン → オプトアウトへ転換。これにより全6社がデフォルト学習利用に揃いました。&lt;/p&gt;</description></item><item><title>AI は会話が長くなるほど「迷子」になる — Microsoft × Salesforce の研究解説</title><link>https://hdknr.github.io/blogs/posts/2026/02/61e0abd5ba76e70dabc257c5f0e6560b/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/61e0abd5ba76e70dabc257c5f0e6560b/</guid><description>&lt;h1 id="ai-は会話が長くなるほど迷子になる--microsoft--salesforce-の衝撃の研究"&gt;AI は会話が長くなるほど「迷子」になる — Microsoft × Salesforce の衝撃の研究&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;紹介ポスト: &lt;a href="https://x.com/kosuke_agos/status/2023934450929987864"&gt;kosuke_agos&lt;/a&gt;
+論文: &lt;a href="https://arxiv.org/html/2505.06120v1"&gt;LLMs Get Lost In Multi-Turn Conversation&lt;/a&gt;
+Microsoft Research: &lt;a href="https://www.microsoft.com/en-us/research/publication/llms-get-lost-in-multi-turn-conversation/"&gt;公式ページ&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;「AI と長く会話するほど、AI の知能が劣化する」— これは体感ではなく、Microsoft Research と Salesforce Research が &lt;strong&gt;20万件以上の AI 会話を分析&lt;/strong&gt; して科学的に証明した事実である。&lt;/p&gt;
+&lt;p&gt;論文タイトルは &lt;strong&gt;&amp;ldquo;LLMs Get Lost In Multi-Turn Conversation&amp;rdquo;&lt;/strong&gt;（LLM はマルチターン会話で迷子になる）。GPT-4.1、Claude 3.7 Sonnet、Gemini 2.5 Pro を含む 15 モデル全てで、会話が長くなるほど性能が劇的に低下することが明らかになった。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="衝撃の数字"&gt;衝撃の数字&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;指標&lt;/th&gt;
+&lt;th&gt;数値&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;平均性能低下&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;39%&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;不安定性（unreliability）の増大&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;+112%&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;精度の変化&lt;/td&gt;
+&lt;td&gt;90% → 約 51%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;テストしたモデル数&lt;/td&gt;
+&lt;td&gt;15（大小問わず全て劣化）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最も重要な発見: &lt;strong&gt;高性能モデルも小型モデルも、同じように劣化する&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;Claude 3.7 Sonnet、Gemini 2.5 Pro、GPT-4.1 といったトップモデルでも 30〜40% の性能低下が観測された。モデルの「賢さ」では回避できない、構造的な問題であることが判明した。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="研究チームと手法"&gt;研究チームと手法&lt;/h2&gt;
+&lt;h3 id="著者"&gt;著者&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;名前&lt;/th&gt;
+&lt;th&gt;所属&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Philippe Laban&lt;/td&gt;
+&lt;td&gt;Microsoft Research&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Hiroaki Hayashi&lt;/td&gt;
+&lt;td&gt;Salesforce Research&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Yingbo Zhou&lt;/td&gt;
+&lt;td&gt;Salesforce Research&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Jennifer Neville&lt;/td&gt;
+&lt;td&gt;Microsoft Research&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="テスト対象モデル15種"&gt;テスト対象モデル（15種）&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;OpenAI&lt;/strong&gt;: GPT-4o-mini, GPT-4o, o3, GPT-4.1&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Anthropic&lt;/strong&gt;: Claude 3 Haiku, Claude 3.7 Sonnet&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Google&lt;/strong&gt;: Gemini 2.5 Flash, Gemini 2.5 Pro&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Meta&lt;/strong&gt;: Llama 3.1-8B, Llama 3.3-70B, Llama 4 Scout&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;その他&lt;/strong&gt;: Microsoft Phi-4, AI2 OLMo-2-13B, Deepseek-R1, Cohere Command-A&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="shardingシャーディング-現実の会話を再現する手法"&gt;Sharding（シャーディング）— 現実の会話を再現する手法&lt;/h3&gt;
+&lt;p&gt;ユーザーは通常、最初から完璧な指示を出さない。&lt;/p&gt;</description></item><item><title>DSpy</title><link>https://hdknr.github.io/blogs/posts/2024/10/7a9e4e5fd5dc3bbec6d78c35c7e8c98b/</link><pubDate>Fri, 04 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/7a9e4e5fd5dc3bbec6d78c35c7e8c98b/</guid><description>&lt;h1 id="dspy-declarative-sequencing-for-python"&gt;DSPy (Declarative Sequencing for Python)&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dspy-docs.vercel.app/"&gt;https://dspy-docs.vercel.app/&lt;/a&gt; (Programming—not prompting—Language Models)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="dspyについて"&gt;DSPyについて&lt;/h2&gt;
+&lt;p&gt;DSPyは、LMプロンプトとウェイトをアルゴリズム的に最適化するためのフレームワークです、
+特にLMがパイプライン内で1回以上使用される場合。
+LMを使用して複雑なシステムを構築する なし DSPy、あなたは一般的に次のことを行う必要があります:&lt;/p&gt;
+&lt;p&gt;(1)問題をステップに分解する、
+(2)各ステップが個別にうまく機能するまでLMをうまく促す、
+(3)ステップを微調整してうまく連携する、
+(4)合成例を生成する各ステップを調整し、
+(5)これらの例を使用して、より小さなLMを調整してコストを削減します。&lt;/p&gt;
+&lt;p&gt;現在、これは困難で厄介です。パイプライン、LM、またはデータを変更するたびに、すべてのプロンプト（または微調整手順）を変更する必要がある場合があります。&lt;/p&gt;
+&lt;p&gt;これをより体系的ではるかに強力にするために、 DSPy 2つのことを行います。
+まず、プログラムの流れを分離します(modules)各ステップのパラメーター（LMプロンプトとウェイト）から。
+第二に、 DSPy 新しい optimizers、これは、LMコールのプロンプトやウェイトを調整できるLM駆動アルゴリズムです。metric 最大化したい。&lt;/p&gt;
+&lt;p&gt;DSPy のような強力なモデルを日常的に教えることができます
+GPT-3.5 または GPT-4 と地元のモデル T5-base または Llama2-13b タスクではるかに信頼性が高くなること、つまり、より高い品質を持つこと、および/または特定の障害パターンを回避すること。
+DSPy オプティマイザーは 同じ プログラム 異なる 各LMの指示、ショットの少ないプロンプト、および/またはウェイトの更新（finetunes）。
+これは、LMとそのプロンプトが、データから学習できるより大きなシステムの最適化可能な部分としてバックグラウンドにフェードインする新しいパラダイムです。
+tldr; LMでハードタスクを解決するためのプロンプトが少なく、スコアが高く、より体系的なアプローチ。&lt;/p&gt;
+&lt;h3 id="ニューラルネットワークへのアナロジー"&gt;ニューラルネットワークへのアナロジー&lt;/h3&gt;
+&lt;p&gt;ニューラルネットワークを構築するときは、マニュアルを書きません
+for-loops 以上のリスト 手調整 フロート。代わりに、次のようなフレームワークを使用できます
+PyTorch レイヤーを作成する(例: Convolution または Dropout)0次に、オプティマイザー（SGDやAdamなど）を使用して、ネットワークのパラメーターを学習します。&lt;/p&gt;
+&lt;p&gt;同上！DSPy 適切な汎用モジュールを提供します
+（例: ChainOfThought、 ReAct等）、文字列ベースのプロンプトトリックを置き換えます。
+迅速なハッキングと1回限りの合成データジェネレーターを置き換えるには、 DSPy 一般的なオプティマイザーも提供します(BootstrapFewShotWithRandomSearch または MIPRO)、
+これはプログラムのパラメーターを更新するアルゴリズムです。
+コード、データ、アサーション、またはメトリックを変更するときはいつでも、 コンパイル あなたのプログラムをもう一度 DSPy 変更に適合する新しい効果的なプロンプトを作成します。&lt;/p&gt;</description></item><item><title>ChatGPT: PowerPoint生成</title><link>https://hdknr.github.io/blogs/posts/2024/02/ad77d6446a72ddd33623525bcf5e568b/</link><pubDate>Wed, 21 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/ad77d6446a72ddd33623525bcf5e568b/</guid><description>&lt;h1 id="chatgpt-powerpoint-生成"&gt;CHatGPT PowerPoint 生成&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dev.to/copilotkit/how-to-build-ai-powered-powerpoint-app-nextjs-openai-copilotkit-ji2"&gt;How to build: an AI PowerPoint generator (Next.js, OpenAI, CopilotKit)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/CopilotKit/CopilotKit"&gt;https://github.com/CopilotKit/CopilotKit&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>ChatGPT: SQL 生成</title><link>https://hdknr.github.io/blogs/posts/2024/02/161e24aca8022bd7de64375802626f9f/</link><pubDate>Thu, 15 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/161e24aca8022bd7de64375802626f9f/</guid><description>&lt;h1 id="chatgpt-sql-生成"&gt;ChatGPT SQL 生成&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/ademakdogan/ChatSQL"&gt;https://github.com/ademakdogan/ChatSQL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: Bedrock: GenAI</title><link>https://hdknr.github.io/blogs/posts/2024/02/895c111bd79b76d4f8be7a5267a0afc3/</link><pubDate>Tue, 06 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/895c111bd79b76d4f8be7a5267a0afc3/</guid><description>&lt;h1 id="aws-bedrock-genai"&gt;AWS: Bedrock: GenAI&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/bedrock/latest/userguide/what-is-bedrock.html"&gt;Amazon Bedrock とは&lt;/a&gt;
+&lt;a href="https://dev.classmethod.jp/articles/breaing-news-amazon-bedrock-was-released/"&gt;【速報】AWS の生成 AI サービスである Amazon Bedrock がリリースされたので朝イチで触ってみた&lt;/a&gt;
+&lt;a href="https://qiita.com/nasuvitz/items/e6cabec6c000de861d22"&gt;Amazon Bedrock &amp;ldquo;Claude 2&amp;rdquo; と、ChatGPT &amp;ldquo;GPT-4&amp;rdquo; を比較してみる&lt;/a&gt;
+&lt;a href="https://qiita.com/nasuvitz/items/679674d93219cfb8320d"&gt;AWS による生成 AI の新サービス「Amazon Bedrock」の可能性を考察する&lt;/a&gt;
+&lt;a href="https://qiita.com/JamyJamy/items/f1d63d1c3186a0e5d7da"&gt;Amazon Bedrock でモデルごとに画像を生成してみた&lt;/a&gt;
+&lt;a href="https://speakerdeck.com/icoxfog417/amazon-bedrock-nohazimefang"&gt;Bedrock のはじめかた&lt;/a&gt;
+&lt;a href="https://findy-tools.io/products/amazon-bedrock/14/37"&gt;Amazon Bedrock の導入効果をレビューでご紹介（KDDI アジャイル開発センター株式会社-みのるん）&lt;/a&gt;
+&lt;a href="https://aws.amazon.com/jp/blogs/machine-learning/build-generative-ai-chatbots-using-prompt-engineering-with-amazon-redshift-and-amazon-bedrock/"&gt;Build generative AI chatbots using prompt engineering with Amazon Redshift and Amazon Bedrock&lt;/a&gt;
+&lt;a href="https://zenn.dev/spiralai/articles/8af7cbf526c2e1"&gt;GPT 連携アプリ開発時の必須知識、RAG をゼロから解説する。概要＆Python コード例&lt;/a&gt;
+&lt;a href="https://acro-engineer.hatenablog.com/entry/2023/12/20/140000"&gt;Amazon Bedrock の Knowledge base で簡単に RAG を構築&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Github:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/query-structured-data-with-amazon-bedrock"&gt;Query structured data with natural language using Amazon Bedrock&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/amazon-bedrock-workshop"&gt;https://github.com/aws-samples/amazon-bedrock-workshop&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/promptus"&gt;https://github.com/aws-samples/promptus&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;API:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Boto3: &lt;a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock.html"&gt;https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;モデル&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Titan FMs&lt;/li&gt;
+&lt;li&gt;Claude 2&lt;/li&gt;
+&lt;li&gt;Jurassic-2 (&lt;a href="https://docs.ai21.com/docs/python-sdk-with-amazon-bedrock"&gt;Python SDK&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Stable Diffusion&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="claude-2"&gt;Claude 2&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.sms-datatech.co.jp/column/consulting_claude2/"&gt;生成 AI の最新モデル「Claude2」とは？使い方や ChatGPT との違いについても解説&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.anthropic.com/claude/reference/client-sdks"&gt;クライアント SDK&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://10000.co.jp/web/1374/"&gt;GPT-4 と Claude 2 を比較してみました&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://weel.co.jp/media/claude-2.1"&gt;【Claude 2.1】ChatGPT 超え AI の日本語での使い方や API の使用方法、GPT-4 との比較を解説&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://japan.cnet.com/article/35211912/"&gt;Anthropic、「Claude 2.1」をリリース&amp;ndash;15 万ワードに対応、幻覚も半減&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="jurassi-2"&gt;Jurassi-2&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;日本語対応していない&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/moritalous/items/13e5a918266cdcab139e"&gt;AWS の&amp;quot;推しの AI&amp;quot; 「Jurassic-2」を使ってみた！！Bedrock ローンチ前に使えるんやん！&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

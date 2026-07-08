@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Ollama on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ollama/</link><description>Recent content in Ollama on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ollama/index.xml" rel="self" type="application/rss+xml"/><item><title>AMD Ryzen AI Max+ 395 がAIサブスクを終わらせる — ランチボックスサイズのPCで2350億パラメータモデルが走る時代</title><link>https://hdknr.github.io/blogs/posts/2026/06/amd-ryzen-ai-max-395-local-ai-subscription-killer/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/amd-ryzen-ai-max-395-local-ai-subscription-killer/</guid><description>AMD Ryzen AI Max+ 395 は x86 初の大容量 128GB 統合メモリ設計で Qwen3 235B などの巨大モデルをローカル実行可能にした。RTX 5080 比3倍の推論性能と Ollama による移行手順、年間 $5,280 のAIサブスク不要化の試算を解説。</description></item><item><title>SecSuite — OSINT収集からAI修復まで統合したオープンソースセキュリティプラットフォームが登場</title><link>https://hdknr.github.io/blogs/posts/2026/06/secsuite-ai-security-platform/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/secsuite-ai-security-platform/</guid><description>OSINT収集・Web脆弱性診断・APIセキュリティ評価・AI修復支援を一元化したオープンソースツール「SecSuite」が登場。ローカルAI（Ollama）対応で完全オフライン環境でも動作する。</description></item><item><title>OpenHuman — 完全ローカルで動くパーソナルAIアシスタント：プライバシー最優先でChatGPT級の体験を自分のPCで</title><link>https://hdknr.github.io/blogs/posts/2026/05/openhuman-local-ai-assistant/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/openhuman-local-ai-assistant/</guid><description>OpenHumanはRust製オープンソースのローカルAIアシスタント。Memory Tree・Ollama連携・118サービスAuto-fetchでChatGPT級の体験を実現する。ただしデフォルト構成ではTinyHumansへのサブスク課金が前提で、本当に「完全ローカル」にするには追加設定が必要——その構造を解説。</description></item><item><title>macOS キャッシュ掃除チートシート — 開発マシンの数百 GB を取り戻す</title><link>https://hdknr.github.io/blogs/posts/2026/05/macos-cache-cleanup/</link><pubDate>Thu, 07 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/macos-cache-cleanup/</guid><description>macOS 開発マシンに溜まる uv・npm・Docker・JetBrains・Ollama などのキャッシュを安全に削除するコマンド集。月 1 回の定期掃除スクリプト付き。</description></item><item><title>Hermes Agent — Telegram × AI で個人専属エージェントを構築、使うほど成長する「資産型 AI」</title><link>https://hdknr.github.io/blogs/posts/2026/04/hermes-agent-telegram-personal-ai/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/hermes-agent-telegram-personal-ai/</guid><description>Nous Research 製の自己進化型 AI エージェント Hermes Agent を Telegram 連携で 24 時間運用する方法。インストール・ゲートウェイ設定・OpenClaw 移行手順を解説。</description></item><item><title>Open-notebook — NotebookLM をセルフホストできる完全ローカル OSS</title><link>https://hdknr.github.io/blogs/posts/2026/04/open-notebook-notebooklm-oss/</link><pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/open-notebook-notebooklm-oss/</guid><description>NotebookLM の完全ローカル実装 OSS「open-notebook」の機能・導入手順・NotebookLM との比較を解説。Ollama 対応でゼロコスト運用も可能。</description></item><item><title>Gemma 4 31B vs Qwen3.5-27B — ローカルLLM最強はどちらか</title><link>https://hdknr.github.io/blogs/posts/2026/04/gemma4-vs-qwen35-local-llm/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/gemma4-vs-qwen35-local-llm/</guid><description>Google Gemma 4 31BとAlibaba Qwen3.5-27Bをローカル実行の観点で徹底比較。ベンチマーク、メモリ要件、マルチモーダル、日本語対応、推論速度を検証する。</description></item><item><title>OpenClaw + Ollama + Gemma4 でローカル無料AIエージェントを構築する</title><link>https://hdknr.github.io/blogs/posts/2026/04/openclaw-gemma4-local-setup/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/openclaw-gemma4-local-setup/</guid><description>&lt;p&gt;API課金なしで、ローカル環境にAIエージェントを無制限で運用できるセットアップ方法を紹介します。OpenClaw（エージェントインターフェース）+ Ollama（ローカルモデルサーバー）+ Gemma4（推論エンジン）の組み合わせにより、Telegram・Discord・LINEなどの既存チャンネルともシームレスに連携できます。&lt;/p&gt;
+&lt;h2 id="構成概要"&gt;構成概要&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;コンポーネント&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;OpenClaw&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;AIエージェントのインターフェース・オーケストレーション&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Ollama&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ローカルLLMサーバー（モデルの管理・API提供）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Gemma4&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;推論エンジン（Google製オープンモデル）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この3つを組み合わせることで、クラウドAPIへの依存なしにフル機能のAIエージェントが動作します。&lt;/p&gt;
+&lt;h2 id="セットアップ手順"&gt;セットアップ手順&lt;/h2&gt;
+&lt;h3 id="1-ollama-のインストール"&gt;1. Ollama のインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# macOS / Linux&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://ollama.ai/install.sh | sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Windows&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# https://ollama.ai から インストーラーをダウンロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="2-gemma4-モデルの取得"&gt;2. Gemma4 モデルの取得&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama pull gemma4
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3-openclaw-のインストール"&gt;3. OpenClaw のインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install -g openclaw
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="4-オンボーディングウィザードの実行"&gt;4. オンボーディングウィザードの実行&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openclaw onboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;ウィザードに従ってOllama接続設定とチャンネル連携（Telegram・Discord・LINEなど）を行います。&lt;/p&gt;</description></item><item><title>claw-code-local — Claude Code風のAIコーディングエージェントをローカルLLMで動かす</title><link>https://hdknr.github.io/blogs/posts/2026/04/claw-code-local/</link><pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claw-code-local/</guid><description>Claude Code風のAIコーディングエージェント claw-code-local の紹介。Ollama や LM Studio でローカルLLMを使い、API費用ゼロ・プライバシー保護でコード生成を実現する方法を解説。</description></item><item><title>Onyx（旧 Danswer）完全ガイド — 無料で使えるオープンソース AI プラットフォーム</title><link>https://hdknr.github.io/blogs/posts/2026/04/onyx-open-source-ai-platform/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/onyx-open-source-ai-platform/</guid><description>Onyx（旧 Danswer）は MIT ライセンスの無料 AI プラットフォーム。RAG・AIエージェント・50以上のコネクタを備え、Docker でセルフホスト可能。インストール手順やエディション比較を解説。</description></item><item><title>Claude Code を Ollama でローカル無料実行する方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-ollama-local-free/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-ollama-local-free/</guid><description>Ollama v0.15 以降で Claude Code をローカル LLM バックエンドで無料実行する方法。ollama launch コマンドによるワンコマンドセットアップから、環境変数による手動設定、ハードウェア要件、実用上の注意点まで解説。</description></item><item><title>Claude Code × ローカルLLM で KVキャッシュが毎回無効化される問題と対策</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-local-llm-kv-cache/</link><pubDate>Fri, 13 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-local-llm-kv-cache/</guid><description>&lt;p&gt;Claude Code をローカルLLM（llama.cpp、Ollama など）で使う際に、&lt;strong&gt;毎回プロンプト処理に異常な時間がかかる&lt;/strong&gt;という問題が報告されています。原因は Claude Code が付加する「Attribution Header」によるKVキャッシュの無効化です。設定一つで解決できるので、対処法をまとめます。&lt;/p&gt;
+&lt;h2 id="何が起きているのか"&gt;何が起きているのか&lt;/h2&gt;
+&lt;p&gt;Claude Code v2.1.36 以降、リクエストごとに以下のような Attribution Header がプロンプトの先頭に付加されるようになりました。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;x-anthropic-billing-header: cc_version=xxxx; cc_entrypoint=cli; cch=xxxx;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;この &lt;code&gt;cch&lt;/code&gt; の値がリクエストのたびに変化します。ローカルLLMサーバー（llama.cpp、Ollama、LM Studio など）は&lt;strong&gt;プロンプトの先頭からバイト単位で一致した部分までKVキャッシュを再利用&lt;/strong&gt;する仕組みのため、先頭が毎回変わると&lt;strong&gt;キャッシュが丸ごと無効化&lt;/strong&gt;されます。&lt;/p&gt;
+&lt;p&gt;結果として、数万トークンのシステムプロンプトや会話履歴を毎回ゼロから処理することになり、&lt;strong&gt;推論速度が最大90%低下&lt;/strong&gt;するという報告があります。&lt;/p&gt;
+&lt;h2 id="対策attribution-header-を無効化する"&gt;対策：Attribution Header を無効化する&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;~/.claude/settings.json&lt;/code&gt; の &lt;code&gt;env&lt;/code&gt; セクションに以下を追加します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;env&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;CLAUDE_CODE_ATTRIBUTION_HEADER&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;既に &lt;code&gt;settings.json&lt;/code&gt; がある場合は &lt;code&gt;env&lt;/code&gt; セクション内にキーを追加してください。&lt;/p&gt;
+&lt;h3 id="注意点"&gt;注意点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;export CLAUDE_CODE_ATTRIBUTION_HEADER=0&lt;/code&gt; ではダメ&lt;/strong&gt;。シェルの環境変数として設定しても反映されません。必ず &lt;code&gt;settings.json&lt;/code&gt; 経由で設定します&lt;/li&gt;
+&lt;li&gt;ついでに不要なテレメトリも無効化しておくと、余計な通信を減らせます&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;env&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;CLAUDE_CODE_ATTRIBUTION_HEADER&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;CLAUDE_CODE_ENABLE_TELEMETRY&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="kvキャッシュの仕組みをおさらい"&gt;KVキャッシュの仕組みをおさらい&lt;/h2&gt;
+&lt;p&gt;ローカルLLMサーバーが採用している Prefix Caching（Automatic Prefix Caching）は、プロンプトの&lt;strong&gt;先頭から連続して一致するトークン列&lt;/strong&gt;のKV（Key-Value）テンソルを再利用する仕組みです。&lt;/p&gt;</description></item><item><title>Kali Linux × Ollama × MCP — 完全ローカルで動く AI ペンテスト環境の構築</title><link>https://hdknr.github.io/blogs/posts/2026/03/kali-ollama-mcp-pentesting/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/kali-ollama-mcp-pentesting/</guid><description>&lt;p&gt;Kali Linux チームが、外部 SaaS に一切依存しない&lt;strong&gt;完全ローカルの AI ペンテスト支援環境&lt;/strong&gt;の構築ガイドを&lt;a href="https://www.kali.org/blog/kali-llm-ollama-5ire/"&gt;公式ブログ&lt;/a&gt;で公開した。Ollama でローカル LLM を動かし、MCP（Model Context Protocol）経由で nmap などの Kali ツールを自然言語から操作する構成だ。&lt;/p&gt;
+&lt;h2 id="構成要素"&gt;構成要素&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;コンポーネント&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;th&gt;アーキテクチャ上の位置づけ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Ollama&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ローカル LLM サーバー。llama.cpp のラッパーとしてモデルのダウンロード・サービングを簡素化&lt;/td&gt;
+&lt;td&gt;推論エンジン（脳）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;mcp-kali-server&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Flask ベースの MCP サーバー（127.0.0.1:5000）。nmap, gobuster, nikto, hydra, sqlmap 等の Kali ツールを MCP 経由で公開&lt;/td&gt;
+&lt;td&gt;ツールサーバー（手足）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;5ire&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;デスクトップ AI アシスタント兼 MCP クライアント。ユーザー入力を LLM に送り、LLM の応答からツール呼び出しを検出し、MCP 経由でツールを実行し、結果を LLM に戻すループを回す&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;AI エージェント&lt;/strong&gt;（オーケストレーター）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この構成で「エージェント」に相当するのは &lt;strong&gt;5ire&lt;/strong&gt; だ。LLM（Ollama）は推論を担うだけであり、ツールサーバー（mcp-kali-server）は呼ばれるのを待つだけ。ユーザーの意図を解釈し、LLM とツールの間を仲介して自律的にループを回す 5ire こそがエージェントの役割を果たしている。Claude Code に例えると、Ollama は API の向こう側の Claude モデル、mcp-kali-server は MCP サーバー、5ire は Claude Code 本体に相当する。&lt;/p&gt;</description></item><item><title>ローカルQwenに個人知識を覚えさせたい — ファインチューニング vs RAG</title><link>https://hdknr.github.io/blogs/posts/2026/03/qwen-finetuning-vs-rag/</link><pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/qwen-finetuning-vs-rag/</guid><description>&lt;p&gt;ローカルで Ollama + Qwen を動かしている Mac Studio（M3 Ultra / 96GB）に、NAS 上の PDF やテキストなどのドキュメントを学習させて「個人の知識ベース」として活用したい——そんなとき、ファインチューニングと RAG のどちらを選ぶべきかを整理する。&lt;/p&gt;
+&lt;h2 id="やりたいこと"&gt;やりたいこと&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;NAS に蓄積された個人ドキュメント（PDF、テキスト等）の知識を Qwen に覚えさせたい&lt;/li&gt;
+&lt;li&gt;自分の PC を使った活動に関する知識を、AI が把握している状態にしたい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="選択肢1-ファインチューニングqlora"&gt;選択肢1: ファインチューニング（QLoRA）&lt;/h2&gt;
+&lt;p&gt;モデル自体の重みを更新し、知識を「記憶」させるアプローチ。&lt;/p&gt;
+&lt;h3 id="mac-studio-での実現可能性"&gt;Mac Studio での実現可能性&lt;/h3&gt;
+&lt;p&gt;M3 Ultra / 96GB 統合メモリなら、QLoRA でのファインチューニングは技術的に可能。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;手法&lt;/th&gt;
+&lt;th&gt;必要メモリ目安（7B）&lt;/th&gt;
+&lt;th&gt;ツール&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;QLoRA (4bit)&lt;/td&gt;
+&lt;td&gt;6-8 GB&lt;/td&gt;
+&lt;td&gt;Unsloth, LLaMA-Factory, MLX&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LoRA (16bit)&lt;/td&gt;
+&lt;td&gt;14-16 GB&lt;/td&gt;
+&lt;td&gt;LLaMA-Factory, PEFT&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;フル FT&lt;/td&gt;
+&lt;td&gt;60+ GB&lt;/td&gt;
+&lt;td&gt;非現実的&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Apple Silicon では &lt;strong&gt;MLX&lt;/strong&gt; ベースが最もパフォーマンスが良い。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# MLX での QLoRA 実行例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install mlx-lm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mlx_lm.lora &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --model Qwen/Qwen2.5-Coder-14B-Instruct &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --data ./training_data &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --train &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --batch-size &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --lora-layers &lt;span style="color:#ae81ff"&gt;16&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --iters &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="ファインチューニングの課題"&gt;ファインチューニングの課題&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;最大のボトルネックはデータ準備&lt;/strong&gt;。NAS の生ファイルはそのまま学習データにはならず、instruction 形式への変換が必要になる。&lt;/p&gt;</description></item><item><title>Qwen3.5-27B：個人PCで動く高性能LLMの実力と使い方</title><link>https://hdknr.github.io/blogs/posts/2026/03/qwen35-27b/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/qwen35-27b/</guid><description>&lt;p&gt;Alibaba Cloud の Qwen チームが 2026 年 2 月にリリースした &lt;strong&gt;Qwen3.5-27B&lt;/strong&gt; は、27B パラメータという中規模サイズながら上位モデルに匹敵する性能を発揮する密（dense）モデルです。メモリ効率に優れ、量子化を活用すれば個人の PC でも快適に動作するため「自分専用 AI」を構築するのに最適な選択肢として注目されています。&lt;/p&gt;
+&lt;h2 id="qwen35-27b-の主な特徴"&gt;Qwen3.5-27B の主な特徴&lt;/h2&gt;
+&lt;h3 id="アーキテクチャ"&gt;アーキテクチャ&lt;/h3&gt;
+&lt;p&gt;Qwen3.5-27B は MoE（Mixture of Experts）ではなく、全パラメータが推論時に活性化される &lt;strong&gt;密モデル（dense model）&lt;/strong&gt; です。Gated Delta Networks と Feed Forward Networks を組み合わせた構造で、高い計算密度を実現しています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;パラメータ数&lt;/strong&gt;: 27B（全パラメータ活性化）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト長&lt;/strong&gt;: 262K トークン（最大 1M まで拡張可能）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対応言語&lt;/strong&gt;: 201 言語&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マルチモーダル&lt;/strong&gt;: 視覚・言語の統合能力を搭載&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ベンチマーク性能"&gt;ベンチマーク性能&lt;/h3&gt;
+&lt;p&gt;27B というサイズにもかかわらず、主要ベンチマークで際立った成績を残しています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ベンチマーク&lt;/th&gt;
+&lt;th&gt;スコア&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;MMLU-Pro&lt;/td&gt;
+&lt;td&gt;86.1%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GPQA Diamond&lt;/td&gt;
+&lt;td&gt;85.5%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SWE-bench Verified&lt;/td&gt;
+&lt;td&gt;72.4%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LiveCodeBench&lt;/td&gt;
+&lt;td&gt;80.7%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IFEval&lt;/td&gt;
+&lt;td&gt;95.0%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;HMMT（数学）&lt;/td&gt;
+&lt;td&gt;92.0%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;特に &lt;strong&gt;SWE-bench Verified で 72.4%&lt;/strong&gt; は GPT-5 mini と同等の数値であり、オープンウェイトの 27B 密モデルとしては驚異的な結果です。コーディング、数学、指示追従の各タスクで中規模モデルカテゴリをリードしています。&lt;/p&gt;</description></item><item><title># OpenHands × Ollama ローカルLLM実践記 — Mac Studio M3 Ultra で動かすまでの全記録</title><link>https://hdknr.github.io/blogs/posts/2026/03/4103685108dfb6be44f9a0ec050655a7/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/4103685108dfb6be44f9a0ec050655a7/</guid><description>&lt;h1 id="openhands--ollama-ローカルllm実践記--mac-studio-m3-ultra-で動かすまでの全記録"&gt;OpenHands × Ollama ローカルLLM実践記 — Mac Studio M3 Ultra で動かすまでの全記録&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;: OpenHands（旧OpenDevin）をMac Studio M3 Ultra（96GB）+ Ollama + Qwen3-Coder 30B で動かそうとした。Docker-in-Docker のビルド問題、Playwright依存、ランタイムイメージ手動構築を経てUI起動まで到達したが、30Bモデルのtool calling精度不足で実用には至らなかった。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="1-openhands-とは"&gt;1. OpenHands とは&lt;/h2&gt;
+&lt;p&gt;OpenHands（旧 OpenDevin）は、オープンソースのAIコーディングエージェントプラットフォーム。75以上のLLMプロバイダーに対応し、SWE-bench で Qwen3-Coder 使用時に 69.6% のスコアを記録している。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;公式リポジトリ&lt;/strong&gt;: &lt;a href="https://github.com/All-Hands-AI/OpenHands"&gt;https://github.com/All-Hands-AI/OpenHands&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;特徴:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Web UI でブラウザから操作&lt;/li&gt;
+&lt;li&gt;Docker サンドボックスで安全にコード実行&lt;/li&gt;
+&lt;li&gt;CodeActAgent による自律的なタスク遂行&lt;/li&gt;
+&lt;li&gt;Playwright 統合によるブラウザ操作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-動機--なぜ-openhands-を試したか"&gt;2. 動機 — なぜ OpenHands を試したか&lt;/h2&gt;
+&lt;p&gt;前回の実験で Qwen Code（CLI エージェント）を Ollama + Qwen3-Coder 30B で動かしたが、&lt;strong&gt;複雑な multi-step タスク（GitHub PR レビューなど）で tool calling が破綻&lt;/strong&gt;する問題に直面した。&lt;/p&gt;
+&lt;p&gt;OpenHands は SWE-bench で高スコアを出しており、エージェントスキャフォールディングの力で同じ 30B モデルでも改善されるのでは？という仮説を検証するために試した。&lt;/p&gt;</description></item><item><title>Qwen Code ローカル運用実践記 — Mac Studio M3 Ultra で Ollama + qwen3-coder:30b を動かして分かったこと</title><link>https://hdknr.github.io/blogs/posts/2026/03/9023009193920fd0ad17eda629351b18/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/9023009193920fd0ad17eda629351b18/</guid><description>&lt;h1 id="qwen-code-ローカル運用実践記--mac-studio-m3-ultra-で-ollama--qwen3-coder30b-を動かして分かったこと"&gt;Qwen Code ローカル運用実践記 — Mac Studio M3 Ultra で Ollama + qwen3-coder:30b を動かして分かったこと&lt;/h1&gt;
+&lt;p&gt;Qwen Code（Alibaba Cloud Qwen チームが開発したオープンソース CLI コーディングエージェント）を Mac Studio M3 Ultra（96GB）上で Ollama と組み合わせてローカル運用を試みた実践記録です。環境構築からツール呼び出しの限界まで、実際に手を動かして検証した結果をまとめます。&lt;/p&gt;
+&lt;h2 id="背景と目的"&gt;背景と目的&lt;/h2&gt;
+&lt;p&gt;Claude Code は強力ですが、コードがクラウドに送信されるためプライバシーの懸念があります。Qwen Code は Apache 2.0 ライセンスのオープンソースで、Ollama と組み合わせれば完全ローカルで動作するため、機密コードベースでの利用が期待されます。&lt;/p&gt;
+&lt;p&gt;本記事の検証環境:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;スペック&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;マシン&lt;/td&gt;
+&lt;td&gt;Mac Studio M3 Ultra&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;メモリ&lt;/td&gt;
+&lt;td&gt;96GB ユニファイドメモリ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;メモリ帯域&lt;/td&gt;
+&lt;td&gt;800 GB/s&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ollama&lt;/td&gt;
+&lt;td&gt;v0.15.6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Qwen Code&lt;/td&gt;
+&lt;td&gt;v0.12.0（Fork からローカルビルド）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;モデル&lt;/td&gt;
+&lt;td&gt;qwen3-coder:30b (18GB)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="ステップ1-リポジトリの-fork-と-clone"&gt;ステップ1: リポジトリの Fork と Clone&lt;/h2&gt;
+&lt;p&gt;調査・改造を前提に、まず &lt;a href="https://github.com/QwenLM/qwen-code"&gt;QwenLM/qwen-code&lt;/a&gt; を Fork しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Fork（GitHub CLI）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh repo fork QwenLM/qwen-code --clone&lt;span style="color:#f92672"&gt;=&lt;/span&gt;false
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# devel ブランチを作成してデフォルトに設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# main は upstream との sync 用にクリーンに保つ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh api repos/hdknr/qwen-code/git/refs &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -f ref&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;refs/heads/devel&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -f sha&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;gh api repos/hdknr/qwen-code/git/ref/heads/main --jq &lt;span style="color:#e6db74"&gt;&amp;#39;.object.sha&amp;#39;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh repo edit hdknr/qwen-code --default-branch devel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Clone&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p ~/Projects/qwen
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd ~/Projects/qwen
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh repo clone hdknr/qwen-code
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;ブランチ戦略:&lt;/p&gt;</description></item><item><title>「Claude Code無料で無制限」は本当か × ollama launch claudeの実態と品質ギャップの正直な話</title><link>https://hdknr.github.io/blogs/posts/2026/03/bf2e6519b561967327735da3f05142be/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/bf2e6519b561967327735da3f05142be/</guid><description>&lt;h1 id="claude-code-が無料で無制限は本当か--ollama-launch-claude-の実態と品質ギャップの正直な話"&gt;「Claude Code が無料で無制限」は本当か &amp;mdash; ollama launch claude の実態と品質ギャップの正直な話&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/tusharsoni014/status/2029198384721215662"&gt;@TusharSoni014 氏の X 投稿&lt;/a&gt;が 10 万回以上表示され、2,227 件のブックマークを集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Want Claude Code Unlimited FREE? Follow,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Download Ollama&lt;/li&gt;
+&lt;li&gt;Install Qwen3.5 9B&lt;/li&gt;
+&lt;li&gt;Run this command in your terminal, ollama launch claude &amp;ndash;model qwen3.5:9b&lt;/li&gt;
+&lt;li&gt;Enjoy Unlimited Claude Code fully running 100% Free&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「Claude Code が完全に無料で無制限に使える」という主張です。1,311 件のいいねと 127 件のリツイートを見ると、多くの人がこの情報に飛びついたことがわかります。&lt;/p&gt;
+&lt;p&gt;結論から言えば、&lt;strong&gt;コマンド自体は実在しますが、「Claude Code が無料で動く」という表現は大きな誤解を招きます&lt;/strong&gt;。正確に何が起きているのか、何が失われるのかを解説します。&lt;/p&gt;
+&lt;h2 id="ollama-launch-claude-は実在する"&gt;ollama launch claude は実在する&lt;/h2&gt;
+&lt;h3 id="コマンドの正体"&gt;コマンドの正体&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;ollama launch&lt;/code&gt; は、Ollama v0.15 で追加された&lt;strong&gt;公式コマンド&lt;/strong&gt;です。Claude Code、OpenCode、Codex などのコーディングツールを、環境変数や設定ファイルなしで起動できるようにするものです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 基本的な使い方&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama launch claude &lt;span style="color:#75715e"&gt;# インタラクティブにモデルを選択&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama launch claude --model qwen3-coder &lt;span style="color:#75715e"&gt;# モデルを指定して起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama launch claude --model qwen3.5:9b &lt;span style="color:#75715e"&gt;# ツイートの例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このコマンドが裏でやっていることは、Ollama の &lt;strong&gt;Anthropic Messages API 互換モード&lt;/strong&gt;を利用して、ローカルの LLM を Claude Code のバックエンドとして接続することです。&lt;/p&gt;</description></item><item><title>ローカル LLM を金融取引の意思決定サポートに応用する — コードレビュー 4 段階カスタマイズの転用</title><link>https://hdknr.github.io/blogs/posts/2026/03/cde933b6eb635a778d7b053610aca40a/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cde933b6eb635a778d7b053610aca40a/</guid><description>&lt;h1 id="ローカル-llm-を金融取引の意思決定サポートに応用する--コードレビュー-4-段階カスタマイズの転用"&gt;ローカル LLM を金融取引の意思決定サポートに応用する — コードレビュー 4 段階カスタマイズの転用&lt;/h1&gt;
+&lt;p&gt;前回の記事では、ローカル LLM（Ollama + Qwen3）を社内コードレビューに特化させる 4 段階のカスタマイズ手法を紹介しました。この仕組みは&lt;strong&gt;金融取引の意思決定サポート&lt;/strong&gt;にもそのまま応用できます。&lt;/p&gt;
+&lt;p&gt;個人投資家が株式や BTC などの売買判断を行う際に、ニュース分析・テクニカル指標の解釈・リスク評価を&lt;strong&gt;自分の PC 上で、自分の投資ルールに基づいて&lt;/strong&gt;AI に補助させる構成です。&lt;/p&gt;
+&lt;h2 id="なぜローカル-llm-が金融取引に向いているのか"&gt;なぜローカル LLM が金融取引に向いているのか&lt;/h2&gt;
+&lt;p&gt;金融取引は、AI の活用にローカル環境が特に適している分野です。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;利点&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;プライバシー&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ポートフォリオ・売買履歴・資産額をクラウドに送信しない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;コスト&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;毎日の市場分析やニュース要約を API 課金なしで実行可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;カスタマイズ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;自分の投資スタイル・リスク許容度に完全に特化できる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;速度&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ネットワーク遅延がなく、市場の急変時にも即座に分析可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;独立性&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;API 障害やサービス停止の影響を受けない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;2024 年末時点で個人がビットコインの発行上限の約 69% を保有しており、個人投資家にとって&lt;strong&gt;自分だけの分析ツール&lt;/strong&gt;を持つ意義はますます大きくなっています。&lt;/p&gt;
+&lt;h2 id="コードレビューから金融取引への対応表"&gt;コードレビューから金融取引への対応表&lt;/h2&gt;
+&lt;p&gt;前回の記事の 4 段階がどのように転用できるかを整理します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;レベル&lt;/th&gt;
+&lt;th&gt;コードレビュー&lt;/th&gt;
+&lt;th&gt;金融取引サポート&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;1. Modelfile&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;コーディング規約を教える&lt;/td&gt;
+&lt;td&gt;売買ルール・リスク管理ルールを教える&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;2. RAG&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;障害報告・設計書を検索&lt;/td&gt;
+&lt;td&gt;決算短信・ニュース・四季報を検索&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;3. Few-shot&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;過去のレビュー事例を見せる&lt;/td&gt;
+&lt;td&gt;過去の売買判断の成功/失敗事例を見せる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;4. LoRA&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;PR レビュー履歴で再訓練&lt;/td&gt;
+&lt;td&gt;金融センチメント分析データで再訓練&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;レベル 1：投資ルールを「教える」 ← すぐできる
+レベル 2：市場情報を「渡す」 ← 1〜2日
+レベル 3：売買パターンを「見せる」 ← 数日
+レベル 4：金融の頭脳を「鍛える」 ← 1〜2週間
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="レベル-1modelfile-に投資ルールを埋め込む即日導入"&gt;レベル 1：Modelfile に投資ルールを埋め込む（即日導入）&lt;/h2&gt;
+&lt;p&gt;自分の投資ルール・リスク管理基準をシステムプロンプトとして設定します。&lt;/p&gt;</description></item><item><title>ローカル LLM を社内業務に特化させる 4 段階カスタマイズ — Qwen3 を「より賢く」する仕組み</title><link>https://hdknr.github.io/blogs/posts/2026/03/f7bad4476f8bec3e58bcf01848bfb807/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/f7bad4476f8bec3e58bcf01848bfb807/</guid><description>&lt;h1 id="ローカル-llm-を社内業務に特化させる-4-段階カスタマイズ--qwen3-をより賢くする仕組み"&gt;ローカル LLM を社内業務に特化させる 4 段階カスタマイズ — Qwen3 を「より賢く」する仕組み&lt;/h1&gt;
+&lt;p&gt;Claude Code で生成したコードをローカル LLM（Ollama + Qwen3）でレビューする構成を前回の記事で紹介しました。しかし、汎用モデルのままでは「受注ステータスの遷移ルール」や「金額計算に float を使ってはならない」といった&lt;strong&gt;社内固有のルール&lt;/strong&gt;を知りません。&lt;/p&gt;
+&lt;p&gt;この記事では、Qwen3 を社内業務に特化させ、特定のコーディング規約・業務ルール・過去の障害パターンを踏まえたレビューができるようにする 4 段階のカスタマイズ手法を紹介します。&lt;/p&gt;
+&lt;h2 id="全体像4-段階のカスタマイズ"&gt;全体像：4 段階のカスタマイズ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;レベル&lt;/th&gt;
+&lt;th&gt;手法&lt;/th&gt;
+&lt;th&gt;導入期間&lt;/th&gt;
+&lt;th&gt;効果&lt;/th&gt;
+&lt;th&gt;専門知識&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Modelfile（システムプロンプト）&lt;/td&gt;
+&lt;td&gt;即日&lt;/td&gt;
+&lt;td&gt;ルールベースの指摘&lt;/td&gt;
+&lt;td&gt;不要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;2&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;RAG（社内ドキュメント検索）&lt;/td&gt;
+&lt;td&gt;1〜2 日&lt;/td&gt;
+&lt;td&gt;文脈を踏まえた指摘&lt;/td&gt;
+&lt;td&gt;Docker の基本&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;3&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Few-shot（レビュー事例の学習）&lt;/td&gt;
+&lt;td&gt;数日&lt;/td&gt;
+&lt;td&gt;パターン認識の向上&lt;/td&gt;
+&lt;td&gt;不要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;4&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;LoRA ファインチューニング&lt;/td&gt;
+&lt;td&gt;1〜2 週間&lt;/td&gt;
+&lt;td&gt;モデル自体の精度向上&lt;/td&gt;
+&lt;td&gt;Python・ML の基本&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;レベル 1：ルールを「教える」 ← すぐできる
+レベル 2：資料を「渡す」 ← 1〜2日
+レベル 3：お手本を「見せる」 ← 数日
+レベル 4：頭脳を「鍛える」 ← 1〜2週間
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;推奨&lt;/strong&gt;: レベル 1 から順に導入し、効果を確認しながらステップアップしてください。多くの場合、レベル 1 + 2 で十分な精度が得られます。&lt;/p&gt;</description></item></channel></rss>

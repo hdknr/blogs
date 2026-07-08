@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Serverless on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/serverless/</link><description>Recent content in Serverless on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 26 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/serverless/index.xml" rel="self" type="application/rss+xml"/><item><title>AWS DMS Serverless の OOM 障害と監視の盲点 — 検知漏れの根本原因と対策</title><link>https://hdknr.github.io/blogs/posts/2026/03/dms-oom-recovery/</link><pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/dms-oom-recovery/</guid><description>&lt;p&gt;AWS DMS Serverless Replication（CDC モード）が OOM（Out of Memory）で &lt;code&gt;failed&lt;/code&gt; 状態になり、自動再起動の仕組みが検知できずに長期間停止していた問題について、根本原因と対策をまとめます。&lt;/p&gt;
+&lt;h2 id="構成"&gt;構成&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;RDS (MySQL) → DMS Serverless (CDC) → S3 (Parquet)
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;DMS Serverless Replication で全テーブルの CDC（Change Data Capture）を実行&lt;/li&gt;
+&lt;li&gt;S3 に Parquet 形式で日付パーティション付きで出力&lt;/li&gt;
+&lt;li&gt;EventBridge + Lambda で DMS 停止を検知し自動再起動する仕組みを構築済み&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="発生した事象"&gt;発生した事象&lt;/h2&gt;
+&lt;h3 id="症状"&gt;症状&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;prod 環境の DMS Serverless Replication が &lt;code&gt;failed&lt;/code&gt; 状態で停止&lt;/li&gt;
+&lt;li&gt;エラーメッセージ: &lt;code&gt;Replication out of memory. Stop Reason FATAL_ERROR Error Level FATAL&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;CDC が完全に停止し、S3 へのデータ同期が止まっていた&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="発覚の経緯"&gt;発覚の経緯&lt;/h3&gt;
+&lt;p&gt;手動確認で発見。自動再起動 Lambda の最終実行は約2ヶ月前で、それ以降は検知されていなかった。&lt;/p&gt;
+&lt;h2 id="根本原因"&gt;根本原因&lt;/h2&gt;
+&lt;h3 id="原因-1-eventbridge-ルールのイベントパターンが不完全"&gt;原因 1: EventBridge ルールのイベントパターンが不完全&lt;/h3&gt;
+&lt;p&gt;自動再起動用の EventBridge ルールが &lt;code&gt;REPLICATION_TASK_STOPPED&lt;/code&gt; のみを監視していた。&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>バッチ処理 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%90%E3%83%83%E3%83%81%E5%87%A6%E7%90%86/</link><description>Recent content in バッチ処理 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 13 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%90%E3%83%83%E3%83%81%E5%87%A6%E7%90%86/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code のスキルで「マージ後」の指示が PR 作成中に発火する罠 — バッチ並行実行で起きた wiki コンフリクトの原因と修正</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-skill-post-merge-trap/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-skill-post-merge-trap/</guid><description>&lt;h2 id="症状"&gt;症状&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;blog-batch.sh&lt;/code&gt; で夜間バッチを回した結果、こんな状態になっていた:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;同じ wiki ファイル（&lt;code&gt;content/wiki/concepts/harness-engineering.md&lt;/code&gt;、&lt;code&gt;content/wiki/tools/claude-code.md&lt;/code&gt;）が&lt;strong&gt;複数の blog PR で同時に変更&lt;/strong&gt;されていた&lt;/li&gt;
+&lt;li&gt;main にマージしようとすると毎回コンフリクト&lt;/li&gt;
+&lt;li&gt;直近の #368・#369・#371・#372 はすべてこの原因で手動コンフリクト解消が必要だった&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;調査して原因が判明したので、修正内容と「LLM スキルを書くときに気をつけるべきポイント」を共有する。&lt;/p&gt;
+&lt;h2 id="pr-の中身を見ると-3-コミットあった"&gt;PR の中身を見ると 3 コミットあった&lt;/h2&gt;
+&lt;p&gt;通常の &lt;code&gt;/blog&lt;/code&gt; で作った PR は「記事 1 本分の 1 コミット」のはずだが、見ると 3 コミットあった:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;35a61c2 Add blog post: トレーダーのSランクスキル5選...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;86e5bd4 Update wiki-last-ingest.txt: mark all posts through 2026-05-07 as ingested
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;0bc4e1f Update Wiki: ingest posts 2026-04-15 through 2026-04-21 (5 updated, 16 new pages)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;2 つ目と 3 つ目は &lt;strong&gt;wiki ingest の結果コミット&lt;/strong&gt;。これが各 blog PR に混入していて、複数 PR で同じ wiki ファイルを並行更新 → コンフリクトという流れ。&lt;/p&gt;</description></item></channel></rss>

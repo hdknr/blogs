@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>AI連携 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ai%E9%80%A3%E6%90%BA/</link><description>Recent content in AI連携 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 17 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ai%E9%80%A3%E6%90%BA/index.xml" rel="self" type="application/rss+xml"/><item><title>Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する</title><link>https://hdknr.github.io/blogs/posts/2026/04/obsidian-pkm-second-brain/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/obsidian-pkm-second-brain/</guid><description>&lt;p&gt;メモツールは世の中に溢れている。Notion、Evernote、Google Keep……。その中で &lt;strong&gt;Obsidian&lt;/strong&gt; が開発者やナレッジワーカーに支持され続けている理由は「ローカルファースト」という設計哲学にある。データは自分のマシンに Markdown ファイルとして保存され、ベンダーロックインが一切ない。&lt;/p&gt;
+&lt;p&gt;本記事では Obsidian の機能・利点・活用法を網羅的にまとめる。&lt;/p&gt;
+&lt;h2 id="obsidian-とは"&gt;Obsidian とは&lt;/h2&gt;
+&lt;p&gt;Obsidian は &lt;strong&gt;ローカルファイルベースの Markdown エディタ&lt;/strong&gt;であり、個人の知識管理（PKM: Personal Knowledge Management）に特化したツールだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;公式サイト&lt;/strong&gt;: &lt;a href="https://obsidian.md"&gt;obsidian.md&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;料金&lt;/strong&gt;: 個人利用は&lt;strong&gt;完全無料&lt;/strong&gt;。商用利用のみ Commercial License（$50/年）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対応 OS&lt;/strong&gt;: Windows / macOS / Linux / iOS / Android&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プラグイン数&lt;/strong&gt;: 2,700 種類以上のコミュニティプラグイン&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="設計哲学your-thoughts-are-yours"&gt;設計哲学：「Your thoughts are yours」&lt;/h3&gt;
+&lt;p&gt;Obsidian の根底にあるのは「あなたの思考はあなたのもの」という哲学だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ローカルファースト&lt;/strong&gt;: データはすべて自分のマシン上の &lt;code&gt;.md&lt;/code&gt; ファイル&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プレーンテキスト&lt;/strong&gt;: 専用フォーマットなし。他のエディタでも開ける&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ベンダーロックインなし&lt;/strong&gt;: Obsidian を辞めても、データはそのまま使える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オフライン動作&lt;/strong&gt;: インターネット接続なしで完全に機能する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="コア機能"&gt;コア機能&lt;/h2&gt;
+&lt;h3 id="内部リンク-記法"&gt;内部リンク（&lt;code&gt;[[]]&lt;/code&gt; 記法）&lt;/h3&gt;
+&lt;p&gt;Obsidian の最大の特徴が &lt;code&gt;[[ページ名]]&lt;/code&gt; で即座にノート間リンクを作れる内部リンク機能だ。リンク先が存在しなくても構わない。リンクをクリックした時点で新規ページが自動生成される。&lt;/p&gt;
+&lt;p&gt;これにより、メモを書いている最中に「あ、この概念は別ページにまとめたい」と思った瞬間に &lt;code&gt;[[概念名]]&lt;/code&gt; と書くだけで、知識のネットワークが自然に広がっていく。&lt;/p&gt;
+&lt;h3 id="グラフビュー"&gt;グラフビュー&lt;/h3&gt;
+&lt;p&gt;ノート間のリンク関係を視覚的にネットワーク図として表示する機能。知識の全体像や孤立したノートの発見に役立つ。ただし、実用面ではグラフビューよりも全文検索の方が圧倒的に使用頻度が高いという声も多い。&lt;/p&gt;
+&lt;h3 id="全文検索"&gt;全文検索&lt;/h3&gt;
+&lt;p&gt;Vault（Obsidian のワークスペース）内のすべてのファイルを横断的に検索できる。ローカルファイルなので検索速度が速く、数千ファイルでもストレスなく動作する。&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Multi-Agent on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/multi-agent/</link><description>Recent content in Multi-Agent on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/multi-agent/index.xml" rel="self" type="application/rss+xml"/><item><title>takt — AIコーディングエージェントのワークフローをYAMLで定義するCLIツール</title><link>https://hdknr.github.io/blogs/posts/2026/03/takt-ai-agent-workflow/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/takt-ai-agent-workflow/</guid><description>&lt;p&gt;&lt;a href="https://github.com/nrslib/takt"&gt;takt&lt;/a&gt; は、Claude Code や Codex などの AI コーディングエージェントのワークフローを YAML で定義できる CLI ツールです。エージェントに単にコードを書かせるだけでなく、レビューループや人間の介入ポイントを宣言的に管理することで、品質の高いアウトプットを継続的に得られるよう設計されています。&lt;/p&gt;
+&lt;h2 id="takt-とは"&gt;takt とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;TAKT&lt;/strong&gt; は &lt;strong&gt;T&lt;/strong&gt;AKT &lt;strong&gt;A&lt;/strong&gt;gent &lt;strong&gt;K&lt;/strong&gt;oordination &lt;strong&gt;T&lt;/strong&gt;opology の略で、ドイツ語の「拍子・指揮棒」を由来とする名前です。オーケストラの指揮者のように複数の AI エージェントを統率するというコンセプトが込められています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href="https://github.com/nrslib/takt"&gt;https://github.com/nrslib/takt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;言語&lt;/strong&gt;: TypeScript&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;スター数&lt;/strong&gt;: 952（2026年4月時点）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ライセンス&lt;/strong&gt;: MIT&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;対応エージェント: Claude Code、Codex、OpenCode、Cursor、GitHub Copilot CLI&lt;/p&gt;
+&lt;h2 id="なぜ-takt-が必要か"&gt;なぜ takt が必要か&lt;/h2&gt;
+&lt;p&gt;AI コーディングエージェントを使う上で重要なのは、ワークフローの設計です。エージェントに「コードを書いて」と指示するだけでは、品質にばらつきが生じます。takt は以下の課題を解決します:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;レビューループの自動化&lt;/strong&gt;: 実装 → レビュー → 修正 のサイクルを自動で回す&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;再現性の確保&lt;/strong&gt;: 実行パスを YAML で宣言するため、チーム間で同じ品質プロセスを共有できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マルチエージェント対応&lt;/strong&gt;: 異なるペルソナ・権限・レビュー基準を持つ複数エージェントをオーケストレーション&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;完全なトレーサビリティ&lt;/strong&gt;: 全ステップを NDJSON でログに記録&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストールと基本的な使い方"&gt;インストールと基本的な使い方&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install -g takt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="設定ファイル"&gt;設定ファイル&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;~/.takt/config.yaml&lt;/code&gt; を作成してプロバイダーを指定します:&lt;/p&gt;</description></item></channel></rss>

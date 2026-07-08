@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>MacBook on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/macbook/</link><description>Recent content in MacBook on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Sat, 02 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/macbook/index.xml" rel="self" type="application/rss+xml"/><item><title>MacBook Pro M4 + llama.cpp で実現した太平洋横断フライトのオフライン AI ワークフロー</title><link>https://hdknr.github.io/blogs/posts/2026/05/macbook-m4-llama-cpp-offline-ai-workflow/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/macbook-m4-llama-cpp-offline-ai-workflow/</guid><description>&lt;p&gt;MacBook Pro M4 ローカルで Llama 3.3 70B を 11 時間動かし続け、機内でクライアント仕事をすべて片付けた開発者がいる。Wi-Fi 代 25 ドルを払わず、オフラインだけで完結させた「オフライン AI ワークフロー」の実例が話題になっている。&lt;/p&gt;
+&lt;h2 id="構成ハードウェアとソフトウェア"&gt;構成：ハードウェアとソフトウェア&lt;/h2&gt;
+&lt;p&gt;使用機材はシンプルだ。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;マシン&lt;/td&gt;
+&lt;td&gt;MacBook Pro M4、64 GB 統合メモリ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;モデル&lt;/td&gt;
+&lt;td&gt;Llama 3.3 70B（bf16 精度）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;推論エンジン&lt;/td&gt;
+&lt;td&gt;llama.cpp（localhost:8080 で待機）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;生成速度&lt;/td&gt;
+&lt;td&gt;71 トークン/秒&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;コンテキスト長&lt;/td&gt;
+&lt;td&gt;約 60,000 トークン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;メモリ使用量&lt;/td&gt;
+&lt;td&gt;48.6 GiB（ほぼ上限）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;離陸時バッテリー残量&lt;/td&gt;
+&lt;td&gt;3 時間 21 分&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="離陸前に書いたオーケストレーションスクリプト"&gt;離陸前に書いたオーケストレーション・スクリプト&lt;/h2&gt;
+&lt;p&gt;キモはフライト前に仕込んだシステムプロンプトとスクリプトだ。要約すると以下のとおりだった。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたは今、MacBook 上のオフライン・オーケストレーターです。ネットはありません。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;使えるのはローカルファイルと localhost:8080 の Llama 推論サービスだけです。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;バッテリーは 3 時間強。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/Users/dev/work/queue.jsonl からクライアントタスクを 1 件ずつ読み込み、
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;各タスクをドラフト→ローカル評価→ /Users/dev/work/done/ に出力してください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;12 タスクごとにコンテキストチェックポイントを保存し、電源交換後に復元できるようにすること。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;キューが空になるか、バッテリーが 5% を切ったら停止。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;制約を正直に宣言したシステムプロンプトが、エージェントに「自分の家の事情」を完全に理解させた。インターネットなし・メモリ有限・電源も有限、そして操作者は空の上にいる——何か起きても誰も介入できない状況だ。&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,90 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="food-lighting" name="Food Photography Lighting">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="640" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="食事の物撮り ライティング配置図（真俯瞰と斜めアングル）" style="text;html=1;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="230" y="16" width="660" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== LEFT: 真俯瞰セットアップ ===== -->
+        <mxCell id="left-group" value="① 真俯瞰（真上から）— 大きな面光源が必須" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=6 6;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="480" height="500" as="geometry"/>
+        </mxCell>
+
+        <!-- 大きな面光源（ソフトボックス2連） -->
+        <mxCell id="bigsoftbox" value="大きな面光源&#xa;（50cm ソフトボックス × 2 を&#xa;T字棒で横連結）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="90" y="120" width="380" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- 面光源からの光 -->
+        <mxCell id="lightbeam1" style="endArrow=block;html=1;strokeColor=#d6b656;strokeWidth=2;dashed=1;" edge="1" parent="1" source="bigsoftbox" target="dish-set">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 料理（セットメニュー） -->
+        <mxCell id="dish-set" value="料理&#xa;（セットメニュー / A3超）" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="300" width="200" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- カメラ真上 -->
+        <mxCell id="cam-top" value="&#x1f4f7; カメラ（真上・俯瞰）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="470" width="260" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="cam-arrow1" style="endArrow=block;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="cam-top" target="dish-set">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 注記 -->
+        <mxCell id="note-left" value="ポイント：一皿なら1灯で足りるが、セットメニューは&#xa;範囲が広く1灯ではムラになる。面光源を大きくするほど&#xa;均一で柔らかい光に。カメラ固定は三脚が使えず難所。" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="440" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== RIGHT: 斜めアングル2灯 ===== -->
+        <mxCell id="right-group" value="② 斜めアングル — LED定常光 2灯（美味しさ表現向き）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=6 6;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="600" y="70" width="480" height="500" as="geometry"/>
+        </mxCell>
+
+        <!-- メインライト（トップ） -->
+        <mxCell id="main-light" value="メインライト&#xa;（真上トップ / T字棒に固定）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="680" y="120" width="220" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- サブライト（後方サイド・逆光） -->
+        <mxCell id="sub-light" value="サブライト&#xa;後方サイド（半逆光・手持ち）&#xa;→ 湯気・立体感を演出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="920" y="230" width="140" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- 料理 -->
+        <mxCell id="dish-one" value="料理（一皿）" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="300" width="150" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- カメラ斜め -->
+        <mxCell id="cam-angle" value="&#x1f4f7; カメラ&#xa;（斜め45度前後）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="450" width="180" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- 光の矢印 -->
+        <mxCell id="mlight-arrow" style="endArrow=block;html=1;strokeColor=#d6b656;strokeWidth=2;dashed=1;" edge="1" parent="1" source="main-light" target="dish-one">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="slight-arrow" style="endArrow=block;html=1;strokeColor=#d79b00;strokeWidth=2;dashed=1;" edge="1" parent="1" source="sub-light" target="dish-one">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="cam-arrow2" style="endArrow=block;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="cam-angle" target="dish-one">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 注記 -->
+        <mxCell id="note-right" value="ポイント：定常光（LED）はストロボにない“優しい”描写。&#xa;手持ちで位置を微調整し、赤外リモコンでレリーズ。&#xa;斜めアングルは料理が最も美味しそうに写る。" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="620" y="530" width="440" height="35" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

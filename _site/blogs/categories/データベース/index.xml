@@ -1,0 +1,1347 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>データベース on hdknr blog</title><link>https://hdknr.github.io/blogs/categories/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/</link><description>Recent content in データベース on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 08 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/categories/%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/index.xml" rel="self" type="application/rss+xml"/><item><title>SQLite の「unable to open database file」が高負荷時刻に散発する問題を WAL 化で根治した話</title><link>https://hdknr.github.io/blogs/posts/2026/06/sqlite-wal-unable-to-open/</link><pubDate>Mon, 08 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/sqlite-wal-unable-to-open/</guid><description>&lt;h1 id="sqlite-のunable-to-open-database-fileが高負荷時刻に散発する問題を-wal-化で根治した話"&gt;SQLite の「unable to open database file」が高負荷時刻に散発する問題を WAL 化で根治した話&lt;/h1&gt;
+&lt;p&gt;ある自立型トレーディングシステムの運用中に、SQLite が &lt;code&gt;OperationalError: unable to open database file&lt;/code&gt; を散発的に投げる慢性バグを追い詰めて修正した記録です。「ディスクは空いている」「ファイルは存在する」のにエラーが出る、という一見矛盾した現象の正体と、その根治・緩和の二段構えの対策をまとめます。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="wal-とは"&gt;WAL とは?&lt;/h2&gt;
+&lt;p&gt;本題に入る前に、今回のキーになる &lt;strong&gt;WAL（Write-Ahead Logging）&lt;/strong&gt; を簡単に押さえておきます。&lt;/p&gt;
+&lt;p&gt;SQLite には書き込み中のクラッシュからデータを守るための「ジャーナル方式」が複数あり、&lt;code&gt;journal_mode&lt;/code&gt; PRAGMA で切り替えます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;delete&lt;/code&gt;（デフォルト）&lt;/strong&gt; — ロールバックジャーナル方式。トランザクションを開始するたびに &lt;code&gt;元DB-journal&lt;/code&gt; というファイルを&lt;strong&gt;新規作成&lt;/strong&gt;して変更前の内容を退避し、コミット時に削除する。書き込み中は DB 本体を直接書き換えるため、&lt;strong&gt;読み取りと書き込みが互いをブロック&lt;/strong&gt;する。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;WAL&lt;/code&gt;&lt;/strong&gt; — 先行書き込みログ方式。変更を DB 本体ではなく追記専用の &lt;code&gt;元DB-wal&lt;/code&gt; ファイルに&lt;strong&gt;追記&lt;/strong&gt;していき、後で「チェックポイント」で本体に反映する。&lt;code&gt;-wal&lt;/code&gt; と &lt;code&gt;-shm&lt;/code&gt;（共有メモリインデックス）は一度作られたら使い回されるため、&lt;strong&gt;トランザクション毎のファイル新規作成が発生しない&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;WAL の主な利点:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;th&gt;効果&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;読み書きが互いをブロックしない&lt;/td&gt;
+&lt;td&gt;reader はトランザクション中の writer を待たずに読める（その逆も）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ジャーナルファイルを毎回作らない&lt;/td&gt;
+&lt;td&gt;ファイル作成のオーバーヘッドと競合がなくなる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;書き込みが概ね高速&lt;/td&gt;
+&lt;td&gt;fsync 回数を減らせる（特に &lt;code&gt;synchronous=NORMAL&lt;/code&gt; 併用時）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;WAL が向いているケース&lt;/strong&gt;: 読み取りが多く・書き込みもそれなりにある、同一ホスト上の単一プロセス／複数プロセスからのアクセス。今回のように「書き込みデーモン 1 つ＋複数の reader」という構成は典型的な適用例です。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;WAL の注意点&lt;/strong&gt;: ① ネットワーク越しのファイルシステム（NFS など）では共有メモリが使えず非対応、② in-memory DB では効かない、③ &lt;code&gt;-wal&lt;/code&gt; / &lt;code&gt;-shm&lt;/code&gt; ファイルが DB 本体と併存するため、バックアップは単純な &lt;code&gt;cp&lt;/code&gt; ではなく専用 API（後述）を使う必要がある。&lt;/p&gt;</description></item><item><title>django-mptt はなぜ「unmaintained」と書かれているのか — そして django-tree-queries への移行</title><link>https://hdknr.github.io/blogs/posts/2026/04/django-mptt-unmaintained-tree-queries/</link><pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/django-mptt-unmaintained-tree-queries/</guid><description>django-mptt が unmaintained を表明した背景を CHANGELOG とソースから読み解き、後継として推奨される django-tree-queries (Recursive CTE) への移行手順・API 対応表・落とし穴までまとめる</description></item><item><title>mysqldump エラー 1449: DEFINER が存在しないユーザーを参照している場合の対処法</title><link>https://hdknr.github.io/blogs/posts/2026/03/mysqldump-definer-error-1449/</link><pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/mysqldump-definer-error-1449/</guid><description>&lt;p&gt;&lt;code&gt;mysqldump&lt;/code&gt; でデータベースをダンプしようとしたら、こんなエラーが出て止まった経験はないでしょうか。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;mysqldump: Got error: 1449: The user specified as a definer (&amp;#39;root&amp;#39;@&amp;#39;%&amp;#39;) does not exist when using LOCK TABLES
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;これは MySQL の &lt;strong&gt;DEFINER&lt;/strong&gt; という仕組みに起因するエラーです。ビューやストアドプロシージャの作成時に記録された「定義者（DEFINER）」ユーザーが、現在のサーバー上に存在しない場合に発生します。&lt;/p&gt;
+&lt;h2 id="なぜ起きるのか"&gt;なぜ起きるのか&lt;/h2&gt;
+&lt;p&gt;MySQL のビュー、ストアドプロシージャ、トリガー、イベントには &lt;code&gt;DEFINER&lt;/code&gt; 属性があります。これはそのオブジェクトを作成した MySQL ユーザーを記録したもので、&lt;code&gt;SQL SECURITY DEFINER&lt;/code&gt;（デフォルト）の場合、オブジェクトの実行は &lt;strong&gt;DEFINER ユーザーの権限&lt;/strong&gt; で行われます。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;mysqldump&lt;/code&gt; は &lt;code&gt;LOCK TABLES&lt;/code&gt; を実行する際、ダンプ対象のビューなどの &lt;code&gt;DEFINER&lt;/code&gt; ユーザーを参照します。このとき、DEFINER に設定されたユーザー（例: &lt;code&gt;'root'@'%'&lt;/code&gt;）がサーバー上に存在しなければ、エラー 1449 で処理が中断されます。&lt;/p&gt;
+&lt;p&gt;よくあるシナリオ:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;本番環境から別環境にデータベースをコピーした際、元の環境にいた &lt;code&gt;root@'%'&lt;/code&gt; が移行先に存在しない&lt;/li&gt;
+&lt;li&gt;MySQL のユーザーを整理した際、ビューの DEFINER を更新し忘れた&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;root@'localhost'&lt;/code&gt; しか存在しないのに、ビューが &lt;code&gt;root@'%'&lt;/code&gt; で作成されていた&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="definer-が問題のオブジェクトを特定する"&gt;DEFINER が問題のオブジェクトを特定する&lt;/h2&gt;
+&lt;p&gt;まず、どのオブジェクトが問題の原因かを &lt;code&gt;information_schema&lt;/code&gt; で確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- ビュー
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt;, TABLE_SCHEMA, &lt;span style="color:#66d9ef"&gt;TABLE_NAME&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; information_schema.VIEWS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;LIKE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;%root@%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- ストアドプロシージャ / ファンクション
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;ROUTINE_SCHEMA&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;ROUTINE_NAME&lt;/span&gt;, ROUTINE_TYPE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; information_schema.ROUTINES
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;LIKE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;%root@%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- イベント
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; EVENT_CATALOG, EVENT_SCHEMA, EVENT_NAME, &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; information_schema.EVENTS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;LIKE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;%root@%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- トリガー
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TRIGGER_SCHEMA&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;TRIGGER_NAME&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; information_schema.TRIGGERS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;LIKE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;%root@%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;多くの場合、ビューが原因です。該当するオブジェクトが見つかったら、その定義を確認しましょう。&lt;/p&gt;</description></item><item><title>急成長でぶつかったMySQLの罠とその向き合い方 - 7つの実践的な教訓</title><link>https://hdknr.github.io/blogs/posts/2026/03/mysql-pitfalls-rapid-growth/</link><pubDate>Fri, 20 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/mysql-pitfalls-rapid-growth/</guid><description>&lt;p&gt;Timee のプラットフォームエンジニアリングチームの徳富博氏による発表「&lt;a href="https://speakerdeck.com/hirosi1900day/ji-cheng-chang-debutukatutamysqlnomin-tosonoxiang-kihe-ifang"&gt;急成長でぶつかったMySQLの罠とその向き合い方&lt;/a&gt;」から、Aurora MySQL 運用で遭遇した 7 つの重要な課題とその対策をまとめます。&lt;/p&gt;
+&lt;p&gt;サービスの急成長に伴い、小規模では問題にならなかった MySQL の挙動が本番環境で深刻な障害を引き起こすことがあります。この発表では、実際の運用経験に基づいた具体的な対策が共有されています。&lt;/p&gt;
+&lt;h2 id="1-ddl-実行の落とし穴"&gt;1. DDL 実行の落とし穴&lt;/h2&gt;
+&lt;p&gt;DDL（Data Definition Language: テーブル定義の変更操作）には「Online DDL」という仕組みがありますが、DDL 実行中もテーブルへのアクセスがブロックされないわけではありません。実際にはメタデータロック（MDL）が必ず発生します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Aurora のレプリカでは DDL 実行時にコネクションが切断されるため、リトライロジックが必須&lt;/li&gt;
+&lt;li&gt;外部キー制約を追加する際は &lt;code&gt;foreign_key_checks = 0&lt;/code&gt; を設定すると、COPY アルゴリズムではなく INPLACE アルゴリズム（テーブルの再構築を伴わない方式）が使われ、影響を最小化できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-mdl-ベースのデッドロック"&gt;2. MDL ベースのデッドロック&lt;/h2&gt;
+&lt;p&gt;MDL デッドロックは &lt;code&gt;SHOW ENGINE INNODB STATUS&lt;/code&gt; に表示されないため、標準的な監視では検知できません。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;外部キーが存在すると、DROP/ALTER 操作時に親テーブルに対して広範な MDL が取得される&lt;/li&gt;
+&lt;li&gt;対策: DDL 操作の前に外部キー制約を削除する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-レプリカがライターに影響を与える問題"&gt;3. レプリカがライターに影響を与える問題&lt;/h2&gt;
+&lt;p&gt;Aurora ではレプリカとライターがストレージボリュームを共有しています。レプリカ上の長時間クエリが undo ログのクリーンアップを妨げ、ライターのパフォーマンスに影響します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;MySQL のデフォルトの分離レベルは &lt;code&gt;REPEATABLE READ&lt;/code&gt; だが、分析用クエリには &lt;code&gt;READ COMMITTED&lt;/code&gt; を使用することで、リードビューの保持期間を短縮し undo ログの蓄積を抑えられる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-同時リクエストによるデッドロック"&gt;4. 同時リクエストによるデッドロック&lt;/h2&gt;
+&lt;p&gt;高トラフィック環境では、確率的に発生する競合が確実に障害を引き起こすようになります。&lt;/p&gt;
+&lt;h3 id="ギャップロックパターン"&gt;ギャップロックパターン&lt;/h3&gt;
+&lt;p&gt;ギャップロック（インデックスレコード間の隙間に対するロック）同士は競合しませんが、複数のトランザクションが同時に INSERT を実行すると循環待ちが発生します。&lt;/p&gt;</description></item><item><title>DuckDB・Apache Arrow・Parquetの関係を整理する：列指向エコシステムの全体像</title><link>https://hdknr.github.io/blogs/posts/2026/03/duckdb-columnar-arrow/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/duckdb-columnar-arrow/</guid><description>&lt;p&gt;DuckDB は「SQLite の分析版」とも呼ばれるインプロセス OLAP データベースです。Apache Arrow、Apache Parquet と同じ列指向の思想を持ちますが、三者の役割はそれぞれ異なります。この記事では DuckDB のアーキテクチャ、Arrow・Parquet との関係、そして従来の行指向 DB との違いを整理します。&lt;/p&gt;
+&lt;h2 id="parquetarrowduckdb-の位置付け"&gt;Parquet・Arrow・DuckDB の位置付け&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;Parquet&lt;/th&gt;
+&lt;th&gt;Arrow&lt;/th&gt;
+&lt;th&gt;DuckDB&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;何か&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ディスク上の列指向ファイル形式&lt;/td&gt;
+&lt;td&gt;インメモリ列指向データフォーマット（仕様+ライブラリ）&lt;/td&gt;
+&lt;td&gt;SQL データベースエンジン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;レイヤー&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ストレージ（ディスク）&lt;/td&gt;
+&lt;td&gt;データ交換（メモリ）&lt;/td&gt;
+&lt;td&gt;クエリ実行（エンジン）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;目的&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;効率的な永続化・圧縮&lt;/td&gt;
+&lt;td&gt;アプリケーション間のゼロコピーデータ交換&lt;/td&gt;
+&lt;td&gt;SQL クエリの実行・最適化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;三者は列指向エコシステムの異なるレイヤーを担っており、補完関係にあります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[ディスク] Parquet ファイル（列指向・圧縮済み）
+↓ 読み込み（必要な列だけ）
+[メモリ] Arrow フォーマット（列指向・ゼロコピー）
+↓ クエリ実行
+[エンジン] DuckDB（ベクトル化 SQL 実行）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Parquet は「データの保存形式」、Arrow は「メモリ上のデータの並べ方の規格」、DuckDB は「SQL を実行するエンジン」です。三者とも列指向という共通思想を持つため、組み合わせるとデータ変換のオーバーヘッドがほぼ発生しません。&lt;/p&gt;
+&lt;h2 id="duckdb-の高速性を支える3つの柱"&gt;DuckDB の高速性を支える3つの柱&lt;/h2&gt;
+&lt;h3 id="1-列指向ストレージ"&gt;1. 列指向ストレージ&lt;/h3&gt;
+&lt;p&gt;行単位ではなく列単位でデータを格納します。分析クエリ（&lt;code&gt;SUM&lt;/code&gt;, &lt;code&gt;AVG&lt;/code&gt;, &lt;code&gt;GROUP BY&lt;/code&gt; など）で必要な列だけを読み込むため、I/O が効率的です。&lt;/p&gt;
+&lt;h3 id="2-ベクトル化実行エンジン"&gt;2. ベクトル化実行エンジン&lt;/h3&gt;
+&lt;p&gt;1行ずつではなく、列のチャンク（ベクトル）単位で処理します。これにより CPU キャッシュのヒット率が上がり、SIMD 命令も活用できます。&lt;/p&gt;
+&lt;h3 id="3-自動並列化"&gt;3. 自動並列化&lt;/h3&gt;
+&lt;p&gt;マルチコアを自動的に活用し、クエリを並列実行します。ユーザー側で並列化の設定を意識する必要はありません。&lt;/p&gt;</description></item><item><title>redis-py の Lock をサブクラス化してフェンシングトークンを実装する</title><link>https://hdknr.github.io/blogs/posts/2026/03/redis-fenced-lock-python/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/redis-fenced-lock-python/</guid><description>&lt;p&gt;redis-py の &lt;code&gt;Lock&lt;/code&gt; クラスは UUID ベースのトークンでロックの所有権を管理するが、フェンシングトークン（単調増加する数値）は提供しない。しかし、&lt;code&gt;Lock&lt;/code&gt; クラスは &lt;code&gt;do_acquire&lt;/code&gt; や Lua スクリプトをオーバーライドできる設計になっており、サブクラス化でフェンシングトークンを追加できる。&lt;/p&gt;
+&lt;p&gt;本記事では、redis-py の &lt;code&gt;Lock&lt;/code&gt; を拡張してフェンシングトークンを発行する &lt;code&gt;FencedLock&lt;/code&gt; クラスの実装例を紹介する。&lt;/p&gt;
+&lt;h2 id="前提知識redis-の-lua-スクリプティング"&gt;前提知識：Redis の Lua スクリプティング&lt;/h2&gt;
+&lt;p&gt;Redis はバージョン 2.6 から &lt;a href="https://redis.io/docs/latest/develop/interact/programmability/eval-intro/"&gt;Lua スクリプトの実行機能&lt;/a&gt;を内蔵している。&lt;code&gt;EVAL&lt;/code&gt; コマンドで Lua スクリプトを Redis サーバー上で直接実行でき、&lt;strong&gt;複数の Redis コマンドをアトミック（不可分）に実行&lt;/strong&gt;できる。&lt;/p&gt;
+&lt;h3 id="なぜ-lua-スクリプトが必要か"&gt;なぜ Lua スクリプトが必要か&lt;/h3&gt;
+&lt;p&gt;通常、Redis コマンドは1つずつ実行される。例えば「キーが存在しなければセットし、同時にカウンターをインクリメントする」という処理を2つのコマンドで行うと、その間に他のクライアントが割り込む可能性がある：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;クライアント A: SET mykey value NX → 成功
+← クライアント B が割り込む余地
+クライアント A: INCR counter → インクリメント
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Lua スクリプトを使えば、この2つの操作を&lt;strong&gt;1回のアトミックな呼び出し&lt;/strong&gt;にまとめられる：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Redis サーバー上で実行される（他のコマンドは割り込めない）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;local&lt;/span&gt; ok &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis.call(&lt;span style="color:#e6db74"&gt;&amp;#39;SET&amp;#39;&lt;/span&gt;, KEYS[&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;], ARGV[&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;], &lt;span style="color:#e6db74"&gt;&amp;#39;NX&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; ok &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; redis.call(&lt;span style="color:#e6db74"&gt;&amp;#39;INCR&amp;#39;&lt;/span&gt;, KEYS[&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="redis-cli-での実行例"&gt;Redis CLI での実行例&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# EVAL &amp;#34;スクリプト&amp;#34; キーの数 キー1 キー2 ... 引数1 引数2 ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis-cli EVAL &lt;span style="color:#e6db74"&gt;&amp;#34;return redis.call(&amp;#39;SET&amp;#39;, KEYS[1], ARGV[1])&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; mykey myvalue
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="redis-py-での実行例"&gt;redis-py での実行例&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; redis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;r &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Redis()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 方法1: eval で直接実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;r&lt;span style="color:#f92672"&gt;.&lt;/span&gt;eval(&lt;span style="color:#e6db74"&gt;&amp;#34;return redis.call(&amp;#39;SET&amp;#39;, KEYS[1], ARGV[1])&amp;#34;&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;mykey&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;myvalue&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 方法2: register_script で事前登録（推奨）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サーバー側に SHA1 でキャッシュされ、2回目以降はスクリプト本文の転送が不要&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;script &lt;span style="color:#f92672"&gt;=&lt;/span&gt; r&lt;span style="color:#f92672"&gt;.&lt;/span&gt;register_script(&lt;span style="color:#e6db74"&gt;&amp;#34;return redis.call(&amp;#39;GET&amp;#39;, KEYS[1])&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; script(keys&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;mykey&amp;#34;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="セキュリティ上の注意"&gt;セキュリティ上の注意&lt;/h3&gt;
+&lt;p&gt;Lua スクリプトのパラメータは &lt;code&gt;KEYS[]&lt;/code&gt; と &lt;code&gt;ARGV[]&lt;/code&gt; で渡される。SQL のプリペアドステートメントと同様に、パラメータが文字列としてスクリプトに展開されることはないため、&lt;strong&gt;パラメータ経由でのインジェクションはできない&lt;/strong&gt;。ただし、ユーザー入力でスクリプト文字列自体を動的に組み立てると危険なので、スクリプトは固定文字列として定義すること。&lt;/p&gt;</description></item><item><title>Redisを「共有状態」として使うアンチパターン：キー設計の落とし穴</title><link>https://hdknr.github.io/blogs/posts/2026/03/redis-shared-state-antipattern/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/redis-shared-state-antipattern/</guid><description>&lt;p&gt;Redis はキャッシュとして非常に優秀なツールだが、複数のチームやサービスが**共有状態（shared state）**として Redis を使い始めると、設計上の問題が発生しやすくなる。&lt;/p&gt;
+&lt;h2 id="キャッシュと共有状態の違い"&gt;キャッシュと共有状態の違い&lt;/h2&gt;
+&lt;p&gt;Redis をキャッシュとして使う場合、データは一時的なものであり、いつ消えても問題ない。元データは RDB などに存在し、キャッシュミス時に再構築できる。&lt;/p&gt;
+&lt;p&gt;一方、共有状態として使う場合は話が変わる。複数のサービスが同じ Redis キーを読み書きし、そのデータが「正」として扱われる。RDB のようなスキーマや制約がないため、以下の問題が起きやすい。&lt;/p&gt;
+&lt;h2 id="暗黙の契約に依存したデータ構造"&gt;暗黙の契約に依存したデータ構造&lt;/h2&gt;
+&lt;p&gt;RDB であればスキーマによってデータ構造が明示的に定義される。カラム名、型、制約、外部キーなどが設計書の役割を果たす。&lt;/p&gt;
+&lt;p&gt;Redis にはそのような仕組みがない。キーの命名規則やデータ形式は開発者間の「暗黙の契約」に依存する。チームが増えると、以下のような問題が顕在化する：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;キーの命名が衝突する&lt;/strong&gt; — 異なるチームが同じプレフィックスを使ってしまう&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;データ形式の不一致&lt;/strong&gt; — あるサービスは JSON、別のサービスは MessagePack で書き込む&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;バージョン管理の欠如&lt;/strong&gt; — データ構造を変更しても、読み取り側が追従できない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="削除できないキー問題"&gt;「削除できないキー」問題&lt;/h2&gt;
+&lt;p&gt;最も厄介な問題の一つが、&lt;strong&gt;誰が所有しているのか分からないキー&lt;/strong&gt;が残り続けることだ。&lt;/p&gt;
+&lt;p&gt;本番環境で以下のような状況が発生する：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;# このキーは誰が作った？いつ expire する？削除していい？
+GET user:session:abc123:metadata
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;作成したサービスがすでに廃止されている&lt;/li&gt;
+&lt;li&gt;TTL が設定されていないため、永遠に残る&lt;/li&gt;
+&lt;li&gt;他のサービスが依存している可能性があり、安易に削除できない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="キーをパブリック-apiとして扱う"&gt;キーを「パブリック API」として扱う&lt;/h2&gt;
+&lt;p&gt;この問題に対する実践的なアプローチとして、&lt;strong&gt;Redis キーをパブリック API のように扱う&lt;/strong&gt;という考え方がある：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;バージョニング&lt;/strong&gt; — キー名にバージョンを含める（例: &lt;code&gt;v2:user:session:{id}&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ドキュメント化&lt;/strong&gt; — どのキーがどのサービスによって管理されているかを明文化する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オーナーの明確化&lt;/strong&gt; — 各キーに責任を持つチーム・サービスを割り当てる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;TTL の必須化&lt;/strong&gt; — 共有キーには必ず TTL を設定し、期限切れを明示する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="補足分散ロック基盤としての-redis"&gt;補足：分散ロック基盤としての Redis&lt;/h2&gt;
+&lt;p&gt;Redis を共有状態として使うもう一つの典型例が、&lt;strong&gt;トランザクション境界をまたぐ分散ロック&lt;/strong&gt;だ。&lt;code&gt;SET key value NX PX timeout&lt;/code&gt; を使ったロックや、Redlock アルゴリズムは広く利用されているが、ここにも落とし穴がある。&lt;/p&gt;</description></item><item><title>Software Design 2026年4月号の注目特集：PostgreSQL 18 高速化と MCP サーバー開発</title><link>https://hdknr.github.io/blogs/posts/2026/03/sd-202604/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/sd-202604/</guid><description>&lt;p&gt;技術評論社の &lt;a href="https://gihyo.jp/magazine/SD/archive/2026/202604"&gt;Software Design 2026年4月号&lt;/a&gt;（2026年3月18日発売）の特集内容を紹介します。今号は PostgreSQL 18 のパフォーマンス最適化と、MCP サーバー開発という2つの注目特集が組まれています。&lt;/p&gt;
+&lt;h2 id="第1特集postgresql-18-に学ぶデータベース高速化機能"&gt;第1特集：PostgreSQL 18 に学ぶデータベース高速化機能&lt;/h2&gt;
+&lt;p&gt;「アーキテクチャから見えてくる処理性能向上のヒント」と題した第1特集では、PostgreSQL 18 の新機能を軸にデータベース高速化のテクニックが解説されています。&lt;/p&gt;
+&lt;h3 id="章構成"&gt;章構成&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;第1章&lt;/strong&gt; データ処理メカニズムと高速化（三谷篤）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;第2章&lt;/strong&gt; トランザクションとバックアップ（三谷篤）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;第3章&lt;/strong&gt; クエリ最適化とオプティマイザー（篠田典良）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;第4章&lt;/strong&gt; インデックス検索技法（篠田典良）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;第5章&lt;/strong&gt; 並列処理と JIT（寺内大輝）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;第6章&lt;/strong&gt; PostgreSQL 互換クラウド DB 比較（小山哲志）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;第7章&lt;/strong&gt; PostgreSQL 18 の新機能（寺内大輝）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;PostgreSQL のデータ処理メカニズムから始まり、クエリ最適化、インデックス活用、並列処理・JIT コンパイルまで、パフォーマンスチューニングの全体像をカバーする構成です。第6章では PostgreSQL 互換のクラウドデータベース（Amazon Aurora、AlloyDB など）の比較もあり、実務で選定する際の参考になります。&lt;/p&gt;
+&lt;h2 id="第2特集mcp-サーバー開発成功の秘訣"&gt;第2特集：MCP サーバー開発成功の秘訣&lt;/h2&gt;
+&lt;p&gt;「事業戦略・品質・開発効率をふまえたアプローチ」と題した第2特集では、AI エージェントのツール連携で注目される MCP（Model Context Protocol）サーバーの開発について、実践的なアプローチが紹介されています。&lt;/p&gt;
+&lt;h3 id="章構成-1"&gt;章構成&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;第1章&lt;/strong&gt; MCP 設計ガイド（川崎庸市）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;第2章&lt;/strong&gt; 駅すぱあと API での事例（橋本あゆみ、平川瑞樹）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;第3章&lt;/strong&gt; Sansan での事例（川瀬圭亮）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;MCP は Anthropic が提唱した AI モデルと外部ツールを接続するためのオープンプロトコルで、Claude Code をはじめ多くの AI ツールで採用が進んでいます。本特集では設計の基本方針に加え、駅すぱあと API や Sansan といった実サービスでの MCP サーバー構築事例が紹介されており、自社サービスに MCP を導入する際の具体的な指針が得られます。&lt;/p&gt;</description></item><item><title>RuView × Wi-Fi電波で壁越し人体検知 — $48で心拍・姿勢を丸裸にする技術の実態</title><link>https://hdknr.github.io/blogs/posts/2026/03/f1c70eb4f0ec2a6201d2fb770c6ea9de/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/f1c70eb4f0ec2a6201d2fb770c6ea9de/</guid><description>&lt;h1 id="ruview--wi-fi電波で壁越し人体検知--48で心拍姿勢を丸裸にする技術の実態"&gt;RuView × Wi-Fi電波で壁越し人体検知 — $48で心拍・姿勢を丸裸にする技術の実態&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;: カメラなし・$48のESP32だけで壁の向こうの人間の心拍・呼吸・骨格17点を検知できるとするオープンソースプロジェクト「RuView」がSNSで話題に。原理はCMU発の査読済み研究に基づく実在技術だが、「28.5kスター」の裏には再現性への疑義とCSIハードウェアの壁がある。煽りと科学を分離して整理する。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="話題の発端"&gt;話題の発端&lt;/h2&gt;
+&lt;p&gt;@kosuke_agos氏のポスト（2026年3月5日、閲覧6.4万・ブックマーク456）が日本語圏で拡散。「市販Wi-Fiルーターだけで壁の向こう側の人間の心拍数や姿勢を完全に特定」「わずか48ドルで構築」という衝撃的な内容が注目を集めた。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://x.com/kosuke_agos/status/2029392193325285521"&gt;https://x.com/kosuke_agos/status/2029392193325285521&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="ruview-とは何か"&gt;RuView とは何か&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;RuView&lt;/strong&gt;（旧wifi-densepose）は、Wi-Fi信号のCSI（Channel State Information）を解析して、カメラなしで人体の姿勢推定・バイタルサイン検知を行うオープンソースプロジェクト。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href="https://github.com/ruvnet/RuView"&gt;https://github.com/ruvnet/RuView&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;スター&lt;/strong&gt;: 28.5k / フォーク: 3.7k&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ライセンス&lt;/strong&gt;: MIT&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;実装言語&lt;/strong&gt;: Rust（Python比810倍の処理速度を主張）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="主張されている性能"&gt;主張されている性能&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;スペック&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;骨格トラッキング&lt;/td&gt;
+&lt;td&gt;17箇所のキーポイント&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;呼吸検知&lt;/td&gt;
+&lt;td&gt;6-30 BPM&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;心拍検知&lt;/td&gt;
+&lt;td&gt;40-120 BPM&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;処理速度&lt;/td&gt;
+&lt;td&gt;54,000 fps（Rust実装）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;壁越し検知距離&lt;/td&gt;
+&lt;td&gt;最大5m&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;AIモデルサイズ&lt;/td&gt;
+&lt;td&gt;55KB（エッジ実行可能）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ハードウェアコスト&lt;/td&gt;
+&lt;td&gt;〜$48（ESP32-S3 × 4-6台）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="科学的な背景--cmudensepose-from-wifi"&gt;科学的な背景 — CMU「DensePose From WiFi」&lt;/h2&gt;
+&lt;p&gt;RuView の理論的基盤は、カーネギーメロン大学（CMU）ロボティクス研究所が2022年に発表した査読済み論文「&lt;strong&gt;DensePose From WiFi&lt;/strong&gt;」（arXiv: 2301.00250）。&lt;/p&gt;
+&lt;h3 id="論文の核心"&gt;論文の核心&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Wi-Fiの**CSI（チャネル状態情報）**は、空間内の物体・人体による電波の反射・回折・散乱を数値化したもの&lt;/li&gt;
+&lt;li&gt;CSI信号を画像的な2D特徴マップに変換する&lt;strong&gt;エンコーダ・デコーダネットワーク&lt;/strong&gt;を構築&lt;/li&gt;
+&lt;li&gt;修正版&lt;strong&gt;DensePose-RCNN&lt;/strong&gt;で、2D特徴から人体表面のUV座標を推定&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;複数人の同時検知&lt;/strong&gt;が可能で、カメラベースのアプローチに匹敵する性能を達成&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;この研究は実在し、査読を通過しており、Wi-Fi CSI による人体検知という&lt;strong&gt;原理自体は「嘘」ではない&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id="csi-の仕組み簡略版"&gt;CSI の仕組み（簡略版）&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Wi-Fi ルーター → 電波送信（OFDM: 52サブキャリア）
+↓
+人体が電波を反射・吸収・散乱
+↓
+ESP32 受信 → 各サブキャリアの振幅・位相変化を記録（= CSI）
+↓
+AI が CSI パターンから人体の姿勢・バイタルを推定
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;呼吸は胸部の周期的な膨張・収縮（6-30回/分）、心拍は胸壁の微小振動（40-120回/分）として、CSIの&lt;strong&gt;FFT（高速フーリエ変換）解析&lt;/strong&gt;で分離・抽出される。&lt;/p&gt;</description></item><item><title>Redis Pub/Sub から Streams への移行で帯域 99% 削減 --- 同時接続 30 万超チャットの実践記録</title><link>https://hdknr.github.io/blogs/posts/2026/03/92ce5b95cd28ffb9ca25100b1991d6d3/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/92ce5b95cd28ffb9ca25100b1991d6d3/</guid><description>&lt;h1 id="redis-pubsub-から-streams-への移行で帯域-99-削減--同時接続-30-万超チャットの実践記録"&gt;Redis Pub/Sub から Streams への移行で帯域 99% 削減 &amp;mdash; 同時接続 30 万超チャットの実践記録&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/Keisuke69/status/2027704204853411996"&gt;Keisuke Nishitani 氏(@Keisuke69)のポスト&lt;/a&gt;で、LY Corp（旧 LINE）の技術ブログ記事が紹介されていました。同時接続数 30 万超の LINE 公式アカウント（OA）チャットが、メッセージ配信基盤を Redis Cluster の Pub/Sub から Redis Streams へ移行した事例です。ピーク時 1.5 Gbps だったノードあたりの帯域が 11 Mbps まで削減されたという結果は、大規模リアルタイムシステムを運用するエンジニアにとって示唆に富む内容です。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;同時接続数30万超のチャットサービスのメッセージ配信基盤をRedis Pub/SubからRedis Streamsにした話
+&amp;mdash; &lt;a href="https://x.com/Keisuke69/status/2027704204853411996"&gt;@Keisuke69&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="背景--redis-cluster-pubsub-のスケール限界"&gt;背景 &amp;mdash; Redis Cluster Pub/Sub のスケール限界&lt;/h2&gt;
+&lt;p&gt;LINE 公式アカウントのチャット機能（OA チャット）は、ユーザーから送られたメッセージを OA オーナーにリアルタイムで配信する仕組みを持っています。この配信基盤として Redis Cluster の Pub/Sub を使用していました。&lt;/p&gt;
+&lt;p&gt;問題は Redis Cluster における Pub/Sub の仕様にあります。あるシャードに publish されたメッセージは、クラスター内の&lt;strong&gt;全シャードにブロードキャスト&lt;/strong&gt;されます。24 シャード構成であれば、1 メッセージが残り 23 シャードに伝搬するため、アウトバウンドトラフィックはインバウンドの 23 倍になります。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;指標&lt;/th&gt;
+&lt;th&gt;値&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;クラスター構成&lt;/td&gt;
+&lt;td&gt;24 シャード / 48 ノード&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ノードあたり帯域（平常時）&lt;/td&gt;
+&lt;td&gt;500 Mbps&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ノードあたり帯域（ピーク時）&lt;/td&gt;
+&lt;td&gt;1.5 Gbps&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;シャードを増やせばクラスター性能は上がりますが、同時にブロードキャストのトラフィックも増えるというジレンマがあり、スケールアウトが頭打ちになっていました。&lt;/p&gt;</description></item><item><title>PolarDB</title><link>https://hdknr.github.io/blogs/posts/2024/07/17a1712865d19bdf7b978b94a9577f72/</link><pubDate>Wed, 31 Jul 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/07/17a1712865d19bdf7b978b94a9577f72/</guid><description>&lt;h1 id="polardb-for-postgresql"&gt;PolarDB for PostgreSQL&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;PolarDB for PostgreSQL（以下、PolarDB）は、Alibaba Cloud が独自に開発したクラウドネイティブなデータベースサービスです。&lt;/li&gt;
+&lt;li&gt;このサービスは、PostgreSQL と 100%互換性があり、共有ストレージベースのアーキテクチャを採用しています。&lt;/li&gt;
+&lt;li&gt;これにより、計算とストレージが分離され、柔軟なスケーラビリティ、ミリ秒レベルの遅延、HTAP（Hybrid Transactional/Analytical Processing）機能を提供します ¹²。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;主な特徴は以下の通りです：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;柔軟なスケーラビリティ&lt;/strong&gt;：ビジネス要件に応じて、計算クラスターやストレージクラスターをスケールアウトできます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ミリ秒レベルの遅延&lt;/strong&gt;：WAL（Write-Ahead Logging）ログが共有ストレージに保存され、メタデータのみがレプリケートされます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;HTAP 機能&lt;/strong&gt;：OLTP（オンライントランザクション処理）と OLAP（オンライン分析処理）の両方をサポートするためのアーキテクチャを持っています ¹²³。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;他に知りたいことがあれば教えてくださいね。&lt;/p&gt;
+&lt;p&gt;ソース: Copilot との会話、 2024/7/31
+(1) GitHub - ApsaraDB/PolarDB-for-PostgreSQL: A cloud-native &amp;hellip;. &lt;a href="https://github.com/ApsaraDB/PolarDB-for-PostgreSQL"&gt;https://github.com/ApsaraDB/PolarDB-for-PostgreSQL&lt;/a&gt;.
+(2) PolarDB for PostgreSQL - Gitee. &lt;a href="https://gitee.com/polardb/PolarDB-for-PostgreSQL"&gt;https://gitee.com/polardb/PolarDB-for-PostgreSQL&lt;/a&gt;.
+(3) PolarDB&lt;em&gt;云原生数据库&lt;/em&gt;自研数据库_数据库-阿里云. &lt;a href="https://polardbpg.com/"&gt;https://polardbpg.com/&lt;/a&gt;.
+(4) PolarDB: 阿里云开源云原生数据库 PolarDB - Gitee. &lt;a href="https://gitee.com/polardb"&gt;https://gitee.com/polardb&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/hmatsu47/items/3ebefcc778273776f5e6"&gt;PolarDB for PostgreSQL 14 で pgvector と LangChain を使ってベクトル検索してみる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Redis キーの作成時刻</title><link>https://hdknr.github.io/blogs/posts/2023/11/44e397ac03deaa013c125c49c0d33904/</link><pubDate>Mon, 06 Nov 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/11/44e397ac03deaa013c125c49c0d33904/</guid><description>&lt;h1 id="redis-キーの登録日時"&gt;Redis キーの登録日時&lt;/h1&gt;
+&lt;p&gt;Redis でキーを登録した時刻を取得するには、残念ながら直接的な方法はありません。Redis はキーの作成日時や更新日時を保存していないからです ¹。ただし、いくつかの回避策があります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;キーを登録するときに、別のキーにタイムスタンプを保存する。
+例えば、&lt;code&gt;SET foo bar&lt;/code&gt;とするときに、&lt;code&gt;SET foo:timestamp 1636106362&lt;/code&gt;というように、キーの名前に&lt;code&gt;:timestamp&lt;/code&gt;を付けて現在の UNIX 時間を値として保存する。
+この方法では、キーの数が増えるとメモリの消費量も増えることに注意が必要です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;キーの値にタイムスタンプを含める。
+例えば、&lt;code&gt;SET foo bar:1636106362&lt;/code&gt;というように、値の末尾に&lt;code&gt;:&lt;/code&gt;と現在の UNIX 時間を付ける。
+この方法では、値の取得や操作において、タイムスタンプを除去する必要があることに注意が必要です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;キーに有効期限を設定する。
+例えば、&lt;code&gt;EXPIRE foo 3600&lt;/code&gt;とすると、キー&lt;code&gt;foo&lt;/code&gt;は 1 時間後に削除される。
+このとき、&lt;code&gt;TTL foo&lt;/code&gt;とすると、キーの残りの有効期限が秒単位で返される。
+この値から、キーの登録時刻を逆算することができる。この方法では、キーが削除されると時刻を取得できなくなることに注意が必要です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上の方法のいずれも完璧ではありませんが、Redis でキーの登録時刻を取得するための可能な解決策として参考にしてください。&lt;/p&gt;
+&lt;p&gt;¹: &lt;a href="%5E1%5E"&gt;Redis でキーの作成日時や更新日時を取得する方法はありますか？ - スタック・オーバーフロー&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/11/6
+(1) redis-cli でよく使うコマンド 20 選 #Redis - Qiita. &lt;a href="https://qiita.com/hatsu/items/a52817364160e0b6bb60"&gt;https://qiita.com/hatsu/items/a52817364160e0b6bb60&lt;/a&gt;.
+(2) redis-cli でよく使うコマンド 20 選 #Redis - Qiita. &lt;a href="https://qiita.com/hatsu/items/a52817364160e0b6bb60"&gt;https://qiita.com/hatsu/items/a52817364160e0b6bb60&lt;/a&gt;.
+(3) 全データ型対応の操作 — redis 2.0.3 documentation - shibu.jp. &lt;a href="http://redis.shibu.jp/commandreference/alldata.html"&gt;http://redis.shibu.jp/commandreference/alldata.html&lt;/a&gt;.
+(4) 【2022 年最新版】【Redis メモ・3】キーに有効期限を付与し &amp;hellip;. &lt;a href="https://www.servernote.net/article.cgi?id=redis-note-3"&gt;https://www.servernote.net/article.cgi?id=redis-note-3&lt;/a&gt;.
+(5) セッション管理として Redis を使用する - RAKUS Developers Blog &amp;hellip;. &lt;a href="https://tech-blog.rakus.co.jp/entry/2017/10/17/111828"&gt;https://tech-blog.rakus.co.jp/entry/2017/10/17/111828&lt;/a&gt;.
+(6) ja.wikipedia.org. &lt;a href="https://ja.wikipedia.org/wiki/Redis"&gt;https://ja.wikipedia.org/wiki/Redis&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>DRF: DataFrame を使って CSV エクスポート</title><link>https://hdknr.github.io/blogs/posts/2023/08/92c5eb49f98b8e7a52ab4afc7801ed92/</link><pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/08/92c5eb49f98b8e7a52ab4afc7801ed92/</guid><description>&lt;h1 id="drf-dataframe-を使って-csv-エクスポート"&gt;DRF: DataFrame を使って CSV エクスポート&lt;/h1&gt;
+&lt;h2 id="csv-レンダラー"&gt;CSV レンダラー&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;dataframe_to_csv_stream&lt;/span&gt;(df, encoding&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;kwargs):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; buffer &lt;span style="color:#f92672"&gt;=&lt;/span&gt; BytesIO()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; df&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(buffer, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;kwargs)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; buffer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;seek(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; encoding:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; BytesIO(buffer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;read()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;decode(&lt;span style="color:#e6db74"&gt;&amp;#34;utf8&amp;#34;&lt;/span&gt;)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;encode(encoding))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; buffer
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DataFrameCSVRenderer&lt;/span&gt;(BaseRenderer):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; media_type &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;text/csv&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; format &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;csv&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;render&lt;/span&gt;(self, data, media_type&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, renderer_context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, writer_opts&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; renderer_context &lt;span style="color:#f92672"&gt;=&lt;/span&gt; renderer_context &lt;span style="color:#f92672"&gt;or&lt;/span&gt; {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; isinstance(data, pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(data)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stream &lt;span style="color:#f92672"&gt;=&lt;/span&gt; dataframe_to_csv_stream(data, index&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; stream&lt;span style="color:#f92672"&gt;.&lt;/span&gt;read()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;decode(&lt;span style="color:#e6db74"&gt;&amp;#34;utf-8-sig&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="dataframe-を返すリストシリアライザ"&gt;DataFrame を返すリストシリアライザ&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DataFrameSerializer&lt;/span&gt;(serializers&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ListSerializer):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@property&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;(self):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ret &lt;span style="color:#f92672"&gt;=&lt;/span&gt; super()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ser &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ret&lt;span style="color:#f92672"&gt;.&lt;/span&gt;serializer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;child
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; columns &lt;span style="color:#f92672"&gt;=&lt;/span&gt; dict((name, field&lt;span style="color:#f92672"&gt;.&lt;/span&gt;label) &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; name, field &lt;span style="color:#f92672"&gt;in&lt;/span&gt; ser&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fields&lt;span style="color:#f92672"&gt;.&lt;/span&gt;items())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(ret)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;rename(columns&lt;span style="color:#f92672"&gt;=&lt;/span&gt;columns)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="エクスポートするシリアライザを生成するメタクラス"&gt;エクスポートするシリアライザを生成するメタクラス&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ExpporSerializerMetaclass&lt;/span&gt;(serializers&lt;span style="color:#f92672"&gt;.&lt;/span&gt;SerializerMetaclass):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; EXPORT_META &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; FIELD_CLASS_DEFAULTS &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@classmethod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;create_fields&lt;/span&gt;(cls):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_create_field&lt;/span&gt;(item):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; label, name, klass &lt;span style="color:#f92672"&gt;=&lt;/span&gt; item
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; defaults &lt;span style="color:#f92672"&gt;=&lt;/span&gt; cls&lt;span style="color:#f92672"&gt;.&lt;/span&gt;FIELD_CLASS_DEFAULTS[klass]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; (name, getattr(serializers, klass)(label&lt;span style="color:#f92672"&gt;=&lt;/span&gt;label, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;defaults))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; dict(map(_create_field, cls&lt;span style="color:#f92672"&gt;.&lt;/span&gt;EXPORT_META))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@classmethod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;annotate&lt;/span&gt;(cls, queryset):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;NotImplementedError&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;__new__&lt;/span&gt;(cls, name, bases, attrs, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;kwargs):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; attrs[&lt;span style="color:#e6db74"&gt;&amp;#34;Meta&amp;#34;&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fields &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [i[&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;] &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; cls&lt;span style="color:#f92672"&gt;.&lt;/span&gt;EXPORT_META] &lt;span style="color:#75715e"&gt;# CSVで返答するカラム&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; attrs[&lt;span style="color:#e6db74"&gt;&amp;#34;Meta&amp;#34;&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;list_serializer_class &lt;span style="color:#f92672"&gt;=&lt;/span&gt; DataFrameSerializer &lt;span style="color:#75715e"&gt;# リストシリアライザ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; attrs&lt;span style="color:#f92672"&gt;.&lt;/span&gt;update(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;cls&lt;span style="color:#f92672"&gt;.&lt;/span&gt;create_fields())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; attrs[&lt;span style="color:#e6db74"&gt;&amp;#34;annotate&amp;#34;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; cls&lt;span style="color:#f92672"&gt;.&lt;/span&gt;annotate &lt;span style="color:#75715e"&gt;# クエリセットをアノテートさせるクラスメソッド &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; super()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;__new__&lt;/span&gt;(cls, name, bases, attrs, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;kwargs)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="実際のメタクラス"&gt;実際のメタクラス&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;28
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;29
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;IncomeExpporSerializerMetaclass&lt;/span&gt;(ExpporSerializerMetaclass):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# (ラベル, フィールド名, フィールドクラス名)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; EXPORT_META &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#e6db74"&gt;&amp;#34;会社コード&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;order__company_code&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;CharField&amp;#34;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;....&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# フィールドクラスのデフォルト値&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; FIELD_CLASS_DEFAULTS &lt;span style="color:#f92672"&gt;=&lt;/span&gt; dict(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CharField&lt;span style="color:#f92672"&gt;=&lt;/span&gt;dict(read_only&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; DecimalField&lt;span style="color:#f92672"&gt;=&lt;/span&gt;dict(max_digits&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;12&lt;/span&gt;, decimal_places&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, read_only&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@classmethod&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;annotate&lt;/span&gt;(cls, queryset):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34; クエリセットを適切にアノテートする&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_ann&lt;/span&gt;(item):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; label, name, klass &lt;span style="color:#f92672"&gt;=&lt;/span&gt; item
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; name&lt;span style="color:#f92672"&gt;.&lt;/span&gt;startswith(&lt;span style="color:#e6db74"&gt;&amp;#34;order__&amp;#34;&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# リレーション&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; (name, F(name))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; name&lt;span style="color:#f92672"&gt;.&lt;/span&gt;startswith(&lt;span style="color:#e6db74"&gt;&amp;#34;meme__&amp;#34;&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 固定値&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; (name, Value(&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# その他はモデルフィールドなのでアノテートしない&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; (&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ann &lt;span style="color:#f92672"&gt;=&lt;/span&gt; dict(filter(&lt;span style="color:#66d9ef"&gt;lambda&lt;/span&gt; i: i[&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;] &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, map(_ann, cls&lt;span style="color:#f92672"&gt;.&lt;/span&gt;EXPORT_META)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; queryset&lt;span style="color:#f92672"&gt;.&lt;/span&gt;annotate(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;ann)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="実際のシリアライザ"&gt;実際のシリアライザ&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;IncomeExportSerializer&lt;/span&gt;(serializers&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ModelSerializer, metaclass&lt;span style="color:#f92672"&gt;=&lt;/span&gt;IncomeExpporSerializerMetaclass):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Meta&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model &lt;span style="color:#f92672"&gt;=&lt;/span&gt; models&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Income
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="api-本体ビューセット"&gt;API 本体(ビューセット)&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;IncomeViewSet&lt;/span&gt;(VS&lt;span style="color:#f92672"&gt;.&lt;/span&gt;BaseModelViewSet):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; serializer_class &lt;span style="color:#f92672"&gt;=&lt;/span&gt; serializers&lt;span style="color:#f92672"&gt;.&lt;/span&gt;IncomeSerializer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; queryset &lt;span style="color:#f92672"&gt;=&lt;/span&gt; models&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Income&lt;span style="color:#f92672"&gt;.&lt;/span&gt;objects&lt;span style="color:#f92672"&gt;.&lt;/span&gt;all()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; pagination_class &lt;span style="color:#f92672"&gt;=&lt;/span&gt; paginations&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Pagination
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; renderer_classes &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tuple(api_settings&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DEFAULT_RENDERER_CLASSES) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; (DataFrameCSVRenderer,)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_serializer_class&lt;/span&gt;(self):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34; export アクションでシリアライザを切り替える &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; res &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;export&amp;#34;&lt;/span&gt;: serializers&lt;span style="color:#f92672"&gt;.&lt;/span&gt;IncomeExportSerializer,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;action, super()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get_serializer_class())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; res
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_queryset&lt;/span&gt;(self):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34; export アクションの場合、必要なアノテーションを行う &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; qs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; super()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get_queryset()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;action &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;export&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; qs &lt;span style="color:#f92672"&gt;=&lt;/span&gt; serializers&lt;span style="color:#f92672"&gt;.&lt;/span&gt;IncomeExportSerializer&lt;span style="color:#f92672"&gt;.&lt;/span&gt;annotate(qs)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;filter(level&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; qs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; qs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@decorators.action&lt;/span&gt;(methods&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;get&amp;#34;&lt;/span&gt;], detail&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;export&lt;/span&gt;(self, request, pk&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;## リスト処理を行うと シリアライザとレンダラで勝手にCSVを返答する(Accept: text/csvの時)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;list(request)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>MySQL BULK INSERT</title><link>https://hdknr.github.io/blogs/posts/2023/08/f535daf6a7506df3d6a1a666bb0b8849/</link><pubDate>Tue, 15 Aug 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/08/f535daf6a7506df3d6a1a666bb0b8849/</guid><description>&lt;h1 id="mysql-バルクインサート"&gt;MySQL バルクインサート&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://wonwon-eater.com/mysql-insert/#outline__1_1"&gt;MySQL 複数データのバルク INSERT や CSV ファイルから高速インポートする方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.softel.co.jp/blogs/tech/archives/2293"&gt;【MySQL】LOAD DATA INFILE するときのファイルの文字コード&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@main.command&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@click.argument&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;source_file&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@click.option&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;--encoding&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-e&amp;#34;&lt;/span&gt;, default&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;cp932&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@click.pass_context&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;data_import&lt;/span&gt;(ctx, source_file, encoding):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34; import TSV file &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; opt &lt;span style="color:#f92672"&gt;=&lt;/span&gt; get_model()&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_meta
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; fields &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;,&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;.&lt;/span&gt;join([f&lt;span style="color:#f92672"&gt;.&lt;/span&gt;name &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; f &lt;span style="color:#f92672"&gt;in&lt;/span&gt; opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fields &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; f&lt;span style="color:#f92672"&gt;.&lt;/span&gt;name &lt;span style="color:#f92672"&gt;not&lt;/span&gt; &lt;span style="color:#f92672"&gt;in&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;]])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SQL &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; LOAD DATA LOCAL INFILE &amp;#39;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;source_file&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39; INTO TABLE &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;opt&lt;span style="color:#f92672"&gt;.&lt;/span&gt;db_table&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; CHARACTER SET &lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;encoding&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; FIELDS TERMINATED BY &amp;#39;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\t&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39; (&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;fields&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;) ;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; connection&lt;span style="color:#f92672"&gt;.&lt;/span&gt;cursor() &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; cursor:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;execute(SQL)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(cursor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;fetchall())
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;重複時に UPDATE する(&lt;code&gt;REPLACE&lt;/code&gt;):&lt;/p&gt;</description></item><item><title>MySQL only_full_group_by</title><link>https://hdknr.github.io/blogs/posts/2023/06/506c4756ec411fe30bae034fbd04209d/</link><pubDate>Fri, 30 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/506c4756ec411fe30bae034fbd04209d/</guid><description>&lt;h1 id="only_full_group_by"&gt;&lt;code&gt;only_full_group_by&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;エラー:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-txt" data-lang="txt"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;OperationalError: (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; 1055,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &amp;#34;Expression #1 of SELECT list is not in GROUP BY clause
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; and contains nonaggregated column &amp;#39;server.sales_sales.sales_status&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; which is not functionally dependent on columns in GROUP BY clause;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; this is incompatible with sql_mode=only_full_group_by&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;対処: &lt;code&gt;sql_mod&lt;/code&gt; に &lt;code&gt;traditional&lt;/code&gt; を指定する&lt;/p&gt;</description></item><item><title>MySQL 半角カナ検索</title><link>https://hdknr.github.io/blogs/posts/2023/05/9ab709a18700b0a9a97b327112c8e6bb/</link><pubDate>Wed, 31 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/9ab709a18700b0a9a97b327112c8e6bb/</guid><description>&lt;h2 id="utf8mb4_0900_ai_ci"&gt;utf8mb4_0900_ai_ci&lt;/h2&gt;
+&lt;p&gt;「utf8mb4_0900_ai_ci」という照合順序は、MySQL 8.0 から標準になった照合順序で、Unicode 9.0 の文字セットをサポートしています。¹&lt;/p&gt;
+&lt;p&gt;この照合順序は、文字列の比較において、アクセントや大小文字を区別せずに比較することができます。¹&lt;/p&gt;
+&lt;p&gt;また、日本語のようなマルチバイト文字を含む文字列を扱う場合にも適しています。¹¹:
+&lt;a href="https://qiita.com/seltzer/items/8b5d8a61591e72715d5b"&gt;MySQL 8.0 の照合順序で標準になった「utf8mb4_0900_ai_ci」とは - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/5/31&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) MySQL 8.0 の照合順序で標準になった「utf8mb4_0900_ai_ci &amp;hellip;. &lt;a href="https://qiita.com/seltzer/items/8b5d8a61591e72715d5b"&gt;https://qiita.com/seltzer/items/8b5d8a61591e72715d5b&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(2) MySQL :: MySQL 8.0 リファレンスマニュアル :: 10.5 &amp;hellip;. &lt;a href="https://dev.mysql.com/doc/refman/8.0/ja/charset-applications.html"&gt;https://dev.mysql.com/doc/refman/8.0/ja/charset-applications.html&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(3) MySQL :: MySQL 8.0 リファレンスマニュアル :: 10.4 接続文字 &amp;hellip;. &lt;a href="https://dev.mysql.com/doc/refman/8.0/ja/charset-connection.html"&gt;https://dev.mysql.com/doc/refman/8.0/ja/charset-connection.html&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="半角カナの濁点ありは照合順序の設定では解決できない"&gt;半角カナの濁点ありは照合順序の設定では解決できない&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;utf8mb4_0900_ai_ci&lt;/code&gt; での検索:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;where&lt;/th&gt;
+&lt;th&gt;結果&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ベル&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ヘル&lt;/code&gt;, &lt;code&gt;ベル&lt;/code&gt;, &lt;code&gt;ﾍﾙ&lt;/code&gt; (つまり、 &lt;code&gt;ﾍﾞﾙ&lt;/code&gt; は一致しない)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ヘル&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ヘル&lt;/code&gt;, &lt;code&gt;ベル&lt;/code&gt;, &lt;code&gt;ﾍﾙ&lt;/code&gt; (つまり、 &lt;code&gt;ﾍﾞﾙ&lt;/code&gt; は一致しない)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ﾍﾙ&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ヘル&lt;/code&gt;, &lt;code&gt;ベル&lt;/code&gt;, &lt;code&gt;ﾍﾙ&lt;/code&gt; (つまり、 &lt;code&gt;ﾍﾞﾙ&lt;/code&gt; は一致しない)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ﾍﾞﾙ&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ﾍﾞﾙ&lt;/code&gt; (のみ)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="django-filter-method-フィルターで対応"&gt;django-filter: method フィルターで対応&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; functools &lt;span style="color:#f92672"&gt;import&lt;/span&gt; reduce
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; operator &lt;span style="color:#f92672"&gt;import&lt;/span&gt; or_
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; django_filters &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; DF
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; jaconv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;filter_icontains_mix&lt;/span&gt;(queryset, name, value):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;全角半角を区別しないで検索(濁点対応)&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; value:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; queryset
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; values &lt;span style="color:#f92672"&gt;=&lt;/span&gt; set([jaconv&lt;span style="color:#f92672"&gt;.&lt;/span&gt;h2z(value), jaconv&lt;span style="color:#f92672"&gt;.&lt;/span&gt;z2h(value)])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_query&lt;/span&gt;(v):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; Q(&lt;span style="color:#f92672"&gt;**&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;name&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;__icontains&amp;#34;&lt;/span&gt;: v})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; query &lt;span style="color:#f92672"&gt;=&lt;/span&gt; reduce(or_, map(_query, values))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; queryset&lt;span style="color:#f92672"&gt;.&lt;/span&gt;filter(query)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;OrderFilter&lt;/span&gt;(DF&lt;span style="color:#f92672"&gt;.&lt;/span&gt;FilterSet):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; customer_name__contains &lt;span style="color:#f92672"&gt;=&lt;/span&gt; DF&lt;span style="color:#f92672"&gt;.&lt;/span&gt;CharFilter(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; field_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;customer_name&amp;#34;&lt;/span&gt;, lookup_expr&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;icontains&amp;#34;&lt;/span&gt;, method&lt;span style="color:#f92672"&gt;=&lt;/span&gt;filter_icontains_mix
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>MySQL: ERROR 1553 (HY000): Cannot drop index 'uniq_profit': needed in a foreign key constraint</title><link>https://hdknr.github.io/blogs/posts/2023/04/45977c6ccb776010dc14dd4b4c9e195e/</link><pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/45977c6ccb776010dc14dd4b4c9e195e/</guid><description>&lt;h2 id="mysql-error-1553-hy000-cannot-drop-index-uniq_profit-needed-in-a-foreign-key-constraint"&gt;MySQL: ERROR 1553 (HY000): Cannot drop index &amp;lsquo;uniq_profit&amp;rsquo;: needed in a foreign key constraint&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://engineering.mobalab.net/2021/01/19/mysql-cannot-drop-index/"&gt;MySQL で一意制約が削除できない&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;UNIQUE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;uniq_profit&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;,&lt;span style="color:#f92672"&gt;`&lt;/span&gt;accounting_status&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit_sales_id_d56dec15_fk_sales_sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;sales_sales&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit_chk_1&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CHECK&lt;/span&gt; ((&lt;span style="color:#f92672"&gt;`&lt;/span&gt;fiscal_year&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit_sales_id_d56dec15_fk_sales_sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;uniq_profit&lt;span style="color:#f92672"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ADD&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit_sales_id_d56dec15_fk_sales_sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;sales_sales&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;実行:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysql&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit_sales_id_d56dec15_fk_sales_sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;uniq_profit&lt;span style="color:#f92672"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Query OK, &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;rows&lt;/span&gt; affected (&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;.&lt;span style="color:#ae81ff"&gt;20&lt;/span&gt; sec)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Records: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; Duplicates: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; Warnings: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysql&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ADD&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;costs_profit_sales_id_d56dec15_fk_sales_sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;sales_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;sales_sales&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Query OK, &lt;span style="color:#ae81ff"&gt;16&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;rows&lt;/span&gt; affected (&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;.&lt;span style="color:#ae81ff"&gt;17&lt;/span&gt; sec)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Records: &lt;span style="color:#ae81ff"&gt;16&lt;/span&gt; Duplicates: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; Warnings: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="django-migration-の失敗"&gt;Django Migration の失敗&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; django.db &lt;span style="color:#f92672"&gt;import&lt;/span&gt; migrations, models
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Migration&lt;/span&gt;(migrations&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Migration):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dependencies &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#e6db74"&gt;&amp;#39;partners&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;0003_auto_20230426_0908&amp;#39;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; operations &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; migrations&lt;span style="color:#f92672"&gt;.&lt;/span&gt;RemoveConstraint(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;partneruserrole&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;uniq_partneruserrole&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; migrations&lt;span style="color:#f92672"&gt;.&lt;/span&gt;AddConstraint(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; model_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;partneruserrole&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; constraint&lt;span style="color:#f92672"&gt;=&lt;/span&gt;models&lt;span style="color:#f92672"&gt;.&lt;/span&gt;UniqueConstraint(fields&lt;span style="color:#f92672"&gt;=&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;partner&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;partneruser&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;permission&amp;#39;&lt;/span&gt;), name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;uniq_partneruserrole&amp;#39;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="制約-検索"&gt;制約 検索&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DISTINCT&lt;/span&gt; A.&lt;span style="color:#66d9ef"&gt;CONSTRAINT_NAME&lt;/span&gt;, A.&lt;span style="color:#66d9ef"&gt;TABLE_NAME&lt;/span&gt;, A.&lt;span style="color:#66d9ef"&gt;COLUMN_NAME&lt;/span&gt;, B.&lt;span style="color:#66d9ef"&gt;CONSTRAINT_NAME&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; INFORMATION_SCHEMA.KEY_COLUMN_USAGE &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; A
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; INFORMATION_SCHEMA.KEY_COLUMN_USAGE &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; B
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; A.&lt;span style="color:#66d9ef"&gt;TABLE_NAME&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; B.&lt;span style="color:#66d9ef"&gt;TABLE_NAME&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; A.&lt;span style="color:#66d9ef"&gt;TABLE_NAME&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;partners_partneruserrole&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; B.&lt;span style="color:#66d9ef"&gt;CONSTRAINT_NAME&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;like&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;uniq_%&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; A.&lt;span style="color:#66d9ef"&gt;CONSTRAINT_NAME&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;not&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;like&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;uniq_%&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; A.&lt;span style="color:#66d9ef"&gt;CONSTRAINT_NAME&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;PRIMARY&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;+-----------------------------------------------------------+--------------------------+----------------+----------------------+
+| CONSTRAINT_NAME | TABLE_NAME | COLUMN_NAME | CONSTRAINT_NAME |
++-----------------------------------------------------------+--------------------------+----------------+----------------------+
+| partners_partneruser_partneruser_id_d59f67cc_fk_partners_ | partners_partneruserrole | partneruser_id | uniq_partneruserrole |
+| partners_partneruser_partner_id_852ab185_fk_partners_ | partners_partneruserrole | partner_id | uniq_partneruserrole |
+| partners_partneruser_permission_id_031e3996_fk_auth_perm | partners_partneruserrole | permission_id | uniq_partneruserrole |
++-----------------------------------------------------------+--------------------------+----------------+----------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="再設定"&gt;再設定&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_partneruser_id_d59f67cc_fk_partners_&lt;span style="color:#f92672"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_partner_id_852ab185_fk_partners_&lt;span style="color:#f92672"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_partner_id_852ab185_fk_partners_&lt;span style="color:#f92672"&gt;`&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INDEX&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;uniq_profit&lt;span style="color:#f92672"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ADD&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_partneruser_id_d59f67cc_fk_partners_&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;partneruser_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ADD&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_partner_id_852ab185_fk_partners_&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;partner_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partner&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;ADD&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_permission_id_031e3996_fk_auth_perm&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;permission_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;auth_permission&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;user_ptr_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="最終スキーマ"&gt;最終スキーマ&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;IF&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;EXISTS&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt; bigint &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt; AUTO_INCREMENT,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ....
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;UNIQUE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;uniq_partneruserrole&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;partner_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;,&lt;span style="color:#f92672"&gt;`&lt;/span&gt;partneruser_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;,&lt;span style="color:#f92672"&gt;`&lt;/span&gt;permission_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_partneruser_id_d59f67cc_fk_partners_&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;partneruser_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_permission_id_031e3996_fk_auth_perm&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;permission_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_partner_id_852ab185_fk_partners_&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;partner_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partner&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_partneruser_id_d59f67cc_fk_partners_&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;partneruser_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;user_ptr_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;partners_partneruser_permission_id_031e3996_fk_auth_perm&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;permission_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;auth_permission&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;) ENGINE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;InnoDB &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; CHARSET&lt;span style="color:#f92672"&gt;=&lt;/span&gt;utf8mb4 &lt;span style="color:#66d9ef"&gt;COLLATE&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;utf8mb4_0900_ai_ci;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>MySQL: ERROR 3780 (HY000) at line 1406622: Referencing column 'os_branch_id' and referenced column 'id' in foreign key constraint '***' are incompatible.</title><link>https://hdknr.github.io/blogs/posts/2023/04/5fd1d629ab71c3e877aff7531e976e97/</link><pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/5fd1d629ab71c3e877aff7531e976e97/</guid><description>&lt;h2 id="error-3780-hy000-at-line-1406622-referencing-column-os_branch_id-and-referenced-column-id-in-foreign-key-constraint--are-incompatible"&gt;&lt;code&gt;ERROR 3780 (HY000) at line 1406622: Referencing column 'os_branch_id' and referenced column 'id' in foreign key constraint '***' are incompatible.&lt;/code&gt;&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;gas_bombehouse&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt; int &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt; AUTO_INCREMENT,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;code&lt;span style="color:#f92672"&gt;`&lt;/span&gt; varchar(&lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ....
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;os_branch_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt; bigint &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;UNIQUE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;code&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;code&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;gas_bombehouse_os_branch_id_d35d17d3_fk_outsource&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;os_branch_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;CONSTRAINT&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;gas_bombehouse_os_branch_id_d35d17d3_fk&lt;span style="color:#f92672"&gt;`&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FOREIGN&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;os_branch_id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;REFERENCES&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;outsources_outsourcebranch&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;) ENGINE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;InnoDB AUTO_INCREMENT&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;6&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; CHARSET&lt;span style="color:#f92672"&gt;=&lt;/span&gt;utf8mb3;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/*!40101 SET character_set_client = @saved_cs_client */&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;outsources_outsourcebranch&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt; bigint &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt; AUTO_INCREMENT,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (&lt;span style="color:#f92672"&gt;`&lt;/span&gt;id&lt;span style="color:#f92672"&gt;`&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;) ENGINE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;InnoDB AUTO_INCREMENT&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;9751&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFAULT&lt;/span&gt; CHARSET&lt;span style="color:#f92672"&gt;=&lt;/span&gt;utf8mb3;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/*!40101 SET character_set_client = @saved_cs_client */&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="原因"&gt;原因&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;リモートの mysqldump を ローカルにそのまま取り込もうとしていた&lt;/li&gt;
+&lt;li&gt;古いスキーマが残っていて、その&lt;code&gt;id&lt;/code&gt;が&lt;code&gt;int&lt;/code&gt; であったため。&lt;/li&gt;
+&lt;li&gt;DROP TABLE IF EXISTS &lt;code&gt;table&lt;/code&gt; CREATE TABLE &lt;code&gt;table&lt;/code&gt; が実行されるまで、古いスキーマが残っている、ということ。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;IF&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;EXISTS&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;outsources_outsourcebranch&lt;span style="color:#f92672"&gt;`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/*!40101 SET @saved_cs_client = @@character_set_client */&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/*!50503 SET character_set_client = utf8mb4 */&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;outsources_outsourcebranch&lt;span style="color:#f92672"&gt;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;....
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="解決"&gt;解決&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;DROP DATABASE&lt;/code&gt; &amp;amp; &lt;code&gt;CREATE DATABASE&lt;/code&gt; して、更地にmysqldumpをロードする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="資料"&gt;資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://sebhastian.com/mysql-error-1215/"&gt;How to fix MySQL error 1215 Cannot add foreign key constraint&lt;/a&gt;&lt;/p&gt;</description></item><item><title>MySQL: JSON_OBJECT: JSON文字列フィールドを含む時のバックスラッシュ問題</title><link>https://hdknr.github.io/blogs/posts/2023/03/d10bbaf5de4c7cbb9c21f240ab5e543f/</link><pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/03/d10bbaf5de4c7cbb9c21f240ab5e543f/</guid><description>&lt;h2 id="how-to-replace-double-back-slash-character-to-single-one-from-mysql-json_object-function-results-for-column-including-json-string"&gt;&lt;code&gt;how to replace double back slash character to single one from MySQL JSON_OBJECT function results for column including JSON string&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;You can use the MySQL function &lt;code&gt;REPLACE()&lt;/code&gt; to replace double backslashes with single backslashes in a JSON object. Here&amp;rsquo;s an example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-mysql" data-lang="mysql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;REPLACE&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;JSON_OBJECT&lt;/span&gt;(column_name), &lt;span style="color:#e6db74"&gt;&amp;#39;\\\\\\\\&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;\\\\&amp;#39;&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; table_name;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;This will return the column values with double backslashes replaced with single backslashes.&lt;/p&gt;
+&lt;p&gt;If you want to insert a JSON object literal with single backslashes instead of double backslashes, you can set the &lt;code&gt;NO_BACKSLASH_ESCAPES&lt;/code&gt; SQL mode⁴. When this mode is set, a single backslash instead of double backslashes can be used to insert the JSON object literal, and the backslashes are preserved⁴. If you use the &lt;code&gt;JSON_OBJECT()&lt;/code&gt; function when performing the insert and this mode is set, you must alternate single and double quotes⁴.&lt;/p&gt;</description></item><item><title>Snowfake: ビュー</title><link>https://hdknr.github.io/blogs/posts/2023/03/0ba7781eab1c22d9bc05fb2c18f7cc3c/</link><pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/03/0ba7781eab1c22d9bc05fb2c18f7cc3c/</guid><description>&lt;h2 id="snowflake-view"&gt;Snowflake View&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.snowflake.com/ja/user-guide/views-introduction"&gt;ビューの概要&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.snowflake.com/ja/sql-reference/sql/create-view"&gt;CREATE VIEW&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="マテリアライズドビューenterprise-edition"&gt;マテリアライズドビュー(&lt;code&gt;Enterprise Edition&lt;/code&gt;)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://docs.snowflake.com/ja/user-guide/views-materialized"&gt;マテリアライズドビューの使用&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ベーステーブルで実行された DML の量に関係なく、マテリアライズドビューを介してアクセスされるデータは常に最新です。
+マテリアライズドビューが最新になる前にクエリが実行されると、Snowflakeはマテリアライズドビューを更新するか、
+マテリアライズドビューの最新部分を使用して、必要な新しいデータをベーステーブルから取得します。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://docs.snowflake.com/ja/sql-reference/sql/create-materialized-view"&gt;CREATE MATERIALIZED VIEW&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://products.sint.co.jp/siob/blog/oracle-view-mview"&gt;ビューとマテリアライズド・ビューの違いを理解する&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://zenn.dev/kyami/articles/a7d1e01cf78e59"&gt;Snowflake マテリアライズドビューについて&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://ikuty.com/2022/05/11/snowflake_materialized_view/"&gt;SnowflakeのMaterialized View&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://docs.snowflake.com/ja/user-guide/views-materialized#best-practices-for-clustering-materialized-views-and-their-base-tables"&gt;マテリアライズドビューとそのベーステーブルをクラスタリングするためのベストプラクティス&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="postgresql"&gt;PostgreSQL&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/jiyu58546526/items/84182206f9c908b47d38"&gt;マテリアライズドビューの機能（PostgreSQL）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;マテリアライズドビューの内容をテーブルの最新の状態と同じにしたいときには、REFRESH MATERIALIZED VIEWを実行します&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="mysql"&gt;MySQL&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://tech.excite.co.jp/entry/2022/02/07/174804"&gt;MySQLでMaterialized Viewを実現する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;残念ながら、MySQLではデフォルトでMaterialized Viewを作る機能は存在しません。&lt;/li&gt;
+&lt;li&gt;トリガーかバッチで参照用のテーブルを作る&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Snowflake: NDJSON format</title><link>https://hdknr.github.io/blogs/posts/2023/02/3d92e36bb3bbe85b7e913e61a6490be8/</link><pubDate>Tue, 14 Feb 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/02/3d92e36bb3bbe85b7e913e61a6490be8/</guid><description>&lt;h1 id="create-file-format"&gt;&lt;code&gt;CREATE FILE FORMAT&lt;/code&gt;&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.snowflake.com/ja/sql-reference/sql/create-file-format"&gt;https://docs.snowflake.com/ja/sql-reference/sql/create-file-format&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="json"&gt;JSON&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.snowflake.com/ja/sql-reference/sql/create-file-format#type-json"&gt;https://docs.snowflake.com/ja/sql-reference/sql/create-file-format#type-json&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;-- If TYPE = JSON
+COMPRESSION = AUTO | GZIP | BZ2 | BROTLI | ZSTD | DEFLATE | RAW_DEFLATE | NONE
+DATE_FORMAT = &amp;#39;&amp;lt;string&amp;gt;&amp;#39; | AUTO
+TIME_FORMAT = &amp;#39;&amp;lt;string&amp;gt;&amp;#39; | AUTO
+TIMESTAMP_FORMAT = &amp;#39;&amp;lt;string&amp;gt;&amp;#39; | AUTO
+BINARY_FORMAT = HEX | BASE64 | UTF8
+TRIM_SPACE = TRUE | FALSE
+NULL_IF = ( &amp;#39;&amp;lt;string&amp;gt;&amp;#39; [ , &amp;#39;&amp;lt;string&amp;gt;&amp;#39; ... ] )
+FILE_EXTENSION = &amp;#39;&amp;lt;string&amp;gt;&amp;#39;
+ENABLE_OCTAL = TRUE | FALSE
+ALLOW_DUPLICATE = TRUE | FALSE
+STRIP_OUTER_ARRAY = TRUE | FALSE
+STRIP_NULL_VALUES = TRUE | FALSE
+REPLACE_INVALID_CHARACTERS = TRUE | FALSE
+IGNORE_UTF8_ERRORS = TRUE | FALSE
+SKIP_BYTE_ORDER_MARK = TRUE | FALSE
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>doctrine ORM</title><link>https://hdknr.github.io/blogs/posts/2015/08/34b7cdf47b330a63fead/</link><pubDate>Thu, 06 Aug 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/08/34b7cdf47b330a63fead/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;$ ./composer.phar require doctrine/orm 2.4.*
+./composer.json has been updated
+Loading composer repositories with package information
+Updating dependencies (including require-dev)
+- Installing doctrine/collections (dev-master 3661cd8)
+Cloning 3661cd8bc5152598dbe6772e98b78d1fa8281a67
+- Installing doctrine/cache (dev-master e7b77e5)
+Cloning e7b77e5abe230a2cc1db5005fb86435da213ae3b
+- Installing doctrine/inflector (dev-master b0b2fef)
+Cloning b0b2feffb47906a03b570777c07044c529d1d124
+- Installing doctrine/common (2.5.x-dev 26727ba)
+Cloning 26727ba78de21a824dcbfa5a8ab52c21fe7d71d5
+- Installing doctrine/dbal (dev-master cc2d503)
+Cloning cc2d50385efa1ea87f5d0afa2c47cc2499914f81
+- Installing doctrine/orm (2.4.x-dev 0cf7e0e)
+Cloning 0cf7e0e628c1409c9235c9b107c9623a2e8a80ef
+doctrine/orm suggests installing symfony/yaml (If you want to use YAML Metadata Mapping Driver)
+Writing lock file
+Generating autoload files
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>MySQL</title><link>https://hdknr.github.io/blogs/posts/2015/08/f51a6866ad655ecd548f/</link><pubDate>Wed, 05 Aug 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/08/f51a6866ad655ecd548f/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;[intrinsic column flags]
+- PK: primary key (column is part of a pk)
+- NN: not null (column is nullable)
+- UQ: unique (column is part of a unique key)
+- AI: auto increment (the column is auto incremented when rows are inserted)
+[additional data type flags, depend on used data type]
+- BIN: binary (if dt is a blob or similar, this indicates that is binary data, rather than text)
+- UN: unsigned (for integer types, see docs: &amp;#34;10.2. Numeric Types&amp;#34;)
+- ZF: zero fill (rather a display related flag, see docs: &amp;#34;10.2. Numeric Types&amp;#34;)
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://d.hatena.ne.jp/yk5656/20140506/1400878224"&gt;MySQLでログを出力してみる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="error-2049-hy000-connection-using-old-pre-411-authentication-protocol-refused-client-option-secure_auth-enabled"&gt;ERROR 2049 (HY000): Connection using old (pre-4.1.1) authentication protocol refused (client option &amp;lsquo;secure_auth&amp;rsquo; enabled)&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;MySQLのバージョンがちがうとパスワードハッシュが違うのでログインできなくなる&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Redis Windows</title><link>https://hdknr.github.io/blogs/posts/2015/04/ecf1cb51339d7447a19e/</link><pubDate>Tue, 21 Apr 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/04/ecf1cb51339d7447a19e/</guid><description>&lt;h1 id="redis-64-on-windows"&gt;Redis-64 on Windows&lt;/h1&gt;
+&lt;h2 id="install"&gt;Install&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr&amp;gt;choco install redis-64
+Chocolatey v0.9.9.2
+Installing the following packages:
+redis-64
+By installing you accept licenses for the packages.
+redis-64 v2.8.19
+ShimGen has successfully created a shim for redis-benchmark.exe
+ShimGen has successfully created a shim for redis-check-aof.exe
+ShimGen has successfully created a shim for redis-check-dump.exe
+ShimGen has successfully created a shim for redis-cli.exe
+ShimGen has successfully created a shim for redis-server.exe
+redis-64 has been installed successfully.
+Chocolatey installed 1/1 package(s). 0 package(s) failed.
+See the log for details.
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="redis-server"&gt;redis-server&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr&amp;gt;redis-server
+[7308] 21 Apr 10:26:02.432 # Warning: no config file specified, using the defaul
+t config.
+In order to specify a config file use C:\ProgramData\chocolatey\lib\redis-64\redis-server.exe /path/to/redis.conf
+_._
+_.-``__ &amp;#39;&amp;#39;-._
+_.-`` `. `_. &amp;#39;&amp;#39;-._ Redis 2.8.19 (00000000/0) 64 bit
+.-`` .-```. ```\/ _.,_ &amp;#39;&amp;#39;-._
+( &amp;#39; , .-` | `, ) Running in stand alone mode
+|`-._`-...-` __...-.``-._|&amp;#39;` _.-&amp;#39;| Port: 6379
+| `-._ `._ / _.-&amp;#39; | PID: 7308
+`-._ `-._ `-./ _.-&amp;#39; _.-&amp;#39;
+|`-._`-._ `-.__.-&amp;#39; _.-&amp;#39;_.-&amp;#39;|
+| `-._`-._ _.-&amp;#39;_.-&amp;#39; | http://redis.io
+`-._ `-._`-.__.-&amp;#39;_.-&amp;#39; _.-&amp;#39;
+|`-._`-._ `-.__.-&amp;#39; _.-&amp;#39;_.-&amp;#39;|
+| `-._`-._ _.-&amp;#39;_.-&amp;#39; |
+`-._ `-._`-.__.-&amp;#39;_.-&amp;#39; _.-&amp;#39;
+`-._ `-.__.-&amp;#39; _.-&amp;#39;
+`-._ _.-&amp;#39;
+`-.__.-&amp;#39;
+[7308] 21 Apr 10:26:02.455 # Server started, Redis version 2.8.19
+[7308] 21 Apr 10:26:02.456 * The server is now ready to accept connections on port 6379
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="redis-cli"&gt;redis-cli&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr&amp;gt;redis-cli
+127.0.0.1:6379&amp;gt; set testkey testvalue
+OK
+127.0.0.1:6379&amp;gt; get testkey
+&amp;#34;testvalue&amp;#34;
+127.0.0.1:6379&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="stackexchangeredis"&gt;StackExchange.Redis&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/StackExchange.Redis/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;PM&amp;gt; Install-Package StackExchange.Redis
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Windows Forms&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-csharp" data-lang="csharp"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; button1_Click(&lt;span style="color:#66d9ef"&gt;object&lt;/span&gt; sender, EventArgs e)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; connect = StackExchange.Redis.ConnectionMultiplexer.Connect(&lt;span style="color:#e6db74"&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; cb = connect.GetDatabase(); &lt;span style="color:#75715e"&gt;// StackExchange.Redis.IDatabase&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cb.StringSet(&lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;hdknr&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; MessageBox.Show(cb.StringGet(&lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Console Client&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;127.0.0.1:6379&amp;gt; get name
+&amp;#34;hdknr&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>PNGファイルの連結</title><link>https://hdknr.github.io/blogs/posts/2015/03/6dc08ad7738383e2d1b5/</link><pubDate>Sun, 01 Mar 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/03/6dc08ad7738383e2d1b5/</guid><description>&lt;h2 id="imagemagick-install"&gt;imagemagick install&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;$ brew install ImageMagick
+==&amp;gt; Downloading https://homebrew.bintray.com/bottles/imagemagick-6.9.0-3.yosemite.bottle.tar.gz
+######################################################################## 100.0%
+==&amp;gt; Pouring imagemagick-6.9.0-3.yosemite.bottle.tar.gz
+Error: The `brew link` step did not complete successfully
+The formula built, but is not symlinked into /usr/local
+Could not symlink bin/convert
+Target /usr/local/bin/convert
+already exists. You may want to remove it:
+rm &amp;#39;/usr/local/bin/convert&amp;#39;
+To force the link and overwrite all conflicting files:
+brew link --overwrite imagemagick
+To list all files that would be deleted:
+brew link --overwrite --dry-run imagemagick
+Possible conflicting files are:
+/usr/local/bin/convert
+/usr/local/share/man/man1/convert.1
+==&amp;gt; Summary
+🍺 /usr/local/Cellar/imagemagick/6.9.0-3: 1440 files, 22M
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;$ rm &amp;#39;/usr/local/bin/convert&amp;#39;
+override rwxr-xr-x root/wheel for /usr/local/bin/convert? yes
+$ ls /usr/local/bin/convert
+ls: /usr/local/bin/convert: No such file or directory
+$ brew link --overwrite imagemagick
+Linking /usr/local/Cellar/imagemagick/6.9.0-3... 71 symlinks created
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Boostrap : nav</title><link>https://hdknr.github.io/blogs/posts/2015/02/1726910830023440a703/</link><pubDate>Wed, 25 Feb 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/02/1726910830023440a703/</guid><description>&lt;ul&gt;
+&lt;li&gt;navbar&lt;/li&gt;
+&lt;li&gt;navbar-brand&lt;/li&gt;
+&lt;li&gt;navbar-collapse&lt;/li&gt;
+&lt;li&gt;navbar-default&lt;/li&gt;
+&lt;li&gt;navbar-form&lt;/li&gt;
+&lt;li&gt;navbar-header&lt;/li&gt;
+&lt;li&gt;navbar-nav&lt;/li&gt;
+&lt;li&gt;navbar-toggle&lt;/li&gt;
+&lt;li&gt;navbar-left&lt;/li&gt;
+&lt;li&gt;navbar-btn&lt;/li&gt;
+&lt;li&gt;navbar-text&lt;/li&gt;
+&lt;li&gt;navbar-link&lt;/li&gt;
+&lt;li&gt;navbar-right&lt;/li&gt;
+&lt;li&gt;navbar-fixed-top&lt;/li&gt;
+&lt;li&gt;navbar-fixed-bottom&lt;/li&gt;
+&lt;li&gt;navbar-static-top&lt;/li&gt;
+&lt;li&gt;navbar-inverse&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

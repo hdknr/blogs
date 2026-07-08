@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Nginx on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/nginx/</link><description>Recent content in Nginx on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/nginx/index.xml" rel="self" type="application/rss+xml"/><item><title>開発サーバーの Let's Encrypt 証明書が切れたので自動更新できるようにした</title><link>https://hdknr.github.io/blogs/posts/2026/03/letsencrypt-certbot-dns-route53/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/letsencrypt-certbot-dns-route53/</guid><description>&lt;h2 id="きっかけ"&gt;きっかけ&lt;/h2&gt;
+&lt;p&gt;ある日、開発環境の Web アプリにアクセスしたら証明書の期限切れ警告が表示された。&lt;/p&gt;
+&lt;p&gt;確認してみると、ワイルドカード証明書 (&lt;code&gt;*.dev.example.com&lt;/code&gt;) がちょうどその日に期限切れになっていた。さらにもう1つ古い証明書も半年前に失効済み。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Certificate Name: dev.example.com-0001
+Domains: *.dev.example.com
+Expiry Date: 2026-03-17 (INVALID: EXPIRED)
+Certificate Name: dev.example.com
+Domains: *.dev.example.com dev.example.com
+Expiry Date: 2025-09-17 (INVALID: EXPIRED)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="原因"&gt;原因&lt;/h2&gt;
+&lt;p&gt;certbot の renewal 設定を確認したところ、問題が見えた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[renewalparams]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;authenticator&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;manual&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;pref_challs&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;dns-01,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;authenticator が &lt;code&gt;manual&lt;/code&gt;&lt;/strong&gt; になっていた。&lt;/p&gt;
+&lt;p&gt;ワイルドカード証明書は DNS-01 チャレンジが必須だが、&lt;code&gt;manual&lt;/code&gt; モードでは certbot が更新のたびに「この TXT レコードを DNS に追加してください」と対話的に聞いてくる。つまり &lt;strong&gt;自動更新が不可能&lt;/strong&gt; な状態だった。&lt;/p&gt;
+&lt;p&gt;systemd timer (&lt;code&gt;certbot.timer&lt;/code&gt;) は1日2回動いていたが、&lt;code&gt;manual&lt;/code&gt; モードの証明書は自動更新をスキップされるため、期限切れまで放置されていた。&lt;/p&gt;
+&lt;h2 id="対応方針"&gt;対応方針&lt;/h2&gt;
+&lt;p&gt;2つの選択肢を検討した。&lt;/p&gt;</description></item><item><title>PHP: LightSpeed</title><link>https://hdknr.github.io/blogs/posts/2024/03/8e36bbbb0841e69c12f70b4096f4771e/</link><pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/03/8e36bbbb0841e69c12f70b4096f4771e/</guid><description>&lt;h1 id="php--ligthspeed"&gt;PHP : LigthSpeed&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/BRSF/items/ed838139a97e5d702d09"&gt;第 4 の WEB サーバ「LiteSpeed」は Nginx より高速か、centOS7 に環境構築し動作検証&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kosen.monster/?p=1494"&gt;Ubuntu 20.04 + OpenLiteSpeed で爆速 WordPress 構築の夢を見るのか&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.apar.jp/linux/10121/"&gt;LiteSpeed Web Server の HTTPS（SSL/TLS）設定メモ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Wordpress Plugin with WP-CLI</title><link>https://hdknr.github.io/blogs/posts/2015/08/2ec22d39de388f78c660/</link><pubDate>Sun, 09 Aug 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/08/2ec22d39de388f78c660/</guid><description>&lt;h2 id="wordpress-development-environment"&gt;Wordpress Development Environment&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;vim wp-cli.yml&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;./scaffold.bash&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo $(phpenv prefix)/sbin/php-fpm -y conf/php-fpm.conf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo ln -s $PWD/conf/nginx.conf /etc/nginx/sites-enabled/your_wp_cname.conf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo /etc/init.d/nginx start&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>NginxTool</title><link>https://hdknr.github.io/blogs/posts/2015/07/7752aaa4aac58aa400b9/</link><pubDate>Tue, 21 Jul 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/07/7752aaa4aac58aa400b9/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;$ git clone git@gist.github.com:7752aaa4aac58aa400b9.git bin
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;$ wget -qO- https://gist.github.com/hdknr/7752aaa4aac58aa400b9/archive/ac76968b64cbe682964880afc68b08bd54fc9987.zip | bsdtar -xvf-
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>

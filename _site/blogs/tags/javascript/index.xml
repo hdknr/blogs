@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Javascript on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/javascript/</link><description>Recent content in Javascript on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 04 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/javascript/index.xml" rel="self" type="application/rss+xml"/><item><title>HubSpot + LINE でリードを統合管理する — LIFF でアンケート回答者と LINE 友だちを紐づける</title><link>https://hdknr.github.io/blogs/posts/2026/06/hubspot-line-lead-linking/</link><pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/hubspot-line-lead-linking/</guid><description>LINE 友だちと HubSpot リードを LIFF で紐づける実装ガイド。LIFF SDK で取得した userId をフォームの hidden フィールドに同送し、追加サーバーなしで名寄せ。LINE Login チャネル作成・LIFF Server API 自動化・CMS モジュール実装まで解説。</description></item><item><title>Vercelを使えばインフラエンジニア不要？ Framework-defined Infrastructureが変えるWebアプリ開発</title><link>https://hdknr.github.io/blogs/posts/2026/03/vercel-no-infra-engineer/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/vercel-no-infra-engineer/</guid><description>&lt;p&gt;「Vercelを使えばそこそこ大規模なアプリケーションまでインフラエンジニア要らずにいけるのよな」——元Yahoo!エンジニアで YouTuber のしまぶー氏（&lt;a href="https://x.com/shimabu_it"&gt;@shimabu_it&lt;/a&gt;）のポストが話題になった。Vercel CEO の Guillermo Rauch 氏の投稿に対するコメントで、「しかも大抵の場合インフラエンジニアがAWSやGCPで構築したものより高機能、高可用性、高パフォーマンス」と踏み込んだ発言をしている。&lt;/p&gt;
+&lt;h2 id="vercelが実現するインフラレス開発"&gt;Vercelが実現する「インフラレス」開発&lt;/h2&gt;
+&lt;p&gt;Vercelは Next.js の開発元として知られるが、プラットフォームとしての本質は&lt;strong&gt;開発者からインフラの複雑さを隠蔽すること&lt;/strong&gt;にある。&lt;/p&gt;
+&lt;h3 id="framework-defined-infrastructurefdi"&gt;Framework-defined Infrastructure（FdI）&lt;/h3&gt;
+&lt;p&gt;Vercelが推進する &lt;a href="https://vercel.com/blog/framework-defined-infrastructure"&gt;Framework-defined Infrastructure&lt;/a&gt; は、Infrastructure as Code（IaC）の進化形だ。&lt;/p&gt;
+&lt;p&gt;従来のIaCでは、開発者がTerraformやCloudFormationでインフラを明示的に定義する必要があった。FdIでは、&lt;strong&gt;フレームワークのコードからインフラ構成が自動的に導出される&lt;/strong&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ビルド時にソースコードを解析し、開発者の意図を理解&lt;/li&gt;
+&lt;li&gt;必要なインフラ構成（Edge Functions、Serverless Functions、Static Assets、ISR設定など）を自動生成&lt;/li&gt;
+&lt;li&gt;開発者は「何を作るか」に集中し、「どこにデプロイするか」を考える必要がない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="self-driving-infrastructure"&gt;Self-driving Infrastructure&lt;/h3&gt;
+&lt;p&gt;Vercelは &lt;a href="https://vercel.com/blog/self-driving-infrastructure"&gt;Self-driving Infrastructure&lt;/a&gt; というコンセプトも掲げている。本番環境の運用を自律的に管理し、実世界のインサイトを基にアプリケーションコードの改善まで行うというビジョンだ。&lt;/p&gt;
+&lt;h2 id="6人のエンジニアで年間360億トークンを処理"&gt;6人のエンジニアで年間360億トークンを処理&lt;/h2&gt;
+&lt;p&gt;Vercelの「インフラ不要」の主張を裏付ける事例として、&lt;a href="https://vercel.com/blog/360-billion-tokens-3-million-customers-6-engineers"&gt;Durable社のケース&lt;/a&gt;が象徴的だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;6名のエンジニアチーム&lt;/strong&gt;で300万ビジネスをサポート&lt;/li&gt;
+&lt;li&gt;年間&lt;strong&gt;360億トークン&lt;/strong&gt;（日次1.1億トークン）を処理&lt;/li&gt;
+&lt;li&gt;新しいAIエージェントを&lt;strong&gt;1日で本番環境に展開&lt;/strong&gt;可能&lt;/li&gt;
+&lt;li&gt;自社ホスティング比で&lt;strong&gt;3〜4倍のコスト削減&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;創業者は「インフラ構築ではなくエージェント開発に注力できるようになった」と評価している。&lt;/p&gt;
+&lt;h2 id="インフラエンジニアは本当に不要になるのか"&gt;インフラエンジニアは本当に不要になるのか？&lt;/h2&gt;
+&lt;p&gt;しまぶー氏は以前から「インフラエンジニアは二極化する」と指摘している:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;高待遇化&lt;/strong&gt;: クラウドサービスの基盤自体を作れるエンジニア&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;活躍の場が減少&lt;/strong&gt;: アプリケーションのインフラを構築する程度のエンジニア&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;「基盤自体を作れるエンジニア」とは、VercelやAWSのサービスそのものを開発・運用する側のスキルセットを指す。具体的には以下のような領域だ:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;分散システム設計&lt;/strong&gt;: AWS LambdaやVercel Edge Functionsの実行基盤を設計・構築するスキル&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテナランタイム/オーケストレーション&lt;/strong&gt;: Kubernetesを「使う」のではなく「作る・拡張する」レベル&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ネットワーク基盤&lt;/strong&gt;: CDN、ロードバランサ、DNSを大規模に設計・運用するスキル&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ストレージエンジン&lt;/strong&gt;: 分散データベースやオブジェクトストレージの内部実装&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンパイラ/ランタイム&lt;/strong&gt;: サーバーレスプラットフォームのビルドパイプラインや実行環境の開発&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり「AWS上にアプリをデプロイする」のではなく「AWSのようなサービスを作る」側の人材であり、このレベルのエンジニアはプラットフォームの進化によってむしろ需要が高まっている。&lt;/p&gt;
+&lt;h3 id="vercelの基盤は何で動いているのか"&gt;Vercelの基盤は何で動いているのか&lt;/h3&gt;
+&lt;p&gt;「基盤を作る」とは具体的にどのレベルなのか。Vercel自身の技術スタックを見ると、その深さがわかる。&lt;/p&gt;
+&lt;p&gt;Vercelは当初 AWS Fargate でビルド処理を実行していたが、プロビジョニングに90秒かかる問題があった。そこで2023年に独自のコンピュート基盤「&lt;a href="https://www.infoq.com/news/2025/01/vercel-hive/"&gt;Hive&lt;/a&gt;」を構築し、起動時間を5秒に短縮した。&lt;/p&gt;
+&lt;p&gt;Hiveの技術スタックは以下の通りだ:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;レイヤー&lt;/th&gt;
+&lt;th&gt;技術&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;物理基盤&lt;/td&gt;
+&lt;td&gt;ベアメタルサーバー（&amp;ldquo;Boxes&amp;rdquo;）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;VM隔離&lt;/td&gt;
+&lt;td&gt;Firecracker microVM + KVM&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ビルド基盤&lt;/td&gt;
+&lt;td&gt;Hive（独自コントロールプレーン）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;関数実行&lt;/td&gt;
+&lt;td&gt;AWS Lambda、Edge Functions&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;オーケストレーション&lt;/td&gt;
+&lt;td&gt;Amazon EKS（一部）+ 独自制御&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ストレージ/キュー&lt;/td&gt;
+&lt;td&gt;Amazon S3、SQS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ネットワーク&lt;/td&gt;
+&lt;td&gt;Amazon Global Accelerator&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;注目すべきは、&lt;strong&gt;OpenShiftのような既存のKubernetesディストリビューションは使われていない&lt;/strong&gt;点だ。Firecracker はAWSがLambdaとFargateのために開発したオープンソースのmicroVMで、約300ミリ秒でVMを起動できる。Vercelはこの Firecracker + KVM の上に独自のオーケストレーション層を構築している。&lt;/p&gt;</description></item><item><title>Theatre.js — GUI でWebアニメーションを直感的に作れるモーションデザインエディタ</title><link>https://hdknr.github.io/blogs/posts/2026/03/40d876bc001b09ef7af4a6fe9c415357/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/40d876bc001b09ef7af4a6fe9c415357/</guid><description>&lt;h1 id="theatrejs--gui-でwebアニメーションを直感的に作れるモーションデザインエディタ"&gt;Theatre.js — GUI でWebアニメーションを直感的に作れるモーションデザインエディタ&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/shiba_program/status/2028787478908502388"&gt;しば（@shiba_program）氏のポスト&lt;/a&gt;が、GUI でWebアニメーションを作成できる JavaScript ライブラリ「Theatre.js」を紹介しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;GUIで直感的にWebアニメーションが作れる「theatre.js」すごいな。編集した内容が即座に反映されるので、これは微調整捗る。GUIで編集できるから、デザイナーに調整任せることもできそう。デモにある高度なものだけでなく、Webサイトで使うシンプルなアニメーションの作成もかなり楽にしてくれるはず
+— しば（@shiba_program）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;投稿が注目している「デザイナーに調整を任せられる」という点は、Theatre.js の設計思想の核心です。コードでアニメーション対象を定義し、ブラウザ上の GUI エディタで動きを調整する。このワークフローにより、エンジニアとデザイナーの協業が自然に成立します。&lt;/p&gt;
+&lt;h2 id="theatrejs-とは何か"&gt;Theatre.js とは何か&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.theatrejs.com/"&gt;Theatre.js&lt;/a&gt; はフィンランド・ヘルシンキの Theatre.js Oy が開発するオープンソースの Web モーションデザインライブラリです。GitHub Stars 12.2k、1,600以上のプロジェクトが依存しており、Web アニメーション領域で確固たる地位を築いています。&lt;/p&gt;
+&lt;h3 id="基本情報"&gt;基本情報&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;開発元&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Theatre.js Oy（ヘルシンキ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;ライセンス&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Apache 2.0（@theatre/core）/ AGPL 3.0（@theatre/studio）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;言語&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;TypeScript 82.6%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;GitHub Stars&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;12.2k&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;現バージョン&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;0.5（1.0 開発中）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;対応技術&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Three.js、React Three Fiber、HTML/SVG、任意のJSライブラリ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="2つのパッケージ構成"&gt;2つのパッケージ構成&lt;/h3&gt;
+&lt;p&gt;Theatre.js は2つの独立したパッケージで構成されます。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;パッケージ&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;th&gt;使用場面&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;@theatre/core&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;アニメーション再生エンジン&lt;/td&gt;
+&lt;td&gt;開発・本番の両方&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;@theatre/studio&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;GUI エディタ（シーケンスエディタ、グラフエディタ、プロパティパネル）&lt;/td&gt;
+&lt;td&gt;開発時のみ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この分離設計が重要です。Studio は開発時にのみ使い、本番ビルドには core だけを含めます。エディタのコードが本番バンドルに入らないため、パフォーマンスへの影響はありません。&lt;/p&gt;
+&lt;h2 id="4つの基本概念"&gt;4つの基本概念&lt;/h2&gt;
+&lt;p&gt;Theatre.js には、理解すべき4つの概念があります。&lt;/p&gt;</description></item><item><title>リクルート新卒研修の React 資料が「無料で最高の教材」と言われる理由</title><link>https://hdknr.github.io/blogs/posts/2026/03/1c086b903d60fa0090924064b09f40cc/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1c086b903d60fa0090924064b09f40cc/</guid><description>&lt;h1 id="リクルート新卒研修の-react-資料が無料で最高の教材と言われる理由"&gt;リクルート新卒研修の React 資料が「無料で最高の教材」と言われる理由&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/sigumataityouda/status/2028111546975760640"&gt;sigumataityouda 氏のポスト&lt;/a&gt;が、リクルートの新卒研修資料を「React を語る上で欠かせないもの」「完成度が非常に高い」と紹介しています。リクルートは 2017 年から毎年、新卒エンジニア向け研修資料を無料公開しており、React 研修資料は特に業界で高く評価されています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;React語る上で欠かせないものとしてリクルートの新卒研修資料というのもがある。完成度が非常に高い。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="リクルートの-react-研修資料とは"&gt;リクルートの React 研修資料とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://speakerdeck.com/recruitengineers/react-yan-xiu-2024"&gt;React 研修 (2024)&lt;/a&gt; は、リクルートのエンジニアコース新卒研修「BootCamp」で使われている講義資料です。約 170 スライド以上で構成され、Speaker Deck で無料公開されています。&lt;/p&gt;
+&lt;h3 id="研修の位置づけ"&gt;研修の位置づけ&lt;/h3&gt;
+&lt;p&gt;リクルートの新卒エンジニアは配属前に約 3 ヶ月間の BootCamp を受講します。&lt;a href="https://techblog.recruit.co.jp/article-4635/"&gt;2024 年度は 24 講座以上&lt;/a&gt;が開講されており、React 研修はフロントエンド技術スタックの中核として位置づけられています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;研修カテゴリ&lt;/th&gt;
+&lt;th&gt;主な講座&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;フロントエンド&lt;/td&gt;
+&lt;td&gt;JavaScript、TypeScript、&lt;strong&gt;React&lt;/strong&gt;、Next.js&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;バックエンド&lt;/td&gt;
+&lt;td&gt;データベース設計、API 設計&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;品質・テスト&lt;/td&gt;
+&lt;td&gt;テスト駆動開発（講師: t_wada 氏）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;セキュリティ&lt;/td&gt;
+&lt;td&gt;セキュリティ演習&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;AI&lt;/td&gt;
+&lt;td&gt;テキスト生成 AI 活用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;マインドセット&lt;/td&gt;
+&lt;td&gt;ソフトウェアエンジニアとしての姿勢と心構え&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最初の講座「ソフトウェアエンジニアとしての姿勢と心構え」は、技術顧問の t_wada 氏が担当し、「技術の学び方を学ぶ」ことに重点を置いています。&lt;/p&gt;
+&lt;h2 id="資料の構成"&gt;資料の構成&lt;/h2&gt;
+&lt;p&gt;React 研修資料は 5 つのセクションで構成されています。&lt;/p&gt;
+&lt;h3 id="1-web-アプリ開発の変遷"&gt;1. Web アプリ開発の変遷&lt;/h3&gt;
+&lt;p&gt;React を学ぶ前に、Web アプリケーション開発がどう進化してきたかを整理します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;世代&lt;/th&gt;
+&lt;th&gt;アーキテクチャ&lt;/th&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;第 1 世代&lt;/td&gt;
+&lt;td&gt;MPA（クラシック SSR）&lt;/td&gt;
+&lt;td&gt;サーバーが HTML を生成、ページ遷移ごとにリロード&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;第 2 世代&lt;/td&gt;
+&lt;td&gt;MPA + jQuery&lt;/td&gt;
+&lt;td&gt;DOM 操作で部分的な動的 UI を実現&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;第 3 世代&lt;/td&gt;
+&lt;td&gt;SPA（CSR のみ）&lt;/td&gt;
+&lt;td&gt;クライアントで描画、リッチな UX&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;第 4 世代&lt;/td&gt;
+&lt;td&gt;SPA（CSR + 事前レンダリング）&lt;/td&gt;
+&lt;td&gt;SSR / SSG で初期表示を高速化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この変遷を理解することで、「なぜ React が必要になったのか」という文脈が掴めます。jQuery 時代の命令的 UI と React の宣言的 UI の違いを、歴史的な流れの中で説明しているのが特徴です。&lt;/p&gt;</description></item><item><title>javascript: ページのURLを取得</title><link>https://hdknr.github.io/blogs/posts/2024/10/b9da430dc87e11d78397a4edff1f7aa3/</link><pubDate>Mon, 14 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/b9da430dc87e11d78397a4edff1f7aa3/</guid><description>&lt;h1 id="javascript-ページ内のアンカーの取得"&gt;Javascript ページ内のアンカーの取得&lt;/h1&gt;
+&lt;h2 id="ブラウザの検証でコンソールからプログラムを実行"&gt;ブラウザの「検証」でコンソールからプログラムを実行&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-js" data-lang="js"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// ページ内のすべてのアンカー要素を取得
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;anchors&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; document.&lt;span style="color:#a6e22e"&gt;querySelectorAll&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// アンカーのhref属性を配列に格納
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;urls&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Array.&lt;span style="color:#a6e22e"&gt;from&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;anchors&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;map&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;anchor&lt;/span&gt; =&amp;gt; &lt;span style="color:#a6e22e"&gt;anchor&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;href&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// 結果をコンソールに表示
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;urls&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Gatsby レイアウト</title><link>https://hdknr.github.io/blogs/posts/2024/09/c11a71f5f88d3d0f6abb643fb5a8e0a6/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/c11a71f5f88d3d0f6abb643fb5a8e0a6/</guid><description>&lt;h1 id="gastby-レイアウト"&gt;Gastby レイアウト&lt;/h1&gt;
+&lt;h2 id="wrapperjs"&gt;&lt;code&gt;wrapper.js&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;Gatsbyの&lt;code&gt;wrapper.js&lt;/code&gt;ファイルは、ページ全体をラップするために使用されるファイルです。
+このファイルを使用することで、特定のHTML要素やReactプロバイダーでページをラップすることができます。
+これにより、ページ全体に共通のレイアウトや機能を簡単に適用できます。&lt;/p&gt;
+&lt;p&gt;例えば、以下のように&lt;code&gt;wrapper.js&lt;/code&gt;ファイルを作成し、ページを特定のコンポーネントでラップすることができます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;React&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;react&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Layout&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;./src/components/Layout&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;export&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;wrapPageElement&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ({ &lt;span style="color:#a6e22e"&gt;element&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;props&lt;/span&gt; }) =&amp;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;Layout&lt;/span&gt; {...&lt;span style="color:#a6e22e"&gt;props&lt;/span&gt;}&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;{&lt;span style="color:#a6e22e"&gt;element&lt;/span&gt;}&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;/Layout&amp;gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この例では、&lt;code&gt;Layout&lt;/code&gt;コンポーネントでページ全体をラップしています。これにより、すべてのページに共通のレイアウトが適用されます。&lt;/p&gt;
+&lt;p&gt;さらに詳しい情報や具体的な使用例については、&lt;a href="https://www.gatsbyjs.com/plugins/gatsby-plugin-wrap-pages/"&gt;Gatsbyの公式ドキュメント&lt;/a&gt;を参考にすると良いでしょう¹。&lt;/p&gt;
+&lt;p&gt;他に知りたいことがあれば教えてくださいね！&lt;/p&gt;
+&lt;p&gt;ソース: Copilot との会話、 2024/9/4
+(1) gatsby-plugin-wrap-pages | Gatsby. &lt;a href="https://www.gatsbyjs.com/plugins/gatsby-plugin-wrap-pages/"&gt;https://www.gatsbyjs.com/plugins/gatsby-plugin-wrap-pages/&lt;/a&gt;.
+(2) Gatsby公式チュートリアルやったよ #JavaScript - Qiita. &lt;a href="https://qiita.com/irico/items/cf87eb29ecaf7e135fcd"&gt;https://qiita.com/irico/items/cf87eb29ecaf7e135fcd&lt;/a&gt;.
+(3) Gatsby.js 入門 - Zenn. &lt;a href="https://zenn.dev/dev8/articles/gatsby_tutorial"&gt;https://zenn.dev/dev8/articles/gatsby_tutorial&lt;/a&gt;.
+(5) en.wikipedia.org. &lt;a href="https://en.wikipedia.org/wiki/Gatsby_(software)"&gt;https://en.wikipedia.org/wiki/Gatsby_(software)&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;wrapper.js:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-js" data-lang="js"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;React&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;react&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Layout&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;./layout&amp;#34;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;export&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;wrapPageElement&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ({ &lt;span style="color:#a6e22e"&gt;element&lt;/span&gt; }) =&amp;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;Layout&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;{&lt;span style="color:#a6e22e"&gt;element&lt;/span&gt;}&lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;/Layout&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; );
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;};
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;layout.js:&lt;/p&gt;</description></item><item><title>React</title><link>https://hdknr.github.io/blogs/posts/2024/09/4cd25b4d1f6080ae9dcfd82b5229eea4/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/4cd25b4d1f6080ae9dcfd82b5229eea4/</guid><description>&lt;h1 id="react"&gt;React&lt;/h1&gt;
+&lt;h2 id="reactdomrender"&gt;&lt;code&gt;ReactDOM.render&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;React 18以降では、&lt;code&gt;ReactDOM.render&lt;/code&gt;は非推奨となり、代わりに&lt;code&gt;createRoot&lt;/code&gt;を使用することが推奨されています。以下に新しい方法の例を示します。&lt;/p&gt;
+&lt;p&gt;まず、&lt;code&gt;react-dom/client&lt;/code&gt;から&lt;code&gt;createRoot&lt;/code&gt;をインポートします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;React&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;react&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; { &lt;span style="color:#a6e22e"&gt;createRoot&lt;/span&gt; } &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;react-dom/client&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;App&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;./App&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;container&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; document.&lt;span style="color:#a6e22e"&gt;getElementById&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;root&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;root&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;createRoot&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;container&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;root&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;render&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;React&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StrictMode&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;App&lt;/span&gt; &lt;span style="color:#f92672"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;/React.StrictMode&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このコードでは、&lt;code&gt;createRoot&lt;/code&gt;を使用してルートを作成し、そのルートに対して&lt;code&gt;render&lt;/code&gt;メソッドを呼び出しています。これにより、React 18の新しいレンダリングAPIを利用することができます¹²。&lt;/p&gt;</description></item><item><title>サイトセキュリティチェック</title><link>https://hdknr.github.io/blogs/posts/2024/07/5380ecce3a4ebda601efcc8b45e1e417/</link><pubDate>Mon, 22 Jul 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/07/5380ecce3a4ebda601efcc8b45e1e417/</guid><description>&lt;h1 id="サイトセキュリティチェック"&gt;サイトセキュリティチェック&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Mozilla: &lt;a href="https://observatory.mozilla.org/"&gt;https://observatory.mozilla.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;トレンドマイクロ: &lt;a href="https://global.sitesafety.trendmicro.com/?cc=jp"&gt;https://global.sitesafety.trendmicro.com/?cc=jp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Google: &lt;a href="https://www.virustotal.com/gui/home/upload"&gt;https://www.virustotal.com/gui/home/upload&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="owasp-zap"&gt;OWASP Zap&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/y640/articles/430e99504cd275"&gt;Docker 版 OWASP ZAP を M1 Mac で動かす。&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;問題:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10010/"&gt;Cookie No HttpOnly Flag&lt;/a&gt; [10010]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10015/"&gt;Re-examine Cache-control Directives&lt;/a&gt; [10015]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10017/"&gt;Cross-Domain JavaScript Source File Inclusion&lt;/a&gt; [10017]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10020-1/"&gt;Missing Anti-clickjacking Header&lt;/a&gt; [10020]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10021/"&gt;X-Content-Type-Options Header Missing&lt;/a&gt; [10021]&lt;/li&gt;
+&lt;li&gt;: [Information Disclosure - Suspicious Comments]&lt;a href="10027"&gt;https://www.zaproxy.org/docs/alerts/10027/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;: [Cookie Poisoning]&lt;a href="10029"&gt;https://www.zaproxy.org/docs/alerts/10029/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10031/"&gt;User Controllable HTML Element Attribute (Potential XSS)&lt;/a&gt; [10031]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10035/"&gt;Strict-Transport-Security Header Not Set&lt;/a&gt; [10035]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10038/"&gt;Content Security Policy (CSP) Header Not Set&lt;/a&gt; [10038]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10040/"&gt;Secure Pages Include Mixed Content&lt;/a&gt; [10040]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10049/"&gt;Storable and Cacheable Content&lt;/a&gt; [10049]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10054/"&gt;Cookie without SameSite Attribute&lt;/a&gt; [10054]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10063/"&gt;Permissions Policy Header Not Set&lt;/a&gt; [10063]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10096/"&gt;Timestamp Disclosure - Unix&lt;/a&gt; [10096]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10109/"&gt;Modern Web Application&lt;/a&gt; [10109] (対応しなくてもよい)&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10110/"&gt;Dangerous JS Functions&lt;/a&gt; [10110]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10112/"&gt;Session Management Response Identified&lt;/a&gt; [10112]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10202/"&gt;Absence of Anti-CSRF Tokens&lt;/a&gt; [10202]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/90003/"&gt;Sub Resource Integrity Attribute Missing&lt;/a&gt; [90003]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/90011/"&gt;Charset Mismatch&lt;/a&gt; [90011]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="virustotal"&gt;VIRUSTOTAL&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.virustotal.com/gui/home/upload"&gt;https://www.virustotal.com/gui/home/upload&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="suuri"&gt;SUURI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://sitecheck.sucuri.net/"&gt;https://sitecheck.sucuri.net/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Flutter</title><link>https://hdknr.github.io/blogs/posts/2024/05/0587d3a56ad9e10b12e6ac45f7769ff2/</link><pubDate>Tue, 14 May 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/05/0587d3a56ad9e10b12e6ac45f7769ff2/</guid><description>&lt;h1 id="android-インストール"&gt;Android インストール&lt;/h1&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;% flutter build apk
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;% flutter devices
+Found 4 connected devices:
+Pixel 7a (mobile) • 38211JEHN05972 • android-arm64 • Android 14 (API 34)
+sdk gphone64 arm64 (mobile) • emulator-5554 • android-arm64 • Android 14 (API 34) (emulator)
+macOS (desktop) • macos • darwin-arm64 • macOS 14.4.1 23E224 darwin-arm64
+Chrome (web) • chrome • web-javascript • Google Chrome 124.0.6367.203
+Found 1 wirelessly connected device:
+iPhone13Pro (mobile) • 00008110-000150C21440401E • ios • iOS 17.4.1 21E236
+Run &amp;#34;flutter emulators&amp;#34; to list and start any available device emulators.
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;% flutter install -d 38211JEHN05972
+Installing app-release.apk to Pixel 7a...
+Uninstalling old version...
+Installing build/app/outputs/flutter-apk/app-release.apk... 6.1s
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="ios"&gt;ios&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/seito/articles/6ac70d8831aa88"&gt;[Flutter]iOS のビルドで失敗したらまず試すこと 10 選&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>ijavascript</title><link>https://hdknr.github.io/blogs/posts/2023/06/05ac8f0f35a2a233b9db0b9ef5ae674d/</link><pubDate>Wed, 07 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/05ac8f0f35a2a233b9db0b9ef5ae674d/</guid><description>&lt;h2 id="ijavascript"&gt;ijavascript&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://n-riesco.github.io/ijavascript/index.html"&gt;https://n-riesco.github.io/ijavascript/index.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Puppeteer</title><link>https://hdknr.github.io/blogs/posts/2023/05/007a4e807b981b64903f186c375d4e56/</link><pubDate>Tue, 23 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/007a4e807b981b64903f186c375d4e56/</guid><description>&lt;h2 id="puppeteer"&gt;Puppeteer&lt;/h2&gt;
+&lt;p&gt;Puppeteer とヘッドレス Chrome を使って React の SPA サイトをクロールするためのスクリプトを記述するには、以下のようなコードを記述することができます ¹。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;puppeteer&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;require&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;puppeteer&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; () =&amp;gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;browser&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;puppeteer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;launch&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;page&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;browser&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;newPage&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;page&lt;/span&gt;.&lt;span style="color:#66d9ef"&gt;goto&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;https://example.com&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// SPA のページ遷移を待つ
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;page&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;waitForNavigation&lt;/span&gt;({ &lt;span style="color:#a6e22e"&gt;waitUntil&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;networkidle0&amp;#34;&lt;/span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// スクリーンショットを撮る
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;page&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;screenshot&lt;/span&gt;({ &lt;span style="color:#a6e22e"&gt;path&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;example.png&amp;#34;&lt;/span&gt; });
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;browser&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;close&lt;/span&gt;();
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;})();
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;上記のコードでは、Puppeteer を使ってブラウザを起動し、指定した URL にアクセスしています。その後、SPA のページ遷移が完了するまで待機し、スクリーンショットを撮影しています。必要に応じて、このコードを改良していただければと思います。&lt;/p&gt;</description></item><item><title>半角カナ文字</title><link>https://hdknr.github.io/blogs/posts/2023/04/b3098af64855fdf9e4dfe567db8e6ca4/</link><pubDate>Tue, 18 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/b3098af64855fdf9e4dfe567db8e6ca4/</guid><description>&lt;h2 id="半角カナ文字"&gt;半角カナ文字&lt;/h2&gt;
+&lt;p&gt;Pythonで半角カナ文字かどうかを判定するには、正規表現を使う方法があります。⁴⁶&lt;/p&gt;
+&lt;p&gt;例えば、次のような関数を定義して、文字列が半角カナだけで構成されているかどうかをチェックできます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; re
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;is_hankaku_kana&lt;/span&gt;(s):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; re&lt;span style="color:#f92672"&gt;.&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;match&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;r&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;^[ｦ-ﾟ]+$&amp;#34;&lt;/span&gt;, s) &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#f92672"&gt;not&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この関数は、文字列sが半角カナの範囲（ｦからﾟ）にマッチするかどうかを判定します。⁶&lt;/p&gt;
+&lt;p&gt;他の言語（JavaScriptやC#など）でも同様の方法が使えます。¹²&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/4/18&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) python 正規表現を使った文字列チェック【ひらがな・カタカナ &amp;hellip;. &lt;a href="https://qiita.com/mocha_xx/items/00c5a968f7069d8e092c"&gt;https://qiita.com/mocha_xx/items/00c5a968f7069d8e092c&lt;/a&gt; アクセス日時 2023/4/18.&lt;/li&gt;
+&lt;li&gt;(2) Pythonで正規表現を使って数値/英字チェックを実装する (コピペ &amp;hellip;. &lt;a href="https://www.sukerou.com/2018/12/python.html"&gt;https://www.sukerou.com/2018/12/python.html&lt;/a&gt; アクセス日時 2023/4/18.&lt;/li&gt;
+&lt;li&gt;(3) [JavaScript] 全角カナ、半角カナの判定を行う方法 - YoheiM .NET. &lt;a href="https://www.yoheim.net/blog.php?q=20191105"&gt;https://www.yoheim.net/blog.php?q=20191105&lt;/a&gt; アクセス日時 2023/4/18.&lt;/li&gt;
+&lt;li&gt;(4) [C#共通関数] 半角カナチェックFunction - C#ちょこっとリファレンス. &lt;a href="https://csharp.programmer-reference.com/function-check-han-kana/"&gt;https://csharp.programmer-reference.com/function-check-han-kana/&lt;/a&gt; アクセス日時 2023/4/18.&lt;/li&gt;
+&lt;li&gt;(5) 文字がひらがなか、カタカナか、漢字か、英数字か調べる - .NET &amp;hellip;. &lt;a href="https://dobon.net/vb/dotnet/string/ishiragana.html"&gt;https://dobon.net/vb/dotnet/string/ishiragana.html&lt;/a&gt; アクセス日時 2023/4/18.&lt;/li&gt;
+&lt;li&gt;(6) python - 半角数字・文字のチェック方法 - スタック・オーバーフロー. &lt;a href="https://ja.stackoverflow.com/questions/90953/%E5%8D%8A%E8%A7%92%E6%95%B0%E5%AD%97-%E6%96%87%E5%AD%97%E3%81%AE%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E6%96%B9%E6%B3%95"&gt;https://ja.stackoverflow.com/questions/90953/%E5%8D%8A%E8%A7%92%E6%95%B0%E5%AD%97-%E6%96%87%E5%AD%97%E3%81%AE%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E6%96%B9%E6%B3%95&lt;/a&gt; アクセス日時 2023/4/18.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="半角カナ文字を判定するpypiパッケージはありますか"&gt;半角カナ文字を判定するPYPIパッケージはありますか？&lt;/h3&gt;
+&lt;p&gt;半角カナ文字を判定する専用のPYPIパッケージは見つかりませんでしたが、標準ライブラリのunicodedataモジュールを使うことができます。¹&lt;/p&gt;</description></item><item><title>サバクラ両方で動く JavaScript の大規模開発を行うために</title><link>https://hdknr.github.io/blogs/posts/2011/12/1519248/</link><pubDate>Sun, 25 Dec 2011 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2011/12/1519248/</guid><description>&lt;h1 id="サバクラ両方で動く-javascript-の大規模開発を行うために"&gt;サバクラ両方で動く JavaScript の大規模開発を行うために&lt;/h1&gt;
+&lt;p&gt;原文：&lt;a href="http://blog.nodejitsu.com/scaling-isomorphic-javascript-code"&gt;Scaling Isomorphic Javascript Code&lt;/a&gt;
+(This is just for study, please contact me at tily05 atmark gmail.com if any problem.)&lt;/p&gt;
+&lt;p&gt;考えてみれば Model-View-Controller とか MVC ってよく聞くよね。実際どんなものか知ってる？ 抽象的に言うなら「オブジェクト情報の保持されるグラフィック・システム (つまり、ラスターではないグラフィック。ゲームとか) 上に構築された、表示系を中心としたアプリケーションにおいて、主要な機能どうしの関わりをうまく分離すること」とでも言おうか。もう少し深く考えを押し進めてみれば、これは当然、他のさまざまなアプリケーションにもあてはまる言葉 (bucket term ?) だ。&lt;/p&gt;
+&lt;p&gt;過去に多くの開発コミュニティが MVC による解決案を提供し、それによってよくあるユースケースにうまく対処し、地位を築くことができた。例をあげるなら、Ruby や Python コミュニティは Rails や Django を作り、MVC アーキテクチャを実現した。&lt;/p&gt;
+&lt;p&gt;こうした手法は Java, Ruby, Python といった他の言語では容易に受け入れらてきたが、Node.js について十分ではない。理由は単純で、それはただ、&lt;strong&gt;JavaScript が今や isomorphic な言語である&lt;/strong&gt;からだ。&lt;strong&gt;isomorphic&lt;/strong&gt; というのは「ソースコードのどの行 (もちろん注目すべき例外もあるが) をとってみても、クライアント・サーバーの両方で実行できる」ということを意味している。表面的には無害に見えるが、この特徴のせいで現状の MVC ベースのパターンでは解決できない課題がたくさんある。&lt;/p&gt;
+&lt;p&gt;この記事では、まず現存するパターンをいくつか取り上げ、いかにそのようなパターンに関する実装や心配事が言語や環境に関わらず普遍的なものとなり得たか、そのようなパターンがどうして真に &amp;ldquo;isomorphic&amp;rdquo; な Javascript のソースコードにはあまり適していないのかを述べる。そして結論として、新しいパターン &amp;ldquo;Resource-View-Presenter&amp;rdquo; について述べる。&lt;/p&gt;
+&lt;h2 id="目次"&gt;目次&lt;/h2&gt;
+&lt;p&gt;デザインパターンは、アプリケーションの開発にとってなくてはならないオマンマのような存在である。アプリケーションやその環境についてのさまざまの心配事をカプセル化し、うまくまとめてくれる。ブラウザとサーバの間でこんなにもさまざまの心配事があるからね：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;View を作るとして、(たとえばサーバ側で) 一時的にしか存在しないのか、(たとえばブラウザ側で) 永続するべきものなのか？&lt;/li&gt;
+&lt;li&gt;View を作るとして、複数のユースケースやシナリオの間で再利用可能なものか？&lt;/li&gt;
+&lt;li&gt;View を作るとして、アプリケーション特有のタグやマークアップが使われているか？&lt;/li&gt;
+&lt;li&gt;ビジネスロジックをどこに記述すべきか？ (Model なのか Controller なのか)&lt;/li&gt;
+&lt;li&gt;アプリケーションの持つ状態はどのように保持されアクセスされるのか？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;現存するパターンを取り上げ、上記の問題がどのように解決されているのか見てみよう：&lt;/p&gt;</description></item></channel></rss>

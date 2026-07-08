@@ -118,7 +118,7 @@ jobs:
         with:
           args: >-
             --no-progress
-            --config lychee.toml
+            --config lychee-external.toml
             --scheme https
             --scheme http
             --exclude "^https?://hdknr\.github\.io/"

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>セカンドブレイン on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%BB%E3%82%AB%E3%83%B3%E3%83%89%E3%83%96%E3%83%AC%E3%82%A4%E3%83%B3/</link><description>Recent content in セカンドブレイン on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 21 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%BB%E3%82%AB%E3%83%B3%E3%83%89%E3%83%96%E3%83%AC%E3%82%A4%E3%83%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>Obsidianの創業者が「有料Syncを使わずに済む方法」を公式公開 — iCloud・Git・ヘッドレスCLIで完全無料運用する選択肢</title><link>https://hdknr.github.io/blogs/posts/2026/05/obsidian-free-sync-without-paid-subscription/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/obsidian-free-sync-without-paid-subscription/</guid><description>&lt;p&gt;Obsidianの創業者が、自社の有料サービスである Obsidian Sync を &lt;strong&gt;使わずに&lt;/strong&gt; Vault を同期・バックアップする方法を公式ドキュメントとして明文化したことが話題になっている。&lt;/p&gt;
+&lt;h2 id="何が起きているのか"&gt;何が起きているのか&lt;/h2&gt;
+&lt;p&gt;Obsidian は「あなたのノートは永遠にあなたのもの」を掲げるローカルファースト型のナレッジ管理ツールだ。ノートはプレーンテキスト（Markdown）でローカルに保存され、クラウドへの依存を強制しない設計になっている。&lt;/p&gt;
+&lt;p&gt;そのObsidianの創業者が、有料の Obsidian Sync（$4〜/月・年払い、または $5/月・月払い）を契約しなくても Vault を複数デバイス間で同期できる方法を、公式ドキュメント上で余すところなく公開した。&lt;/p&gt;
+&lt;h2 id="公式が案内している無料同期の選択肢"&gt;公式が案内している無料同期の選択肢&lt;/h2&gt;
+&lt;p&gt;公式ヘルプ（&lt;a href="https://obsidian.md/help/sync-notes"&gt;Sync your notes across devices&lt;/a&gt;）によると、以下の方法が紹介されている。&lt;/p&gt;
+&lt;h3 id="1-icloudapple-デバイス間"&gt;1. iCloud（Apple デバイス間）&lt;/h3&gt;
+&lt;p&gt;Mac・iPhone・iPad を使うユーザーにとって最もシンプルな選択肢。iCloud Drive の中に Vault フォルダを配置するだけで、Apple デバイス間でシームレスに同期される。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MyVault
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;設定コストがほぼゼロで、iOS アプリとの相性も良い。&lt;/p&gt;
+&lt;h3 id="2-google-drive--dropbox--onedrive"&gt;2. Google Drive / Dropbox / OneDrive&lt;/h3&gt;
+&lt;p&gt;クラウドストレージのフォルダ配下に Vault を置くだけで同期が成立する。Windows や Android ユーザーにも対応できる汎用的な方法だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Google Drive のデスクトップアプリで同期するフォルダを指定&lt;/li&gt;
+&lt;li&gt;Vault を &lt;code&gt;~/Google Drive/MyVault&lt;/code&gt; などのパスに配置&lt;/li&gt;
+&lt;li&gt;モバイルでは公式の &lt;a href="https://obsidian.md"&gt;Obsidian アプリ&lt;/a&gt; + ファイルマネージャアプリで Vault フォルダを指定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-gitバージョン履歴も残したい人向け"&gt;3. Git（バージョン履歴も残したい人向け）&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/Vinzent03/obsidian-git"&gt;obsidian-git&lt;/a&gt; プラグインを使えば、Vault の変更を GitHub などに自動プッシュできる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# プラグイン設定後、Vault ルートで初期化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git init
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git remote add origin https://github.com/yourname/my-vault.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push -u origin main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;プラグイン設定で自動コミット・プッシュ間隔を指定できるため、&lt;strong&gt;バージョン履歴&lt;/strong&gt;まで残せる点が他の方法と異なる。&lt;/p&gt;</description></item></channel></rss>

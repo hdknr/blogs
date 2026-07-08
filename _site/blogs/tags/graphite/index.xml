@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Graphite on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/graphite/</link><description>Recent content in Graphite on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Sun, 19 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/graphite/index.xml" rel="self" type="application/rss+xml"/><item><title>Graphite 徹底解説 — スタックドPRとマージキューがAIファースト開発を加速する理由</title><link>https://hdknr.github.io/blogs/posts/2026/04/graphite-stacked-prs-merge-queue/</link><pubDate>Sun, 19 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/graphite-stacked-prs-merge-queue/</guid><description>&lt;p&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/04/ai-first-harness-engineering-creao/"&gt;CreaoAI が25名で6週間のリリースサイクルを1日に短縮した事例&lt;/a&gt;では、PR 管理ツールとして &lt;strong&gt;Graphite&lt;/strong&gt; が採用されていた。1日8回デプロイ・AI が大量に PR を量産する運用で、素の GitHub PR フローは何が詰まり、Graphite は何を解決するのか。本記事では Graphite の3本柱（スタックドPR・マージキュー・AIレビュー）を、CLI コマンドと具体的な運用シナリオで解説する。&lt;/p&gt;
+&lt;h2 id="graphite-とは"&gt;Graphite とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://graphite.com/"&gt;Graphite&lt;/a&gt; は GitHub 上の PR ワークフローを拡張する開発者プラットフォーム。2025年3月に Anthropic から $52M の Series B を調達し、同時に AI コードレビュー「Diamond」をローンチした（現在は &lt;strong&gt;Graphite Agent&lt;/strong&gt; に名称統合）。元 Airbnb・Meta のエンジニア出身チームが、Meta 内部で使われていた Phabricator / Sapling 的なスタック開発体験を GitHub に持ち込んだのが出発点だ。&lt;/p&gt;
+&lt;p&gt;主要機能は3つに整理できる。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;スタックドPR&lt;/strong&gt; — 大きな変更を依存関係のある小さな PR の連鎖に分割する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マージキュー&lt;/strong&gt; — スタックを理解した状態で main にマージを直列化する（stack-aware）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Graphite Agent（旧 Diamond）+ Chat&lt;/strong&gt; — AI によるコードレビューと対話的修正&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="スタックドpr大きな差分を小さなレビュー単位の連鎖に分解する"&gt;スタックドPR：大きな差分を「小さなレビュー単位の連鎖」に分解する&lt;/h2&gt;
+&lt;h3 id="何が問題だったのか"&gt;何が問題だったのか&lt;/h3&gt;
+&lt;p&gt;AI エージェントや生産性の高い開発者は、1つのフィーチャーを実装する過程でしばしば以下のような複数階層の変更を生む。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DBスキーマの追加&lt;/li&gt;
+&lt;li&gt;それを使う API エンドポイント&lt;/li&gt;
+&lt;li&gt;認証ミドルウェアの更新&lt;/li&gt;
+&lt;li&gt;フロントエンドの呼び出し&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;従来の GitHub PR モデルだと選択肢は2つしかない。&lt;/p&gt;</description></item></channel></rss>

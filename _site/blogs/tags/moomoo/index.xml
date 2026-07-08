@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Moomoo on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/moomoo/</link><description>Recent content in Moomoo on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/moomoo/index.xml" rel="self" type="application/rss+xml"/><item><title>moomoo × AI でセクターローテーションを察知する — 44のルールで構築した定量売買システム</title><link>https://hdknr.github.io/blogs/posts/2026/05/moomoo-ai-sector-rotation/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/moomoo-ai-sector-rotation/</guid><description>&lt;p&gt;セクターローテーションは、景気サイクルに合わせて資金が特定のセクターへ移動する現象だ。この動きを早期に察知できれば、相場の追い風を受けながら売買できる。しかし「どのセクターが今動いているか」を毎日人手で追うのは難しい。&lt;/p&gt;
+&lt;p&gt;ある個人投資家（&lt;a href="https://x.com/hm_emememem"&gt;@hm_emememem&lt;/a&gt;）は、moomooとAIを組み合わせてこの問題を解決し、44のルールで構成された定量的な売買システムへと発展させた。そのアプローチを紐解く。&lt;/p&gt;
+&lt;h2 id="moomoo-でセクターを一覧監視する"&gt;moomoo でセクターを一覧監視する&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.moomoo.com/jp/"&gt;moomoo&lt;/a&gt;（ムームー）は、香港上場のFintech企業 Futu Holdings（ナスダック: FUTU）が提供するグローバル投資プラットフォームだ。2023年9月に日本でサービスを開始し、2024年3月には日本株取引にも対応。2024年時点で日本国内のダウンロード数が100万件を超えている。&lt;/p&gt;
+&lt;p&gt;moomooには、セクター監視に役立つ機能が揃っている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ヒートマップ&lt;/strong&gt;: セクターごとのパフォーマンスを色とサイズで視覚化。大型株が緑（上昇）／赤（下落）で一目でわかる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セクタースクリーナー&lt;/strong&gt;: 14種類の指標（バリュエーション、テクニカル、収益性など）でフィルタリング&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マーケットモニター&lt;/strong&gt;: カスタムアラートで価格ブレイクアウトなどの条件を自動通知&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンセプトセクター&lt;/strong&gt;: テーマ投資視点でホットな市場を可視化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらを使い、複数セクターを一覧にまとめたウォッチリストを構築することで、AIに毎日渡すデータセットの土台を作る。moomooのデータをさらにプログラムで活用したい場合は、&lt;a href="../../03/2026-03-18-moomoo-openapi/"&gt;moomoo OpenAPIを使った自動売買&lt;/a&gt;も参照してほしい。&lt;/p&gt;
+&lt;h2 id="aiを毎日のセクター監視役にする"&gt;AIを毎日のセクター監視役にする&lt;/h2&gt;
+&lt;p&gt;構築したウォッチリストのデータを毎日AIに読み込ませ、以下を問いかける運用を行っている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;今日はどのセクターに資金が流入しているか？&lt;/li&gt;
+&lt;li&gt;過去数日と比較して傾向に変化はあるか？&lt;/li&gt;
+&lt;li&gt;新しいカタリスト（触媒となる材料）が発生していないか？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AIは過去データとの差分を解析し、「ようやく新しいカタリストが動き始めた」といった変化の兆候をテキストでフィードバックする。人間がチャートを目視確認するより、変化の記述が言語化されるため見落としが減る。&lt;/p&gt;
+&lt;h2 id="44のルールで売買を定量化する"&gt;44のルールで売買を定量化する&lt;/h2&gt;
+&lt;p&gt;AIとの対話を繰り返して投資ルールを精緻化した結果、最終的に44のルールを体系化し、それらを複合することで売買判断を定量的に行う仕組みを構築した。&lt;/p&gt;
+&lt;p&gt;ルールの例として考えられるのは次のような構造だ。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ルール例（概念的な構成 — 実際の44ルールの内容は非公開）:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1. セクター強度スコア: 過去5日の相対リターンが上位3セクターに入る
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2. 出来高確認: 20日平均の1.5倍以上の出来高を伴う
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3. 主力株のブレイクアウト: セクター内主力銘柄が52週高値更新
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4. マクロ環境チェック: 利上げ局面/利下げ局面に応じた対象セクター除外
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;5. リスク管理: 単一セクターへの集中を資産の20%以内に抑える
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...（計44ルール）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これらを「AND条件」「OR条件」で組み合わせ、シグナルが複数の基準を満たしたときのみ発動する構造にすることで、フォールスポジティブ（誤検知）を減らしている。&lt;/p&gt;</description></item><item><title>moomoo証券が米国株API取引に対応 — moomoo OpenAPIで個人投資家も自動売買が可能に</title><link>https://hdknr.github.io/blogs/posts/2026/03/moomoo-openapi/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/moomoo-openapi/</guid><description>moomoo証券が提供する米国株API取引サービス「moomoo OpenAPI」を解説。Python SDKでの自動売買、リアルタイムデータ取得、バックテスト機能、国内他社APIとの比較まで網羅。</description></item></channel></rss>

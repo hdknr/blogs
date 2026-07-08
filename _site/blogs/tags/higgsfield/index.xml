@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Higgsfield on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/higgsfield/</link><description>Recent content in Higgsfield on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/higgsfield/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code + 4ツールMCP連携で動画10本量産 — Algrow・Renoise・Higgsfield・Lovart・HyperFramesの全構成を解説</title><link>https://hdknr.github.io/blogs/posts/2026/06/claude-code-4tool-video-mass-production-mcp/</link><pubDate>Mon, 01 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/claude-code-4tool-video-mass-production-mcp/</guid><description>Claude CodeをオーケストレーターとしてAlgrow・Renoise・Higgsfield・LovartをMCP接続し、HyperFrames Skillでテロップ・カットを自動化。動画10本を量産する全構成を各ツールのMCP設定JSONと費用感とともに解説。</description></item><item><title>Higgsfield「Supercomputer」— GPT-5.5・Claude Opus 4.7・Seedance・Veo・Kling を指揮するマルチモデル映像制作ハブの衝撃</title><link>https://hdknr.github.io/blogs/posts/2026/05/higgsfield-supercomputer-ai-cinematic-pipeline/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/higgsfield-supercomputer-ai-cinematic-pipeline/</guid><description>Higgsfield Supercomputer は GPT-5.5・Claude Opus 4.7・Seedance・Veo・Kling を 61 の制作スキルで自動ルーティングするマルチモデル映像制作ハブ。1行の指示から完成動画を自動生成する仕組みと従来モデルとの違いを解説します。</description></item><item><title>Claude Code × Higgsfield MCP でCM制作が一撃完結 — 絵コンテから動画まで6シーンを自動生成する新時代の広告制作フロー</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-higgsfield-mcp-cm-production/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-higgsfield-mcp-cm-production/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;「演出を言語化するだけで6シーンのCMがそのまま動画になる」——そんな未来がもう始まっている。&lt;/p&gt;
+&lt;p&gt;2026年5月18日、動画生成AIプラットフォーム &lt;strong&gt;Higgsfield AI&lt;/strong&gt; が公式ツイートで発表した一本のデモ動画が静かに話題を呼んでいる。Claude Code と Higgsfield MCP を組み合わせた新しいモーションデザインのワークフローで、Higgsfield は「&lt;strong&gt;Motion Design, solved.&lt;/strong&gt;」と宣言した。&lt;/p&gt;
+&lt;p&gt;Pinterest から参考映像を収集し、6シーン分の絵コンテを自動生成して、そのまま動画化まで完結する——しかも全部 Claude Code のチャットから操作できる。広告制作者にとって長年の「制作コスト」と「スピード」のトレードオフを、一気に解消するかもしれないフローだ。&lt;/p&gt;
+&lt;h2 id="higgsfield-mcp-とは"&gt;Higgsfield MCP とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Higgsfield AI&lt;/strong&gt; はサンフランシスコ発のクリエイター向けAIプラットフォームだ。2026年4月30日に公式MCPサーバーを公開し、30以上の画像・動画生成モデルを単一のエンドポイントから呼び出せる仕組みを提供している。&lt;/p&gt;
+&lt;p&gt;対応モデルの主なラインナップ：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Sora 2&lt;/strong&gt; (OpenAI) ※2026年9月にAPI廃止予定&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Veo 3.1&lt;/strong&gt; (Google)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Kling 3.0&lt;/strong&gt; (快手)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Seedance 2.0&lt;/strong&gt; (ByteDance)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GPT Image 2&lt;/strong&gt; (OpenAI) — 絵コンテ生成に使用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Wan 2.6&lt;/strong&gt;、&lt;strong&gt;MiniMax Hailuo&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Higgsfield 独自モデル: Soul、Soul Cinema、Cinema Studio&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Claude Code からこれら全モデルに直接アクセスでき、プロンプトからカメラ移動・レンズ選択・被写界深度・アスペクト比・フレームレートまで自然言語で指定できる。&lt;/p&gt;
+&lt;h2 id="3ステップで完結するモーションデザインフロー"&gt;3ステップで完結するモーションデザインフロー&lt;/h2&gt;
+&lt;p&gt;Higgsfield の&lt;a href="https://x.com/higgsfield/status/2056427804531773598"&gt;公式ツイートのデモ&lt;/a&gt;が示したワークフローは以下の3ステップだ：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Pinterest API で参考映像を収集&lt;/strong&gt;&lt;br&gt;
+Claude Code が Pinterest の API を呼び出し、ブランドや演出の参考になる映像素材を自動収集する。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;GPT Image 2 で6シーン分の絵コンテを生成&lt;/strong&gt;&lt;br&gt;
+Higgsfield MCP 経由で GPT Image 2 を呼び出し、各シーンの構図・テキストを含む絵コンテを生成する。&lt;/p&gt;</description></item><item><title>Higgsfield MCP 正式リリース — 1つのコネクタで30以上のAI動画・画像モデルをエージェントから使う</title><link>https://hdknr.github.io/blogs/posts/2026/04/higgsfield-mcp-official-release/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/higgsfield-mcp-official-release/</guid><description>Higgsfield MCP は Claude・Cursor などの MCP クライアントから Seedance 2.0・Sora 2・Veo 3.1 など30以上の AI 動画・画像生成モデルを1つのコネクタで呼び出せるホスト型 MCP サーバー。</description></item></channel></rss>
