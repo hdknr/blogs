@@ -12,7 +12,7 @@ tags: ["claude-code", "TypeScript", "tdd", "開発効率化", "prompt"]
 
 ## 概要
 
-TypeScript の第一人者として知られる Matt Pocock が、自身の `.claude` ディレクトリをそのままオープンソース化したリポジトリ [**mattpocock/skills**](https://github.com/mattpocock/skills) が急速に注目を集め、13万スターを超えた。[4月の公開直後に 22,000 スターで話題になったリポジトリ](/posts/2026/04/matt-pocock-skills-for-real-engineers/)の約2か月後のアップデートとして、改めて全スキルの設計思想と使い方を整理する。
+TypeScript の第一人者として知られる Matt Pocock が、自身の `.claude` ディレクトリをそのままオープンソース化したリポジトリ [**mattpocock/skills**](https://github.com/mattpocock/skills) が急速に注目を集め、13万スターを超えた。[4月の公開直後に 22,000 スターで話題になったリポジトリ](/blogs/posts/2026/04/matt-pocock-skills-for-real-engineers/)の約2か月後のアップデートとして、改めて全スキルの設計思想と使い方を整理する。
 
 「雰囲気コーディング（vibe coding）」ではなく、実際の本番開発で使える工学的なスキルセットを集めたものとして、海外エンジニアコミュニティで話題になっている。
 
@@ -53,7 +53,7 @@ Matt Pocock 自身が README で述べているように、このスキル集は
 
 エージェントが実装前にユーザーを徹底的にインタビューし、要件の不明点を洗い出す。このスキルは「最も人気のあるスキル」と紹介されており、変更を加えるたびに使うことが推奨されている。
 
-コードを伴う場合は `/grill-with-docs` が上位互換。ドメイン固有の語彙（CONTEXT.md）とアーキテクチャ上の判断記録（ADR）も同時に整備できる。詳しくは[grill-me 解説記事](/posts/2026/05/claude-code-grill-me/)も参照。
+コードを伴う場合は `/grill-with-docs` が上位互換。ドメイン固有の語彙（CONTEXT.md）とアーキテクチャ上の判断記録（ADR）も同時に整備できる。詳しくは[grill-me 解説記事](/blogs/posts/2026/05/claude-code-grill-me/)も参照。
 
 ### 失敗パターン 2: エージェントが冗長すぎる
 

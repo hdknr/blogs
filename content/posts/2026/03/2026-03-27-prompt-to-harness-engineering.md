@@ -50,7 +50,7 @@ Anthropic は3月に「[Harness design for long-running application development]
 
 注目すべきは、**同じモデルでもハーネスの有無でベンチマーク結果が大幅に変わる**という実証だ。ハーネス（スキャフォールド）の違いだけで20ポイント以上のスコア差が生じ、「中位モデル＋適切に設計されたハーネス」が「最先端モデル＋未整備なハーネス」を上回るケースすらある。
 
-Anthropic の事例では、Planner・Generator・Evaluator の3エージェント構成で、Claude が6時間かけてフルスタックアプリケーションを自律構築している。詳細は「[Anthropic の3エージェント・ハーネス設計](/posts/2026/03/anthropic-harness-design-three-agents/)」を参照。
+Anthropic の事例では、Planner・Generator・Evaluator の3エージェント構成で、Claude が6時間かけてフルスタックアプリケーションを自律構築している。詳細は「[Anthropic の3エージェント・ハーネス設計](/blogs/posts/2026/03/anthropic-harness-design-three-agents/)」を参照。
 
 ### Martin Fowler / Birgitta Böckeler: ソフトウェアエンジニアリングの視点（2026年2月）
 
@@ -86,7 +86,7 @@ Harness Engineering は大規模チーム専用の概念ではない。個人開
 - **E2E テスト**: エージェントの出力を決定論的に検証する仕組み
 - **セッション間の状態管理**: Git ログや構造化された進捗ファイルで前回の状態を引き継ぐ
 
-具体的な実装パターンについては「[Harness Engineering ベストプラクティス 2026](/posts/2026/03/harness-engineering/)」も参照してほしい。
+具体的な実装パターンについては「[Harness Engineering ベストプラクティス 2026](/blogs/posts/2026/03/harness-engineering/)」も参照してほしい。
 
 プロンプトを磨くことは依然として重要だが、それだけでは不十分な時代に入った。モデルの力を最大限に引き出すには、その外側に「仕組み」を組む必要がある。
 

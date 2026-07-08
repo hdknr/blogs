@@ -10,7 +10,7 @@ tags: ["claude-code", "prompt-caching", "CLAUDE.md", "日本語", "トークン�
 
 ## 背景: 日本語の「言語税」をどこで払うか
 
-[先日の記事](/blogs/posts/2026/04/2026-04-30-llm-japanese-token-language-tax/)で、日本語入出力が英語比 1.48 倍のトークンを消費すること、Claude では最大 1.94 倍にもなることを取り上げた。
+[先日の記事](/blogs/posts/2026/04/llm-japanese-token-language-tax/)で、日本語入出力が英語比 1.48 倍のトークンを消費すること、Claude では最大 1.94 倍にもなることを取り上げた。
 
 しかし現実問題、ブログ記事本文・コミットメッセージ・GitHub PR の説明・許可プロンプトなど、**最終アウトプットが日本語であること自体が要求である**ケースは避けられない。Claude Code を使い続ける限り、日本語コストはゼロにはならない。
 
@@ -25,7 +25,7 @@ tags: ["claude-code", "prompt-caching", "CLAUDE.md", "日本語", "トークン�
 | **A. 翻訳プロキシ (Ollama)** | ユーザー入力 ja→en、Claude 応答 en→ja を中間 LLM が翻訳 | 「思考・指示が日本語で出来ればよい」用途 | ツール結果・ファイル内容・git diff まで翻訳経路に入り破綻 |
 | **B. 部分英語化** | 思考・指示は英語、最終成果物は日本語のまま | 大半の開発作業 | 削減率は応答側ほど効かない |
 | **C. Prompt Caching 徹底** | CLAUDE.md・Skills・MCP 出力をキャッシュ | 日本語のまま実コストを大幅削減 | 設計工数が必要 |
-| **D. Caveman プロンプト** | 「原始人みたいに喋れ」で日本語応答を圧縮 | [既存実績手法（最大 80% 削減）](/blogs/posts/2026/04/2026-04-17-claude-caveman-token-reduction/) | 文体が崩れるので公開記事には不向き |
+| **D. Caveman プロンプト** | 「原始人みたいに喋れ」で日本語応答を圧縮 | [既存実績手法（最大 80% 削減）](/blogs/posts/2026/04/claude-caveman-token-reduction/) | 文体が崩れるので公開記事には不向き |
 | **E. モデル切替** | Gemini など日本語効率の良いモデルへ部分委譲 | 翻訳・要約などコモディティ作業 | Claude のハーネス連携を捨てる |
 
 ## 翻訳プロキシ案 (A) が筋悪な理由
@@ -129,7 +129,7 @@ CLAUDE.md は毎セッションの先頭で読み込まれる固定資産。prom
 
 ## 関連記事
 
-- [LLM で日本語を使うと英語の 1.48 倍トークンを消費する「言語税」の実態](/blogs/posts/2026/04/2026-04-30-llm-japanese-token-language-tax/)
-- [Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/2026-04-17-claude-caveman-token-reduction/)
+- [LLM で日本語を使うと英語の 1.48 倍トークンを消費する「言語税」の実態](/blogs/posts/2026/04/llm-japanese-token-language-tax/)
+- [Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/claude-caveman-token-reduction/)
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/)
 - [Claude Code](/blogs/wiki/tools/claude-code/)

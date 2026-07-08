@@ -11,7 +11,7 @@ tags: ["claude", "aws", "anthropic", "bedrock", "messages-api", "sigv4"]
 
 2026年5月11日に一般提供（GA）となった **Claude Platform on AWS** のセットアップ手順・API 呼び出し・`inference_geo` の挙動を実機で検証した記録です。
 
-概念的な概要や Amazon Bedrock との比較については[こちらの記事](/blogs/posts/2026/05/2026-05-13-claude-platform-on-aws-ga/)をご参照ください。本記事では hands-on のセットアップと API 呼び出しに絞って解説します。
+概念的な概要や Amazon Bedrock との比較については[こちらの記事](/blogs/posts/2026/05/claude-platform-on-aws-ga/)をご参照ください。本記事では hands-on のセットアップと API 呼び出しに絞って解説します。
 
 参考: [Claude Platform on AWS がGA。セットアップとAPI呼び出しを試してみた | DevelopersIO](https://dev.classmethod.jp/articles/claude-platform-on-aws-ga-setup/)
 

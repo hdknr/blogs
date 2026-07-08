@@ -37,7 +37,7 @@ Ben Holmes が YouTube でデモを公開し、daily.dev にも掲載された�
 
 ### ステップ1: Claude Code で計画を立てる
 
-まず Claude Code 上でタスクを整理し、**`/grill-me`** スキルで計画を徹底的に問い詰める（`/grill-me` については[こちらの記事](/blogs/posts/2026/05/2026-05-22-claude-code-grill-me/)を参照）。この段階で曖昧さを潰しておくことが後の並列化の精度を左右する。
+まず Claude Code 上でタスクを整理し、**`/grill-me`** スキルで計画を徹底的に問い詰める（`/grill-me` については[こちらの記事](/blogs/posts/2026/05/claude-code-grill-me/)を参照）。この段階で曖昧さを潰しておくことが後の並列化の精度を左右する。
 
 ### ステップ2: `/handoff` でドキュメントを生成する
 
