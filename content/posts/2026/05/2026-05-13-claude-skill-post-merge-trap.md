@@ -158,7 +158,7 @@ blog PRs run in parallel.
 
 ## 関連記事
 
-- [「言語税」対策として CLAUDE.md を英語化する](/blogs/posts/2026/05/2026-05-13-claude-md-english-prompt-caching/) — Skill 設計の別角度（トークン削減）
-- [CLAUDE.md+SKILL.md 英語化で 37.6% トークン削減 — tiktoken による実測結果と内訳](/blogs/posts/2026/05/2026-05-13-claude-md-english-tiktoken-measurement/)
+- [「言語税」対策として CLAUDE.md を英語化する](/blogs/posts/2026/05/claude-md-english-prompt-caching/) — Skill 設計の別角度（トークン削減）
+- [CLAUDE.md+SKILL.md 英語化で 37.6% トークン削減 — tiktoken による実測結果と内訳](/blogs/posts/2026/05/claude-md-english-tiktoken-measurement/)
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/)
 - [Claude Code](/blogs/wiki/tools/claude-code/)

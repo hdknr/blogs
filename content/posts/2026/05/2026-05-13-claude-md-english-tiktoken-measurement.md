@@ -16,7 +16,7 @@ tags: ["claude-code", "prompt-caching", "CLAUDE.md", "tiktoken", "トークン�
 
 ## 背景
 
-[CLAUDE.md 英語化の記事](/blogs/posts/2026/05/2026-05-13-claude-md-english-prompt-caching/) と Skills 英語化 PR (#394) の続編。
+[CLAUDE.md 英語化の記事](/blogs/posts/2026/05/claude-md-english-prompt-caching/) と Skills 英語化 PR (#394) の続編。
 
 前 2 つの作業で、ハーネスの「内側」（LLM だけが読む固定資産）を英語化し、「外側」（人間が読むブログ記事や許可プロンプト）は日本語のまま維持する**部分英語化パターン**を実装した。
 
@@ -147,7 +147,7 @@ API キーが必要で、外部 API 呼び出しが発生する点が留意事�
 
 ## 関連記事
 
-- [LLM で日本語を使うと英語の 1.48 倍トークンを消費する「言語税」の実態](/blogs/posts/2026/04/2026-04-30-llm-japanese-token-language-tax/) — 言語税の元データ
-- [「言語税」対策として CLAUDE.md を英語化する](/blogs/posts/2026/05/2026-05-13-claude-md-english-prompt-caching/) — 設計方針
-- [Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/2026-04-17-claude-caveman-token-reduction/) — 出力側の削減手法
+- [LLM で日本語を使うと英語の 1.48 倍トークンを消費する「言語税」の実態](/blogs/posts/2026/04/llm-japanese-token-language-tax/) — 言語税の元データ
+- [「言語税」対策として CLAUDE.md を英語化する](/blogs/posts/2026/05/claude-md-english-prompt-caching/) — 設計方針
+- [Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/claude-caveman-token-reduction/) — 出力側の削減手法
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/)
