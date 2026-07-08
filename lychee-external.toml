@@ -1,26 +1,34 @@
-# lychee configuration — used by the weekly external-link sweep in
+# lychee configuration — used by the weekly EXTERNAL-link sweep in
 # .github/workflows/linkcheck.yml
 #
-# Rationale: many hosts return 403/429/400 to non-browser clients (bot
-# protection, rate limits) even though the page is perfectly reachable in a
-# browser. Treating those as "dead" produces false positives, so we:
-#   1. exclude the worst offenders outright, and
-#   2. accept transient/soft-block status codes as OK.
-# The PR-time internal check does NOT use this file (it only checks localhost).
+# The external job builds the site, mirrors it under the /blogs/ base path and
+# serves it on http://127.0.0.1:8099/. This config then:
+#   - resolves internal links to that local server (base_url + remap) so
+#     root-relative assets like /blogs/assets/…css do NOT error, and
+#   - EXCLUDES the local server, so only genuine EXTERNAL links are checked.
+#
+# Many hosts return 403/429/5xx to non-browser clients (bot protection, rate
+# limits) even though the page is reachable in a browser. To keep the weekly
+# report actionable we accept those soft-block/transient codes and report only
+# hard-dead links. The PR-time internal check does NOT use this file.
 
-# Accept soft-block / partial-content codes as reachable.
-accept = [200, 206, 403, 429]
+# Resolve internal links against the local mirror server.
+base_url = "http://127.0.0.1:8099/"
+remap = ["https://hdknr.github.io/ http://127.0.0.1:8099/"]
 
-# Retry transient failures before giving up.
+# Accept soft-block / partial-content / transient codes as reachable so the
+# report is dominated by real dead links (404/410), not bot walls.
+accept = ["200", "206", "403", "429", "500", "503"]
+
 max_retries = 2
 retry_wait_time = 3
 timeout = 20
-
-# Be gentle: some hosts rate-limit aggressively.
 max_concurrency = 8
 
-# Hosts that reliably block crawlers (verified reachable in a browser).
 exclude = [
+  # Internal: served locally; only external links should be checked here.
+  "^http://127\\.0\\.0\\.1:8099/",
+  # Hosts that reliably block crawlers (verified reachable in a browser).
   "^https?://(www\\.)?bloomberg\\.com/",
   "^https?://(www\\.)?axios\\.com/",
   "^https?://tabelog\\.com/",
@@ -44,4 +52,6 @@ exclude = [
   "^https?://zhuanlan\\.zhihu\\.com/",
   "^https?://(developers|access)\\.redhat\\.com/",
   "^https?://app\\.getzep\\.com/",
+  # X/Twitter: returns 404 to bots for valid tweets (SPA).
+  "^https?://(x|twitter)\\.com/",
 ]
