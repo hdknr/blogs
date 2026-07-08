@@ -112,22 +112,48 @@ jobs:
           TZ: Asia/Tokyo
         run: hugo --gc --minify --baseURL "https://hdknr.github.io/blogs/"
 
+      - name: Mirror to /blogs base path
+        run: |
+          mkdir -p _site/blogs
+          cp -a public/. _site/blogs/
+
+      - name: Serve site locally
+        run: |
+          nohup python3 -c "
+          from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+          import functools
+          h = functools.partial(SimpleHTTPRequestHandler, directory='_site')
+          ThreadingHTTPServer(('127.0.0.1', 8099), h).serve_forever()
+          " >/dev/null 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://127.0.0.1:8099/blogs/ && break
+            sleep 0.5
+          done
+
+      - name: Install lychee
+        run: |
+          wget -O /tmp/lychee.tar.gz \
+            "https://github.com/lycheeverse/lychee/releases/download/lychee-v${LYCHEE_VERSION}/lychee-x86_64-unknown-linux-gnu.tar.gz"
+          mkdir -p /tmp/lychee-bin
+          tar -xzf /tmp/lychee.tar.gz -C /tmp/lychee-bin
+          sudo mv "$(find /tmp/lychee-bin -type f -name lychee | head -1)" /usr/local/bin/lychee
+          lychee --version
+
+      # Internal links resolve to the local server (base_url/remap in the
+      # config) and are excluded, so only genuine EXTERNAL links are checked.
       - name: Check external links
         id: lychee
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: >-
-            --no-progress
-            --config lychee-external.toml
-            --scheme https
-            --scheme http
-            --exclude "^https?://hdknr\.github\.io/"
-            './public/**/*.html'
-          fail: false
-          output: ./lychee/report.md
+        run: |
+          mkdir -p lychee
+          set +e
+          lychee --no-progress --config lychee-external.toml \
+            --output ./lychee/report.md \
+            './_site/blogs/**/*.html'
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          set -e
 
       - name: Open issue on dead links
-        if: steps.lychee.outputs.exit_code != 0
+        if: steps.lychee.outputs.exit_code != '0'
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "Dead links detected by weekly lychee sweep"
