@@ -1,0 +1,134 @@
+name: Link check
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  schedule:
+    # Weekly external-link sweep: Monday 00:00 UTC (09:00 JST)
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  HUGO_VERSION: 0.157.0
+  LYCHEE_VERSION: 0.24.2
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Internal-link check (blocking). Runs on PRs and pushes.
+  # Builds the site, mirrors it under the /blogs/ base path, serves it locally,
+  # and checks that every INTERNAL link/image resolves. External links are
+  # excluded here (they are handled by the weekly job) so this stays fast and
+  # deterministic. A missing /blogs prefix or a wrong slug becomes a 404.
+  # ---------------------------------------------------------------------------
+  internal:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O "${{ runner.temp }}/hugo.deb" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i "${{ runner.temp }}/hugo.deb"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build site
+        env:
+          HUGO_ENVIRONMENT: production
+          TZ: Asia/Tokyo
+        run: hugo --gc --minify --baseURL "https://hdknr.github.io/blogs/"
+
+      - name: Mirror to /blogs base path
+        run: |
+          mkdir -p _site/blogs
+          cp -a public/. _site/blogs/
+
+      - name: Serve site locally
+        run: |
+          nohup python3 -c "
+          from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+          import functools
+          h = functools.partial(SimpleHTTPRequestHandler, directory='_site')
+          ThreadingHTTPServer(('127.0.0.1', 8099), h).serve_forever()
+          " >/dev/null 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://127.0.0.1:8099/blogs/ && break
+            sleep 0.5
+          done
+
+      - name: Install lychee
+        run: |
+          wget -O /tmp/lychee.tar.gz \
+            "https://github.com/lycheeverse/lychee/releases/download/lychee-v${LYCHEE_VERSION}/lychee-x86_64-unknown-linux-gnu.tar.gz"
+          tar -xzf /tmp/lychee.tar.gz -C /tmp
+          sudo mv /tmp/lychee /usr/local/bin/lychee
+          lychee --version
+
+      - name: Check internal links
+        run: |
+          lychee \
+            --no-progress \
+            --base-url http://127.0.0.1:8099/ \
+            --remap "https://hdknr.github.io/ http://127.0.0.1:8099/" \
+            --include "^http://127\.0\.0\.1:8099/" \
+            --max-concurrency 16 \
+            './_site/blogs/**/*.html'
+
+  # ---------------------------------------------------------------------------
+  # External-link sweep (non-blocking). Runs weekly (and via workflow_dispatch).
+  # Checks external URLs across the built site. Known bot-blocked hosts and
+  # transient codes are tamed via lychee.toml so the report stays signal-rich.
+  # On failure it opens/updates a tracking issue instead of failing the run.
+  # ---------------------------------------------------------------------------
+  external:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O "${{ runner.temp }}/hugo.deb" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i "${{ runner.temp }}/hugo.deb"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build site
+        env:
+          HUGO_ENVIRONMENT: production
+          TZ: Asia/Tokyo
+        run: hugo --gc --minify --baseURL "https://hdknr.github.io/blogs/"
+
+      - name: Check external links
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --config lychee.toml
+            --scheme https
+            --scheme http
+            --exclude "^https?://hdknr\.github\.io/"
+            './public/**/*.html'
+          fail: false
+          output: ./lychee/report.md
+
+      - name: Open issue on dead links
+        if: steps.lychee.outputs.exit_code != 0
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Dead links detected by weekly lychee sweep"
+          content-filepath: ./lychee/report.md
+          labels: link-check, automated
