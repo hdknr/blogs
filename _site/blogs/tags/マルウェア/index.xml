@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>マルウェア on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%9E%E3%83%AB%E3%82%A6%E3%82%A7%E3%82%A2/</link><description>Recent content in マルウェア on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 20 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%9E%E3%83%AB%E3%82%A6%E3%82%A7%E3%82%A2/index.xml" rel="self" type="application/rss+xml"/><item><title>エアギャップ攻撃</title><link>https://hdknr.github.io/blogs/wiki/concepts/air-gap-attack/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/air-gap-attack/</guid><description>ネットワーク接続を物理的に持たないエアギャップ環境から、電磁波・音響・光・熱などのコバートチャネル経由でデータを盗み出すサイドチャネル攻撃の総称</description></item><item><title>エアギャップ攻撃 ODINI — CPU 磁気放射でファラデーケージを突破するマルウェアの全貌</title><link>https://hdknr.github.io/blogs/posts/2026/05/odini-air-gap-cpu-magnetic-exfiltration/</link><pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/odini-air-gap-cpu-magnetic-exfiltration/</guid><description>CPU の磁気放射を悪用してファラデーケージ付きエアギャップ PCからデータを盗み出す ODINI マルウェアの攻撃原理・スペック・対策を解説。</description></item><item><title>PyPI公式パッケージ telnyx がサプライチェーン攻撃で汚染 — TeamPCPによるWAVステガノグラフィ攻撃の全容</title><link>https://hdknr.github.io/blogs/posts/2026/03/telnyx-pypi-supply-chain-attack/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/telnyx-pypi-supply-chain-attack/</guid><description>PyPI公式パッケージ telnyx がTeamPCPのサプライチェーン攻撃で汚染。WAVステガノグラフィ手法の詳細と、Python開発者が今すぐ取るべき対策を解説。</description></item><item><title>Vibe Hacking とは何か：AI が変えるサイバー攻撃の新潮流</title><link>https://hdknr.github.io/blogs/posts/2026/03/vibe-hacking/</link><pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/vibe-hacking/</guid><description>&lt;p&gt;「Vibe Coding」が開発者の間で広まる中、同じ発想をサイバー攻撃に応用する「Vibe Hacking」が新たな脅威として注目されている。AI を使って、専門知識がなくてもマルウェアや攻撃スクリプトを生成できる時代が到来した。&lt;/p&gt;
+&lt;h2 id="vibe-hacking-とは"&gt;Vibe Hacking とは&lt;/h2&gt;
+&lt;p&gt;Vibe Hacking は、AI を活用してサイバー攻撃のハードルを劇的に下げる手法・思想を指す。開発者が自然言語で AI にコードを書かせる「Vibe Coding」のダークサイドとも言える概念だ。&lt;/p&gt;
+&lt;p&gt;従来のハッキングには、ネットワークプロトコルの理解、脆弱性の発見、エクスプロイトコードの記述といった高度な技術スキルが必要だった。しかし Vibe Hacking では「ターゲットを指定するだけ」「経験不要」「AI が処理する」といった形で、技術的な障壁がほぼ消失する。&lt;/p&gt;
+&lt;h2 id="具体的な脅威"&gt;具体的な脅威&lt;/h2&gt;
+&lt;h3 id="ai-生成マルウェア"&gt;AI 生成マルウェア&lt;/h3&gt;
+&lt;p&gt;HP Wolf Security の脅威インサイトレポート（2025年10月〜12月）によると、攻撃者は AI で生成した感染スクリプトを実際の攻撃キャンペーンに使用している。偽のインボイス PDF を通じて、正規のプラットフォーム（Booking.com など）へリダイレクトする前にマルウェアをダウンロードさせる手口が確認されている。&lt;/p&gt;
+&lt;h3 id="flat-pack-malware"&gt;Flat-Pack Malware&lt;/h3&gt;
+&lt;p&gt;複数の無関係な脅威グループが、同一のモジュール化されたマルウェアコンポーネントを再利用する「Flat-Pack Malware」も増加している。市販のマルウェア部品を組み立てるだけで、最小限の労力でカスタマイズされた攻撃キャンペーンを展開できる。&lt;/p&gt;
+&lt;h3 id="国家レベルの活用"&gt;国家レベルの活用&lt;/h3&gt;
+&lt;p&gt;パキスタン系の脅威アクター「Transparent Tribe」が、AI コーディングツールを使ってマルウェアを「Vibe Coding」し、インド政府やその海外大使館を標的にした事例も報告されている。&lt;/p&gt;
+&lt;h2 id="なぜ危険なのか"&gt;なぜ危険なのか&lt;/h2&gt;
+&lt;h3 id="攻撃コストの劇的な低下"&gt;攻撃コストの劇的な低下&lt;/h3&gt;
+&lt;p&gt;脆弱性の発見からエクスプロイト作成までのコストは、かつて数週間と数千ドルを要した。AI によりこれがほぼゼロになりつつある。「スプレー＆プレイ」型の大規模攻撃ではなく、特定のシステムや企業、さらには個々の開発者をピンポイントで狙うマイクロターゲット攻撃が現実的になった。&lt;/p&gt;
+&lt;h3 id="検出回避能力の向上"&gt;検出回避能力の向上&lt;/h3&gt;
+&lt;p&gt;HP の調査では、メール脅威の 14% 以上がゲートウェイスキャナーを回避している。AI が生成するコードは毎回微妙に異なるため、シグネチャベースの検出が困難になっている。&lt;/p&gt;
+&lt;h3 id="vibe-coding-で作られたアプリの脆弱性"&gt;Vibe Coding で作られたアプリの脆弱性&lt;/h3&gt;
+&lt;p&gt;攻撃だけでなく、Vibe Coding で開発されたアプリケーション側も問題を抱えている。Veracode の GenAI コードセキュリティレポートによると、AI 生成コードの 45% にセキュリティ脆弱性が含まれている。AI はほぼ半分の確率で安全でない実装を選択する。&lt;/p&gt;
+&lt;h2 id="対策のポイント"&gt;対策のポイント&lt;/h2&gt;
+&lt;h3 id="ai-によるコードレビューの自動化"&gt;AI によるコードレビューの自動化&lt;/h3&gt;
+&lt;p&gt;Vibe Coding で生成された全コードを人間がレビューするのは現実的ではない。コード生成が AI なら、レビューも AI で自動化するのが自然な流れだ。&lt;/p&gt;</description></item></channel></rss>

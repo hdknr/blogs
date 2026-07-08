@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>AIアーキテクチャ on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ai%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3/</link><description>Recent content in AIアーキテクチャ on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 16 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ai%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3/index.xml" rel="self" type="application/rss+xml"/><item><title>Anthropic が解説するマルチエージェント調整パターン 5 選</title><link>https://hdknr.github.io/blogs/posts/2026/04/anthropic-multi-agent-coordination-patterns/</link><pubDate>Sat, 11 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/anthropic-multi-agent-coordination-patterns/</guid><description>&lt;p&gt;Anthropic が 2026 年 4 月 10 日に公開したブログ記事「&lt;a href="https://claude.com/blog/multi-agent-coordination-patterns"&gt;Multi-agent coordination patterns: Five approaches and when to use them&lt;/a&gt;」では、複数のAIエージェントを協調させるための 5 つのパターンが紹介されています。&lt;/p&gt;
+&lt;p&gt;それぞれのパターンを整理してみます。&lt;/p&gt;
+&lt;h2 id="1-generator-verifier生成検証"&gt;1. Generator-Verifier（生成・検証）&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;概要&lt;/strong&gt;: 一方のエージェントが出力を生成し、もう一方のエージェントが明示的な基準に照らして検証します。検証が失敗した場合、フィードバックが生成エージェントに戻り、条件を満たすか最大反復回数に達するまでループします。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;向いているケース&lt;/strong&gt;: コード生成＋テスト実行のような、品質が最重要でかつ評価基準を明確に定義できるタスク。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;: 検証の質は定義した基準の質に完全に依存します。評価基準の設計を省略すると、「品質管理をしているという幻想」だけが残ってしまいます。&lt;/p&gt;
+&lt;h2 id="2-orchestrator-subagentオーケストレーターサブエージェント"&gt;2. Orchestrator-Subagent（オーケストレーター・サブエージェント）&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;概要&lt;/strong&gt;: リーダー役のエージェントが作業を計画し、専門化されたサブエージェントに明確な境界付きのタスクを委任します。サブエージェントは作業を実行し、結果をオーケストレーターに返します。オーケストレーターは各結果を統合して最終的なアウトプットを生成します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;向いているケース&lt;/strong&gt;: セキュリティ・テストカバレッジ・スタイルをそれぞれ別エージェントが担当するコードレビューのように、サブタスクの依存関係が少ない明確なタスク分解ができる場合。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;: サブエージェント同士で発見した情報に依存関係が生じると、オーケストレーターが「情報のボトルネック」になります。また、明示的に並列化しない限り、サブエージェントは逐次実行されるためスループットが制限されます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;推奨&lt;/strong&gt;: Anthropic は「大半のユースケースでまず試すべきパターン」としてこのパターンを位置づけています。最も問題の幅広さをカバーしつつ、調整のオーバーヘッドが最小限です。&lt;/p&gt;
+&lt;h2 id="3-agent-teamsエージェントチーム"&gt;3. Agent Teams（エージェントチーム）&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;概要&lt;/strong&gt;: コーディネーターがキューからタスクを取得する &lt;strong&gt;永続的な&lt;/strong&gt; ワーカーエージェントを生成します。ワーカーは複数のステップにわたって自律的に作業し、担当コンポーネントのドメイン知識を蓄積します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;向いているケース&lt;/strong&gt;: 大規模コードベースのサービス移行のように、エージェントが担当範囲に習熟しながら並列で長期間実行するタスク。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Orchestrator-Subagent との違い&lt;/strong&gt;: サブエージェントが単発タスクで消えるのに対し、チームワーカーはアサインをまたいで生存し続けるため、ドメイン知識が蓄積される。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;: タスク間の独立性が必要で、エージェント同士が中間結果を共有しにくい。タスク時間がばらつく場合、完了検知が難しくなります。&lt;/p&gt;
+&lt;h2 id="4-message-busメッセージバス"&gt;4. Message Bus（メッセージバス）&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;概要&lt;/strong&gt;: エージェントが共有ルーターを介してトピックをパブリッシュ・サブスクライブします。ルーターはマッチングメッセージを配信しますが、実行順序はあらかじめ決まっていません。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;向いているケース&lt;/strong&gt;: セキュリティアラートが多段階の調査を動的にトリガーするようなイベント駆動パイプラインで、どのエージェントが関与するかがリアルタイムに決まる場合。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;: イベントが複数エージェントを連鎖的にトリガーすると、トレーサビリティが困難になります。ルーターがイベントを誤分類すると、エラーが静かに発生します。&lt;/p&gt;
+&lt;h2 id="5-shared-state共有ステート"&gt;5. Shared State（共有ステート）&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;概要&lt;/strong&gt;: 中央コーディネーターを置かず、エージェントが永続ストレージに直接読み書きします。エージェントは他エージェントの発見をリアルタイムで参照しながら協調的な知識を蓄積します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;向いているケース&lt;/strong&gt;: 一方の調査結果が即座に他方のエージェントの探索方向に影響する、協調型のリサーチタスク。単一障害点がなくなるというメリットもあります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;: 収束条件がないとエージェントが際限なく反応し合い、トークンを無駄に消費します。「時間予算・収束閾値・終了エージェントの指定」のいずれかによる&lt;strong&gt;明示的な終了条件&lt;/strong&gt;が必須です。&lt;/p&gt;</description></item><item><title>マルチエージェント調整パターン</title><link>https://hdknr.github.io/blogs/wiki/concepts/multi-agent-coordination-patterns/</link><pubDate>Sat, 11 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/multi-agent-coordination-patterns/</guid><description>複数 AI エージェントを協調させる5つの設計パターン。Anthropic が体系化した Generator-Verifier・Orchestrator-Subagent・Agent Teams・Message Bus・Shared State</description></item></channel></rss>

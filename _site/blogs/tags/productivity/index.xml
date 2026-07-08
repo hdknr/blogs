@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Productivity on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/productivity/</link><description>Recent content in Productivity on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 23 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/productivity/index.xml" rel="self" type="application/rss+xml"/><item><title>AIにログを読ませてPDCA計画を立てさせる：深津貴之氏が提案するシンプルな振り返り術</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-pdca-log-review/</link><pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-pdca-log-review/</guid><description>&lt;p&gt;note CXO・THE GUILD 代表の深津貴之氏（&lt;a href="https://x.com/fladdict"&gt;@fladdict&lt;/a&gt;）が、AI を使った日次・週次の振り返り手法を紹介している。やり方は極めてシンプルで、「昨日（先週）のログを AI に読み込ませて、PDCA 計画を策定させる」だけだという。&lt;/p&gt;
+&lt;h2 id="手法の概要"&gt;手法の概要&lt;/h2&gt;
+&lt;p&gt;深津氏のツイートによると、手順は以下の通り：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;昨日（または先週）の作業ログを AI に読み込ませる&lt;/li&gt;
+&lt;li&gt;「昨日（先週）の問題を解決する PDCA 計画を策定せよ」と指示する&lt;/li&gt;
+&lt;li&gt;AI が問題点を分析し、改善計画を提案してくれる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これだけで「仕事と人生がドンドン解決していく」と述べている。&lt;/p&gt;
+&lt;h2 id="なぜこの手法が効果的なのか"&gt;なぜこの手法が効果的なのか&lt;/h2&gt;
+&lt;h3 id="ログの蓄積がそのまま改善の燃料になる"&gt;ログの蓄積がそのまま改善の燃料になる&lt;/h3&gt;
+&lt;p&gt;日々の作業ログは多くの人が何らかの形で残している。しかし、それを定期的に振り返って改善につなげるのは手間がかかる。AI を挟むことで、ログの分析と計画策定のコストがほぼゼロになる。&lt;/p&gt;
+&lt;h3 id="pdca-サイクルのcheck--actが自動化される"&gt;PDCA サイクルの「Check → Act」が自動化される&lt;/h3&gt;
+&lt;p&gt;PDCA サイクルの中で最もおろそかになりがちなのが Check（振り返り）と Act（改善アクション）のフェーズだ。AI にログを読ませることで、この2つのフェーズが自動的に回るようになる。&lt;/p&gt;
+&lt;h3 id="客観的な視点が得られる"&gt;客観的な視点が得られる&lt;/h3&gt;
+&lt;p&gt;自分のログを自分で振り返ると、どうしてもバイアスがかかる。AI に分析させることで、見落としていた問題点やパターンに気づける可能性がある。&lt;/p&gt;
+&lt;h2 id="実践のポイント"&gt;実践のポイント&lt;/h2&gt;
+&lt;h3 id="ログの形式"&gt;ログの形式&lt;/h3&gt;
+&lt;p&gt;AI に読み込ませるログは、特別なフォーマットである必要はない。日報、タスク管理ツールの履歴、カレンダーの予定、チャットの履歴など、手元にあるものをそのまま使えばよい。&lt;/p&gt;
+&lt;h3 id="プロンプトの例"&gt;プロンプトの例&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;以下は私の昨日の作業ログです。
+[ログを貼り付け]
+このログを分析して、以下の観点で PDCA 計画を策定してください：
+- Plan: 今日取り組むべき優先課題
+- Do: 具体的なアクション項目
+- Check: 昨日の問題点と原因分析
+- Act: 改善すべきプロセスや習慣
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="週次での活用"&gt;週次での活用&lt;/h3&gt;
+&lt;p&gt;日次だけでなく、週次でも同じ手法が使える。1週間分のログをまとめて AI に渡せば、より大きな視点での改善計画が得られる。&lt;/p&gt;
+&lt;h2 id="ai--pdca-の広がり"&gt;AI × PDCA の広がり&lt;/h2&gt;
+&lt;p&gt;この手法は個人の生産性向上だけでなく、チームや組織でも応用できる。InfoQ では AI コード生成における PDCA フレームワークとして、日次のマイクロ振り返り（5〜10分）を AI エージェントと行うアプローチが紹介されている。&lt;/p&gt;</description></item><item><title>OpenClaw × Telegram Forum Topics — AIとの対話を構造化して生産性を上げる方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-telegram-forum-topics/</link><pubDate>Sun, 08 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-telegram-forum-topics/</guid><description>&lt;p&gt;OpenClaw を Telegram で使っている人に向けて、&lt;strong&gt;Forum Topics&lt;/strong&gt; を活用した構造化テクニックが海外で話題になっています。ブックマーク 2,000 件を突破したこの手法を紹介します。&lt;/p&gt;
+&lt;h2 id="forum-topics-でできること"&gt;Forum Topics でできること&lt;/h2&gt;
+&lt;p&gt;Telegram の Forum Topics 機能を OpenClaw と組み合わせると、以下のことが実現できます:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;会話をカテゴリ分け&lt;/strong&gt; — 仕事、開発、健康、趣味など、トピックごとに独立した LLM セッションを持てる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;文脈が混ざらない&lt;/strong&gt; — 各トピックが独立したセッションになるため、異なるコンテキストが干渉しない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;cron ジョブ・定期通知の自動ルーティング&lt;/strong&gt; — 関連するトピックに自動で振り分け&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メール転送による自動処理&lt;/strong&gt; — ボットにメールを転送するだけで、適切なトピックで自動的に処理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="設定方法"&gt;設定方法&lt;/h2&gt;
+&lt;p&gt;設定はシンプルです:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;BotFather&lt;/strong&gt; で「Threaded Mode」を ON にする&lt;/li&gt;
+&lt;li&gt;OpenClaw に Forum Topics を使うよう指示する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これだけで、トピックベースの構造化された AI アシスタント環境が整います。&lt;/p&gt;
+&lt;h2 id="実践例-ai-が部門別の秘書チームになる"&gt;実践例: AI が部門別の秘書チームになる&lt;/h2&gt;
+&lt;p&gt;この手法を紹介した Typefully の共同創業者は、実際に自分のプロダクト運用でこの構造を活用しています:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;トピック&lt;/th&gt;
+&lt;th&gt;用途&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;General&lt;/td&gt;
+&lt;td&gt;一般的なやり取り&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Dev&lt;/td&gt;
+&lt;td&gt;開発タスク管理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Life&lt;/td&gt;
+&lt;td&gt;日常のタスク&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Health&lt;/td&gt;
+&lt;td&gt;健康管理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Racing&lt;/td&gt;
+&lt;td&gt;レース準備&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Finances&lt;/td&gt;
+&lt;td&gt;財務管理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;まさに &lt;strong&gt;AI が部門別の秘書チーム&lt;/strong&gt; として機能している状態です。&lt;/p&gt;</description></item></channel></rss>

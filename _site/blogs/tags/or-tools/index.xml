@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>OR-Tools on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/or-tools/</link><description>Recent content in OR-Tools on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 08 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/or-tools/index.xml" rel="self" type="application/rss+xml"/><item><title>Apprise + シフト管理ツールで OnCall 自作スタックを組む — PyShift・OR-Tools・GoAlert の役割と選び方</title><link>https://hdknr.github.io/blogs/posts/2026/05/apprise-shift-management-oncall-stack/</link><pubDate>Fri, 08 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/apprise-shift-management-oncall-stack/</guid><description>&lt;p&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/05/grafana-oncall-irm-incident-response/"&gt;前回の記事&lt;/a&gt;で「Apprise + 自作 Web サービスで OnCall 相当を組む」例を示しました。この記事ではよくある誤解を整理し、&lt;strong&gt;シフト管理を含めた自作 OnCall スタックの現実的な選択肢&lt;/strong&gt;を深掘りします。&lt;/p&gt;
+&lt;h2 id="まずは-apprise-の正しい位置付けを確認"&gt;まずは Apprise の正しい位置付けを確認&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/caronc/apprise"&gt;Apprise&lt;/a&gt; は名前から「シフト管理ができそう」と誤解されがちですが、実際の役割は明確に分かれています。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;正しい位置付け&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Apprise は &lt;strong&gt;「通知の超便利ハブ」&lt;/strong&gt; — 1 つのコードで Slack / メール / SMS / LINE / Telegram など 100 種類以上の通知先に統一インタフェースで送る&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;シフト管理機能（カレンダー、ローテーション、当番判定）は持たない&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;「シフト管理に Apprise を使う」とは、&lt;strong&gt;シフトロジックは別のライブラリ / DB / カレンダーで持ち、通知配信だけ Apprise に任せる&lt;/strong&gt;という意味&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり Apprise は「&lt;strong&gt;組んだシフトを確実に届ける道具&lt;/strong&gt;」であり、「シフトを組む道具」ではありません。前回記事のコード例で &lt;code&gt;get_policy_for_now()&lt;/code&gt; を Python で書いていたのは、まさにこの「シフト判定ロジックを自作」の実装です。&lt;/p&gt;
+&lt;h2 id="シフト管理を自作する場合に組み合わせる-python-ライブラリ"&gt;シフト管理を「自作する場合」に組み合わせる Python ライブラリ&lt;/h2&gt;
+&lt;p&gt;シフトロジックを自分で書くなら、以下のライブラリが Apprise と相性が良い。&lt;/p&gt;
+&lt;h3 id="1-pyshiftpoint85pyshift--古典的なシフトローテ"&gt;1. PyShift（point85/PyShift） — 古典的なシフトローテ&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/point85/PyShift"&gt;point85/PyShift&lt;/a&gt; は、Java 版の Shift ライブラリを Python に移植したもの。PyPI では &lt;code&gt;PyWorkShift&lt;/code&gt; として配布されています。&lt;/p&gt;</description></item></channel></rss>

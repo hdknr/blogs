@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>AI Agent on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ai-agent/</link><description>Recent content in AI Agent on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 24 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ai-agent/index.xml" rel="self" type="application/rss+xml"/><item><title>Ponytail — AIエージェントを「怠惰なシニア開発者」にするプラグイン</title><link>https://hdknr.github.io/blogs/posts/2026/06/ponytail-ai-agent-minimal-code/</link><pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/ponytail-ai-agent-minimal-code/</guid><description>&lt;p&gt;AIエージェントに簡単なタスクを頼んだはずが、500行のコードが返ってきた——そんな経験はないだろうか。&lt;strong&gt;Ponytail&lt;/strong&gt; はそれを解決するためのオープンソースプラグインだ。MITライセンスで公開され、すでに54,000以上のスターを集めている。&lt;/p&gt;
+&lt;h2 id="ponytail-とは何か"&gt;Ponytail とは何か&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/DietrichGebert/ponytail"&gt;Ponytail&lt;/a&gt; は、AIエージェントに「ラダー（梯子）」と呼ばれる意思決定フローを組み込み、コードを書く前に本当に必要かどうかを確認させるプラグインだ。&lt;/p&gt;
+&lt;p&gt;名前の由来は、どのチームにもいる「あのシニア開発者」のイメージ——長いポニーテール、楕円形の眼鏡、バージョン管理システムよりも長くその会社にいる人物。50行のコードを見せると、一言も言わずに1行に置き換えてくれる。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ponytail はそのシニアをAIエージェントの中に宿らせる。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="7段のラダー"&gt;7段のラダー&lt;/h2&gt;
+&lt;p&gt;コードを書く前に、エージェントはこの順序で判断する：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;1. これは本当に必要か？ → 不要なら: スキップ (YAGNI)
+2. このコードベースに既にある？ → あれば再利用、書き直しは不要
+3. 標準ライブラリで対応できる？ → できるなら使う
+4. プラットフォームのネイティブ機能？ → あれば使う
+5. インストール済みの依存ライブラリ？ → あれば使う
+6. 1行で書ける？ → 1行で書く
+7. 上記すべてが該当しない時のみ: 最小限のコードを書く
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;このラダーは「問題を理解する」より前には走らない。まずコードを読んで実際のフローを把握し、その上で梯子を登る。エージェントは解決策の選択には怠惰だが、理解することには手を抜かない。&lt;/p&gt;
+&lt;h3 id="典型例日付ピッカー"&gt;典型例：日付ピッカー&lt;/h3&gt;
+&lt;p&gt;通常のエージェントに日付ピッカーを依頼すると、flatpickr をインストールし、ラッパーコンポーネントを書き、スタイルシートを追加し、タイムゾーンについて議論を始める。&lt;/p&gt;
+&lt;p&gt;Ponytail を使うと：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-html" data-lang="html"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!-- ponytail: ブラウザにネイティブ機能がある --&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;&lt;span style="color:#f92672"&gt;input&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;type&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;date&amp;#34;&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="ベンチマーク結果"&gt;ベンチマーク結果&lt;/h2&gt;
+&lt;p&gt;実際の Claude Code セッションで計測した結果（モデル: Haiku 4.5 / 対象: FastAPI + React の OSS リポジトリ / 12タスク、n=4）：&lt;/p&gt;</description></item><item><title>ガレージで $794,000 稼いだ AI トレーディングボット — Polymarket × Claude Opus × Hermes の自己進化ループ</title><link>https://hdknr.github.io/blogs/posts/2026/05/polymarket-claude-opus-hermes-trading-bot/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/polymarket-claude-opus-hermes-trading-bot/</guid><description>&lt;h2 id="ガレージから-794000-へ--ほぼコードを書かずに"&gt;ガレージから $794,000 へ — ほぼコードを書かずに&lt;/h2&gt;
+&lt;p&gt;ブラジルの大学中退者が、両親の家のガレージに戻り、オープンソースの AI エージェントフレームワークを使って Polymarket のトレーディングボットを構築した。14ヶ月で稼いだ金額は &lt;strong&gt;$794,000&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;驚くべき点は、彼自身がほとんどコードを書いていないことだ。コードの大部分は &lt;strong&gt;Claude Opus&lt;/strong&gt; が生成した。&lt;/p&gt;
+&lt;p&gt;使用したフレームワークは &lt;strong&gt;&lt;a href="https://github.com/NousResearch/hermes-agent"&gt;Hermes Agent&lt;/a&gt;&lt;/strong&gt; — NousResearch が開発したオープンソースの AI エージェントフレームワーク（Paradigm 出資）だ。&lt;/p&gt;
+&lt;h2 id="システム構成シンプルな-4-層アーキテクチャ"&gt;システム構成：シンプルな 4 層アーキテクチャ&lt;/h2&gt;
+&lt;p&gt;このトレーディングシステムは驚くほどシンプルだ。月額コストは &lt;strong&gt;$10 程度&lt;/strong&gt;。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;レイヤー&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Claude Opus&lt;/td&gt;
+&lt;td&gt;シグナル読み取り・判断・毎日の戦略調整&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Hermes エージェント&lt;/td&gt;
+&lt;td&gt;判断を自動実行フローに変換&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;安価なサーバー&lt;/td&gt;
+&lt;td&gt;24 時間稼働&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Telegram&lt;/td&gt;
+&lt;td&gt;各取引と日次レポートを手元に通知&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;構築時間はわずか 30 分だったという。&lt;/p&gt;
+&lt;h2 id="戦略のコアマルコフ連鎖による持続状態検出"&gt;戦略のコア：マルコフ連鎖による「持続状態」検出&lt;/h2&gt;
+&lt;p&gt;このボットが取引するのは &lt;strong&gt;Polymarket の BTC 5 分足の上昇/下降マーケット&lt;/strong&gt;。1 日 288 ウィンドウ、平均 81 秒に 1 度取引する。&lt;/p&gt;
+&lt;p&gt;ポイントは、BTC の次の動きを当てようとしているわけではないことだ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;マルコフ連鎖&lt;/strong&gt;（確率的な状態遷移モデル）を使って、価格が「持続的な上昇状態」に入ったかどうかを判断している。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;BTC 価格が持続的な上昇状態に入ると、数学的に次のローソク足が継続して上昇する確率が明らかに上がる。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;モデルが確率をあるしきい値（閾値、例: 87%）以上と判断し、かつ市場価格がまだその確率を反映していない場合、ボットが参入する。&lt;/p&gt;
+&lt;p&gt;このボットが狙うのはニュースでも、感情でも、注文でもない。**「市場がまだ正しく確率を反映していないその瞬間の歪み」**だ。&lt;/p&gt;
+&lt;h2 id="自己進化ループ毎晩-claude-が自分で戦略を更新する"&gt;自己進化ループ：毎晩 Claude が自分で戦略を更新する&lt;/h2&gt;
+&lt;p&gt;このシステムが最も注目すべき点は、&lt;strong&gt;毎晩自動でレビューと最適化を行う&lt;/strong&gt;ことだ。&lt;/p&gt;</description></item><item><title>SOPS で AI エージェントのシークレット管理 — Claude Code に「平文を見せない」3つのガードレール</title><link>https://hdknr.github.io/blogs/posts/2026/05/sops-ai-agent-secrets-management/</link><pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/sops-ai-agent-secrets-management/</guid><description>Claude Code などの AI エージェントに SOPS で暗号化されたシークレットを安全に扱わせるための3つのガードレール（平文をコンテキストに載せない／コミットさせない／復号鍵を分離する）と、Linux / macOS / Windows それぞれでの sops exec-env を使ったランタイム注入の具体例、permissions.deny の設定例を解説します。</description></item><item><title>Karpathy の LLM Wiki — 公開48時間で5000スターを集めた「LLMが維持するパーソナル知識ベース」パターン</title><link>https://hdknr.github.io/blogs/posts/2026/05/karpathy-llm-wiki/</link><pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/karpathy-llm-wiki/</guid><description>&lt;p&gt;Andrej Karpathy が2026年4月に公開した GitHub gist「LLM Wiki」が、公開から48時間以内に5000スターを超えた。コード一行も含まない、純粋にアイデアだけを記述したドキュメントがここまで反響を呼んだ理由はシンプルだ。「RAGの次」を具体的かつ実践的に示していたからである。&lt;/p&gt;
+&lt;h2 id="ragとの決定的な違い"&gt;RAGとの決定的な違い&lt;/h2&gt;
+&lt;p&gt;多くの人がLLMとドキュメントを組み合わせるとき、最初に試みるのが &lt;strong&gt;RAG（Retrieval-Augmented Generation）&lt;/strong&gt; だ。ChatGPTのファイルアップロード、NotebookLM、LangChainで構築するベクトルDB検索 — これらはすべて「質問が来たときにドキュメントから関連部分を取ってきて回答する」という設計思想に基づいている。&lt;/p&gt;
+&lt;p&gt;この方式には根本的な問題がある。&lt;strong&gt;知識が蓄積されない&lt;/strong&gt;。5つのドキュメントを横断する微妙な問いに対しても、LLMは毎回ゼロから関連箇所を探し出し、推論し直す。「矛盾」も「文脈」も「先週気づいた発見」も、次の質問では消えてしまう。&lt;/p&gt;
+&lt;p&gt;LLM Wiki が提案するのは根本的に異なるアプローチだ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LLM が incrementally に永続的な wiki を構築・維持する。新しいソースを追加するたびに、LLM はそれを読み込んで既存 wiki に統合し、エンティティページを更新し、矛盾を記録し、進化する合成の全体を強化する。知識は毎回再導出されるのではなく、一度コンパイルされてから最新に保たれる。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この「コンパイルされた知識ベース」こそが LLM Wiki の本質である。&lt;/p&gt;
+&lt;h2 id="3層アーキテクチャ"&gt;3層アーキテクチャ&lt;/h2&gt;
+&lt;p&gt;LLM Wiki は3つの層で構成される。&lt;/p&gt;
+&lt;h3 id="1-raw-sources生ソース"&gt;1. Raw Sources（生ソース）&lt;/h3&gt;
+&lt;p&gt;記事、論文、画像、データファイルなど自分がキュレートしたソースドキュメントの置き場。&lt;strong&gt;不変（immutable）&lt;/strong&gt; — LLMはここから読むだけで決して書き換えない。これが「真実の源泉」となる。&lt;/p&gt;
+&lt;h3 id="2-the-wikiwiki本体"&gt;2. The Wiki（wiki本体）&lt;/h3&gt;
+&lt;p&gt;LLM が生成・維持するマークダウンファイルの集合。概要、エンティティページ、概念ページ、比較、合成。この層は &lt;strong&gt;LLM が完全に所有&lt;/strong&gt; する。あなたは読む側で、LLM が書く側だ。&lt;/p&gt;
+&lt;h3 id="3-the-schemaスキーマ"&gt;3. The Schema（スキーマ）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt;（Claude Code用）や &lt;code&gt;AGENTS.md&lt;/code&gt;（Codex用）など、LLMに wiki の構造・規約・ワークフローを伝えるドキュメント。これが LLM を「汎用チャットボット」から「規律あるwikiメンテナ」に変える鍵だ。このファイルはあなたと LLM が協力しながら進化させていく。&lt;/p&gt;
+&lt;h2 id="3つの操作"&gt;3つの操作&lt;/h2&gt;
+&lt;h3 id="ingest取り込み"&gt;Ingest（取り込み）&lt;/h3&gt;
+&lt;p&gt;新しいソースを生コレクションに追加して、LLMに処理を依頼する。LLMはソースを読み込み、重要な情報を抽出し、wikiに統合する。一つのソースが10〜15のwikiページを更新することもある。一度に大量のソースをバッチ処理することも可能だが、Karpathy 自身は「一つずつ取り込み、要約を確認しながら進める」スタイルを好むと述べている。&lt;/p&gt;
+&lt;h3 id="queryクエリ"&gt;Query（クエリ）&lt;/h3&gt;
+&lt;p&gt;wikiに対して質問する。LLMは関連ページを検索・読み込み、引用付きで回答を合成する。回答の形式は問いによって変わる — マークダウンページ、比較表、Marpスライド、matplotlibグラフなど。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;重要な洞察&lt;/strong&gt;: 良い回答はwikiに新しいページとして追記できる。「あの比較をお願いした結果」「見つけた新しい接続」— これらをチャット履歴に埋もれさせるのではなく、wikiに蓄積させることで探求が複利的に積み重なる。&lt;/p&gt;</description></item><item><title>takt — AIコーディングエージェントのワークフローをYAMLで定義するCLIツール</title><link>https://hdknr.github.io/blogs/posts/2026/03/takt-ai-agent-workflow/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/takt-ai-agent-workflow/</guid><description>&lt;p&gt;&lt;a href="https://github.com/nrslib/takt"&gt;takt&lt;/a&gt; は、Claude Code や Codex などの AI コーディングエージェントのワークフローを YAML で定義できる CLI ツールです。エージェントに単にコードを書かせるだけでなく、レビューループや人間の介入ポイントを宣言的に管理することで、品質の高いアウトプットを継続的に得られるよう設計されています。&lt;/p&gt;
+&lt;h2 id="takt-とは"&gt;takt とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;TAKT&lt;/strong&gt; は &lt;strong&gt;T&lt;/strong&gt;AKT &lt;strong&gt;A&lt;/strong&gt;gent &lt;strong&gt;K&lt;/strong&gt;oordination &lt;strong&gt;T&lt;/strong&gt;opology の略で、ドイツ語の「拍子・指揮棒」を由来とする名前です。オーケストラの指揮者のように複数の AI エージェントを統率するというコンセプトが込められています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href="https://github.com/nrslib/takt"&gt;https://github.com/nrslib/takt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;言語&lt;/strong&gt;: TypeScript&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;スター数&lt;/strong&gt;: 952（2026年4月時点）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ライセンス&lt;/strong&gt;: MIT&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;対応エージェント: Claude Code、Codex、OpenCode、Cursor、GitHub Copilot CLI&lt;/p&gt;
+&lt;h2 id="なぜ-takt-が必要か"&gt;なぜ takt が必要か&lt;/h2&gt;
+&lt;p&gt;AI コーディングエージェントを使う上で重要なのは、ワークフローの設計です。エージェントに「コードを書いて」と指示するだけでは、品質にばらつきが生じます。takt は以下の課題を解決します:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;レビューループの自動化&lt;/strong&gt;: 実装 → レビュー → 修正 のサイクルを自動で回す&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;再現性の確保&lt;/strong&gt;: 実行パスを YAML で宣言するため、チーム間で同じ品質プロセスを共有できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マルチエージェント対応&lt;/strong&gt;: 異なるペルソナ・権限・レビュー基準を持つ複数エージェントをオーケストレーション&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;完全なトレーサビリティ&lt;/strong&gt;: 全ステップを NDJSON でログに記録&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストールと基本的な使い方"&gt;インストールと基本的な使い方&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install -g takt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="設定ファイル"&gt;設定ファイル&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;~/.takt/config.yaml&lt;/code&gt; を作成してプロバイダーを指定します:&lt;/p&gt;</description></item></channel></rss>

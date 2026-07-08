@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Duckdb on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/duckdb/</link><description>Recent content in Duckdb on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 19 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/duckdb/index.xml" rel="self" type="application/rss+xml"/><item><title>DuckDB・Apache Arrow・Parquetの関係を整理する：列指向エコシステムの全体像</title><link>https://hdknr.github.io/blogs/posts/2026/03/duckdb-columnar-arrow/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/duckdb-columnar-arrow/</guid><description>&lt;p&gt;DuckDB は「SQLite の分析版」とも呼ばれるインプロセス OLAP データベースです。Apache Arrow、Apache Parquet と同じ列指向の思想を持ちますが、三者の役割はそれぞれ異なります。この記事では DuckDB のアーキテクチャ、Arrow・Parquet との関係、そして従来の行指向 DB との違いを整理します。&lt;/p&gt;
+&lt;h2 id="parquetarrowduckdb-の位置付け"&gt;Parquet・Arrow・DuckDB の位置付け&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;Parquet&lt;/th&gt;
+&lt;th&gt;Arrow&lt;/th&gt;
+&lt;th&gt;DuckDB&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;何か&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ディスク上の列指向ファイル形式&lt;/td&gt;
+&lt;td&gt;インメモリ列指向データフォーマット（仕様+ライブラリ）&lt;/td&gt;
+&lt;td&gt;SQL データベースエンジン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;レイヤー&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ストレージ（ディスク）&lt;/td&gt;
+&lt;td&gt;データ交換（メモリ）&lt;/td&gt;
+&lt;td&gt;クエリ実行（エンジン）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;目的&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;効率的な永続化・圧縮&lt;/td&gt;
+&lt;td&gt;アプリケーション間のゼロコピーデータ交換&lt;/td&gt;
+&lt;td&gt;SQL クエリの実行・最適化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;三者は列指向エコシステムの異なるレイヤーを担っており、補完関係にあります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[ディスク] Parquet ファイル（列指向・圧縮済み）
+↓ 読み込み（必要な列だけ）
+[メモリ] Arrow フォーマット（列指向・ゼロコピー）
+↓ クエリ実行
+[エンジン] DuckDB（ベクトル化 SQL 実行）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Parquet は「データの保存形式」、Arrow は「メモリ上のデータの並べ方の規格」、DuckDB は「SQL を実行するエンジン」です。三者とも列指向という共通思想を持つため、組み合わせるとデータ変換のオーバーヘッドがほぼ発生しません。&lt;/p&gt;
+&lt;h2 id="duckdb-の高速性を支える3つの柱"&gt;DuckDB の高速性を支える3つの柱&lt;/h2&gt;
+&lt;h3 id="1-列指向ストレージ"&gt;1. 列指向ストレージ&lt;/h3&gt;
+&lt;p&gt;行単位ではなく列単位でデータを格納します。分析クエリ（&lt;code&gt;SUM&lt;/code&gt;, &lt;code&gt;AVG&lt;/code&gt;, &lt;code&gt;GROUP BY&lt;/code&gt; など）で必要な列だけを読み込むため、I/O が効率的です。&lt;/p&gt;
+&lt;h3 id="2-ベクトル化実行エンジン"&gt;2. ベクトル化実行エンジン&lt;/h3&gt;
+&lt;p&gt;1行ずつではなく、列のチャンク（ベクトル）単位で処理します。これにより CPU キャッシュのヒット率が上がり、SIMD 命令も活用できます。&lt;/p&gt;
+&lt;h3 id="3-自動並列化"&gt;3. 自動並列化&lt;/h3&gt;
+&lt;p&gt;マルチコアを自動的に活用し、クエリを並列実行します。ユーザー側で並列化の設定を意識する必要はありません。&lt;/p&gt;</description></item><item><title>Claude Codeで大量データを扱うならSQLite/DuckDBを使おう</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-sqlite-duckdb/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-sqlite-duckdb/</guid><description>&lt;p&gt;Claude Code で Markdown や JSON ファイルを直接編集してデータ管理を行うのは、少量のデータなら問題ありません。しかし、レコード数が100件を超えるような規模になると、スキーマ違反や細かいスクリプト制御の問題、パフォーマンスの低下が発生しやすくなります。こうした場面では、SQLite や DuckDB を活用するのが効果的です。&lt;/p&gt;
+&lt;h2 id="markdownjson-直接編集の限界"&gt;Markdown/JSON 直接編集の限界&lt;/h2&gt;
+&lt;p&gt;Claude Code にMarkdown ファイルや JSON ファイルを直接編集させる方法は、手軽で分かりやすい反面、データ量が増えると以下の問題が顕在化します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;スキーマ違反&lt;/strong&gt;: JSON の構造が崩れたり、必須フィールドが欠落するケースが発生する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;細かいスクリプト制御が必要になる&lt;/strong&gt;: データの整合性を保つために、バリデーションや変換のスクリプトが増えていく&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;パフォーマンス低下&lt;/strong&gt;: ファイル全体を読み込んで書き戻す処理が、レコード数に比例して遅くなる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="sqlite-を使うメリット"&gt;SQLite を使うメリット&lt;/h2&gt;
+&lt;p&gt;SQLite はファイルベースの軽量データベースで、Claude Code との相性が良好です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# SQLite データベースを作成してテーブルを定義&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sqlite3 data.db &lt;span style="color:#e6db74"&gt;&amp;#34;CREATE TABLE items (id INTEGER PRIMARY KEY, name TEXT, value REAL);&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Claude Code から SQL でデータを操作&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sqlite3 data.db &lt;span style="color:#e6db74"&gt;&amp;#34;INSERT INTO items (name, value) VALUES (&amp;#39;example&amp;#39;, 42.0);&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sqlite3 data.db &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM items WHERE value &amp;gt; 10;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ACID準拠&lt;/strong&gt;: データの整合性がデータベースエンジンによって保証される&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SQL によるクエリ&lt;/strong&gt;: 複雑な検索・集計・更新が簡潔に記述できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;単一ファイル&lt;/strong&gt;: &lt;code&gt;.db&lt;/code&gt; ファイル1つで完結し、バックアップやコピーが容易&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="duckdb-を使うメリット"&gt;DuckDB を使うメリット&lt;/h2&gt;
+&lt;p&gt;DuckDB は分析用途に特化したインプロセスデータベースです。CSV、Parquet、JSON などのファイルを直接 SQL でクエリできます。&lt;/p&gt;</description></item></channel></rss>

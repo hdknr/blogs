@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Copilot on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/copilot/</link><description>Recent content in Copilot on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 11 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/copilot/index.xml" rel="self" type="application/rss+xml"/><item><title>VS Code AI コーディングアシスタントのインストール数推移：GitHub Copilot の急落と競合の台頭</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-coding-assistant-vscode-installs/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-coding-assistant-vscode-installs/</guid><description>&lt;p&gt;VS Code マーケットプレイスにおける AI コーディングアシスタントの日次インストール数を示すグラフが話題になっている。GitHub Copilot のインストール数が急激に落ち込む「崖」が鮮明に表れており、SaaS 事業者やプロダクトマネージャーにとって示唆に富む内容だ。&lt;/p&gt;
+&lt;h2 id="グラフが示すもの"&gt;グラフが示すもの&lt;/h2&gt;
+&lt;p&gt;「Daily Install Counts of AI Coding Assistants in Visual Studio Code」と題されたグラフには、以下の 3 つの AI コーディングアシスタントの日次インストール数（30日移動平均）が描かれている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GitHub Copilot&lt;/strong&gt;（オレンジ）：2021年末から着実に成長し、2025年後半には日次 150,000 インストール近くまで到達。しかし 2026年に入って急落し、現在は 60,000 前後まで落ち込んでいる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude Code&lt;/strong&gt;（シアン）：2025年後半に登場し、直近で急速に伸長。日次 60,000 近くまで上昇&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenAI Codex&lt;/strong&gt;（イエロー）：同じく直近で伸びを見せているが、Claude Code よりやや控えめ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;注目すべきは、GitHub Copilot のインストール数がピークから半分以下に急落している点だ。この「崖」は、競合の台頭と GitHub Copilot 自体の変化の両方が要因と考えられる。&lt;/p&gt;
+&lt;h2 id="急落の背景"&gt;急落の背景&lt;/h2&gt;
+&lt;h3 id="github-copilot-の課金モデル変更"&gt;GitHub Copilot の課金モデル変更&lt;/h3&gt;
+&lt;p&gt;GitHub Copilot は 2024年12月に無料ティアを導入し、月 2,000 回のコード補完と 50 回のチャットリクエストという制限付きで提供を開始した。同時に、有料プランの価格体系も複雑化している。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Free&lt;/strong&gt;：月 2,000 補完 / 50 チャット&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Pro&lt;/strong&gt;：$10/月&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Pro+&lt;/strong&gt;：$39/月&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Business&lt;/strong&gt;：$19/ユーザー/月&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Enterprise&lt;/strong&gt;：$39/ユーザー/月&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;無料ティアの導入は新規ユーザー獲得を狙った施策だが、既存の有料ユーザーが無料枠で十分と判断して解約するケースもあり得る。また、Microsoft は従来の IntelliCode を廃止し、AI 支援を Copilot に一本化する戦略を取っている。&lt;/p&gt;</description></item></channel></rss>

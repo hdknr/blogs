@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Trading on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/trading/</link><description>Recent content in Trading on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 11 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/trading/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenClaw エージェントでトレーディング戦略を自動バックテスト</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-trading-backtest/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-trading-backtest/</guid><description>&lt;p&gt;OpenClaw エージェントを使って、TradingView の指標を自動スクレイピングし、Pine Script から Python に変換してバックテストまで全自動で実行する手法が話題になっています。&lt;/p&gt;
+&lt;h2 id="openclaw-とは"&gt;OpenClaw とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/openclaw/openclaw"&gt;OpenClaw&lt;/a&gt; は、オーストリアの開発者 Peter Steinberger 氏が 2025 年 11 月に Claude を使って構築したオープンソースの AI エージェントです。ローカルマシン上で動作し、自然言語の指示を受けてタスクを自律的に実行します。GitHub で 32 万以上のスターを獲得しており、2026 年初頭にはユーザー数が 200 万人を超えるなど急成長しています。&lt;/p&gt;
+&lt;p&gt;主な特徴:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;マルチプラットフォーム対応&lt;/strong&gt;: Mac / Windows / Linux で動作&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メッセージ連携&lt;/strong&gt;: WhatsApp、Telegram、Slack、Discord など複数チャネルに対応&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;スキルシステム&lt;/strong&gt;: モジュラーなプラグイン（スキル）で機能を拡張可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;永続メモリ&lt;/strong&gt;: コンテキストを記憶して継続的に動作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="トレーディング戦略の自動バックテスト"&gt;トレーディング戦略の自動バックテスト&lt;/h2&gt;
+&lt;p&gt;今回話題になっているのは、OpenClaw エージェントを使ったトレーディング戦略の自動バックテストです。&lt;/p&gt;
+&lt;h3 id="処理の流れ"&gt;処理の流れ&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;TradingView 指標の自動スクレイピング&lt;/strong&gt;: TradingView から 50 以上のテクニカル指標を自動収集&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Pine Script → Python 変換&lt;/strong&gt;: TradingView 独自の Pine Script で書かれた指標を Python コードに自動変換&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;バックテスト実行&lt;/strong&gt;: 変換した戦略を過去データで自動検証&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;結果のフィルタリング&lt;/strong&gt;: 失敗した戦略を自動除外し、勝ちパターンを抽出&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GitHub へのログ&lt;/strong&gt;: テスト結果を自動で GitHub リポジトリに記録&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;設定を済ませれば、コードを一切書かずにこの一連のプロセスが自動で回り続けます。&lt;/p&gt;</description></item></channel></rss>

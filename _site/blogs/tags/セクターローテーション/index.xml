@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>セクターローテーション on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%BB%E3%82%AF%E3%82%BF%E3%83%BC%E3%83%AD%E3%83%BC%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/</link><description>Recent content in セクターローテーション on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%BB%E3%82%AF%E3%82%BF%E3%83%BC%E3%83%AD%E3%83%BC%E3%83%86%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>moomoo × AI でセクターローテーションを察知する — 44のルールで構築した定量売買システム</title><link>https://hdknr.github.io/blogs/posts/2026/05/moomoo-ai-sector-rotation/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/moomoo-ai-sector-rotation/</guid><description>&lt;p&gt;セクターローテーションは、景気サイクルに合わせて資金が特定のセクターへ移動する現象だ。この動きを早期に察知できれば、相場の追い風を受けながら売買できる。しかし「どのセクターが今動いているか」を毎日人手で追うのは難しい。&lt;/p&gt;
+&lt;p&gt;ある個人投資家（&lt;a href="https://x.com/hm_emememem"&gt;@hm_emememem&lt;/a&gt;）は、moomooとAIを組み合わせてこの問題を解決し、44のルールで構成された定量的な売買システムへと発展させた。そのアプローチを紐解く。&lt;/p&gt;
+&lt;h2 id="moomoo-でセクターを一覧監視する"&gt;moomoo でセクターを一覧監視する&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.moomoo.com/jp/"&gt;moomoo&lt;/a&gt;（ムームー）は、香港上場のFintech企業 Futu Holdings（ナスダック: FUTU）が提供するグローバル投資プラットフォームだ。2023年9月に日本でサービスを開始し、2024年3月には日本株取引にも対応。2024年時点で日本国内のダウンロード数が100万件を超えている。&lt;/p&gt;
+&lt;p&gt;moomooには、セクター監視に役立つ機能が揃っている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ヒートマップ&lt;/strong&gt;: セクターごとのパフォーマンスを色とサイズで視覚化。大型株が緑（上昇）／赤（下落）で一目でわかる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セクタースクリーナー&lt;/strong&gt;: 14種類の指標（バリュエーション、テクニカル、収益性など）でフィルタリング&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マーケットモニター&lt;/strong&gt;: カスタムアラートで価格ブレイクアウトなどの条件を自動通知&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンセプトセクター&lt;/strong&gt;: テーマ投資視点でホットな市場を可視化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらを使い、複数セクターを一覧にまとめたウォッチリストを構築することで、AIに毎日渡すデータセットの土台を作る。moomooのデータをさらにプログラムで活用したい場合は、&lt;a href="../../03/2026-03-18-moomoo-openapi/"&gt;moomoo OpenAPIを使った自動売買&lt;/a&gt;も参照してほしい。&lt;/p&gt;
+&lt;h2 id="aiを毎日のセクター監視役にする"&gt;AIを毎日のセクター監視役にする&lt;/h2&gt;
+&lt;p&gt;構築したウォッチリストのデータを毎日AIに読み込ませ、以下を問いかける運用を行っている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;今日はどのセクターに資金が流入しているか？&lt;/li&gt;
+&lt;li&gt;過去数日と比較して傾向に変化はあるか？&lt;/li&gt;
+&lt;li&gt;新しいカタリスト（触媒となる材料）が発生していないか？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AIは過去データとの差分を解析し、「ようやく新しいカタリストが動き始めた」といった変化の兆候をテキストでフィードバックする。人間がチャートを目視確認するより、変化の記述が言語化されるため見落としが減る。&lt;/p&gt;
+&lt;h2 id="44のルールで売買を定量化する"&gt;44のルールで売買を定量化する&lt;/h2&gt;
+&lt;p&gt;AIとの対話を繰り返して投資ルールを精緻化した結果、最終的に44のルールを体系化し、それらを複合することで売買判断を定量的に行う仕組みを構築した。&lt;/p&gt;
+&lt;p&gt;ルールの例として考えられるのは次のような構造だ。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ルール例（概念的な構成 — 実際の44ルールの内容は非公開）:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1. セクター強度スコア: 過去5日の相対リターンが上位3セクターに入る
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2. 出来高確認: 20日平均の1.5倍以上の出来高を伴う
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3. 主力株のブレイクアウト: セクター内主力銘柄が52週高値更新
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4. マクロ環境チェック: 利上げ局面/利下げ局面に応じた対象セクター除外
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;5. リスク管理: 単一セクターへの集中を資産の20%以内に抑える
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...（計44ルール）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これらを「AND条件」「OR条件」で組み合わせ、シグナルが複数の基準を満たしたときのみ発動する構造にすることで、フォールスポジティブ（誤検知）を減らしている。&lt;/p&gt;</description></item><item><title>AI電力テーマのセクターローテーション — 半導体から蓄電池へ、先回りする投資家の視点</title><link>https://hdknr.github.io/blogs/posts/2026/05/ai-power-sector-rotation/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/ai-power-sector-rotation/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;AIブームが引き起こした「電力テーマ」は、単なる半導体株の上昇にとどまらず、複数のセクターを順番に押し上げるセクターローテーションとして進行しています。&lt;/p&gt;
+&lt;p&gt;株式市場で成果を出している投資家の間で「半導体はもう買っていない」という声が増えています。なぜか。答えはシンプルで、&lt;strong&gt;上がる前に買う&lt;/strong&gt;という鉄則を実践しているからです。&lt;/p&gt;
+&lt;p&gt;この記事では、AI電力テーマのセクターローテーション4段階の構造と、現在の注目フェーズである蓄電池への移行ロジック、そして「上がる前に仕込む」実践的な視点を解説します。&lt;/p&gt;
+&lt;h2 id="ai電力テーマのローテーション構造"&gt;AI電力テーマのローテーション構造&lt;/h2&gt;
+&lt;p&gt;AI電力テーマは次の4段階でセクターを移動していると分析されています。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/ai-power-sector-rotation.png" alt="AI電力テーマのセクターローテーション構造：第1フェーズの半導体から、データセンター建設・REIT、発電・電力株を経て、現在第4フェーズの蓄電池へ資金が流れる4段階の図"&gt;&lt;/p&gt;
+&lt;p&gt;各フェーズを順番に見ていきます。&lt;/p&gt;
+&lt;h3 id="第1フェーズ半導体"&gt;第1フェーズ：半導体&lt;/h3&gt;
+&lt;p&gt;AIの計算需要が爆発的に増大し、NVIDIAのGPUや関連半導体株が急騰しました。ChatGPT登場以降のAIブームをけん引した最初の波です。この段階では「AI = 半導体」という図式が定着し、多くの資金が流入しました。&lt;/p&gt;
+&lt;p&gt;しかし、すでに市場価格に織り込まれており、上昇余地が限定的になってきています。賢い投資家はここから次のフェーズへ資金を移動させています。&lt;/p&gt;
+&lt;h3 id="第2フェーズデータセンター建設reit"&gt;第2フェーズ：データセンター建設・REIT&lt;/h3&gt;
+&lt;p&gt;AIを動かすには大量のサーバーを収容するデータセンターが必要です。建設・不動産投資信託（REIT）セクターへの資金移動が起きました。Alphabet・Amazon・Microsoft・Metaによるデータセンター投資拡大の発表が相次ぎ、関連銘柄が注目を集めました。&lt;/p&gt;
+&lt;h3 id="第3フェーズ発電電力株"&gt;第3フェーズ：発電・電力株&lt;/h3&gt;
+&lt;p&gt;データセンターの電力消費は膨大です。米国では三マイル島原発の再稼働（Microsoftとの長期契約）や小型モジュール炉（SMR）への投資発表など、電力インフラへの関心が高まりました。日本でも原発再稼働の動きが加速し、発電会社や電力関連インフラ株がこのフェーズの主役となりました。&lt;/p&gt;
+&lt;h3 id="第4フェーズ蓄電池現在進行中"&gt;第4フェーズ：蓄電池（現在進行中）&lt;/h3&gt;
+&lt;p&gt;現在注目されているのが蓄電池セクターです。&lt;/p&gt;
+&lt;p&gt;電力需要の増大に対して、安定した電力供給を実現するには蓄電技術が不可欠です。再生可能エネルギーの出力変動を平準化し、データセンターの無停電を支える基盤として、蓄電池の重要性が増しています。&lt;/p&gt;
+&lt;h2 id="なぜ蓄電池が次のフェーズなのか"&gt;なぜ蓄電池が次のフェーズなのか&lt;/h2&gt;
+&lt;h3 id="電力安定化の需要"&gt;電力安定化の需要&lt;/h3&gt;
+&lt;p&gt;太陽光・風力など再生可能エネルギーは発電量が天候に左右されます。データセンターのような24時間365日稼働が必要な施設には、安定した電力供給が不可欠です。電力会社レベルの大規模蓄電（グリッドスケールESS: Energy Storage System）が、この変動を吸収する役割を担います。テスラのMegapackに代表されるユーティリティスケール蓄電製品への需要が世界的に拡大しています。&lt;/p&gt;
+&lt;h3 id="evモビリティとの相乗効果"&gt;EV・モビリティとの相乗効果&lt;/h3&gt;
+&lt;p&gt;電気自動車（EV）の普及加速も蓄電池需要を押し上げています。EV向けと定置型蓄電はどちらもリチウムイオン技術を基盤としており、製造規模の拡大がコスト低下に相乗効果をもたらしています。ただし化学系統には差異があり、EV向けはNMC（ニッケル・マンガン・コバルト）、定置型蓄電はLFP（リン酸鉄リチウム）が主流です。テスラ自身もMegapackをLFP系統に切り替えており、安全性・コスト面でのLFP優位性が定置型市場のトレンドとなっています。&lt;/p&gt;
+&lt;h3 id="グリッドレベルの蓄電"&gt;グリッドレベルの蓄電&lt;/h3&gt;
+&lt;p&gt;電力会社レベルの大規模蓄電への投資も世界的に拡大しています。再生可能エネルギーの比率が上がるほど、出力変動を吸収する蓄電インフラの整備が急務となるためです。&lt;/p&gt;
+&lt;h2 id="上がる前に買うという鉄則"&gt;「上がる前に買う」という鉄則&lt;/h2&gt;
+&lt;p&gt;セクターローテーションで重要なのは&lt;strong&gt;次に資金が流入するセクターを先読みすること&lt;/strong&gt;です。&lt;/p&gt;
+&lt;p&gt;すでに上昇したセクターに遅れて入るのは、リスクとリターンのバランスが悪化します。先行して動いた投資家が利益確定に動く場面で、後から入った投資家が損失を被る構図になりがちです。&lt;/p&gt;
+&lt;p&gt;セクターローテーションを意識した投資では、以下の4点を意識します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;現在の主役セクターを把握する&lt;/strong&gt; — 今どこに資金が集中しているか&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;次の受益セクターを特定する&lt;/strong&gt; — インフラ整備の連鎖を読む&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;材料出尽くし前に仕込む&lt;/strong&gt; — ニュースが広まる前に入る&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;過熱感を見極めて乗り換える&lt;/strong&gt; — 次のフェーズへの移動タイミングを逃さない&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;AI電力テーマのセクターローテーションは「半導体 → データセンター → 電力 → 蓄電池」という流れで進行しており、現在は蓄電池フェーズにあるとされています。&lt;/p&gt;
+&lt;p&gt;投資で成果を上げる人たちに共通するのは、注目が集まる前に動き、注目が集まったときに次を見ているという姿勢です。「上がってから買うのではなく、上がる前に買う」——この原則はセクターローテーション戦略の本質を突いています。&lt;/p&gt;
+&lt;p&gt;もちろん、投資判断は自己責任であり、相場には常に不確実性があります。セクターローテーションの読みが外れることもありますが、市場のテーマ性と資金の流れを理解しておくことは、投資戦略を立てる上での重要な視座になります。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;参考: &lt;a href="https://x.com/KB_Hiragi/status/2056682142277697969"&gt;@KB_Hiragi さんのポスト (X)&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>N8n on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/n8n/</link><description>Recent content in N8n on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/n8n/index.xml" rel="self" type="application/rss+xml"/><item><title>寝ている間に仕事を自動化する2026年の GitHub リポジトリ 10 選 — 全部無料・オープンソース</title><link>https://hdknr.github.io/blogs/posts/2026/06/10-github-repos-automate-work-2026/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/10-github-repos-automate-work-2026/</guid><description>2026年注目の AI エージェント・自動化 GitHub OSS 10 選。OpenHands・CrewAI・n8n・Browser Use・LangGraph など、マルチエージェント/ワークフロー/ブラウザ操作の各カテゴリを無料で実現するツールをスター数付きで解説。</description></item><item><title>ObsidianとN8Nで月$120の「一人ヘッジファンド」を構築 — 6ヶ月で$180,000を稼いだ自動トレーディングAIの全仕組み</title><link>https://hdknr.github.io/blogs/posts/2026/05/obsidian-n8n-trading-ai/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/obsidian-n8n-trading-ai/</guid><description>&lt;p&gt;海外で話題になっているある個人トレーダーの話が、X（旧Twitter）で拡散されている。彼はObsidianとN8Nを組み合わせて「自動トレーディングAI」を構築し、6ヶ月で$180,000（約2,700万円）を稼ぎ出したという。月のAPIコストはたった$120。クラウドサーバーも、アナリストチームも、Bloombergターミナルも不要だ。&lt;/p&gt;
+&lt;p&gt;元ネタのツイートは&lt;a href="https://x.com/browomo"&gt;@browomo&lt;/a&gt;によるもので、4,500以上のいいね、90万回以上の閲覧数を記録している。&lt;/p&gt;
+&lt;h2 id="システムの全体像"&gt;システムの全体像&lt;/h2&gt;
+&lt;p&gt;このシステムの核心は、Obsidianのローカルvaultをナレッジの「中枢」として、N8Nの6本のワークフローパイプラインが情報を自動収集・分析・配信する構造にある。構成要素は次の通りだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ハードウェア&lt;/strong&gt;: 自宅のMac Mini（ローカルでvaultを保管・パイプラインを常時稼働）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;モバイル&lt;/strong&gt;: iPhoneでvaultにアクセス・アイデアをキャプチャ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コスト&lt;/strong&gt;: Readwise・Whisper API・N8Nホスティングのサブスクリプションで月約$120&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;伝統的なクオンツファンドが同等のインサイトフローのために8人のチームを雇っている一方、このシステムはその機能を個人レベルで再現している。&lt;/p&gt;
+&lt;h2 id="vaultmd-に書かれたaiアナリストへの指示"&gt;VAULT.md に書かれた「AIアナリストへの指示」&lt;/h2&gt;
+&lt;p&gt;システムの起点となるのは、Obsidian vaultのルートに置かれた &lt;code&gt;VAULT.md&lt;/code&gt; ファイルだ。ここにAIアナリストへの役割定義と行動指針が記されている：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;you are the AI analyst of a solo trader. you read his vault every morning at 6:00,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find connections between fresh and old notes, and deliver 3 trading ideas he can verify
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;in the hour before the market opens.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipelines:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Reader (pulls every article and highlight from Readwise, Twitter bookmarks, and Kindle into /notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Listener (transcribes podcasts through Airr and voice notes through Whisper, puts them in /notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Catcher (accepts any message from the Telegram bot and writes it to /inbox with a timestamp)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Connector (every night reads across the entire vault and updates the connection graph between 4,000 notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Briefer (at 6:00 AM writes a brief: 3 trading ideas for today plus the emerging thesis of the week, puts it in /inbox)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Mobile (lives in the iPhone, answers any question about the vault by voice, and confirms alerts while the owner is on the go).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;you wake the owner with a push notification only when a fresh note contradicts his active thesis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;or when 1 of the 3 morning ideas has a confidence score above 90%.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この指示が秀逸なのは、AIに「何を自律的にやるか」と「いつ人間を介入させるか」の境界を明確に定義している点だ。&lt;/p&gt;</description></item></channel></rss>

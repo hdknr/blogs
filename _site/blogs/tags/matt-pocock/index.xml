@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Matt Pocock on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/matt-pocock/</link><description>Recent content in Matt Pocock on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/matt-pocock/index.xml" rel="self" type="application/rss+xml"/><item><title>Matt Pocock の「Skills for Real Engineers」— Claude Code に現場のエンジニアリング作法を仕込む Markdown スキル集</title><link>https://hdknr.github.io/blogs/posts/2026/04/matt-pocock-skills-for-real-engineers/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/matt-pocock-skills-for-real-engineers/</guid><description>&lt;p&gt;TypeScript 界の著名エンジニア Matt Pocock が公開した「&lt;strong&gt;Skills for Real Engineers&lt;/strong&gt;」が、公開 24 時間で 22,000 スター、現在は 64,000 スター超えという驚異的な勢いで注目を集めている。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/mattpocock/skills"&gt;GitHub: mattpocock/skills&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本記事では、このスキル集の設計思想・解決する問題・導入手順を紹介する。&lt;/p&gt;
+&lt;h2 id="skills-for-real-engineers-とは"&gt;Skills for Real Engineers とは&lt;/h2&gt;
+&lt;p&gt;「Skills for Real Engineers」は、Claude Code や Codex などの AI コーディングエージェントに「&lt;strong&gt;現場のエンジニアリング作法&lt;/strong&gt;」を仕込むための Markdown ファイル集だ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;My agent skills that I use every day to do real engineering - not vibe coding.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Matt Pocock 自身が毎日使っているエージェントスキルをそのままオープンソースとして公開したもので、「ノリでコーディング（vibe coding）」ではなく、現実のアプリケーション開発で機能する設計になっている。&lt;/p&gt;
+&lt;h2 id="なぜ必要なのか--ai-開発-3-大失敗パターン"&gt;なぜ必要なのか — AI 開発 3 大失敗パターン&lt;/h2&gt;
+&lt;p&gt;AI 開発で誰もがハマる以下の問題を解決するために設計されている。&lt;/p&gt;
+&lt;h3 id="1-エージェントが意図を汲まない"&gt;1. エージェントが意図を汲まない&lt;/h3&gt;
+&lt;p&gt;エンジニアと AI の間の「コミュニケーションギャップ」が最大の失敗原因。エージェントは何を作りたいかを正確に理解していないまま実装を進める。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解決スキル:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/grill-me&lt;/code&gt; — コード不要のユースケースで詳細なヒアリングを実施&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/grill-with-docs&lt;/code&gt; — ドキュメント生成も含めた上位版&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-コードがいつまでも動かない"&gt;2. コードがいつまでも動かない&lt;/h3&gt;
+&lt;p&gt;エージェントは「動いている」と思っていても、実際には壊れていることがある。テストと実装の間にギャップが生まれやすい。このスキル集にはテスト駆動の実装フローを強制するスキルも含まれている。&lt;/p&gt;</description></item></channel></rss>

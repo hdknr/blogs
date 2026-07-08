@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>YouTube Shorts on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/youtube-shorts/</link><description>Recent content in YouTube Shorts on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/youtube-shorts/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude + YouTube Shorts で顔出しなし・編集なしの自動収益化 — バイラル動画を量産する実践プロンプト術</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-youtube-shorts-automation/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-youtube-shorts-automation/</guid><description>&lt;p&gt;千寻（@Crypto_QianXun）さんが2026年4月のポストで紹介した「Claude + YouTube Shorts = 自動収益化」という手法が注目を集めている。&lt;strong&gt;カメラなし・編集なし・顔出しなし&lt;/strong&gt; でバイラルショート動画を量産するアプローチだ。&lt;/p&gt;
+&lt;p&gt;この記事では、そのコンセプトをもとに、Claude を使った YouTube Shorts コンテンツ自動生成のフローと実践的なプロンプト例・Python コードを解説する。&lt;/p&gt;
+&lt;h2 id="youtube-shorts-アルゴリズムが評価する要素--顔出しなしでも収益化できる理由"&gt;YouTube Shorts アルゴリズムが評価する要素 — 顔出しなしでも収益化できる理由&lt;/h2&gt;
+&lt;p&gt;YouTube Shorts のアルゴリズムは &lt;strong&gt;視聴継続率・エンゲージメント&lt;/strong&gt; をコンテンツ品質の代理指標として評価する。次の3点が鍵になる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;フック（冒頭3秒）&lt;/strong&gt; で視聴者を引き込めるか&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情報密度&lt;/strong&gt; が高く最後まで見られるか&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;感情を動かす&lt;/strong&gt; テキスト・ナレーションがあるか&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらは人間が画面に映らなくても Claude が生成したスクリプトで十分に実現できる。AI 音声と AI 生成画像/映像を組み合わせれば、顔出し不要のチャンネルが成立する。&lt;/p&gt;
+&lt;h2 id="claude-を使ったコンテンツ生成フロー"&gt;Claude を使ったコンテンツ生成フロー&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/youtube-shorts-automation-pipeline.png" alt="Claude スクリプト生成から AI 音声合成・映像生成・自動編集を経て YouTube Shorts にアップロードする5段階の自動化パイプライン"&gt;&lt;/p&gt;
+&lt;p&gt;Claude が担うのは最初のスクリプト生成だが、これがコンテンツ全体の品質を左右する最重要ステップだ。&lt;/p&gt;
+&lt;h2 id="claude-でバイラル-shorts-スクリプトを生成するプロンプトの型"&gt;Claude でバイラル Shorts スクリプトを生成するプロンプトの型&lt;/h2&gt;
+&lt;h3 id="1-フック特化型プロンプト"&gt;1. フック特化型プロンプト&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたは YouTube Shorts のバイラル専門家です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;トピック：[テーマ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;以下の構成で60秒のスクリプトを書いてください：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 冒頭3秒：視聴者が思わず止まる衝撃的な問いかけ or 事実
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 本編45秒：テンポよく箇条書きで展開
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- ラスト12秒：CTA（コメント誘導 or 保存促進）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;制約：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 一文は短く（15文字以内）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 数字を多用する（例：「94%の人が知らない」）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 感情語を入れる（驚き・不安・希望）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="2-ジャンルバイラル要素の組み合わせ型"&gt;2. ジャンル×バイラル要素の組み合わせ型&lt;/h3&gt;
+&lt;p&gt;バイラルになりやすいジャンルとその鉄板フレーズを Claude にコンテキストとして渡してスクリプトを生成させる：&lt;/p&gt;</description></item></channel></rss>

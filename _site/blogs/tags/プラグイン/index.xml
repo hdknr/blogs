@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>プラグイン on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3/</link><description>Recent content in プラグイン on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Sun, 26 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>Everything Claude Code の instinct システム — Claude がセッションをまたいでパターンを学習する仕組み</title><link>https://hdknr.github.io/blogs/posts/2026/04/ecc-instinct-system/</link><pubDate>Sun, 26 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ecc-instinct-system/</guid><description>&lt;p&gt;2026年4月時点で GitHub スター &lt;strong&gt;16万超&lt;/strong&gt;を記録した Claude Code 向けプラグイン「Everything Claude Code（ECC）」。開発者は 2025年9月の Anthropic × Forum Ventures ハッカソンで優勝した Affaan Mustafa で、現在はコントリビューター170人以上を擁するオープンソースプロジェクトに成長しています。&lt;/p&gt;
+&lt;p&gt;本記事では、ECC の全体像を俯瞰しつつ、特に注目の &lt;strong&gt;instinct（直感）システム&lt;/strong&gt; — Claude がセッションをまたいで自動的にパターンを学習する仕組み — に焦点を当てて解説します。&lt;/p&gt;
+&lt;h2 id="ecc-とは"&gt;ECC とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/affaan-m/everything-claude-code"&gt;Everything Claude Code&lt;/a&gt; は、Claude Code を「チャットツール」から「エージェントオーケストレーション基盤」に変える全部入りプラグインです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;48個の専門エージェント&lt;/strong&gt; — planner や code-reviewer が必要な時に自動起動&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;183個のスキル&lt;/strong&gt; — 言語ごとのベストプラクティスから記事執筆まで&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;79個のコマンド&lt;/strong&gt; — &lt;code&gt;/plan&lt;/code&gt;、&lt;code&gt;/tdd&lt;/code&gt;、&lt;code&gt;/security-scan&lt;/code&gt; など&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自動化フック&lt;/strong&gt; — ワークフローの自動化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AgentShield（セキュリティスキャナー）&lt;/strong&gt; — 1,282のテストケースでエージェントの安全性を検証&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;2行のコマンドでインストール可能です:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/plugin marketplace add https://github.com/affaan-m/everything-claude-code
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/plugin install everything-claude-code@everything-claude-code
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="ecc-が生まれた背景"&gt;ECC が生まれた背景&lt;/h2&gt;
+&lt;p&gt;ECC は 2025年9月の Anthropic × Forum Ventures ハッカソンに端を発します。Affaan Mustafa が Claude Code のみを使って8時間でサービスを構築し優勝。賞金15,000ドル分の API クレジットを獲得した経験が出発点です。&lt;/p&gt;</description></item><item><title>Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する</title><link>https://hdknr.github.io/blogs/posts/2026/04/obsidian-pkm-second-brain/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/obsidian-pkm-second-brain/</guid><description>&lt;p&gt;メモツールは世の中に溢れている。Notion、Evernote、Google Keep……。その中で &lt;strong&gt;Obsidian&lt;/strong&gt; が開発者やナレッジワーカーに支持され続けている理由は「ローカルファースト」という設計哲学にある。データは自分のマシンに Markdown ファイルとして保存され、ベンダーロックインが一切ない。&lt;/p&gt;
+&lt;p&gt;本記事では Obsidian の機能・利点・活用法を網羅的にまとめる。&lt;/p&gt;
+&lt;h2 id="obsidian-とは"&gt;Obsidian とは&lt;/h2&gt;
+&lt;p&gt;Obsidian は &lt;strong&gt;ローカルファイルベースの Markdown エディタ&lt;/strong&gt;であり、個人の知識管理（PKM: Personal Knowledge Management）に特化したツールだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;公式サイト&lt;/strong&gt;: &lt;a href="https://obsidian.md"&gt;obsidian.md&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;料金&lt;/strong&gt;: 個人利用は&lt;strong&gt;完全無料&lt;/strong&gt;。商用利用のみ Commercial License（$50/年）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対応 OS&lt;/strong&gt;: Windows / macOS / Linux / iOS / Android&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プラグイン数&lt;/strong&gt;: 2,700 種類以上のコミュニティプラグイン&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="設計哲学your-thoughts-are-yours"&gt;設計哲学：「Your thoughts are yours」&lt;/h3&gt;
+&lt;p&gt;Obsidian の根底にあるのは「あなたの思考はあなたのもの」という哲学だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ローカルファースト&lt;/strong&gt;: データはすべて自分のマシン上の &lt;code&gt;.md&lt;/code&gt; ファイル&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プレーンテキスト&lt;/strong&gt;: 専用フォーマットなし。他のエディタでも開ける&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ベンダーロックインなし&lt;/strong&gt;: Obsidian を辞めても、データはそのまま使える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オフライン動作&lt;/strong&gt;: インターネット接続なしで完全に機能する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="コア機能"&gt;コア機能&lt;/h2&gt;
+&lt;h3 id="内部リンク-記法"&gt;内部リンク（&lt;code&gt;[[]]&lt;/code&gt; 記法）&lt;/h3&gt;
+&lt;p&gt;Obsidian の最大の特徴が &lt;code&gt;[[ページ名]]&lt;/code&gt; で即座にノート間リンクを作れる内部リンク機能だ。リンク先が存在しなくても構わない。リンクをクリックした時点で新規ページが自動生成される。&lt;/p&gt;
+&lt;p&gt;これにより、メモを書いている最中に「あ、この概念は別ページにまとめたい」と思った瞬間に &lt;code&gt;[[概念名]]&lt;/code&gt; と書くだけで、知識のネットワークが自然に広がっていく。&lt;/p&gt;
+&lt;h3 id="グラフビュー"&gt;グラフビュー&lt;/h3&gt;
+&lt;p&gt;ノート間のリンク関係を視覚的にネットワーク図として表示する機能。知識の全体像や孤立したノートの発見に役立つ。ただし、実用面ではグラフビューよりも全文検索の方が圧倒的に使用頻度が高いという声も多い。&lt;/p&gt;
+&lt;h3 id="全文検索"&gt;全文検索&lt;/h3&gt;
+&lt;p&gt;Vault（Obsidian のワークスペース）内のすべてのファイルを横断的に検索できる。ローカルファイルなので検索速度が速く、数千ファイルでもストレスなく動作する。&lt;/p&gt;</description></item></channel></rss>

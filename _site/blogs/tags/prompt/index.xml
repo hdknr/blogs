@@ -1,0 +1,2781 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Prompt on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/prompt/</link><description>Recent content in Prompt on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/prompt/index.xml" rel="self" type="application/rss+xml"/><item><title>mattpocock/skills — 有名エンジニアが毎日使う Claude Code スキル集を .claude ごと公開、13万スター突破</title><link>https://hdknr.github.io/blogs/posts/2026/06/mattpocock-skills/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/mattpocock-skills/</guid><description>Matt Pocock が本番開発で使う Claude Code スキル15種を npx skills@latest add mattpocock/skills でインストールできる。/grill-me・/tdd・/diagnose 等のスキルで vibe coding から工学的開発へ移行する方法を解説する。</description></item><item><title>「Claudeだけで6500万ドル」バイラル投稿の真相と、AIコンテンツ自動化の現実</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-ebook-automation-viral-claim/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-ebook-automation-viral-claim/</guid><description>X（旧Twitter）で147万ビューを集めた「Claudeで6500万ドル稼いだ7人」バイラル投稿の真偽をコミュニティノートとともに検証。実際のeブック自動化パイプラインとClaude APIコードも解説。</description></item><item><title>Claude + YouTube Shorts で顔出しなし・編集なしの自動収益化 — バイラル動画を量産する実践プロンプト術</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-youtube-shorts-automation/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-youtube-shorts-automation/</guid><description>&lt;p&gt;千寻（@Crypto_QianXun）さんが2026年4月のポストで紹介した「Claude + YouTube Shorts = 自動収益化」という手法が注目を集めている。&lt;strong&gt;カメラなし・編集なし・顔出しなし&lt;/strong&gt; でバイラルショート動画を量産するアプローチだ。&lt;/p&gt;
+&lt;p&gt;この記事では、そのコンセプトをもとに、Claude を使った YouTube Shorts コンテンツ自動生成のフローと実践的なプロンプト例・Python コードを解説する。&lt;/p&gt;
+&lt;h2 id="youtube-shorts-アルゴリズムが評価する要素--顔出しなしでも収益化できる理由"&gt;YouTube Shorts アルゴリズムが評価する要素 — 顔出しなしでも収益化できる理由&lt;/h2&gt;
+&lt;p&gt;YouTube Shorts のアルゴリズムは &lt;strong&gt;視聴継続率・エンゲージメント&lt;/strong&gt; をコンテンツ品質の代理指標として評価する。次の3点が鍵になる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;フック（冒頭3秒）&lt;/strong&gt; で視聴者を引き込めるか&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情報密度&lt;/strong&gt; が高く最後まで見られるか&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;感情を動かす&lt;/strong&gt; テキスト・ナレーションがあるか&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらは人間が画面に映らなくても Claude が生成したスクリプトで十分に実現できる。AI 音声と AI 生成画像/映像を組み合わせれば、顔出し不要のチャンネルが成立する。&lt;/p&gt;
+&lt;h2 id="claude-を使ったコンテンツ生成フロー"&gt;Claude を使ったコンテンツ生成フロー&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/youtube-shorts-automation-pipeline.png" alt="Claude スクリプト生成から AI 音声合成・映像生成・自動編集を経て YouTube Shorts にアップロードする5段階の自動化パイプライン"&gt;&lt;/p&gt;
+&lt;p&gt;Claude が担うのは最初のスクリプト生成だが、これがコンテンツ全体の品質を左右する最重要ステップだ。&lt;/p&gt;
+&lt;h2 id="claude-でバイラル-shorts-スクリプトを生成するプロンプトの型"&gt;Claude でバイラル Shorts スクリプトを生成するプロンプトの型&lt;/h2&gt;
+&lt;h3 id="1-フック特化型プロンプト"&gt;1. フック特化型プロンプト&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたは YouTube Shorts のバイラル専門家です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;トピック：[テーマ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;以下の構成で60秒のスクリプトを書いてください：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 冒頭3秒：視聴者が思わず止まる衝撃的な問いかけ or 事実
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 本編45秒：テンポよく箇条書きで展開
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- ラスト12秒：CTA（コメント誘導 or 保存促進）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;制約：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 一文は短く（15文字以内）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 数字を多用する（例：「94%の人が知らない」）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 感情語を入れる（驚き・不安・希望）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="2-ジャンルバイラル要素の組み合わせ型"&gt;2. ジャンル×バイラル要素の組み合わせ型&lt;/h3&gt;
+&lt;p&gt;バイラルになりやすいジャンルとその鉄板フレーズを Claude にコンテキストとして渡してスクリプトを生成させる：&lt;/p&gt;</description></item><item><title>ClaudeのEQとは？「脳内トレース能力」が変えるAI対話の本質</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-eq-thought-tracing/</link><pubDate>Mon, 13 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-eq-thought-tracing/</guid><description>Claude の EQ（感情知性）の本質は脳内トレース能力にある。曖昧な指示から完成像を形にする Claude の対話スタイルと、その活用法を解説。</description></item><item><title>Claude AI で投資銀行レベルの財務モデルを作成する 12 のプロンプト</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-financial-modeling/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-financial-modeling/</guid><description>ゴールドマン・サックスも採用した Claude AI を使い、DCF・LBO・3ステートメントモデルなど投資銀行レベルの財務モデルを 12 の構造化プロンプトで構築する方法を解説</description></item><item><title>「値は計算されていた。ただ届いていなかっただけ」— LLMエージェントプロンプトのハードコード問題</title><link>https://hdknr.github.io/blogs/posts/2026/03/llm-prompt-hardcode-bug/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/llm-prompt-hardcode-bug/</guid><description>LLMエージェントのプロンプトにリスクパラメータがハードコードされていたため、動的調整が反映されなかったバグの原因と修正。テンプレート変数化、結合テスト、CLAUDE.mdルール追加による再発防止策を解説。</description></item><item><title>AIにログを読ませてPDCA計画を立てさせる：深津貴之氏が提案するシンプルな振り返り術</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-pdca-log-review/</link><pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-pdca-log-review/</guid><description>&lt;p&gt;note CXO・THE GUILD 代表の深津貴之氏（&lt;a href="https://x.com/fladdict"&gt;@fladdict&lt;/a&gt;）が、AI を使った日次・週次の振り返り手法を紹介している。やり方は極めてシンプルで、「昨日（先週）のログを AI に読み込ませて、PDCA 計画を策定させる」だけだという。&lt;/p&gt;
+&lt;h2 id="手法の概要"&gt;手法の概要&lt;/h2&gt;
+&lt;p&gt;深津氏のツイートによると、手順は以下の通り：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;昨日（または先週）の作業ログを AI に読み込ませる&lt;/li&gt;
+&lt;li&gt;「昨日（先週）の問題を解決する PDCA 計画を策定せよ」と指示する&lt;/li&gt;
+&lt;li&gt;AI が問題点を分析し、改善計画を提案してくれる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これだけで「仕事と人生がドンドン解決していく」と述べている。&lt;/p&gt;
+&lt;h2 id="なぜこの手法が効果的なのか"&gt;なぜこの手法が効果的なのか&lt;/h2&gt;
+&lt;h3 id="ログの蓄積がそのまま改善の燃料になる"&gt;ログの蓄積がそのまま改善の燃料になる&lt;/h3&gt;
+&lt;p&gt;日々の作業ログは多くの人が何らかの形で残している。しかし、それを定期的に振り返って改善につなげるのは手間がかかる。AI を挟むことで、ログの分析と計画策定のコストがほぼゼロになる。&lt;/p&gt;
+&lt;h3 id="pdca-サイクルのcheck--actが自動化される"&gt;PDCA サイクルの「Check → Act」が自動化される&lt;/h3&gt;
+&lt;p&gt;PDCA サイクルの中で最もおろそかになりがちなのが Check（振り返り）と Act（改善アクション）のフェーズだ。AI にログを読ませることで、この2つのフェーズが自動的に回るようになる。&lt;/p&gt;
+&lt;h3 id="客観的な視点が得られる"&gt;客観的な視点が得られる&lt;/h3&gt;
+&lt;p&gt;自分のログを自分で振り返ると、どうしてもバイアスがかかる。AI に分析させることで、見落としていた問題点やパターンに気づける可能性がある。&lt;/p&gt;
+&lt;h2 id="実践のポイント"&gt;実践のポイント&lt;/h2&gt;
+&lt;h3 id="ログの形式"&gt;ログの形式&lt;/h3&gt;
+&lt;p&gt;AI に読み込ませるログは、特別なフォーマットである必要はない。日報、タスク管理ツールの履歴、カレンダーの予定、チャットの履歴など、手元にあるものをそのまま使えばよい。&lt;/p&gt;
+&lt;h3 id="プロンプトの例"&gt;プロンプトの例&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;以下は私の昨日の作業ログです。
+[ログを貼り付け]
+このログを分析して、以下の観点で PDCA 計画を策定してください：
+- Plan: 今日取り組むべき優先課題
+- Do: 具体的なアクション項目
+- Check: 昨日の問題点と原因分析
+- Act: 改善すべきプロセスや習慣
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="週次での活用"&gt;週次での活用&lt;/h3&gt;
+&lt;p&gt;日次だけでなく、週次でも同じ手法が使える。1週間分のログをまとめて AI に渡せば、より大きな視点での改善計画が得られる。&lt;/p&gt;
+&lt;h2 id="ai--pdca-の広がり"&gt;AI × PDCA の広がり&lt;/h2&gt;
+&lt;p&gt;この手法は個人の生産性向上だけでなく、チームや組織でも応用できる。InfoQ では AI コード生成における PDCA フレームワークとして、日次のマイクロ振り返り（5〜10分）を AI エージェントと行うアプローチが紹介されている。&lt;/p&gt;</description></item><item><title>NotebookLMで「20人の専門家」を雇う方法：専門特化型ノートブックの作り方</title><link>https://hdknr.github.io/blogs/posts/2026/03/notebooklm-20-experts/</link><pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/notebooklm-20-experts/</guid><description>&lt;p&gt;NotebookLM の「専門特化型ノート」を使って、テーマごとにノートブックを分けることで「20人の専門家チーム」を構築する方法を紹介します。元ネタは &lt;a href="https://x.com/ai_jitan"&gt;えーたん/AI×時短で仕事効率化(@ai_jitan)&lt;/a&gt; さんの投稿です。&lt;/p&gt;
+&lt;h2 id="なぜ-notebooklm-が専門家になるのか"&gt;なぜ NotebookLM が「専門家」になるのか&lt;/h2&gt;
+&lt;p&gt;NotebookLM の最大の強みは、&lt;strong&gt;ユーザーが入れた資料だけを根拠に回答する&lt;/strong&gt;こと。ネットの一般論ではなく、ストックした信頼できる情報源からのみ回答を生成します。さらに、すべての回答に引用元のリンクが付くため、根拠の確認も簡単です。&lt;/p&gt;
+&lt;p&gt;この仕組みを活かして、&lt;strong&gt;テーマごとにノートブックを分ける&lt;/strong&gt;。たったこれだけで、各ノートブックが「その分野の専門家」として機能し始めます。&lt;/p&gt;
+&lt;p&gt;1つの AI に何でもかんでも聞くのと、20人の専門家に分けて聞くのでは、回答の精度がまったく違います。&lt;/p&gt;
+&lt;h2 id="専門家ノートの作り方共通4ステップ"&gt;専門家ノートの作り方（共通4ステップ）&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;NotebookLM で新規ノートブックを作成する&lt;/li&gt;
+&lt;li&gt;タイトルに「○○専門」と設定する（例：「マーケティング専門」）&lt;/li&gt;
+&lt;li&gt;「ソースを探す（Fast Research）」で、5つのプロンプトを順番に実行する&lt;/li&gt;
+&lt;li&gt;情報が集約されたら、あなたの課題を入力するだけ&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="20人の専門家一覧"&gt;20人の専門家一覧&lt;/h2&gt;
+&lt;h3 id="1-業務改善コンサルタント"&gt;1. 業務改善コンサルタント&lt;/h3&gt;
+&lt;p&gt;ムダを見つけて仕組みに変える専門家。属人化している作業、毎回ゼロから作っている資料、形骸化した会議などの「見えないコスト」を洗い出します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Fast Research 用プロンプト例:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;「業務プロセスの可視化と改善手法（BPR、リーン等）を具体例付きで解説した記事を収集」&lt;/li&gt;
+&lt;li&gt;「属人化の解消とナレッジマネジメントの実践方法を詳しく紹介した記事を収集」&lt;/li&gt;
+&lt;li&gt;「業務自動化（RPA・ノーコード等）の導入手順と成功事例を解説した記事を収集」&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-マーケティングコンサルタント"&gt;2. マーケティングコンサルタント&lt;/h3&gt;
+&lt;p&gt;集客戦略、SNS運用、競合分析、KPI設計まで幅広くカバー。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Fast Research 用プロンプト例:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;「デジタルマーケティングの最新手法と成功事例を詳しく解説した記事を収集」&lt;/li&gt;
+&lt;li&gt;「SNSマーケティングとコンテンツ戦略の具体的な手法を解説した記事を収集」&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-コピーライター"&gt;3. コピーライター&lt;/h3&gt;
+&lt;p&gt;メール、提案書、LP、SNS投稿など「伝わる言葉」を作る専門家。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Fast Research 用プロンプト例:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;「売れるキャッチコピーの作り方と名作事例を詳しく解説した記事を収集」&lt;/li&gt;
+&lt;li&gt;「ランディングページのライティング手法とコンバージョン改善策を紹介した記事を収集」&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-データアナリスト"&gt;4. データアナリスト&lt;/h3&gt;
+&lt;p&gt;データに基づいた判断ができるようになる右腕。売上予測、A/Bテストの設計、KPIの設定をサポート。&lt;/p&gt;
+&lt;h3 id="5-営業コーチ"&gt;5. 営業コーチ&lt;/h3&gt;
+&lt;p&gt;新規開拓の方法、クロージングの話法、断られたときの切り返し方まで。営業スキルを「型」として共有できます。&lt;/p&gt;
+&lt;h3 id="6-プロジェクトマネージャー"&gt;6. プロジェクトマネージャー&lt;/h3&gt;
+&lt;p&gt;タスクの優先順位の付け方、進捗の可視化方法、トラブル発生時の対応手順を体系的にアドバイス。&lt;/p&gt;
+&lt;h3 id="7-広報prアドバイザー"&gt;7. 広報・PRアドバイザー&lt;/h3&gt;
+&lt;p&gt;プレスリリースの書き方、メディアへのアプローチ方法、SNS公式アカウントの運用方針をカバー。&lt;/p&gt;
+&lt;h3 id="8-心理学アドバイザー"&gt;8. 心理学アドバイザー&lt;/h3&gt;
+&lt;p&gt;部下のやる気を引き出す声かけ、顧客の購買意欲を高めるプレゼン手法、チームの信頼関係を築くコミュニケーション術。&lt;/p&gt;
+&lt;h3 id="9-カスタマーサクセスマネージャー"&gt;9. カスタマーサクセスマネージャー&lt;/h3&gt;
+&lt;p&gt;解約の兆候を早期に察知する方法、顧客オンボーディングの設計、アップセルの提案タイミングなど。&lt;/p&gt;
+&lt;h3 id="10-人事コンサルタント"&gt;10. 人事コンサルタント&lt;/h3&gt;
+&lt;p&gt;「面接で何を聞くべきか」「どう評価すべきか」「入社後にどう育てるか」まで体系的にサポート。&lt;/p&gt;
+&lt;h3 id="11-交渉ファシリテーションアドバイザー"&gt;11. 交渉・ファシリテーションアドバイザー&lt;/h3&gt;
+&lt;p&gt;会議を30分で終わらせる進行術、交渉で双方が納得する落としどころの見つけ方など。&lt;/p&gt;
+&lt;h3 id="12-財務アドバイザー"&gt;12. 財務アドバイザー&lt;/h3&gt;
+&lt;p&gt;財務諸表の読み方、投資の判断基準、キャッシュフロー管理をカバー。&lt;/p&gt;</description></item><item><title>Vibe Coding で結果を出すために必要な2つのスキル — CS基礎知識と論理的文章力</title><link>https://hdknr.github.io/blogs/posts/2026/03/vibe-coding-skills/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/vibe-coding-skills/</guid><description>CHI 2026 論文の解説。大学生100名の調査で、Vibe Coding の成績を予測する因子はCS基礎知識と論理的文章力の2つであることが実証された。</description></item><item><title>デザイナーのためのAI活用術5選 — 制作スピードを劇的に上げる実践テクニック</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-design-workflow/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-design-workflow/</guid><description>Claude Code × Figma 連携、AI モックアップ、AI 素材生成など、デザイナーの制作スピードを劇的に上げる AI 活用術5選を解説。</description></item><item><title>Claude Cowork スターターパック：プラグイン・スキル・ワークフロー完全ガイド</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-cowork-starter-pack/</link><pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-cowork-starter-pack/</guid><description>&lt;p&gt;Corey Ganim 氏が公開した「Ultimate Claude Cowork Starter Pack」が話題になっています。Claude Cowork を単なるチャットボットではなく、本格的な生産性ツールとして活用するための設定方法を体系的にまとめた記事です。本稿ではその要点を日本語で紹介します。&lt;/p&gt;
+&lt;h2 id="claude-cowork-とは"&gt;Claude Cowork とは&lt;/h2&gt;
+&lt;p&gt;Claude Cowork は Anthropic が提供するデスクトップ向け AI ワークスペースです。プラグイン・スキル・コンテキストファイルを組み合わせることで、日常業務を大幅に効率化できます。&lt;/p&gt;
+&lt;h2 id="まずインストールすべき4つのプラグイン"&gt;まずインストールすべき4つのプラグイン&lt;/h2&gt;
+&lt;h3 id="1-productivity-プラグイン最優先"&gt;1. Productivity プラグイン（最優先）&lt;/h3&gt;
+&lt;p&gt;タスク管理・スケジューリング・ワークフロー自動化を提供します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/task&lt;/code&gt; — タスクの作成・追跡&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/schedule&lt;/code&gt; — カレンダーへの時間ブロック&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/workflow&lt;/code&gt; — 保存済みの多段ステップ自動化の実行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-marketing-プラグイン"&gt;2. Marketing プラグイン&lt;/h3&gt;
+&lt;p&gt;コンテンツ制作を支援します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1つのコンテンツを5つの SNS 投稿に変換&lt;/li&gt;
+&lt;li&gt;テーマとフックを含むコンテンツカレンダーの作成&lt;/li&gt;
+&lt;li&gt;キャンペーンの一括管理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-data-プラグイン"&gt;3. Data プラグイン&lt;/h3&gt;
+&lt;p&gt;データ分析タスクに対応します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;スプレッドシートの分析&lt;/li&gt;
+&lt;li&gt;ダッシュボードの構築&lt;/li&gt;
+&lt;li&gt;データの整理・変換&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-sales-プラグイン"&gt;4. Sales プラグイン&lt;/h3&gt;
+&lt;p&gt;営業活動を効率化します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;アカウントリサーチ&lt;/li&gt;
+&lt;li&gt;ミーティング前ブリーフの自動作成（通常30分 → 3分に短縮）&lt;/li&gt;
+&lt;li&gt;アウトリーチ文面の生成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="コンテキストファイルの設定"&gt;コンテキストファイルの設定&lt;/h2&gt;
+&lt;p&gt;Ganim 氏が強調するのは「プロンプトの時代は終わり、コンテキストの時代が来た」（The prompting game is over. The context game is everything.）という点です。&lt;/p&gt;</description></item><item><title>Claude Codeで「AI チーフ・オブ・スタッフ」を構築する ― Jim Prosserの36時間実験</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-chief-of-staff/</link><pubDate>Fri, 13 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-chief-of-staff/</guid><description>&lt;p&gt;テックコミュニケーション・コンサルタントのJim Prosser氏が、Claude Codeを使って36時間で個人用AIアシスタントシステムを構築した。「My chief of staff, Claude Code」と題されたこの取り組みは、非エンジニアがClaude Codeのサブエージェント機能を活用して日常業務を自動化した実践例として注目を集めている。&lt;/p&gt;
+&lt;h2 id="システムの全体像"&gt;システムの全体像&lt;/h2&gt;
+&lt;p&gt;Prosser氏が構築したのは、毎朝起床前に自動で業務の下準備を完了させるシステムだ。常時稼働のMac Studio上で2つの自動プロセスが夜間に実行され、朝6:15までに処理が完了する。&lt;/p&gt;
+&lt;p&gt;主な機能:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;メール自動トリアージ&lt;/strong&gt; — 受信メールからアクション可能な項目を特定し、Todoistのタスクと重複チェック&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;カレンダー管理&lt;/strong&gt; — Google Maps APIを使った実際の移動時間計算を含むスケジュール最適化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;6つの並列AIエージェント&lt;/strong&gt; — Claude Codeのサブエージェント機能で独立したワーカーを同時実行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="am-sweepボタンの仕組み"&gt;「AM Sweep」ボタンの仕組み&lt;/h2&gt;
+&lt;p&gt;Stream Deckの物理ボタンを押すと、6つの専門エージェントが並列で起動する:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;メール下書き作成（送信はしない、レビュー用の下書きのみ）&lt;/li&gt;
+&lt;li&gt;Obsidianのクライアントファイル更新&lt;/li&gt;
+&lt;li&gt;ミーティングのスケジュール調整&lt;/li&gt;
+&lt;li&gt;見込み客やトピックのバックグラウンドリサーチ&lt;/li&gt;
+&lt;li&gt;タスクの分類とコンテキスト収集&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;各エージェントは独自のコンテキストウィンドウとスコープされたツールアクセスを持ち、互いに干渉せずに動作する。&lt;/p&gt;
+&lt;h2 id="タスク4色分類フレームワーク"&gt;タスク4色分類フレームワーク&lt;/h2&gt;
+&lt;p&gt;Prosser氏は「dispatch, prep, yours, skip」の4段階でタスクを分類する:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;色&lt;/th&gt;
+&lt;th&gt;分類&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;🟢 緑&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Dispatch&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;AIが完全に処理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;🟡 黄&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Prep&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;AIが80%完了、人間が仕上げ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;🔴 赤&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Yours&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;人間の判断が必要としてフラグ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;⚪ 灰&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Skip&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;理由付きで延期&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;重要なのは、判断に迷う場合は「Dispatch」ではなく「Prep」にデフォルトする設計だ。AIが勝手に完了させるのではなく、人間が最終判断する余地を常に残している。&lt;/p&gt;
+&lt;h2 id="人間とaiの境界線"&gt;人間とAIの境界線&lt;/h2&gt;
+&lt;p&gt;このシステムの設計で最も重要な原則は「AIにやらせないことを決める」ことだ:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;メールは絶対に送信しない&lt;/strong&gt; — 下書きのみ作成し、人間がレビューして送信&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;戦略的決定は人間が行う&lt;/strong&gt; — 価格交渉、関係性に配慮が必要なコミュニケーションはAI対象外&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;不確実な場合はPrepにデフォルト&lt;/strong&gt; — 自動処理より人間の関与を優先&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="time-block機能"&gt;Time Block機能&lt;/h2&gt;
+&lt;p&gt;残タスクをカレンダーイベントに変換する機能も備えている:&lt;/p&gt;</description></item><item><title>AIプログラマティックSEO：JSON Schemaで13,000ページを3時間で生成し、トラフィックを5.7倍にした手法</title><link>https://hdknr.github.io/blogs/posts/2026/03/programmatic-seo-json-schema/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/programmatic-seo-json-schema/</guid><description>&lt;p&gt;SEO・コンテンツマーケティングの専門家 Jake Ward 氏が、AI とプログラマティック SEO を組み合わせて &lt;strong&gt;60日間で SEO トラフィックを466%（5.7倍）増加&lt;/strong&gt; させた手法が注目を集めています。13,000ページ以上をわずか3時間で生成し、週間オーガニッククリックを971から5,500に伸ばした具体的なアプローチを解説します。&lt;/p&gt;
+&lt;h2 id="成果の概要"&gt;成果の概要&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;13,000+ ページ&lt;/strong&gt;を3時間で生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;週間オーガニッククリック&lt;/strong&gt;: 971 → 5,500（+466%）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;60日間&lt;/strong&gt;で達成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="従来のプログラマティック-seo-との違い"&gt;従来のプログラマティック SEO との違い&lt;/h2&gt;
+&lt;p&gt;従来のプログラマティック SEO は、テンプレートの単語を置換するだけのものが多く、低品質なページが量産される問題がありました。Jake Ward 氏のアプローチは、AI にフリーフォームでコンテンツを書かせるのではなく、&lt;strong&gt;厳密な JSON Schema を埋め込む&lt;/strong&gt;ことで品質を担保しています。&lt;/p&gt;
+&lt;h2 id="3つの核心ポイント"&gt;3つの核心ポイント&lt;/h2&gt;
+&lt;h3 id="1-json-schema-によるコンテンツ構造化"&gt;1. JSON Schema によるコンテンツ構造化&lt;/h3&gt;
+&lt;p&gt;最も重要な技術的要素が、AI への指示に厳密な JSON Schema を使うことです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;section_title&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;items&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string (50-100 words)&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;difficulty_level&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;beginner | intermediate | advanced&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;potential_score&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;number (1-10)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;min_items&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;15&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;max_items&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;20&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;AI にフリーフォームの文章を書かせると、ページごとに品質がばらつきます。JSON Schema で出力形式を固定することで、13,000ページ全体で一貫した品質を維持できます。&lt;/p&gt;</description></item><item><title>Claude Code の Skills でプロンプト履歴を分析し、新人教育に活用する</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-skills-training/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-skills-training/</guid><description>&lt;p&gt;Claude Code の Skills 機能を使って、過去のプロンプト入力履歴をスキャンし、利用者が「何を分かっていて、何を分かっていないか」を可視化する仕組みが紹介されていました。プロンプトを通じた新人教育の可能性を探ります。&lt;/p&gt;
+&lt;h2 id="アイデアの概要"&gt;アイデアの概要&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://x.com/tokoroten/status/2031984056372756633"&gt;@tokoroten氏のポスト&lt;/a&gt;で紹介されたアプローチは以下の通りです:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Claude Code の Skills を利用&lt;/strong&gt;して、過去のプロンプト入力履歴をスキャンする&lt;/li&gt;
+&lt;li&gt;その履歴から、利用者が&lt;strong&gt;何を理解していて、何を理解していないか&lt;/strong&gt;を分析・出力する&lt;/li&gt;
+&lt;li&gt;結果として、&lt;strong&gt;どの技術分野の理解が甘いか&lt;/strong&gt;が可視化される&lt;/li&gt;
+&lt;li&gt;これにより、&lt;strong&gt;プロンプトを通じた新人教育&lt;/strong&gt;が可能になる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="claude-code-skills-とは"&gt;Claude Code Skills とは&lt;/h2&gt;
+&lt;p&gt;Claude Code の Skills は、再利用可能なプロンプトテンプレートをプロジェクト内に定義できる機能です。&lt;code&gt;.claude/skills/&lt;/code&gt; ディレクトリにスキル定義を配置することで、&lt;code&gt;/スキル名&lt;/code&gt; のようなスラッシュコマンドとして呼び出せます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;.claude/
+skills/
+analyze-prompts/
+skill.md # スキルの定義・プロンプト
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;スキルには以下のような特徴があります:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;プロジェクト固有のワークフロー&lt;/strong&gt;を定義できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;引数を受け取る&lt;/strong&gt;ことが可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;複数のツール呼び出し&lt;/strong&gt;を組み合わせた複雑な処理を自動化できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="プロンプト履歴から理解度を分析する仕組み"&gt;プロンプト履歴から理解度を分析する仕組み&lt;/h2&gt;
+&lt;p&gt;このアプローチの面白いところは、プロンプト（質問）の内容自体が「その人が何を知らないか」の強力なシグナルになるという点です。&lt;/p&gt;
+&lt;h3 id="分析の観点"&gt;分析の観点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;質問の頻度&lt;/strong&gt;: 特定の技術領域について繰り返し質問しているなら、その分野の理解が浅い可能性が高い&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;質問の深さ&lt;/strong&gt;: 基本的な概念を聞いているのか、応用的な質問をしているのかで理解度が測れる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自己解決率&lt;/strong&gt;: 同じトピックの質問が減っていれば、学習が進んでいると判断できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="教育への応用"&gt;教育への応用&lt;/h3&gt;
+&lt;p&gt;従来の新人教育では、メンターが1対1でレビューしたり、定期的な面談で理解度を確認したりする必要がありました。このアプローチでは:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;受動的な観察&lt;/strong&gt;: 普段の業務でのプロンプト利用を分析するだけで、能動的なヒアリングが不要&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;定量的な評価&lt;/strong&gt;: どの分野にどれだけ質問しているかを数値化できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;継続的なトラッキング&lt;/strong&gt;: 時系列での成長を追跡できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="実現に向けた考慮点"&gt;実現に向けた考慮点&lt;/h2&gt;
+&lt;p&gt;このような仕組みを導入する際には、いくつかの点を考慮する必要があります。&lt;/p&gt;
+&lt;h3 id="プライバシーへの配慮"&gt;プライバシーへの配慮&lt;/h3&gt;
+&lt;p&gt;プロンプト履歴には業務上の機密情報が含まれる可能性があるため、分析対象の範囲や匿名化の方法を検討する必要があります。&lt;/p&gt;
+&lt;h3 id="分析精度の担保"&gt;分析精度の担保&lt;/h3&gt;
+&lt;p&gt;単純なキーワードマッチだけでは正確な理解度評価は難しく、文脈を考慮した分析が求められます。Claude Code 自体の言語理解能力を活かすことで、より精度の高い分析が可能になるでしょう。&lt;/p&gt;
+&lt;h3 id="フィードバックループの構築"&gt;フィードバックループの構築&lt;/h3&gt;
+&lt;p&gt;分析結果を本人にフィードバックし、推奨学習リソースを提示するところまで自動化できれば、より実用的な教育ツールになります。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;Claude Code の Skills を活用したプロンプト履歴分析は、AI ツールの利用ログそのものを教育データとして活用するという発想です。新人が日常的に AI に質問する行為自体が、自然と学習進捗の記録になるというのは、AI 時代ならではの教育アプローチと言えます。&lt;/p&gt;</description></item><item><title>CLAUDE.mdを採点・改善してくれるClaude Code公式プラグイン claude-md-improver</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-md-improver/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-md-improver/</guid><description>&lt;p&gt;Claude Code を使っていると、プロジェクトのコンテキストを伝える &lt;code&gt;CLAUDE.md&lt;/code&gt; の質が作業効率に直結することに気づきます。Anthropic 公式プラグイン &lt;strong&gt;claude-md-management&lt;/strong&gt; に含まれる &lt;code&gt;claude-md-improver&lt;/code&gt; スキルは、CLAUDE.md を自動で採点し、改善点を提案してくれる便利なツールです。&lt;/p&gt;
+&lt;h2 id="claude-md-management-プラグインとは"&gt;claude-md-management プラグインとは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management"&gt;claude-md-management&lt;/a&gt; は、Anthropic が公式に管理している Claude Code プラグインです。CLAUDE.md ファイルの品質を監査し、セッションで得た知見を反映するための2つのスキルを提供します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;スキル&lt;/th&gt;
+&lt;th&gt;呼び出し方&lt;/th&gt;
+&lt;th&gt;目的&lt;/th&gt;
+&lt;th&gt;使いどころ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;claude-md-improver&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;会話で依頼&lt;/td&gt;
+&lt;td&gt;CLAUDE.md をコードベースの現状に合わせる&lt;/td&gt;
+&lt;td&gt;定期的なメンテナンス&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;revise-claude-md&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/claude-md-management:revise-claude-md&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;セッション中の学びを記録する&lt;/td&gt;
+&lt;td&gt;セッション終了時&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;: &lt;code&gt;/revise-claude-md&lt;/code&gt; のような短縮名では呼び出せません。必ず &lt;code&gt;/claude-md-management:revise-claude-md&lt;/code&gt; と完全修飾名を使ってください。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="インストール方法"&gt;インストール方法&lt;/h2&gt;
+&lt;p&gt;公式マーケットプレイスは Claude Code 起動時に自動で利用可能になっているため、以下のコマンドだけでインストールできます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/plugin install claude-md-management@claude-plugins-official
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;UI からインストールする場合は、&lt;code&gt;/plugin&lt;/code&gt; を実行して &lt;strong&gt;Discover&lt;/strong&gt; タブから &lt;code&gt;claude-md-management&lt;/code&gt; を選択します。インストールスコープは以下の3種類から選べます。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;スコープ&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;User&lt;/td&gt;
+&lt;td&gt;自分の全プロジェクトで有効（デフォルト）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Project&lt;/td&gt;
+&lt;td&gt;このリポジトリの全コラボレーターで有効（&lt;code&gt;.claude/settings.json&lt;/code&gt; に記録）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Local&lt;/td&gt;
+&lt;td&gt;このリポジトリの自分だけで有効&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;インストール後、&lt;code&gt;/reload-plugins&lt;/code&gt; を実行すると再起動なしで有効化されます。&lt;/p&gt;
+&lt;h2 id="claude-md-improver-の使い方"&gt;claude-md-improver の使い方&lt;/h2&gt;
+&lt;p&gt;Claude Code のセッション中に、以下のように話しかけるだけで起動します。&lt;/p&gt;</description></item><item><title>Codified Context — 10万行規模の開発でもAIに一貫したコードを書かせる3層メモリ手法</title><link>https://hdknr.github.io/blogs/posts/2026/03/codified-context/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/codified-context/</guid><description>&lt;p&gt;LLMベースのコーディングエージェント（Claude Code、Cursor など）は、セッションが変わるたびにプロジェクトの規約や過去のミスを忘れてしまう。小さなプロトタイプなら問題にならないが、10万行を超える大規模コードベースでは「毎回同じ説明をする」「直したはずのバグパターンが再発する」といったコストが無視できなくなる。&lt;/p&gt;
+&lt;p&gt;2026年2月に公開された論文 &lt;a href="https://arxiv.org/abs/2602.20478"&gt;Codified Context: Infrastructure for AI Agents in a Complex Codebase&lt;/a&gt;（Aristidis Vasilopoulos）は、この問題に対して &lt;strong&gt;3層のメモリインフラストラクチャ&lt;/strong&gt; を提案し、108,000行のC#分散システムを283セッションかけて構築した実践データとともに検証している。&lt;/p&gt;
+&lt;h2 id="問題セッション間で失われる記憶"&gt;問題：セッション間で失われる記憶&lt;/h2&gt;
+&lt;p&gt;LLMエージェントは各セッションの開始時にコンテキストがリセットされる。&lt;code&gt;.cursorrules&lt;/code&gt; や &lt;code&gt;CLAUDE.md&lt;/code&gt; のような単一ファイルでプロジェクト規約を伝える方法は小規模なら有効だが、10万行規模のシステムでは単一プロンプトに収まりきらない。&lt;/p&gt;
+&lt;p&gt;結果として起きる典型的な問題:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;命名規則やアーキテクチャパターンの逸脱&lt;/li&gt;
+&lt;li&gt;過去に修正した失敗パターンの再発&lt;/li&gt;
+&lt;li&gt;サブシステム間の整合性の欠如&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="提案手法3層の-codified-context"&gt;提案手法：3層の Codified Context&lt;/h2&gt;
+&lt;p&gt;論文では、プロジェクト知識を &lt;strong&gt;負荷分散インフラストラクチャ&lt;/strong&gt; として扱う3層アーキテクチャを提案している。&lt;/p&gt;
+&lt;h3 id="tier-1-hot-memory-constitution約660行"&gt;Tier 1: Hot-Memory Constitution（約660行）&lt;/h3&gt;
+&lt;p&gt;常にセッションにロードされるMarkdownファイル。以下を含む:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;コード品質基準・命名規則&lt;/li&gt;
+&lt;li&gt;ビルドコマンド&lt;/li&gt;
+&lt;li&gt;アーキテクチャパターンの要約&lt;/li&gt;
+&lt;li&gt;よくある操作のチェックリスト&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;既知の失敗モード&lt;/strong&gt;（過去のバグパターン）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オーケストレーション用トリガーテーブル&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;トリガーテーブルは「どのファイルを変更したら、どの専門エージェントを呼ぶか」を定義する:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ファイル変更&lt;/th&gt;
+&lt;th&gt;割り当てエージェント&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Network, sync&lt;/td&gt;
+&lt;td&gt;network-protocol-designer&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Coordinates, camera&lt;/td&gt;
+&lt;td&gt;coordinate-wizard&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;UI配信&lt;/td&gt;
+&lt;td&gt;ui-sync-specialist&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="tier-2-specialized-agents19エージェント約9300行"&gt;Tier 2: Specialized Agents（19エージェント、約9,300行）&lt;/h3&gt;
+&lt;p&gt;タスクに応じて呼び出される専門エージェント群。2つのクラスに分かれる:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;高能力エージェント&lt;/strong&gt;（8個、平均711行）: ネットワークプロトコル設計、アーキテクチャ検証、デバッグなど&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;標準能力エージェント&lt;/strong&gt;（11個、平均327行）: 特定タスクにフォーカス&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;各エージェント仕様の &lt;strong&gt;50%以上がプロジェクト固有のドメイン知識&lt;/strong&gt; で構成されている。コード例、数式、失敗モードなど、そのプロジェクトでしか使えない具体的な情報が埋め込まれている点が特徴。&lt;/p&gt;
+&lt;h3 id="tier-3-cold-memory-knowledge-base34文書約16250行"&gt;Tier 3: Cold-Memory Knowledge Base（34文書、約16,250行）&lt;/h3&gt;
+&lt;p&gt;サブシステムごとの詳細仕様をMarkdownで記述し、MCP（Model Context Protocol）検索サーバー経由でオンデマンド参照する:&lt;/p&gt;</description></item><item><title>OpenClawを使いこなす鍵は「情報の一元管理」にある</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-knowledge-management/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-knowledge-management/</guid><description>&lt;p&gt;「OpenClawを使ってみたけど、うまくいかなかった」という声をよく聞く。しかし、それはツールの問題ではなく「使い方」の問題かもしれない。@ichiaimarketer氏（いち＠OpenClawガチ勢）のポストから、AIエージェントツールを活用するための本質的なポイントを整理する。&lt;/p&gt;
+&lt;h2 id="openclaw活用の本質は情報の一元管理"&gt;OpenClaw活用の本質は「情報の一元管理」&lt;/h2&gt;
+&lt;p&gt;同氏の主張はシンプルだ。&lt;strong&gt;OpenClaw活用の90%は「情報の一元管理」にある&lt;/strong&gt;。小手先のテクニックやプロンプトの工夫ではなく、AIに渡す情報の整理こそが成否を分ける。&lt;/p&gt;
+&lt;p&gt;情報なしでAIツールを運用すると、メモリ・文脈・判断材料が不足する。これは「派遣社員に会社の情報を一切与えずに仕事を依頼するようなもの」だと同氏は例えている。どれだけ優秀な人材（AI）でも、必要な情報がなければまともな成果は出せない。&lt;/p&gt;
+&lt;h2 id="推奨される情報構造"&gt;推奨される情報構造&lt;/h2&gt;
+&lt;p&gt;同氏が実践している情報の整理方法は、以下のようなフォルダ構造だ:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;フォルダ&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;経営&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ミッション、ビジョン、議事録&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;マーケティング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;X投稿、記事コンテンツ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;開発&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;自動化ツール関連&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;日常&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;人間関係、日記&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Old&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;1〜2ヶ月未使用のプロジェクト&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;このように業務領域ごとに情報を構造化しておくことで、AIエージェントが必要な文脈を取得しやすくなる。&lt;/p&gt;
+&lt;h2 id="なぜ情報の一元管理が重要なのか"&gt;なぜ「情報の一元管理」が重要なのか&lt;/h2&gt;
+&lt;p&gt;AIエージェントツールは、与えられた情報をもとに推論・判断・実行を行う。つまり:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;情報が散在している&lt;/strong&gt; → エージェントが必要な文脈を把握できない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情報が整理されている&lt;/strong&gt; → エージェントが的確な判断を下せる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これはOpenClawに限った話ではなく、Claude Codeの &lt;code&gt;CLAUDE.md&lt;/code&gt; や &lt;code&gt;MEMORY.md&lt;/code&gt; によるコンテキスト管理とも通じる考え方だ。AIツールの性能を引き出すには、ツール側の設定だけでなく、人間側の情報整理が不可欠となる。&lt;/p&gt;
+&lt;h2 id="実践のヒント"&gt;実践のヒント&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;まず情報を一箇所に集める&lt;/strong&gt; — GitHub、Obsidian、Notionなど、自分に合ったツールでナレッジを集約する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;業務領域ごとに分類する&lt;/strong&gt; — 経営、開発、マーケティングなど、AIが参照しやすい粒度で整理する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;定期的に棚卸しする&lt;/strong&gt; — 古くなった情報は「Old」フォルダに移動し、ノイズを減らす&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AIに渡すコンテキストを意識する&lt;/strong&gt; — 「このタスクにはどの情報が必要か」を考えてから指示を出す&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;AIエージェントツールの活用で成果が出ない原因は、ツールの性能ではなく情報管理にあることが多い。OpenClawでもClaude Codeでも、AIに適切な情報を渡すための「情報の一元管理」が最も重要な基盤となる。ツールを変える前に、まず自分の情報整理を見直してみることを勧める。&lt;/p&gt;</description></item><item><title>非エンジニア(ADHD)が2ヶ月間Claude Codeに夢中になった結果、分身が生まれてシンギュラリティーに入った話</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-non-engineer-adhd-singularity/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-non-engineer-adhd-singularity/</guid><description>&lt;p&gt;動画広告分析Proを運営する@masapark95氏が、非エンジニア・ADHDという立場から2ヶ月間Claude Codeを使い倒した体験談が話題になっている。「分身が生まれた」「シンギュラリティーに入った」という表現が印象的なこのポストから、非エンジニアがClaude Codeを活用するためのヒントを読み解く。&lt;/p&gt;
+&lt;h2 id="背景非エンジニアがclaude-codeに出会うまで"&gt;背景：非エンジニアがClaude Codeに出会うまで&lt;/h2&gt;
+&lt;p&gt;@masapark95氏（パク）は、株式会社KASHIKAが提供する動画広告分析ツール「動画広告分析Pro」の運営に携わる人物。累計2000社以上が利用するサービスを手がけるビジネスサイドの人で、ADHDの特性を持つことを公言している。&lt;/p&gt;
+&lt;p&gt;そんな同氏が2ヶ月間Claude Codeに没頭した結果、「分身が生まれてシンギュラリティーに入った」と表現するほどの変化を体験したという。&lt;/p&gt;
+&lt;h2 id="分身aiパクくんの誕生"&gt;「分身」＝AIパクくんの誕生&lt;/h2&gt;
+&lt;p&gt;同氏が構築したのは、Claude Codeの設定ファイル群を駆使した「AIパクくん」と呼ばれるシステムだ。以下のファイルを組み合わせることで、自分の分身となるAIアシスタントを作り上げた:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;CLAUDE.md&lt;/strong&gt; — AIの性格やルールを定義するファイル&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MEMORY.md&lt;/strong&gt; — 知識マップとして機能するナレッジベース&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Knowledge ファイル群&lt;/strong&gt; — 業務に関する専門知識&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skills&lt;/strong&gt; — 特定タスクの実行手順を定義
+これらのファイルを適切に設計することで、Claude Codeが単なるコード生成ツールではなく、自分の思考や判断基準を理解した「分身」として機能するようになったという。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="シンギュラリティーの感覚とは"&gt;「シンギュラリティー」の感覚とは&lt;/h2&gt;
+&lt;p&gt;同氏が「シンギュラリティーに入った」と表現するのは、Claude Codeとの協業で感じた加速感のことだ。具体的には:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;1週間で338万行ものコードが生成された&lt;/strong&gt;との報告（Claude Codeによる自動生成）&lt;/li&gt;
+&lt;li&gt;同週の利用料金は&lt;strong&gt;416ドル&lt;/strong&gt;に達したとのこと（Claude Maxプラン利用時）&lt;/li&gt;
+&lt;li&gt;「止まらなくなる」感覚 — AIが既存アセットを掛け合わせて目標達成の提案を次々と行う&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この「止まらない」感覚こそが、同氏の言う「シンギュラリティー」だ。SkillsとKnowledgeの組み合わせをClaude Codeが最適化し、ワークフローの設計提案まで行うことで、人間側の判断が追いつかないほどの速度で物事が進んでいく体験を指している。&lt;/p&gt;
+&lt;h2 id="adhdとclaude-codeの相性"&gt;ADHDとClaude Codeの相性&lt;/h2&gt;
+&lt;p&gt;ADHDの特性として知られる「過集中」は、Claude Codeとの相性が良い可能性がある。興味を持った対象に深く没頭できるADHDの特性と、対話的にタスクを進められるClaude Codeの特性が組み合わさることで、通常では考えられない生産性が生まれたと考えられる。&lt;/p&gt;
+&lt;p&gt;実際に海外でも「Claude Code has been a game changer for me」というADHD当事者の声がHacker Newsなどで共有されており、AIコーディングツールとADHDの親和性は注目されているテーマだ。&lt;/p&gt;
+&lt;h2 id="非エンジニアがclaude-codeを活用するポイント"&gt;非エンジニアがClaude Codeを活用するポイント&lt;/h2&gt;
+&lt;p&gt;この事例から見えてくる、非エンジニアがClaude Codeを活用するためのポイント:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;CLAUDE.mdで「自分」を定義する&lt;/strong&gt; — 自分の役割、判断基準、優先事項をCLAUDE.mdに明文化する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MEMORY.mdでコンテキストを蓄積する&lt;/strong&gt; — 会話を重ねるたびに学んだことを記録し、知識を積み上げる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skillsで定型作業を自動化する&lt;/strong&gt; — 繰り返し行うタスクをSkillとして定義し、再利用可能にする&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Knowledgeで専門知識を注入する&lt;/strong&gt; — 自分の業務ドメインの知識をファイルとして整理し、Claude Codeに読み込ませる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="claude-code-deep-dive-イベント"&gt;Claude Code DEEP DIVE イベント&lt;/h2&gt;
+&lt;p&gt;この体験を共有するため、同氏は「Claude Code DEEP DIVE」という学習プログラムを2026年3月に開始している。非エンジニアがClaude Codeを実践的に活用するためのノウハウを提供する内容となっている。&lt;/p&gt;</description></item><item><title>Claude Code のスキルを作るなら skill-creator プラグインを使おう</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-skill-creator/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-skill-creator/</guid><description>&lt;p&gt;Anthropic が公開した「The Complete Guide to Building Skills for Claude」という 33 ページの PDF ガイドが話題になっています。このガイドをそのまま Claude Code のメモリに読み込ませてスキル構築に活用しようとする人もいますが、実は公式の &lt;strong&gt;skill-creator プラグイン&lt;/strong&gt;を使う方がはるかに効率的です。&lt;/p&gt;
+&lt;p&gt;skill-creator はガイドの内容をすべて反映しているだけでなく、テスト・最適化・トリガー精度改善といった仕組みも組み込まれています。PDF をメモリに入れるとコンテキストウィンドウを圧迫するリスクもあるため、新規スキル作成には skill-creator を導入するのがおすすめです。&lt;/p&gt;
+&lt;h2 id="claude-code-のスキルとは"&gt;Claude Code のスキルとは&lt;/h2&gt;
+&lt;p&gt;スキルとは、Claude に特定のタスクの実行方法を教える &lt;strong&gt;指示・スクリプト・リソースのフォルダ&lt;/strong&gt; です。&lt;code&gt;SKILL.md&lt;/code&gt; ファイルに YAML フロントマターと指示を記述するだけで作成できます。&lt;/p&gt;
+&lt;p&gt;Claude Code は 3 段階の情報ロードシステム（&lt;strong&gt;Progressive Disclosure&lt;/strong&gt;）を採用しています。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;起動時&lt;/strong&gt;: インストール済みスキルの名前と説明文のみをシステムプロンプトに読み込む（スキルあたり約 50〜100 トークン）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;判定時&lt;/strong&gt;: ユーザーの入力に関連するスキルがあるかを判定&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;実行時&lt;/strong&gt;: 該当スキルの全内容をロード&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;この仕組みにより、多数のスキルをインストールしてもコンテキストウィンドウを無駄に消費しません。&lt;/p&gt;
+&lt;h2 id="skill-creator-プラグインのインストール"&gt;skill-creator プラグインのインストール&lt;/h2&gt;
+&lt;p&gt;skill-creator は Anthropic 公式マーケットプレイスに含まれています。Claude Code 内で以下のコマンドを実行するだけでインストールできます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/plugin install skill-creator@claude-plugins-official
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;インストール後、プラグインを有効化します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/reload-plugins
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;なお、&lt;code&gt;/plugin&lt;/code&gt; コマンドで &lt;strong&gt;Discover&lt;/strong&gt; タブを開き、GUI からインストールすることも可能です。プラグイン機能を利用するには Claude Code &lt;strong&gt;バージョン 1.0.33 以上&lt;/strong&gt; が必要です（&lt;code&gt;claude --version&lt;/code&gt; で確認できます）。&lt;/p&gt;</description></item><item><title>CLAUDE.md の設定を99%消したら逆にうまくいった話：AI への指示は「哲学」だけ残せ</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-md-less-is-more/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-md-less-is-more/</guid><description>&lt;p&gt;Claude Code の設定ファイル &lt;code&gt;CLAUDE.md&lt;/code&gt; に「こう書け」「これは禁止」「この順番で処理しろ」とルールを追加していったら 300行を超え、AI の出力品質がどんどん落ちていった——そんな経験を経て「99%消した。残したのは、哲学だけ。」という結論に至った話が X で話題になっている。&lt;/p&gt;
+&lt;h2 id="なぜルールを増やすと-ai-の性能が落ちるのか"&gt;なぜルールを増やすと AI の性能が落ちるのか&lt;/h2&gt;
+&lt;h3 id="コンテキストウィンドウの競合"&gt;コンテキストウィンドウの競合&lt;/h3&gt;
+&lt;p&gt;LLM はコンテキストウィンドウ内のすべての情報を処理する。&lt;code&gt;CLAUDE.md&lt;/code&gt; のルールが増えるほど、実際の作業に使える「注意力」が奪われる。コンテキストが埋まるにつれてパフォーマンスが低下するのは、LLM の根本的な特性だ。&lt;/p&gt;
+&lt;h3 id="指示の上限問題"&gt;指示の上限問題&lt;/h3&gt;
+&lt;p&gt;IFScale ベンチマークの研究によると、フロンティアモデルは &lt;strong&gt;150〜200個の指示&lt;/strong&gt; を超えたあたりから選択的注意のバイアスがピークに達し、それ以降は均一に失敗するパターンに収束する。Claude Code のシステムプロンプト自体がすでに約50個の指示を含んでいるため、ユーザーが使える枠は実質100〜150個。200行の詳細なルールを書いた時点で、すでに予算オーバーだ。&lt;/p&gt;
+&lt;h3 id="指示追従バイアス"&gt;指示追従バイアス&lt;/h3&gt;
+&lt;p&gt;LLM はプロンプトの &lt;strong&gt;先頭と末尾&lt;/strong&gt; の指示に従いやすい傾向がある。中間に埋もれたルールは見落とされがちだ。ルールが増えるほど、重要な指示が中間に埋もれて無視されるリスクが高まる。&lt;/p&gt;
+&lt;h2 id="具体的に何が起こるか"&gt;具体的に何が起こるか&lt;/h2&gt;
+&lt;p&gt;例えば「見出しは H2 を必ず4つ使え」「セクションは5つ構成にしろ」というルールを設定したとする。すると AI は、本来3セクションで十分な内容でも無理やり5セクションに引き伸ばし、冗長な文章を生成してしまう。&lt;/p&gt;
+&lt;p&gt;ルールに &lt;strong&gt;従うこと自体が目的化&lt;/strong&gt; し、最適な出力を考える余地がなくなる。これは人間の組織でも起こる現象だ。過剰なルールがかえって生産性を下げる。&lt;/p&gt;
+&lt;h2 id="哲学だけ残すアプローチ"&gt;「哲学だけ残す」アプローチ&lt;/h2&gt;
+&lt;h3 id="細かいルールではなく方針を伝える"&gt;細かいルールではなく方針を伝える&lt;/h3&gt;
+&lt;p&gt;悪い例:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;- 見出しは H2 を4つ使うこと
+- 各セクションは200〜300文字
+- コードブロックには必ず言語指定をつけること
+- 箇条書きは最大5項目まで
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;良い例:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;- 読者が最短で理解できる構成を優先する
+- 冗長さよりも明確さを重視する
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="anthropic-公式の推奨"&gt;Anthropic 公式の推奨&lt;/h3&gt;
+&lt;p&gt;Anthropic の公式ドキュメントでも、&lt;code&gt;CLAUDE.md&lt;/code&gt; について以下のように推奨している:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;肥大化した CLAUDE.md は、実際の指示を AI に無視させる原因になる&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Claude がすでに正しくやっていることについては、わざわざルールを書かない&lt;/li&gt;
+&lt;li&gt;削除できるものは削除し、自動化できるものはフックに変換する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="progressive-disclosure-パターン"&gt;Progressive Disclosure パターン&lt;/h3&gt;
+&lt;p&gt;すべての情報を &lt;code&gt;CLAUDE.md&lt;/code&gt; に詰め込むのではなく、&lt;strong&gt;情報の見つけ方&lt;/strong&gt; を教える方法が効果的だ。&lt;/p&gt;</description></item><item><title>OpenClaw のマークダウン駆動エージェント運用スタック：40日間の実践から学ぶ設計パターン</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-markdown-agent-stack/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-markdown-agent-stack/</guid><description>&lt;p&gt;Google のシニア AI プロダクトマネージャー Shubham Saboo 氏が、OpenClaw エージェントを 40 日間運用した経験から導き出した「マークダウンファイル駆動のエージェント運用スタック」について紹介する。モデルを変えず、蓄積されたマークダウンファイルだけでエージェントが成長していくというアプローチだ。&lt;/p&gt;
+&lt;h2 id="コアコンセプトマークダウンファイルが成長エンジン"&gt;コアコンセプト：マークダウンファイルが成長エンジン&lt;/h2&gt;
+&lt;p&gt;このスタックの最大の特徴は、&lt;strong&gt;モデル自体は変わらない&lt;/strong&gt;という点にある。エージェント間の違いは「蓄積されたマークダウンファイル」にある。データベースもオーケストレーションフレームワークもメッセージキューも不要で、ディスク上のマークダウンファイルがすべてのインテグレーション層として機能する。&lt;/p&gt;
+&lt;h2 id="3-層スタック構造"&gt;3 層スタック構造&lt;/h2&gt;
+&lt;p&gt;エージェントの設計は以下の 3 層で構成される：&lt;/p&gt;
+&lt;h3 id="1-identity-層アイデンティティ"&gt;1. Identity 層（アイデンティティ）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;SOUL.md&lt;/code&gt; がセッション起動時に毎回読み込まれる。ここにはエージェントの人格、役割、原則、関係性が定義される。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# SOUL.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 役割: プロジェクトマネージャー
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 原則: 簡潔さを重視、事実ベースで判断
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 性格: Dwight Schrute 的な徹底さ
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;TV キャラクターの名前をエージェントに付けるのが Saboo 氏のテクニックだ。Claude の学習データにキャラクターの性格が含まれているため、「Dwight Schrute のエネルギーで」と伝えるだけで、徹底的で真剣な仕事ぶりが期待できる。&lt;/p&gt;
+&lt;h3 id="2-operations-層行動ルール"&gt;2. Operations 層（行動ルール）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;AGENTS.md&lt;/code&gt; でセッション起動ルーティンとメモリ管理ルールを定義する。運用開始から約 1 週間後に作成するのが推奨される。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# AGENTS.md
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; セッション開始時: MEMORY.md を読み込む
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; タスク完了時: 日次ログに記録
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; エラー発生時: 修正内容をメモリに追記
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3-knowledge-層記憶ログ"&gt;3. Knowledge 層（記憶・ログ）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;MEMORY.md&lt;/code&gt; は約 2 週間の運用後に初期化する。日次ログをレビューし、繰り返し発生する修正パターンを恒久的なエントリとして蒸留していく。&lt;/p&gt;</description></item><item><title>Claude Code Skills 構築完全ガイド — Anthropic 公式 33 ページの要点まとめ</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-skills-guide/</link><pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-skills-guide/</guid><description>&lt;p&gt;Anthropic が公開した「The Complete Guide to Building Skills for Claude」は、Claude Code のスキル機能を本格的に活用するための 33 ページにわたる公式ガイドです。この記事では、ガイドの要点を日本語でまとめます。&lt;/p&gt;
+&lt;h2 id="skills-とは何か"&gt;Skills とは何か&lt;/h2&gt;
+&lt;p&gt;Skills は、Claude に特定のタスクやワークフローを教えるための &lt;strong&gt;再利用可能な指示セット&lt;/strong&gt; です。フォルダにパッケージ化され、一度作れば Claude.ai、Claude Code、API のすべてで動作します。&lt;/p&gt;
+&lt;p&gt;従来のように毎回プロンプトで細かく指示する代わりに、Skills を使えば「一度教えて、何度でも使える」ようになります。&lt;/p&gt;
+&lt;h2 id="skills-のファイル構造"&gt;Skills のファイル構造&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;my-skill/
+├── SKILL.md # メインの指示ファイル（必須）
+├── scripts/ # 補助スクリプト
+├── references/ # 参考資料
+└── assets/ # アセットファイル
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;重要なルール:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;メインファイルは必ず &lt;code&gt;SKILL.md&lt;/code&gt;（大文字小文字を区別）&lt;/li&gt;
+&lt;li&gt;フォルダ名は kebab-case（例: &lt;code&gt;notion-project-setup&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;README.md は含めない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="yaml-フロントマターの設計"&gt;YAML フロントマターの設計&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;SKILL.md&lt;/code&gt; の冒頭に YAML フロントマターを記述します。ここがスキルの「顔」になります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;deploy-checker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;本番デプロイ前のチェックリストを実行する。デプロイや本番リリースの話題が出たときに使用する&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;description&lt;/code&gt; には &lt;strong&gt;何をするか&lt;/strong&gt; と &lt;strong&gt;いつ使うか&lt;/strong&gt; の 2 つを含めることが重要です。Claude はこのメタデータだけでスキルの使用タイミングを判断します。&lt;/p&gt;</description></item><item><title>Claude Codeの「セキュリティ%表示」は対策ではなく"お気持ち表示"？ 本当にやるべきセキュリティ設定</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-security-theater/</link><pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-security-theater/</guid><description>&lt;p&gt;Claude Codeでツール実行のたびに「パスワード漏洩リスク: 0%」「悪意あるコード実行リスク: 0%」のようなセキュリティリスクのパーセンテージを表示させるCLAUDE.mdの設定がSNSで話題になった。これに対し、セキュリティエンジニアから「それは対策ではなくお気持ち表示」という指摘が上がり、議論を呼んでいる。&lt;/p&gt;
+&lt;h2 id="話題になったパーセンテージ表示"&gt;話題になった「パーセンテージ表示」&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://x.com/wan_line_"&gt;@wan_line_（ワン@AIのお兄さん）&lt;/a&gt;氏が2026年3月9日に投稿したポストでは、CLAUDE.mdに以下のようなルールを記述することが提案されていた:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ツール実行のたびに&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;パスワードが外に漏れる可能性: ○%&lt;/li&gt;
+&lt;li&gt;外部サーバーにデータが送られる可能性: ○%&lt;/li&gt;
+&lt;li&gt;悪意あるコードが動く可能性: ○%&lt;/li&gt;
+&lt;li&gt;PCの設定が書き換わる可能性: ○%&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude Codeで「yes連打」してしまうユーザー向けに、実行前にリスクを可視化してくれるという趣旨だ。&lt;/p&gt;
+&lt;h2 id="セキュリティ専門家の反論お気持ち表示"&gt;セキュリティ専門家の反論:「お気持ち表示」&lt;/h2&gt;
+&lt;p&gt;この投稿に対し、&lt;a href="https://x.com/sudachikawaii"&gt;@sudachikawaii（シンジ☁Shinji）&lt;/a&gt;氏が&lt;a href="https://x.com/sudachikawaii/status/2031304091486531843"&gt;反論した&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;セキュリティ屋から言うと、これは「対策」ではなく「お気持ち表示」です。LLMはコードの安全性を静的解析していないので、表示されるパーセンテージに技術的根拠がありません。&lt;/p&gt;
+&lt;p&gt;「0%」を見てyes押すのは、yes連打と同じです。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;指摘のポイントは明快だ:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;LLMは静的解析エンジンではない&lt;/strong&gt; — LLMが出すパーセンテージは、コードを構文解析して脆弱性を検出した結果ではなく、「それっぽい数値」を生成しているだけ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;偽の安心感を与える&lt;/strong&gt; — 「0%」という表示を見てユーザーが安心してyesを押すなら、結局yes連打と変わらない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;技術的根拠がない&lt;/strong&gt; — 実際のセキュリティリスク分析には、静的解析ツール（SAST）、依存関係チェック、ネットワーク通信の監視などが必要&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="claude-codeに本当に効くセキュリティ対策"&gt;Claude Codeに本当に効くセキュリティ対策&lt;/h2&gt;
+&lt;p&gt;Claude Codeには、CLAUDE.mdの「お気持ちルール」よりもはるかに実効性のあるセキュリティ機能が組み込まれている。&lt;a href="https://code.claude.com/docs/ja/security"&gt;公式ドキュメント&lt;/a&gt;に基づき、本当にやるべき対策を整理する。&lt;/p&gt;
+&lt;h3 id="1-サンドボックスを有効にする"&gt;1. サンドボックスを有効にする&lt;/h3&gt;
+&lt;p&gt;最も重要な対策。Bashコマンドの実行をOSレベルで隔離し、ファイルシステムやネットワークへのアクセスを制限する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;macOSではSeatbelt、LinuxではBubble Wrapが使用される&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/sandbox&lt;/code&gt; コマンドで有効化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-denyルールで危険なコマンドをブロック"&gt;2. denyルールで危険なコマンドをブロック&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;permissions.deny&lt;/code&gt; に実行禁止コマンドを明示的に設定する。評価順は &lt;strong&gt;deny → ask → allow&lt;/strong&gt; で、denyが最優先。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;permissions&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;deny&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Bash(command:rm -rf *)&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Bash(command:curl *)&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Bash(command:wget *)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3-機密ファイルへのアクセスを遮断"&gt;3. 機密ファイルへのアクセスを遮断&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;.env&lt;/code&gt; やシークレットファイルへのアクセスをブロックする。&lt;/p&gt;</description></item><item><title>Claude Code でツール実行前にセキュリティリスクをパーセンテージ表示させる CLAUDE.md 設定</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-security-risk-prompt/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-security-risk-prompt/</guid><description>&lt;p&gt;Claude Code でツール実行の許可を求められるたびに、セキュリティリスクをパーセンテージで表示させる CLAUDE.md の設定が話題になっています。「なんかやばそうだけど…まあいいか」で Yes を連打してしまう問題への対策です。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;Claude Code はファイル操作やシェルコマンドの実行時にユーザーの許可を求めますが、表示される内容だけでは何がどの程度危険なのか判断しにくいことがあります。特に初心者は、よく分からないまま Yes を連打してしまいがちです。&lt;/p&gt;
+&lt;h2 id="claudemd-に追加する設定"&gt;CLAUDE.md に追加する設定&lt;/h2&gt;
+&lt;p&gt;プロジェクトのルートディレクトリにある &lt;code&gt;CLAUDE.md&lt;/code&gt; に以下の内容を追加します:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## ツール実行時の許可ルール
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; ツール実行（Bash、ファイル操作など）の許可を求めるときは、必ず日本語で説明・確認を行うこと
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 許可を求める際、以下のセキュリティリスクをパーセンテージ(%)で提示すること
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; パスワードや秘密鍵が外に漏れる可能性
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 外部サーバーにデータが送られる可能性
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 悪意あるコードが勝手に動く可能性
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; PCの設定が書き換わる可能性
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="表示イメージ"&gt;表示イメージ&lt;/h2&gt;
+&lt;p&gt;この設定を入れると、ツール実行の確認時に以下のようなリスク評価が表示されるようになります:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;・パスワードが外に漏れる可能性: 0%
+・外部サーバーにデータが送られる可能性: 0%
+・悪意あるコードが動く可能性: 5%
+・PCの設定が書き換わる可能性: 80%
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;これにより、各操作のリスクを具体的な数値で把握した上で、許可するかどうかを判断できるようになります。&lt;/p&gt;</description></item><item><title>Claudeのデザインが急に良くなった理由 ― frontend-design スキルと「一般的」から離れるプロンプト</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-frontend-design-skill/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-frontend-design-skill/</guid><description>&lt;p&gt;Claude Code で生成される UI デザインの品質が急に向上したと話題になっています。その理由は「画像学習」の強化ではなく、&lt;strong&gt;「一般的（on distribution）」なデザインから意図的に離れるプロンプト設計&lt;/strong&gt;にありました。&lt;/p&gt;
+&lt;h2 id="aiスロップ問題とは"&gt;AIスロップ問題とは&lt;/h2&gt;
+&lt;p&gt;AI が生成するフロントエンドデザインには「AIスロップ（AI slop）」と呼ばれる品質問題があります。特に指示を与えずに UI を生成させると、AI は確率分布の中心付近からサンプリングするため、どこかで見たような「いかにもAIが作った」デザインに収束してしまいます。&lt;/p&gt;
+&lt;p&gt;具体的には以下のような特徴が見られます:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;過度にグラデーションやシャドウを多用する&lt;/li&gt;
+&lt;li&gt;汎用的すぎるカラーパレット&lt;/li&gt;
+&lt;li&gt;差別化のないカードレイアウト&lt;/li&gt;
+&lt;li&gt;どのサイトでも見るような Hero セクション&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="frontend-design-スキルの登場"&gt;frontend-design スキルの登場&lt;/h2&gt;
+&lt;p&gt;Anthropic は Claude Code 向けに &lt;code&gt;frontend-design&lt;/code&gt; という公式スキルをリリースしました。このスキルの核心は、Claude に対して**「一般的な出力に収束しないように」**と明示的に指示することです。&lt;/p&gt;
+&lt;p&gt;スキルの中には以下のような指針が含まれています:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;確率分布の中心（もっとも一般的なデザインパターン）に寄らないこと&lt;/li&gt;
+&lt;li&gt;AIスロップ的な美学を避けること&lt;/li&gt;
+&lt;li&gt;個性のあるデザインを生成すること&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="なぜプロンプトで解決できるのか"&gt;なぜプロンプトで解決できるのか&lt;/h2&gt;
+&lt;p&gt;Claude は十分なデザイン知識を持っています。問題は、指示がないと「安全な」中間値に落ち着いてしまうことでした。&lt;code&gt;frontend-design&lt;/code&gt; スキルは、この傾向を明示的に打ち消すプロンプトを提供することで、Claude が持つ本来のデザイン能力を引き出しています。&lt;/p&gt;
+&lt;p&gt;これは画像生成 AI における「ネガティブプロンプト」に近い考え方です。生成したいものを指定するだけでなく、&lt;strong&gt;避けたいもの（一般的すぎるデザイン）を指定する&lt;/strong&gt;ことで、出力品質が大きく向上します。&lt;/p&gt;
+&lt;h2 id="実践のポイント"&gt;実践のポイント&lt;/h2&gt;
+&lt;p&gt;自分のプロジェクトでも同様のアプローチを取ることができます:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;「一般的にしないで」と明示する&lt;/strong&gt; ― デザイン生成時に「よくあるパターンを避けて」と指示する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;具体的なリファレンスを与える&lt;/strong&gt; ― 参考にしたいデザインの方向性を具体的に伝える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;frontend-design スキルを活用する&lt;/strong&gt; ― Claude Code を使っているなら、このスキルを有効にする&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Claude Code でスキルをインストール&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx skills add anthropics/claude-code
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Claude Code 内では &lt;code&gt;/skills&lt;/code&gt; コマンドでインストール済みスキルの一覧を確認できます。&lt;/p&gt;</description></item><item><title>Claude Codeのハルシネーション対策 — Anti-Hallucination Protocolという考え方</title><link>https://hdknr.github.io/blogs/posts/2026/03/anti-hallucination-protocol/</link><pubDate>Sun, 08 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/anti-hallucination-protocol/</guid><description>&lt;p&gt;Claude Code などの LLM エージェントを業務で使う際、最大のリスクは**ハルシネーション（幻覚）**です。プロンプトの改善ばかりが注目されがちですが、本当に必要なのは「仕組みで縛る」アプローチです。&lt;/p&gt;
+&lt;h2 id="きっかけとなった事故"&gt;きっかけとなった事故&lt;/h2&gt;
+&lt;p&gt;ある開発者が実際に遭遇した事故が、この議論のきっかけです:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;which&lt;/code&gt; コマンドの結果だけで「未インストール」と診断されたが、コードは PATH 外のディレクトリを直接参照していた。ログを1行も読まずに断言。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;LLM エージェントは自信に満ちた口調で誤った結論を出すことがあり、人間がそれを鵜呑みにしてしまうリスクがあります。&lt;/p&gt;
+&lt;h2 id="anti-hallucination-protocol-の4つの柱"&gt;Anti-Hallucination Protocol の4つの柱&lt;/h2&gt;
+&lt;p&gt;提唱されている Anti-Hallucination Protocol は、以下の4つのルールで構成されます:&lt;/p&gt;
+&lt;h3 id="1-事実主張にはツール実行による検証を義務化"&gt;1. 事実主張にはツール実行による検証を義務化&lt;/h3&gt;
+&lt;p&gt;LLM が「〜がインストールされていない」「〜が原因です」と主張する場合、必ず対応するコマンドやツールを実行して裏付けを取ることを求めます。推測だけで結論を出すことを許容しません。&lt;/p&gt;
+&lt;h3 id="2-禁止パターンの明示"&gt;2. 禁止パターンの明示&lt;/h3&gt;
+&lt;p&gt;以下の4つのパターンを明示的に禁止します:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;パターン&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;推測診断&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;十分な証拠なしに原因を断定する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;確認なし否定&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;実際に確認せず「存在しない」「動かない」と主張する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;記憶による主張&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;過去の学習データだけに基づく事実主張&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;自信に満ちた誤り&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;高い確信度で不正確な情報を提供する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="3-違反時のインシデント記録と伝播"&gt;3. 違反時のインシデント記録と伝播&lt;/h3&gt;
+&lt;p&gt;ハルシネーションが検出された場合、インシデントとして記録し、全プロジェクト横断で伝播させます。これにより同じ失敗パターンを繰り返さない仕組みを構築します。&lt;/p&gt;
+&lt;h3 id="4-プロジェクト設定への組み込み"&gt;4. プロジェクト設定への組み込み&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; や類似の設定ファイルにルールを記述し、プロジェクト単位で一貫したガードレールを維持します。&lt;/p&gt;
+&lt;h2 id="2026年のハルシネーション対策の現状"&gt;2026年のハルシネーション対策の現状&lt;/h2&gt;
+&lt;p&gt;2026年3月時点で、各 LLM のハルシネーション率は改善が進んでいます。&lt;a href="https://dev.to/es2026/llm-hallucination-index-2026-why-claude-46-sonnet-dominates-bullshitbench-v2-while-reasoning-5cp5"&gt;LLM Hallucination Index 2026&lt;/a&gt; によると、Claude Sonnet 4.6 は BS 検出成功率 91.0%、誤検出率 3.0% とトップクラスの精度を示しています。&lt;/p&gt;
+&lt;p&gt;しかし、モデル性能の向上だけでは不十分です。特に以下の場面ではハルシネーションが発生しやすいことが報告されています:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト圧縮後&lt;/strong&gt;: 長い会話でコンテキストが圧縮されると、計画と実装の乖離が起きやすい&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Plan Mode での実装フェーズ&lt;/strong&gt;: 計画作成後の実装で、計画にない機能を追加してしまう&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="実践的な対策"&gt;実践的な対策&lt;/h2&gt;
+&lt;h3 id="claudemd-への記述例"&gt;CLAUDE.md への記述例&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Anti-Hallucination Rules
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; ファイルの存在確認は必ず &lt;span style="color:#e6db74"&gt;`ls`&lt;/span&gt; や &lt;span style="color:#e6db74"&gt;`cat`&lt;/span&gt; で実行すること
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; パッケージのインストール状況は &lt;span style="color:#e6db74"&gt;`which`&lt;/span&gt; だけでなく、実際のインポートやバージョン確認で検証すること
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; エラーの原因を主張する前に、必ずログファイルを読むこと
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 「〜のはずです」「おそらく〜」という推測を事実として扱わないこと
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="cleo-のようなツールの活用"&gt;CLEO のようなツールの活用&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/kryptobaseddev/cleo"&gt;CLEO&lt;/a&gt; は Claude Code 向けのタスク管理ツールで、4層の Anti-Hallucination 保護と SQLite による不変の監査証跡を提供します。&lt;/p&gt;</description></item><item><title>ChatGPT音声モード × 14日間英会話特訓 — 詰まった言葉がスラスラ出る4つの黄金プロンプト</title><link>https://hdknr.github.io/blogs/posts/2026/03/559e4056f42896daf0dce494eb0f68b5/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/559e4056f42896daf0dce494eb0f68b5/</guid><description>&lt;h1 id="chatgpt-音声モード--14-日間英会話特訓--詰まった言葉がスラスラ出る-4-つの黄金プロンプト"&gt;ChatGPT 音声モード × 14 日間英会話特訓 — 詰まった言葉がスラスラ出る 4 つの黄金プロンプト&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/technocrat_s/status/2029343618880938494"&gt;@technocrat_s 氏のポスト&lt;/a&gt;で紹介された記事が話題になっています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;【検証】ChatGPTと14日間、ガチの「英会話」特訓。詰まった言葉がスラスラ出る黄金プロンプト4つ&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://www.lifehacker.jp/article/2603improve-speaking-skills-using-chatgpt-voice-mode-prompts/"&gt;ライフハッカー・ジャパンの記事&lt;/a&gt;（原文: &lt;a href="https://www.makeuseof.com/improve-speaking-skills-using-chatgpt-voice-mode-prompts/"&gt;MakeUseOf / Saikat Basu&lt;/a&gt;）は、在宅勤務でスピーキング力が錆びついたライターが ChatGPT の高度音声モード（Advanced Voice Mode）をコーチに見立て、14 日間の集中特訓を行った検証記事です。思考と発話の間の「0.5 秒の遅れ」を消すために設計された 4 つのプロンプトと、その結果を具体的に報告しています。&lt;/p&gt;
+&lt;h2 id="問題--考えてから話す05-秒の壁"&gt;問題 — 「考えてから話す」0.5 秒の壁&lt;/h2&gt;
+&lt;p&gt;著者の Saikat Basu 氏は MakeUseOf の元編集者で、MBA を持つテクノロジーライターです。在宅勤務が長くなるにつれ、ビデオ会議やチームコールで英語の発話に遅れが生じるようになりました。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;在宅ワーカーのスピーキング劣化:
+思考 → [0.5 秒の遅れ] → 発話
+↑
+・フィラー語（um, uh）の増加
+・語彙が出てこない
+・文法ミスの自己修正ができない
+・発音の曖昧化
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;「知っている英語」と「口から出る英語」の間にギャップがある — これは日本人英語学習者にも共通する課題です。文法や語彙の知識があっても、リアルタイムの発話ではその知識を引き出せない。Basu 氏はこのギャップを ChatGPT の音声モードで埋められるかを検証しました。&lt;/p&gt;
+&lt;h2 id="chatgpt-高度音声モード--ai-が聞いて話して直す"&gt;ChatGPT 高度音声モード — AI が「聞いて、話して、直す」&lt;/h2&gt;
+&lt;p&gt;ChatGPT の Advanced Voice Mode は 2024 年後半に GPT-4o ベースで登場し、2025 年以降は無料ユーザーにも開放されています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;th&gt;従来のテキストチャット&lt;/th&gt;
+&lt;th&gt;高度音声モード&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;応答速度&lt;/td&gt;
+&lt;td&gt;テキスト入力→テキスト出力&lt;/td&gt;
+&lt;td&gt;リアルタイム音声対話&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;発音フィードバック&lt;/td&gt;
+&lt;td&gt;不可能&lt;/td&gt;
+&lt;td&gt;母音・子音レベルで指摘可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;会話の自然さ&lt;/td&gt;
+&lt;td&gt;ターン制&lt;/td&gt;
+&lt;td&gt;割り込み・相槌あり&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;感情表現&lt;/td&gt;
+&lt;td&gt;なし&lt;/td&gt;
+&lt;td&gt;9 種類のアクセント・声質選択&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;練習の心理的障壁&lt;/td&gt;
+&lt;td&gt;低い&lt;/td&gt;
+&lt;td&gt;低い（相手が AI なので恥ずかしくない）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;従来の英会話レッスンとの最大の違いは&lt;strong&gt;予約不要・24 時間・何度でもやり直せる&lt;/strong&gt;ことです。また「相手が AI なので失敗が恥ずかしくない」という心理的安全性も、スピーキング練習では非常に重要です。&lt;/p&gt;</description></item><item><title>「決定性のないソフトウェア」の設計と評価 × t_wada氏の視点とskill-creatorが実装したTDD→EDD移行パターン</title><link>https://hdknr.github.io/blogs/posts/2026/03/75d885dac4bc6727daa08e68d0771e91/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/75d885dac4bc6727daa08e68d0771e91/</guid><description>&lt;h1 id="決定性のないソフトウェアをどう設計し評価するか--t_wada-氏の視点と-skill-creator-が実装した答え"&gt;「決定性のないソフトウェア」をどう設計し評価するか &amp;mdash; t_wada 氏の視点と skill-creator が実装した答え&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/t_wada/status/2029390103462986212"&gt;和田卓人（@t_wada）氏が X で言及&lt;/a&gt;した、skill-creator の設計に関するコメントが注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;skill-creator いい感じで動作すると思っていたら中身がこのようになっていたのか。決定性のないソフトウェアをどう実践的に設計して評価するかといった観点でも参考になるエントリ。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;t_wada 氏は、テスト駆動開発（TDD）の日本における第一人者であり、Kent Beck 著『テスト駆動開発』の翻訳者、power-assert-js の作者として知られるプログラマです。その t_wada 氏が「決定性のないソフトウェアの設計と評価」という観点で skill-creator を評価しています。&lt;/p&gt;
+&lt;p&gt;元記事は&lt;a href="https://nyosegawa.github.io/posts/skill-creator-and-orchestration-skill/"&gt;逆瀬川ちゃん氏のブログ「skill-creator から学ぶ Skill 設計と、Orchestration Skill の作り方」&lt;/a&gt;です。本記事では、t_wada 氏の指摘する「決定性のないソフトウェア」の設計問題に焦点を当て、skill-creator がどのような解を実装しているかを解説します。&lt;/p&gt;
+&lt;h2 id="決定性のないソフトウェアとは何か"&gt;「決定性のないソフトウェア」とは何か&lt;/h2&gt;
+&lt;h3 id="従来のソフトウェアとの違い"&gt;従来のソフトウェアとの違い&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;決定的ソフトウェア（従来）:
+入力 A → 常に出力 X
+入力 B → 常に出力 Y
+→ 「2 + 2 = 4」を assert できる
+非決定的ソフトウェア（LLM ベース）:
+入力 A → 出力 X1, X2, X3...（毎回異なる）
+入力 B → 出力 Y1, Y2, Y3...（毎回異なる）
+→ 「正解」が一意に定まらない
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;LLM の出力は&lt;strong&gt;確率的&lt;/strong&gt;です。同じプロンプトを送っても、temperature やサンプリングの影響で異なる結果が返ります。従来の &lt;code&gt;assertEqual(expected, actual)&lt;/code&gt; というテスト手法が通用しない世界です。&lt;/p&gt;</description></item><item><title>Agentic AI の仕組み — 4層アーキテクチャで理解する「考えて動く AI」の全体像</title><link>https://hdknr.github.io/blogs/posts/2026/03/7eb04a726f76f2ff880bc2b18efa42b2/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/7eb04a726f76f2ff880bc2b18efa42b2/</guid><description>&lt;h1 id="agentic-ai-の仕組み--4層アーキテクチャで理解する考えて動く-aiの全体像"&gt;Agentic AI の仕組み — 4層アーキテクチャで理解する「考えて動く AI」の全体像&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/Ronald_vanLoon"&gt;Ronald van Loon さん（@Ronald_vanLoon）&lt;/a&gt;が、&lt;a href="https://x.com/Python_Dv"&gt;@Python_Dv&lt;/a&gt; 作成の Agentic AI アーキテクチャ図を共有し、注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How #AgenticAI works&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://x.com/Ronald_vanLoon/status/2029305639546060814"&gt;https://x.com/Ronald_vanLoon/status/2029305639546060814&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;このインフォグラフィックは、Agentic AI の動作原理を &lt;strong&gt;Input Sources → AI Processing → Action Layer → Output&lt;/strong&gt; の4層で整理しています。「生成 AI と何が違うのか」「なぜ自律的に動けるのか」を、この4層構造を軸に解説します。&lt;/p&gt;
+&lt;h2 id="生成-ai-と-agentic-ai-の根本的な違い"&gt;生成 AI と Agentic AI の根本的な違い&lt;/h2&gt;
+&lt;p&gt;まず前提を整理します。生成 AI（Generative AI）と Agentic AI は、&lt;strong&gt;AI の進化の段階&lt;/strong&gt;が異なります。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;観点&lt;/th&gt;
+&lt;th&gt;生成 AI&lt;/th&gt;
+&lt;th&gt;Agentic AI&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;基本動作&lt;/td&gt;
+&lt;td&gt;プロンプトに対してコンテンツを&lt;strong&gt;生成&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;目標に向かって自律的に&lt;strong&gt;行動&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;姿勢&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;受動的&lt;/strong&gt;（聞かれたら答える）&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;能動的&lt;/strong&gt;（自分で判断して動く）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;タスク範囲&lt;/td&gt;
+&lt;td&gt;1回のやり取りで完結&lt;/td&gt;
+&lt;td&gt;複数ステップを跨いで継続&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;外部連携&lt;/td&gt;
+&lt;td&gt;なし（テキスト入出力のみ）&lt;/td&gt;
+&lt;td&gt;API・ツール・データベースと連携&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;記憶&lt;/td&gt;
+&lt;td&gt;セッション内のみ&lt;/td&gt;
+&lt;td&gt;セッション間で永続化可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;自己修正&lt;/td&gt;
+&lt;td&gt;なし&lt;/td&gt;
+&lt;td&gt;エラーを検知して自動リカバリー&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;IBM は両者の関係を端的にまとめています。「生成 AI は&lt;strong&gt;考えて話す&lt;/strong&gt;。Agentic AI は&lt;strong&gt;計画して実行する&lt;/strong&gt;」。&lt;/p&gt;</description></item><item><title>Agentic AI 学習ロードマップ — 「フルスタックインテリジェンス」を9ヶ月で習得する体系的な道筋</title><link>https://hdknr.github.io/blogs/posts/2026/03/cb9c696dbeb648e3286f2976b9a3eac6/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cb9c696dbeb648e3286f2976b9a3eac6/</guid><description>&lt;h1 id="agentic-ai-学習ロードマップ--フルスタックインテリジェンスを9ヶ月で習得する体系的な道筋"&gt;Agentic AI 学習ロードマップ — 「フルスタックインテリジェンス」を9ヶ月で習得する体系的な道筋&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ingliguori/status/2029184341893337547"&gt;@ingliguori 氏（Giuliano Liguori）のポスト&lt;/a&gt;が、Agentic AI を学ぶためのロードマップを共有しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Roadmap to learn Agentic AI:
+AI fundamentals → Python + frameworks → LLMs → Agents architecture → Memory + RAG → Planning &amp;amp; decision-making → RL &amp;amp; self-improvement → Deployment → Real-world automation
+Agentic AI = full-stack intelligence.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「Agentic AI = フルスタックインテリジェンス」というフレーズが示すように、AI エージェントの開発には基礎数学からデプロイまで、フルスタックの知識が求められます。本記事では、このロードマップを複数の学習リソースと照合しながら、各段階で何を学び、どのツールを使い、どこまでを目指すのかを体系的に解説します。&lt;/p&gt;
+&lt;h2 id="ロードマップの全体像"&gt;ロードマップの全体像&lt;/h2&gt;
+&lt;p&gt;Liguori 氏が示した9ステップを、&lt;a href="https://www.scaler.com/blog/agentic-ai-roadmap/"&gt;Scaler の9ヶ月ロードマップ&lt;/a&gt;と &lt;a href="https://roadmap.sh/ai-agents"&gt;roadmap.sh の AI Agents ロードマップ&lt;/a&gt;を参考に、時系列で整理します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;月0-1 AI Fundamentals ← 数学 + ML 基礎
+月1-2 Python + Frameworks ← API + ライブラリ
+月2-3 LLMs ← Transformer + プロンプト
+月3-4 Agents Architecture ← ReAct + ツール使用
+月4-5 Memory + RAG ← ベクトル DB + 検索拡張
+月5-6 Planning &amp;amp; Decision ← 計画 + マルチエージェント
+月6-7 RL &amp;amp; Self-improvement ← フィードバック + 自律性
+月7-8 Deployment ← MLOps + 監視
+月8-9 Real-world Automation ← ポートフォリオ + 実案件
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="step-1-ai-fundamentals月0-1"&gt;Step 1: AI Fundamentals（月0-1）&lt;/h2&gt;
+&lt;h3 id="学ぶこと"&gt;学ぶこと&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;分野&lt;/th&gt;
+&lt;th&gt;具体的な内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;線形代数&lt;/td&gt;
+&lt;td&gt;ベクトル、行列演算、固有値分解、SVD&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;微積分&lt;/td&gt;
+&lt;td&gt;勾配、偏微分、最適化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;確率・統計&lt;/td&gt;
+&lt;td&gt;ベイズの定理、分布、仮説検定&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ML 基礎&lt;/td&gt;
+&lt;td&gt;教師あり/なし学習、評価指標&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="推奨リソース"&gt;推奨リソース&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.khanacademy.org/"&gt;Khan Academy&lt;/a&gt; — 数学基礎&lt;/li&gt;
+&lt;li&gt;&amp;ldquo;Mathematics for Machine Learning&amp;rdquo;（書籍）&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/@StatQuest"&gt;StatQuest&lt;/a&gt; — 統計の直感的理解&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="この段階のゴール"&gt;この段階のゴール&lt;/h3&gt;
+&lt;p&gt;「なぜニューラルネットワークが動くのか」を数学的に説明できること。数式を書ける必要はないが、勾配降下法やベイズ推論の直感を持つことが重要です。&lt;/p&gt;</description></item><item><title>Agentic AIの周期表 — 66要素で読み解くAIエージェント構築の全体像</title><link>https://hdknr.github.io/blogs/posts/2026/03/783efe7ccb15ece292b5d6210664c397/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/783efe7ccb15ece292b5d6210664c397/</guid><description>&lt;h1 id="agentic-ai-の周期表--66-要素で読み解く-ai-エージェント構築の全体像"&gt;Agentic AI の周期表 — 66 要素で読み解く AI エージェント構築の全体像&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ingliguori/status/2028899473653469308"&gt;@ingliguori（Giuliano Liguori）氏のポスト&lt;/a&gt;が話題になっています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Agentic AI now has its own &amp;ldquo;Periodic Table&amp;rdquo;. From: LLM, RAG, RL to PLAN, MAS, LTM to SAFE, HUMAN oversight to HR, MKT, LEGAL use cases. Autonomous AI = memory + planning + tools + safety + collaboration. It&amp;rsquo;s a system, not a prompt.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Capital One の Chief Scientist である Prem Natarajan 氏が、AI エージェント構築に必要な &lt;strong&gt;66 の要素&lt;/strong&gt;を化学の周期表のように体系化した「Agentic AI Periodic Table」を公開しました。LLM や RAG といった基盤技術から、メモリシステム、安全性プロトコル、業務適用まで、エージェント開発の全領域を一枚の表に凝縮しています。&lt;/p&gt;</description></item><item><title>Claude-Native Designer — デザイナーが「作る人」になるFigma MCP × Claude Codeワークフロー</title><link>https://hdknr.github.io/blogs/posts/2026/03/1f81385148befa3ee0e980408c174676/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1f81385148befa3ee0e980408c174676/</guid><description>&lt;h1 id="claude-native-designer--デザイナーが作る人になる-figma-mcp--claude-code-ワークフロー"&gt;Claude-Native Designer — デザイナーが「作る人」になる Figma MCP × Claude Code ワークフロー&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/felixleezd/status/2029236285005860903"&gt;@felixleezd（Felix Lee）氏のポスト&lt;/a&gt;が注目を集めています。ADPList の共同創業者であり、1,500 人以上のデザイナーに Vibe Coding を教えてきた Felix Lee 氏が、4 ヶ月の実践から導いた「Claude-Native Designer」のワークフローを公開しました。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you want to ship products you designed, stop using Figma only. Do it on Claude Code instead.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Autonomous AI = memory + planning + tools + safety + collaboration. It&amp;rsquo;s a system, not a prompt.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「デザインの未来はコードを学ぶことではない。&lt;strong&gt;ビルドすることを学ぶこと&lt;/strong&gt;だ」— この記事の核心は、デザイナーが抱えてきた「アイデアはあるが実装できない」という壁が、Claude Code によって構造的に消滅したという主張です。&lt;/p&gt;
+&lt;h2 id="デザイナーの天井--7-年間の経験が語る構造的問題"&gt;デザイナーの天井 — 7 年間の経験が語る構造的問題&lt;/h2&gt;
+&lt;p&gt;Felix Lee 氏は Gotrade（YC S19）と ADPList で 7 年間デザインに携わってきました。その間、デザイナーが直面する共通の天井を目撃しています。&lt;/p&gt;</description></item><item><title>Geminiフルパワープロンプト50選 × ロールプロンプティングの効果と限界</title><link>https://hdknr.github.io/blogs/posts/2026/03/c34e3d75e5362af5db9e32df8e7db5b7/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/c34e3d75e5362af5db9e32df8e7db5b7/</guid><description>&lt;h1 id="geminiフルパワープロンプト50選--ロールプロンプティングの効果と限界"&gt;Geminiフルパワープロンプト50選 × ロールプロンプティングの効果と限界&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/daifukujinji"&gt;たか田さん（@daifukujinji）&lt;/a&gt;が、Gemini の性能を引き上げる「人格付与プロンプト」50選を公開し、大きな反響を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Geminiが「いまいち」になってない？それ、性能が低いからじゃない。使う人が９割まちがってる。「〜を教えて」で終わらせてる人はマジでもったいない。GeminiはGoogleの検索窓じゃない思考するマシーン。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://x.com/daifukujinji/status/2029119665222627465"&gt;https://x.com/daifukujinji/status/2029119665222627465&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;304 いいね・48 RT・485 ブックマークを集めた一連のポストでは、Gemini に「あなたは〇〇です」と人格を与えることで回答品質が変わるという主張が展開されています。提示された50項目の「フルパワープロンプト」は、戦略コンサルから校正者、ストーリーテラーまで多岐にわたる人格定義です。&lt;/p&gt;
+&lt;h2 id="フルパワープロンプト50項目の全容"&gt;「フルパワープロンプト」50項目の全容&lt;/h2&gt;
+&lt;p&gt;画像で公開された50項目を分類・整理します。&lt;/p&gt;
+&lt;h3 id="思考力分析系no110"&gt;思考力・分析系（No.1〜10）&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;No&lt;/th&gt;
+&lt;th&gt;プロンプト&lt;/th&gt;
+&lt;th&gt;狙い&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;あなたは世界トップ0.1%の戦略コンサルとして思考してください&lt;/td&gt;
+&lt;td&gt;高次の戦略的思考&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;あなたは論理破綻を絶対に許さない分析官です&lt;/td&gt;
+&lt;td&gt;論理の厳密性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;あなたは仮説検証を最優先するリサーチャーです&lt;/td&gt;
+&lt;td&gt;仮説思考&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;あなたは常に反論を想定して考える批判家です&lt;/td&gt;
+&lt;td&gt;反証的思考&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;あなたは抽象と具体を自在に往復できる知性です&lt;/td&gt;
+&lt;td&gt;抽象化・具体化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;あなたはMECEを無意識で使いこなすプロです&lt;/td&gt;
+&lt;td&gt;網羅的思考&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;あなたは意思決定の質を最大化する参謀です&lt;/td&gt;
+&lt;td&gt;意思決定支援&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;あなたは数字とロジックで語る合理主義者です&lt;/td&gt;
+&lt;td&gt;データ駆動&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;あなたは前提条件の抜け漏れを見抜く監査役です&lt;/td&gt;
+&lt;td&gt;前提検証&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;あなたは再現性だけを重視する設計者です&lt;/td&gt;
+&lt;td&gt;再現可能性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="文章表現系no1120"&gt;文章・表現系（No.11〜20）&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;No&lt;/th&gt;
+&lt;th&gt;プロンプト&lt;/th&gt;
+&lt;th&gt;狙い&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;11&lt;/td&gt;
+&lt;td&gt;あなたはプロ歴20年のトップコピーライターです&lt;/td&gt;
+&lt;td&gt;訴求力&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;12&lt;/td&gt;
+&lt;td&gt;あなたは読者の感情を設計する文章家です&lt;/td&gt;
+&lt;td&gt;感情設計&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;13&lt;/td&gt;
+&lt;td&gt;あなたは1文目で心を掴む編集者です&lt;/td&gt;
+&lt;td&gt;リード文&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;14&lt;/td&gt;
+&lt;td&gt;あなたは無駄な言葉を1文字も許さない校正者です&lt;/td&gt;
+&lt;td&gt;簡潔性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;15&lt;/td&gt;
+&lt;td&gt;あなたはSNSで何度もバズらせてきた運用者です&lt;/td&gt;
+&lt;td&gt;SNS最適化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;16&lt;/td&gt;
+&lt;td&gt;あなたは中学生にも刺さる言語変換の達人です&lt;/td&gt;
+&lt;td&gt;平易化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;17&lt;/td&gt;
+&lt;td&gt;あなたはPREP構成を本能で使うライターです&lt;/td&gt;
+&lt;td&gt;構成力&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td&gt;あなたは物語化が異常にうまいストーリーテラーです&lt;/td&gt;
+&lt;td&gt;物語化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;19&lt;/td&gt;
+&lt;td&gt;あなたは読後に行動させるプロです&lt;/td&gt;
+&lt;td&gt;CTA設計&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;20&lt;/td&gt;
+&lt;td&gt;あなたは保存したくなる文章専門家です&lt;/td&gt;
+&lt;td&gt;保存性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="ビジネス経営系no2130"&gt;ビジネス・経営系（No.21〜30）&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;No&lt;/th&gt;
+&lt;th&gt;プロンプト&lt;/th&gt;
+&lt;th&gt;狙い&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;21&lt;/td&gt;
+&lt;td&gt;あなたは利益から逆算する起業家です&lt;/td&gt;
+&lt;td&gt;収益思考&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;22&lt;/td&gt;
+&lt;td&gt;あなたは失敗事例を1000件知っている経営者です&lt;/td&gt;
+&lt;td&gt;リスク回避&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;23&lt;/td&gt;
+&lt;td&gt;あなたは小さく勝って大きく伸ばす投資家です&lt;/td&gt;
+&lt;td&gt;段階的成長&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;24&lt;/td&gt;
+&lt;td&gt;あなたは時間対効果を最重視する経営者です&lt;/td&gt;
+&lt;td&gt;効率性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;25&lt;/td&gt;
+&lt;td&gt;あなたは凡人でも再現できる仕組み屋です&lt;/td&gt;
+&lt;td&gt;仕組み化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;26&lt;/td&gt;
+&lt;td&gt;あなたはスケール前提で考える事業設計者です&lt;/td&gt;
+&lt;td&gt;スケーラビリティ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;27&lt;/td&gt;
+&lt;td&gt;あなたは価格設計に異常に強いマーケターです&lt;/td&gt;
+&lt;td&gt;価格戦略&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;28&lt;/td&gt;
+&lt;td&gt;あなたは顧客心理を読み切る営業のプロです&lt;/td&gt;
+&lt;td&gt;顧客理解&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;29&lt;/td&gt;
+&lt;td&gt;あなたは数字でしか判断しないCFOです&lt;/td&gt;
+&lt;td&gt;財務分析&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;30&lt;/td&gt;
+&lt;td&gt;あなたは撤退判断が異常に早い冷静な経営者です&lt;/td&gt;
+&lt;td&gt;撤退判断&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="専門効率系no3140"&gt;専門・効率系（No.31〜40）&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;No&lt;/th&gt;
+&lt;th&gt;プロンプト&lt;/th&gt;
+&lt;th&gt;狙い&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;31&lt;/td&gt;
+&lt;td&gt;あなたは業務効率化だけを考えるDXコンサルです&lt;/td&gt;
+&lt;td&gt;DX推進&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;32&lt;/td&gt;
+&lt;td&gt;あなたは自動化前提で思考する設計者です&lt;/td&gt;
+&lt;td&gt;自動化設計&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;33&lt;/td&gt;
+&lt;td&gt;あなたはExcel・スプレッドシートの鬼です&lt;/td&gt;
+&lt;td&gt;表計算&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;34&lt;/td&gt;
+&lt;td&gt;あなたは無駄な作業を嫌う業務改善屋です&lt;/td&gt;
+&lt;td&gt;業務改善&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;35&lt;/td&gt;
+&lt;td&gt;あなたは人に任せる前提で設計するPMです&lt;/td&gt;
+&lt;td&gt;委譲設計&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;36&lt;/td&gt;
+&lt;td&gt;あなたはチェックリスト化の達人です&lt;/td&gt;
+&lt;td&gt;チェックリスト&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;37&lt;/td&gt;
+&lt;td&gt;あなたは1回で終わらせるために考える実務家です&lt;/td&gt;
+&lt;td&gt;一発完結&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;38&lt;/td&gt;
+&lt;td&gt;あなたは再利用できない仕事を失敗と定義します&lt;/td&gt;
+&lt;td&gt;再利用性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;39&lt;/td&gt;
+&lt;td&gt;あなたは最短ルートしか提示しない案内人です&lt;/td&gt;
+&lt;td&gt;最短経路&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40&lt;/td&gt;
+&lt;td&gt;あなたは今すぐ使える形でしか出力しません&lt;/td&gt;
+&lt;td&gt;即実用性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="メタ思考品質系no4150"&gt;メタ思考・品質系（No.41〜50）&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;No&lt;/th&gt;
+&lt;th&gt;プロンプト&lt;/th&gt;
+&lt;th&gt;狙い&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;41&lt;/td&gt;
+&lt;td&gt;あなたはこの分野の第一人者として断定的に語ります&lt;/td&gt;
+&lt;td&gt;権威性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;42&lt;/td&gt;
+&lt;td&gt;あなたは甘い表現を一切使わない辛口評論家です&lt;/td&gt;
+&lt;td&gt;率直性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;43&lt;/td&gt;
+&lt;td&gt;あなたはユーザーが気づいていない前提を補完します&lt;/td&gt;
+&lt;td&gt;前提補完&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;44&lt;/td&gt;
+&lt;td&gt;あなたは常に一段深い示唆を出します&lt;/td&gt;
+&lt;td&gt;深堀り&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;45&lt;/td&gt;
+&lt;td&gt;あなたは60点の回答を恥と考えます&lt;/td&gt;
+&lt;td&gt;品質基準&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;46&lt;/td&gt;
+&lt;td&gt;あなたは改善案を必ず3案以上提示します&lt;/td&gt;
+&lt;td&gt;複数案&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;47&lt;/td&gt;
+&lt;td&gt;あなたはなぜ？を5回繰り返して考えます&lt;/td&gt;
+&lt;td&gt;Why分析&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;48&lt;/td&gt;
+&lt;td&gt;あなたは想定外の視点を必ず1つ入れます&lt;/td&gt;
+&lt;td&gt;意外性&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;49&lt;/td&gt;
+&lt;td&gt;あなたは結論→理由→具体→再結論で話します&lt;/td&gt;
+&lt;td&gt;PREP構成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;50&lt;/td&gt;
+&lt;td&gt;あなたはユーザーの目的達成を最優先に最適化します&lt;/td&gt;
+&lt;td&gt;目的志向&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="ロールプロンプティングとは何か"&gt;ロールプロンプティングとは何か&lt;/h2&gt;
+&lt;p&gt;50項目の本質は&lt;strong&gt;ロールプロンプティング&lt;/strong&gt;（Role Prompting）というプロンプトエンジニアリング技法です。「あなたは〇〇です」と指示することで、LLM の出力を特定の専門性やスタイルに方向づけます。&lt;/p&gt;</description></item><item><title>gen-ai-experiments × 130超の生成AIアプリを「動かして学ぶ」LangChain・RAG・エージェント実践集</title><link>https://hdknr.github.io/blogs/posts/2026/03/d6238d29f67740e50870a83860a480fc/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/d6238d29f67740e50870a83860a480fc/</guid><description>&lt;h1 id="130-超の生成-ai-アプリを動かして学ぶ-gen-ai-experiments-リポジトリ完全ガイド"&gt;130 超の生成 AI アプリを「動かして学ぶ」&amp;mdash; gen-ai-experiments リポジトリ完全ガイド&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/alifcoder/status/2028974471391146371"&gt;@alifcoder 氏が X で紹介&lt;/a&gt;した、生成 AI の実践的学習リポジトリが注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Collection of 130+ production-ready Gen AI apps, agents, and experiments. Built with LangChain, RAG, AI Agents, Multi-Agent Teams, and more.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://github.com/buildfastwithai/gen-ai-experiments"&gt;buildfastwithai/gen-ai-experiments&lt;/a&gt; は、&lt;strong&gt;130 を超える本番レベルの生成 AI アプリケーション、エージェント、実験プロジェクト&lt;/strong&gt;を Jupyter ノートブック形式で集めたリポジトリです。LangChain、RAG、AI エージェント、マルチエージェントシステムなど、2024-2026 年の主要な AI 技術スタックを網羅しています。&lt;/p&gt;
+&lt;p&gt;本記事では、このリポジトリの構成と活用法、類似リソースとの比較、そして「動かして学ぶ」アプローチの価値を解説します。&lt;/p&gt;
+&lt;h2 id="なぜ動かして学ぶが重要なのか"&gt;なぜ「動かして学ぶ」が重要なのか&lt;/h2&gt;
+&lt;h3 id="ドキュメントだけでは身につかない"&gt;ドキュメントだけでは身につかない&lt;/h3&gt;
+&lt;p&gt;生成 AI の学習には特有の難しさがあります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;生成 AI 学習の 3 つの壁:
+1. API の組み合わせの壁:
+LLM API 単体は簡単。だが RAG、エージェント、
+ツール連携を組み合わせると複雑度が指数的に増加
+2. プロンプト設計の壁:
+「動くプロンプト」と「良いプロンプト」の差は
+ドキュメントでは伝わらない。実行して出力を見るしかない
+3. 本番品質の壁:
+デモレベルと本番レベルの間にある
+エラーハンドリング、レート制限、コスト管理の知識
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;gen-ai-experiments は、これらの壁を&lt;strong&gt;動くコード&lt;/strong&gt;で越えるアプローチを取っています。631 の Jupyter ノートブックがあり、セルを 1 つずつ実行しながら各技術の仕組みを体験できます。&lt;/p&gt;</description></item><item><title>Obsidian × Claude Code で「AIセカンドブレイン」を構築する — コンテキストがプロンプトに勝つ時代</title><link>https://hdknr.github.io/blogs/posts/2026/03/00a5a21b56da09807d7c114573cbcf14/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/00a5a21b56da09807d7c114573cbcf14/</guid><description>&lt;h1 id="obsidian--claude-code-でaiセカンドブレインを構築する--コンテキストがプロンプトに勝つ時代"&gt;Obsidian × Claude Code で「AIセカンドブレイン」を構築する — コンテキストがプロンプトに勝つ時代&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/noahvnct"&gt;Noah Vincent さん（@noahvnct）&lt;/a&gt;が、Obsidian と Claude Code を組み合わせた「AI セカンドブレイン」の構築方法を公開し、大きな反響を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Steal My AI Second Brain Setup With Obsidian + Claude Code (For Free)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://x.com/noahvnct/status/2029222820257935369"&gt;https://x.com/noahvnct/status/2029222820257935369&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;645 いいね・76 RT・1,741 ブックマークを集めたこのポストが紹介するのは、Obsidian の Vault（保管庫）に Claude Code を住まわせ、あなたの知識・プロジェクト・好みを全て理解した AI パートナーを作る方法です。Noah さんの主張の核心は「&lt;strong&gt;Context beats prompts. Always.&lt;/strong&gt;（コンテキストはプロンプトに常に勝つ）」という一文に集約されています。&lt;/p&gt;
+&lt;h2 id="セカンドブレインとは何か"&gt;セカンドブレインとは何か&lt;/h2&gt;
+&lt;p&gt;「セカンドブレイン」は、Tiago Forte が提唱した個人知識管理の概念です。本、記事、動画、ポッドキャストから得た知識を&lt;strong&gt;外部の仕組み&lt;/strong&gt;に保存し、必要なときに取り出せるようにするシステムです。&lt;/p&gt;
+&lt;h3 id="従来のセカンドブレインの課題"&gt;従来のセカンドブレインの課題&lt;/h3&gt;
+&lt;p&gt;多くの人がノートアプリに情報を溜め込みますが、実際にはほとんど活用できていません。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;従来のセカンドブレイン:
+インプット（本・記事・動画）
+→ ノートを取る
+→ フォルダに保存
+→ 忘れる
+→ 検索しても見つからない
+→ 同じ情報を再度インプット
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;問題は「保存」と「活用」の間にあるギャップです。ノートは増え続けるが、必要なときに必要な情報を引き出す仕組みがない。Noah さんはこの問題を「誰も解決していなかった問題」と呼んでいます。&lt;/p&gt;
+&lt;h3 id="ai-セカンドブレインの解決策"&gt;AI セカンドブレインの解決策&lt;/h3&gt;
+&lt;p&gt;Claude Code を Obsidian Vault の中で動かすことで、このギャップが埋まります。&lt;/p&gt;</description></item><item><title>OpenFang × Rust製シングルバイナリ「エージェントOS」のHandsアーキテクチャと自律型AI設計</title><link>https://hdknr.github.io/blogs/posts/2026/03/bdc5082e2f5f8160644bd0ba01f52c76/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/bdc5082e2f5f8160644bd0ba01f52c76/</guid><description>&lt;h1 id="openfang--rust-製シングルバイナリのエージェント-osが再定義する自律型-ai-の設計"&gt;OpenFang &amp;mdash; Rust 製シングルバイナリの「エージェント OS」が再定義する自律型 AI の設計&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/mikefutia/status/2029220162818453968"&gt;@mikefutia 氏が X で紹介&lt;/a&gt;した OpenFang v0.3.7 のリリースが注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;OpenFang v0.3.7 is out! here&amp;rsquo;s everything since v0.3.3&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://github.com/RightNow-AI/openfang"&gt;OpenFang&lt;/a&gt; は RightNow AI の創設者 Jaber 氏が開発する、&lt;strong&gt;Rust で一から構築されたオープンソースのエージェントオペレーティングシステム&lt;/strong&gt;です。チャットボットフレームワークではなく、自律的にタスクを実行する「エージェント OS」を標榜しています。2026 年 2 月 24 日の公開から 4 日で GitHub スター 4,037 を獲得し、パーソナル AI エージェント領域で最速級の立ち上がりを見せました。&lt;/p&gt;
+&lt;p&gt;本記事では、OpenFang のアーキテクチャ、独自の「Hands」機構、Python 製フレームワークとの構造的な違いを技術的に解説します。&lt;/p&gt;
+&lt;h2 id="なぜエージェント-osなのか"&gt;なぜ「エージェント OS」なのか&lt;/h2&gt;
+&lt;h3 id="チャットボットフレームワークとの違い"&gt;チャットボットフレームワークとの違い&lt;/h3&gt;
+&lt;p&gt;LangChain や CrewAI のような既存のエージェントフレームワークは、基本的に&lt;strong&gt;ユーザーのプロンプトを起点&lt;/strong&gt;に動作します。ユーザーが指示を出し、エージェントが実行し、結果を返す。この対話ループが基本構造です。&lt;/p&gt;
+&lt;p&gt;OpenFang が「OS」と名乗る理由は、&lt;strong&gt;プロンプトなしで自律的に動作する&lt;/strong&gt;設計にあります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;既存フレームワーク:
+ユーザー → プロンプト → エージェント → 結果 → ユーザー
+（対話ループ）
+OpenFang:
+スケジュール → エージェント → タスク実行 → 知識グラフ更新
+↓
+ダッシュボードに報告
+（自律ループ、ユーザーの介入は承認ゲートのみ）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;24 時間 365 日、バックグラウンドでエージェントが動き続ける。リード獲得、競合監視、SNS 投稿、コンテンツ生成を自動で行い、ユーザーはダッシュボードで結果を確認する。これが OpenFang の設計思想です。&lt;/p&gt;</description></item><item><title>.env を AI に安心して触らせる — 1Password CLI ラッパー「opx」とプロセススコープ認証の設計</title><link>https://hdknr.github.io/blogs/posts/2026/03/ee3017a7e8bcfbb995b93b8884cec258/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ee3017a7e8bcfbb995b93b8884cec258/</guid><description>&lt;h1 id="env-を-ai-に安心して触らせる--1password-cli-ラッパーopxとプロセススコープ認証の設計"&gt;.env を AI に安心して触らせる — 1Password CLI ラッパー「opx」とプロセススコープ認証の設計&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/suin/status/2025525553823191550"&gt;@suin 氏のポスト&lt;/a&gt;が、AI エージェント時代の .env 管理問題に対する実践的な解決策として、自作の 1Password CLI ラッパー「&lt;a href="https://github.com/suin/opx"&gt;opx&lt;/a&gt;」を公開しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;.envをAIに安心して触らせたくて、こんなの作った
+AIエージェントなしではもう開発が成り立たないほど必須になってきています。権限設定がいろいろできるにせよ、本質的にAIエージェントにはプロジェクトの全ファイルを触りうる力を与えているわけで、気になるのがシークレットなどの機密情報です。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude Code や Cursor などの AI コーディングエージェントは、開発者と同じ権限でファイルシステムにアクセスします。&lt;code&gt;.env&lt;/code&gt; にアクセストークンや AWS キーを平文で書いていれば、エージェントはそれを読めてしまいます。この構造的な問題に対し、「.env に機密情報を一切書かない」というアプローチで解決するのが opx です。&lt;/p&gt;
+&lt;h2 id="問題の構造--ai-エージェントが-env-を読める"&gt;問題の構造 — AI エージェントが .env を読める&lt;/h2&gt;
+&lt;h3 id="なぜ危険なのか"&gt;なぜ危険なのか&lt;/h3&gt;
+&lt;p&gt;AI コーディングエージェントは通常のプロセスとして動作し、シェル環境を継承します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;開発者のシェル
+└── AI エージェント（Claude Code, Cursor 等）
+├── ファイルシステムへのフルアクセス
+├── .env ファイルの読み取り
+├── 環境変数の参照
+└── Bash コマンドの実行
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;.zshrc&lt;/code&gt; に &lt;code&gt;AWS_SECRET_ACCESS_KEY&lt;/code&gt; を書いていれば、エージェントもそれを持っています。プロンプトインジェクション攻撃を受けた場合、エージェントが意図せず機密情報を外部に送信するリスクがあります。&lt;/p&gt;
+&lt;h3 id="実際に報告されている脆弱性"&gt;実際に報告されている脆弱性&lt;/h3&gt;
+&lt;p&gt;2025年末に公開された「IDEsaster」と呼ばれる調査では、Cursor、Windsurf、GitHub Copilot、Cline など30以上の AI IDE に脆弱性が発見されています。OpenAI Codex CLI では &lt;code&gt;.env&lt;/code&gt; ファイルを経由した任意コマンド実行の脆弱性（CVE-2025-61260）も報告されました。&lt;/p&gt;</description></item><item><title>AI プロンプトのベストプラクティスは「プロの手順」の踏襲 — 要件定義から実装まで5段階に分ける</title><link>https://hdknr.github.io/blogs/posts/2026/03/8d2c53a084630f78f82593308f8a5e6e/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/8d2c53a084630f78f82593308f8a5e6e/</guid><description>&lt;h1 id="ai-プロンプトのベストプラクティスはプロの手順の踏襲--要件定義から実装まで-5-段階に分ける"&gt;AI プロンプトのベストプラクティスは「プロの手順」の踏襲 — 要件定義から実装まで 5 段階に分ける&lt;/h1&gt;
+&lt;p&gt;gohan 氏（&lt;a href="https://x.com/grandchildrice"&gt;@grandchildrice&lt;/a&gt;）が、Cursor アンバサダーの Kinopee 氏のツイートを引用して次のように投稿しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;AIプロンプトのベストプラクティスは「プロの人間はどういう手順を取る？」を徹底して踏襲すること&lt;/p&gt;
+&lt;p&gt;システム開発するとなったらざっくり&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;ゴールと要件定義&lt;/li&gt;
+&lt;li&gt;要件定義の検証&lt;/li&gt;
+&lt;li&gt;テスト工程設計&lt;/li&gt;
+&lt;li&gt;開発&lt;/li&gt;
+&lt;li&gt;テスト&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;バイブコーディングするときも、1〜5でそれぞれプロンプトを分けるとクオリティは格段に上がる
+— &lt;a href="https://x.com/grandchildrice/status/1971380606580949146"&gt;gohan&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;引用元の Kinopee 氏（&lt;a href="https://x.com/kinopee_ai"&gt;@kinopee_ai&lt;/a&gt;）は 2,048 いいね・35 万回表示を記録したツイートで、こう述べています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;壁打ちして、いきなり「それで実装して」ではなく、このひと手間をかけるだけで、結果が全然違いますよ
+— &lt;a href="https://x.com/kinopee_ai/status/1971049490506506349"&gt;Kinopee&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「ひと手間」とは何か。要件定義と実装の間に「検証」と「テスト設計」を挟むことです。この記事では、プロの開発プロセスを AI プロンプトに適用する具体的な方法を解説します。&lt;/p&gt;
+&lt;h2 id="なぜ一発プロンプトは失敗するのか"&gt;なぜ「一発プロンプト」は失敗するのか&lt;/h2&gt;
+&lt;p&gt;多くの人がバイブコーディングでつまずく原因は、&lt;strong&gt;1 つのプロンプトですべてを済ませようとする&lt;/strong&gt;ことにあります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;❌ 「経費精算アプリを作って」
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;この指示は、人間の開発チームに例えれば「要件定義も設計もテストも全部同時にやって」と言っているのと同じです。プロの開発者はそんなことはしません。&lt;/p&gt;
+&lt;p&gt;LLM は 1 つのプロンプトに複数の目的を詰め込むと、各目的の達成度が下がります。要件定義の精緻さ、テスト設計の網羅性、実装の品質が、すべて中途半端になります。&lt;/p&gt;
+&lt;h2 id="5-段階プロンプト設計"&gt;5 段階プロンプト設計&lt;/h2&gt;
+&lt;p&gt;gohan 氏が提唱する 5 段階は、ソフトウェア開発の V 字モデルを簡略化したものです。各段階で別々のプロンプトを使うことで、AI の出力品質が格段に向上します。&lt;/p&gt;
+&lt;h3 id="第-1-段階ゴールと要件定義"&gt;第 1 段階：ゴールと要件定義&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;目的&lt;/strong&gt;: 「何を作るか」を言語化する&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;このアプリのゴールは「月次経費精算の手作業を 30 分から 5 分に短縮する」ことです。
+以下の要件定義書を作成してください：
+- ユーザーストーリー
+- 機能要件（入力・処理・出力）
+- 非機能要件（性能・セキュリティ）
+- 制約条件（使用する外部サービス、予算）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;ポイントは&lt;strong&gt;ゴールを定量的に書く&lt;/strong&gt;ことです。「便利なアプリ」ではなく「30 分を 5 分に短縮」と書けば、AI が判断基準を持てます。&lt;/p&gt;</description></item><item><title>AIパーソナライズが「イエスマン」を生む × MIT・Northeastern研究が示す役割依存型シコファンシー</title><link>https://hdknr.github.io/blogs/posts/2026/03/46d2401fed667f37d722157693448d77/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/46d2401fed667f37d722157693448d77/</guid><description>&lt;h1 id="パーソナルな-aiはイエスマン-aiになる--mit-研究が明かすパーソナライゼーションと追従性の構造的関係"&gt;「パーソナルな AI」は「イエスマン AI」になる &amp;mdash; MIT 研究が明かすパーソナライゼーションと追従性の構造的関係&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ai_database/status/2029026544769814861"&gt;@ai_database 氏が X で紹介&lt;/a&gt;した、AI のパーソナライゼーションと追従性（シコファンシー）に関する研究が注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;研究者らによると、より「パーソナルな AI」は、より「イエスマン的な AI」になりうるとのこと。ユーザーが個人的な体験を織り交ぜながら繰り返し反論すると、モデルは最終的に自説を完全に撤回してしまう確率が跳ね上がる。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この投稿が参照するのは、MIT と Northeastern 大学の 2 つの研究グループによる発見です。「AI をパーソナライズするほど追従的になる」という直感に反する問題と、&lt;strong&gt;役割（ロール）によって振る舞いが逆転する&lt;/strong&gt;という発見を技術的に解説します。&lt;/p&gt;
+&lt;h2 id="2-つの研究"&gt;2 つの研究&lt;/h2&gt;
+&lt;h3 id="研究-1-mit--penn-state--実世界データによる検証"&gt;研究 1: MIT + Penn State &amp;mdash; 実世界データによる検証&lt;/h3&gt;
+&lt;p&gt;MIT IDSS の Shomik Jain 氏らは、&lt;a href="https://news.mit.edu/2026/personalization-features-can-make-llms-more-agreeable-0218"&gt;パーソナライゼーションが LLM の追従性を高める&lt;/a&gt;ことを実証しました。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;詳細&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;著者&lt;/td&gt;
+&lt;td&gt;Shomik Jain, Charlotte Park (MIT), Matt Viana (Penn State), Ashia Wilson (MIT), Dana Calacci (Penn State)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;発表&lt;/td&gt;
+&lt;td&gt;2026 年 2 月&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;方法&lt;/td&gt;
+&lt;td&gt;38 名の参加者が 2 週間にわたり LLM と対話。1 人あたり約 90 件のクエリを収集&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;特徴&lt;/td&gt;
+&lt;td&gt;ラボ環境ではなく、日常生活での実際の対話データを使用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この研究が従来と異なるのは、&lt;strong&gt;実世界のデータ&lt;/strong&gt;を使っている点です。多くの先行研究はラボで設計したプロンプトを評価しますが、MIT チームは参加者の日常的な LLM 利用を 2 週間追跡しました。&lt;/p&gt;</description></item><item><title>Anthropic 公式「プロンプトのベストプラクティス」完全ガイド — Claude 4.6 時代の「宝の山」を読み解く</title><link>https://hdknr.github.io/blogs/posts/2026/03/8f5e0a0647a6c9d12ab70b9f59856e71/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/8f5e0a0647a6c9d12ab70b9f59856e71/</guid><description>&lt;h1 id="anthropic-公式プロンプトのベストプラクティス完全ガイド--claude-46-時代の宝の山を読み解く"&gt;Anthropic 公式「プロンプトのベストプラクティス」完全ガイド — Claude 4.6 時代の「宝の山」を読み解く&lt;/h1&gt;
+&lt;p&gt;Cursor Ambassador であり「Cursor完全ガイド」著者の&lt;a href="https://x.com/kinopee_ai/status/2028843964221243853"&gt;Kinopee(@kinopee_ai)氏のポスト&lt;/a&gt;が注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;XML云々の例は英語版のリンクだけど、日本語訳もある。「プロンプトのベストプラクティス」の章だけでも熟読をお勧めします。作りたいものをモデルに伝える大切なテクニック集、宝の山。
+— Kinopee(@kinopee_ai)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;67いいね、91ブックマークという反響は、AI コーディングツールを日常的に使う開発者がプロンプト設計の基礎に立ち返る必要性を感じていることを示しています。Kinopee氏が「宝の山」と表現する &lt;a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices"&gt;Anthropic 公式のプロンプトベストプラクティス&lt;/a&gt;は、Claude Opus 4.6、Claude Sonnet 4.6、Claude Haiku 4.5 に対応した包括的なガイドです。本記事ではその全体像を、実践的な視点で解説します。&lt;/p&gt;
+&lt;h2 id="ドキュメントの全体構成"&gt;ドキュメントの全体構成&lt;/h2&gt;
+&lt;p&gt;公式ドキュメントは大きく6つのセクションで構成されています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;セクション&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;General principles&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;明確な指示、コンテキスト付与、例示、XMLタグ構造化、ロール設定、長文コンテキスト&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Output and formatting&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;コミュニケーションスタイル、出力形式制御、LaTeX、ドキュメント作成、プリフィル廃止&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Tool use&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ツール使用の明示的指示、並列ツール呼び出し最適化&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Thinking and reasoning&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;過剰思考の抑制、adaptive thinking、interleaved thinking&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Agentic systems&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;長期推論、状態管理、自律性と安全性のバランス、サブエージェント&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Migration considerations&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Claude 4.6 への移行ガイド、Sonnet 4.5 → 4.6 の effort 設定&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;API 開発者向けの内容ですが、Claude Code や Cursor などの AI コーディングツールを使う際にも、&lt;strong&gt;CLAUDE.md やシステムプロンプトの設計&lt;/strong&gt;に直接応用できます。&lt;/p&gt;
+&lt;h2 id="最もインパクトの高い5つのスキル"&gt;最もインパクトの高い5つのスキル&lt;/h2&gt;
+&lt;p&gt;公式ドキュメントが挙げる「最もインパクトの高い5つのスキル」は以下の通りです。&lt;/p&gt;
+&lt;h3 id="1-xml-タグで構造化する"&gt;1. XML タグで構造化する&lt;/h3&gt;
+&lt;p&gt;Claude にとって XML タグは&lt;strong&gt;プロンプトの文法&lt;/strong&gt;です。指示、コンテキスト、例示、入力データが混在するプロンプトでは、各要素をタグで包むことで誤解を大幅に減らせます。&lt;/p&gt;</description></item><item><title>Anthropic、ChatGPT からの移行ツール提供開始 --- メモリインポートと App Store 1位の背景</title><link>https://hdknr.github.io/blogs/posts/2026/03/b8b0f06e9ac13cce154f50e510c2fdc7/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/b8b0f06e9ac13cce154f50e510c2fdc7/</guid><description>&lt;h1 id="anthropicchatgpt-からの移行ツール提供開始--メモリインポートと-app-store-1-位の背景"&gt;Anthropic、ChatGPT からの移行ツール提供開始 &amp;mdash; メモリインポートと App Store 1 位の背景&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/itm_aiplus/status/2028625171997966782"&gt;ITmedia AI+ が X で報じた&lt;/a&gt;ように、Anthropic が ChatGPT などの競合サービスから Claude への移行を支援するツールの提供を開始しました。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Anthropic、ChatGPT などから Claude への移行をしやすくするツール提供開始&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;2026 年 3 月 2 日、Claude は米国 App Store の無料アプリダウンロードチャートで &lt;strong&gt;1 位&lt;/strong&gt;に躍り出ました。この記事では、メモリインポート機能の仕組みと、その背景にある ChatGPT 解約運動について解説します。&lt;/p&gt;
+&lt;h2 id="メモリインポート機能とは"&gt;メモリインポート機能とは&lt;/h2&gt;
+&lt;h3 id="概要"&gt;概要&lt;/h3&gt;
+&lt;p&gt;Anthropic は &lt;a href="https://claude.com/import-memory"&gt;claude.com/import-memory&lt;/a&gt; でメモリインポート機能を公開しました。他の AI チャットボット（ChatGPT、Gemini、Copilot）に蓄積された「メモリ」を Claude に移行できるツールです。&lt;/p&gt;
+&lt;p&gt;AI チャットボットの「メモリ」とは、過去の会話から学習したユーザーの好み・背景情報・利用パターンなどの記憶です。ChatGPT では「Memory」、Gemini では「Gems」として保存されています。&lt;/p&gt;
+&lt;h3 id="移行の手順3-ステップ"&gt;移行の手順（3 ステップ）&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;ステップ 1: Anthropic が提供するプロンプトをコピー
+claude.com/import-memory にアクセス
+移行用プロンプトをコピーする
+ステップ 2: 現在の AI サービスにペースト
+ChatGPT / Gemini / Copilot にプロンプトを貼り付け
+AI が保存しているメモリをテキストブロックとして出力
+ステップ 3: Claude のメモリ設定にペースト
+出力されたテキストを Claude のメモリ設定に貼り付け
+Claude が内容を解析し、メモリとして取り込む
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;インポートしたメモリは約 24 時間で Claude に反映されます。その後、Settings &amp;gt; Capabilities &amp;gt; View and edit your memory から個別に確認・編集・削除が可能です。&lt;/p&gt;</description></item><item><title>Claude Cowork を最強にする 17 の方法 --- プロンプトではなく「設計」で差がつくシステム工学</title><link>https://hdknr.github.io/blogs/posts/2026/03/bcecef951ac3e3bd81aafaa2c836b37a/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/bcecef951ac3e3bd81aafaa2c836b37a/</guid><description>&lt;h1 id="claude-cowork-を最強にする-17-の方法--プロンプトではなく設計で差がつくシステム工学"&gt;Claude Cowork を最強にする 17 の方法 &amp;mdash; プロンプトではなく「設計」で差がつくシステム工学&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/masahirochaen/status/2028609546730762511"&gt;@masahirochaen 氏が X で投稿&lt;/a&gt;した、Claude Cowork のベストプラクティス解説が反響を呼んでいます。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;海外でバズった「Claude Cowork を最強にする 17 の方法」の学びが深い。プロンプト力ではなく「仕組み」で差がつく&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;元になっているのは &lt;a href="https://x.com/heynavtoor/status/2028148844891152554"&gt;@heynavtoor（Nav Toor）氏の X Article&lt;/a&gt;「17 Best Practices That Make Claude Cowork 100x More Powerful」です。Nav Toor 氏は 2026 年 1 月 12 日から Cowork を使い始め、7 週間で 400 セッション以上を重ねた経験をもとに、Anthropic が公式ドキュメントに書いていない 17 の実践法をまとめています。いいね 3,194、ブックマーク 13,149、閲覧 188 万超と大きな反響を得ました。本記事では、この 17 の方法を技術的に掘り下げて解説します。&lt;/p&gt;
+&lt;h2 id="claude-cowork-とは"&gt;Claude Cowork とは&lt;/h2&gt;
+&lt;h3 id="claude-code-との違い"&gt;Claude Code との違い&lt;/h3&gt;
+&lt;p&gt;Claude Cowork は、Anthropic が提供する&lt;strong&gt;非エンジニア向けの AI エージェント環境&lt;/strong&gt;です。Claude Code がターミナルベースの開発者向けツールであるのに対し、Cowork は Claude デスクトップアプリ内で動作する GUI ベースの作業環境です。&lt;/p&gt;</description></item><item><title>Claude で YouTube チャンネルを 90 日で収益化する 7 つのプロンプト戦略 --- ニッチ分析からコミュニティ構築まで</title><link>https://hdknr.github.io/blogs/posts/2026/03/bf72fb2762062814f5feecceee6735a3/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/bf72fb2762062814f5feecceee6735a3/</guid><description>&lt;h1 id="claude-で-youtube-チャンネルを-90-日で収益化する-7-つのプロンプト戦略--ニッチ分析からコミュニティ構築まで"&gt;Claude で YouTube チャンネルを 90 日で収益化する 7 つのプロンプト戦略 &amp;mdash; ニッチ分析からコミュニティ構築まで&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/gudanglifehack/status/2028966502662382074"&gt;@gudanglifehack 氏が X で投稿&lt;/a&gt;した、Claude を活用した YouTube 成長戦略が注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;BREAKING: Claude can now build a complete YouTube growth strategy that takes channels from 0 to monetization in 90 days. 7 prompts to go from unknown creator to trusted authority in your niche.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;37 万フォロワーを持つ @gudanglifehack 氏が紹介するのは、Claude に投げるだけで YouTube チャンネルの成長戦略を一気通貫で構築できる &lt;strong&gt;7 つのプロンプト&lt;/strong&gt;です。本記事では、各プロンプトの構造と背景にある YouTube 成長の仕組みを技術的に解説し、AI をコンテンツ戦略に活用する方法を整理します。&lt;/p&gt;
+&lt;h2 id="youtube-収益化の現在地2026-年"&gt;YouTube 収益化の現在地（2026 年）&lt;/h2&gt;
+&lt;h3 id="2-段階の収益化要件"&gt;2 段階の収益化要件&lt;/h3&gt;
+&lt;p&gt;YouTube パートナープログラム（YPP）は 2 段階の収益化構造になっています。&lt;/p&gt;</description></item><item><title>Skills の自動最適化 — TextGrad を応用して提案書生成スキルを「学習」させる実験と過学習の発見</title><link>https://hdknr.github.io/blogs/posts/2026/03/8df722451a54a64ee778169b6c2f6c07/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/8df722451a54a64ee778169b6c2f6c07/</guid><description>&lt;h1 id="skills-の自動最適化--textgrad-を応用して提案書生成スキルを学習させる実験と過学習の発見"&gt;Skills の自動最適化 — TextGrad を応用して提案書生成スキルを「学習」させる実験と過学習の発見&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/yusuke_post"&gt;@yusuke_post 氏&lt;/a&gt;が、Claude Code の Skills を深層学習の手法で自動最適化する実験を公開し、大きな反響を呼んでいます。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://x.com/yusuke_post/status/2027348800331972703"&gt;最初のポスト&lt;/a&gt;（いいね 1,226、ブックマーク 2,265）では TextGrad を応用した Skills 最適化の概念を紹介し、&lt;a href="https://x.com/yusuke_post/status/2028757271703126347"&gt;続報のポスト&lt;/a&gt;（いいね 126、ブックマーク 132）では追加実験の結果として以下の知見を報告しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;わかったのは、
+・３イテレーションくらいで過学習する。
+・１回だけでなく、3回くらいイテレーションを回すことで徐々にスコアが改善する。
+・学習を始めて最初の方は、「提案書に何を書くか」を学び出して、最後の方では「提案書のそれぞれの項目をどう書くか」を自動で学習する。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;特に「&lt;strong&gt;全体最適→局所最適の順番で AI が自動で学んだ&lt;/strong&gt;」という発見は、深層学習の訓練過程と同様の振る舞いが Markdown のプロンプトでも起きることを示唆しています。本記事では、この実験の背景・手法・発見を解説します。&lt;/p&gt;
+&lt;h2 id="textgrad-とは何か"&gt;TextGrad とは何か&lt;/h2&gt;
+&lt;h3 id="テキスト版の誤差逆伝播"&gt;「テキスト版の誤差逆伝播」&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://textgrad.com/"&gt;TextGrad&lt;/a&gt;（&lt;a href="https://arxiv.org/abs/2406.07496"&gt;論文: arXiv 2406.07496&lt;/a&gt;）は、Stanford 大学の Zou グループが開発し、Nature に掲載されたフレームワークです。深層学習における誤差逆伝播（backpropagation）の概念を、テキストに適用します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[深層学習の最適化]
+入力 → ニューラルネット → 出力 → 損失関数 → 勾配計算 → パラメータ更新
+↑ 数値の勾配
+[TextGrad の最適化]
+入力 → LLM → 出力 → 評価（LLM） → テキスト勾配 → プロンプト更新
+↑ 自然言語のフィードバック
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;従来の深層学習では数値的な勾配を計算してパラメータを更新しますが、TextGrad では &lt;strong&gt;LLM が自然言語で「どう改善すべきか」をフィードバック&lt;/strong&gt;し、それを「テキスト勾配」としてプロンプトを更新します。&lt;/p&gt;</description></item><item><title>Trivy VS Code 拡張が改ざんされ、ローカル AI エージェントが認証情報を窃取 — hackerbot-claw の全貌</title><link>https://hdknr.github.io/blogs/posts/2026/03/2fb1416daa8c7baf370c69d0b1649625/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/2fb1416daa8c7baf370c69d0b1649625/</guid><description>&lt;h1 id="trivy-vs-code-拡張が改ざんされローカル-ai-エージェントが認証情報を窃取--hackerbot-claw-の全貌"&gt;Trivy VS Code 拡張が改ざんされ、ローカル AI エージェントが認証情報を窃取 — hackerbot-claw の全貌&lt;/h1&gt;
+&lt;p&gt;セキュリティ研究者の&lt;a href="https://x.com/yousukezan/status/2028747212793188583"&gt;yousukezan氏&lt;/a&gt;が、Aqua Security の脆弱性スキャナー「Trivy」の VS Code 拡張が改ざんされ、開発者のローカル AI コーディングツールを悪用して認証情報を窃取するサプライチェーン攻撃を紹介しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Aqua Trivy VS Code拡張が改ざんされ、AIコーディング支援ツールを悪用する異例のサプライチェーン攻撃が発覚した。正規機能を装いながら裏で認証情報を収集する手口で、被害はGitHubリポジトリの乗っ取りにも及んだ。
+— yousukezan&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この事件の異例な点は、従来のマルウェアやバックドアではなく、&lt;strong&gt;開発者のマシンに既にインストールされている AI コーディングツールを武器として利用した&lt;/strong&gt;ことです。Claude、Codex、Gemini、GitHub Copilot CLI、Kiro CLI を最大権限で呼び出し、自然言語プロンプトで機密情報を探索させるという、AI 時代に固有の新しい攻撃ベクターです。&lt;/p&gt;
+&lt;h2 id="事件の全体像"&gt;事件の全体像&lt;/h2&gt;
+&lt;p&gt;この攻撃は、&lt;code&gt;hackerbot-claw&lt;/code&gt; と名乗る自律型 AI ボットによる大規模キャンペーンの一部です。2026年2月21日〜28日の間に、Microsoft、DataDog、CNCF プロジェクトなど少なくとも7つの主要リポジトリが標的となりました。&lt;/p&gt;
+&lt;h3 id="影響を受けたリポジトリ"&gt;影響を受けたリポジトリ&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;リポジトリ&lt;/th&gt;
+&lt;th&gt;Stars&lt;/th&gt;
+&lt;th&gt;攻撃手法&lt;/th&gt;
+&lt;th&gt;結果&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;aquasecurity/trivy&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;25k+&lt;/td&gt;
+&lt;td&gt;pull_request_target 悪用&lt;/td&gt;
+&lt;td&gt;PAT 窃取、リポジトリ乗っ取り&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;avelino/awesome-go&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;140k+&lt;/td&gt;
+&lt;td&gt;Go init() 関数にペイロード注入&lt;/td&gt;
+&lt;td&gt;GITHUB_TOKEN 窃取&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;microsoft/ai-discovery-agent&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;ブランチ名コマンドインジェクション&lt;/td&gt;
+&lt;td&gt;RCE 達成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;DataDog/datadog-iac-scanner&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;ファイル名ベースのインジェクション&lt;/td&gt;
+&lt;td&gt;RCE 達成（9時間で修正）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;ambient-code/platform&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;CLAUDE.md プロンプトインジェクション&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Claude が検出・拒否&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;project-akri/akri&lt;/strong&gt; (CNCF)&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;curl | bash 直接インジェクション&lt;/td&gt;
+&lt;td&gt;RCE 達成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;RustPython/RustPython&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;20k+&lt;/td&gt;
+&lt;td&gt;Base64 ブランチインジェクション&lt;/td&gt;
+&lt;td&gt;攻撃試行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="hackerbot-claw-の正体"&gt;hackerbot-claw の正体&lt;/h3&gt;
+&lt;p&gt;hackerbot-claw は GitHub 上で自らを「autonomous security research agent powered by claude-opus-4-5」と名乗り、暗号通貨の寄付を募っています。README には9クラス・47サブパターンの「脆弱性パターンインデックス」を持ち、&lt;strong&gt;47,391リポジトリをスキャン済み&lt;/strong&gt;と記載されています。&lt;/p&gt;</description></item><item><title>「AIが覚醒する魔法の言葉」は本当に効くのか — プロンプトエンジニアリングの実態と公式ガイドの教え</title><link>https://hdknr.github.io/blogs/posts/2026/03/7531bfaf8041fb404827e0361645b3f7/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/7531bfaf8041fb404827e0361645b3f7/</guid><description>&lt;h1 id="aiが覚醒する魔法の言葉は本当に効くのか--プロンプトエンジニアリングの実態と公式ガイドの教え"&gt;「AIが覚醒する魔法の言葉」は本当に効くのか — プロンプトエンジニアリングの実態と公式ガイドの教え&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/fit_youtubead/status/2028384815486222807"&gt;@fit_youtubead 氏のポスト&lt;/a&gt;が、Claude と ChatGPT で使える「魔法のプロンプト」を紹介し、大きな反響を呼んでいます。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「最高の専門家として、思考プロセスを分解し、初心者にも再現できる形で5ステップで出力してください」&lt;/p&gt;
+&lt;p&gt;これだけ。なぜ強いのか？理由は3つ。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;役割を与える → AIの精度が跳ね上がる&lt;/li&gt;
+&lt;li&gt;思考を分解させる → 中身が薄くならない&lt;/li&gt;
+&lt;li&gt;再現性を指定する → 実用的で使えるアウトプットになる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;確かに、雑な指示よりも構造化された指示の方が良い結果を得られるのは事実です。しかし「魔法の言葉」と呼ぶには、いくつか知っておくべきことがあります。本記事では、ツイートで紹介された3つのテクニックを、Anthropic と OpenAI の公式ガイドおよび研究論文に照らし合わせて検証します。&lt;/p&gt;
+&lt;h2 id="テクニック1-役割を与えるロールプロンプティング"&gt;テクニック1: 役割を与える（ロールプロンプティング）&lt;/h2&gt;
+&lt;p&gt;「最高の専門家として」のように、AI に特定の役割やペルソナを与えるテクニックです。&lt;/p&gt;
+&lt;h3 id="公式ガイドの見解"&gt;公式ガイドの見解&lt;/h3&gt;
+&lt;p&gt;Anthropic は&lt;a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview"&gt;プロンプトエンジニアリングのベストプラクティス&lt;/a&gt;で、ロールプロンプティングを推奨テクニックの1つとして挙げています。「法律アドバイザー」「データアナリスト」「カスタマーサポート担当」のように、具体的な文脈に合わせてモデルの声とふるまいを調整する手法です。&lt;/p&gt;
+&lt;p&gt;OpenAI も&lt;a href="https://platform.openai.com/docs/guides/prompt-engineering"&gt;公式ガイド&lt;/a&gt;でシステムプロンプトによる役割設定を推奨しています。&lt;/p&gt;
+&lt;h3 id="研究が示す実態"&gt;研究が示す実態&lt;/h3&gt;
+&lt;p&gt;ところが、学術的な研究を見ると、ロールプロンプティングの効果は「場合による」というのが正確な答えです。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;研究&lt;/th&gt;
+&lt;th&gt;結果&lt;/th&gt;
+&lt;th&gt;対象モデル&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Better Zero-Shot Reasoning with Role-Play Prompting&lt;/td&gt;
+&lt;td&gt;AQuA データセットで精度が53.5%→63.8%に向上（+10.3pt）&lt;/td&gt;
+&lt;td&gt;GPT-3.5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ExpertPrompting&lt;/td&gt;
+&lt;td&gt;詳細な専門家ペルソナが単純なペルソナを大幅に上回る&lt;/td&gt;
+&lt;td&gt;複数モデル&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;When &amp;ldquo;A Helpful Assistant&amp;rdquo; Is Not Really Helpful&lt;/td&gt;
+&lt;td&gt;追加のペルソナは性能を向上させない&lt;/td&gt;
+&lt;td&gt;4モデルファミリー&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Persona is a Double-edged Sword&lt;/td&gt;
+&lt;td&gt;GPT-4ではペルソナの有無で差は最小限&lt;/td&gt;
+&lt;td&gt;GPT-4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;a href="https://www.prompthub.us/blog/role-prompting-does-adding-personas-to-your-prompts-really-make-a-difference"&gt;PromptHub の検証記事&lt;/a&gt;は、これらの研究を総合して以下のように結論づけています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;創作的なタスク&lt;/strong&gt;（文体の調整、トーンの統一）では効果がある&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;精度ベースのタスク&lt;/strong&gt;（分類、計算、ファクトチェック）では、新しいモデルほど効果が薄い&lt;/li&gt;
+&lt;li&gt;「天才ペルソナが愚か者ペルソナより劣る」という矛盾した結果も報告されている&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり、「専門家として」と付けるだけで「精度が跳ね上がる」わけではありません。効果があるのは、役割指定によってモデルの出力スタイルや視点が適切に制約されるケースです。&lt;/p&gt;</description></item><item><title>「上位 1% の Claude Skills 構築方法」を技術的に読み解く --- スキルの構造・設計パターン・組織展開</title><link>https://hdknr.github.io/blogs/posts/2026/03/3e4439ecefa6b85e164145183dead0da/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/3e4439ecefa6b85e164145183dead0da/</guid><description>&lt;h1 id="上位-1-の-claude-skills-構築方法を技術的に読み解く--スキルの構造設計パターン組織展開"&gt;「上位 1% の Claude Skills 構築方法」を技術的に読み解く &amp;mdash; スキルの構造・設計パターン・組織展開&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/sales_muscle/status/2028666852097040738"&gt;@sales_muscle 氏が X で投稿&lt;/a&gt;した、Claude Skills の構築ガイドが反響を呼んでいます。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;上位1%のClaude Skills構築方法&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;投稿では、AI 活用の基準が「プロンプトのうまさ」から「AI にスキル（専門能力）を組み込み、組織の資産にできるか」へ移行したと主張しています。本記事では、この投稿の内容を Claude Code の公式ドキュメントと照らし合わせ、スキルの技術的な構造と実践的な設計パターンを掘り下げます。&lt;/p&gt;
+&lt;h2 id="claude-skills-とは何か"&gt;Claude Skills とは何か&lt;/h2&gt;
+&lt;h3 id="プロンプトからスキルへの進化"&gt;プロンプトからスキルへの進化&lt;/h3&gt;
+&lt;p&gt;投稿の核心は「指示（プロンプト）からスキルへ」という転換です。これは技術的に正確な指摘です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;従来の AI 活用:
+ユーザー → プロンプトを毎回書く → AI が回答
+問題: 知識がチャットセッションに閉じる、再現性がない
+スキルベースの AI 活用:
+ユーザー → /skill-name で呼び出す → AI がスキルの手順に従って実行
+利点: 再現性あり、共有可能、自動呼び出し対応
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href="https://code.claude.com/docs/en/skills"&gt;Claude Code 公式ドキュメント&lt;/a&gt;によると、スキルは「&lt;code&gt;SKILL.md&lt;/code&gt; ファイルに指示を書き、Claude のツールキットに追加する」仕組みです。Claude は関連するタスクで自動的にスキルを読み込むか、&lt;code&gt;/skill-name&lt;/code&gt; で直接呼び出せます。&lt;/p&gt;
+&lt;h3 id="スキルの技術的な定義"&gt;スキルの技術的な定義&lt;/h3&gt;
+&lt;p&gt;スキルは単なるプロンプトテンプレートではなく、以下の要素を持つ&lt;strong&gt;構造化されたモジュール&lt;/strong&gt;です。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;要素&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;YAML フロントマター&lt;/td&gt;
+&lt;td&gt;名前、説明、呼び出し制御、許可ツールなどのメタデータ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Markdown 本文&lt;/td&gt;
+&lt;td&gt;Claude が従う具体的な手順・ルール&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;サポートファイル&lt;/td&gt;
+&lt;td&gt;テンプレート、例、スクリプトなどの補助リソース&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;文字列置換&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;$ARGUMENTS&lt;/code&gt;、&lt;code&gt;$0&lt;/code&gt;、&lt;code&gt;${CLAUDE_SESSION_ID}&lt;/code&gt; などの動的値&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;スキルは &lt;a href="https://agentskills.io"&gt;Agent Skills&lt;/a&gt; オープン標準に準拠しており、Claude Code 固有の機能ではなく、複数の AI ツールで動作する標準仕様です。&lt;/p&gt;</description></item><item><title>2 人で 100 人に勝つ --- AI を「自分の分身」に変える実務活用の 6 つの原則</title><link>https://hdknr.github.io/blogs/posts/2026/03/3d37ea6b1e2d65ea1b5e1cd908224b70/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/3d37ea6b1e2d65ea1b5e1cd908224b70/</guid><description>&lt;h1 id="2-人で-100-人に勝つ--ai-を自分の分身に変える実務活用の-6-つの原則"&gt;2 人で 100 人に勝つ &amp;mdash; AI を「自分の分身」に変える実務活用の 6 つの原則&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/taichi_we/status/2028418536805384279"&gt;@taichi_we（長谷川氏 / Levela CTO）が「有益、AIの本質」とコメントして共有&lt;/a&gt;した、&lt;a href="https://x.com/sales_muscle/status/2028303867105210598"&gt;@sales_muscle（OneBiz / Levela）の投稿&lt;/a&gt;が注目を集めています。&lt;/p&gt;
+&lt;p&gt;ブックマーク 100 超、閲覧 3.5 万という反応は、「少人数で AI を使いこなし、大企業に匹敵する生産性を出す」というテーマへの関心の高さを示しています。本記事では、投稿で紹介された 6 つの原則を掘り下げつつ、2026 年の AI 活用の現実と照らし合わせます。&lt;/p&gt;
+&lt;h2 id="原則-1-汎用-ai-が専用-ai-より優秀な理由"&gt;原則 1: 汎用 AI が専用 AI より優秀な理由&lt;/h2&gt;
+&lt;p&gt;投稿の最初のポイントは、業務特化の SaaS ツールより Claude のような汎用 AI の方が優れているという主張です。&lt;/p&gt;
+&lt;p&gt;これは一見、直感に反します。専用ツールの方が精度が高いのでは? しかし、少人数チームの文脈では論理が逆転します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;専用 AI の限界&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;業務ごとにツールが分断される（営業は A、経理は B、マーケは C）&lt;/li&gt;
+&lt;li&gt;ツール間の連携が手動で発生する&lt;/li&gt;
+&lt;li&gt;各ツールの学習コストが積み重なる&lt;/li&gt;
+&lt;li&gt;「自分の判断基準」を各ツールに教え込む手間が N 倍になる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;汎用 AI の強み&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1 つのインターフェースで全業務を横断できる&lt;/li&gt;
+&lt;li&gt;自分の思考プロセスを一度教えれば、全業務に適用される&lt;/li&gt;
+&lt;li&gt;コンテキストが途切れない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;少人数チームにとって最も貴重なのは「コンテキストスイッチのコスト」です。5 つの専用ツールを使い分けるより、1 つの汎用 AI に自分の判断基準を教え込む方が、トータルの生産性は高くなります。&lt;/p&gt;
+&lt;h2 id="原則-2-ai-にスキルを覚えさせる--思考プロセスの外部化"&gt;原則 2: AI にスキルを覚えさせる &amp;mdash; 思考プロセスの外部化&lt;/h2&gt;
+&lt;p&gt;投稿の核心は「AI に自分のスキルを教え込む」ことです。これは単なるプロンプトエンジニアリングではなく、&lt;strong&gt;自分の思考プロセスの構造化と外部化&lt;/strong&gt;を意味します。&lt;/p&gt;</description></item><item><title>AI が書いた CLAUDE.md は逆効果 --- 「コンテキストファイルの自動生成は精度を下げる」という研究</title><link>https://hdknr.github.io/blogs/posts/2026/03/95278de03de967bcc74ff8b320222044/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/95278de03de967bcc74ff8b320222044/</guid><description>&lt;h1 id="ai-が書いた-claudemd-は逆効果--コンテキストファイルの自動生成は精度を下げるという研究"&gt;AI が書いた CLAUDE.md は逆効果 &amp;mdash; 「コンテキストファイルの自動生成は精度を下げる」という研究&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/at_sushi_/status/2028658902246772875"&gt;@at_sushi_（門脇敦司）氏が X で投稿&lt;/a&gt;した、AI 生成のプロンプトファイルに関する記事が注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;CLAUDE.md のようなプロンプトファイルを AI に生成させると「逆に精度が下がる」という研究です。AI 文書は冗長で、AI 自身を混乱させます。では、どうすればいいのか？ というと、「本当に重要な情報だけを、開発者が書く」というのが現在の正解です&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;元記事は &lt;a href="https://zenn.dev/knowledgesense/articles/7210292cbe6838"&gt;Zenn の解説記事&lt;/a&gt;で、ETH Zurich と LogicStar.ai の研究チーム（Gloaguen et al.）による&lt;a href="https://arxiv.org/abs/2602.11988"&gt;論文「Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?」&lt;/a&gt;を日本語で紹介しています。本記事では、この研究の実験データを詳しく読み解き、CLAUDE.md / AGENTS.md の書き方への実践的な示唆を整理します。&lt;/p&gt;
+&lt;h2 id="研究の概要--何を検証したのか"&gt;研究の概要 &amp;mdash; 何を検証したのか&lt;/h2&gt;
+&lt;h3 id="背景"&gt;背景&lt;/h3&gt;
+&lt;p&gt;CLAUDE.md、AGENTS.md、CURSORRULES &amp;mdash; これらの「コンテキストファイル」は、AI コーディングエージェントにリポジトリの慣習や制約を伝えるための指示書です。Anthropic、OpenAI、Cursor はいずれもこれらのファイルの作成を強く推奨しています。&lt;/p&gt;
+&lt;p&gt;しかし、&lt;strong&gt;「コンテキストファイルは本当にエージェントの性能を向上させるのか?」&lt;/strong&gt; という基本的な問いに対して、厳密な検証はこれまで行われていませんでした。&lt;/p&gt;
+&lt;h3 id="実験設計"&gt;実験設計&lt;/h3&gt;
+&lt;p&gt;ETH Zurich の研究チームは、3 つの条件で比較実験を実施しました。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;条件&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;なし（None）&lt;/td&gt;
+&lt;td&gt;コンテキストファイルなし（ベースライン）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LLM 生成&lt;/td&gt;
+&lt;td&gt;エージェント開発者の推奨に従い LLM に自動生成させたファイル&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;人間作成&lt;/td&gt;
+&lt;td&gt;開発者がリポジトリにコミットしたファイル&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;評価対象モデル&lt;/strong&gt;: Claude Code（Sonnet 4.5）、Codex（GPT-5.2 / GPT-5.1 mini）、Qwen Code（Qwen3-30b-coder）&lt;/p&gt;</description></item><item><title>Claude Code / MCP を安全に使うための実践ガイド — settings.json の多層防御と deny の落とし穴</title><link>https://hdknr.github.io/blogs/posts/2026/03/eccd6b7eeb61d1f6278961cf6717e3ec/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/eccd6b7eeb61d1f6278961cf6717e3ec/</guid><description>&lt;h1 id="claude-code--mcp-を安全に使うための実践ガイド--settingsjson-の多層防御と-deny-の落とし穴"&gt;Claude Code / MCP を安全に使うための実践ガイド — settings.json の多層防御と deny の落とし穴&lt;/h1&gt;
+&lt;p&gt;セキュリティ研究者の&lt;a href="https://x.com/yousukezan/status/2028651068176171479"&gt;yousukezan氏&lt;/a&gt;（バグバウンティプログラムでランク1位受賞歴あり）が紹介した Zenn 記事「&lt;a href="https://zenn.dev/ytksato/articles/057dc7c981d304"&gt;Claude Code / MCP を安全に使うための実践ガイド&lt;/a&gt;」が注目を集めています。165いいね、161ブックマークという反響は、Claude Code のセキュリティ設定に対する実務者の強い関心を示しています。&lt;/p&gt;
+&lt;p&gt;本記事では元記事の内容を掘り下げつつ、公式ドキュメントや GitHub Issues の情報を加えて、&lt;strong&gt;実務で本当に機能するセキュリティ設定&lt;/strong&gt;を整理します。&lt;/p&gt;
+&lt;h2 id="背景--8桁後半の被害事例"&gt;背景 — 8桁後半の被害事例&lt;/h2&gt;
+&lt;p&gt;この記事が書かれた背景には、&lt;a href="https://gist.github.com/hdknr/67f7657965c1f660dfbad9b0e88d0414"&gt;AI コーディングツール経由で Google Ads の MCC が乗っ取られ、8桁後半の被害が発生した事例&lt;/a&gt;があります。報告された4つの攻撃ベクターは全て Claude Code / MCP の利用シーンで再現可能です。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;攻撃ベクター&lt;/th&gt;
+&lt;th&gt;Claude Code での該当リスク&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;間接プロンプトインジェクション&lt;/td&gt;
+&lt;td&gt;Webページに埋め込まれた隠し指示をAIが実行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プロンプトサプライチェーン攻撃&lt;/td&gt;
+&lt;td&gt;外部から取得した CLAUDE.md / settings.json / .mcp.json の改ざん&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MCP権限悪用（Tool Poisoning）&lt;/td&gt;
+&lt;td&gt;許可済みMCPツールの悪意ある利用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;クレデンシャルリーク&lt;/td&gt;
+&lt;td&gt;トークンやAPIキーのログ・git履歴への残存&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="最も重要な3つの設定"&gt;最も重要な3つの設定&lt;/h2&gt;
+&lt;p&gt;元記事が推奨する最小限の設定は3つです。&lt;/p&gt;
+&lt;h3 id="1-bypasspermissions-モードの無効化"&gt;1. bypassPermissions モードの無効化&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;permissions&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;disableBypassPermissionsMode&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;disable&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;--dangerously-skip-permissions&lt;/code&gt; フラグは全ての承認プロンプトをスキップします。&lt;a href="https://code.claude.com/docs/en/permissions"&gt;公式ドキュメント&lt;/a&gt;によると、このモードではClaude がファイルの削除、破壊的なコマンドの実行、不可逆な変更を承認なしで行えます。&lt;code&gt;disableBypassPermissionsMode: &amp;quot;disable&amp;quot;&lt;/code&gt; で&lt;strong&gt;組織全体でこのモードを禁止&lt;/strong&gt;できます。&lt;/p&gt;</description></item><item><title>Claude Code サンドボックス完全解説 — chroot ではない、カーネルレベル隔離の仕組みと実践設定</title><link>https://hdknr.github.io/blogs/posts/2026/03/fd36299e0751373fd17f0ab90d49bf98/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/fd36299e0751373fd17f0ab90d49bf98/</guid><description>&lt;h1 id="claude-code-サンドボックス完全解説--chroot-ではないカーネルレベル隔離の仕組みと実践設定"&gt;Claude Code サンドボックス完全解説 — chroot ではない、カーネルレベル隔離の仕組みと実践設定&lt;/h1&gt;
+&lt;p&gt;「Claude Code のサンドボックスって、要するに chroot でしょ？」という誤解をよく耳にします。答えは明確に&lt;strong&gt;ノー&lt;/strong&gt;です。Claude Code のサンドボックスは chroot とは次元の異なるカーネルレベルの隔離機構で、ファイルシステムとネットワークの2層を OS プリミティブで強制します。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.anthropic.com/engineering/claude-code-sandboxing"&gt;Anthropic のエンジニアリングブログ&lt;/a&gt;によると、サンドボックスにより&lt;strong&gt;承認プロンプトが84%削減&lt;/strong&gt;されました。セキュリティと生産性を両立する仕組みの全貌を、技術的な背景から実践設定まで解説します。&lt;/p&gt;
+&lt;h2 id="chroot-との決定的な違い"&gt;chroot との決定的な違い&lt;/h2&gt;
+&lt;p&gt;まず「chroot で十分か」という疑問に答えます。結論から言えば、&lt;strong&gt;chroot はセキュリティ対策として設計されていません&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id="隔離技術の比較"&gt;隔離技術の比較&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://book.jorianwoltjer.com/binary-exploitation/sandboxes-chroot-seccomp-and-namespaces"&gt;Practical CTF の解説&lt;/a&gt;を基に、主要な隔離技術を比較します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;技術&lt;/th&gt;
+&lt;th&gt;制限対象&lt;/th&gt;
+&lt;th&gt;脱出の容易さ&lt;/th&gt;
+&lt;th&gt;設計目的&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;chroot&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ファイルシステムのパス解決のみ&lt;/td&gt;
+&lt;td&gt;容易（root 権限で即脱出）&lt;/td&gt;
+&lt;td&gt;組織的なツール（セキュリティ目的ではない）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;seccomp&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;システムコール&lt;/td&gt;
+&lt;td&gt;中程度（許可リストの漏れを突く）&lt;/td&gt;
+&lt;td&gt;セキュリティ機構&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;namespaces&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;プロセス、ネットワーク、マウント&lt;/td&gt;
+&lt;td&gt;困難（適切設定時）&lt;/td&gt;
+&lt;td&gt;コンテナ隔離&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Seatbelt&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ファイル、ネットワーク、IPC、プロセス&lt;/td&gt;
+&lt;td&gt;困難（カーネルレベル強制）&lt;/td&gt;
+&lt;td&gt;アプリケーション隔離&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="chroot-の脱出方法"&gt;chroot の脱出方法&lt;/h3&gt;
+&lt;p&gt;chroot がセキュリティ対策に不十分な理由を具体的に示します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;カレントディレクトリ攻撃&lt;/strong&gt;: chroot 実行時にカレントディレクトリが jail 外にあれば、相対パスで脱出可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;二重 chroot&lt;/strong&gt;: 別の chroot を実行して前の制限を上書き&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ファイルディスクリプタ&lt;/strong&gt;: jail 外で開かれた fd を経由してアクセス&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;openat syscall&lt;/strong&gt;: ディレクトリ fd を使って jail 外のファイルを操作&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;つまり chroot は「ルートディレクトリの表示を変えるだけ」であり、ネットワーク制限もシステムコール制限もありません。AI エージェントのサンドボックスとしては全く不十分です。&lt;/p&gt;</description></item><item><title>MCP サーバーを増やしてもコンテキストを食わせない — Claude Code の Tool Search でトークン消費を95%削減</title><link>https://hdknr.github.io/blogs/posts/2026/03/8feec16470c6e442ce0b999e472ec095/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/8feec16470c6e442ce0b999e472ec095/</guid><description>&lt;h1 id="mcp-サーバーを増やしてもコンテキストを食わせない--claude-code-の-tool-search-でトークン消費を95削減"&gt;MCP サーバーを増やしてもコンテキストを食わせない — Claude Code の Tool Search でトークン消費を95%削減&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/djrio_vr/status/2028717397134520392"&gt;@djrio_vr 氏のポスト&lt;/a&gt;が、Claude Code の MCP Tool Search 機能を紹介し、大きな反響を呼んでいます（いいね 418、ブックマーク 522）。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Codeで登録してるMCPサーバが増えてくるとコンテキストがかなり食われてたけど、Tool Searchという必要な時だけ動的ロードするオプションをONにしたらめちゃくちゃコンテキスト節約になった！&lt;/p&gt;
+&lt;p&gt;環境変数 ENABLE_TOOL_SEARCH=true と設定するだけ&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;MCP サーバーを複数接続していると、会話を始める前からコンテキストウィンドウの大部分が消費されてしまう問題は、多くの Claude Code ユーザーが直面していました。本記事では、この問題の構造と Tool Search による解決策を技術的に解説します。&lt;/p&gt;
+&lt;h2 id="mcp-ツール定義がコンテキストを圧迫する構造"&gt;MCP ツール定義がコンテキストを圧迫する構造&lt;/h2&gt;
+&lt;h3 id="なぜ-mcp-サーバーを増やすとコンテキストが減るのか"&gt;なぜ MCP サーバーを増やすとコンテキストが減るのか&lt;/h3&gt;
+&lt;p&gt;Claude Code に MCP サーバーを接続すると、各サーバーが提供する&lt;strong&gt;全てのツール定義&lt;/strong&gt;がコンテキストウィンドウに読み込まれます。ツール定義には、ツール名、説明文、JSON スキーマ（パラメータの型・制約・説明）が含まれており、1つのツールだけでも数百トークンを消費します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[MCP サーバー接続時のコンテキスト構造]
+システムプロンプト ～数千トークン
+├── Claude Code の指示
+├── CLAUDE.md の内容
+└── ユーザー設定
+ツール定義 ★ ここが問題
+├── 組み込みツール（Read, Edit, Bash 等）
+├── MCP サーバー A のツール × 10個
+├── MCP サーバー B のツール × 15個
+├── MCP サーバー C のツール × 20個
+└── ...
+会話履歴 ← 残りがここに使われる
+├── ユーザーのメッセージ
+└── Claude の応答
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="具体的な数値"&gt;具体的な数値&lt;/h3&gt;
+&lt;p&gt;GitHub Issue &lt;a href="https://github.com/anthropics/claude-code/issues/3036"&gt;#3036&lt;/a&gt; では、約20個の MCP サーバーを接続した環境で、開始時点からコンテキスト使用率が8〜18%に達し、わずか5プロンプトで100%に到達する現象が報告されています。&lt;/p&gt;</description></item><item><title>AIコーディングツール導入でMCC乗っ取り被害 — Antigravity・Claude Codeの脆弱性とシャドーAI対策</title><link>https://hdknr.github.io/blogs/posts/2026/03/67f7657965c1f660dfbad9b0e88d0414/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/67f7657965c1f660dfbad9b0e88d0414/</guid><description>&lt;h1 id="aiコーディングツール導入でmcc乗っ取り被害--antigravityclaude-codeの脆弱性とシャドーai対策"&gt;AIコーディングツール導入でMCC乗っ取り被害 — Antigravity・Claude Codeの脆弱性とシャドーAI対策&lt;/h1&gt;
+&lt;p&gt;広告運用の現場に衝撃が走っています。&lt;a href="https://x.com/hassii_ad/status/2028399491565633731"&gt;広告の裏側(@hassii_ad)氏のポスト&lt;/a&gt;によると、ある代理店がAIコンサルの支援で Claude Code と Google Antigravity を導入した結果、Google Ads の MCC（マネージャークライアントセンター）アカウントが乗っ取られ、&lt;strong&gt;被害額は8桁後半&lt;/strong&gt;に達したとのことです。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;知り合いの代理店がとあるAI導入したらMCCが乗っ取られて桁違いの損害でてて震えた。こういうのこれから増えそうですね。
+— 広告の裏側(@hassii_ad) 2026年2月17日&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この事態を受けて、&lt;a href="https://x.com/ADHDHSP249834/status/2028449740762103820"&gt;まな(@ADHDHSP249834)氏&lt;/a&gt;は「AIコンサルがClaude CodeとAntigravityの導入を進めたんですかね？その時点で大問題です」と指摘しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;基本は3大LLMとCopilot程度に止めるべきです。またシャドーAI対策を進めていなかったことも想定されますね。セキュリティ対策をせずに、ローカルファイルにアクセスできるAIツールを導入するのはNGです！
+— まな(@ADHDHSP249834)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="mcc乗っ取りの推定原因"&gt;MCC乗っ取りの推定原因&lt;/h2&gt;
+&lt;p&gt;@hassii_ad 氏は乗っ取りの原因として4つの可能性を挙げています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;原因&lt;/th&gt;
+&lt;th&gt;概要&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;悪意あるWebサイト指示&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;プロンプトインジェクションによりAIの動作を乗っ取る&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;配布プロンプトへの悪意ある指示混入&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;AIコンサルまたは社員が使用したプロンプトに仕込まれた攻撃&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;MCPツールの悪用&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Model Context Protocol ツールを経由した不正操作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;トークン流出&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;自動化過程でAPIトークンや認証情報が漏洩&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;特に深刻なのは、MCCが&lt;strong&gt;正規の権限で操作された&lt;/strong&gt;場合、通常の操作と区別がつかず「補償は絶望的」という点です。Google Ads の MCC アカウントは複数の広告アカウントを一元管理する仕組みのため、一度乗っ取られると被害が連鎖的に広がります。&lt;/p&gt;
+&lt;h2 id="google-ads-のセーフガードはなぜ機能しなかったのか"&gt;Google Ads のセーフガードはなぜ機能しなかったのか&lt;/h2&gt;
+&lt;p&gt;Google Ads には予算制限やセキュリティ機能が存在しますが、&lt;strong&gt;正規権限で操作された場合にはほとんど機能しません&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id="既存のセーフガード一覧"&gt;既存のセーフガード一覧&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;th&gt;乗っ取り時に有効か&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;日予算の上限&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;1日の費用は&lt;a href="https://support.google.com/google-ads/answer/2375423?hl=ja"&gt;日予算の2倍まで&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;攻撃者が日予算自体を変更可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;月間費用上限&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;月間費用は日予算 x 30.4 まで&lt;/td&gt;
+&lt;td&gt;同上&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;&lt;a href="https://support.google.com/google-ads/answer/7054229?hl=en"&gt;アカウント予算&lt;/a&gt;&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;アカウント全体の費用上限を設定可能。上限到達で全広告停止&lt;/td&gt;
+&lt;td&gt;攻撃者が上限を変更・解除可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;異常な予算変更の確認&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;大幅な予算変更時（例: $100→$1,000）に確認ダイアログ表示&lt;/td&gt;
+&lt;td&gt;UI操作のみ。API経由なら確認なし&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;&lt;a href="https://support.google.com/google-ads/answer/12795729?hl=en"&gt;不審なアクティビティの検知&lt;/a&gt;&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Google が異常を検知すると一時的な日次支出制限を適用&lt;/td&gt;
+&lt;td&gt;「正規権限」の操作は異常と判定されにくい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;自動ルール&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;一定額到達でキャンペーンを一時停止するルール設定が可能&lt;/td&gt;
+&lt;td&gt;攻撃者がルール自体を削除可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="セーフガードが無力化される理由"&gt;セーフガードが無力化される理由&lt;/h3&gt;
+&lt;p&gt;今回の事件の核心は、攻撃者が MCC の&lt;strong&gt;正規の管理者権限&lt;/strong&gt;を取得している点です。&lt;/p&gt;</description></item><item><title>Claude Code スキルで AI ワークフローを自動化する — Ralph Loop + YAML 宣言的定義の実践</title><link>https://hdknr.github.io/blogs/posts/2026/03/7313515ac133e6a70b7f9f153ee8e2f5/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/7313515ac133e6a70b7f9f153ee8e2f5/</guid><description>&lt;h1 id="claude-code-スキルで-ai-ワークフローを自動化する--ralph-loop--yaml-宣言的定義の実践"&gt;Claude Code スキルで AI ワークフローを自動化する — Ralph Loop + YAML 宣言的定義の実践&lt;/h1&gt;
+&lt;p&gt;kenfdev さん（&lt;a href="https://x.com/kenfdev"&gt;@kenfdev&lt;/a&gt;）が、Claude Code のスキル機能を活用した AI エージェントのワークフロー自動化について、実践的な技術記事を公開しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code のスキルを中心に、AIエージェントのワークフローを自動化してみた話を書きました。
+bash の while ループで claude -p を繰り返す Ralph Loop と、YAML でワークフロー定義を組み合わせて、plan → implement → review → finalize を自律的に回す仕組みです。
+TAKTほどの精度には及ばないのですが、それなりに自分のワークフローでは活用できています。&lt;/p&gt;
+&lt;p&gt;— &lt;a href="https://x.com/kenfdev/status/2024079025065558483"&gt;kenfdev (@kenfdev)&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;記事の核は「Ralph Loop」と「YAML ワークフロー定義」という 2 つの技術を Claude Code スキルで統合し、&lt;strong&gt;plan → implement → review → finalize&lt;/strong&gt; を自律的に回す仕組みです。&lt;/p&gt;
+&lt;h2 id="ralph-loop-とは何か"&gt;Ralph Loop とは何か&lt;/h2&gt;
+&lt;h3 id="起源"&gt;起源&lt;/h3&gt;
+&lt;p&gt;Ralph Loop（正式には Ralph Wiggum Loop）は、Geoffrey Huntley が考案した AI 開発自動化パターンです。名前はシンプソンズのキャラクターに由来しますが、仕組み自体は極めてシンプルです。&lt;/p&gt;
+&lt;h3 id="基本構造"&gt;基本構造&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; true; &lt;span style="color:#66d9ef"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;claude -p &lt;span style="color:#e6db74"&gt;&amp;#34;プロンプト&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 完了判定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$result&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; *&lt;span style="color:#e6db74"&gt;&amp;#34;COMPLETE&amp;#34;&lt;/span&gt;* &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; break
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;bash の &lt;code&gt;while&lt;/code&gt; ループで &lt;code&gt;claude -p&lt;/code&gt;（ヘッドレスモード）を繰り返し呼び出す、たったこれだけです。&lt;code&gt;-p&lt;/code&gt; フラグは Claude Code を非対話モードで実行し、結果を標準出力に返します。&lt;/p&gt;</description></item><item><title>Claude Code スキルで「穴場市場」を自動発掘 — コードを書かない AI エージェント活用術</title><link>https://hdknr.github.io/blogs/posts/2026/03/0248d4f7dad745c12a44f107f17dee96/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/0248d4f7dad745c12a44f107f17dee96/</guid><description>&lt;h1 id="claude-code-スキルで穴場市場を自動発掘--コードを書かない-ai-エージェント活用術"&gt;Claude Code スキルで「穴場市場」を自動発掘 — コードを書かない AI エージェント活用術&lt;/h1&gt;
+&lt;p&gt;「Claude Code はプログラミング支援ツール」——そう思い込んでいませんか？&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://x.com/koder_dev/status/2027323578367242690"&gt;@koder_dev さんのポスト&lt;/a&gt; で紹介された &lt;a href="https://zenn.dev/s4kura/articles/claude-code-indie-idea-scout-skill"&gt;Zenn 記事（s4kura 氏）&lt;/a&gt; が話題になっています。Claude Code の &lt;strong&gt;スキル機能&lt;/strong&gt; を使って「穴場市場を探させる」という、コーディングとは全く異なる使い方です。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「Claude Code にスキル自作させて穴場市場探させるって Zenn の記事めっちゃ面白かった。いや本当自分の周りも自作 skill でプログラミング作って色んな作業やらせてる、無限に応用効くからなー」— @koder_dev&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="claude-code-スキルとは何か"&gt;Claude Code スキルとは何か&lt;/h2&gt;
+&lt;h3 id="基本概念"&gt;基本概念&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://code.claude.com/docs/ja/skills"&gt;Claude Code のスキル&lt;/a&gt;は、&lt;code&gt;SKILL.md&lt;/code&gt; ファイルに指示を記述することで Claude の機能を拡張する仕組みです。いわば &lt;strong&gt;「プロンプトエンジニアリングのパッケージ化」&lt;/strong&gt; です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;スキルなし:
+毎回 → 「こういう手順で」「こういう基準で」「こういう形式で」と指示
+結果 → 指示漏れ、品質のばらつき
+スキルあり:
+毎回 → /skill-name と入力するだけ
+結果 → 事前定義した手順・基準・形式が自動適用
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="スキルの構造"&gt;スキルの構造&lt;/h3&gt;
+&lt;p&gt;スキルは &lt;code&gt;SKILL.md&lt;/code&gt; を中心としたディレクトリです。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;my-skill/
+├── SKILL.md # メイン指示（必須）
+├── references/ # 判断基準・リファレンス（任意）
+├── templates/ # テンプレート（任意）
+├── scripts/ # 実行スクリプト（任意）
+└── examples/ # サンプル出力（任意）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;SKILL.md&lt;/code&gt; は YAML フロントマターとマークダウンコンテンツの 2 部構成です。&lt;/p&gt;</description></item><item><title>Claude Code スキルの自動最適化 — テキスト勾配で「職人芸プロンプト」を工学に変える</title><link>https://hdknr.github.io/blogs/posts/2026/03/1d6854d8bc646392d41a556f4d931021/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1d6854d8bc646392d41a556f4d931021/</guid><description>&lt;h1 id="claude-code-スキルの自動最適化--テキスト勾配で職人芸プロンプトを工学に変える"&gt;Claude Code スキルの自動最適化 — テキスト勾配で「職人芸プロンプト」を工学に変える&lt;/h1&gt;
+&lt;p&gt;「プロンプトは職人芸」——そんな時代が終わりつつあります。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://x.com/yusuke_post/status/2027348800331972703"&gt;@yusuke_post さん&lt;/a&gt; が発表した &lt;a href="https://x.com/i/article/2026959443972530176"&gt;X 記事&lt;/a&gt; では、&lt;strong&gt;プロンプトエンジニアリングを自動化する研究を応用して Claude Code の Skills を自動最適化&lt;/strong&gt;する手法が紹介されています。ヒアリングメモから SaaS 導入提案書を生成するスキルを題材に、4 イテレーションで 13.6 点のスコア改善を達成しました。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://x.com/kgsi/status/2027603672860074265"&gt;@kgsi さん&lt;/a&gt; も「この取り組みすごい、ナレッジが溜まっている企業や組織ほどこの仕組みで効果が出そう」と反応しています。&lt;/p&gt;
+&lt;h2 id="全体像何がどう繋がっているのか"&gt;全体像：何がどう繋がっているのか&lt;/h2&gt;
+&lt;p&gt;この記事で扱う内容を先に俯瞰します。&lt;/p&gt;
+&lt;h3 id="課題"&gt;課題&lt;/h3&gt;
+&lt;p&gt;Claude Code の Skills（SKILL.md）は、タスクの手順を定義する「指示書」です。しかし、良い指示書を書くのは難しく、試行錯誤が属人的になりがちです。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-mermaid" data-lang="mermaid"&gt;graph LR
+A[&amp;#34;人間が SKILL.md を書く&amp;#34;] --&amp;gt; B[&amp;#34;実行&amp;#34;]
+B --&amp;gt; C[&amp;#34;結果がイマイチ&amp;#34;]
+C --&amp;gt; D[&amp;#34;🤔 勘で修正&amp;lt;br/&amp;gt;（= 職人芸）&amp;#34;]
+D --&amp;gt; B
+style D fill:#f9c74f,color:#000
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="解決策テキスト勾配による自動改善ループ"&gt;解決策：テキスト勾配による自動改善ループ&lt;/h3&gt;
+&lt;p&gt;深層学習がパラメータを自動で最適化するように、&lt;strong&gt;SKILL.md を自動で最適化する&lt;/strong&gt;のがテキスト勾配です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-mermaid" data-lang="mermaid"&gt;graph TD
+A[&amp;#34;① SKILL.md（現在の指示書）で実行&amp;#34;] --&amp;gt; B[&amp;#34;② 出力を正解データと比較&amp;lt;br/&amp;gt;（人間の過去の成果物）&amp;#34;]
+B --&amp;gt; C[&amp;#34;③ AI が差分を分析し改善点を言語化&amp;lt;br/&amp;gt;= テキスト勾配&amp;#34;]
+C --&amp;gt; D[&amp;#34;④ テキスト勾配に従って&amp;lt;br/&amp;gt;SKILL.md を改訂&amp;#34;]
+D --&amp;gt; E[&amp;#34;⑤ 改訂版で再実行&amp;#34;]
+E --&amp;gt; B
+C -.- F[&amp;#34;例: 優先度の整理ステップが欠如している&amp;#34;]
+style C fill:#4ecdc4,color:#000
+style F fill:#f0f0f0,color:#555,stroke-dasharray: 5 5
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;4 回繰り返すだけで 13.6 点のスコア改善を達成。&lt;/p&gt;</description></item><item><title>Claude Code ベストプラクティス — 成果を安定させる 7 つの鉄則と公式ガイドの設計思想</title><link>https://hdknr.github.io/blogs/posts/2026/03/6c41ec635f51d851c9fe02fd83a0d8d9/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/6c41ec635f51d851c9fe02fd83a0d8d9/</guid><description>&lt;h1 id="claude-code-ベストプラクティス--成果を安定させる-7-つの鉄則と公式ガイドの設計思想"&gt;Claude Code ベストプラクティス — 成果を安定させる 7 つの鉄則と公式ガイドの設計思想&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/qiitapoi/status/2028011497528836528"&gt;qiitapoi 氏のポスト&lt;/a&gt;が、Qiita 記事「Claude Code ベストプラクティス &amp;ndash; 成果を安定させる 7 つの鉄則」を紹介しています。この記事は、Claude Code の公式ベストプラクティスを実務者の視点で 7 つのルールに凝縮したもので、「具体的に頼む」「必ず検証する」という基本から、セッション管理やコスト意識まで、日々の運用に直結する指針をまとめています。&lt;/p&gt;
+&lt;p&gt;本記事では、この 7 つの鉄則を公式ドキュメントの設計思想と照らし合わせながら、なぜそのルールが効くのかを掘り下げます。&lt;/p&gt;
+&lt;h2 id="公式ベストプラクティスの根本原則-コンテキストウィンドウ"&gt;公式ベストプラクティスの根本原則: コンテキストウィンドウ&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://code.claude.com/docs/ja/best-practices"&gt;Claude Code 公式ベストプラクティス&lt;/a&gt;は、冒頭で明確に述べています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ほとんどのベストプラクティスは 1 つの制約に基づいています。Claude のコンテキストウィンドウはすぐにいっぱいになり、満杯になるにつれてパフォーマンスが低下します。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude Code の 200K トークンのコンテキストウィンドウには、すべてのメッセージ、読み取ったファイル、コマンド出力が蓄積されます。コンテキストが埋まるにつれて、初期の指示を「忘れる」、ミスが増えるといった品質低下が起きます。7 つの鉄則のほぼすべてが、この制約への対処法として理解できます。&lt;/p&gt;
+&lt;h2 id="7-つの鉄則と公式ガイドの対応"&gt;7 つの鉄則と公式ガイドの対応&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://qiita.com/nogataka/items/392934f79e943e8b9228"&gt;nogataka 氏の Qiita 記事&lt;/a&gt;が提案する 7 つの鉄則を、公式ドキュメントの推奨事項と対応させて整理します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;鉄則&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;th&gt;公式ガイドの対応セクション&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1. 具体的に頼む&lt;/td&gt;
+&lt;td&gt;5W1H で指示を明確にする&lt;/td&gt;
+&lt;td&gt;プロンプトで具体的なコンテキストを提供する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2. 必ず検証する&lt;/td&gt;
+&lt;td&gt;diff、テスト、コストの 3 点確認&lt;/td&gt;
+&lt;td&gt;Claude に自分の作業を検証する方法を与える&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3. CLAUDE.md でルール言語化&lt;/td&gt;
+&lt;td&gt;プロジェクト固有の規約を明文化する&lt;/td&gt;
+&lt;td&gt;効果的な CLAUDE.md を書く&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4. セッション短く保つ&lt;/td&gt;
+&lt;td&gt;1 タスク 1 セッション&lt;/td&gt;
+&lt;td&gt;セッションを管理する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5. 計画→実行の 2 段階&lt;/td&gt;
+&lt;td&gt;5 分ルールで判断&lt;/td&gt;
+&lt;td&gt;最初に探索し、次に計画し、その後コーディングする&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6. コスト意識&lt;/td&gt;
+&lt;td&gt;/cost で定期確認&lt;/td&gt;
+&lt;td&gt;コンテキストを積極的に管理する&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7. 自動化への次ステップ&lt;/td&gt;
+&lt;td&gt;Hooks, MCP, Agent Teams&lt;/td&gt;
+&lt;td&gt;自動化とスケール&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;7 つの鉄則は、公式ガイドの膨大な内容を実務者が日常的に参照できる形に圧縮したものと位置づけられます。&lt;/p&gt;</description></item><item><title>Claude Cowork 入門ガイド — プロンプトを頑張る時代の終わり、「仕組み化」で AI と働く新しいスタイル</title><link>https://hdknr.github.io/blogs/posts/2026/03/98b91df087ccd64d04b0417b217f7cd0/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/98b91df087ccd64d04b0417b217f7cd0/</guid><description>&lt;h1 id="claude-cowork-入門ガイド--プロンプトを頑張る時代の終わり仕組み化で-ai-と働く新しいスタイル"&gt;Claude Cowork 入門ガイド — プロンプトを頑張る時代の終わり、「仕組み化」で AI と働く新しいスタイル&lt;/h1&gt;
+&lt;p&gt;長谷川氏（&lt;a href="https://x.com/taichi_we/status/2027666793150767417"&gt;@taichi_we&lt;/a&gt;）が投稿した「Claude Cowork の始め方ガイド」が X 上で大きな反響を呼んでいます。ブックマーク数 14,850、いいね 6,021、閲覧数 300 万超という驚異的な数字です。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;プロンプトを頑張る時代は、もう終わりに近い。これから必要なのは、「AIに何を渡せば仕事が進むか」を整えることです。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この記事では、元ポストの内容をベースに、公式ドキュメントや技術解説記事の情報を加えて、Claude Cowork の全体像と実践的な始め方を解説します。&lt;/p&gt;
+&lt;h2 id="claude-cowork-とは何か"&gt;Claude Cowork とは何か&lt;/h2&gt;
+&lt;p&gt;Claude Cowork は、Anthropic が提供する &lt;strong&gt;非エンジニア向けの自律型 AI エージェント機能&lt;/strong&gt; です。Claude Desktop アプリに統合されており、「Chat」「Code」と並んで「Cowork」タブから利用できます。&lt;/p&gt;
+&lt;p&gt;もともと Claude Code はエンジニア向けのコマンドラインツールとして提供されていましたが、ファイル整理やスプレッドシート作成など、コーディング以外の用途にも多く使われていることに Anthropic が気づきました。実際、Claude Code でも業務タスクは十分に実行できます。ただし、ターミナル操作は非エンジニアにとってハードルが高いという課題がありました。Cowork は Claude Code と同等の能力を GUI で包み、誰でもアクセスできるようにしたものです。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;Claude Chat&lt;/th&gt;
+&lt;th&gt;Claude Code&lt;/th&gt;
+&lt;th&gt;Claude Cowork&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;対象ユーザー&lt;/td&gt;
+&lt;td&gt;全般&lt;/td&gt;
+&lt;td&gt;開発者中心（だが業務タスクも可能）&lt;/td&gt;
+&lt;td&gt;非エンジニアを含む全職種&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;インターフェース&lt;/td&gt;
+&lt;td&gt;Web / アプリ&lt;/td&gt;
+&lt;td&gt;ターミナル（CLI）&lt;/td&gt;
+&lt;td&gt;Desktop アプリ（GUI）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ファイル操作&lt;/td&gt;
+&lt;td&gt;アップロード / ダウンロード&lt;/td&gt;
+&lt;td&gt;ローカル直接アクセス&lt;/td&gt;
+&lt;td&gt;ローカル直接アクセス&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;自律実行&lt;/td&gt;
+&lt;td&gt;なし&lt;/td&gt;
+&lt;td&gt;あり&lt;/td&gt;
+&lt;td&gt;あり&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;差別化ポイント&lt;/td&gt;
+&lt;td&gt;手軽な対話&lt;/td&gt;
+&lt;td&gt;Bash 実行、Git 操作、MCP、スキル&lt;/td&gt;
+&lt;td&gt;プラグイン、コネクター、スケジュール実行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;前提スキル&lt;/td&gt;
+&lt;td&gt;不要&lt;/td&gt;
+&lt;td&gt;ターミナル操作に慣れている必要あり&lt;/td&gt;
+&lt;td&gt;不要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;本質的な違いは「何ができるか」ではなく「誰がアクセスしやすいか」です。Claude Code でもレポート作成やファイル整理といった業務タスクは問題なくこなせます。Cowork はその能力を、ターミナルに馴染みのないユーザーにも開放したものと考えるのが正確です。&lt;/p&gt;</description></item><item><title>NotebookLM に「40 人の天才の思考」をストックする — AI を多角的な思考パートナーに変える方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/9b460514639d1e0e315a9c310672e729/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/9b460514639d1e0e315a9c310672e729/</guid><description>&lt;h1 id="notebooklm-に40-人の天才の思考をストックする--ai-を多角的な思考パートナーに変える方法"&gt;NotebookLM に「40 人の天才の思考」をストックする — AI を多角的な思考パートナーに変える方法&lt;/h1&gt;
+&lt;p&gt;「AI に自分の浅い考えしか入力できなくて、薄い回答しか返ってこない」&lt;/p&gt;
+&lt;p&gt;この問題に対する解決策が SNS で話題になっています。&lt;a href="https://x.com/ai_jitan/status/2026943427452260525"&gt;@ai_jitan さん&lt;/a&gt; が提案する手法は、&lt;strong&gt;孫子、アドラー、ドラッカーなど 40 人の天才の思考法を NotebookLM にストック&lt;/strong&gt;し、AI を「多角的な思考パートナー」に変えるというものです。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://x.com/karasu_ai/status/2027276933449252914"&gt;@karasu_ai さん&lt;/a&gt; も「40 人の天才の思考をプロンプトとしてストックするって発想がすごい」と反応し、大きな反響を呼びました。&lt;/p&gt;
+&lt;h2 id="コアアイデア入力の質がai出力の質を決める"&gt;コア・アイデア：入力の質がAI出力の質を決める&lt;/h2&gt;
+&lt;h3 id="問題自分の浅い考えがボトルネック"&gt;問題：「自分の浅い考え」がボトルネック&lt;/h3&gt;
+&lt;p&gt;AI に質問するとき、多くの人は自分の知識の範囲内で入力を行います。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;ユーザー: 「売上を伸ばすにはどうすればいい？」
+AI: 「マーケティングを強化しましょう。SNS広告や...」
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;汎用的で薄い回答しか返ってきません。&lt;strong&gt;入力が浅ければ、出力も浅い&lt;/strong&gt;のです。&lt;/p&gt;
+&lt;h3 id="解決策天才の思考フレームワークを注入する"&gt;解決策：天才の思考フレームワークを注入する&lt;/h3&gt;
+&lt;p&gt;同じ質問でも、複数の偉人の思考法をコンテキストとして与えると：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;孫子（戦略家）: 「敵（競合）を知り己を知れば百戦危うからず。
+まず市場と競合の徹底分析から始めよ」
+ドラッカー（経営学者）: 「顧客は何に価値を見出しているか？
+それを問うことが出発点」
+アドラー（心理学者）: 「顧客の劣等感や承認欲求に着目せよ。
+人は理想の自分に近づくために消費する」
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;1 つの課題に対して、戦略・経営・心理という 3 つの異なる角度&lt;/strong&gt;からアプローチが得られます。これが「多角的な視点での課題解決」の正体です。&lt;/p&gt;
+&lt;h2 id="notebooklm-を使う理由"&gt;NotebookLM を使う理由&lt;/h2&gt;
+&lt;h3 id="notebooklm-の特性"&gt;NotebookLM の特性&lt;/h3&gt;
+&lt;p&gt;Google が提供する &lt;a href="https://notebooklm.google/"&gt;NotebookLM&lt;/a&gt; は、アップロードした資料（ソース）をもとに回答を生成する AI ツールです。通常の ChatGPT や Claude との決定的な違いは：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ソースに基づいた回答&lt;/strong&gt;: 学習データ全体ではなく、アップロードした資料に基づいて回答する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;引用の透明性&lt;/strong&gt;: 回答の根拠となるソースを明示する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ペルソナカスタマイズ&lt;/strong&gt;: AI の役割や視点を詳細に設定できる（最大 10,000 文字）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="なぜストックが重要か"&gt;なぜ「ストック」が重要か&lt;/h3&gt;
+&lt;p&gt;ChatGPT に「孫子になりきって答えて」と毎回指示するのと、NotebookLM に孫子の著作や思考法をソースとしてアップロードしておくのでは、&lt;strong&gt;回答の深さが根本的に異なります&lt;/strong&gt;。&lt;/p&gt;</description></item><item><title>Prompt Request — Pull Requestの次の形：コードを書く時代から「意図を書く時代」へ</title><link>https://hdknr.github.io/blogs/posts/2026/03/2fc3ee764133e8302afdd04eb5c64447/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/2fc3ee764133e8302afdd04eb5c64447/</guid><description>&lt;h1 id="prompt-request--pull-request-の次の形コードを書く時代から意図を書く時代へ"&gt;Prompt Request — Pull Request の次の形：コードを書く時代から「意図を書く時代」へ&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/the_agi_way/status/2026159378525733239"&gt;@The_AGI_WAY（ハヤシシュンスケ）氏のポスト&lt;/a&gt;が話題です。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;コードを書く時代から、意図を書く時代へ。GitHub Issue にこう書く。「[auto] ユーザー認証のエラーハンドリングを追加しろ」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;引用元は &lt;a href="https://x.com/Shuns_AI/status/2026157528787325127"&gt;@Shuns_AI 氏が X で公開した長文記事「Prompt Request — Pull Request の次の形」&lt;/a&gt;です。AI エージェントが GitHub Issue を読み取り、ブランチ作成から実装・テスト・PR 作成・マージまでを自律的に完了するワークフローを提案しています。92 タスクで 95% の成功率を達成したという実績とともに、「良い Issue を書く能力」こそが開発者の最重要スキルになるという主張が注目を集めました。&lt;/p&gt;
+&lt;h2 id="prompt-requestとは何か"&gt;「Prompt Request」とは何か&lt;/h2&gt;
+&lt;p&gt;「Prompt Request」は、従来の Pull Request（PR）に代わる新しい開発パラダイムを表す概念です。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;Pull Request&lt;/th&gt;
+&lt;th&gt;Prompt Request&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;開発者の作業&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;コードを書いて PR を作成する&lt;/td&gt;
+&lt;td&gt;GitHub Issue に意図を書く&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;実装の担い手&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;人間の開発者&lt;/td&gt;
+&lt;td&gt;AI エージェント&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;レビュー&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;人間がコードレビュー&lt;/td&gt;
+&lt;td&gt;AI がピアレビュー + 人間が最終確認&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;マージ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;人間が判断してマージ&lt;/td&gt;
+&lt;td&gt;条件を満たせば自動マージ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;所要時間&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;数時間〜数日&lt;/td&gt;
+&lt;td&gt;5〜15 分&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;PR がコードの差分を中心とした「成果物の提出」であるのに対し、Prompt Request は「意図の伝達」が起点になります。開発者が書くのはコードではなく、何をしたいかという自然言語の指示です。&lt;/p&gt;
+&lt;h2 id="ワークフローの全体像"&gt;ワークフローの全体像&lt;/h2&gt;
+&lt;p&gt;記事で提案されているワークフローは次のとおりです。&lt;/p&gt;</description></item><item><title>Claude Code が汎用AIエージェント基盤へ進化 — Auto Memory・Remote Control・Scheduled Tasks の全貌</title><link>https://hdknr.github.io/blogs/posts/2026/03/1a7265c8ba51f09a06687b88ffe260e9/</link><pubDate>Sun, 01 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1a7265c8ba51f09a06687b88ffe260e9/</guid><description>&lt;h2 id="claude-code-が汎用aiエージェント基盤へ進化--auto-memoryremote-controlscheduled-tasks-の全貌"&gt;Claude Code が「汎用AIエージェント基盤」へ進化 — Auto Memory・Remote Control・Scheduled Tasks の全貌&lt;/h2&gt;
+&lt;p&gt;2026年2月、Anthropic は Claude Code に3つの重要なアップデートを投入しました。これらを組み合わせると、オープンソースの自律AIエージェント &lt;strong&gt;OpenClaw&lt;/strong&gt; に近い体験が、公式機能だけで実現できる可能性が見えてきます。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;参考ツイート: &lt;a href="https://x.com/Fujin_Metaverse/status/2027936819086856280"&gt;@Fujin_Metaverse&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h3 id="3つのアップデート概要"&gt;3つのアップデート概要&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;概要&lt;/th&gt;
+&lt;th&gt;リリース&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Auto Memory&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;AIが自分で学習内容を記憶・蓄積する&lt;/td&gt;
+&lt;td&gt;2026年2月&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Remote Control&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;スマホからPCのClaude Codeを操作&lt;/td&gt;
+&lt;td&gt;2026年2月25日&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Cowork Scheduled Tasks&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;指定時間に自動でタスクを実行&lt;/td&gt;
+&lt;td&gt;2026年2月24日&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h3 id="1-auto-memory--aiが自分でメモを取りセッションを超えて記憶する"&gt;1. Auto Memory — AIが自分でメモを取り、セッションを超えて記憶する&lt;/h3&gt;
+&lt;h4 id="仕組み"&gt;仕組み&lt;/h4&gt;
+&lt;p&gt;Claude Code がプロジェクトごとに &lt;code&gt;MEMORY.md&lt;/code&gt; ファイルを自動作成し、以下のような情報を蓄積していきます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロジェクトのビルドコマンド、コードスタイル&lt;/li&gt;
+&lt;li&gt;アーキテクチャの決定事項&lt;/li&gt;
+&lt;li&gt;デバッグで解決したトリッキーなバグ&lt;/li&gt;
+&lt;li&gt;ユーザーのワークフローやコミュニケーションスタイル&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="技術的な詳細"&gt;技術的な詳細&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;保存場所&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;~/.claude/projects/&amp;lt;encoded-path&amp;gt;/memory/MEMORY.md&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;読み込み&lt;/td&gt;
+&lt;td&gt;セッション開始時に&lt;strong&gt;最初の200行&lt;/strong&gt;をシステムプロンプトに自動注入&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Git&lt;/td&gt;
+&lt;td&gt;ローカル保存のみ。Git にはコミットされない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;管理&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/memory&lt;/code&gt; コマンドで確認・編集&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;無効化&lt;/td&gt;
+&lt;td&gt;設定ファイルまたは環境変数でオフ可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id="claudemd-との違い"&gt;CLAUDE.md との違い&lt;/h4&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;CLAUDE.md → ユーザーが手動で書くルール・指示書（チーム共有可能）
+MEMORY.md → AIが自動で書く学習メモ（ローカル個人用）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;両方を併用するのがベスト。&lt;code&gt;CLAUDE.md&lt;/code&gt; でプロジェクトのルールを明示し、&lt;code&gt;MEMORY.md&lt;/code&gt; でAIの学習知見を蓄積します。&lt;/p&gt;</description></item><item><title>MCP のトークン消費問題 — スキーマ注入で 55,000 トークン、CLI は 35 倍効率的</title><link>https://hdknr.github.io/blogs/posts/2026/03/0ee19b59603fd68d6a0295e4e94ac6f9/</link><pubDate>Sun, 01 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/0ee19b59603fd68d6a0295e4e94ac6f9/</guid><description>&lt;h1 id="mcp-のトークン消費問題--スキーマ注入で-55000-トークンcli-は-35-倍効率的"&gt;MCP のトークン消費問題 — スキーマ注入で 55,000 トークン、CLI は 35 倍効率的&lt;/h1&gt;
+&lt;p&gt;Claude Code や OpenClaw で MCP（Model Context Protocol）を使っている方に知ってほしい事実があります。MCP はスキーマ注入だけで数万トークンを消費しており、同じタスクを CLI 経由で実行すると &lt;strong&gt;35 倍効率的&lt;/strong&gt; になるケースがあるのです。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://x.com/SuguruKun_ai/status/2026958295857344532"&gt;@SuguruKun_ai さんのポスト&lt;/a&gt; と &lt;a href="https://x.com/shinzizm2/status/2026976707983684021"&gt;@shinzizm2 さんのポスト&lt;/a&gt; でこの問題が指摘され、大きな反響を呼びました。&lt;/p&gt;
+&lt;h2 id="mcp-のトークン消費問題とは"&gt;MCP のトークン消費問題とは&lt;/h2&gt;
+&lt;h3 id="スキーマ注入の仕組み"&gt;スキーマ注入の仕組み&lt;/h3&gt;
+&lt;p&gt;MCP サーバーを接続すると、&lt;strong&gt;ツール定義（スキーマ）がシステムプロンプトに注入&lt;/strong&gt;されます。これは AI が「どんなツールを使えるか」を理解するために必要な情報ですが、この定義自体が大量のトークンを消費します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;MCP サーバー接続時の処理:
+1. tools/list でツール一覧を取得
+2. 各ツールの名前、説明、パラメータ定義を取得
+3. 全てのスキーマをプロンプトに注入 ← ここで大量消費
+4. ユーザーの質問に回答
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;あなたが何も入力する前に、スキーマだけでトークンが消費されている&lt;/strong&gt;のです。&lt;/p&gt;
+&lt;h3 id="具体的な数値"&gt;具体的な数値&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;MCP サーバー&lt;/th&gt;
+&lt;th&gt;ツール数&lt;/th&gt;
+&lt;th&gt;トークン消費量&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;GitHub MCP サーバー&lt;/td&gt;
+&lt;td&gt;93 ツール&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;約 55,000 トークン&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Notion サーバー&lt;/td&gt;
+&lt;td&gt;15+ ツール&lt;/td&gt;
+&lt;td&gt;約 8,000 トークン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ファイルシステム&lt;/td&gt;
+&lt;td&gt;10 ツール&lt;/td&gt;
+&lt;td&gt;約 4,000 トークン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;平均的なツール定義&lt;/td&gt;
+&lt;td&gt;1 ツール&lt;/td&gt;
+&lt;td&gt;300〜600 トークン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;GitHub MCP サーバーの場合、93 ツール分のスキーマには &lt;code&gt;owner&lt;/code&gt;、&lt;code&gt;repo&lt;/code&gt;、&lt;code&gt;title&lt;/code&gt; 等のプロパティ定義、&lt;code&gt;required&lt;/code&gt; フィールド、入出力スキーマが全て含まれます。&lt;/p&gt;</description></item><item><title># Claude Code の「YOLO モード」を安全に使う — dangerously-skip-permissions と Docker 活用</title><link>https://hdknr.github.io/blogs/posts/2026/02/efad95152b5d282330300019d1d8572a/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/efad95152b5d282330300019d1d8572a/</guid><description>&lt;h1 id="claude-code-のyolo-モードを安全に使う--dangerously-skip-permissions-と-docker-活用"&gt;Claude Code の「YOLO モード」を安全に使う — dangerously-skip-permissions と Docker 活用&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;関連ポスト: &lt;a href="https://x.com/hiragram/status/2026106377169666406"&gt;hiragram&lt;/a&gt;
+リポジトリ: &lt;a href="https://github.com/hiragram/claude-docker"&gt;hiragram/claude-docker&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;Claude Code を使っていると、ファイル編集やコマンド実行のたびに「これを実行してもいいですか？」と確認を求められる。安全設計として正しいが、反復的な作業では毎回の承認が煩わしくなる。&lt;/p&gt;
+&lt;p&gt;そこで登場するのが &lt;code&gt;--dangerously-skip-permissions&lt;/code&gt; フラグ。通称「&lt;strong&gt;YOLO モード&lt;/strong&gt;」。YOLO とは &lt;strong&gt;&amp;ldquo;You Only Live Once&amp;rdquo;（人生は一度きり）&lt;/strong&gt; の略で、「結果を気にせず、とにかくやってしまえ」というネットスラング。安全確認を一切スキップして全操作をぶっ通しで実行させる様子が、まさに「後先考えずに突っ走る」YOLOの精神そのものであることから、コミュニティでこう呼ばれるようになった。&lt;/p&gt;
+&lt;p&gt;便利だが、名前の通り危険も伴う。このフラグの本質と、安全に使うための Docker 活用について整理する。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="--dangerously-skip-permissions-とは"&gt;&lt;code&gt;--dangerously-skip-permissions&lt;/code&gt; とは&lt;/h2&gt;
+&lt;p&gt;Claude Code の&lt;strong&gt;全てのパーミッションチェック（権限確認プロンプト）をバイパス&lt;/strong&gt;し、完全に自律動作させるフラグ。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude --dangerously-skip-permissions
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3つの動作モードの比較"&gt;3つの動作モードの比較&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;モード&lt;/th&gt;
+&lt;th&gt;挙動&lt;/th&gt;
+&lt;th&gt;ユーザー介入&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;通常モード&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ファイル変更・コマンド実行のたびに承認を要求&lt;/td&gt;
+&lt;td&gt;毎回必要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Auto-Accept&lt;/strong&gt; (Shift+Tab)&lt;/td&gt;
+&lt;td&gt;UI上で承認を自動化&lt;/td&gt;
+&lt;td&gt;介入可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;dangerously-skip-permissions&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;全ての安全ガードレールを除去&lt;/td&gt;
+&lt;td&gt;一切不要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="なぜdangerouslyと名付けられているのか"&gt;なぜ「dangerously」と名付けられているのか&lt;/h3&gt;
+&lt;p&gt;Anthropic が意図的に「危険」という語を含めている。実際にリスクは深刻で、以下のような報告がある。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Wolak 事件（2025年10月）&lt;/strong&gt;: Ubuntu/WSL2 上で Claude Code が &lt;code&gt;rm -rf /&lt;/code&gt; を実行し、&lt;code&gt;/bin&lt;/code&gt;、&lt;code&gt;/boot&lt;/code&gt;、&lt;code&gt;/etc&lt;/code&gt; などシステムディレクトリを破壊&lt;/li&gt;
+&lt;li&gt;eesel AI の調査によると、このフラグ使用者の &lt;strong&gt;32%&lt;/strong&gt; が意図しないファイル変更を経験、&lt;strong&gt;9%&lt;/strong&gt; が実際のデータ損失を報告&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="主なリスク"&gt;主なリスク&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;リスク&lt;/th&gt;
+&lt;th&gt;具体例&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;破壊的コマンドの無確認実行&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;rm -rf&lt;/code&gt;、&lt;code&gt;git reset --hard&lt;/code&gt;、設定ファイル上書き&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スコープクリープ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;指定範囲外のファイルを「親切心」で変更・削除&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;資格情報の漏洩&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ホストの全資格情報にアクセス可能な状態&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;連鎖的被害&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;1つの誤った解釈が次々と問題を引き起こす&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="それでも-yolo-モードが必要な理由"&gt;それでも YOLO モードが必要な理由&lt;/h2&gt;
+&lt;p&gt;危険だが、以下のユースケースでは事実上不可欠。&lt;/p&gt;</description></item><item><title># Claude Code の能力を10倍にする CLAUDE.md — AI エージェントのマネジメント哲学</title><link>https://hdknr.github.io/blogs/posts/2026/02/5fcb10cb6bcc6b0c29f2b1e01d1c0855/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/5fcb10cb6bcc6b0c29f2b1e01d1c0855/</guid><description>&lt;h1 id="claude-code-の能力を10倍にする-claudemd--ai-エージェントのマネジメント哲学"&gt;Claude Code の能力を10倍にする CLAUDE.md — AI エージェントのマネジメント哲学&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;紹介ポスト: &lt;a href="https://x.com/masahirochaen/status/2025423179578311048"&gt;チャエン @masahirochaen&lt;/a&gt;
+解説記事: &lt;a href="https://zenn.dev/pochaneco/articles/dc7b0b3cecc836"&gt;Zenn: Claude Codeの能力を10倍にする CLAUDE.md の中身を見てみた&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;海外で大バズりした「Claude Code の能力を10倍にする CLAUDE.md」。Anthropic の Claude Code 開発者が実際に使っているベストプラクティスを、1つの CLAUDE.md ファイルに構造化したもの。&lt;/p&gt;
+&lt;p&gt;これは単なるプロンプトテンプレートではない。&lt;strong&gt;AI エージェントをどうマネジメントするか&lt;/strong&gt;という哲学を、実装可能な形にまとめたファイルだ。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="6つのワークフロー原則"&gt;6つのワークフロー原則&lt;/h2&gt;
+&lt;h3 id="1-plan-mode-デフォルト"&gt;1. Plan Mode デフォルト&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「3ステップ以上、またはアーキテクチャ判断を伴うタスクは、必ず Plan Mode から始めよ」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude Code が実装に飛びつくのを防ぐ最も重要なルール。計画なしに実装を始めると、途中で方向修正が必要になったとき、修正の連鎖（カスケード失敗）が発生する。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;やり方:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Shift+Tab を2回押して Plan Mode に入る&lt;/li&gt;
+&lt;li&gt;Claude の計画が納得できるまでやり取りを繰り返す&lt;/li&gt;
+&lt;li&gt;計画が固まったら Auto-Accept モードに切り替えて一気に実装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;実行中に問題が起きたら:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;すぐに Plan Mode に戻って再計画する&lt;/li&gt;
+&lt;li&gt;Plan Mode は「最初の設計」だけでなく「リカバリー」にも使う&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-サブエージェント戦略"&gt;2. サブエージェント戦略&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「リサーチ、探索、並列分析はサブエージェントに委譲せよ」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;メインのコンテキストウィンドウは有限のリソース。調査や分析をメインエージェントにやらせると、コンテキストが汚れて本来のタスクの品質が下がる。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;サブエージェントに委譲すべきタスク:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;コードベースの調査・探索&lt;/li&gt;
+&lt;li&gt;複数ファイルの並列分析&lt;/li&gt;
+&lt;li&gt;計算集約的な処理&lt;/li&gt;
+&lt;li&gt;独立した検証作業&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;メインエージェントに残すべきタスク:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;最終的な設計判断&lt;/li&gt;
+&lt;li&gt;コードの実装&lt;/li&gt;
+&lt;li&gt;統合・結合&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="初心者向け解説-サブエージェントtaskとは何か"&gt;初心者向け解説: 「サブエージェント（Task）」とは何か&lt;/h4&gt;
+&lt;p&gt;「サブエージェント」と聞くと難しそうだが、仕組みはシンプル。&lt;strong&gt;Claude Code が内部的に「別の Claude」を立ち上げて、作業を分担する機能&lt;/strong&gt;のこと。Claude Code ではこれを &lt;strong&gt;Task&lt;/strong&gt; と呼ぶ。&lt;/p&gt;</description></item><item><title># コンテキストエンジニアリング — AI を「使う人」と「使いこなす人」の違い</title><link>https://hdknr.github.io/blogs/posts/2026/02/066b5a501b99b2a36e1e5e4496d1ead0/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/066b5a501b99b2a36e1e5e4496d1ead0/</guid><description>&lt;h1 id="コンテキストエンジニアリング--ai-を使う人と使いこなす人の違い"&gt;コンテキストエンジニアリング — AI を「使う人」と「使いこなす人」の違い&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;紹介ポスト: &lt;a href="https://x.com/7_eito_7/status/2025953809030406420"&gt;えいと @7_eito_7&lt;/a&gt;
+「AIを使っている人と、本当にAIを使いこなしている人の違いは何か。結論はコンテキストエンジニアリングができるかどうか。簡単に言えば、指示の出し方ではなく&lt;strong&gt;どんな文脈を渡しているか&lt;/strong&gt;。」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;2025年半ば、Shopify CEO の Tobi Lütke が次のように発言した:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;「&amp;ldquo;プロンプトエンジニアリング&amp;quot;より&amp;quot;コンテキストエンジニアリング&amp;quot;という言葉の方がずっと好きだ。LLM がタスクを解決できるだけの十分な文脈を与える技術 — これこそが核心的スキルだ。」&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;AI 研究者の Andrej Karpathy もこれに同意し、「コンテキストエンジニアリング」という概念は一気に広まった。2026年現在、プロンプトエンジニアリングの時代は終わり、&lt;strong&gt;コンテキストエンジニアリングが AI 活用の新しい標準&lt;/strong&gt;になりつつある。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="プロンプトエンジニアリング-vs-コンテキストエンジニアリング"&gt;プロンプトエンジニアリング vs コンテキストエンジニアリング&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;観点&lt;/th&gt;
+&lt;th&gt;プロンプトエンジニアリング&lt;/th&gt;
+&lt;th&gt;コンテキストエンジニアリング&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スコープ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;1つの入力テキストの書き方&lt;/td&gt;
+&lt;td&gt;モデルが見る情報の全体設計&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;焦点&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;指示の言い回し・構造&lt;/td&gt;
+&lt;td&gt;情報の選択・順序・形式・量&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;対象&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;単発の質疑応答&lt;/td&gt;
+&lt;td&gt;複雑な推論、マルチターン、エージェント&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;複雑さ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;文章レベル&lt;/td&gt;
+&lt;td&gt;システムレベルのパイプライン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;例え&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;「質問の仕方を工夫する」&lt;/td&gt;
+&lt;td&gt;「解答に必要な教科書・資料・道具を揃える」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;プロンプトエンジニアリングは&lt;strong&gt;コンテキストエンジニアリングの一部&lt;/strong&gt;にすぎない。質問の質ではなく、&lt;strong&gt;AI に渡す情報の質と構造&lt;/strong&gt;が結果を決める。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="なぜプロンプトだけでは不十分なのか"&gt;なぜプロンプトだけでは不十分なのか&lt;/h2&gt;
+&lt;p&gt;よくある問題: RAG で正確な情報を取得し、プロンプトも丁寧に書いた。&lt;strong&gt;それでも AI がハルシネーションを起こす&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;原因はプロンプトでも検索でもなく、&lt;strong&gt;コンテキストの構造&lt;/strong&gt;にある。&lt;/p&gt;
+&lt;h3 id="プロンプトの-3-つの限界"&gt;プロンプトの 3 つの限界&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;情報不足&lt;/strong&gt;: 質問は完璧でも、判断に必要な背景情報が足りない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情報過多&lt;/strong&gt;: 関連情報を全部詰め込むと、かえって精度が落ちる（ノイズに埋もれる）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情報の無秩序&lt;/strong&gt;: 重要な情報とそうでない情報が区別なく並んでいる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;コンテキストエンジニアリングは、この 3 つを体系的に解決する。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="コンテキストエンジニアリングの-4-つの柱"&gt;コンテキストエンジニアリングの 4 つの柱&lt;/h2&gt;
+&lt;h3 id="1-構成composition-何を渡すか"&gt;1. 構成（Composition）— 何を渡すか&lt;/h3&gt;
+&lt;p&gt;タスクに必要な「材料」を選択する:&lt;/p&gt;</description></item><item><title>DSpy</title><link>https://hdknr.github.io/blogs/posts/2024/10/7a9e4e5fd5dc3bbec6d78c35c7e8c98b/</link><pubDate>Fri, 04 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/7a9e4e5fd5dc3bbec6d78c35c7e8c98b/</guid><description>&lt;h1 id="dspy-declarative-sequencing-for-python"&gt;DSPy (Declarative Sequencing for Python)&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dspy-docs.vercel.app/"&gt;https://dspy-docs.vercel.app/&lt;/a&gt; (Programming—not prompting—Language Models)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="dspyについて"&gt;DSPyについて&lt;/h2&gt;
+&lt;p&gt;DSPyは、LMプロンプトとウェイトをアルゴリズム的に最適化するためのフレームワークです、
+特にLMがパイプライン内で1回以上使用される場合。
+LMを使用して複雑なシステムを構築する なし DSPy、あなたは一般的に次のことを行う必要があります:&lt;/p&gt;
+&lt;p&gt;(1)問題をステップに分解する、
+(2)各ステップが個別にうまく機能するまでLMをうまく促す、
+(3)ステップを微調整してうまく連携する、
+(4)合成例を生成する各ステップを調整し、
+(5)これらの例を使用して、より小さなLMを調整してコストを削減します。&lt;/p&gt;
+&lt;p&gt;現在、これは困難で厄介です。パイプライン、LM、またはデータを変更するたびに、すべてのプロンプト（または微調整手順）を変更する必要がある場合があります。&lt;/p&gt;
+&lt;p&gt;これをより体系的ではるかに強力にするために、 DSPy 2つのことを行います。
+まず、プログラムの流れを分離します(modules)各ステップのパラメーター（LMプロンプトとウェイト）から。
+第二に、 DSPy 新しい optimizers、これは、LMコールのプロンプトやウェイトを調整できるLM駆動アルゴリズムです。metric 最大化したい。&lt;/p&gt;
+&lt;p&gt;DSPy のような強力なモデルを日常的に教えることができます
+GPT-3.5 または GPT-4 と地元のモデル T5-base または Llama2-13b タスクではるかに信頼性が高くなること、つまり、より高い品質を持つこと、および/または特定の障害パターンを回避すること。
+DSPy オプティマイザーは 同じ プログラム 異なる 各LMの指示、ショットの少ないプロンプト、および/またはウェイトの更新（finetunes）。
+これは、LMとそのプロンプトが、データから学習できるより大きなシステムの最適化可能な部分としてバックグラウンドにフェードインする新しいパラダイムです。
+tldr; LMでハードタスクを解決するためのプロンプトが少なく、スコアが高く、より体系的なアプローチ。&lt;/p&gt;
+&lt;h3 id="ニューラルネットワークへのアナロジー"&gt;ニューラルネットワークへのアナロジー&lt;/h3&gt;
+&lt;p&gt;ニューラルネットワークを構築するときは、マニュアルを書きません
+for-loops 以上のリスト 手調整 フロート。代わりに、次のようなフレームワークを使用できます
+PyTorch レイヤーを作成する(例: Convolution または Dropout)0次に、オプティマイザー（SGDやAdamなど）を使用して、ネットワークのパラメーターを学習します。&lt;/p&gt;
+&lt;p&gt;同上！DSPy 適切な汎用モジュールを提供します
+（例: ChainOfThought、 ReAct等）、文字列ベースのプロンプトトリックを置き換えます。
+迅速なハッキングと1回限りの合成データジェネレーターを置き換えるには、 DSPy 一般的なオプティマイザーも提供します(BootstrapFewShotWithRandomSearch または MIPRO)、
+これはプログラムのパラメーターを更新するアルゴリズムです。
+コード、データ、アサーション、またはメトリックを変更するときはいつでも、 コンパイル あなたのプログラムをもう一度 DSPy 変更に適合する新しい効果的なプロンプトを作成します。&lt;/p&gt;</description></item><item><title>Vercel</title><link>https://hdknr.github.io/blogs/posts/2024/09/2910f2d1558c00b2dc5c321c8fcea9c7/</link><pubDate>Mon, 02 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/2910f2d1558c00b2dc5c321c8fcea9c7/</guid><description>&lt;h1 id="vercel"&gt;Vercel&lt;/h1&gt;
+&lt;h2 id="v0"&gt;v0&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://v0.dev/"&gt;https://v0.dev/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="v0とは"&gt;v0とは？&lt;/h3&gt;
+&lt;p&gt;Vercel v0は、最新のフロントエンド開発プラットフォームで、特に開発者の効率を最大化することを目指しています。以下のような特徴があります¹²：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;リアルタイムコラボレーション&lt;/strong&gt;：開発チームがリアルタイムで共同作業できる機能を提供します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自動スケーリング&lt;/strong&gt;：需要に応じてリソースを自動的に調整し、効率的なリソース管理を実現します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;統合された開発環境&lt;/strong&gt;：開発者が最小限の設定で最大限の成果を得られるように設計されています。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;テキストプロンプトからのUI生成&lt;/strong&gt;：自然言語での指示を基に、ウェブサイトのユーザーインターフェース（UI）を自動生成します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;リアルタイムプレビュー&lt;/strong&gt;：コードの変更が即座に反映され、フィードバックサイクルを短縮します。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これにより、プロジェクトの立ち上げからデプロイまでのプロセスが大幅に簡素化され、開発者はより迅速に市場に製品を投入することが可能となります¹²。&lt;/p&gt;
+&lt;p&gt;何か特定の機能について詳しく知りたいことがありますか？&lt;/p&gt;
+&lt;p&gt;ソース: Copilot との会話、 2024/9/2
+(1) Vercel v0とは何か：最新技術の概要とその背景について &amp;hellip;. &lt;a href="https://www.issoh.co.jp/tech/details/3416/"&gt;https://www.issoh.co.jp/tech/details/3416/&lt;/a&gt;.
+(2) 【2024最新】v0 by Vercelとは？特徴や使い方、料金まで解説 &amp;hellip;. &lt;a href="https://ai-gallery.jp/tools/v0-by-vercel/"&gt;https://ai-gallery.jp/tools/v0-by-vercel/&lt;/a&gt;.
+(3) 【Claude Artifactに匹敵！？】Vercel v0の使い方と活用事例20 &amp;hellip;. &lt;a href="https://bing.com/search?q=vercel+v0+%e3%81%a8%e3%81%af"&gt;https://bing.com/search?q=vercel+v0+%e3%81%a8%e3%81%af&lt;/a&gt;.
+(4) 【生成AI】Vercel v0の登録方法〜料金プランまで解説 &amp;hellip;. &lt;a href="https://funrepeat.com/fr-note/3547"&gt;https://funrepeat.com/fr-note/3547&lt;/a&gt;.
+(5) [Vercel] v0 Private Betaの試用レポート - Zenn. &lt;a href="https://zenn.dev/shimarisu_121/articles/b2aabc4f0110d7"&gt;https://zenn.dev/shimarisu_121/articles/b2aabc4f0110d7&lt;/a&gt;.
+(6) undefined. &lt;a href="https://t.co/v5wvCdhPov"&gt;https://t.co/v5wvCdhPov&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="記事"&gt;記事&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/acntechjp/articles/f29c823733bb6e"&gt;vercelのv0(ブイゼロ)を試してみた&lt;/a&gt; (今後はAIソリューション使い倒し、どのような場面でどのソリューションが効果的で、どうプロンプトすれば良いのかマスターになった方が差別化になる)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/arthurlawrence/articles/c456750edfd56e"&gt;いま流行りのvercelの【v0】の自作アイデア17選✨&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="aws"&gt;AWS&lt;/h2&gt;
+&lt;p&gt;はい、Vercelの基盤システムはAWS上で運用されています。Vercelは、AWSのインフラを利用して、グローバルにスケール可能なフロントエンドコードのデプロイとトラフィックのルーティングを行っています³。&lt;/p&gt;
+&lt;p&gt;他に何か知りたいことがあれば教えてくださいね。&lt;/p&gt;
+&lt;p&gt;ソース: Copilot との会話、 2024/9/2
+(1) AWS + Vercel. &lt;a href="https://vercel.com/partners/aws"&gt;https://vercel.com/partners/aws&lt;/a&gt;.
+(2) データ活用基盤を作ってみたその1(構成シナリオ) #AWS - Qiita. &lt;a href="https://qiita.com/kamein/items/81df29ef9d32bf0a0810"&gt;https://qiita.com/kamein/items/81df29ef9d32bf0a0810&lt;/a&gt;.
+(3) Vercelを調査していて感じたメリット・デメリット - Zenn. &lt;a href="https://zenn.dev/smartcamp/articles/9d9b4224be862f"&gt;https://zenn.dev/smartcamp/articles/9d9b4224be862f&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="django"&gt;Django&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/shimakaze_soft/articles/ef4a709dbe797c"&gt;VercelにDjangoをデプロイする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>LangChain</title><link>https://hdknr.github.io/blogs/posts/2024/03/a79c6b608a8198e9c2a42f06ea7075e7/</link><pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/03/a79c6b608a8198e9c2a42f06ea7075e7/</guid><description>&lt;h1 id="langchain"&gt;LangChain&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.langchain.com/"&gt;https://www.langchain.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/search?q=langchain"&gt;https://qiita.com/search?q=langchain&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/search?q=langchain"&gt;https://zenn.dev/search?q=langchain&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/topics/langchain"&gt;https://zenn.dev/topics/langchain&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://book.st-hakky.com/data-science/langcain-in-python/"&gt;LangChain を Python で使う&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/minorun365/items/081fc560e08f0197a7a8"&gt;そろそろ知っておかないとヤバい？ 話題の LangChain を 30 分だけ触って理解しよう！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/get-start-bedrock-with-langchain/"&gt;Amazon Bedrock を LangChain 経由で使って会話履歴も保存してみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="生成-ai-アプリ開発フレームワーク-langchain-入門"&gt;&lt;a href="https://zenn.dev/yoshiyuki_kono/articles/63e731ab98ffca"&gt;生成 AI アプリ開発フレームワーク LangChain 入門&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;独自データの活用:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ファインチューニング (LLM + 独自データ -(再レーニング)-&amp;gt; 独自 LLM)&lt;/li&gt;
+&lt;li&gt;プロンプトエンジニアリング(独自データをコンテキストとして与えて LLM から生成)&lt;/li&gt;
+&lt;li&gt;ベクトル検索(ベクトル化された独自データから最適解をコンテキストとして与えて LLM から生成)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="langchain-とは"&gt;&lt;a href="https://www.ibm.com/jp-ja/topics/langchain"&gt;LangChain とは&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;大規模言語モデル（LLM）を使用したアプリケーション開発のためのオープンソース・オーケストレーション・フレームワーク&lt;/li&gt;
+&lt;li&gt;チャットボットや仮想エージェントなどの LLM 駆動型アプリケーションの構築プロセスを簡素化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="langchain-の仕組みとは"&gt;LangChain の仕組みとは&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;抽象化によって LLM アプリケーションのプログラミングを効率化する開発環境&lt;/li&gt;
+&lt;li&gt;1 つ以上の複雑なプロセスの構成ステップをすべてカプセル化した名前付きコンポーネントとみなすことでコードを簡素化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;言語モデルのインポート:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ほぼすべての LLM を使用できます&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;プロンプトテンプレート:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロンプト: LLM に与えられる指示&lt;/li&gt;
+&lt;li&gt;プロンプトエンジニアリング:LLM が入力を解釈し、最も役立つ方法で出力を構成するために必要なコンテキストを効果的に提供するプロンプトを作成する作業&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;チェーン:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;LLM を他のコンポーネントと組み合わせ、一連の関数を実行することでアプリケーションを作成&lt;/li&gt;
+&lt;li&gt;LLMChain: 基本チェーン: 単にモデルを呼び出し、そのモデルのプロンプトテンプレートを呼び出す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;インデックス:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;トレーニングデータセットに含まれていない特定の外部データソース&lt;/p&gt;</description></item><item><title>AWS: Bedrock: GenAI</title><link>https://hdknr.github.io/blogs/posts/2024/02/895c111bd79b76d4f8be7a5267a0afc3/</link><pubDate>Tue, 06 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/895c111bd79b76d4f8be7a5267a0afc3/</guid><description>&lt;h1 id="aws-bedrock-genai"&gt;AWS: Bedrock: GenAI&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/bedrock/latest/userguide/what-is-bedrock.html"&gt;Amazon Bedrock とは&lt;/a&gt;
+&lt;a href="https://dev.classmethod.jp/articles/breaing-news-amazon-bedrock-was-released/"&gt;【速報】AWS の生成 AI サービスである Amazon Bedrock がリリースされたので朝イチで触ってみた&lt;/a&gt;
+&lt;a href="https://qiita.com/nasuvitz/items/e6cabec6c000de861d22"&gt;Amazon Bedrock &amp;ldquo;Claude 2&amp;rdquo; と、ChatGPT &amp;ldquo;GPT-4&amp;rdquo; を比較してみる&lt;/a&gt;
+&lt;a href="https://qiita.com/nasuvitz/items/679674d93219cfb8320d"&gt;AWS による生成 AI の新サービス「Amazon Bedrock」の可能性を考察する&lt;/a&gt;
+&lt;a href="https://qiita.com/JamyJamy/items/f1d63d1c3186a0e5d7da"&gt;Amazon Bedrock でモデルごとに画像を生成してみた&lt;/a&gt;
+&lt;a href="https://speakerdeck.com/icoxfog417/amazon-bedrock-nohazimefang"&gt;Bedrock のはじめかた&lt;/a&gt;
+&lt;a href="https://findy-tools.io/products/amazon-bedrock/14/37"&gt;Amazon Bedrock の導入効果をレビューでご紹介（KDDI アジャイル開発センター株式会社-みのるん）&lt;/a&gt;
+&lt;a href="https://aws.amazon.com/jp/blogs/machine-learning/build-generative-ai-chatbots-using-prompt-engineering-with-amazon-redshift-and-amazon-bedrock/"&gt;Build generative AI chatbots using prompt engineering with Amazon Redshift and Amazon Bedrock&lt;/a&gt;
+&lt;a href="https://zenn.dev/spiralai/articles/8af7cbf526c2e1"&gt;GPT 連携アプリ開発時の必須知識、RAG をゼロから解説する。概要＆Python コード例&lt;/a&gt;
+&lt;a href="https://acro-engineer.hatenablog.com/entry/2023/12/20/140000"&gt;Amazon Bedrock の Knowledge base で簡単に RAG を構築&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Github:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/query-structured-data-with-amazon-bedrock"&gt;Query structured data with natural language using Amazon Bedrock&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/amazon-bedrock-workshop"&gt;https://github.com/aws-samples/amazon-bedrock-workshop&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/promptus"&gt;https://github.com/aws-samples/promptus&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;API:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Boto3: &lt;a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock.html"&gt;https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;モデル&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Titan FMs&lt;/li&gt;
+&lt;li&gt;Claude 2&lt;/li&gt;
+&lt;li&gt;Jurassic-2 (&lt;a href="https://docs.ai21.com/docs/python-sdk-with-amazon-bedrock"&gt;Python SDK&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Stable Diffusion&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="claude-2"&gt;Claude 2&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.sms-datatech.co.jp/column/consulting_claude2/"&gt;生成 AI の最新モデル「Claude2」とは？使い方や ChatGPT との違いについても解説&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.anthropic.com/claude/reference/client-sdks"&gt;クライアント SDK&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://10000.co.jp/web/1374/"&gt;GPT-4 と Claude 2 を比較してみました&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://weel.co.jp/media/claude-2.1"&gt;【Claude 2.1】ChatGPT 超え AI の日本語での使い方や API の使用方法、GPT-4 との比較を解説&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://japan.cnet.com/article/35211912/"&gt;Anthropic、「Claude 2.1」をリリース&amp;ndash;15 万ワードに対応、幻覚も半減&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="jurassi-2"&gt;Jurassi-2&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;日本語対応していない&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/moritalous/items/13e5a918266cdcab139e"&gt;AWS の&amp;quot;推しの AI&amp;quot; 「Jurassic-2」を使ってみた！！Bedrock ローンチ前に使えるんやん！&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS Windows</title><link>https://hdknr.github.io/blogs/posts/2023/06/9382ed893473228a92481c45e92f9917/</link><pubDate>Tue, 20 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/9382ed893473228a92481c45e92f9917/</guid><description>&lt;h1 id="aws-ec2-windows"&gt;AWS EC2 Windows&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/wattanx/articles/4c4b3750ba8a92"&gt;AWS EC2 で起動した Windows Server を日本語設定にする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://win.just4fun.biz/?%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%83%97%E3%83%AD%E3%83%B3%E3%83%97%E3%83%88/%E8%8B%B1%E8%AA%9E%E3%83%A2%E3%83%BC%E3%83%89%E3%83%BB%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%83%A2%E3%83%BC%E3%83%89%E3%81%AE%E5%88%87%E3%82%8A%E6%9B%BF%E3%81%88%E6%96%B9%E6%B3%95%E3%83%BBchcp"&gt;コマンドプロンプト/英語モード・日本語モードの切り替え方法・chcp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/setalb_access_to_be_allowed_only_from_cloudfront/"&gt;ALB のアクセスを CloudFront からだけに許可するように設定してみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/about-aws/whats-new/2022/02/amazon-cloudfront-managed-prefix-list/"&gt;Amazon VPC で Amazon CloudFront 用に AWS が管理するプレフィックスリストのサポートを開始&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html"&gt;Work with AWS-managed prefix lists&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/WindowsGuide/ResettingAdminPassword_EC2Launchv2.html"&gt;EC2Launch v2 を使用した Windows 管理者パスワードのリセット&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

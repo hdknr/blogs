@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>検索 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E6%A4%9C%E7%B4%A2/</link><description>Recent content in 検索 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 27 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E6%A4%9C%E7%B4%A2/index.xml" rel="self" type="application/rss+xml"/><item><title>Exa for Claude — Web・論文・企業情報を標準検索より高速・高精度に扱う MCP プラグイン</title><link>https://hdknr.github.io/blogs/posts/2026/04/exa-for-claude-mcp-plugin/</link><pubDate>Sat, 25 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/exa-for-claude-mcp-plugin/</guid><description>Claude に本格的なニューラル検索を付与する MCP サーバー「Exa」の使い方を解説。企業情報・LinkedIn・コード検索など多様なツールを Claude Desktop と Claude Code で利用する方法を紹介。</description></item><item><title>AIが自分で調べ方を選ぶRAG — モデル推論能力でスケールする新手法</title><link>https://hdknr.github.io/blogs/posts/2026/03/rag-adaptive-search-strategy/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/rag-adaptive-search-strategy/</guid><description>&lt;p&gt;社内資料をRAGで検索しているのに「欲しい情報に限って見つけてくれない」「関係ない文書ばかり読んで的外れな回答をする」という経験はないでしょうか。AIDB が紹介する新しいRAG手法は、&lt;strong&gt;検索方法そのものをモデル自身に判断させる&lt;/strong&gt;というアプローチで、この問題に正面から取り組んでいます。&lt;/p&gt;
+&lt;h2 id="従来ragの限界一本調子の検索"&gt;従来RAGの限界：一本調子の検索&lt;/h2&gt;
+&lt;p&gt;従来のRAGはシンプルです。あらかじめ決まった方法（主にベクトル類似度検索）で文書チャンクを引っ張ってきて、まとめてLLMに渡す。検索がハズれたら、その時点でもう正解にはたどり着けません。&lt;/p&gt;
+&lt;p&gt;どんなに優れたモデルを使っても、読む資料がズレていれば回答の質は上がりません。問題は「LLMの能力」ではなく「検索戦略の固定化」にあります。&lt;/p&gt;
+&lt;h2 id="3つの検索戦略を状況に応じて使い分ける"&gt;3つの検索戦略を状況に応じて使い分ける&lt;/h2&gt;
+&lt;p&gt;この新手法では、モデルが以下の3つの検索戦略から最適なものを選択し、必要に応じて組み合わせます。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;検索戦略&lt;/th&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;th&gt;向いているケース&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;キーワード検索&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;特定の語句・コードをピンポイントで探す&lt;/td&gt;
+&lt;td&gt;固有名詞、型番、コマンドなどを調べるとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;意味検索（セマンティック検索）&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;意味的に近い文書を探す&lt;/td&gt;
+&lt;td&gt;概念的な質問、言い換えが多い文書を扱うとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;チャンク全文読み&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;対象範囲を丸ごと読み込む&lt;/td&gt;
+&lt;td&gt;文脈が重要な長文、前後関係が必要なとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;重要なのは、&lt;strong&gt;どの順番で、どの検索を使うか&lt;/strong&gt;をモデル自身が推論して決定する点です。固定のパイプラインではなく、質問の性質や文書の構造に合わせて動的に戦略を切り替えます。&lt;/p&gt;
+&lt;h2 id="なぜこれが機能するのか"&gt;なぜこれが機能するのか&lt;/h2&gt;
+&lt;h3 id="読み込むテキスト量は同等以下"&gt;読み込むテキスト量は同等以下&lt;/h3&gt;
+&lt;p&gt;従来のRAGと比較して、読み込むテキストの量は同等かそれ以下です。にもかかわらず、回答精度は大きく向上します。これはトークン数の節約にもつながります。&lt;/p&gt;
+&lt;h3 id="モデル進化と共にスケールする構造"&gt;モデル進化と共にスケールする構造&lt;/h3&gt;
+&lt;p&gt;この手法の特筆すべき点は&lt;strong&gt;モデルの推論能力と性能が比例する&lt;/strong&gt;ことです。モデルの推論能力が高いほど、「どの検索を、どの順番で使うか」という判断精度が上がり、RAG全体の性能が向上します。&lt;/p&gt;
+&lt;p&gt;つまり、将来より優れたモデルが登場すれば、RAGのフレームワーク自体を改修しなくても自然に性能が底上げされます。&lt;/p&gt;
+&lt;h2 id="実装への示唆"&gt;実装への示唆&lt;/h2&gt;
+&lt;p&gt;この手法を自社のRAGシステムに取り入れる場合、以下の点が設計のポイントになります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 検索ツールの整備&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;モデルが選択できるよう、複数の検索エンドポイントを用意する必要があります。BM25（キーワード）、ベクトルDB（意味）、ドキュメント取得（全文）の3種を揃えるのが基本構成です。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. ツール呼び出し（Function Calling）の活用&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;OpenAI / Anthropic / Google などの主要LLMはFunction Callingをサポートしています。検索戦略の選択をFunction Callingで実装することで、モデルが自律的に検索を制御できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tools &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;keyword_search&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;固有名詞・型番・コマンドなど特定のキーワードで文書を検索する&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;query&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;semantic_search&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;意味・概念の近さで関連文書を検索する&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;query&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;read_document&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;指定した文書チャンクを全文読み込む&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;document_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;3. 推論能力の高いモデルを選ぶ&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

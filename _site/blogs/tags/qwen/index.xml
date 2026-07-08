@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Qwen on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/qwen/</link><description>Recent content in Qwen on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 27 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/qwen/index.xml" rel="self" type="application/rss+xml"/><item><title>Qwen（クウェン）</title><link>https://hdknr.github.io/blogs/wiki/tools/qwen/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/qwen/</guid><description>Alibaba の Qwen チームが開発するオープンソース LLM シリーズ。コーディング性能・長コンテキスト・メモリ効率に優れ、Apache 2.0 ライセンスで商用利用可能</description></item><item><title>ローカルLLM比較（2026年春）</title><link>https://hdknr.github.io/blogs/wiki/concepts/local-llm-comparison/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/local-llm-comparison/</guid><description>2026年春時点のローカル実行可能LLMの比較。Gemma 4、Qwen3.5、BitNetの特性とユースケース別の選び方</description></item><item><title>Gemma 4 31B vs Qwen3.5-27B — ローカルLLM最強はどちらか</title><link>https://hdknr.github.io/blogs/posts/2026/04/gemma4-vs-qwen35-local-llm/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/gemma4-vs-qwen35-local-llm/</guid><description>Google Gemma 4 31BとAlibaba Qwen3.5-27Bをローカル実行の観点で徹底比較。ベンチマーク、メモリ要件、マルチモーダル、日本語対応、推論速度を検証する。</description></item><item><title>ローカルQwenに個人知識を覚えさせたい — ファインチューニング vs RAG</title><link>https://hdknr.github.io/blogs/posts/2026/03/qwen-finetuning-vs-rag/</link><pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/qwen-finetuning-vs-rag/</guid><description>&lt;p&gt;ローカルで Ollama + Qwen を動かしている Mac Studio（M3 Ultra / 96GB）に、NAS 上の PDF やテキストなどのドキュメントを学習させて「個人の知識ベース」として活用したい——そんなとき、ファインチューニングと RAG のどちらを選ぶべきかを整理する。&lt;/p&gt;
+&lt;h2 id="やりたいこと"&gt;やりたいこと&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;NAS に蓄積された個人ドキュメント（PDF、テキスト等）の知識を Qwen に覚えさせたい&lt;/li&gt;
+&lt;li&gt;自分の PC を使った活動に関する知識を、AI が把握している状態にしたい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="選択肢1-ファインチューニングqlora"&gt;選択肢1: ファインチューニング（QLoRA）&lt;/h2&gt;
+&lt;p&gt;モデル自体の重みを更新し、知識を「記憶」させるアプローチ。&lt;/p&gt;
+&lt;h3 id="mac-studio-での実現可能性"&gt;Mac Studio での実現可能性&lt;/h3&gt;
+&lt;p&gt;M3 Ultra / 96GB 統合メモリなら、QLoRA でのファインチューニングは技術的に可能。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;手法&lt;/th&gt;
+&lt;th&gt;必要メモリ目安（7B）&lt;/th&gt;
+&lt;th&gt;ツール&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;QLoRA (4bit)&lt;/td&gt;
+&lt;td&gt;6-8 GB&lt;/td&gt;
+&lt;td&gt;Unsloth, LLaMA-Factory, MLX&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LoRA (16bit)&lt;/td&gt;
+&lt;td&gt;14-16 GB&lt;/td&gt;
+&lt;td&gt;LLaMA-Factory, PEFT&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;フル FT&lt;/td&gt;
+&lt;td&gt;60+ GB&lt;/td&gt;
+&lt;td&gt;非現実的&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Apple Silicon では &lt;strong&gt;MLX&lt;/strong&gt; ベースが最もパフォーマンスが良い。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# MLX での QLoRA 実行例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install mlx-lm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mlx_lm.lora &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --model Qwen/Qwen2.5-Coder-14B-Instruct &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --data ./training_data &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --train &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --batch-size &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --lora-layers &lt;span style="color:#ae81ff"&gt;16&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --iters &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="ファインチューニングの課題"&gt;ファインチューニングの課題&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;最大のボトルネックはデータ準備&lt;/strong&gt;。NAS の生ファイルはそのまま学習データにはならず、instruction 形式への変換が必要になる。&lt;/p&gt;</description></item><item><title>Qwen3.5-27B：個人PCで動く高性能LLMの実力と使い方</title><link>https://hdknr.github.io/blogs/posts/2026/03/qwen35-27b/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/qwen35-27b/</guid><description>&lt;p&gt;Alibaba Cloud の Qwen チームが 2026 年 2 月にリリースした &lt;strong&gt;Qwen3.5-27B&lt;/strong&gt; は、27B パラメータという中規模サイズながら上位モデルに匹敵する性能を発揮する密（dense）モデルです。メモリ効率に優れ、量子化を活用すれば個人の PC でも快適に動作するため「自分専用 AI」を構築するのに最適な選択肢として注目されています。&lt;/p&gt;
+&lt;h2 id="qwen35-27b-の主な特徴"&gt;Qwen3.5-27B の主な特徴&lt;/h2&gt;
+&lt;h3 id="アーキテクチャ"&gt;アーキテクチャ&lt;/h3&gt;
+&lt;p&gt;Qwen3.5-27B は MoE（Mixture of Experts）ではなく、全パラメータが推論時に活性化される &lt;strong&gt;密モデル（dense model）&lt;/strong&gt; です。Gated Delta Networks と Feed Forward Networks を組み合わせた構造で、高い計算密度を実現しています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;パラメータ数&lt;/strong&gt;: 27B（全パラメータ活性化）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト長&lt;/strong&gt;: 262K トークン（最大 1M まで拡張可能）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対応言語&lt;/strong&gt;: 201 言語&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マルチモーダル&lt;/strong&gt;: 視覚・言語の統合能力を搭載&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ベンチマーク性能"&gt;ベンチマーク性能&lt;/h3&gt;
+&lt;p&gt;27B というサイズにもかかわらず、主要ベンチマークで際立った成績を残しています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ベンチマーク&lt;/th&gt;
+&lt;th&gt;スコア&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;MMLU-Pro&lt;/td&gt;
+&lt;td&gt;86.1%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GPQA Diamond&lt;/td&gt;
+&lt;td&gt;85.5%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SWE-bench Verified&lt;/td&gt;
+&lt;td&gt;72.4%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;LiveCodeBench&lt;/td&gt;
+&lt;td&gt;80.7%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;IFEval&lt;/td&gt;
+&lt;td&gt;95.0%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;HMMT（数学）&lt;/td&gt;
+&lt;td&gt;92.0%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;特に &lt;strong&gt;SWE-bench Verified で 72.4%&lt;/strong&gt; は GPT-5 mini と同等の数値であり、オープンウェイトの 27B 密モデルとしては驚異的な結果です。コーディング、数学、指示追従の各タスクで中規模モデルカテゴリをリードしています。&lt;/p&gt;</description></item><item><title># OpenHands × Ollama ローカルLLM実践記 — Mac Studio M3 Ultra で動かすまでの全記録</title><link>https://hdknr.github.io/blogs/posts/2026/03/4103685108dfb6be44f9a0ec050655a7/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/4103685108dfb6be44f9a0ec050655a7/</guid><description>&lt;h1 id="openhands--ollama-ローカルllm実践記--mac-studio-m3-ultra-で動かすまでの全記録"&gt;OpenHands × Ollama ローカルLLM実践記 — Mac Studio M3 Ultra で動かすまでの全記録&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;: OpenHands（旧OpenDevin）をMac Studio M3 Ultra（96GB）+ Ollama + Qwen3-Coder 30B で動かそうとした。Docker-in-Docker のビルド問題、Playwright依存、ランタイムイメージ手動構築を経てUI起動まで到達したが、30Bモデルのtool calling精度不足で実用には至らなかった。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="1-openhands-とは"&gt;1. OpenHands とは&lt;/h2&gt;
+&lt;p&gt;OpenHands（旧 OpenDevin）は、オープンソースのAIコーディングエージェントプラットフォーム。75以上のLLMプロバイダーに対応し、SWE-bench で Qwen3-Coder 使用時に 69.6% のスコアを記録している。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;公式リポジトリ&lt;/strong&gt;: &lt;a href="https://github.com/All-Hands-AI/OpenHands"&gt;https://github.com/All-Hands-AI/OpenHands&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;特徴:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Web UI でブラウザから操作&lt;/li&gt;
+&lt;li&gt;Docker サンドボックスで安全にコード実行&lt;/li&gt;
+&lt;li&gt;CodeActAgent による自律的なタスク遂行&lt;/li&gt;
+&lt;li&gt;Playwright 統合によるブラウザ操作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-動機--なぜ-openhands-を試したか"&gt;2. 動機 — なぜ OpenHands を試したか&lt;/h2&gt;
+&lt;p&gt;前回の実験で Qwen Code（CLI エージェント）を Ollama + Qwen3-Coder 30B で動かしたが、&lt;strong&gt;複雑な multi-step タスク（GitHub PR レビューなど）で tool calling が破綻&lt;/strong&gt;する問題に直面した。&lt;/p&gt;
+&lt;p&gt;OpenHands は SWE-bench で高スコアを出しており、エージェントスキャフォールディングの力で同じ 30B モデルでも改善されるのでは？という仮説を検証するために試した。&lt;/p&gt;</description></item><item><title>Qwen Code ローカル運用実践記 — Mac Studio M3 Ultra で Ollama + qwen3-coder:30b を動かして分かったこと</title><link>https://hdknr.github.io/blogs/posts/2026/03/9023009193920fd0ad17eda629351b18/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/9023009193920fd0ad17eda629351b18/</guid><description>&lt;h1 id="qwen-code-ローカル運用実践記--mac-studio-m3-ultra-で-ollama--qwen3-coder30b-を動かして分かったこと"&gt;Qwen Code ローカル運用実践記 — Mac Studio M3 Ultra で Ollama + qwen3-coder:30b を動かして分かったこと&lt;/h1&gt;
+&lt;p&gt;Qwen Code（Alibaba Cloud Qwen チームが開発したオープンソース CLI コーディングエージェント）を Mac Studio M3 Ultra（96GB）上で Ollama と組み合わせてローカル運用を試みた実践記録です。環境構築からツール呼び出しの限界まで、実際に手を動かして検証した結果をまとめます。&lt;/p&gt;
+&lt;h2 id="背景と目的"&gt;背景と目的&lt;/h2&gt;
+&lt;p&gt;Claude Code は強力ですが、コードがクラウドに送信されるためプライバシーの懸念があります。Qwen Code は Apache 2.0 ライセンスのオープンソースで、Ollama と組み合わせれば完全ローカルで動作するため、機密コードベースでの利用が期待されます。&lt;/p&gt;
+&lt;p&gt;本記事の検証環境:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;スペック&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;マシン&lt;/td&gt;
+&lt;td&gt;Mac Studio M3 Ultra&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;メモリ&lt;/td&gt;
+&lt;td&gt;96GB ユニファイドメモリ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;メモリ帯域&lt;/td&gt;
+&lt;td&gt;800 GB/s&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ollama&lt;/td&gt;
+&lt;td&gt;v0.15.6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Qwen Code&lt;/td&gt;
+&lt;td&gt;v0.12.0（Fork からローカルビルド）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;モデル&lt;/td&gt;
+&lt;td&gt;qwen3-coder:30b (18GB)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="ステップ1-リポジトリの-fork-と-clone"&gt;ステップ1: リポジトリの Fork と Clone&lt;/h2&gt;
+&lt;p&gt;調査・改造を前提に、まず &lt;a href="https://github.com/QwenLM/qwen-code"&gt;QwenLM/qwen-code&lt;/a&gt; を Fork しました。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Fork（GitHub CLI）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh repo fork QwenLM/qwen-code --clone&lt;span style="color:#f92672"&gt;=&lt;/span&gt;false
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# devel ブランチを作成してデフォルトに設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# main は upstream との sync 用にクリーンに保つ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh api repos/hdknr/qwen-code/git/refs &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -f ref&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;refs/heads/devel&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -f sha&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;gh api repos/hdknr/qwen-code/git/ref/heads/main --jq &lt;span style="color:#e6db74"&gt;&amp;#39;.object.sha&amp;#39;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh repo edit hdknr/qwen-code --default-branch devel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Clone&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir -p ~/Projects/qwen
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd ~/Projects/qwen
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh repo clone hdknr/qwen-code
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;ブランチ戦略:&lt;/p&gt;</description></item><item><title>Qwen Code 初心者ガイド — 無料で使えるオープンソース CLI コーディングエージェント</title><link>https://hdknr.github.io/blogs/posts/2026/03/e053dfb0c2bee4f36f609060b3dfd487/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/e053dfb0c2bee4f36f609060b3dfd487/</guid><description>&lt;h1 id="qwen-code-初心者ガイド--無料で使えるオープンソース-cli-コーディングエージェント"&gt;Qwen Code 初心者ガイド — 無料で使えるオープンソース CLI コーディングエージェント&lt;/h1&gt;
+&lt;p&gt;Claude Code の無料オープンソース代替として注目を集めている &lt;a href="https://github.com/QwenLM/qwen-code"&gt;Qwen Code&lt;/a&gt;。Alibaba Cloud の Qwen チームが開発したターミナルベースの AI コーディングエージェントで、1日1,000リクエストまで無料で利用できます。この記事では、初めて使う人にもわかるように、インストールから実践的な使い方まで解説します。&lt;/p&gt;
+&lt;h2 id="qwen-code-とは何か"&gt;Qwen Code とは何か&lt;/h2&gt;
+&lt;p&gt;Qwen Code は、ターミナル（コマンドライン）で動く AI コーディングアシスタントです。自然言語で指示を出すと、コードの理解・生成・編集・実行を自律的に行います。&lt;/p&gt;
+&lt;h3 id="一言で言うと"&gt;一言で言うと&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「無料で使える Claude Code のオープンソース版」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="claude-code-との違い"&gt;Claude Code との違い&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;観点&lt;/th&gt;
+&lt;th&gt;Qwen Code&lt;/th&gt;
+&lt;th&gt;Claude Code&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;料金&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;無料（OAuth で1日1,000リクエスト）&lt;/td&gt;
+&lt;td&gt;従量課金（API 使用量に応じて）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;ライセンス&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Apache 2.0（オープンソース）&lt;/td&gt;
+&lt;td&gt;プロプライエタリ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;ベースモデル&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Qwen3-Coder&lt;/td&gt;
+&lt;td&gt;Claude&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;インターフェース&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ターミナル CLI&lt;/td&gt;
+&lt;td&gt;ターミナル CLI&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;IDE 統合&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;VS Code, Zed, JetBrains&lt;/td&gt;
+&lt;td&gt;VS Code, JetBrains&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;MCP サポート&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;あり&lt;/td&gt;
+&lt;td&gt;あり&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;コード品質&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;実用的（オープンモデルとしてトップクラス）&lt;/td&gt;
+&lt;td&gt;最高品質&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;カスタマイズ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;完全にカスタマイズ可能&lt;/td&gt;
+&lt;td&gt;限定的&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="できること"&gt;できること&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;コードベース全体を理解して質問に答える&lt;/li&gt;
+&lt;li&gt;ファイルの作成・編集・削除&lt;/li&gt;
+&lt;li&gt;シェルコマンドの実行&lt;/li&gt;
+&lt;li&gt;Git 操作（コミット、diff 確認等）&lt;/li&gt;
+&lt;li&gt;バグの発見と修正&lt;/li&gt;
+&lt;li&gt;テストの作成と実行&lt;/li&gt;
+&lt;li&gt;MCP サーバーとの連携&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストール手順"&gt;インストール手順&lt;/h2&gt;
+&lt;h3 id="前提条件"&gt;前提条件&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Node.js 20 以上&lt;/strong&gt;が必要です。まだインストールしていない場合は &lt;a href="https://nodejs.org/"&gt;nodejs.org&lt;/a&gt; からダウンロードしてください。&lt;/p&gt;</description></item><item><title>「Claude Code無料で無制限」は本当か × ollama launch claudeの実態と品質ギャップの正直な話</title><link>https://hdknr.github.io/blogs/posts/2026/03/bf2e6519b561967327735da3f05142be/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/bf2e6519b561967327735da3f05142be/</guid><description>&lt;h1 id="claude-code-が無料で無制限は本当か--ollama-launch-claude-の実態と品質ギャップの正直な話"&gt;「Claude Code が無料で無制限」は本当か &amp;mdash; ollama launch claude の実態と品質ギャップの正直な話&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/tusharsoni014/status/2029198384721215662"&gt;@TusharSoni014 氏の X 投稿&lt;/a&gt;が 10 万回以上表示され、2,227 件のブックマークを集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Want Claude Code Unlimited FREE? Follow,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Download Ollama&lt;/li&gt;
+&lt;li&gt;Install Qwen3.5 9B&lt;/li&gt;
+&lt;li&gt;Run this command in your terminal, ollama launch claude &amp;ndash;model qwen3.5:9b&lt;/li&gt;
+&lt;li&gt;Enjoy Unlimited Claude Code fully running 100% Free&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「Claude Code が完全に無料で無制限に使える」という主張です。1,311 件のいいねと 127 件のリツイートを見ると、多くの人がこの情報に飛びついたことがわかります。&lt;/p&gt;
+&lt;p&gt;結論から言えば、&lt;strong&gt;コマンド自体は実在しますが、「Claude Code が無料で動く」という表現は大きな誤解を招きます&lt;/strong&gt;。正確に何が起きているのか、何が失われるのかを解説します。&lt;/p&gt;
+&lt;h2 id="ollama-launch-claude-は実在する"&gt;ollama launch claude は実在する&lt;/h2&gt;
+&lt;h3 id="コマンドの正体"&gt;コマンドの正体&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;ollama launch&lt;/code&gt; は、Ollama v0.15 で追加された&lt;strong&gt;公式コマンド&lt;/strong&gt;です。Claude Code、OpenCode、Codex などのコーディングツールを、環境変数や設定ファイルなしで起動できるようにするものです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 基本的な使い方&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama launch claude &lt;span style="color:#75715e"&gt;# インタラクティブにモデルを選択&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama launch claude --model qwen3-coder &lt;span style="color:#75715e"&gt;# モデルを指定して起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama launch claude --model qwen3.5:9b &lt;span style="color:#75715e"&gt;# ツイートの例&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このコマンドが裏でやっていることは、Ollama の &lt;strong&gt;Anthropic Messages API 互換モード&lt;/strong&gt;を利用して、ローカルの LLM を Claude Code のバックエンドとして接続することです。&lt;/p&gt;</description></item><item><title>Qwen-Agent 公式エージェントフレームワーク完全ガイド — モデル開発チームが作った「全部入り」の設計思想</title><link>https://hdknr.github.io/blogs/posts/2026/03/35454b5978b916a5aed65f93d54afb5f/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/35454b5978b916a5aed65f93d54afb5f/</guid><description>&lt;h1 id="qwen-agent-公式エージェントフレームワーク完全ガイド--モデル開発チームが作った全部入りの設計思想"&gt;Qwen-Agent 公式エージェントフレームワーク完全ガイド — モデル開発チームが作った「全部入り」の設計思想&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/abxxai/status/2029560600070881577"&gt;@abxxai（Abdul Shakoor）のポスト&lt;/a&gt;が、Qwen チームが公式リリースしたエージェントフレームワーク「Qwen-Agent」を紹介し、10万ビュー超・2,900ブックマーク・2,200いいねと極めて高い反響を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;BREAKING: The Qwen team just shipped their official agent framework and it has everything.
+No stitching together third-party libraries. No fighting abstractions.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「サードパーティのライブラリをつなぎ合わせる必要がない」「抽象化と戦わなくていい」という評価は、既存のエージェントフレームワーク（LangChain、CrewAI 等）が抱える複雑さへのアンチテーゼです。&lt;/p&gt;
+&lt;h2 id="qwen-agent-とは何か"&gt;Qwen-Agent とは何か&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/QwenLM/Qwen-Agent"&gt;Qwen-Agent&lt;/a&gt; は、Alibaba Cloud の Qwen チームが開発したオープンソースのエージェントフレームワークです。Qwen 3.0 以上のモデルをベースに、Function Calling・MCP・Code Interpreter・RAG・Chrome 拡張を統合した「全部入り」のフレームワークとして設計されています。&lt;/p&gt;
+&lt;h3 id="最大の特徴-モデルとフレームワークの共進化"&gt;最大の特徴: モデルとフレームワークの共進化&lt;/h3&gt;
+&lt;p&gt;LangChain や CrewAI がモデルに依存しない汎用フレームワークであるのに対し、Qwen-Agent は &lt;strong&gt;Qwen モデルと一体的に開発&lt;/strong&gt;されています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;観点&lt;/th&gt;
+&lt;th&gt;Qwen-Agent&lt;/th&gt;
+&lt;th&gt;LangChain / CrewAI&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;開発元&lt;/td&gt;
+&lt;td&gt;Qwen モデル開発チーム&lt;/td&gt;
+&lt;td&gt;サードパーティ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;モデルとの関係&lt;/td&gt;
+&lt;td&gt;共進化（同時に開発・最適化）&lt;/td&gt;
+&lt;td&gt;モデル非依存&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ツール呼び出し&lt;/td&gt;
+&lt;td&gt;ネイティブ統合（テンプレート・パーサー内蔵）&lt;/td&gt;
+&lt;td&gt;アダプタ経由&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;抽象化の層&lt;/td&gt;
+&lt;td&gt;薄い（モデルに直接最適化）&lt;/td&gt;
+&lt;td&gt;厚い（汎用性のための間接層）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;対応モデル&lt;/td&gt;
+&lt;td&gt;Qwen 系が最適、他モデルも利用可&lt;/td&gt;
+&lt;td&gt;幅広いモデルに対応&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Qwen チームは「モデルの開発当初から、ツール使用と深い推論を含む強力なエージェント能力の実現が戦略の柱だった」と述べています。フレームワークはモデルの能力を最大限に引き出すために設計されており、汎用フレームワークでは到達できない最適化が実現されています。&lt;/p&gt;</description></item><item><title>Qwen3.5-0.8B を日本語SFTしたモデル公開 — スマホで動く0.8Bパラメータの実力と小規模LLMの現在地</title><link>https://hdknr.github.io/blogs/posts/2026/03/c15ed5806e48bd6c5ec74e5cf494cfd2/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/c15ed5806e48bd6c5ec74e5cf494cfd2/</guid><description>&lt;h1 id="qwen35-08b-を日本語sftしたモデル公開--スマホで動く08bパラメータの実力と小規模llmの現在地"&gt;Qwen3.5-0.8B を日本語SFTしたモデル公開 — スマホで動く0.8Bパラメータの実力と小規模LLMの現在地&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/holy_fox_llm/status/2029086551481938237"&gt;@Holy_fox_LLM 氏（ほーりーふぉっくす）のポスト&lt;/a&gt;が、Qwen3.5-0.8B を約10万件の日本語データでフルパラメータ SFT したモデルを &lt;a href="https://huggingface.co/Holy-fox/Qwen3.5-0.8B-JP"&gt;Hugging Face で公開&lt;/a&gt;しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Qwen3.5 0.8Bに対して約10万件超のデータを用いてフルパラでSFTしたモデルを公開しました！スマホなどの推論に最適なモデルとなっています&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;ポストは440いいね、69リツイートと高い反響を集めています。Qwen3.5 Small シリーズが2026年3月2日にリリースされた直後のタイミングで、日本語コミュニティの素早い対応として注目されています。&lt;/p&gt;
+&lt;h2 id="qwen35-small-シリーズ--08b-でもマルチモーダル"&gt;Qwen3.5 Small シリーズ — 0.8B でもマルチモーダル&lt;/h2&gt;
+&lt;h3 id="リリースの概要"&gt;リリースの概要&lt;/h3&gt;
+&lt;p&gt;2026年3月2日、Alibaba の Qwen チームが &lt;a href="https://stable-learn.com/en/qwen35-native-multimodal-agent-model/"&gt;Qwen3.5 Small シリーズ&lt;/a&gt;を Apache 2.0 ライセンスで公開しました。0.8B、2B、4B、9B の4サイズで構成されています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;モデル&lt;/th&gt;
+&lt;th&gt;パラメータ&lt;/th&gt;
+&lt;th&gt;VRAM（FP16）&lt;/th&gt;
+&lt;th&gt;主な用途&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Qwen3.5-0.8B&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;8億&lt;/td&gt;
+&lt;td&gt;約1.6GB&lt;/td&gt;
+&lt;td&gt;スマホ、IoT、エッジデバイス&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Qwen3.5-2B&lt;/td&gt;
+&lt;td&gt;20億&lt;/td&gt;
+&lt;td&gt;約4GB&lt;/td&gt;
+&lt;td&gt;軽量サーバー、タブレット&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Qwen3.5-4B&lt;/td&gt;
+&lt;td&gt;40億&lt;/td&gt;
+&lt;td&gt;約8GB&lt;/td&gt;
+&lt;td&gt;ローカル PC&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Qwen3.5-9B&lt;/td&gt;
+&lt;td&gt;90億&lt;/td&gt;
+&lt;td&gt;約18GB&lt;/td&gt;
+&lt;td&gt;デスクトップ、サーバー&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;注目すべきは、9B モデルが OpenAI の gpt-oss-120B（13.5倍のサイズ）を GPQA Diamond ベンチマークで上回ったことです（81.7 vs 71.5）。&lt;/p&gt;
+&lt;h3 id="gated-deltanet-アーキテクチャ"&gt;Gated DeltaNet アーキテクチャ&lt;/h3&gt;
+&lt;p&gt;Qwen3.5 Small シリーズの技術的な特徴は、&lt;strong&gt;Gated DeltaNet ハイブリッドアーキテクチャ&lt;/strong&gt;です。&lt;/p&gt;</description></item><item><title>Claude Code の生成コードをローカル LLM でレビューする 3 つの構成パターン</title><link>https://hdknr.github.io/blogs/posts/2026/03/43baeed6a433f7f961aefedcf9bb4201/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/43baeed6a433f7f961aefedcf9bb4201/</guid><description>&lt;h1 id="claude-code-の生成コードをローカル-llm-でレビューする-3-つの構成パターン"&gt;Claude Code の生成コードをローカル LLM でレビューする 3 つの構成パターン&lt;/h1&gt;
+&lt;p&gt;Claude Code は強力なコード生成能力を持ちますが、生成されたコードを&lt;strong&gt;別の視点でレビュー&lt;/strong&gt;したい場面があります。クラウド API にコードを送りたくない場合や、コスト削減のためにローカル LLM を活用したい場合です。&lt;/p&gt;
+&lt;p&gt;この記事では、Ollama + Qwen3（ローカル LLM）と OpenHands（オープンソースのコーディングエージェント）を組み合わせて、Claude Code の生成コードを自動レビューする 3 つの構成パターンを紹介します。&lt;/p&gt;
+&lt;h2 id="前提となる構成"&gt;前提となる構成&lt;/h2&gt;
+&lt;p&gt;以下のツールがインストール済みであることを前提とします。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ツール&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;th&gt;インストール&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Claude Code&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;コード生成（エージェント）&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;npm install -g @anthropic-ai/claude-code&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Ollama&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ローカル LLM 実行（ランタイム）&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://ollama.com"&gt;ollama.com&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Qwen3&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;レビュー用 AI モデル（LLM）&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ollama pull qwen3:14b&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;OpenHands&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;レビュー実行（エージェント）※パターン 2・3&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;pip install openhands-ai&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;構成図で示すと、Claude Code（クラウド）が書いたコードを、ローカル環境でレビューする構造です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Claude Code（Anthropic API）
+↓ コードを生成・編集
+ローカルリポジトリ（あなたの PC）
+↓ レビュー依頼
+OpenHands / Git フック
+↓
+Ollama（ローカルランタイム）
+↓
+Qwen3（ローカル LLM）→ レビュー結果を出力
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="パターン-1git-フック--ollama-直接呼び出し最もシンプル"&gt;パターン 1：Git フック + Ollama 直接呼び出し（最もシンプル）&lt;/h2&gt;
+&lt;p&gt;OpenHands は不要です。Claude Code がコミットするタイミングで、Git の pre-commit フックが Ollama に差分を送り、Qwen3 にレビューさせます。&lt;/p&gt;</description></item><item><title>Ollama で Qwen3 を動かす初心者ガイド — 日本語最強ローカルLLMを自分のPCで使う方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/9c65e3a8bc648a1493bf0a8fe0fa3bb8/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/9c65e3a8bc648a1493bf0a8fe0fa3bb8/</guid><description>&lt;h1 id="ollama-で-qwen3-を動かす初心者ガイド--日本語最強ローカル-llm-を自分の-pc-で使う方法"&gt;Ollama で Qwen3 を動かす初心者ガイド — 日本語最強ローカル LLM を自分の PC で使う方法&lt;/h1&gt;
+&lt;p&gt;「ChatGPT みたいな AI を、自分の PC だけで動かせたら」と思ったことはありませんか。Ollama と Qwen3 を使えば、それが実現できます。この記事では、&lt;a href="https://saiteki-ai.com/basics/ai-tool/ollama/ollama-qwen/"&gt;Saiteki AI の解説記事&lt;/a&gt;をベースに、初心者でもわかるように Ollama と Qwen3 の導入手順をまとめました。&lt;/p&gt;
+&lt;h2 id="まず知っておきたいllmランタイムエージェントの-3-層構造"&gt;まず知っておきたい：LLM・ランタイム・エージェントの 3 層構造&lt;/h2&gt;
+&lt;p&gt;AI の世界には、混同しやすい 3 つの概念があります。この記事で扱う Ollama と Qwen がどこに位置するかを最初に整理しましょう。&lt;/p&gt;
+&lt;h3 id="レストランに例えると"&gt;レストランに例えると&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;お客さん（あなた）
+↓ 「パスタを作って」
+ウェイター（AI エージェント） ← 注文を聞き、判断し、段取りを組む
+↓ 「この食材でこう調理して」
+キッチン設備（ランタイム） ← オーブンや鍋。料理を物理的に実行する環境
+↓
+シェフの腕＝レシピの知識（LLM） ← 実際に「どう調理するか」を知っている頭脳
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;層&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;th&gt;具体例&lt;/th&gt;
+&lt;th&gt;自分で判断するか&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;LLM&lt;/strong&gt;（AI モデル）&lt;/td&gt;
+&lt;td&gt;言葉を理解し、回答を生成する「頭脳」&lt;/td&gt;
+&lt;td&gt;Qwen3, Llama3, Gemma2&lt;/td&gt;
+&lt;td&gt;しない（聞かれたことに答えるだけ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;ランタイム&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;LLM をメモリに読み込み、動かす「実行環境」&lt;/td&gt;
+&lt;td&gt;Ollama, vLLM, llama.cpp&lt;/td&gt;
+&lt;td&gt;しない（言われた通り動かすだけ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;AI エージェント&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;LLM を使って自律的に「仕事」をこなすプログラム&lt;/td&gt;
+&lt;td&gt;Claude Code, Devin, Dify&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;する&lt;/strong&gt;（目標に向かって複数ステップを自分で組み立てる）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="3-つの関係"&gt;3 つの関係&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;AI エージェント（Claude Code など）
+↓ 「この質問を LLM に投げて」
+ランタイム（Ollama など）
+↓ モデルをメモリに読み込んで推論実行
+LLM（Qwen3 など）
+↓ 回答を生成
+ランタイム → エージェントに結果を返す
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;LLM&lt;/strong&gt; は「頭脳」。質問されたら答えを返すが、自分からは何もしない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ランタイム&lt;/strong&gt; は「エンジン」。LLM を動かすが、何を質問するかは決めない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント&lt;/strong&gt; は「ドライバー」。ランタイム経由で LLM を呼び出し、結果を見て次の行動を自分で決める&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;この記事で扱うのは、LLM（Qwen3）とランタイム（Ollama）の 2 つです。&lt;/strong&gt; エージェントは含みませんが、Ollama で動かした Qwen3 を Claude Code や Dify などのエージェントのバックエンドとして使うことも可能です。&lt;/p&gt;</description></item><item><title>QwenVoice --- Mac でボイスクローニング・感情表現・音声デザインを完全オフラインで実現する Qwen3-TTS アプリ</title><link>https://hdknr.github.io/blogs/posts/2026/03/1a39b3cc62c29543a5e6de566017beeb/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1a39b3cc62c29543a5e6de566017beeb/</guid><description>&lt;h1 id="qwenvoice--mac-でボイスクローニング感情表現音声デザインを完全オフラインで実現する-qwen3-tts-アプリ"&gt;QwenVoice &amp;mdash; Mac でボイスクローニング・感情表現・音声デザインを完全オフラインで実現する Qwen3-TTS アプリ&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ai_hakase_/status/2028713487686389785"&gt;@ai_hakase_ 氏が X で紹介&lt;/a&gt;した、Mac 向け音声生成アプリ「QwenVoice」が注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;【Mac で革命】Qwen3-TTS 搭載の最強音声生成アプリ「QwenVoice」。ボイスクローニングや感情表現が Mac で爆速！Apple Silicon 最適化でオフライン動作も完璧です。面倒な設定なしでプロ級のナレーションを生成可能。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;QwenVoice は、Alibaba Cloud の Qwen チームが開発したオープンソース TTS モデル「Qwen3-TTS」を Apple Silicon Mac でネイティブに動かす GUI アプリです。Python のインストールもターミナル操作も不要で、ドラッグ &amp;amp; ドロップだけで使い始められます。本記事では、QwenVoice の機能と Qwen3-TTS の技術的な仕組みを解説します。&lt;/p&gt;
+&lt;h2 id="qwenvoice-の概要"&gt;QwenVoice の概要&lt;/h2&gt;
+&lt;h3 id="何ができるのか"&gt;何ができるのか&lt;/h3&gt;
+&lt;p&gt;QwenVoice は 3 つの音声生成モードを提供します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;モード&lt;/th&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;使い方&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Custom Voice&lt;/td&gt;
+&lt;td&gt;プリセット音声で読み上げ&lt;/td&gt;
+&lt;td&gt;4 種類の英語話者（Ryan, Aiden, Serena, Vivian）から選択&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Voice Design&lt;/td&gt;
+&lt;td&gt;自然言語で新しい声を作る&lt;/td&gt;
+&lt;td&gt;「落ち着いた男性の低い声」のようにテキストで指示&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Voice Cloning&lt;/td&gt;
+&lt;td&gt;既存の声を複製&lt;/td&gt;
+&lt;td&gt;5〜10 秒の音声サンプルから声を再現&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;3 つのモードすべてが &lt;strong&gt;100% オフライン&lt;/strong&gt;で動作します。音声データがクラウドに送信されることはありません。&lt;/p&gt;
+&lt;h3 id="システム要件"&gt;システム要件&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;要件&lt;/th&gt;
+&lt;th&gt;スペック&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;OS&lt;/td&gt;
+&lt;td&gt;macOS 14.0（Sonoma）以上&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プロセッサ&lt;/td&gt;
+&lt;td&gt;Apple Silicon（M1 / M2 / M3 / M4）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;メモリ&lt;/td&gt;
+&lt;td&gt;8 GB 以上推奨&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="インストール手順"&gt;インストール手順&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. GitHub Releases から QwenVoice.dmg をダウンロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. /Applications にドラッグ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 3. 検疫属性を解除（署名なしのため）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;xattr -cr &lt;span style="color:#e6db74"&gt;&amp;#34;/Applications/QwenVoice.app&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 4. アプリを起動 → Models タブ → モデルをダウンロード → 生成開始&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Python 環境の構築やライブラリのインストールは&lt;strong&gt;アプリが自動で行います&lt;/strong&gt;。ユーザーが触るのは GUI だけです。&lt;/p&gt;</description></item><item><title>ローカル LLM を金融取引の意思決定サポートに応用する — コードレビュー 4 段階カスタマイズの転用</title><link>https://hdknr.github.io/blogs/posts/2026/03/cde933b6eb635a778d7b053610aca40a/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cde933b6eb635a778d7b053610aca40a/</guid><description>&lt;h1 id="ローカル-llm-を金融取引の意思決定サポートに応用する--コードレビュー-4-段階カスタマイズの転用"&gt;ローカル LLM を金融取引の意思決定サポートに応用する — コードレビュー 4 段階カスタマイズの転用&lt;/h1&gt;
+&lt;p&gt;前回の記事では、ローカル LLM（Ollama + Qwen3）を社内コードレビューに特化させる 4 段階のカスタマイズ手法を紹介しました。この仕組みは&lt;strong&gt;金融取引の意思決定サポート&lt;/strong&gt;にもそのまま応用できます。&lt;/p&gt;
+&lt;p&gt;個人投資家が株式や BTC などの売買判断を行う際に、ニュース分析・テクニカル指標の解釈・リスク評価を&lt;strong&gt;自分の PC 上で、自分の投資ルールに基づいて&lt;/strong&gt;AI に補助させる構成です。&lt;/p&gt;
+&lt;h2 id="なぜローカル-llm-が金融取引に向いているのか"&gt;なぜローカル LLM が金融取引に向いているのか&lt;/h2&gt;
+&lt;p&gt;金融取引は、AI の活用にローカル環境が特に適している分野です。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;利点&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;プライバシー&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ポートフォリオ・売買履歴・資産額をクラウドに送信しない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;コスト&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;毎日の市場分析やニュース要約を API 課金なしで実行可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;カスタマイズ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;自分の投資スタイル・リスク許容度に完全に特化できる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;速度&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ネットワーク遅延がなく、市場の急変時にも即座に分析可能&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;独立性&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;API 障害やサービス停止の影響を受けない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;2024 年末時点で個人がビットコインの発行上限の約 69% を保有しており、個人投資家にとって&lt;strong&gt;自分だけの分析ツール&lt;/strong&gt;を持つ意義はますます大きくなっています。&lt;/p&gt;
+&lt;h2 id="コードレビューから金融取引への対応表"&gt;コードレビューから金融取引への対応表&lt;/h2&gt;
+&lt;p&gt;前回の記事の 4 段階がどのように転用できるかを整理します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;レベル&lt;/th&gt;
+&lt;th&gt;コードレビュー&lt;/th&gt;
+&lt;th&gt;金融取引サポート&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;1. Modelfile&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;コーディング規約を教える&lt;/td&gt;
+&lt;td&gt;売買ルール・リスク管理ルールを教える&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;2. RAG&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;障害報告・設計書を検索&lt;/td&gt;
+&lt;td&gt;決算短信・ニュース・四季報を検索&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;3. Few-shot&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;過去のレビュー事例を見せる&lt;/td&gt;
+&lt;td&gt;過去の売買判断の成功/失敗事例を見せる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;4. LoRA&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;PR レビュー履歴で再訓練&lt;/td&gt;
+&lt;td&gt;金融センチメント分析データで再訓練&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;レベル 1：投資ルールを「教える」 ← すぐできる
+レベル 2：市場情報を「渡す」 ← 1〜2日
+レベル 3：売買パターンを「見せる」 ← 数日
+レベル 4：金融の頭脳を「鍛える」 ← 1〜2週間
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="レベル-1modelfile-に投資ルールを埋め込む即日導入"&gt;レベル 1：Modelfile に投資ルールを埋め込む（即日導入）&lt;/h2&gt;
+&lt;p&gt;自分の投資ルール・リスク管理基準をシステムプロンプトとして設定します。&lt;/p&gt;</description></item><item><title>ローカル LLM を社内業務に特化させる 4 段階カスタマイズ — Qwen3 を「より賢く」する仕組み</title><link>https://hdknr.github.io/blogs/posts/2026/03/f7bad4476f8bec3e58bcf01848bfb807/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/f7bad4476f8bec3e58bcf01848bfb807/</guid><description>&lt;h1 id="ローカル-llm-を社内業務に特化させる-4-段階カスタマイズ--qwen3-をより賢くする仕組み"&gt;ローカル LLM を社内業務に特化させる 4 段階カスタマイズ — Qwen3 を「より賢く」する仕組み&lt;/h1&gt;
+&lt;p&gt;Claude Code で生成したコードをローカル LLM（Ollama + Qwen3）でレビューする構成を前回の記事で紹介しました。しかし、汎用モデルのままでは「受注ステータスの遷移ルール」や「金額計算に float を使ってはならない」といった&lt;strong&gt;社内固有のルール&lt;/strong&gt;を知りません。&lt;/p&gt;
+&lt;p&gt;この記事では、Qwen3 を社内業務に特化させ、特定のコーディング規約・業務ルール・過去の障害パターンを踏まえたレビューができるようにする 4 段階のカスタマイズ手法を紹介します。&lt;/p&gt;
+&lt;h2 id="全体像4-段階のカスタマイズ"&gt;全体像：4 段階のカスタマイズ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;レベル&lt;/th&gt;
+&lt;th&gt;手法&lt;/th&gt;
+&lt;th&gt;導入期間&lt;/th&gt;
+&lt;th&gt;効果&lt;/th&gt;
+&lt;th&gt;専門知識&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;1&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Modelfile（システムプロンプト）&lt;/td&gt;
+&lt;td&gt;即日&lt;/td&gt;
+&lt;td&gt;ルールベースの指摘&lt;/td&gt;
+&lt;td&gt;不要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;2&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;RAG（社内ドキュメント検索）&lt;/td&gt;
+&lt;td&gt;1〜2 日&lt;/td&gt;
+&lt;td&gt;文脈を踏まえた指摘&lt;/td&gt;
+&lt;td&gt;Docker の基本&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;3&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Few-shot（レビュー事例の学習）&lt;/td&gt;
+&lt;td&gt;数日&lt;/td&gt;
+&lt;td&gt;パターン認識の向上&lt;/td&gt;
+&lt;td&gt;不要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;4&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;LoRA ファインチューニング&lt;/td&gt;
+&lt;td&gt;1〜2 週間&lt;/td&gt;
+&lt;td&gt;モデル自体の精度向上&lt;/td&gt;
+&lt;td&gt;Python・ML の基本&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;レベル 1：ルールを「教える」 ← すぐできる
+レベル 2：資料を「渡す」 ← 1〜2日
+レベル 3：お手本を「見せる」 ← 数日
+レベル 4：頭脳を「鍛える」 ← 1〜2週間
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;推奨&lt;/strong&gt;: レベル 1 から順に導入し、効果を確認しながらステップアップしてください。多くの場合、レベル 1 + 2 で十分な精度が得られます。&lt;/p&gt;</description></item><item><title>Claude Code に「目」を与える --- ローカル VLM で画像・動画をコンテキスト消費ゼロで理解させる</title><link>https://hdknr.github.io/blogs/posts/2026/03/49217ac30b52677a7872c3008e38ed9a/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/49217ac30b52677a7872c3008e38ed9a/</guid><description>&lt;h1 id="claude-code-に目を与える--ローカル-vlm-で画像動画をコンテキスト消費ゼロで理解させる"&gt;Claude Code に「目」を与える &amp;mdash; ローカル VLM で画像・動画をコンテキスト消費ゼロで理解させる&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/ShadeLurk/status/2028409595895722338"&gt;@ShadeLurk 氏が X で公開した記事&lt;/a&gt;が注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code に「目」を作る &amp;mdash; コンテキストを 1 トークンも使わずに動画を理解させる方法&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude Code で画像や動画を扱うと、1 枚あたり数千トークンがコンテキストから消えます。ローカル VLM（Qwen3-VL 等）を MCP サーバー経由で接続し、&lt;strong&gt;画像処理をオフロード&lt;/strong&gt;することで、Claude Code のコンテキストを一切消費せずにビジュアル情報を扱う手法が提案されています。本記事では、この問題の構造と解決アプローチを技術的に解説します。&lt;/p&gt;
+&lt;h2 id="問題--画像-1-枚で数千トークンが消える"&gt;問題 &amp;mdash; 画像 1 枚で数千トークンが消える&lt;/h2&gt;
+&lt;h3 id="claude-のビジョン処理とトークン消費"&gt;Claude のビジョン処理とトークン消費&lt;/h3&gt;
+&lt;p&gt;Claude API でのビジョン処理は、画像をトークンに変換してコンテキストウィンドウに載せる仕組みです。Anthropic の公式ドキュメントによると、トークン消費量は以下の式で算出されます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;tokens = (width px × height px) / 750
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;画像サイズ&lt;/th&gt;
+&lt;th&gt;トークン数&lt;/th&gt;
+&lt;th&gt;1,000 枚あたりのコスト&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;200x200 px（0.04 MP）&lt;/td&gt;
+&lt;td&gt;約 54&lt;/td&gt;
+&lt;td&gt;約 $0.16&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1000x1000 px（1 MP）&lt;/td&gt;
+&lt;td&gt;約 1,334&lt;/td&gt;
+&lt;td&gt;約 $4.00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1092x1092 px（1.19 MP）&lt;/td&gt;
+&lt;td&gt;約 1,590&lt;/td&gt;
+&lt;td&gt;約 $4.80&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;1 枚の高解像度スクリーンショットで &lt;strong&gt;約 1,600 トークン&lt;/strong&gt;が消費されます。Claude Code のコンテキストウィンドウは約 200,000 トークンですが、システムプロンプト・CLAUDE.md・会話履歴・MCP ツール定義などが既に占有しているため、実質的に使える容量は限られています。&lt;/p&gt;</description></item><item><title>個人のファインチューニング済みモデルを P2P で相互利用する --- 分散 MoE で「みんなの AI」は成立するか</title><link>https://hdknr.github.io/blogs/posts/2026/03/3a077eceff8222a61428311635b6cbe9/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/3a077eceff8222a61428311635b6cbe9/</guid><description>&lt;h1 id="個人のファインチューニング済みモデルを-p2p-で相互利用する--分散-moe-でみんなの-aiは成立するか"&gt;個人のファインチューニング済みモデルを P2P で相互利用する &amp;mdash; 分散 MoE で「みんなの AI」は成立するか&lt;/h1&gt;
+&lt;p&gt;先の記事「&lt;a href="https://gist.github.com/hdknr/268ca8385f0fe7a512fed9885e964825"&gt;オープンソース AI は『無料』でも『民主化』でもない&lt;/a&gt;」で取り上げた Dario Amodei の指摘 &amp;mdash; 推論には高価な計算資源が必要であり、重みの公開だけでは真の民主化にならない &amp;mdash; に対して、興味深い反論の構想があります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Qwen 3.5 のような軽量モデルを各個人が自分のドメインでファインチューニングし、P2P ネットワークで互いのエージェントに相互利用させれば、大規模 LLM と同等の仕組みを分散的に構築できるのではないか?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;この構想を技術的に検証します。&lt;/p&gt;
+&lt;h2 id="構想の全体像--分散-mixture-of-experts"&gt;構想の全体像 &amp;mdash; 分散 Mixture of Experts&lt;/h2&gt;
+&lt;p&gt;この発想は、商用 LLM の内部で使われている &lt;strong&gt;Mixture of Experts（MoE）&lt;/strong&gt; アーキテクチャを、P2P ネットワーク上に展開したものと捉えることができます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;個人A: Qwen 3.5 (法律ドメインでファインチューニング)
+個人B: Qwen 3.5 (医療ドメインでファインチューニング)
+個人C: Qwen 3.5 (プログラミング特化)
+個人D: Qwen 3.5 (会計・税務特化)
+個人E: Qwen 3.5 (マーケティング特化)
+↓
+P2P ルーティングレイヤー（質問の性質に応じて最適なノードを選択）
+↓
+エージェントが複数の専門モデルを横断的に活用
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;商用 LLM が「1 つの巨大なモデル内でエキスパートを切り替える」のに対し、この構想は「ネットワーク上の独立した専門モデルを切り替える」アプローチです。&lt;/p&gt;
+&lt;h2 id="なぜ今この構想が現実味を帯びているのか"&gt;なぜ今この構想が現実味を帯びているのか&lt;/h2&gt;
+&lt;p&gt;3 つの技術的な進歩が、この構想を「空想」から「検討に値する」レベルに引き上げています。&lt;/p&gt;</description></item><item><title>Second Me — AI に「自分の分身」を持つ時代と OpenClaw との本質的な違い</title><link>https://hdknr.github.io/blogs/posts/2026/03/7f8ba24f4d98fb8b93ec3d1a507cffec/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/7f8ba24f4d98fb8b93ec3d1a507cffec/</guid><description>&lt;h1 id="second-me--ai-に自分の分身を持つ時代と-openclaw-との本質的な違い"&gt;Second Me — AI に「自分の分身」を持つ時代と OpenClaw との本質的な違い&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://gist.github.com/hdknr/8f10c70d04ed25f68a744081c16baa76"&gt;前回の記事&lt;/a&gt;で OpenClaw による 13 体 AI チーム構築を紹介しました。OpenClaw では SOUL.md というファイルでエージェントの「人格」を定義しますが、これは本当に「自分の分身」と呼べるのでしょうか。Second Me というプロジェクトは、まったく異なるアプローチで「AI による自分の分身」を実現しようとしています。&lt;/p&gt;
+&lt;h2 id="soulmd-の限界--指示書は分身ではない"&gt;SOUL.md の限界 — 「指示書」は「分身」ではない&lt;/h2&gt;
+&lt;p&gt;OpenClaw の SOUL.md は Markdown で書かれた設定ファイルです。エージェントの名前、性格、役割、制約を自然言語で記述します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;name: sales-agent
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;model: claude-sonnet-4-6
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたは営業チームの一員です。丁寧に話してください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 役割
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; リード情報の整理と優先順位付け
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 提案メールの下書き作成
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これは強力な仕組みですが、あくまで&lt;strong&gt;外から与える指示書&lt;/strong&gt;です。「営業エージェントをこう振る舞わせたい」という設計者の意図を反映したものであり、「この人ならどう考えるか」を再現するものではありません。&lt;/p&gt;</description></item></channel></rss>

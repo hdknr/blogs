@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>機械学習 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92/</link><description>Recent content in 機械学習 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 21 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92/index.xml" rel="self" type="application/rss+xml"/><item><title>Netflixの1時間より価値がある — スタンフォードCS336「ゼロからLLMを構築する」2時間講義が無料公開中</title><link>https://hdknr.github.io/blogs/posts/2026/05/stanford-cs336-llm-lecture/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/stanford-cs336-llm-lecture/</guid><description>&lt;p&gt;「NetflixのドラマよりもこのスタンフォードのAI講義を2時間見た方がいい——大手AI企業で働く多くの人がキャリア全体を通じて学ぶより多くのことを学べる。」&lt;/p&gt;
+&lt;p&gt;スペイン語圏最大のAIニュースレター「IAPROACTIV」を率いるSanti Torres（@SantiTorAI）がXに投稿した。そのメッセージは10万ビューを超えて拡散し、彼が紹介しているのは、スタンフォード大学が2026年春学期に開講した &lt;strong&gt;CS336: Language Modeling from Scratch&lt;/strong&gt;（ゼロから言語モデルを構築する）という講義だ。&lt;/p&gt;
+&lt;h2 id="stanford-cs336-とは"&gt;Stanford CS336 とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Stanford CS336: Language Modeling from Scratch&lt;/strong&gt; は、2026年3月30日から6月3日にかけて開講されたスタンフォード大学のコースで、ChatGPTやClaudeのようなLLMを「一から」実装することを目標にしている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;講師&lt;/strong&gt;: Tatsunori Hashimoto / Percy Liang（Stanford NLPの主要研究者）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;公式サイト&lt;/strong&gt;: &lt;a href="https://cs336.stanford.edu/"&gt;cs336.stanford.edu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;YouTube プレイリスト&lt;/strong&gt;: &lt;a href="https://www.youtube.com/playlist?list=PLoROMvodv4rMqXOcazWaTUHhq-yembLCV"&gt;Spring 2026 全講義&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href="https://github.com/stanford-cs336"&gt;stanford-cs336&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;OSの仕組みを学ぶために「OSを自作するコース」があるように、このコースではLLMの仕組みを学ぶために&lt;strong&gt;LLM自体を自作する&lt;/strong&gt;という哲学を貫いている。&lt;/p&gt;
+&lt;h2 id="講義でカバーされる内容"&gt;講義でカバーされる内容&lt;/h2&gt;
+&lt;h3 id="データ収集クリーニング"&gt;データ収集・クリーニング&lt;/h3&gt;
+&lt;p&gt;事前学習に必要なデータをCommon Crawlのダンプから構築する方法を学ぶ。フィルタリングや重複排除など、大規模テキストデータの品質管理も含まれる。&lt;/p&gt;
+&lt;h3 id="トランスフォーマーの実装"&gt;トランスフォーマーの実装&lt;/h3&gt;
+&lt;p&gt;Transformerアーキテクチャの各コンポーネント（Self-Attention、FFN、LayerNorm等）を一から実装し、それぞれの役割を深く理解する。&lt;/p&gt;
+&lt;h3 id="モデルのトレーニング"&gt;モデルのトレーニング&lt;/h3&gt;
+&lt;p&gt;スケーリング則（Scaling Laws）を使ったモデルサイズと学習量の見積もり、分散学習（データ並列・テンソル並列）、GPU最適化まで踏み込む。&lt;/p&gt;
+&lt;h3 id="アライメントと強化学習"&gt;アライメントと強化学習&lt;/h3&gt;
+&lt;p&gt;RLHF（人間のフィードバックによる強化学習）を含むアライメント手法の実装も演習に含まれる。&lt;/p&gt;
+&lt;h3 id="トークナイザーからrl基盤まで"&gt;トークナイザーからRL基盤まで&lt;/h3&gt;
+&lt;p&gt;5つの主要課題を通じて、BPEトークナイザーの実装から始まり、RLベースのアライメント手法まで一気通貫で経験する。「他のコースの少なくとも10倍のコードを書くことが期待される」と公式サイトに記載があるほど実装量が多い。&lt;/p&gt;
+&lt;h2 id="第1回講義-overview-と-tokenization"&gt;第1回講義: Overview と Tokenization&lt;/h2&gt;
+&lt;p&gt;特に話題を集めているのが**第1回講義（Overview, Tokenization）**で、YouTubeで公開されている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;YouTube&lt;/strong&gt;: &lt;a href="https://www.youtube.com/watch?v=JuoVZkPBiKk"&gt;Lecture 1: Overview, Tokenization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;時間: 約1時間44分&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この講義一本で、LLMのアーキテクチャ全体の俯瞰からトークナイザーの実装まで理解できる構成になっている。Xで拡散したのはこの動画（またはその切り抜き）だ。&lt;/p&gt;
+&lt;h2 id="なぜ無料公開されているのか"&gt;なぜ無料公開されているのか&lt;/h2&gt;
+&lt;p&gt;スタンフォードは以前からCS229（機械学習）やCS231n（画像認識）などの人気コースをYouTubeで無料公開してきた。CS336もその流れを受けて全講義がYouTubeで視聴可能だ。&lt;/p&gt;
+&lt;p&gt;ChatGPTが世界中に普及した今、「LLMがどう動くか」を本当に理解しているエンジニアはまだ少ない。CS336はその知識格差を埋める最短ルートの一つだ。&lt;/p&gt;
+&lt;h2 id="どう活用するか"&gt;どう活用するか&lt;/h2&gt;
+&lt;h3 id="エンジニアml実践者向け"&gt;エンジニア・ML実践者向け&lt;/h3&gt;
+&lt;p&gt;全10週分の講義動画とスライド、GitHubのコード課題が揃っているので、自分のペースで独学できる。特に実装課題は「一から実装することでブラックボックスをなくす」という点で非常に価値が高い。&lt;/p&gt;
+&lt;h3 id="勉強会チーム学習"&gt;勉強会・チーム学習&lt;/h3&gt;
+&lt;p&gt;講義動画を見ながら輪読会形式で進めるのも有効だ。プレイリストが整備されているので進捗管理もしやすい。&lt;/p&gt;
+&lt;h3 id="キャッチアップ教材として"&gt;キャッチアップ教材として&lt;/h3&gt;
+&lt;p&gt;「Transformerはなんとなく知っているが内部は追っていない」というエンジニアにとって、CS336の第1講義は最適な入り口になる。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;コース名&lt;/td&gt;
+&lt;td&gt;Stanford CS336: Language Modeling from Scratch&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;講師&lt;/td&gt;
+&lt;td&gt;Tatsunori Hashimoto, Percy Liang&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;期間&lt;/td&gt;
+&lt;td&gt;2026年3月〜6月（Spring 2026）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;公式サイト&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://cs336.stanford.edu/"&gt;cs336.stanford.edu&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;YouTube&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://www.youtube.com/playlist?list=PLoROMvodv4rMqXOcazWaTUHhq-yembLCV"&gt;全講義プレイリスト&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GitHub&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://github.com/stanford-cs336"&gt;stanford-cs336&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;費用&lt;/td&gt;
+&lt;td&gt;無料（視聴のみ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;大手AI企業が公開するブログやドキュメントを読むより、「自分で実装する」というプロセスがLLMの理解を本物にする。スタンフォードがその機会を無料で提供している今、まずは第1講義から視聴してみてほしい。&lt;/p&gt;</description></item><item><title>機械学習で他社株TOBを予測し TOPIX を上回るリターン — Random Forest と SHAP 分析</title><link>https://hdknr.github.io/blogs/posts/2026/04/ml-tob-prediction-random-forest/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ml-tob-prediction-random-forest/</guid><description>&lt;p&gt;企業の財務データや株主構成から「1年以内に他社株TOB（公開買い付け）の対象となる確率」を機械学習で予測し、その確率を使ったポートフォリオが TOPIX を上回るリターンを出せる——そんな研究結果が発表されました。&lt;/p&gt;
+&lt;p&gt;久保正裕・梶並俊彦・鈴木智也（2026）による論文「機械学習による他社株TOBの予測可能性」（人工知能学会第二種研究会資料・金融情報学研究会、FIN-036 巻 41 号、p.257-263）の内容を紹介します。&lt;/p&gt;
+&lt;p&gt;論文DOI: &lt;a href="https://doi.org/10.11517/jsaisigtwo.2026.FIN-036_257"&gt;10.11517/jsaisigtwo.2026.FIN-036_257&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="研究の概要"&gt;研究の概要&lt;/h2&gt;
+&lt;p&gt;TOBが発生すると対象企業の株価にはプレミアムが上乗せされるため、投資家にとって非常に魅力的なイベントです。この研究では、東京証券取引所の上場全銘柄（データ取得期間：2011年1月〜2025年5月）を対象に、&lt;strong&gt;財務指標だけでなく「株主構成」に関する特徴量&lt;/strong&gt;を加えて予測モデルを構築しました。&lt;/p&gt;
+&lt;h2 id="分析1-不均衡データへの徹底した前処理"&gt;分析1: 不均衡データへの徹底した前処理&lt;/h2&gt;
+&lt;p&gt;TOBは上場企業全体から見ると年間数十件程度と非常にレアなイベントです。そのまま学習すると多数派（TOB非発生）のデータに過剰適合してしまいます。この問題を解決するため、複数ステップの前処理を実施しています。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;時系列分割&lt;/strong&gt;: 予測対象年から過去5年間を学習データとして分割し、TOB発生メカニズムの時変性に対応&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Random UnderSampling&lt;/strong&gt;: 多数派を減らしてクラス比を調整&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tomek Links&lt;/strong&gt;: クラス境界付近のノイズとなる多数派データを削除&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SMOTENC&lt;/strong&gt;: 少数派（TOB発生銘柄）の疑似データを生成し、機械学習による分類が容易な学習環境を整備&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="分析2-予測精度と決定要因shap分析"&gt;分析2: 予測精度と決定要因（SHAP分析）&lt;/h2&gt;
+&lt;p&gt;再学習した Random Forest モデルは &lt;strong&gt;ROC-AUC で 0.60〜0.75&lt;/strong&gt; を達成しました（ランダム予測の AUC=0.50 を大きく上回り、十分な予測能力があることが確認されています）。&lt;/p&gt;
+&lt;p&gt;SHAP 分析によって TOB 予測に寄与する要因も明らかになっています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;特徴量&lt;/th&gt;
+&lt;th&gt;解釈&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;筆頭株主の保有割合&lt;/strong&gt;（最重要）&lt;/td&gt;
+&lt;td&gt;親会社が子会社を完全子会社化する「親子上場の解消」などのケースを示唆&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;個人保有比率（低いほどTOB対象になりやすい）&lt;/td&gt;
+&lt;td&gt;個人投資家が多いと売却を促すためのプレミアムが高くなり、買収コストが嵩む&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;時価総額（LnMV）・PBR・配当性向（低い企業）&lt;/td&gt;
+&lt;td&gt;必要なコストが少ない点や非効率な投資への懸念（フリーキャッシュフロー仮説）から狙われやすい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="分析3-ポートフォリオ運用シミュレーション"&gt;分析3: ポートフォリオ運用シミュレーション&lt;/h2&gt;
+&lt;p&gt;この予測モデルの出力を実際の株式運用に応用した結果が特に注目されます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;機械学習が算出した予測確率の**上位5%・15%・25%**の銘柄で等ウェイトのロングポートフォリオを構築し、年1回リバランスするシミュレーションを実施&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;いずれのポートフォリオも TOPIX を上回るリターンを獲得&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;上位5% &amp;gt; 上位15% &amp;gt; 上位25% の順でリターンが段階的に高くなる傾向を示し、予測確率の有用性が示された&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="最も有益な発見-tobが発生しなかった銘柄の動き"&gt;最も有益な発見: TOBが発生しなかった銘柄の動き&lt;/h2&gt;
+&lt;p&gt;この研究の最も重要な発見は「実際にはTOBが発生しなかった銘柄」の動きです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;TOBが発生しなくても、予測確率が高い銘柄群は&lt;strong&gt;統計的に有意にプラスのリターン&lt;/strong&gt;を生み出していました&lt;/li&gt;
+&lt;li&gt;これは、市場の先行指標である株価が、&lt;strong&gt;TOBの発生可能性を先読みして価格上昇している&lt;/strong&gt;可能性を示唆しています&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり、TOBが発生する・しないにかかわらず、「TOB予測確率」という指標自体がポートフォリオの銘柄選択において非常に有用であるという、実務的応用価値の高い性質を示す結論となっています。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;手法&lt;/td&gt;
+&lt;td&gt;Random Forest + 不均衡データ対策（RUS / Tomek Links / SMOTENC）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;データ&lt;/td&gt;
+&lt;td&gt;東証上場全銘柄（2011年1月〜2025年5月）、財務指標＋株主構成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;予測精度&lt;/td&gt;
+&lt;td&gt;ROC-AUC 0.60〜0.75&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;最重要特徴量&lt;/td&gt;
+&lt;td&gt;筆頭株主の保有割合&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;運用結果&lt;/td&gt;
+&lt;td&gt;上位5%・15%・25%いずれのポートフォリオも TOPIX をアウトパフォーム&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;重要示唆&lt;/td&gt;
+&lt;td&gt;TOB未発生銘柄でも予測確率が高い銘柄群は統計的に有意なプラスリターン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;財務データと株主構成データを組み合わせたこのアプローチは、個人投資家にとっても参考になる視点を提供しています。「TOB予測確率」を独自に計算することは難しいですが、筆頭株主の保有割合や個人保有比率、PBR、時価総額といった公開情報を活用した銘柄スクリーニングは、誰でも実践できる投資戦略のヒントになりそうです。&lt;/p&gt;</description></item><item><title>DeNA+GOのAIコミュニティが4年間の社内勉強会資料120本超をSpeakerDeckで無料公開</title><link>https://hdknr.github.io/blogs/posts/2026/04/dena-ai-community-speakerdeck/</link><pubDate>Tue, 28 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/dena-ai-community-speakerdeck/</guid><description>DeNA+GOのAIコミュニティが4年間の社内勉強会スライド120本超をSpeakerDeckで無料公開。Kaggleコンペ解法・Claude Codeログ分析・NeurIPS論文解説など実務レベルのAI技術資料を網羅。</description></item><item><title>Googleが1000億の実データで学習した予測AI「TimesFM」をひっそり公開していた</title><link>https://hdknr.github.io/blogs/posts/2026/04/google-timesfm-prediction-ai/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/google-timesfm-prediction-ai/</guid><description>&lt;p&gt;Googleが時系列予測のための基盤モデル &lt;strong&gt;TimesFM&lt;/strong&gt;（Time Series Foundation Model）をひっそりと公開していた。1000億以上の実データで学習済みで、自分のデータをファインチューニングすることなく（ゼロショットで）すぐに使える点が特徴だ。&lt;/p&gt;
+&lt;h2 id="timesfm-とは"&gt;TimesFM とは&lt;/h2&gt;
+&lt;p&gt;TimesFM は Google Research が開発した時系列予測に特化した基盤モデルだ。GPT-3 などの大規模言語モデルに着想を得たデコーダーのみのトランスフォーマーアーキテクチャを採用しており、テキストではなく「時系列データのパターン」を学習する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;パラメータ数&lt;/strong&gt;: 2億パラメータ（TimesFM 2.5 では最適化済み）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;アーキテクチャ&lt;/strong&gt;: デコーダーのみのトランスフォーマー&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト長&lt;/strong&gt;: TimesFM 2.5 で 16,384 タイムポイント（8倍に拡張）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="何が予測できるのか"&gt;何が予測できるのか&lt;/h2&gt;
+&lt;p&gt;TimesFM が得意とするユースケースは多岐にわたる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;売上・需要予測&lt;/strong&gt;: 小売の週次売上、在庫需要、サプライチェーン計画&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;市場価格予測&lt;/strong&gt;: 株式市場、コモディティ、仮想通貨の価格変動&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;電力需要予測&lt;/strong&gt;: 電力負荷、エネルギー価格、スマートグリッド最適化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ユーザートラフィック予測&lt;/strong&gt;: Web サイトのアクセス、API リクエスト量、サーバー負荷計画&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ゼロショットで使えるのが最大の強み"&gt;ゼロショットで使えるのが最大の強み&lt;/h2&gt;
+&lt;p&gt;従来の深層学習モデルは、予測したいデータセットに合わせて個別にトレーニングする必要があった。TimesFM はそれとは異なり、&lt;strong&gt;一切のファインチューニングなしに新しいデータセットに対して高精度な予測&lt;/strong&gt;を実現する。&lt;/p&gt;
+&lt;p&gt;公式の評価によると、ゼロショット状態の TimesFM は多くの個別学習済み深層学習モデルを上回るパフォーマンスを示している。&lt;/p&gt;
+&lt;h2 id="学習データ"&gt;学習データ&lt;/h2&gt;
+&lt;p&gt;TimesFM は以下のデータソースから 1000 億以上のデータポイントを使って学習されている。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;データソース&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Wikipedia ページビュー&lt;/td&gt;
+&lt;td&gt;2012〜2023年の閲覧数時系列データ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Google トレンド&lt;/td&gt;
+&lt;td&gt;22,000 件の検索関心度時系列データ（時間単位〜週単位）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;公開データセット&lt;/td&gt;
+&lt;td&gt;M4、電力、トラフィックなどのベンチマークデータ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;合成データ&lt;/td&gt;
+&lt;td&gt;ARMA 生成の 300 万件のシリーズ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最新バージョンでは 4000 億以上の実世界タイムポイントで学習されているとも報告されている。&lt;/p&gt;
+&lt;h2 id="使い方"&gt;使い方&lt;/h2&gt;
+&lt;h3 id="インストール"&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install timesfm
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="python-での基本的な使い方"&gt;Python での基本的な使い方&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; timesfm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# モデルの初期化（Hugging Face からダウンロード）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tfm &lt;span style="color:#f92672"&gt;=&lt;/span&gt; timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFm(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; hparams&lt;span style="color:#f92672"&gt;=&lt;/span&gt;timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFmHparams(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; backend&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;pytorch&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; per_core_batch_size&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;32&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; horizon_len&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;128&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; checkpoint&lt;span style="color:#f92672"&gt;=&lt;/span&gt;timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFmCheckpoint(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; huggingface_repo_id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;google/timesfm-2.5-200m-pytorch&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 配列から予測&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;forecast_array, _ &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;forecast(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[context_time_series],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; freq&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;], &lt;span style="color:#75715e"&gt;# 0: 高頻度（日次以下）、1: 週次・月次、2: 四半期・年次&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# DataFrame から予測&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;forecast_df &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;forecast_on_df(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;=&lt;/span&gt;df,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; freq&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;D&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 日次&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; value_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;target&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; num_jobs&lt;span style="color:#f92672"&gt;=-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="hugging-face-モデル"&gt;Hugging Face モデル&lt;/h3&gt;
+&lt;p&gt;複数のバリアントが公開されている。&lt;/p&gt;</description></item><item><title>TimesFM</title><link>https://hdknr.github.io/blogs/wiki/tools/timesfm/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/timesfm/</guid><description>Google Research が開発した時系列予測の基盤モデル。1000億以上の実データで学習済みで、ゼロショット（ファインチューニング不要）で売上・需要・市場価格・トラフィック予測が可能</description></item><item><title>正則化PCAで米国→日本の業種モメンタムを捉える — 時差を利用したクロスマーケット戦略</title><link>https://hdknr.github.io/blogs/posts/2026/03/regularized-pca-cross-market-momentum/</link><pubDate>Fri, 20 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/regularized-pca-cross-market-momentum/</guid><description>&lt;p&gt;米国市場の業種別リターンから翌日の日本市場を予測する — そんな論文の解説が X で話題になっていました。ポイントは「正則化 PCA（主成分分析）」によるノイズ除去です。本記事ではこの手法の仕組みと、なぜ通常の PCA より優れた結果を出せるのかを整理します。&lt;/p&gt;
+&lt;h2 id="基本アイデア時差を利用した業種間伝播"&gt;基本アイデア：時差を利用した業種間伝播&lt;/h2&gt;
+&lt;p&gt;米国市場が夜に動き、数時間後に日本市場が開く。同業種のリターンは国をまたいで伝播する傾向がある — この「時差」を収益機会として捉えるのが基本的な発想です。&lt;/p&gt;
+&lt;p&gt;具体的には、&lt;strong&gt;米国の 11 業種の当日リターン&lt;/strong&gt;から、&lt;strong&gt;日本の 17 業種の翌日リターン&lt;/strong&gt;を予測します。&lt;/p&gt;
+&lt;h2 id="データソース日米の業種別-etf"&gt;データソース：日米の業種別 ETF&lt;/h2&gt;
+&lt;p&gt;分析対象は &lt;strong&gt;日米の業種別 ETF&lt;/strong&gt; です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;米国側&lt;/strong&gt;: 業種 ETF の &lt;strong&gt;当日 Close-to-Close リターン&lt;/strong&gt;（終値ベース）を情報集合とする&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;日本側&lt;/strong&gt;: 業種 ETF の &lt;strong&gt;翌営業日 Open-to-Close リターン&lt;/strong&gt;（寄付→引け）を予測対象とする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;米国市場の終値で確定した情報が、翌朝の日本市場の寄付きから日中にかけて反映される — この「リード・ラグ仮説」を ETF の日次リターンデータで検証する構成です。&lt;/p&gt;
+&lt;h3 id="データの入手方法"&gt;データの入手方法&lt;/h3&gt;
+&lt;p&gt;業種別 ETF の価格データは誰でも無料で入手できます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;米国の業種 ETF（SPDR Select Sector シリーズ）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;XLK（テクノロジー）、XLF（金融）、XLE（エネルギー）など 11 セクターの ETF が上場しています。Yahoo Finance や Google Finance で日次データを取得可能です。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;日本の業種 ETF（TOPIX-17 業種別シリーズ）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;NEXT FUNDS TOPIX-17 シリーズ（野村アセットマネジメント）など、17 業種に対応する ETF があります。JPX（日本取引所グループ）や Yahoo!ファイナンスで取得できます。&lt;/p&gt;</description></item><item><title>6ヶ月でAIエンジニアになるロードマップ — 無料リソースだけで学ぶ完全ガイド</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-engineer-6-months-roadmap/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-engineer-6-months-roadmap/</guid><description>Python基礎から機械学習、ディープラーニング、LLM/RAG開発、MLOpsまで。6ヶ月でAIエンジニアになるための学習ロードマップを、MIT・Stanford・Harvardの無料コースで構成。</description></item></channel></rss>

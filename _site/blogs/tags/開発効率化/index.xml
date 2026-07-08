@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>開発効率化 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E9%96%8B%E7%99%BA%E5%8A%B9%E7%8E%87%E5%8C%96/</link><description>Recent content in 開発効率化 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E9%96%8B%E7%99%BA%E5%8A%B9%E7%8E%87%E5%8C%96/index.xml" rel="self" type="application/rss+xml"/><item><title>mattpocock/skills — 有名エンジニアが毎日使う Claude Code スキル集を .claude ごと公開、13万スター突破</title><link>https://hdknr.github.io/blogs/posts/2026/06/mattpocock-skills/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/mattpocock-skills/</guid><description>Matt Pocock が本番開発で使う Claude Code スキル15種を npx skills@latest add mattpocock/skills でインストールできる。/grill-me・/tdd・/diagnose 等のスキルで vibe coding から工学的開発へ移行する方法を解説する。</description></item><item><title>Claude Code の /team-onboarding コマンドで新メンバーへの使い方説明が1コマンドで完結する</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-team-onboarding/</link><pubDate>Thu, 16 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-team-onboarding/</guid><description>&lt;p&gt;Claude Code に &lt;code&gt;/team-onboarding&lt;/code&gt; というコマンドが追加された。新メンバーが入るたびに口頭で説明していた「うちのチームの Claude Code の使い方」が、1コマンドで自動ドキュメント化されるようになった。&lt;/p&gt;
+&lt;h2 id="新メンバーへの説明を毎回繰り返す課題"&gt;新メンバーへの説明を毎回繰り返す課題&lt;/h2&gt;
+&lt;p&gt;チームで Claude Code を使っていると、新メンバーが入るたびに「うちってどうやって Claude Code 使ってるの？」という質問が飛んでくる。毎回同じことを口頭で説明するのは時間がかかるし、言語化が難しい暗黙知も多い。&lt;/p&gt;
+&lt;h2 id="team-onboarding-が解決すること"&gt;/team-onboarding が解決すること&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;/team-onboarding&lt;/code&gt; コマンドを実行すると、Claude Code が実行したユーザーの過去のセッション履歴を分析して、チーム向けのオンボーディング資料を自動生成してくれる。&lt;/p&gt;
+&lt;p&gt;生成される内容は以下のとおり：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;過去30日のセッションを自動分析&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;作業タイプの割合をテキスト形式で可視化&lt;/strong&gt;（例：Build 40%, Plan 25% など ※実行例）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;よく使うスキルを頻度順にランキング&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP 接続の使用回数を可視化&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;新メンバー向けセットアップチェックリストを生成&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;出力は Markdown 形式なので、Notion や GitHub Wiki にそのままコピペできる。ドキュメント整備の手間が省ける。&lt;/p&gt;
+&lt;h2 id="使い方"&gt;使い方&lt;/h2&gt;
+&lt;p&gt;プロジェクトルートで Claude Code を起動し、チャット欄に入力するだけ：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/team-onboarding
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;実行すると、セッション履歴が分析され、チームへの共有に適したオンボーディングドキュメントが生成される。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;「新メンバーのオンボーディングに毎回時間を取られる」という壁を崩すコマンドだ。チームの暗黙知を自動でドキュメント化し、Notion や GitHub にそのまま貼れる Markdown で出力される。Claude Code をチームで使っている場合は試してみる価値がある。&lt;/p&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;元ツイート（&lt;a href="https://x.com/SuguruKun_ai/status/2044704237402325249"&gt;@SuguruKun_ai&lt;/a&gt;）より&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>Claude Code にカオスエンジニアリングエージェントを導入してリポジトリの弱点を発見する</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-chaos-engineer-agent/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-chaos-engineer-agent/</guid><description>&lt;p&gt;Claude Code のカスタムエージェント機能を使って「カオスエンジニア」を導入すると、リポジトリの潜在的な弱点を自動的に発見できる。&lt;code&gt;.md&lt;/code&gt; ファイルを1つ置くだけで有効化でき、驚くほど多くの問題が見つかることで話題になっている。&lt;/p&gt;
+&lt;h2 id="カオスエンジニアリングとは"&gt;カオスエンジニアリングとは&lt;/h2&gt;
+&lt;p&gt;カオスエンジニアリングは、本番システムに意図的に障害を注入してシステムの耐障害性を検証する手法だ。Netflix が提唱した概念で、&lt;code&gt;Chaos Monkey&lt;/code&gt; のような自動障害注入ツールが知られている。&lt;/p&gt;
+&lt;p&gt;Claude Code にカオスエンジニアリングの思考を持ったエージェントを持ち込むと、コードベースに対して「もし〇〇が壊れたら？」という視点で弱点分析を行ってくれる。&lt;/p&gt;
+&lt;h2 id="導入方法"&gt;導入方法&lt;/h2&gt;
+&lt;p&gt;Claude Code のカスタムエージェントは &lt;code&gt;.claude/agents/&lt;/code&gt; ディレクトリに &lt;code&gt;.md&lt;/code&gt; ファイルを置くだけで使える。&lt;/p&gt;
+&lt;p&gt;以下が chaos-engineer エージェントの定義例だ:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# chaos-engineer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたはカオスエンジニアリングの専門家です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;システムに意図的に障害を起こす視点でリポジトリを分析し、
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;潜在的な弱点・単一障害点・エラーハンドリングの欠如を特定してください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 分析観点
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 単一障害点（SPOF）の特定
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; エラーハンドリングの欠如箇所
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; タイムアウト設定の不備
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; リトライ処理の欠如
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 環境変数・設定値のハードコーディング
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 依存サービスがダウンした場合の挙動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; データ整合性が保証されない処理
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; テストカバレッジが低い重要処理
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 出力形式
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;各問題について以下を明記する:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 問題箇所（ファイルパス・行番号）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 障害シナリオ
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 影響範囲
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 推奨する対策
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このファイルを &lt;code&gt;.claude/agents/chaos-engineer.md&lt;/code&gt; として保存する。&lt;/p&gt;</description></item><item><title>Claude Code スキル活用の知見：Anthropic 社内での実践から学んだこと</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-skills-lessons/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-skills-lessons/</guid><description>&lt;p&gt;Anthropic で Claude Code を開発している Thariq が、社内での大規模なスキル活用から得た知見をまとめたノートが公開された。スキルは Claude Code の最も使われる拡張ポイントの一つであり、柔軟で作りやすく配布もしやすい。しかしその柔軟性ゆえに「何が正解か」を判断しにくいという問題もある。本記事はそのノートの内容を日本語でまとめたものだ。&lt;/p&gt;
+&lt;h2 id="スキルとは何か"&gt;スキルとは何か&lt;/h2&gt;
+&lt;p&gt;スキルは「ただの Markdown ファイル」という誤解が多いが、実際にはスクリプト・アセット・データなどを含むフォルダー全体がスキルだ。Claude Code では動的なフックの登録など多彩な設定オプションも提供されている。&lt;/p&gt;
+&lt;p&gt;最も面白いスキルは、こうした設定オプションやフォルダー構造をクリエイティブに活用しているものだ。&lt;/p&gt;
+&lt;h2 id="スキルの-9-つのカテゴリ"&gt;スキルの 9 つのカテゴリ&lt;/h2&gt;
+&lt;p&gt;社内のスキルを棚卸ししたところ、いくつかのカテゴリに分類できた。最も優れたスキルは一つのカテゴリに綺麗に収まる。自組織でどのカテゴリが欠けているかを確認するのに役立つ。&lt;/p&gt;
+&lt;h3 id="1-ライブラリapi-リファレンス"&gt;1. ライブラリ・API リファレンス&lt;/h3&gt;
+&lt;p&gt;ライブラリ、CLI、SDK の正しい使い方を説明するスキル。内部ライブラリや Claude Code が苦手とする一般的なライブラリを対象にする。参照コードスニペットのフォルダーや、Claude が避けるべき「落とし穴（gotchas）」リストを含めることが多い。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;例:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;billing-lib&lt;/code&gt; — 社内課金ライブラリのエッジケースや注意点&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;internal-platform-cli&lt;/code&gt; — 社内 CLI の全サブコマンドと使用例&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;frontend-design&lt;/code&gt; — 自社デザインシステムに Claude を合わせる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-プロダクト検証"&gt;2. プロダクト検証&lt;/h3&gt;
+&lt;p&gt;コードが正しく動作しているかをテスト・検証するスキル。Playwright や tmux などの外部ツールと組み合わせることが多い。検証スキルは Claude のアウトプットの正確性を担保するために極めて有用で、エンジニアが 1 週間かけて磨き上げる価値がある。&lt;/p&gt;
+&lt;p&gt;出力の動画録画や各ステップでのプログラムによるアサーションなどの手法も有効だ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;例:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;signup-flow-driver&lt;/code&gt; — サインアップ → メール確認 → オンボーディングをヘッドレスブラウザで実行&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;checkout-verifier&lt;/code&gt; — Stripe テストカードでチェックアウト UI を操作し、請求書の状態を確認&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tmux-cli-driver&lt;/code&gt; — TTY が必要なインタラクティブ CLI テスト用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-データ取得分析"&gt;3. データ取得・分析&lt;/h3&gt;
+&lt;p&gt;データ・監視スタックに接続するスキル。認証情報付きでデータを取得するライブラリ、特定のダッシュボード ID、一般的なワークフローの手順などを含む。&lt;/p&gt;</description></item></channel></rss>

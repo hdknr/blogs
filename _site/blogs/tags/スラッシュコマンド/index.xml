@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>スラッシュコマンド on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%B9%E3%83%A9%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/</link><description>Recent content in スラッシュコマンド on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%B9%E3%83%A9%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code で使える神コマンド10選 — 知らないと時間を溶かす</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-commands/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-commands/</guid><description>&lt;p&gt;Claude Code を使いこなすうえで押さえておきたいコマンド・指示パターンを10個まとめました。
+これを知っているか知らないかで、作業スピードに大きな差が生まれます。&lt;/p&gt;
+&lt;h2 id="コマンド一覧"&gt;コマンド一覧&lt;/h2&gt;
+&lt;h3 id="1-edit--部分修正で爆速"&gt;1. &lt;code&gt;/edit&lt;/code&gt; — 部分修正で爆速&lt;/h3&gt;
+&lt;p&gt;ファイル全体を書き直すのではなく、特定の箇所だけを修正したいときに使います。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/edit auth.py の login 関数のバリデーション処理を修正して
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;変更箇所を絞ることで、Claude が意図を正確に把握しやすくなり、意図しない書き換えを防げます。&lt;/p&gt;
+&lt;h3 id="2-diff--変更点だけ確認"&gt;2. &lt;code&gt;/diff&lt;/code&gt; — 変更点だけ確認&lt;/h3&gt;
+&lt;p&gt;Claude が加えた変更内容を一覧表示します。大量に編集した後に「何が変わったか」を素早く把握できます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/diff
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;git diff&lt;/code&gt; の感覚で使えるため、コードレビュー前の最終確認に重宝します。&lt;/p&gt;
+&lt;h3 id="3-undo--即戻せる"&gt;3. &lt;code&gt;/undo&lt;/code&gt; — 即戻せる&lt;/h3&gt;
+&lt;p&gt;直前の変更を取り消します。「やっぱり前の方が良かった」というときに即座に元に戻せます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/undo
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Claude Code はセッション内の変更履歴を保持しているため、複数回の &lt;code&gt;/undo&lt;/code&gt; で遡ることも可能です。&lt;/p&gt;
+&lt;h3 id="4-run--実行まで自動"&gt;4. &lt;code&gt;/run&lt;/code&gt; — 実行まで自動&lt;/h3&gt;
+&lt;p&gt;コードの生成だけでなく、その場で実行まで完結させます。スクリプトの動作確認やテスト実行を素早く回せます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/run scripts/migrate.py を実行して結果を確認して
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;実行結果のエラーも自動で拾い、修正まで一気に進めてくれます。&lt;/p&gt;
+&lt;h3 id="5-test--テスト生成"&gt;5. &lt;code&gt;/test&lt;/code&gt; — テスト生成&lt;/h3&gt;
+&lt;p&gt;実装コードに対応するユニットテストを自動生成します。テストを書く手間を大幅に削減できます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/test UserService クラスのテストを生成して
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;既存のテストフレームワーク（pytest、Jest など）を検出して、プロジェクトのスタイルに合わせたコードを出力してくれます。&lt;/p&gt;
+&lt;h3 id="6-fix--エラー修正"&gt;6. &lt;code&gt;/fix&lt;/code&gt; — エラー修正&lt;/h3&gt;
+&lt;p&gt;エラーメッセージをそのまま貼り付けるだけで、Claude が原因を分析して修正します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/fix TypeError: &amp;#39;NoneType&amp;#39; object is not subscriptable
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;スタックトレースごと渡すと、より正確な修正が得られます。&lt;/p&gt;
+&lt;h3 id="7-refactor--最適化"&gt;7. &lt;code&gt;/refactor&lt;/code&gt; — 最適化&lt;/h3&gt;
+&lt;p&gt;動いているコードをより読みやすく・効率的な構造に書き直します。&lt;/p&gt;</description></item></channel></rss>

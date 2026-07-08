@@ -1,0 +1,1586 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>AWS on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/aws/</link><description>Recent content in AWS on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 18 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/aws/index.xml" rel="self" type="application/rss+xml"/><item><title>キーを持たずに AWS へデプロイし、夜間に自動適用する — GitHub Actions 運用設計ノート</title><link>https://hdknr.github.io/blogs/posts/2026/06/keyless-aws-deploy-github-actions-oidc-nightly/</link><pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/keyless-aws-deploy-github-actions-oidc-nightly/</guid><description>GitHub Actions から AWS へ OIDC でキーレスデプロイし、夜間 cron で安全に tofu apply する運用設計。鶏と卵問題・PR plan レビュー・冪等性まで実践的に解説。</description></item><item><title>Claude Platform on AWS には Spend Limit がない — AWS Budgets と Rate Limit で課金暴走を防ぐ</title><link>https://hdknr.github.io/blogs/posts/2026/06/claude-platform-on-aws-no-spend-limit/</link><pubDate>Wed, 10 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/claude-platform-on-aws-no-spend-limit/</guid><description>Claude Platform on AWS には金額上限（Spend Limit）がない。理由と、AWS Budgets のアラート・Rate Limit のキャップ・Amazon Bedrock の自動遮断という現実的な課金ガードレールの組み方を整理する。</description></item><item><title>Claude Platform on AWS セットアップと API 呼び出し実録 — API key/SigV4 認証と inference_geo の挙動</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-platform-on-aws-ga-setup/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-platform-on-aws-ga-setup/</guid><description>&lt;p&gt;2026年5月11日に一般提供（GA）となった &lt;strong&gt;Claude Platform on AWS&lt;/strong&gt; のセットアップ手順・API 呼び出し・&lt;code&gt;inference_geo&lt;/code&gt; の挙動を実機で検証した記録です。&lt;/p&gt;
+&lt;p&gt;概念的な概要や Amazon Bedrock との比較については&lt;a href="https://hdknr.github.io/blogs/posts/2026/05/2026-05-13-claude-platform-on-aws-ga/"&gt;こちらの記事&lt;/a&gt;をご参照ください。本記事では hands-on のセットアップと API 呼び出しに絞って解説します。&lt;/p&gt;
+&lt;p&gt;参考: &lt;a href="https://dev.classmethod.jp/articles/claude-platform-on-aws-ga-setup/"&gt;Claude Platform on AWS がGA。セットアップとAPI呼び出しを試してみた | DevelopersIO&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="claude-platform-on-aws-とは概要"&gt;Claude Platform on AWS とは（概要）&lt;/h2&gt;
+&lt;p&gt;AWS アカウントを通じて Anthropic のネイティブ Claude Platform に直接アクセスできるサービスです。Amazon Bedrock とは別サービスで、&lt;strong&gt;推論は Anthropic のインフラ上で実行&lt;/strong&gt;されます。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;Claude Platform on AWS&lt;/th&gt;
+&lt;th&gt;Claude on Bedrock&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;推論の実行&lt;/td&gt;
+&lt;td&gt;Anthropic&lt;/td&gt;
+&lt;td&gt;AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;利用可能な機能&lt;/td&gt;
+&lt;td&gt;全ネイティブ機能（Skills, Code Execution, Files API, MCP 等）&lt;/td&gt;
+&lt;td&gt;Bedrock が提供する機能（Guardrails, KB, Converse API 等）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;新機能の利用&lt;/td&gt;
+&lt;td&gt;Anthropic と同日&lt;/td&gt;
+&lt;td&gt;AWS が対応したとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;認証&lt;/td&gt;
+&lt;td&gt;AWS IAM&lt;/td&gt;
+&lt;td&gt;AWS IAM&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;監査ログ&lt;/td&gt;
+&lt;td&gt;CloudTrail&lt;/td&gt;
+&lt;td&gt;CloudTrail&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;課金&lt;/td&gt;
+&lt;td&gt;AWS 請求に統合&lt;/td&gt;
+&lt;td&gt;AWS 請求に統合&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;向いているケース&lt;/td&gt;
+&lt;td&gt;最新機能・エージェント・スキル&lt;/td&gt;
+&lt;td&gt;データ所在地優先・FedRAMP/HIPAA 等のコンプライアンス対応・AWS 単独データ処理要件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="セットアップ手順"&gt;セットアップ手順&lt;/h2&gt;
+&lt;h3 id="1-aws-コンソールで開始"&gt;1. AWS コンソールで開始&lt;/h3&gt;
+&lt;p&gt;AWS マネジメントコンソールで「Claude Platform on AWS」を開き「Get Started」をクリックします。確認画面で「Continue」を選択します。&lt;/p&gt;</description></item><item><title>Claude Platform on AWS が GA — Amazon Bedrock との違いと day-one でフル機能を使える理由</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-platform-on-aws-%E3%81%8C-ga-amazon-bedrock-%E3%81%A8%E3%81%AE%E9%81%95%E3%81%84%E3%81%A8-day-one-%E3%81%A7%E3%83%95%E3%83%AB%E6%A9%9F%E8%83%BD%E3%82%92%E4%BD%BF%E3%81%88%E3%82%8B%E7%90%86%E7%94%B1/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-platform-on-aws-%E3%81%8C-ga-amazon-bedrock-%E3%81%A8%E3%81%AE%E9%81%95%E3%81%84%E3%81%A8-day-one-%E3%81%A7%E3%83%95%E3%83%AB%E6%A9%9F%E8%83%BD%E3%82%92%E4%BD%BF%E3%81%88%E3%82%8B%E7%90%86%E7%94%B1/</guid><description>Anthropic が 2026 年 5 月 11 日に GA した Claude Platform on AWS を Amazon Bedrock と比較。day-one で使える Managed Agents・Skills・MCP connector、既存 AWS コミットメントの消化など、AWS 顧客が選び分けるための判断材料をまとめる。</description></item><item><title>現代的サーバー監視の王道スタック — Prometheus + Loki + Grafana + Alloy で始めるオブザーバビリティ基盤</title><link>https://hdknr.github.io/blogs/posts/2026/05/prometheus-loki-grafana-server-monitoring-stack/</link><pubDate>Fri, 08 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/prometheus-loki-grafana-server-monitoring-stack/</guid><description>&lt;p&gt;サーバー監視は「死活監視 + リソース監視」の時代から、&lt;strong&gt;「メトリクス + ログ + トレース」を 1 つの画面で相関分析する&lt;/strong&gt;オブザーバビリティの時代に移りました。クラウドネイティブ環境では、&lt;strong&gt;Grafana Labs の OSS スタック&lt;/strong&gt;（Prometheus + Loki + Grafana + Alloy）が、コスト・自由度・運用ノウハウの蓄積において事実上の王道になっています。&lt;/p&gt;
+&lt;p&gt;この記事では、なぜこの組み合わせが現代の標準なのか、各コンポーネントがどう役割分担しているのか、そして最小構成から本番運用までの全体像を整理します。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/loki-grafana-alloy-stack.png" alt="Prometheus・Loki・Tempo を Grafana Alloy が一括収集し、Grafana で可視化するサーバー監視スタックの全体構成図。各サーバー / コンテナで Alloy がメトリクス・ログ・トレースを収集し、Prometheus / Loki / Tempo に振り分け、Grafana が PromQL と LogQL でクエリしてダッシュボード化、Slack/メールにアラート通知する流れを示している"&gt;&lt;/p&gt;
+&lt;h2 id="なぜこの構成が王道なのか"&gt;なぜこの構成が「王道」なのか&lt;/h2&gt;
+&lt;p&gt;サーバー監視の選択肢は大きく分けて 3 系統あります。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;カテゴリ&lt;/th&gt;
+&lt;th&gt;代表例&lt;/th&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;OSS スタック（Grafana Labs）&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Prometheus + Loki + Grafana + Alloy&lt;/td&gt;
+&lt;td&gt;無料、自由度高、運用責任は自分で&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;OSS スタック（Elastic）&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Elasticsearch + Logstash + Kibana + Beats&lt;/td&gt;
+&lt;td&gt;全文検索が強力、コストとリソース消費が大&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;SaaS&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Datadog、New Relic、Grafana Cloud&lt;/td&gt;
+&lt;td&gt;楽だが高価、データ主権がない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;このうち &lt;strong&gt;Prometheus + Loki + Grafana + Alloy&lt;/strong&gt; が王道とされる理由:&lt;/p&gt;</description></item><item><title>Amazon Quick デスクトップアプリ登場 — エンタープライズ向け AI アシスタントが Claude Code とも連携</title><link>https://hdknr.github.io/blogs/posts/2026/04/amazon-quick-desktop-app/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/amazon-quick-desktop-app/</guid><description>AWS が 2026 年 4 月に発表した Amazon Quick デスクトップアプリの概要。エンタープライズ向けセキュリティ、Claude Code との ACP 連携、Microsoft Copilot との競合関係を解説。</description></item><item><title>AWS が明かした AI エージェント導入失敗の構造と「AI BPR」組み直しの方法論</title><link>https://hdknr.github.io/blogs/posts/2026/04/aws-ai-bpr-methodology/</link><pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/aws-ai-bpr-methodology/</guid><description>&lt;p&gt;AWS が公開した「AI 駆動の業務変革手法 &lt;em&gt;AI BPR&lt;/em&gt;」の記事が話題になっている。単なる成功事例ではなく、&lt;strong&gt;「正しいアプローチが全く機能しない」という壁に正直にぶつかった失敗報告&lt;/strong&gt;から始まる点が異色で、AI 導入に苦戦する多くの組織にとって示唆に富む内容だ。&lt;/p&gt;
+&lt;h2 id="aws-が3ヶ月間で発見した正しいアプローチが機能しない現実"&gt;AWS が3ヶ月間で発見した「正しいアプローチが機能しない」現実&lt;/h2&gt;
+&lt;p&gt;AWS は自社で3ヶ月間、お客様に AI エージェント導入プログラムを提供してみた。最初に試みたのは、いわゆる BPR の教科書通りのアプローチだ。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;ゴール設定&lt;/li&gt;
+&lt;li&gt;業務フロー分析&lt;/li&gt;
+&lt;li&gt;ボトルネック特定&lt;/li&gt;
+&lt;li&gt;AI エージェントで解決&lt;/li&gt;
+&lt;li&gt;計測&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;整然としたフローに見えるが、現場から返ってきた反応は想定外だった。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;「AI エージェントに任せるのは BCP 上危険」&lt;/li&gt;
+&lt;li&gt;「提案の枠が狭くて大きな進歩を感じない」&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一見もっともらしい抵抗なのだが、よく分解すると全然別の構造が見えてくる。&lt;/p&gt;
+&lt;h2 id="抵抗の本質2つの根本的障壁"&gt;抵抗の本質：2つの根本的障壁&lt;/h2&gt;
+&lt;h3 id="1-アイデンティティへの脅威"&gt;1. アイデンティティへの脅威&lt;/h3&gt;
+&lt;p&gt;長年積み上げてきた専門性が AI に代替されることへの「存在意義の危機」だ。Stanford の研究でも、45% が AI の精度を懸念し、23% が職の代替を恐れているという。これは&lt;strong&gt;能力の問題ではなく存在意義の問題&lt;/strong&gt;であり、ツール改善では解決できない。&lt;/p&gt;
+&lt;h3 id="2-責任の所在を人間に残したい組織心理"&gt;2. 責任の所在を人間に残したい組織心理&lt;/h3&gt;
+&lt;p&gt;「この業務は◯◯さんが詳しい」という言葉の裏を返せば、責任分担の合意だ。AI に委譲するということは、業務停止時の責任も IT 部門に一気に流れ込むということ。それは組織として受け入れがたい。&lt;/p&gt;
+&lt;p&gt;この2つが合わさると、「やっぱり人間でないと難しい」という一見合理的な「落としどころ」に着地してしまう。AWS はこれを Argyris の言う&lt;strong&gt;防衛的ルーティン&lt;/strong&gt;（defensive routines）・&lt;strong&gt;熟達した無能力&lt;/strong&gt;（skilled incompetence）と結びつけて説明しており、ここが本当に鋭い。&lt;/p&gt;
+&lt;h2 id="アプローチの転換課題は何ですかを捨てる"&gt;アプローチの転換：「課題は何ですか？」を捨てる&lt;/h2&gt;
+&lt;p&gt;AWS が下した判断は、AI BPR を一旦抜本的に見直してゼロから組み直すことだった。&lt;/p&gt;
+&lt;p&gt;従来の「&lt;strong&gt;課題は何ですか？&lt;/strong&gt;」という問いかけをやめ、「&lt;strong&gt;強みは何ですか？&lt;/strong&gt;」から入る設計に変えた。&lt;/p&gt;
+&lt;p&gt;「課題は何ですか？」という問い自体が、実は防衛反応を誘発する最悪のフレームだったという発見も重要だ。問題を分析して修正するアプローチは、当事者を「自分たちは問題を抱えた存在」として位置づけてしまう。&lt;/p&gt;
+&lt;h2 id="appreciative-inquiry-の採用"&gt;Appreciative Inquiry の採用&lt;/h2&gt;
+&lt;p&gt;具体的に採用したのが、Cooperrider &amp;amp; Srivastva が提唱した &lt;strong&gt;Appreciative Inquiry&lt;/strong&gt;（アプリシエイティブ・インクワイアリー、以下 AI）という手法だ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;問題を分析して修正するのではなく、組織の既存の強みと成功体験を発見して増幅することで変革を起こす。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="appreciative-inquiry-とは何か"&gt;Appreciative Inquiry とは何か&lt;/h3&gt;
+&lt;p&gt;AI は 1987 年に Case Western Reserve University の David Cooperrider と Suresh Srivastva が発表した組織開発手法だ。Cooperrider の博士論文（1986 年）が出発点で、以後 40 年近く理論的な拡張と実践が積み重ねられてきた。日本でも 2005 年以降、ヒューマンバリュー社が Diana Whitney を招聘して『ポジティブ・チェンジ』として翻訳・紹介したことで広まっている。&lt;/p&gt;</description></item><item><title>Amazon S3 Files GA：消えるアーキテクチャ層と生まれるアーキテクチャ</title><link>https://hdknr.github.io/blogs/posts/2026/04/s3-files-ga-architecture/</link><pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/s3-files-ga-architecture/</guid><description>&lt;p&gt;2026年4月7日、AWSがAmazon S3 Filesを一般提供（GA）しました。S3バケットをNFS v4.1/v4.2のファイルシステムとしてマウントできる機能で、EC2・EKS・ECS・Lambdaのいずれからでも利用できます。&lt;/p&gt;
+&lt;p&gt;本記事は、ikenyal氏のZenn記事「&lt;a href="https://zenn.dev/genda_jp/articles/b6ff5ea33c7a71"&gt;S3 Filesで消えるアーキテクチャ層、生まれるアーキテクチャ&lt;/a&gt;」を参照しながら、S3 Filesが既存のアーキテクチャにどう影響するかを整理します。「何が設定できるか」ではなく「&lt;strong&gt;何が不要になり、何が可能になるか&lt;/strong&gt;」にフォーカスします。&lt;/p&gt;
+&lt;h2 id="s3-filesが解こうとしている問題"&gt;S3 Filesが解こうとしている問題&lt;/h2&gt;
+&lt;p&gt;たとえば、MLチームが学習データの前処理をする場面を考えましょう。元データはS3に置いてあり、pandasで読み込んで加工したい場面です。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pd.read_csv(&amp;quot;s3://my-bucket/data.csv&amp;quot;)&lt;/code&gt; と書けますが、内部ではboto3がGETリクエストを発行してメモリに読み込んでいます。手元の &lt;code&gt;open(&amp;quot;./data.csv&amp;quot;)&lt;/code&gt; とは根本的に異なるI/Oモデルです。&lt;/p&gt;
+&lt;p&gt;規模が大きくなると、これは「パイプラインのアーキテクチャ課題」になります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;S3からEFS/EBSにコピー → 処理 → 結果をS3に書き戻す
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;この「中間のコピー層」は本来やりたい処理ではなく、ストレージのI/Oモデルの違いを埋めるためだけに存在しています。&lt;/p&gt;
+&lt;p&gt;S3 Filesはこのギャップそのものを解消します。アプリケーションからS3のデータはローカルのディレクトリに見えます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# S3 Filesを使うと&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;read_csv(&lt;span style="color:#e6db74"&gt;&amp;#34;/mnt/s3files/data.csv&amp;#34;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# S3のオブジェクトが読まれる&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;df&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;&amp;#34;/mnt/s3files/result.csv&amp;#34;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 変更が自動的にS3にコミットされる&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="fuseベースのツールとの違い"&gt;FUSEベースのツールとの違い&lt;/h2&gt;
+&lt;p&gt;「S3をマウントできる」と聞いて、Mountpoint for Amazon S3やgcsfuseを思い浮かべる方も多いでしょう。S3 Filesは内部構造がまったく異なります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FUSEベースのツール&lt;/strong&gt;は、S3 APIの上にファイルシステムの振る舞いを「エミュレーション」するアプローチです。ファイルの一部だけを書き換えるような操作がサポートされず、空ディレクトリの扱いに不整合が出ることもあります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;S3 Files&lt;/strong&gt;はエミュレーションではなく、EFS（Elastic File System）という本物のNFSファイルシステムをS3に接続しています。二つの異なるシステムが共存し、その間に明示的な同期レイヤーがある構造です。&lt;/p&gt;
+&lt;h3 id="stage-and-commitモデル"&gt;「stage and commit」モデル&lt;/h3&gt;
+&lt;p&gt;ファイルシステム上での変更は即座にS3に反映されるのではなく、&lt;strong&gt;約60秒ごとにまとめてS3へPUT&lt;/strong&gt;されます（「commit」）。逆に、S3側でオブジェクトが更新された場合は通常数十秒以内にファイルシステム側に反映されます。&lt;/p&gt;
+&lt;p&gt;これは明確なトレードオフです。「リアルタイムに同期される共有ファイルシステム」ではなく、「数十秒の遅延を許容する代わりに、ファイルとオブジェクトの両方のセマンティクスを壊さない」設計です。&lt;/p&gt;
+&lt;h2 id="消えるアーキテクチャ層"&gt;消えるアーキテクチャ層&lt;/h2&gt;
+&lt;h3 id="1-s3--efsebsのステージングパイプライン"&gt;1. S3 → EFS/EBSのステージングパイプライン&lt;/h3&gt;
+&lt;p&gt;100GBの学習データを処理する場合、従来の手順は：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;S3からEBSにダウンロード（数分かかる）&lt;/li&gt;
+&lt;li&gt;データを処理する&lt;/li&gt;
+&lt;li&gt;結果をS3にアップロード&lt;/li&gt;
+&lt;li&gt;EBSボリュームをクリーンアップ&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;やりたい処理は2番だけです。S3 Filesでは、S3プレフィックスをマウントするだけで処理スクリプトはそのまま &lt;code&gt;/mnt/s3files/&lt;/code&gt; のファイルを読み書きします。ダウンロード・アップロード・クリーンアップのステップが消えます。&lt;/p&gt;</description></item><item><title>CloudFront → ALB → Django の HTTPS 判定</title><link>https://hdknr.github.io/blogs/wiki/guides/cloudfront-alb-https/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/guides/cloudfront-alb-https/</guid><description>ALB が X-Forwarded-Proto を上書きする問題の解決ガイド</description></item><item><title>Terraform IaC ベストプラクティス</title><link>https://hdknr.github.io/blogs/wiki/guides/terraform-iac/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/guides/terraform-iac/</guid><description>大規模 Terraform プロジェクトの設計・運用：モジュール化・ファイル分割・state 管理</description></item><item><title>Pay2Key の Linux ランサムウェアが x64/ARM64 サーバーを標的に — 防御機構を無効化する高度な手口</title><link>https://hdknr.github.io/blogs/posts/2026/03/pay2key-linux-ransomware/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/pay2key-linux-ransomware/</guid><description>イラン系攻撃グループ Pay2Key の Linux ランサムウェア新亜種 Pay2Key.I2P の技術分析。SELinux/AppArmor 無効化、ChaCha20 暗号化、I2P 匿名通信の手口と対策を解説。</description></item><item><title>AWS DMS Serverless の OOM 障害と監視の盲点 — 検知漏れの根本原因と対策</title><link>https://hdknr.github.io/blogs/posts/2026/03/dms-oom-recovery/</link><pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/dms-oom-recovery/</guid><description>&lt;p&gt;AWS DMS Serverless Replication（CDC モード）が OOM（Out of Memory）で &lt;code&gt;failed&lt;/code&gt; 状態になり、自動再起動の仕組みが検知できずに長期間停止していた問題について、根本原因と対策をまとめます。&lt;/p&gt;
+&lt;h2 id="構成"&gt;構成&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;RDS (MySQL) → DMS Serverless (CDC) → S3 (Parquet)
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;DMS Serverless Replication で全テーブルの CDC（Change Data Capture）を実行&lt;/li&gt;
+&lt;li&gt;S3 に Parquet 形式で日付パーティション付きで出力&lt;/li&gt;
+&lt;li&gt;EventBridge + Lambda で DMS 停止を検知し自動再起動する仕組みを構築済み&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="発生した事象"&gt;発生した事象&lt;/h2&gt;
+&lt;h3 id="症状"&gt;症状&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;prod 環境の DMS Serverless Replication が &lt;code&gt;failed&lt;/code&gt; 状態で停止&lt;/li&gt;
+&lt;li&gt;エラーメッセージ: &lt;code&gt;Replication out of memory. Stop Reason FATAL_ERROR Error Level FATAL&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;CDC が完全に停止し、S3 へのデータ同期が止まっていた&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="発覚の経緯"&gt;発覚の経緯&lt;/h3&gt;
+&lt;p&gt;手動確認で発見。自動再起動 Lambda の最終実行は約2ヶ月前で、それ以降は検知されていなかった。&lt;/p&gt;
+&lt;h2 id="根本原因"&gt;根本原因&lt;/h2&gt;
+&lt;h3 id="原因-1-eventbridge-ルールのイベントパターンが不完全"&gt;原因 1: EventBridge ルールのイベントパターンが不完全&lt;/h3&gt;
+&lt;p&gt;自動再起動用の EventBridge ルールが &lt;code&gt;REPLICATION_TASK_STOPPED&lt;/code&gt; のみを監視していた。&lt;/p&gt;</description></item><item><title>Agent Plugins for AWS: Claude Code から AWS アーキテクチャ設計・デプロイまで一気通貫</title><link>https://hdknr.github.io/blogs/posts/2026/03/aws-agent-plugins-claude-code/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/aws-agent-plugins-claude-code/</guid><description>&lt;p&gt;AWS が「&lt;strong&gt;Agent Plugins for AWS&lt;/strong&gt;」を公開しました。AI コーディングエージェント（Claude Code や Cursor など）に、AWS のアーキテクチャ設計からデプロイ実行までの能力を組み込むオープンソースのプラグインライブラリです。&lt;/p&gt;
+&lt;h2 id="agent-plugins-for-aws-とは"&gt;Agent Plugins for AWS とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/awslabs/agent-plugins"&gt;Agent Plugins for AWS&lt;/a&gt; は、AWS Labs が開発・公開したオープンソースプロジェクトです。コスト見積もり、Infrastructure as Code（IaC）の生成、デプロイといった AWS 固有のスキルセットを AI エージェントに追加できます。&lt;/p&gt;
+&lt;p&gt;プラグインは以下の要素で構成されています:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Agent Skills&lt;/strong&gt;: 複雑なタスクをステップバイステップで実行するワークフロー。デプロイやアーキテクチャ設計のベストプラクティスを手順として組み込んだもの&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP サーバー&lt;/strong&gt;: 外部サービス、ドキュメント、料金データなどへのリアルタイム接続&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hooks&lt;/strong&gt;: 開発者のアクションに対するバリデーションやガードレール&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="deploy-on-aws-プラグイン"&gt;deploy-on-aws プラグイン&lt;/h2&gt;
+&lt;p&gt;現時点で提供されている主要プラグインが &lt;strong&gt;deploy-on-aws&lt;/strong&gt; です。「deploy to AWS」と指示するだけで、以下の 5 ステップを自動実行します:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;コードベースの分析&lt;/strong&gt;: アプリケーションの構成・依存関係を解析&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AWS サービスの推奨&lt;/strong&gt;: 最適な AWS サービスを理由付きで提案&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コスト見積もり&lt;/strong&gt;: 推奨構成の月額コストを試算&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IaC の生成&lt;/strong&gt;: CDK または CloudFormation でインフラコードを生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;デプロイ実行&lt;/strong&gt;: ユーザーの確認後にデプロイ&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;AWS によると、従来は数時間かかっていたデプロイフローが約 10 分で完了するとのことです。&lt;/p&gt;
+&lt;h2 id="claude-code-へのインストール"&gt;Claude Code へのインストール&lt;/h2&gt;
+&lt;p&gt;Claude Code では、プラグインマーケットプレイス経由でインストールします:&lt;/p&gt;</description></item><item><title>開発サーバーの Let's Encrypt 証明書が切れたので自動更新できるようにした</title><link>https://hdknr.github.io/blogs/posts/2026/03/letsencrypt-certbot-dns-route53/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/letsencrypt-certbot-dns-route53/</guid><description>&lt;h2 id="きっかけ"&gt;きっかけ&lt;/h2&gt;
+&lt;p&gt;ある日、開発環境の Web アプリにアクセスしたら証明書の期限切れ警告が表示された。&lt;/p&gt;
+&lt;p&gt;確認してみると、ワイルドカード証明書 (&lt;code&gt;*.dev.example.com&lt;/code&gt;) がちょうどその日に期限切れになっていた。さらにもう1つ古い証明書も半年前に失効済み。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Certificate Name: dev.example.com-0001
+Domains: *.dev.example.com
+Expiry Date: 2026-03-17 (INVALID: EXPIRED)
+Certificate Name: dev.example.com
+Domains: *.dev.example.com dev.example.com
+Expiry Date: 2025-09-17 (INVALID: EXPIRED)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="原因"&gt;原因&lt;/h2&gt;
+&lt;p&gt;certbot の renewal 設定を確認したところ、問題が見えた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[renewalparams]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;authenticator&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;manual&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;pref_challs&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;dns-01,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;authenticator が &lt;code&gt;manual&lt;/code&gt;&lt;/strong&gt; になっていた。&lt;/p&gt;
+&lt;p&gt;ワイルドカード証明書は DNS-01 チャレンジが必須だが、&lt;code&gt;manual&lt;/code&gt; モードでは certbot が更新のたびに「この TXT レコードを DNS に追加してください」と対話的に聞いてくる。つまり &lt;strong&gt;自動更新が不可能&lt;/strong&gt; な状態だった。&lt;/p&gt;
+&lt;p&gt;systemd timer (&lt;code&gt;certbot.timer&lt;/code&gt;) は1日2回動いていたが、&lt;code&gt;manual&lt;/code&gt; モードの証明書は自動更新をスキップされるため、期限切れまで放置されていた。&lt;/p&gt;
+&lt;h2 id="対応方針"&gt;対応方針&lt;/h2&gt;
+&lt;p&gt;2つの選択肢を検討した。&lt;/p&gt;</description></item><item><title>.env を AI に安心して触らせる — 1Password CLI ラッパー「opx」とプロセススコープ認証の設計</title><link>https://hdknr.github.io/blogs/posts/2026/03/ee3017a7e8bcfbb995b93b8884cec258/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ee3017a7e8bcfbb995b93b8884cec258/</guid><description>&lt;h1 id="env-を-ai-に安心して触らせる--1password-cli-ラッパーopxとプロセススコープ認証の設計"&gt;.env を AI に安心して触らせる — 1Password CLI ラッパー「opx」とプロセススコープ認証の設計&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/suin/status/2025525553823191550"&gt;@suin 氏のポスト&lt;/a&gt;が、AI エージェント時代の .env 管理問題に対する実践的な解決策として、自作の 1Password CLI ラッパー「&lt;a href="https://github.com/suin/opx"&gt;opx&lt;/a&gt;」を公開しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;.envをAIに安心して触らせたくて、こんなの作った
+AIエージェントなしではもう開発が成り立たないほど必須になってきています。権限設定がいろいろできるにせよ、本質的にAIエージェントにはプロジェクトの全ファイルを触りうる力を与えているわけで、気になるのがシークレットなどの機密情報です。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude Code や Cursor などの AI コーディングエージェントは、開発者と同じ権限でファイルシステムにアクセスします。&lt;code&gt;.env&lt;/code&gt; にアクセストークンや AWS キーを平文で書いていれば、エージェントはそれを読めてしまいます。この構造的な問題に対し、「.env に機密情報を一切書かない」というアプローチで解決するのが opx です。&lt;/p&gt;
+&lt;h2 id="問題の構造--ai-エージェントが-env-を読める"&gt;問題の構造 — AI エージェントが .env を読める&lt;/h2&gt;
+&lt;h3 id="なぜ危険なのか"&gt;なぜ危険なのか&lt;/h3&gt;
+&lt;p&gt;AI コーディングエージェントは通常のプロセスとして動作し、シェル環境を継承します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;開発者のシェル
+└── AI エージェント（Claude Code, Cursor 等）
+├── ファイルシステムへのフルアクセス
+├── .env ファイルの読み取り
+├── 環境変数の参照
+└── Bash コマンドの実行
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;.zshrc&lt;/code&gt; に &lt;code&gt;AWS_SECRET_ACCESS_KEY&lt;/code&gt; を書いていれば、エージェントもそれを持っています。プロンプトインジェクション攻撃を受けた場合、エージェントが意図せず機密情報を外部に送信するリスクがあります。&lt;/p&gt;
+&lt;h3 id="実際に報告されている脆弱性"&gt;実際に報告されている脆弱性&lt;/h3&gt;
+&lt;p&gt;2025年末に公開された「IDEsaster」と呼ばれる調査では、Cursor、Windsurf、GitHub Copilot、Cline など30以上の AI IDE に脆弱性が発見されています。OpenAI Codex CLI では &lt;code&gt;.env&lt;/code&gt; ファイルを経由した任意コマンド実行の脆弱性（CVE-2025-61260）も報告されました。&lt;/p&gt;</description></item><item><title>.envの代わりにaws-vaultで安全に環境変数を与える — Claude Code時代のAWS認証情報管理</title><link>https://hdknr.github.io/blogs/posts/2026/03/c6757cc9fa558f456eb0920dea2f76e1/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/c6757cc9fa558f456eb0920dea2f76e1/</guid><description>&lt;h1 id="env-の代わりに-aws-vault-で安全に環境変数を与える--claude-code-時代の-aws-認証情報管理"&gt;.env の代わりに aws-vault で安全に環境変数を与える — Claude Code 時代の AWS 認証情報管理&lt;/h1&gt;
+&lt;p&gt;AI エージェントがローカルファイルを直接読み書きする時代、&lt;code&gt;.env&lt;/code&gt; に平文で認証情報を置くリスクが顕在化しています。&lt;a href="https://gist.github.com/hdknr/12f83bb3b6d488806a8396e9b2c8305a"&gt;前回の記事&lt;/a&gt;では、この問題の背景と複数のシークレット管理ツールを紹介しました。&lt;/p&gt;
+&lt;p&gt;本記事では、AWS を利用しているチームに向けて、&lt;a href="https://github.com/99designs/aws-vault"&gt;aws-vault&lt;/a&gt; を使って &lt;code&gt;.env&lt;/code&gt; と &lt;code&gt;~/.aws/credentials&lt;/code&gt; を完全に排除する具体的な手順を解説します。&lt;/p&gt;
+&lt;h2 id="aws-vault-が解決する問題"&gt;aws-vault が解決する問題&lt;/h2&gt;
+&lt;h3 id="awscredentials-の平文問題"&gt;~/.aws/credentials の平文問題&lt;/h3&gt;
+&lt;p&gt;AWS CLI を使う開発者の多くは、&lt;code&gt;~/.aws/credentials&lt;/code&gt; にアクセスキーを平文で保存しています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ~/.aws/credentials（平文で保存されている）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[default]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;aws_access_key_id&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;AKIAIOSFODNN7EXAMPLE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;aws_secret_access_key&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このファイルには2つのリスクがあります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Claude Code が読み取れる&lt;/strong&gt;: AI エージェントがファイルシステムを探索する際、&lt;code&gt;~/.aws/credentials&lt;/code&gt; のアクセスキーが LLM のコンテキストに載る可能性がある&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;長期的な認証情報が漏洩する&lt;/strong&gt;: アクセスキーには有効期限がなく、漏洩した場合は手動でローテーションするまで悪用され続ける&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="aws-vault-のアプローチ"&gt;aws-vault のアプローチ&lt;/h3&gt;
+&lt;p&gt;aws-vault は以下の2段階で問題を解決します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;暗号化保存&lt;/strong&gt;: アクセスキーを &lt;code&gt;~/.aws/credentials&lt;/code&gt; ではなく、OS のキーストア（macOS Keychain 等）に暗号化して保存する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;一時認証の生成&lt;/strong&gt;: AWS STS（Security Token Service）を使って、1時間で失効する一時認証情報を生成し、子プロセスに注入する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[従来]
+~/.aws/credentials（平文） → AWS CLI / boto3 が直接読み取り
+→ 長期キーがメモリに残る
+[aws-vault]
+macOS Keychain（暗号化） → aws-vault が STS で一時認証を生成
+→ 子プロセスに環境変数として注入
+→ 1時間で失効
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="セットアップ"&gt;セットアップ&lt;/h2&gt;
+&lt;h3 id="インストール"&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# macOS（推奨）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install --cask aws-vault
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# macOS（Homebrew formula 版）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install aws-vault
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Linux&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install aws-vault
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Windows&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;choco install aws-vault
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# または&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scoop install aws-vault
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;macOS では &lt;code&gt;--cask&lt;/code&gt; 版が推奨されています。コード署名されているため、Keychain アクセス時の追加のパスワードプロンプトが少なくなります。&lt;/p&gt;</description></item><item><title>Amazon Bedrock が OpenAI API 互換を提供開始 --- Mantle 推論エンジンが「モデルの交換可能性」を実現する</title><link>https://hdknr.github.io/blogs/posts/2026/03/a5bc48ae4fb9985f19eac99ac6b35d11/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/a5bc48ae4fb9985f19eac99ac6b35d11/</guid><description>&lt;h1 id="amazon-bedrock-が-openai-api-互換を提供開始--mantle-推論エンジンがモデルの交換可能性を実現する"&gt;Amazon Bedrock が OpenAI API 互換を提供開始 &amp;mdash; Mantle 推論エンジンが「モデルの交換可能性」を実現する&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/publickey/status/2028464673591562648"&gt;@publickey が X で投稿&lt;/a&gt;した、Amazon Bedrock の OpenAI API 互換機能に関するブログ記事が話題を呼んでいます。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ブログ書きました： 「Amazon Bedrock」でOpenAI API互換を提供開始。オープンウェイトな基盤モデルでOpenAI SDKが利用可能に&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://www.publickey1.jp/blog/26/amazon_bedrockopenai_apiopenai_sdk.html"&gt;Publickey の元記事&lt;/a&gt;によると、AWS は Amazon Bedrock の Mantle 推論エンジンで OpenAI API 互換機能の提供を開始しました。これにより、開発者は使い慣れた OpenAI SDK をそのまま Amazon Bedrock 上で利用できるようになります。&lt;/p&gt;
+&lt;p&gt;この動きは単なる「API の互換性」にとどまらず、AI 業界の構造を変える可能性を持っています。本記事では、Mantle 推論エンジンの技術的な仕組みと、この互換性がもたらす業界への影響を掘り下げます。&lt;/p&gt;
+&lt;h2 id="mantle-推論エンジンとは何か"&gt;Mantle 推論エンジンとは何か&lt;/h2&gt;
+&lt;h3 id="分散推論の基盤"&gt;分散推論の基盤&lt;/h3&gt;
+&lt;p&gt;Mantle は、Amazon Bedrock のために構築された&lt;strong&gt;大規模モデル向け分散推論エンジン&lt;/strong&gt;です。単なる API ラッパーではなく、以下の機能を内包する本格的な推論インフラです。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;サーバーレス推論&lt;/td&gt;
+&lt;td&gt;容量管理を自動化し、デフォルトのクォータを引き上げ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;OpenAI API 互換&lt;/td&gt;
+&lt;td&gt;Chat Completions API / Responses API をネイティブサポート&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ステートフル会話管理&lt;/td&gt;
+&lt;td&gt;会話履歴をサーバー側で保持（Responses API）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;非同期推論&lt;/td&gt;
+&lt;td&gt;長時間実行ワークロードのバックグラウンド処理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ストリーミング&lt;/td&gt;
+&lt;td&gt;リアルタイムのレスポンス生成に対応&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ゼロオペレーターアクセス&lt;/td&gt;
+&lt;td&gt;NitroTPM による暗号学的な実行環境保証&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="セキュリティ設計"&gt;セキュリティ設計&lt;/h3&gt;
+&lt;p&gt;Mantle のセキュリティ設計は注目に値します。EC2 インスタンス証明（Instance Attestation）機能を活用し、顧客データ処理のための&lt;strong&gt;硬化された不変のコンピュート環境&lt;/strong&gt;を構成しています。Nitro Trusted Platform Module（NitroTPM）による暗号署名付き証明測定で、モデルの重みと推論オペレーションを保護します。&lt;/p&gt;</description></item><item><title>dotenvx・lkr・aws-vault・1Password CLI — .env 代替ツール4種の選び方とベストプラクティス</title><link>https://hdknr.github.io/blogs/posts/2026/03/fbc113dfc0629b475ce1ccf808e859a0/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/fbc113dfc0629b475ce1ccf808e859a0/</guid><description>&lt;h1 id="dotenvxlkraws-vault1password-cli--env-代替ツール4種の選び方とベストプラクティス"&gt;dotenvx・lkr・aws-vault・1Password CLI — .env 代替ツール4種の選び方とベストプラクティス&lt;/h1&gt;
+&lt;p&gt;AI エージェントが &lt;code&gt;.env&lt;/code&gt; ファイルを読み取るリスクが現実のものとなり、平文の &lt;code&gt;.env&lt;/code&gt; を代替するツールが続々と登場しています。本シリーズでは &lt;a href="https://gist.github.com/hdknr/c6757cc9fa558f456eb0920dea2f76e1"&gt;aws-vault&lt;/a&gt;、&lt;a href="https://gist.github.com/hdknr/7276db2810dcd2906c299fa0a1874b44"&gt;lkr&lt;/a&gt;、&lt;a href="https://gist.github.com/hdknr/db0f59b8d75be3b932868c101207fbc8"&gt;dotenvx + 1Password CLI&lt;/a&gt; をそれぞれ解説してきました。&lt;/p&gt;
+&lt;p&gt;しかし「結局どれを使えばいいのか」という疑問が残ります。本記事では、4つのツールの守備範囲・強み・限界を比較し、チーム構成や開発環境に応じた選択指針を提示します。&lt;/p&gt;
+&lt;h2 id="4ツールの守備範囲"&gt;4ツールの守備範囲&lt;/h2&gt;
+&lt;p&gt;最も重要な違いは&lt;strong&gt;管理対象の範囲&lt;/strong&gt;です。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ツール&lt;/th&gt;
+&lt;th&gt;管理対象&lt;/th&gt;
+&lt;th&gt;DB接続&lt;/th&gt;
+&lt;th&gt;SaaS キー&lt;/th&gt;
+&lt;th&gt;LLM API キー&lt;/th&gt;
+&lt;th&gt;AWS 認証&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;aws-vault&lt;/td&gt;
+&lt;td&gt;AWS 認証情報のみ&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;lkr&lt;/td&gt;
+&lt;td&gt;LLM API キー（8社）&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;dotenvx&lt;/td&gt;
+&lt;td&gt;.env に書ける全て&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1Password CLI&lt;/td&gt;
+&lt;td&gt;全種類&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;td&gt;対応&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;aws-vault と lkr は&lt;strong&gt;特定領域に特化&lt;/strong&gt;したツールです。&lt;code&gt;.env&lt;/code&gt; に含まれる全てのシークレットをカバーするには、dotenvx か 1Password CLI が必要になります。&lt;/p&gt;
+&lt;h2 id="各ツールの強みと弱み"&gt;各ツールの強みと弱み&lt;/h2&gt;
+&lt;h3 id="aws-vault"&gt;aws-vault&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ aws-vault exec dev -- python manage.py runserver
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;強み&lt;/th&gt;
+&lt;th&gt;弱み&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;STS 一時認証（15分〜で自動失効）&lt;/td&gt;
+&lt;td&gt;AWS 認証情報しか管理できない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;AssumeRole による権限分離&lt;/td&gt;
+&lt;td&gt;macOS 限定（Keychain 依存）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MFA 統合&lt;/td&gt;
+&lt;td&gt;チーム共有不可&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;漏洩しても短時間で無効化される&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;最大の強み&lt;/strong&gt;は STS による一時認証です。他のどのツールも「漏洩しても自動で失効する」認証情報は提供できません。aws-vault が発行する一時認証情報は、仮に AI エージェントに読まれても最短15分で失効します。&lt;/p&gt;</description></item><item><title>生成AIで情報漏えいが増える本当の理由 — 「検索者がAIになった」時代の脅威モデルと3層防御</title><link>https://hdknr.github.io/blogs/posts/2026/03/92b49bf68845650deef06cbe4f8913e7/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/92b49bf68845650deef06cbe4f8913e7/</guid><description>&lt;hr&gt;
+&lt;h2 id="auto-memory-や-claudemd-への機密混入env-の-gitignore-漏れ機密ファイルの存在などを検査する"&gt;name: security-check
+description: Claude Code 利用における情報漏えいリスクをチェックする。
+Auto Memory や CLAUDE.md への機密混入、.env の gitignore 漏れ、機密ファイルの存在などを検査する。&lt;/h2&gt;
+&lt;p&gt;Claude Code の利用に関する情報漏えいリスクをチェックしてください。&lt;/p&gt;
+&lt;h2 id="チェック対象"&gt;チェック対象&lt;/h2&gt;
+&lt;p&gt;以下の 4 カテゴリを順番に検査する。&lt;/p&gt;
+&lt;h3 id="1-auto-memory-の機密スキャン"&gt;1. Auto Memory の機密スキャン&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;~/.claude/&lt;/code&gt; 配下の memory ファイルを検査する:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;以下のパスを Glob で列挙する:
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;~/.claude/projects/*/memory/*.md&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.claude/projects/*/memory/**/*.md&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;各ファイルを Read で読み込み、以下のパターンを Grep で検出する:
+&lt;ul&gt;
+&lt;li&gt;API キー・トークン: &lt;code&gt;(?i)(api[_-]?key|secret[_-]?key|access[_-]?token|bearer)\s*[:=]\s*\S+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;パスワード: &lt;code&gt;(?i)(password|passwd|pwd)\s*[:=]\s*\S+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;AWS 認証情報: &lt;code&gt;(?i)(AKIA[0-9A-Z]{16}|aws[_-]?secret)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;接続文字列: &lt;code&gt;(?i)(mysql|postgres|redis|mongodb):\/\/\S+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;個人情報パターン: メールアドレス、電話番号、マイナンバーらしき数字列&lt;/li&gt;
+&lt;li&gt;金額・契約情報: &lt;code&gt;(?i)(契約金額|単価|請求|売上)\s*[:：]\s*[\d,￥¥$]+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;顧客 ID の具体値: &lt;code&gt;(?i)(顧客id|customer[_-]?id|ユーザーid|user[_-]?id)\s*[:=：]\s*\d+&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;検出があれば、ファイルパス・行番号・該当箇所を報告する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="2-claudemd-の機密スキャン"&gt;2. CLAUDE.md の機密スキャン&lt;/h3&gt;
+&lt;p&gt;プロジェクトの &lt;code&gt;CLAUDE.md&lt;/code&gt; およびグローバルの &lt;code&gt;~/.claude/CLAUDE.md&lt;/code&gt; を検査する:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;両ファイルを Read で読み込む&lt;/li&gt;
+&lt;li&gt;チェック 1 と同じパターンで Grep 検査する&lt;/li&gt;
+&lt;li&gt;加えて、以下も確認する:
+&lt;ul&gt;
+&lt;li&gt;URL にトークンやキーが含まれていないか（&lt;code&gt;?token=&lt;/code&gt;, &lt;code&gt;?key=&lt;/code&gt;, &lt;code&gt;?secret=&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;内部 IP アドレスやホスト名が含まれていないか&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;CLAUDE.md はリポジトリにコミットされるため、検出時は&lt;strong&gt;即時対応を推奨&lt;/strong&gt;として強調する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="3-機密ファイルの-gitignore-チェック"&gt;3. 機密ファイルの gitignore チェック&lt;/h3&gt;
+&lt;p&gt;プロジェクトルートで以下を確認する:&lt;/p&gt;</description></item><item><title>Agent Plugins for AWS — AI コーディングエージェントに AWS の専門知識を装着する</title><link>https://hdknr.github.io/blogs/posts/2026/02/1f9912da7aa40da008ba4cb88d519c13/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/1f9912da7aa40da008ba4cb88d519c13/</guid><description>&lt;h1 id="agent-plugins-for-aws--ai-コーディングエージェントに-aws-の専門知識を装着する"&gt;Agent Plugins for AWS — AI コーディングエージェントに AWS の専門知識を装着する&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;紹介ポスト: &lt;a href="https://x.com/moritalous/status/2024141790367150402"&gt;moritalous&lt;/a&gt;
+公式ブログ: &lt;a href="https://aws.amazon.com/blogs/developer/introducing-agent-plugins-for-aws/"&gt;Introducing Agent Plugins for AWS | AWS Developer Tools Blog&lt;/a&gt;
+リポジトリ: &lt;a href="https://github.com/awslabs/agent-plugins"&gt;awslabs/agent-plugins&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;2026年2月、AWS は &lt;strong&gt;Agent Plugins for AWS&lt;/strong&gt; をオープンソースで公開した。Claude Code や Cursor といった AI コーディングエージェントに &lt;strong&gt;AWS の専門知識を「スキル」として装着する&lt;/strong&gt;プラグインライブラリである。&lt;/p&gt;
+&lt;p&gt;これは単なる CLI ラッパーではない。AI エージェントが&lt;strong&gt;アーキテクチャ設計 → コスト見積もり → IaC 生成 → デプロイ&lt;/strong&gt;までを一貫して実行できる「AWS ドメイン能力層」を追加するもの。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;従来: 開発者が AWS ドキュメントを読み → 設計を考え → CDK/CFn を書き → デプロイ
+今後: 「deploy to AWS」と言うだけ → AI が全工程を実行（人間は確認・承認のみ）
+&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
+&lt;h2 id="agent-plugin-とは何か"&gt;Agent Plugin とは何か&lt;/h2&gt;
+&lt;h3 id="プラグインの構成要素"&gt;プラグインの構成要素&lt;/h3&gt;
+&lt;p&gt;Agent Plugin は4つの部品を1つのパッケージにまとめたもの。&lt;/p&gt;</description></item><item><title># CloudFront → ALB → Django 構成で API レスポンスの URL スキームが http:// になる問題と解決策</title><link>https://hdknr.github.io/blogs/posts/2026/02/5d604ad7617c043a1bb80b6a43ffbb48/</link><pubDate>Tue, 24 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/5d604ad7617c043a1bb80b6a43ffbb48/</guid><description>&lt;h1 id="cloudfront--alb--django-構成で-api-レスポンスの-url-スキームが-http-になる問題と解決策"&gt;CloudFront → ALB → Django 構成で API レスポンスの URL スキームが http:// になる問題と解決策&lt;/h1&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;AWS の CloudFront + ALB + ECS Fargate で Django REST Framework (DRF) の API サーバーを運用していたところ、API レスポンスに含まれる URL が &lt;code&gt;http://&lt;/code&gt; で返されるという問題に遭遇しました。本記事では原因の調査過程と、最終的な解決策を紹介します。&lt;/p&gt;
+&lt;h2 id="構成"&gt;構成&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Client (HTTPS)
+↓
+CloudFront (SSL終端, us-east-1)
+↓ HTTP
+ALB (HTTP:80のみ受付, ap-northeast-1)
+↓ HTTP
+ECS Fargate (Gunicorn + Uvicorn, port 9000)
+↓
+Django REST Framework
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;CloudFront がSSLを終端し、ALB へは HTTP で転送する構成です。&lt;/p&gt;
+&lt;h2 id="問題"&gt;問題&lt;/h2&gt;
+&lt;p&gt;DRF の API ルート (&lt;code&gt;/api/rest/&lt;/code&gt;) にアクセスすると、レスポンスに含まれる URL がすべて &lt;code&gt;http://&lt;/code&gt; になっていました。&lt;/p&gt;</description></item><item><title>AWS RedShift</title><link>https://hdknr.github.io/blogs/posts/2025/01/5ca9db89d33a68da12a3fce86003f410/</link><pubDate>Tue, 28 Jan 2025 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2025/01/5ca9db89d33a68da12a3fce86003f410/</guid><description>&lt;h1 id="cdc"&gt;CDC&lt;/h1&gt;
+&lt;p&gt;AWS環境で実現するには、主に以下の2つの方法が主流です。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;AWS DMS (Database Migration Service) の利用&lt;/strong&gt; (実績が豊富で柔軟性が高い)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Amazon RDS ゼロ ETL 統合&lt;/strong&gt; (最もシンプルで最新の選択肢)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;それぞれの構成と特徴を詳しく解説します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="1-aws-dms-database-migration-service-を利用した構成"&gt;1. AWS DMS (Database Migration Service) を利用した構成&lt;/h2&gt;
+&lt;p&gt;AWS DMSは、データベース間のデータ移行や継続的なレプリケーション（CDC）を行うための専用サービスです。&lt;/p&gt;
+&lt;h3 id="構成の概要"&gt;構成の概要&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;RDS for MySQLの設定&lt;/strong&gt;:
+&lt;ul&gt;
+&lt;li&gt;MySQLの**バイナリログ（Binlog）**を有効にし、フォーマットを&lt;code&gt;ROW&lt;/code&gt;に設定します。DMSはこれを読み取って変更を追跡します。（&lt;em&gt;CDCの必須設定&lt;/em&gt;）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AWS DMS コンポーネント&lt;/strong&gt;:
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;レプリケーションインスタンス&lt;/strong&gt;: データ移行（レプリケーション）を実行する専用のEC2インスタンスです。ソースとターゲットの間でデータを読み書きし、マッピングや変換を行います。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ソースエンドポイント&lt;/strong&gt;: RDS for MySQLへの接続情報を定義します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ターゲットエンドポイント&lt;/strong&gt;: Amazon Redshiftへの接続情報を定義します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;移行タスク&lt;/strong&gt;: CDC（継続的レプリケーション）を定義するコア設定です。どのテーブルを移行するか、フルロード後にCDCを継続するかなどを指定します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;データフロー&lt;/strong&gt;:
+&lt;ul&gt;
+&lt;li&gt;RDS for MySQLで変更（UPDATE/INSERT/DELETE）が発生すると、その変更がBinlogに記録されます。&lt;/li&gt;
+&lt;li&gt;DMSのレプリケーションインスタンスがBinlogを継続的に読み取ります。&lt;/li&gt;
+&lt;li&gt;DMSは変更データをRedshiftに適した形式に変換し、Redshiftクラスターに書き込みます（通常はS3経由でCOPYコマンドを使用）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="メリットデメリット"&gt;メリット・デメリット&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left"&gt;項目&lt;/th&gt;
+&lt;th style="text-align: left"&gt;メリット&lt;/th&gt;
+&lt;th style="text-align: left"&gt;デメリット&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;strong&gt;柔軟性&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;非常に高く、多種多様なデータベースに対応。テーブルやスキーマのフィルタリング、データ変換（トランスフォーメーション）も可能。&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;strong&gt;コスト&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;strong&gt;レプリケーションインスタンス&lt;/strong&gt;の料金が継続的に発生する。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;strong&gt;運用&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;インスタンスの管理（サイズ選定、冗長性など）や、Binlogの保持期間の管理が必要。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left"&gt;&lt;strong&gt;安定性&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: left"&gt;実績が豊富で安定しているが、タスク設定やインスタンスサイズによってはチューニングが必要になる場合がある。&lt;/td&gt;
+&lt;td style="text-align: left"&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="2-amazon-rds-ゼロ-etl-統合-推奨"&gt;2. Amazon RDS ゼロ ETL 統合 (推奨)&lt;/h2&gt;
+&lt;p&gt;これは、2023年以降に登場した新しい機能で、最もシンプルかつ管理負担の少ないCDCの方法です。現時点ではAurora MySQLからRedshiftへの統合が中心ですが、RDS for MySQLへの対応も進んでいます。&lt;/p&gt;</description></item><item><title>AWS: Device Farm</title><link>https://hdknr.github.io/blogs/posts/2024/12/3ef4e94fc421426ca7d1c059733eb724/</link><pubDate>Mon, 09 Dec 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/12/3ef4e94fc421426ca7d1c059733eb724/</guid><description>&lt;h1 id="aws-device-farm"&gt;AWS Device Farm&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.openupitengineer.co.jp/column/it-technology/8571"&gt;AWS Device Farmとは？利点と利用方法も紹介します！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://onetech.jp/blog/aws-device-farm-15067"&gt;AWS Device Farmとは？実機を使ったモバイルアプリのテストについて解説&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AWS Device Farmは、実際のモバイルデバイスやデスクトップブラウザを使用してアプリケーションをテストするサービスです。以下のような仕組みで動作しています：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;実機デバイスの使用&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AWS Device Farmは、エミュレーターやシミュレーターではなく、実際のスマートフォンやタブレットを使用します。&lt;/li&gt;
+&lt;li&gt;これにより、メモリ使用量、CPU負荷、位置情報、メーカーやキャリアによるファームウェアの違いなど、実際の使用環境に近い条件でテストが可能です
+&lt;a href="https://aws.amazon.com/jp/device-farm/"&gt;1&lt;/a&gt;
+&lt;a href="https://www.openupitengineer.co.jp/column/it-technology/8571"&gt;2&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;リモートアクセス&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;開発者はAWSのクラウド上にあるこれらの実機デバイスにリモートでアクセスし、アプリケーションをインストールしてテストを実行します。&lt;/li&gt;
+&lt;li&gt;これにより、物理的なデバイスを手元に用意する必要がなくなります
+&lt;a href="https://aws.amazon.com/jp/device-farm/"&gt;1&lt;/a&gt;
+&lt;a href="https://www.openupitengineer.co.jp/column/it-technology/8571"&gt;2&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;自動化と手動テスト&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Device Farmは、AppiumやEspressoなどのオープンソースのテストフレームワークを使用して自動テストを実行できます。&lt;/li&gt;
+&lt;li&gt;また、リモートアクセスを利用して手動でのテストも可能です
+&lt;a href="https://aws.amazon.com/jp/device-farm/"&gt;1&lt;/a&gt;
+&lt;a href="https://www.openupitengineer.co.jp/column/it-technology/8571"&gt;2&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;テスト結果の収集と分析&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;テストの実行中に、動画、ログ、パフォーマンスデータなどが収集され、これらのデータを分析することで、アプリケーションの問題点を迅速に特定し、修正することができます
+&lt;a href="https://aws.amazon.com/jp/device-farm/"&gt;1&lt;/a&gt;
+&lt;a href="https://www.openupitengineer.co.jp/column/it-technology/8571"&gt;2&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;スケーラビリティ&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;複数のデバイスやブラウザで同時にテストを実行できるため、テストスイートの実行時間を短縮し、効率的にテストを進めることができます
+&lt;a href="https://aws.amazon.com/jp/device-farm/"&gt;1&lt;/a&gt;
+&lt;a href="https://www.openupitengineer.co.jp/column/it-technology/8571"&gt;2&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;このように、AWS Device Farmは実際のデバイスを使用して、より現実に即したテスト環境を提供し、アプリケーションの品質向上を支援しています。&lt;/p&gt;</description></item><item><title>Grafana</title><link>https://hdknr.github.io/blogs/posts/2024/10/6495729e069ac72f7d752353a6caf03d/</link><pubDate>Tue, 01 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/6495729e069ac72f7d752353a6caf03d/</guid><description>&lt;h1 id="grafana"&gt;Grafana&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://blog.serverworks.co.jp/tech/2016/03/11/play-with-grafana-1/"&gt;Grafanaでかっけぇダッシュボード作るよ！(構築・設定編)&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://qiita.com/kooshin/items/cbab9dd3fc7b1f4eed81"&gt;ネットワークメトリクスを視覚化してみた（collectd + Graphite + Grafana）&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;収集：collectd - SNMPでルータからメトリクスを収集する&lt;/li&gt;
+&lt;li&gt;蓄積：Graphite - 収集したメトリクスを保存する&lt;/li&gt;
+&lt;li&gt;描画：Grafana - メトリクスを時系列で表示する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="aws"&gt;AWS&lt;/h2&gt;
+&lt;p&gt;AWSの利用料金をGraphina（Grafana）を使って可視化する事例について、いくつかの方法があります。以下はその一例です。&lt;/p&gt;
+&lt;h3 id="事例-grafanaでawsのコストを可視化"&gt;事例: GrafanaでAWSのコストを可視化&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;請求メトリクスの取得&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;まず、AWS側で請求額のメトリクスを取得します。AWS Cost ExplorerやCloudWatchを使用して、必要なデータを収集します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;認証情報の作成&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Grafanaで使用するためのIAMユーザーを作成し、必要なポリシー（例: &lt;code&gt;CloudWatchReadOnlyAccess&lt;/code&gt;）をアタッチします。アクセスキーとシークレットキーを取得します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;データソースの設定&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GrafanaのデータソースとしてCloudWatchを設定します。取得したアクセスキーとシークレットキーを使用して認証を行います。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ダッシュボードのインポート&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Grafanaのダッシュボードテンプレートを使用して、AWSのコストを可視化するダッシュボードをインポートします。例えば、「AWS Billing Dashboard」というテンプレートを使用することができます¹。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;カスタマイズ&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;インポートしたダッシュボードを自分のニーズに合わせてカスタマイズします。不要なデータを削除したり、必要な情報を追加したりします。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="具体的な手順"&gt;具体的な手順&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;IAMユーザーの作成&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws iam create-user --user-name &amp;lt;username&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws iam attach-user-policy --user-name &amp;lt;username&amp;gt; --policy-arn arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws iam create-access-key --user-name &amp;lt;username&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Grafanaでの設定&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Grafanaのメニューから「Connections &amp;gt; Data sources &amp;gt; Add new data source」を選択し、CloudWatchをデータソースとして追加します。&lt;/li&gt;
+&lt;li&gt;IAMユーザーのアクセスキーとシークレットキーを入力し、リージョンを &lt;code&gt;us-east-1&lt;/code&gt; に設定します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ダッシュボードのインポート&lt;/strong&gt;:&lt;/p&gt;</description></item><item><title>AWS: ECS: Fargate: pidMode</title><link>https://hdknr.github.io/blogs/posts/2024/09/23895f8dc0f0d4d86fc1f21b97a7825d/</link><pubDate>Mon, 02 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/23895f8dc0f0d4d86fc1f21b97a7825d/</guid><description>&lt;h1 id="aws-ecs-fargate-pidmode"&gt;AWS ECS Fargate: pidMode&lt;/h1&gt;
+&lt;p&gt;AWS Fargateの&lt;code&gt;pidMode&lt;/code&gt;は、タスク内のコンテナ間でプロセスID（PID）名前空間を共有するための設定です。これにより、同じタスク内のコンテナが互いのプロセス情報にアクセスできるようになります¹²。&lt;/p&gt;
+&lt;p&gt;例えば、モニタリング用のサイドカーコンテナが、他のコンテナのプロセス情報を取得して監視することが可能になります。Fargateでは&lt;code&gt;pidMode=task&lt;/code&gt;のみがサポートされており、これを有効にすると、タスク内のすべてのコンテナが同じPID名前空間を共有します²。&lt;/p&gt;
+&lt;p&gt;この機能は、特にセキュリティや監視の観点から便利で、プロセスの監視やシステムコールのトラッキングが容易になります¹。&lt;/p&gt;
+&lt;p&gt;ソース: Copilot との会話、 2024/9/2
+(1) 【アップデート】ECS on Fargateでサイドカーからプロセス &amp;hellip;. &lt;a href="https://dev.classmethod.jp/articles/ecs-on-fargate-support-shared-pid-namespace/"&gt;https://dev.classmethod.jp/articles/ecs-on-fargate-support-shared-pid-namespace/&lt;/a&gt;.
+(2) AWS Fargate がプロセス ID 名前空間の共有とカーネルパラメータ &amp;hellip;. &lt;a href="https://aws.amazon.com/jp/about-aws/whats-new/2023/08/aws-fargate-pid-namespace-sharing-kernel-configuration/"&gt;https://aws.amazon.com/jp/about-aws/whats-new/2023/08/aws-fargate-pid-namespace-sharing-kernel-configuration/&lt;/a&gt;.
+(3) [ECS/Fargate] [request]: Support pidMode: task on Fargate #676. &lt;a href="https://github.com/aws/containers-roadmap/issues/676"&gt;https://github.com/aws/containers-roadmap/issues/676&lt;/a&gt;.
+(4) 【アップデート】ECS on FargateがsystemControlsをサポートし &amp;hellip;. &lt;a href="https://dev.classmethod.jp/articles/ecs-on-fargate-support-systemcontrols/"&gt;https://dev.classmethod.jp/articles/ecs-on-fargate-support-systemcontrols/&lt;/a&gt;.
+(5) Amazon ECS on AWS Fargate - Datadog Infrastructure and &amp;hellip;. &lt;a href="https://docs.datadoghq.com/integrations/ecs_fargate/"&gt;https://docs.datadoghq.com/integrations/ecs_fargate/&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pidMode&lt;/code&gt;を指定しなくてもサイドカー構成を取ることは可能です。&lt;code&gt;pidMode&lt;/code&gt;は、特定のユースケースでプロセスID名前空間を共有するためのオプションですが、サイドカーコンテナ自体は他の方法で連携できます。&lt;/p&gt;
+&lt;p&gt;例えば、サイドカーコンテナは以下のような方法で他のコンテナと連携します：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ネットワーク共有&lt;/strong&gt;: 同じタスク内のコンテナはデフォルトで同じネットワーク名前空間を共有するため、互いに通信できます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ボリューム共有&lt;/strong&gt;: データを共有するために、同じボリュームをマウントすることができます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;環境変数や設定ファイル&lt;/strong&gt;: コンテナ間で設定情報を共有するために使用できます。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらの方法を組み合わせることで、&lt;code&gt;pidMode&lt;/code&gt;を使用しなくても効果的なサイドカー構成を実現できます。&lt;/p&gt;
+&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/about-aws/whats-new/2023/08/aws-fargate-pid-namespace-sharing-kernel-configuration/"&gt;AWS Fargate がプロセス ID 名前空間の共有とカーネルパラメータ構成のサポートを開始&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/shun198/items/e06ca36464cc054a6278"&gt;Terraformを使ってAWSのECS Fargate(Django+Nginx)を構築しよう！&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>メモ</title><link>https://hdknr.github.io/blogs/posts/2024/08/1ba97d9c5fdd09065cc827778cc180af/</link><pubDate>Thu, 01 Aug 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/08/1ba97d9c5fdd09065cc827778cc180af/</guid><description>&lt;h1 id="メモ"&gt;メモ&lt;/h1&gt;
+&lt;h2 id="rye"&gt;Rye&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://qiita.com/kissy24/items/37c881498dcb8a01f3bd"&gt;【Python】Rye で始める Python プロジェクト&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://qiita.com/owayo/items/142ac770d1a007e764a9"&gt;Python パッケージ管理ツール比較: Poetry vs Pipenv vs Rye&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://rye.astral.sh/"&gt;https://rye.astral.sh/&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="contentful--organization-は削除できない"&gt;Contentful : Organization は削除できない&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;管理者の最後のアカウントが削除されたら削除できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="aws-secret-manager-再作成"&gt;AWS Secret Manager: 再作成&lt;/h2&gt;
+&lt;p&gt;このエラーは、Secrets Manager がシークレットを直ちに削除せず、復旧期間（通常 7 日間）を設けているために発生します。この期間中は同じ名前のシークレットを再作成することができません ¹。&lt;/p&gt;
+&lt;p&gt;ただし、AWS CLI を使用して、復旧期間を設けずにシークレットを完全に削除することが可能です。以下の手順を試してみてください：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;削除予定のシークレット ID を取得&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AWS Secrets Manager コンソールを開きます。&lt;/li&gt;
+&lt;li&gt;ナビゲーションペインで「Secrets」を選択します。&lt;/li&gt;
+&lt;li&gt;「設定」アイコンを選択し、「詳細設定」で「削除予定のシークレットを表示」を選択します。&lt;/li&gt;
+&lt;li&gt;「Secrets」ペインで、削除予定のシークレットの ID を確認します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;AWS CLI を使用してシークレットを完全に削除&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;以下のコマンドを実行します（&lt;code&gt;your-secret-name&lt;/code&gt;をシークレット ID または ARN に、&lt;code&gt;your-region&lt;/code&gt;を AWS リージョンに置き換えてください）:
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws secretsmanager delete-secret --secret-id your-secret-name --force-delete-without-recovery --region your-region
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;削除が完了したことを確認&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;以下のコマンドを実行して、シークレットが完全に削除されたことを確認します:
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sh" data-lang="sh"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;aws secretsmanager describe-secret --secret-id your-secret-name --region your-region
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;「Secrets Manager can&amp;rsquo;t find the specified secret」というエラーが表示されれば、シークレットは正常に削除されています。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これで、同じ名前のシークレットを再作成できるようになります ¹。&lt;/p&gt;</description></item><item><title>JWT in AWS Lambda</title><link>https://hdknr.github.io/blogs/posts/2024/06/789a0a8343793b9cd40618241f136588/</link><pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/06/789a0a8343793b9cd40618241f136588/</guid><description>&lt;h1 id="jwt-in-aws-lambda"&gt;JWT in AWS Lambda&lt;/h1&gt;
+&lt;h2 id="api-gateway-"&gt;API Gateway-&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://gist.github.com/bendog/44f21a921f3e4282c631a96051718619"&gt;https://gist.github.com/bendog/44f21a921f3e4282c631a96051718619&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-jwt-authorizer.html"&gt;Controlling access to HTTP APIs with JWT authorizers&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/apigateway/latest/developerguide/http-api-jwt-authorizer.html"&gt;JWT オーソライザーを使用した HTTP API へのアクセスの制御&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://qiita.com/asw_hoggge/items/2e967b7daf93928975c1"&gt;API Gateway の JWT オーソライザーで Google ID トークンを検証してみた&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://qiita.com/KWS_0901/items/9b37712ed4bff75e1d4f"&gt;API Gateway JWT Authorizer メモ&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://qiita.com/tamura_CD/items/46ba8a2f3bfd5484843f"&gt;API Gateway + Lambda で REST API 開発を体験しよう [10 分で完成編]&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://blog.serverworks.co.jp/gen-ai-aws-lambda-streaming"&gt;【生成 AI】AWS Lambda(Python) と LangChain(LCEL) を使ってストリーミング出力したい&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/aws-samples/bedrock-claude-chat"&gt;https://github.com/aws-samples/bedrock-claude-chat&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://zenn.dev/koji_mats/articles/d7dae894845f4e"&gt;slack と AWS で LLM Chatbot を Serverless で運用する&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="lambda-コンテナ"&gt;Lambda コンテナ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/images-create.html"&gt;Lambda のコンテナイメージを使用する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/images-test.html"&gt;Lambda コンテナイメージをローカルでテストする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/python-image.html#python-image-instructions"&gt;コンテナイメージで Python Lambda 関数をデプロイする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/kyamamoto9120/items/f1cda89ffc7cb5254f17"&gt;コンテナイメージを使用して AWS Lambda 関数を作成する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Sorry Page</title><link>https://hdknr.github.io/blogs/posts/2024/06/087b4d6377251bc374ad59aa8ce9e437/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/06/087b4d6377251bc374ad59aa8ce9e437/</guid><description>&lt;h1 id="sorry-page-運用"&gt;Sorry Page 運用&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://blog.serverworks.co.jp/tech/2019/02/28/alb-sorrypage/"&gt;ALB で Sorry ページを実装する方法と運用上の考慮点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.orinbou.info/entry/2024/02/25/175210"&gt;AWS Sorry Page 定番パターン整理（ソーリーページ／メンテナンスページ）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="cloudfront-オリジンフェイルオーバー"&gt;CloudFront オリジンフェイルオーバー&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;CloudFront のオリジンフェイルオーバーでオリジンとの接続タイムアウトやオリジン側で発生したエラーコード（5XX 系）をセカンダリのオリジン（ソーリーページ）へ自動的に遷移させます。&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.denet.co.jp/cloudfront-sorrypage/"&gt;CloudFront でオリジン障害時に Sorry ページを表示したい&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="エラーページ作成ssg"&gt;エラーページ作成(SSG)&lt;/h2&gt;
+&lt;p&gt;Peclican で ファイル名をスラグ化させない:&lt;/p&gt;
+&lt;p&gt;pelicanconf.py:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PATH_METADATA &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;r&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;(?P&amp;lt;path_no_ext&amp;gt;.*)\..*&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ARTICLE_URL &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ARTICLE_SAVE_AS &lt;span style="color:#f92672"&gt;=&lt;/span&gt; PAGE_URL &lt;span style="color:#f92672"&gt;=&lt;/span&gt; PAGE_SAVE_AS &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{path_no_ext}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.html&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>AWS: Billing</title><link>https://hdknr.github.io/blogs/posts/2024/04/842a561c7af98ea5873d73c662da6b25/</link><pubDate>Mon, 08 Apr 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/04/842a561c7af98ea5873d73c662da6b25/</guid><description>&lt;h1 id="aws-billing"&gt;AWS: Billing&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/aws-1st-step-new-era-reiwa/"&gt;AWS アカウントを作ったら最初にやるべきこと ～令和元年版～&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/tmknom/items/303db2d1d928db720888"&gt;AWS アカウントを取得したら速攻でやっておくべき初期設定まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tech.nri-net.com/entry/aws_first_security"&gt;AWS アカウント作成時にやるべきこと&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/cost-check-point/"&gt;無駄なコストを省こう！AWS で消し忘れを防止するためにチェックすべき７つのポイント&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: Pinpoint</title><link>https://hdknr.github.io/blogs/posts/2024/03/968330d868dc49da3124764cadba2888/</link><pubDate>Mon, 04 Mar 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/03/968330d868dc49da3124764cadba2888/</guid><description>&lt;h1 id="aws-pinpoint"&gt;AWS Pinpoint&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.ragate.co.jp/blog/articles/11830"&gt;Amazon Pinpoint を AWS エキスパートが解説 😎 AWS でマーケティングを簡単・手早く効率化させましょう 🚀&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Push:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/pinpoint/latest/userguide/channels-push.html"&gt;Amazon Pinpoint プッシュ通知&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/torana_tech/articles/0d0ca387a399ce"&gt;PWA と Amazon Pinpoint による通知機能&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.acrovision.jp/service/aws/?p=1421"&gt;Amazon Pinpoint とは？わかりやすく解説！低コストでプッシュ通知を実現しよう！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/sadnessOjisan/items/05bbca78bca3301d24b2"&gt;マッチングアプリ強者を体験できる PWA 開発で、Web プッシュ通知を理解しよう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/chocoyama/articles/5b07eead5ae0aa"&gt;令和 4 年の Push 通知を改めて整理する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://techblog.haldata.net/entry/2019/09/23/030438"&gt;Firebase を使って Web プッシュ通知を実装する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.next.inc/articles/2023/flutter%E3%81%A7%E3%83%97%E3%83%83%E3%82%B7%E3%83%A5%E9%80%9A%E7%9F%A5%E3%82%92%E5%AE%9F%E8%A3%85fcm-x-aws-pinpoint%E3%80%82%E3%83%87%E3%83%90%E3%82%A4%E3%82%B9%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3.html"&gt;【FCM x AWS Pinpoint】Flutter で Push 通知を実装したい！デバイストークンを AWS Pinpoint のエンドポイントに登録する方法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;SMS:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/amazon-pinpoint-send-sms/"&gt;Amazon Pinpoint を使った SMS 送信をおこなってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Amazon SNS や Amazon Pinpoint からのモバイルテキストメッセージ (SMS) にかかる料金が予想よりも高くなるのはなぜですか?&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://gist.github.com/aws-john/1a14bf454bfe7e86b38ef1f202756ced"&gt;Send transactional SMS via Amazon PinPoint&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Notification:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://web.dev/explore/notifications?hl=ja"&gt;通知&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;FCM:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://firebase.google.com/docs/cloud-messaging?hl=ja"&gt;Firebase Cloud Messaging&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;SNS:&lt;/p&gt;</description></item><item><title>AWS Connect</title><link>https://hdknr.github.io/blogs/posts/2024/02/539b73e73c66c0b0d9da56140a7de305/</link><pubDate>Thu, 15 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/539b73e73c66c0b0d9da56140a7de305/</guid><description>&lt;h1 id="aws-connect"&gt;AWS Connect&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/mottie/items/5d94c7d2f94beeb9c342"&gt;Amazon Connect の使い方[丁寧に解説してみた]&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="aws-pinpoint"&gt;AWS Pinpoint&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/pinpoint/"&gt;https://aws.amazon.com/jp/pinpoint/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/about-aws/whats-new/2023/11/amazon-connect-two-way-sms/"&gt;Amazon Connect が双方向の SMS のサポートを開始&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=S8zcgBLCm-E"&gt;SMS Chatbot with Amazon Pinpoint, Amazon Lex, and AWS Lambda&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://pages.awscloud.com/rs/112-TZM-766/images/A3-01.pdf"&gt;Amazon Pinpoint でユーザーを掴んで離すな&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="amazon-lex"&gt;Amazon Lex&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/lex/"&gt;Amazon Lex による会話型 AI インターフェイスの構築とデプロイ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/amazon-connect-escalation-to-manned-response/"&gt;AI チャットボットで問い合わせに対応し、回答が難しい内容に限り担当者にエスカレーション[Amazon Connect + Lex + Bedrock]&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/amazon-bedrock-claude-connect-kendra-rag/"&gt;【RAG】Amazon Bedrock と Connect、Kendra を利用し、社内情報や社外の最新情報などの取り込んだデータをもとに回答するコールセンター向け AI チャットボットを構築してみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/hayao_k/items/268c333f3f383125fd30"&gt;Amazon Lex で日本語チャットボットを作ろう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/blogs/messaging-and-targeting/create-an-sms-chatbox-with-amazon-pinpoint-and-lex/"&gt;Create an SMS Chatbot with Amazon Pinpoint and Lex&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="amazon-kendra"&gt;Amazon Kendra&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/kendra/features/"&gt;https://aws.amazon.com/jp/kendra/features/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="その他"&gt;その他&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/amazon-connect-lex-three-verification/"&gt;Amazon Connect と Lex でのコールセンター向け AI チャットボットの構築において、「音声入力の最大時間」「発話の最大待機時間」「発話終了判定の最大時間」の仕様を確認してみた | DevelopersIO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/about-aws/whats-new/2022/05/amazon-lex-supports-custom-vocabulary/"&gt;Amazon Lex でカスタム語彙のサポートを開始&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/amazon-connect-lex-bedrock-personal-information/"&gt;Amazon Connect + Lex + Bedrock の AI チャットボットで、発話から個人情報（名前、住所、生年月日）を正しく認識できるか試してみた | DevelopersIO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/tsnote-support-amazon-connect-003/"&gt;Amazon Connect 電話番号の取得画面で「その国でお使いいただける番号はありません。」というメッセージが表示され、新規番号が取得できない場合の対処方法 | DevelopersIO&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS.EventBridge: 自動停止/起動</title><link>https://hdknr.github.io/blogs/posts/2024/02/f3d79e82ff5a154528647c0fa2b3ea91/</link><pubDate>Thu, 15 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/f3d79e82ff5a154528647c0fa2b3ea91/</guid><description>&lt;h1 id="aws-eventbrdige"&gt;AWS: EventBrdige&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://bishop.hatenadiary.com/entry/2023/04/17/112834"&gt;【AWS】 費用節約のため EC2 を夜間停止する 2023 年 4 月版【備忘録】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/mksamba/items/a9cfcd0431a01863d261"&gt;【コスト削減】AWS ECS(Fargate) の夜間休日タスク停止&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/minedia/articles/f661bfd1d57095"&gt;AWS Amazon EventBridge スケジューラで Amazon Aurora クラスターの稼働時間を管理する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://mihono-bourbon.com/aws-cost-reduction-rds/"&gt;【AWS コスト削減】RDS の自動停止&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/eventbridge-scheduler-and-event-bridge-rule-difference/"&gt;EventBridge Scheduler と Event Bridge Rule の違いを CloudFormation から学ぶ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://envader.plus/article/250"&gt;Terraform と EventBridge Scheduler を活用した EC2 インスタンスの時限起動によるコスト削減&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: Kendra</title><link>https://hdknr.github.io/blogs/posts/2024/02/2a8578c52424322f83266d2adde03ba3/</link><pubDate>Tue, 13 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/2a8578c52424322f83266d2adde03ba3/</guid><description>&lt;h1 id="aws-kendra"&gt;AWS: Kendra&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/kendra/"&gt;https://aws.amazon.com/jp/kendra/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/aws-genai-llm-chatbot"&gt;https://github.com/aws-samples/aws-genai-llm-chatbot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/sugimount-a/items/50370d5781b634bb8d3b"&gt;Amazon Kendra を触ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/builders-flash/202302/kendra-search-system/?awsf.filter-name=*all"&gt;Amazon Kendra で簡単に検索システムを作ってみよう !&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Video:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=iFqe0lDEq4w"&gt;Amazon Kendra による文書からの日本語セマンティック検索&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://docs.aws.amazon.com/kendra/latest/dg/hiw-data-source.html"&gt;データソース&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: Bedrock: GenAI</title><link>https://hdknr.github.io/blogs/posts/2024/02/895c111bd79b76d4f8be7a5267a0afc3/</link><pubDate>Tue, 06 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/895c111bd79b76d4f8be7a5267a0afc3/</guid><description>&lt;h1 id="aws-bedrock-genai"&gt;AWS: Bedrock: GenAI&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/bedrock/latest/userguide/what-is-bedrock.html"&gt;Amazon Bedrock とは&lt;/a&gt;
+&lt;a href="https://dev.classmethod.jp/articles/breaing-news-amazon-bedrock-was-released/"&gt;【速報】AWS の生成 AI サービスである Amazon Bedrock がリリースされたので朝イチで触ってみた&lt;/a&gt;
+&lt;a href="https://qiita.com/nasuvitz/items/e6cabec6c000de861d22"&gt;Amazon Bedrock &amp;ldquo;Claude 2&amp;rdquo; と、ChatGPT &amp;ldquo;GPT-4&amp;rdquo; を比較してみる&lt;/a&gt;
+&lt;a href="https://qiita.com/nasuvitz/items/679674d93219cfb8320d"&gt;AWS による生成 AI の新サービス「Amazon Bedrock」の可能性を考察する&lt;/a&gt;
+&lt;a href="https://qiita.com/JamyJamy/items/f1d63d1c3186a0e5d7da"&gt;Amazon Bedrock でモデルごとに画像を生成してみた&lt;/a&gt;
+&lt;a href="https://speakerdeck.com/icoxfog417/amazon-bedrock-nohazimefang"&gt;Bedrock のはじめかた&lt;/a&gt;
+&lt;a href="https://findy-tools.io/products/amazon-bedrock/14/37"&gt;Amazon Bedrock の導入効果をレビューでご紹介（KDDI アジャイル開発センター株式会社-みのるん）&lt;/a&gt;
+&lt;a href="https://aws.amazon.com/jp/blogs/machine-learning/build-generative-ai-chatbots-using-prompt-engineering-with-amazon-redshift-and-amazon-bedrock/"&gt;Build generative AI chatbots using prompt engineering with Amazon Redshift and Amazon Bedrock&lt;/a&gt;
+&lt;a href="https://zenn.dev/spiralai/articles/8af7cbf526c2e1"&gt;GPT 連携アプリ開発時の必須知識、RAG をゼロから解説する。概要＆Python コード例&lt;/a&gt;
+&lt;a href="https://acro-engineer.hatenablog.com/entry/2023/12/20/140000"&gt;Amazon Bedrock の Knowledge base で簡単に RAG を構築&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Github:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/query-structured-data-with-amazon-bedrock"&gt;Query structured data with natural language using Amazon Bedrock&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/amazon-bedrock-workshop"&gt;https://github.com/aws-samples/amazon-bedrock-workshop&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/aws-samples/promptus"&gt;https://github.com/aws-samples/promptus&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;API:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Boto3: &lt;a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock.html"&gt;https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;モデル&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Titan FMs&lt;/li&gt;
+&lt;li&gt;Claude 2&lt;/li&gt;
+&lt;li&gt;Jurassic-2 (&lt;a href="https://docs.ai21.com/docs/python-sdk-with-amazon-bedrock"&gt;Python SDK&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Stable Diffusion&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="claude-2"&gt;Claude 2&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.sms-datatech.co.jp/column/consulting_claude2/"&gt;生成 AI の最新モデル「Claude2」とは？使い方や ChatGPT との違いについても解説&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.anthropic.com/claude/reference/client-sdks"&gt;クライアント SDK&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://10000.co.jp/web/1374/"&gt;GPT-4 と Claude 2 を比較してみました&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://weel.co.jp/media/claude-2.1"&gt;【Claude 2.1】ChatGPT 超え AI の日本語での使い方や API の使用方法、GPT-4 との比較を解説&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://japan.cnet.com/article/35211912/"&gt;Anthropic、「Claude 2.1」をリリース&amp;ndash;15 万ワードに対応、幻覚も半減&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="jurassi-2"&gt;Jurassi-2&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;日本語対応していない&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/moritalous/items/13e5a918266cdcab139e"&gt;AWS の&amp;quot;推しの AI&amp;quot; 「Jurassic-2」を使ってみた！！Bedrock ローンチ前に使えるんやん！&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: Glue: ETL</title><link>https://hdknr.github.io/blogs/posts/2024/02/3ae35e8d820c3836afb4cf0eb10e5feb/</link><pubDate>Mon, 05 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/3ae35e8d820c3836afb4cf0eb10e5feb/</guid><description>&lt;h1 id="glue"&gt;Glue&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/glue/latest/dg/what-is-glue.html"&gt;AWS Glue の概要&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ETL(抽出、変換、ロード) パイプラインを視覚的に作成/実行&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AWS データサービス連携:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Athena: S3 上のデータに対して、クエリ（SQL）を利用してデータの分析を行うことができるサービス&lt;/li&gt;
+&lt;li&gt;EMR:(Elastic MapReduce): Hadoop, Spart の実行&lt;/li&gt;
+&lt;li&gt;Redshift Spectrum(スペクトル): ReadShift から S3 をクエリ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="主要機能"&gt;主要機能&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;データの検出と整理&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;複数のデータストアを統合して検索&lt;/li&gt;
+&lt;li&gt;データを自動的に検出&lt;/li&gt;
+&lt;li&gt;スキーマとアクセス許可を管理&lt;/li&gt;
+&lt;li&gt;さまざまなデータソースに接続&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;分析用データの変換、準備、クリーニング&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;データを視覚的に変換&lt;/li&gt;
+&lt;li&gt;シンプルなジョブスケジューリングで複雑な ETL パイプラインを構築&lt;/li&gt;
+&lt;li&gt;転送中のストリーミングデータのクリーニングと変換&lt;/li&gt;
+&lt;li&gt;組み込みの機械学習によるデータの重複排除とクリーニング(FindMatch)&lt;/li&gt;
+&lt;li&gt;組み込みのジョブノートブック&lt;/li&gt;
+&lt;li&gt;ETL コードの編集、デバッグ、テスト&lt;/li&gt;
+&lt;li&gt;機密データの定義、検出、修正&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;データパイプラインの構築とモニタリング&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;自動スケーリング(ワークロードに基づく)&lt;/li&gt;
+&lt;li&gt;ジョブ自動化(イベントトリガー)&lt;/li&gt;
+&lt;li&gt;ジョブの実行とモニタリング(Spark, Ray, CloudTail)&lt;/li&gt;
+&lt;li&gt;ETL と統合アクティビティのワークフローを定義&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="コンポーネント"&gt;コンポーネント&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;コンソール&lt;/li&gt;
+&lt;li&gt;Data Catalog&lt;/li&gt;
+&lt;li&gt;クローラおよび分類子&lt;/li&gt;
+&lt;li&gt;ETL オペレーション&lt;/li&gt;
+&lt;li&gt;ストリーミング ETL&lt;/li&gt;
+&lt;li&gt;ジョブシステム&lt;/li&gt;
+&lt;li&gt;ビジュアル ETL コンポーネント&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ジョブ実行エンジン"&gt;ジョブ実行エンジン&lt;/h2&gt;
+&lt;h3 id="spark-aws-glue-etl"&gt;Spark (AWS Glue ETL)&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://spark.apache.org/docs/latest/api/python/index.html"&gt;PySpark Overview&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ray-aws-glue-for-ray"&gt;Ray (AWS Glue for Ray)&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.ray.io/"&gt;Ray&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.ray.io/en/latest/data/data.html"&gt;Ray Data: Scalable Datasets for ML&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/glue/latest/dg/ray-jobs-section.html"&gt;AWS Glue での Ray ジョブの使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/glue/latest/ug/notebooks-chapter.html"&gt;AWS Glue Studio と AWS Glue でのノートブックの使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/glue/latest/dg/is-using-ray.html"&gt;AWS Glue for Ray のインタラクティブセッション (プレビュー) の開始方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/aws-glue-ray-reinvent-2022/"&gt;【プレビュー】AWS Glue で Ray が利用できるようになりました！#reinvent&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://pages.awscloud.com/rs/112-TZM-766/images/20230126_26th_ISV_DiveDeepSeminar_GlueonRay.pdf"&gt;AWS Glue on Ray ではじめるデータ分析とそのパフォーマンス&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: SES</title><link>https://hdknr.github.io/blogs/posts/2024/01/04fae3c0ac3361e57f2250fb938a4584/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/01/04fae3c0ac3361e57f2250fb938a4584/</guid><description>&lt;h1 id="aws-ses-スパム"&gt;AWS: SES: スパム&lt;/h1&gt;
+&lt;p&gt;In a move to safeguard user inboxes,
+Gmail [1] and Yahoo Mail [2] announced a new set of requirements for senders.
+Effective February 2024,
+the new requirements affect email senders who distribute over 5,000 bulk messages per day
+or have &amp;gt;0.3% of messages reported as spam.
+Failure to comply with new requirements may result in Gmail and Yahoo rejecting message delivery to their customers.&lt;/p&gt;
+&lt;p&gt;Your account has at least one email address identity sending email without a matching verified domain identity.
+This may result in reduced ability to send to some email recipients.&lt;/p&gt;</description></item><item><title>Windows: クラウド利用</title><link>https://hdknr.github.io/blogs/posts/2024/01/e6444c43d297d091a09a5de10996efaf/</link><pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/01/e6444c43d297d091a09a5de10996efaf/</guid><description>&lt;h1 id="windows-クラウド利用"&gt;Windows クラウド利用&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://zenn.dev/ncdc/articles/1f9273f1a8cda2"&gt;「Azure は AWS より安い」は本当か&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Windows Server と SQL Server 向けでは、AWS は Azure と比べて 5 倍のコストがかかります&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>ECS: aws-cli</title><link>https://hdknr.github.io/blogs/posts/2024/01/50aad918b816db60ee69c37833f06f3c/</link><pubDate>Sun, 07 Jan 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/01/50aad918b816db60ee69c37833f06f3c/</guid><description>&lt;h1 id="ecs-aws-cli"&gt;ECS: aws-cli&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;curl&lt;/code&gt;, &lt;code&gt;unzip&lt;/code&gt; は入っていること&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;28
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;29
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;30
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;31
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;32
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;33
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;34
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;35
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;36
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;37
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;38
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;39
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;40
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;41
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;42
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-Dockerfile" data-lang="Dockerfile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; BASE_IMAGE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;myimage-cicd-appbase&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; TAG&lt;span style="color:#f92672"&gt;=&lt;/span&gt;latest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#e6db74"&gt;${BASE_IMAGE}:${TAG&lt;/span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt; as server&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; USERNAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; GROUPNAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; PASSWORD&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ubuntu
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; UID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ARG&lt;/span&gt; GID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ENV&lt;/span&gt; APP_BASE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/usr/src/app &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; LIB_BASE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;/usr/src/lib &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; POETRY_VERSION&lt;span style="color:#f92672"&gt;=&lt;/span&gt;1.0.10 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/root/.poetry/bin:&lt;/span&gt;$PATH&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; mkdir -p /var/run/gunicorn &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; mkdir -p /storage&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; apt-get update &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get install -y sudo&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; groupadd -g &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;GID&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;GROUPNAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; useradd -m -s /bin/bash -u &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;UID&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; -g &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;GID&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; -G sudo &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;USERNAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; --home-dir &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;APP_BASE&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;USERNAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;PASSWORD&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; | chpasswd &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; echo &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;USERNAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; ALL=(ALL) NOPASSWD:ALL&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/sudoers&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# aws-cli&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; curl &lt;span style="color:#e6db74"&gt;&amp;#34;https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip&amp;#34;&lt;/span&gt; -o &lt;span style="color:#e6db74"&gt;&amp;#34;awscliv2.zip&amp;#34;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; unzip awscliv2.zip&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; sudo ./aws/install&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Application&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;COPY&lt;/span&gt; . &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;APP_BASE&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WORKDIR&lt;/span&gt; &lt;span style="color:#e6db74"&gt;${APP_BASE&lt;/span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; pip install pip poetry urllib3&lt;span style="color:#f92672"&gt;==&lt;/span&gt;1.26.15 -U &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; poetry config virtualenvs.create false &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; poetry install &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; pip install urllib3&lt;span style="color:#f92672"&gt;==&lt;/span&gt;1.26.15 pyOpenSSL -U&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; chown -R &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;USERNAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;GROUPNAME&lt;span style="color:#e6db74"&gt;}&lt;/span&gt; &lt;span style="color:#e6db74"&gt;${&lt;/span&gt;APP_BASE&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RUN&lt;/span&gt; chmod &lt;span style="color:#ae81ff"&gt;777&lt;/span&gt; /run/gunicorn&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;USER&lt;/span&gt; &lt;span style="color:#e6db74"&gt;${USERNAME&lt;/span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CMD&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;/usr/src/app/docker/codebuild/entry_web.sh&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;/usr/src/app&amp;#34;&lt;/span&gt;]&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>AWS: EFS: バックアップ</title><link>https://hdknr.github.io/blogs/posts/2024/01/aaaae915d7b0c454a3bc4bfdb64573fa/</link><pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/01/aaaae915d7b0c454a3bc4bfdb64573fa/</guid><description>&lt;h1 id="efs-バックアップ"&gt;EFS バックアップ&lt;/h1&gt;
+&lt;h2 id="aws-backup"&gt;AWS Backup&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/hdknr/awsform/blob/main/terraform/modules/backups/main.tf"&gt;https://github.com/hdknr/awsform/blob/main/terraform/modules/backups/main.tf&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="aws-datasync"&gt;AWS DataSync&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://business.ntt-east.co.jp/content/cloudsolution/ih_column-53.html"&gt;AWS DataSync を使って S3 から EFS へデータを転送する！&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>MySQL: CDC</title><link>https://hdknr.github.io/blogs/posts/2023/12/6569afed744a1e7508d9d38826c68a9b/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/12/6569afed744a1e7508d9d38826c68a9b/</guid><description>&lt;h1 id="mysql-cdcchange-data-capture"&gt;MySQL: CDC(Change Data Capture)&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://ts223.hatenablog.com/entry/cdc-rds-bq/part1"&gt;AWS Database Migration Service による Change Data Capture: 前編&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://ts223.hatenablog.com/entry/cdc-rds-bq/part2"&gt;AWS Database Migration Service による Change Data Capture: 後編&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://qiita.com/i3no29/items/73363a7e1ca1c99000f8"&gt;AWS DatabaseMigrationService での DB 移行構築ハンズオン&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="rds-mysql"&gt;RDS MySQL&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.AmazonManaged"&gt;AWS DMS のソースとして AWS が管理する MySQL 互換データベースの使用&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;バイナリログ(&lt;code&gt;binlog_format&lt;/code&gt; == &lt;code&gt;ROW&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;binlog_row_image&lt;/code&gt; == &lt;code&gt;Full&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;binlog_checksum&lt;/code&gt; == &lt;code&gt;NONE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="dms"&gt;DMS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/dms/"&gt;AWS Database Migration Service&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/rdb-dms-rds/"&gt;DMS で AWS RDS へ継続的に移行してみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://repost.aws/questions/QUSjXHLPIgSyuTSfETynK0Cg/dms-endpoint-connection-test-failed-with-secret-manager"&gt;DMS Endpoint Connection Test Failed with Secret Manager&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/blogs/database/manage-your-aws-dms-endpoint-credentials-with-aws-secrets-manager/"&gt;Manage your AWS DMS endpoint credentials with AWS Secrets Manager&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/blogs/security/how-to-connect-to-aws-secrets-manager-service-within-a-virtual-private-cloud/"&gt;How to connect to AWS Secrets Manager service within a Virtual Private Cloud&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.skyarch.net/blog/aws-database-migration-service-aws-dms-%E3%81%AE-cdc-%E3%83%AC%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F/"&gt;AWS Database Migration Service (AWS DMS) の CDC レプリケーションを使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;サーバーレス:&lt;/p&gt;</description></item><item><title>AWS RDS EBSByteBalance%</title><link>https://hdknr.github.io/blogs/posts/2023/07/7d1923553e5731370b80aa58547925f6/</link><pubDate>Tue, 25 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/7d1923553e5731370b80aa58547925f6/</guid><description>&lt;h1 id="ebsbytebalance"&gt;EBSByteBalance%&lt;/h1&gt;
+&lt;p&gt;AWS:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html#current"&gt;EBS 最適化&lt;/a&gt; RDS インスタンスクラスを使用している場合は、CloudWatch のグラフを使用して IOPS またはスループットのスロットリングがないかを確認します。&lt;/li&gt;
+&lt;li&gt;バーストキャパシティを備えたインスタンスクラスの場合は、CloudWatch のグラフで EBSIOBalance% および EBSByteBalance% のメトリクスを表示します。&lt;/li&gt;
+&lt;li&gt;EBSIOBalance% または EBSByteBalance% の常に低い値は、インスタンスレベルで IOPS またはスループットのボトルネックが発生していることを示唆しています。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="資料"&gt;資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://repost.aws/ja/knowledge-center/rds-latency-ebs-iops-bottleneck"&gt;Amazon RDS インスタンスの IOPS のボトルネックによって引き起こされた Amazon EBS ボリュームのレイテンシーをトラブルシューティングするにはどうすればよいですか?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Google Cloud Run</title><link>https://hdknr.github.io/blogs/posts/2023/07/0122e37c8bb55ac1bf347c07c17a168d/</link><pubDate>Sun, 16 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/0122e37c8bb55ac1bf347c07c17a168d/</guid><description>&lt;h1 id="google-cloud-run"&gt;Google Cloud Run&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="ps://cloud.google.com/run/docs/migrate/from-kubernetes?hl=ja"&gt;Kubernetes から Cloud Run に移行する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/gc-cloud-run/"&gt;Google Cloud なんもわからないマンが、Cloud Run の凄さをあれこれ調べてみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="aws-app-runner"&gt;AWS App Runner&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/apprunner/"&gt;https://aws.amazon.com/jp/apprunner/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Managed k8s</title><link>https://hdknr.github.io/blogs/posts/2023/07/ea0dc0301dbd349db40045debb8b10d3/</link><pubDate>Sun, 16 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/ea0dc0301dbd349db40045debb8b10d3/</guid><description>&lt;h1 id="managed-k8s"&gt;Managed k8s&lt;/h1&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Provider&lt;/th&gt;
+&lt;th&gt;Service Product&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;AWS&lt;/td&gt;
+&lt;td&gt;EKS(Elastic Kubernetes Service)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GCP&lt;/td&gt;
+&lt;td&gt;GKE(Google Kubernetes Engine)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Azure&lt;/td&gt;
+&lt;td&gt;AKS(Azure Kubernetes Service)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://cloud-ace.jp/column/detail400/"&gt;マネージド Kubernetes とは？EKS・AKS・GKE を比較&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="aws-eks-vs-ecs"&gt;AWS EKS vs. ECS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.stylez.co.jp/columns/aws_own_idea_of_the_role_of_ecs_and_eks/"&gt;AWS 自身が考える ECS と EKS の役割&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;EKS:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;EKS : 他のプロバイダー/オンプレミスからの移行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ECS:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Kubernetes に比べてはるかに運用がしやすく、低コストで、マルチテナントのプラットフォームとしての効率が非常に高い&lt;/li&gt;
+&lt;li&gt;クラスターの起動を無料で行うことができます&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Celery AWS ECS</title><link>https://hdknr.github.io/blogs/posts/2023/07/9b947258d31059c56fec5000faa190ca/</link><pubDate>Thu, 13 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/9b947258d31059c56fec5000faa190ca/</guid><description>&lt;h1 id="celery-on-ecs"&gt;Celery on ECS&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/hankehly/items/c3e0496eb04327a53ac4#redis"&gt;【Python Celery】本番運用時に知っておくべき 10 のこと&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/Alexmhack/Django-Celery-Redis-AWSEB"&gt;https://github.com/Alexmhack/Django-Celery-Redis-AWSEB&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="redis"&gt;Redis&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://ken0-1n.hatenablog.com/entry/2017/12/05/114653"&gt;Celery + AWS Redis で使ってみる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="クラスターモード"&gt;クラスターモード&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Redis &amp;gt;= 3.2&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://dev.classmethod.jp/articles/elasticache-cluster-mode/"&gt;ElastiCache for Redis のクラスターモードについて調べてみる&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="sqs"&gt;SQS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;broker&lt;/code&gt; としてつかえるが、 &lt;code&gt;backend&lt;/code&gt; としては使えない(SQS + RabbitMQ/Redis/SQLAlchemy を考える)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://medium.com/nerd-for-tech/celery-sqs-on-django-on-elastic-beanstalk-98e20ccf95c1"&gt;Celery + SQS on Django on Elastic Beanstalk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://python.plainenglish.io/deploying-django-on-aws-setting-up-celery-and-sqs-95632a6e79cb"&gt;Deploying Django on AWS: Setting up Celery and SQS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.to/daiquiri_team/deploying-django-application-on-aws-with-terraform-setting-up-celery-and-sqs-38ik"&gt;Deploying Django Application on AWS with Terraform. Setting up Celery and SQS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ecs"&gt;ECS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/61989311/running-celery-tasks-and-celery-beat-in-ecs-with-django"&gt;running celery tasks and celery beat in ECS with Django&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/docker/compose/issues/8040"&gt;docker compose ecs deploy aws tutorial: celery incompatible attribute #8040&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tech.quartetcom.co.jp/2018/11/09/byebye-aws-batch/"&gt;AWS Batch を検討したけど AWS Fargate を採用した話&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="celery-logging"&gt;Celery Logging&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.celeryq.dev/en/stable/reference/celery.app.log.html"&gt;celery.app.log&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://distributedpython.com/posts/three-ideas-to-customise-celery-logging-handlers/"&gt;Three Ideas to Customise Celery logging handlers&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;標準出力:&lt;/p&gt;</description></item><item><title>EC2 mount EFS</title><link>https://hdknr.github.io/blogs/posts/2023/07/45e9f742478bf75a2fc39879b106a903/</link><pubDate>Wed, 12 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/45e9f742478bf75a2fc39879b106a903/</guid><description>&lt;h1 id="aws-ec2-moutn-efs"&gt;AWS EC2 moutn EFS&lt;/h1&gt;
+&lt;h2 id="e2-からマウント"&gt;E2 からマウント&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;EFS_ID&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;fs-0f90bd97a364a6e94&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PKG&lt;span style="color:#f92672"&gt;=&lt;/span&gt;amazon-efs-utils
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RES&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;dpkg --get-selections | grep $PKG&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;MOUNT_PATH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;/efs&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; -z &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;RES&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apt update &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt upgrade -y &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt autoremove -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apt-get -y install binutils
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; git clone https://github.com/aws/efs-utils
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cd efs-utils
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ./build-deb.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; apt-get install -y ./build/amazon-efs-utils*deb
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[&lt;/span&gt; ! -d $MOUNT_PATH &lt;span style="color:#f92672"&gt;]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; mkdir $MOUNT_PATH
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mount -t efs $EFS_ID:/ $MOUNT_PATH
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Cloud Function defautl pages</title><link>https://hdknr.github.io/blogs/posts/2023/06/99549897597023897156035e561ca765/</link><pubDate>Mon, 26 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/99549897597023897156035e561ca765/</guid><description>&lt;h1 id="aws-cloudfuntion-url-変更"&gt;AWS CloudFuntion URL 変更&lt;/h1&gt;
+&lt;p&gt;AWS CloudFront Functions を使用して、ブラウザリクエストの URL を書き換えてオリジンに送信するには、HTTP リクエストを別の URL にリダイレクトする関数を作成する必要があります。
+AWS ドキュメントには、CloudFront Functions を使用して HTTP リクエストを別の URL にリダイレクトする方法が記載されています ¹。&lt;/p&gt;
+&lt;p&gt;また、Classmethod 社の記事には、CloudFront Functions でオリジンに手を加えずに URL リダイレクトを行う方法が記載されています ³。&lt;/p&gt;
+&lt;p&gt;ご参考までに、以下は CloudFront Functions で HTTP リクエストを別の URL にリダイレクトする例です ²。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-js" data-lang="js"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;function&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;handler&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;event&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;request&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;event&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;request&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;headers&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;request&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;headers&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;uri&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;request&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;uri&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;host&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;headers&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;host&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;value&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;newurl&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Check the URI is &amp;#39;/abc/sign-up&amp;#39;.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;uri&lt;/span&gt; &lt;span style="color:#f92672"&gt;===&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;/abc/sign-up&amp;#34;&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;newurl&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`https://&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;host&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/sign-up`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;newurl&lt;/span&gt; &lt;span style="color:#f92672"&gt;!==&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;statusCode&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;301&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;statusDescription&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Moved Permanently&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;headers&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;location&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; { &lt;span style="color:#a6e22e"&gt;value&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;newurl&lt;/span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;request&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この例では、URI が&lt;code&gt;/abc/sign-up&lt;/code&gt;に一致した場合に、&lt;code&gt;https://${host}/sign-up&lt;/code&gt;へリダイレクトしています。この例を参考に、ご自身の環境に合わせた関数を作成してください。&lt;/p&gt;</description></item><item><title>AWS Windows</title><link>https://hdknr.github.io/blogs/posts/2023/06/9382ed893473228a92481c45e92f9917/</link><pubDate>Tue, 20 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/9382ed893473228a92481c45e92f9917/</guid><description>&lt;h1 id="aws-ec2-windows"&gt;AWS EC2 Windows&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/wattanx/articles/4c4b3750ba8a92"&gt;AWS EC2 で起動した Windows Server を日本語設定にする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://win.just4fun.biz/?%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%83%97%E3%83%AD%E3%83%B3%E3%83%97%E3%83%88/%E8%8B%B1%E8%AA%9E%E3%83%A2%E3%83%BC%E3%83%89%E3%83%BB%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%83%A2%E3%83%BC%E3%83%89%E3%81%AE%E5%88%87%E3%82%8A%E6%9B%BF%E3%81%88%E6%96%B9%E6%B3%95%E3%83%BBchcp"&gt;コマンドプロンプト/英語モード・日本語モードの切り替え方法・chcp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/setalb_access_to_be_allowed_only_from_cloudfront/"&gt;ALB のアクセスを CloudFront からだけに許可するように設定してみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/jp/about-aws/whats-new/2022/02/amazon-cloudfront-managed-prefix-list/"&gt;Amazon VPC で Amazon CloudFront 用に AWS が管理するプレフィックスリストのサポートを開始&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html"&gt;Work with AWS-managed prefix lists&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/WindowsGuide/ResettingAdminPassword_EC2Launchv2.html"&gt;EC2Launch v2 を使用した Windows 管理者パスワードのリセット&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS SES Logging</title><link>https://hdknr.github.io/blogs/posts/2023/05/e131c233dcd88d649cdc856008ba4ab9/</link><pubDate>Wed, 17 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/e131c233dcd88d649cdc856008ba4ab9/</guid><description>&lt;h2 id="aws-ses-ロギング"&gt;AWS SES ロギング&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://repost.aws/ja/knowledge-center/ses-email-event-logs"&gt;Amazon SES ログにはどのようにアクセスできますか?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.denet.co.jp/amazon-ses-log/"&gt;Amazon SES でのメール送信ログを表示する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.aws.amazon.com/ja_jp/ses/latest/dg/logging-using-cloudtrail.html"&gt;AWS CloudTrail を使用した Amazon SES API コールのログ作成&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/isseeeeey55/articles/61b350c27e1040"&gt;SESの送信履歴を確認したい&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="terrafrom--firefose"&gt;Terrafrom + Firefose&lt;/h3&gt;
+&lt;p&gt;Firehoseを使用してSESのログをS3バケットに記録するには、Terraformで以下のように記述することができます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;resource &amp;#34;aws_s3_bucket&amp;#34; &amp;#34;log_bucket&amp;#34; {
+bucket = &amp;#34;log-bucket&amp;#34;
+}
+resource &amp;#34;aws_ses_domain_identity&amp;#34; &amp;#34;example&amp;#34; {
+domain = &amp;#34;example.com&amp;#34;
+}
+resource &amp;#34;aws_ses_domain_identity_verification&amp;#34; &amp;#34;example&amp;#34; {
+domain = aws_ses_domain_identity.example.domain
+}
+resource &amp;#34;aws_ses_configuration_set&amp;#34; &amp;#34;example&amp;#34; {
+name = &amp;#34;example&amp;#34;
+}
+resource &amp;#34;aws_ses_event_destination&amp;#34; &amp;#34;example&amp;#34; {
+configuration_set_name = aws_ses_configuration_set.example.name
+name = &amp;#34;example&amp;#34;
+enabled = true
+kinesis_firehose_destination {
+role_arn = aws_iam_role.firehose_role.arn
+delivery_stream_arn = aws_kinesis_firehose_delivery_stream.firehose.arn
+}
+matching_types = [
+&amp;#34;send&amp;#34;,
+&amp;#34;reject&amp;#34;,
+&amp;#34;bounce&amp;#34;,
+&amp;#34;complaint&amp;#34;,
+&amp;#34;delivery&amp;#34;,
+&amp;#34;open&amp;#34;,
+&amp;#34;click&amp;#34;,
+]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;このコードでは、S3バケットを作成し、SESドメイン識別子を作成し、検証し、構成セットを作成し、イベント宛先を作成しています。&lt;/p&gt;</description></item><item><title>AWS Connect CCP</title><link>https://hdknr.github.io/blogs/posts/2023/05/f27ba3ad01e7eb252fc56330b679957f/</link><pubDate>Mon, 08 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/f27ba3ad01e7eb252fc56330b679957f/</guid><description>&lt;h1 id="aws-connect-ccpcontact-control-panel"&gt;AWS Connect: CCP(Contact Control Panel)&lt;/h1&gt;
+&lt;p&gt;Contact Control Panel とは、Amazon Connect 問い合わせコントロールパネル (CCP) を使用して問い合わせと通信するための GUI の機能です ²。
+エージェントが CCP にアクセスし、問い合わせを処理できるようになる前に、行わなければならない操作がいくつかあります ³。&lt;/p&gt;
+&lt;p&gt;ご参考になれば幸いです。&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/5/8&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) 問い合わせコントロールパネルへのアクセスを提供する - Amazon &amp;hellip;. &lt;a href="https://docs.aws.amazon.com/ja_jp/connect/latest/adminguide/amazon-connect-contact-control-panel.html"&gt;https://docs.aws.amazon.com/ja_jp/connect/latest/adminguide/amazon-connect-contact-control-panel.html&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(2) Provide access to the Contact Control Panel - Amazon Connect. &lt;a href="https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-contact-control-panel.html"&gt;https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-contact-control-panel.html&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(3) 【Amazon Connect】在宅コールセンター向けに CCP（発着信 &amp;hellip;. &lt;a href="https://qiita.com/duplicate1984/items/3a4d93a2e9bb5fcf54d1"&gt;https://qiita.com/duplicate1984/items/3a4d93a2e9bb5fcf54d1&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;資料:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.ntt.com/business/lp/amazon-connect.html"&gt;Amazon Connect とは？ 導入前に知っておきたい機能・料金・注意点と事例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="google-ログイン"&gt;Google ログイン&lt;/h2&gt;
+&lt;p&gt;AWS Connect に Google ユーザーを紐付けることは可能です。
+ただし、紐付ける前に、AWS Cognito 単体で、ユーザ ID のサインアップ（ユーザ登録）・サインイン（ログイン）ができるようにする必要があります ³。&lt;/p&gt;
+&lt;p&gt;また、外部で認証されたユーザー（ID フェデレーション）へのアクセス権限を付与することもできます ¹。&lt;/p&gt;
+&lt;p&gt;ご参考になれば幸いです。&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/5/8&lt;/p&gt;</description></item><item><title>AWS CodeWhisperer &amp; IAM Identity Center</title><link>https://hdknr.github.io/blogs/posts/2023/04/39ed7413bfc834267ec909b3b140de0b/</link><pubDate>Sat, 15 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/39ed7413bfc834267ec909b3b140de0b/</guid><description>&lt;h2 id="aws-codewhisperer--iam-identity-center"&gt;AWS CodeWhisperer &amp;amp; IAM Identity Center&lt;/h2&gt;
+&lt;h3 id="codewhisperer"&gt;CodeWhisperer&lt;/h3&gt;
+&lt;p&gt;IAM Identity Center:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;IAM Identity Centerを有効にする&lt;/li&gt;
+&lt;li&gt;ユーザーを追加する&lt;/li&gt;
+&lt;li&gt;ユーザーのメアド認証&lt;/li&gt;
+&lt;li&gt;パスワードリセットをメアドに送り、パスワード設定してログイン可能にする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;CodeWhisperer:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Codewhiper の利用を開始する&lt;/li&gt;
+&lt;li&gt;CodeWhispererを IAM Identity Centerのアプリケーションに登録する&lt;/li&gt;
+&lt;li&gt;IAM Identity Centerで登録したユーザーを CodeWhispererで使えるようにする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;VSCode:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AWS Toolkit プラグインを入れる&lt;/li&gt;
+&lt;li&gt;CodeWhisperer の利用を開始:&lt;code&gt;Connect using AWS Identity Center&lt;/code&gt; で&lt;/li&gt;
+&lt;li&gt;AWS Identity Center URLを入力 (&lt;a href="https://x-xxxxxxx.awsapps.com/start"&gt;https://x-xxxxxxx.awsapps.com/start&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;AWS Toolkitにアクセストークンを取得( 認証コードをブラウザに入力して、IAM Identity Centerにログイン)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="資料"&gt;資料&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/yaasita/articles/aa48bfa06b9a53"&gt;AWS IAM Identity CenterでIAMアカウントを統一する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.engineer.adways.net/entry/2022/10/21/150000"&gt;AWS IAM Identity Center(旧：AWS SSO)を使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/amazon-codewhisperer-iam-identity-center/"&gt;Amazon CodeWhisperer を IAM Identity Center に統合させて使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: ECS</title><link>https://hdknr.github.io/blogs/posts/2021/06/4c1bdfb2819b82331ae05c52c34ba447/</link><pubDate>Fri, 04 Jun 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/06/4c1bdfb2819b82331ae05c52c34ba447/</guid><description>&lt;h1 id="ecs-オートスケーリング"&gt;ECS オートスケーリング&lt;/h1&gt;
+&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://repost.aws/ja/knowledge-center/ecs-fargate-service-auto-scaling"&gt;Fargate で Amazon ECS サービスの自動スケーリングを設定する方法を教えてください。&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/thirosue/items/79b8b4bc1941ee2ff5b0"&gt;AWS FargateでAutoScaleを試してみる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="terraform-の設定"&gt;Terraform の設定&lt;/h2&gt;
+&lt;p&gt;オートスケーリングの設定をTerraformで記述する例を以下に示します。この例では、CPU使用率に基づいてECS Fargateサービスのタスク数を自動的にスケーリングするように設定します。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="必要なリソース"&gt;必要なリソース&lt;/h2&gt;
+&lt;p&gt;TerraformでECSサービスのオートスケーリングを設定するには、以下のリソースを定義します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;aws_appautoscaling_target&lt;/code&gt;: スケーリングの対象となるECSサービスとタスク数を指定します。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;aws_appautoscaling_policy&lt;/code&gt;: 実際のスケーリングロジック（CPU使用率、目標値など）を定義します。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;aws_cloudwatch_metric_alarm&lt;/code&gt;: (オプション) 詳細な条件でスケーリングを制御する場合に使用します。ターゲット追跡スケーリングポリシーは内部でこれを生成するため、通常は明示的に定義する必要はありません。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="terraform-コード例"&gt;Terraform コード例&lt;/h2&gt;
+&lt;p&gt;以下のコードブロックは、&lt;code&gt;aws_ecs_service&lt;/code&gt;リソースで定義されたECSサービスに対して、CPU使用率が50%になるようにタスク数を調整するオートスケーリング設定の例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;28
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;29
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;30
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;31
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;32
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;33
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-terraform" data-lang="terraform"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ECSサービスを定義 (この例では、既存サービスを想定)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# resource &amp;#34;aws_ecs_service&amp;#34; &amp;#34;main&amp;#34; {
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# name = &amp;#34;my-ecs-service&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ...
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# }
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 1. オートスケーリングの対象を定義
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;resource&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;aws_appautoscaling_target&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ecs_target&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;service_namespace&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ecs&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;resource_id&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;service/my-cluster/my-ecs-service&amp;#34;&lt;/span&gt;&lt;span style="color:#75715e"&gt; # サービス名に合わせて変更
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;scalable_dimension&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ecs:service:DesiredCount&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;min_capacity&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;&lt;span style="color:#75715e"&gt; # 最小タスク数
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;max_capacity&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;&lt;span style="color:#75715e"&gt; # 最大タスク数
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 2. ターゲット追跡スケーリングポリシーを定義
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;resource&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;aws_appautoscaling_policy&amp;#34;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;cpu_scaling_policy&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;name&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;cpu-utilization-scaling-policy&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;service_namespace&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ecs&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;resource_id&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;aws_appautoscaling_target&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ecs_target&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;resource_id&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;scalable_dimension&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;aws_appautoscaling_target&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ecs_target&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;scalable_dimension&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;policy_type&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;TargetTrackingScaling&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;target_tracking_scaling_policy_configuration&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;predefined_metric_specification&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;predefined_metric_type&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ECSServiceAverageCPUUtilization&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;target_value&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;50&lt;/span&gt;.&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;&lt;span style="color:#75715e"&gt; # CPU使用率の目標値（%）
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;scale_in_cooldown&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;300&lt;/span&gt;&lt;span style="color:#75715e"&gt; # スケールイン（タスク減少）のクールダウン期間（秒）
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;scale_out_cooldown&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;60&lt;/span&gt;&lt;span style="color:#75715e"&gt; # スケールアウト（タスク増加）のクールダウン期間（秒）
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="コードの解説"&gt;コードの解説&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;aws_appautoscaling_target&lt;/code&gt;&lt;/strong&gt;:&lt;/p&gt;</description></item></channel></rss>

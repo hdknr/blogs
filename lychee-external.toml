@@ -1,0 +1,47 @@
+# lychee configuration — used by the weekly external-link sweep in
+# .github/workflows/linkcheck.yml
+#
+# Rationale: many hosts return 403/429/400 to non-browser clients (bot
+# protection, rate limits) even though the page is perfectly reachable in a
+# browser. Treating those as "dead" produces false positives, so we:
+#   1. exclude the worst offenders outright, and
+#   2. accept transient/soft-block status codes as OK.
+# The PR-time internal check does NOT use this file (it only checks localhost).
+
+# Accept soft-block / partial-content codes as reachable.
+accept = [200, 206, 403, 429]
+
+# Retry transient failures before giving up.
+max_retries = 2
+retry_wait_time = 3
+timeout = 20
+
+# Be gentle: some hosts rate-limit aggressively.
+max_concurrency = 8
+
+# Hosts that reliably block crawlers (verified reachable in a browser).
+exclude = [
+  "^https?://(www\\.)?bloomberg\\.com/",
+  "^https?://(www\\.)?axios\\.com/",
+  "^https?://tabelog\\.com/",
+  "^https?://(developer|trailhead)\\.salesforce\\.com/",
+  "^https?://dev\\.mysql\\.com/",
+  "^https?://www\\.npmjs\\.com/",
+  "^https?://www\\.sciencedirect\\.com/",
+  "^https?://journals\\.sagepub\\.com/",
+  "^https?://dl\\.acm\\.org/",
+  "^https?://pubs\\.acs\\.org/",
+  "^https?://www\\.researchgate\\.net/",
+  "^https?://papers\\.ssrn\\.com/",
+  "^https?://www\\.mdpi\\.com/",
+  "^https?://www\\.gartner\\.com/",
+  "^https?://www\\.meti\\.go\\.jp/",
+  "^https?://support\\.google\\.com/",
+  "^https?://(news\\.)?stanford\\.edu/",
+  "^https?://www\\.bcg\\.com/",
+  "^https?://market\\.us/",
+  "^https?://(finance|news)\\.yahoo\\.co\\.jp/",
+  "^https?://zhuanlan\\.zhihu\\.com/",
+  "^https?://(developers|access)\\.redhat\\.com/",
+  "^https?://app\\.getzep\\.com/",
+]

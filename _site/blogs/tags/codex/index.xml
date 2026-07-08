@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Codex on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/codex/</link><description>Recent content in Codex on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/codex/index.xml" rel="self" type="application/rss+xml"/><item><title>/handoff スキルが海外でバズった理由 — Claude Code で計画して複数 Codex に並列投入する新ワークフロー</title><link>https://hdknr.github.io/blogs/posts/2026/06/claude-code-handoff-codex-parallel/</link><pubDate>Mon, 15 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/claude-code-handoff-codex-parallel/</guid><description>&lt;p&gt;複数の案件を1人で抱えているエンジニアにとって、AIコーディングエージェントへの「実装待ち」は深刻な時間ロスだ。X（旧Twitter）で海外エンジニアの投稿が1万回以上閲覧されて注目を集めた。その投稿が紹介するのが、Claude Code の &lt;code&gt;/handoff&lt;/code&gt; スキルを使って計画を立て、複数の Codex エージェントに並列で投げるワークフローだ。&lt;/p&gt;
+&lt;h2 id="handoff-スキルとは何か"&gt;&lt;code&gt;/handoff&lt;/code&gt; スキルとは何か&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;/handoff&lt;/code&gt; は Matt Pocock の &lt;a href="https://github.com/mattpocock/skills"&gt;mattpocock/skills&lt;/a&gt; で公開されている Claude Code 用スキルだ（パス：&lt;code&gt;skills/productivity/handoff/&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;その役割は「現在の Claude Code セッションの文脈を、別のエージェントが引き継げる形の構造化 Markdown に圧縮すること」に特化している。&lt;/p&gt;
+&lt;p&gt;生成されるドキュメントには、セッションの目標・現在の状況・未決定事項・次のエージェントが呼び出すべきスキルの提案（&amp;ldquo;suggested skills&amp;rdquo;）などが含まれる。実際の出力フォーマットはセッション内容によって柔軟に変わる。&lt;/p&gt;
+&lt;p&gt;重要な設計原則として、&lt;strong&gt;既存の PRD やコミット・差分の内容はドキュメント内に繰り返さない&lt;/strong&gt;。パスや URL で参照するだけにとどめることで、handoff ドキュメント自体をコンパクトに保つ。センシティブな情報も自動的に編集される。&lt;/p&gt;
+&lt;h2 id="なぜこれが問題を解決するのか"&gt;なぜこれが問題を解決するのか&lt;/h2&gt;
+&lt;p&gt;副業や複数案件を抱えているエンジニアが直面する典型的な詰まり：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AIに「実装して」と指示して待っている間、別の案件は手が止まる&lt;/li&gt;
+&lt;li&gt;直列に処理していると、単純なタスクでも1日が終わる&lt;/li&gt;
+&lt;li&gt;コンテキストを切り替えるたびに Claude Code に状況を再説明する手間がかかる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;/handoff&lt;/code&gt; はこの「コンテキスト再説明コスト」を排除し、複数エージェントへの同時投入を可能にする。&lt;/p&gt;
+&lt;h2 id="ワークフローの全体像"&gt;ワークフローの全体像&lt;/h2&gt;
+&lt;p&gt;Ben Holmes が YouTube でデモを公開し、daily.dev にも掲載された。実践的なワークフローは次のとおりだ。&lt;/p&gt;
+&lt;h3 id="ステップ1-claude-code-で計画を立てる"&gt;ステップ1: Claude Code で計画を立てる&lt;/h3&gt;
+&lt;p&gt;まず Claude Code 上でタスクを整理し、&lt;strong&gt;&lt;code&gt;/grill-me&lt;/code&gt;&lt;/strong&gt; スキルで計画を徹底的に問い詰める（&lt;code&gt;/grill-me&lt;/code&gt; については&lt;a href="https://hdknr.github.io/blogs/posts/2026/05/2026-05-22-claude-code-grill-me/"&gt;こちらの記事&lt;/a&gt;を参照）。この段階で曖昧さを潰しておくことが後の並列化の精度を左右する。&lt;/p&gt;
+&lt;h3 id="ステップ2-handoff-でドキュメントを生成する"&gt;ステップ2: &lt;code&gt;/handoff&lt;/code&gt; でドキュメントを生成する&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/handoff
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;これだけで、現在のセッション状態を5セクションの Markdown に圧縮したドキュメントが生成される。このドキュメントが「次のエージェントへの引き継ぎ書」になる。&lt;/p&gt;
+&lt;h3 id="ステップ3-並列化できるタスクを分割する"&gt;ステップ3: 並列化できるタスクを分割する&lt;/h3&gt;
+&lt;p&gt;handoff ドキュメントを見ながら、独立して実装できるサブタスクを洗い出す。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;並列化に向いているタスク&lt;/strong&gt;：&lt;/p&gt;</description></item><item><title>oh-my-openagent</title><link>https://hdknr.github.io/blogs/wiki/tools/oh-my-openagent/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/oh-my-openagent/</guid><description>Claude Code・Codex・Gemini CLI を統合管理する TypeScript 製マルチエージェントハーネス。Team Mode で最大 8 並列実行、ulw コマンドで自律実行に対応</description></item><item><title>Anthropic vs OpenAI：Coding Agent の Harness 戦略はなぜ真逆なのか</title><link>https://hdknr.github.io/blogs/posts/2026/04/anthropic-vs-openai-harness-strategy/</link><pubDate>Mon, 13 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/anthropic-vs-openai-harness-strategy/</guid><description>Anthropic（Managed Agent）と OpenAI（Codex + Symphony）の Harness 戦略を比較。AI コーディングエージェントの設計思想がなぜ真逆なのか、両社が目指す未来像を分析する。</description></item><item><title>OpenAI Codex の SubAgent（Swarm）が変える AI コーディングの未来</title><link>https://hdknr.github.io/blogs/posts/2026/03/codex-subagent-swarm/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/codex-subagent-swarm/</guid><description>&lt;p&gt;OpenAI Codex に搭載された SubAgent（サブエージェント）機能が話題になっています。複数の AI エージェントを並列で動かし、複雑なコーディングタスクを群（Swarm）として処理できるこの機能について、技術的な詳細をまとめます。&lt;/p&gt;
+&lt;h2 id="subagent-とは何か"&gt;SubAgent とは何か&lt;/h2&gt;
+&lt;p&gt;Codex の SubAgent は、メインのエージェントが複数の専門化されたエージェントを並列でスポーン（生成）し、それぞれの結果を統合するワークフロー機能です。コードベース探索やマルチステップの機能実装など、並列処理が有効なタスクに特に威力を発揮します。&lt;/p&gt;
+&lt;p&gt;特筆すべきは、サブエージェントからさらにサブエージェントを生成できる（ネスト可能な）点です。これにより、複雑なタスクを再帰的に分解して処理できます。&lt;/p&gt;
+&lt;h2 id="ビルトインエージェント"&gt;ビルトインエージェント&lt;/h2&gt;
+&lt;p&gt;Codex には3つのビルトインエージェントが用意されています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;エージェント&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;default&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;汎用フォールバック&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;worker&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;実装・修正中心のタスク&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;explorer&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;コードベース探索中心のタスク&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="主要な設定パラメータ"&gt;主要な設定パラメータ&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# ~/.codex/agents/ または .codex/agents/ に TOML 形式で配置&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#a6e22e"&gt;agents&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;max_threads&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;6&lt;/span&gt; &lt;span style="color:#75715e"&gt;# 並行スレッド上限（デフォルト: 6）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;max_depth&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#75715e"&gt;# ネスト深度上限（デフォルト: 1）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;job_max_runtime_seconds&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1800&lt;/span&gt; &lt;span style="color:#75715e"&gt;# タイムアウト（デフォルト: 30分）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;max_depth&lt;/code&gt; を増やすことで、サブエージェントからさらにサブエージェントを生成する多段ネストが可能になります。&lt;/p&gt;</description></item><item><title>Harness Engineering ベストプラクティス 2026 — AI コーディングエージェントを安定稼働させる設計術</title><link>https://hdknr.github.io/blogs/posts/2026/03/harness-engineering/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/harness-engineering/</guid><description>逆瀬川氏のHarness Engineeringベストプラクティス記事を要約。Hooks 4パターン、リンター戦略、E2Eテスト、CLAUDE.md設計、MVH導入ステップを解説。</description></item></channel></rss>

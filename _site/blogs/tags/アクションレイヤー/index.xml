@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>アクションレイヤー on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%A2%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC/</link><description>Recent content in アクションレイヤー on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%A2%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC/index.xml" rel="self" type="application/rss+xml"/><item><title>a16z「なぜ世界はいまだにSAPで動いているのか」の考察：ERPとアクションレイヤーの時代</title><link>https://hdknr.github.io/blogs/posts/2026/03/sap-erp-action-layer-ai/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/sap-erp-action-layer-ai/</guid><description>&lt;p&gt;SAP を置き換えるのは現実的ではない——だからこそ、工夫しながら SAP を使い続ける方法を考える必要があります。a16z が公開した「Why the World Still Runs on SAP」というレポートを受けて、Kurashiru CTO の Masato Otake 氏が自社での業務 AI 開発の知見を交えてまとめた考察を紹介します。&lt;/p&gt;
+&lt;h2 id="erpとは何か"&gt;ERPとは何か&lt;/h2&gt;
+&lt;p&gt;ERP は単なるソフトウェアではありません。企業が何十年もかけて蓄積してきた業務ルール、承認フロー、例外処理の集合体です。組織の暗黙知がカスタムコードとして蓄積されており、長年稼働し続けています。&lt;/p&gt;
+&lt;p&gt;System of Record として、受発注・在庫・会計・人事まで、あらゆる業務の「正」のデータが ERP に集約されています。長年にわたって積み重ねられた業務ルールと例外処理は、まさに企業の制度的記憶そのものです。&lt;/p&gt;
+&lt;p&gt;もしリプレイスしようとしたら、数年単位の時間と億単位のコストがかかるでしょう。サンクコストがあまりにも大きいため、顧客側にリプレイスのニーズが強くないことが多い。&lt;/p&gt;
+&lt;p&gt;一方で、複雑化しすぎた ERP はアジリティ高く変更することが難しくなっています。何十年分のカスタマイズが積み重なり、一箇所を変えると別の業務に影響が出る。AI のような最先端を取り入れようにも、変更コストが高すぎてスピードについていけない状況です。&lt;/p&gt;
+&lt;h2 id="アクションレイヤーの登場"&gt;アクションレイヤーの登場&lt;/h2&gt;
+&lt;p&gt;ここに機会があります。ERP そのものを置き換えるのではなく、その上を覆う「アクションレイヤー」を構築することです。&lt;/p&gt;
+&lt;p&gt;System of Action、Action Layer、Agent Layer など呼び方はいろいろありますが、要するに &lt;strong&gt;System of Record の上に被さって業務フローを自動化するレイヤー&lt;/strong&gt; のことです。&lt;/p&gt;
+&lt;p&gt;ERP はデータの正として残り続けます。変わるのは、ユーザーが業務を行うインターフェースです。アクションレイヤーが ERP とユーザーの間に入り、操作を抽象化し、ワークフローを制御する。ERP に手を入れることなく、その上で業務ロジックの追加や変更を柔軟に行えるようになります。&lt;/p&gt;
+&lt;p&gt;これにより：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ERP 自体は安定した System of Record として維持&lt;/strong&gt;しつつ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ビジネス環境の変化にはアクションレイヤー側でアジリティ高く対応&lt;/strong&gt;できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AI のような新しい技術も、ERP の改修なしにアクションレイヤーに組み込めるため、変更リスクとスピードのトレードオフを、レイヤーを分けることで解消する考え方です。&lt;/p&gt;
+&lt;h2 id="アクションレイヤーがもたらす2つの変化"&gt;アクションレイヤーがもたらす2つの変化&lt;/h2&gt;
+&lt;h3 id="1-erpの操作をラップして使いやすくする"&gt;1. ERPの操作をラップして使いやすくする&lt;/h3&gt;
+&lt;p&gt;ERP の画面は複雑で、トランザクションコードや入力フィールドの知識が求められます。アクションレイヤーがこれを抽象化し、意図ベースの操作に変換することで：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ユーザーは ERP の画面構成を覚える必要がなくなる&lt;/li&gt;
+&lt;li&gt;オンボーディングコストや引き継ぎコストが大きく削減される&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-複数システムを横断するオートメーション"&gt;2. 複数システムを横断するオートメーション&lt;/h3&gt;
+&lt;p&gt;「請求書の差異が3%を超えたら説明文を作成し承認にルーティング」のようなイベント駆動型の自動化は、SAP だけ、Salesforce だけでは実現できない、もしくは工数が大きすぎます。アクションレイヤーがシステム横断の制御を接着することで可能になる領域です。&lt;/p&gt;</description></item></channel></rss>

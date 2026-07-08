@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>クラウド on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%AF%E3%83%A9%E3%82%A6%E3%83%89/</link><description>Recent content in クラウド on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 17 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%AF%E3%83%A9%E3%82%A6%E3%83%89/index.xml" rel="self" type="application/rss+xml"/><item><title>Amazon S3 Files GA：消えるアーキテクチャ層と生まれるアーキテクチャ</title><link>https://hdknr.github.io/blogs/posts/2026/04/s3-files-ga-architecture/</link><pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/s3-files-ga-architecture/</guid><description>&lt;p&gt;2026年4月7日、AWSがAmazon S3 Filesを一般提供（GA）しました。S3バケットをNFS v4.1/v4.2のファイルシステムとしてマウントできる機能で、EC2・EKS・ECS・Lambdaのいずれからでも利用できます。&lt;/p&gt;
+&lt;p&gt;本記事は、ikenyal氏のZenn記事「&lt;a href="https://zenn.dev/genda_jp/articles/b6ff5ea33c7a71"&gt;S3 Filesで消えるアーキテクチャ層、生まれるアーキテクチャ&lt;/a&gt;」を参照しながら、S3 Filesが既存のアーキテクチャにどう影響するかを整理します。「何が設定できるか」ではなく「&lt;strong&gt;何が不要になり、何が可能になるか&lt;/strong&gt;」にフォーカスします。&lt;/p&gt;
+&lt;h2 id="s3-filesが解こうとしている問題"&gt;S3 Filesが解こうとしている問題&lt;/h2&gt;
+&lt;p&gt;たとえば、MLチームが学習データの前処理をする場面を考えましょう。元データはS3に置いてあり、pandasで読み込んで加工したい場面です。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pd.read_csv(&amp;quot;s3://my-bucket/data.csv&amp;quot;)&lt;/code&gt; と書けますが、内部ではboto3がGETリクエストを発行してメモリに読み込んでいます。手元の &lt;code&gt;open(&amp;quot;./data.csv&amp;quot;)&lt;/code&gt; とは根本的に異なるI/Oモデルです。&lt;/p&gt;
+&lt;p&gt;規模が大きくなると、これは「パイプラインのアーキテクチャ課題」になります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;S3からEFS/EBSにコピー → 処理 → 結果をS3に書き戻す
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;この「中間のコピー層」は本来やりたい処理ではなく、ストレージのI/Oモデルの違いを埋めるためだけに存在しています。&lt;/p&gt;
+&lt;p&gt;S3 Filesはこのギャップそのものを解消します。アプリケーションからS3のデータはローカルのディレクトリに見えます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# S3 Filesを使うと&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;read_csv(&lt;span style="color:#e6db74"&gt;&amp;#34;/mnt/s3files/data.csv&amp;#34;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# S3のオブジェクトが読まれる&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;df&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(&lt;span style="color:#e6db74"&gt;&amp;#34;/mnt/s3files/result.csv&amp;#34;&lt;/span&gt;) &lt;span style="color:#75715e"&gt;# 変更が自動的にS3にコミットされる&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="fuseベースのツールとの違い"&gt;FUSEベースのツールとの違い&lt;/h2&gt;
+&lt;p&gt;「S3をマウントできる」と聞いて、Mountpoint for Amazon S3やgcsfuseを思い浮かべる方も多いでしょう。S3 Filesは内部構造がまったく異なります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;FUSEベースのツール&lt;/strong&gt;は、S3 APIの上にファイルシステムの振る舞いを「エミュレーション」するアプローチです。ファイルの一部だけを書き換えるような操作がサポートされず、空ディレクトリの扱いに不整合が出ることもあります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;S3 Files&lt;/strong&gt;はエミュレーションではなく、EFS（Elastic File System）という本物のNFSファイルシステムをS3に接続しています。二つの異なるシステムが共存し、その間に明示的な同期レイヤーがある構造です。&lt;/p&gt;
+&lt;h3 id="stage-and-commitモデル"&gt;「stage and commit」モデル&lt;/h3&gt;
+&lt;p&gt;ファイルシステム上での変更は即座にS3に反映されるのではなく、&lt;strong&gt;約60秒ごとにまとめてS3へPUT&lt;/strong&gt;されます（「commit」）。逆に、S3側でオブジェクトが更新された場合は通常数十秒以内にファイルシステム側に反映されます。&lt;/p&gt;
+&lt;p&gt;これは明確なトレードオフです。「リアルタイムに同期される共有ファイルシステム」ではなく、「数十秒の遅延を許容する代わりに、ファイルとオブジェクトの両方のセマンティクスを壊さない」設計です。&lt;/p&gt;
+&lt;h2 id="消えるアーキテクチャ層"&gt;消えるアーキテクチャ層&lt;/h2&gt;
+&lt;h3 id="1-s3--efsebsのステージングパイプライン"&gt;1. S3 → EFS/EBSのステージングパイプライン&lt;/h3&gt;
+&lt;p&gt;100GBの学習データを処理する場合、従来の手順は：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;S3からEBSにダウンロード（数分かかる）&lt;/li&gt;
+&lt;li&gt;データを処理する&lt;/li&gt;
+&lt;li&gt;結果をS3にアップロード&lt;/li&gt;
+&lt;li&gt;EBSボリュームをクリーンアップ&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;やりたい処理は2番だけです。S3 Filesでは、S3プレフィックスをマウントするだけで処理スクリプトはそのまま &lt;code&gt;/mnt/s3files/&lt;/code&gt; のファイルを読み書きします。ダウンロード・アップロード・クリーンアップのステップが消えます。&lt;/p&gt;</description></item><item><title>Framework-defined Infrastructure (FdI)</title><link>https://hdknr.github.io/blogs/wiki/concepts/framework-defined-infrastructure/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/framework-defined-infrastructure/</guid><description>フレームワークコードからインフラ構成を自動導出する IaC の進化形</description></item></channel></rss>

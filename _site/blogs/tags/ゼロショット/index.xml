@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ゼロショット on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%BC%E3%83%AD%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88/</link><description>Recent content in ゼロショット on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 14 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%BC%E3%83%AD%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88/index.xml" rel="self" type="application/rss+xml"/><item><title>Googleが1000億の実データで学習した予測AI「TimesFM」をひっそり公開していた</title><link>https://hdknr.github.io/blogs/posts/2026/04/google-timesfm-prediction-ai/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/google-timesfm-prediction-ai/</guid><description>&lt;p&gt;Googleが時系列予測のための基盤モデル &lt;strong&gt;TimesFM&lt;/strong&gt;（Time Series Foundation Model）をひっそりと公開していた。1000億以上の実データで学習済みで、自分のデータをファインチューニングすることなく（ゼロショットで）すぐに使える点が特徴だ。&lt;/p&gt;
+&lt;h2 id="timesfm-とは"&gt;TimesFM とは&lt;/h2&gt;
+&lt;p&gt;TimesFM は Google Research が開発した時系列予測に特化した基盤モデルだ。GPT-3 などの大規模言語モデルに着想を得たデコーダーのみのトランスフォーマーアーキテクチャを採用しており、テキストではなく「時系列データのパターン」を学習する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;パラメータ数&lt;/strong&gt;: 2億パラメータ（TimesFM 2.5 では最適化済み）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;アーキテクチャ&lt;/strong&gt;: デコーダーのみのトランスフォーマー&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト長&lt;/strong&gt;: TimesFM 2.5 で 16,384 タイムポイント（8倍に拡張）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="何が予測できるのか"&gt;何が予測できるのか&lt;/h2&gt;
+&lt;p&gt;TimesFM が得意とするユースケースは多岐にわたる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;売上・需要予測&lt;/strong&gt;: 小売の週次売上、在庫需要、サプライチェーン計画&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;市場価格予測&lt;/strong&gt;: 株式市場、コモディティ、仮想通貨の価格変動&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;電力需要予測&lt;/strong&gt;: 電力負荷、エネルギー価格、スマートグリッド最適化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ユーザートラフィック予測&lt;/strong&gt;: Web サイトのアクセス、API リクエスト量、サーバー負荷計画&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ゼロショットで使えるのが最大の強み"&gt;ゼロショットで使えるのが最大の強み&lt;/h2&gt;
+&lt;p&gt;従来の深層学習モデルは、予測したいデータセットに合わせて個別にトレーニングする必要があった。TimesFM はそれとは異なり、&lt;strong&gt;一切のファインチューニングなしに新しいデータセットに対して高精度な予測&lt;/strong&gt;を実現する。&lt;/p&gt;
+&lt;p&gt;公式の評価によると、ゼロショット状態の TimesFM は多くの個別学習済み深層学習モデルを上回るパフォーマンスを示している。&lt;/p&gt;
+&lt;h2 id="学習データ"&gt;学習データ&lt;/h2&gt;
+&lt;p&gt;TimesFM は以下のデータソースから 1000 億以上のデータポイントを使って学習されている。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;データソース&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Wikipedia ページビュー&lt;/td&gt;
+&lt;td&gt;2012〜2023年の閲覧数時系列データ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Google トレンド&lt;/td&gt;
+&lt;td&gt;22,000 件の検索関心度時系列データ（時間単位〜週単位）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;公開データセット&lt;/td&gt;
+&lt;td&gt;M4、電力、トラフィックなどのベンチマークデータ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;合成データ&lt;/td&gt;
+&lt;td&gt;ARMA 生成の 300 万件のシリーズ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最新バージョンでは 4000 億以上の実世界タイムポイントで学習されているとも報告されている。&lt;/p&gt;
+&lt;h2 id="使い方"&gt;使い方&lt;/h2&gt;
+&lt;h3 id="インストール"&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install timesfm
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="python-での基本的な使い方"&gt;Python での基本的な使い方&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; timesfm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# モデルの初期化（Hugging Face からダウンロード）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tfm &lt;span style="color:#f92672"&gt;=&lt;/span&gt; timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFm(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; hparams&lt;span style="color:#f92672"&gt;=&lt;/span&gt;timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFmHparams(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; backend&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;pytorch&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; per_core_batch_size&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;32&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; horizon_len&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;128&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; checkpoint&lt;span style="color:#f92672"&gt;=&lt;/span&gt;timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFmCheckpoint(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; huggingface_repo_id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;google/timesfm-2.5-200m-pytorch&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 配列から予測&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;forecast_array, _ &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;forecast(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[context_time_series],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; freq&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;], &lt;span style="color:#75715e"&gt;# 0: 高頻度（日次以下）、1: 週次・月次、2: 四半期・年次&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# DataFrame から予測&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;forecast_df &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;forecast_on_df(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;=&lt;/span&gt;df,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; freq&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;D&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 日次&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; value_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;target&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; num_jobs&lt;span style="color:#f92672"&gt;=-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="hugging-face-モデル"&gt;Hugging Face モデル&lt;/h3&gt;
+&lt;p&gt;複数のバリアントが公開されている。&lt;/p&gt;</description></item><item><title>TimesFM</title><link>https://hdknr.github.io/blogs/wiki/tools/timesfm/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/timesfm/</guid><description>Google Research が開発した時系列予測の基盤モデル。1000億以上の実データで学習済みで、ゼロショット（ファインチューニング不要）で売上・需要・市場価格・トラフィック予測が可能</description></item></channel></rss>

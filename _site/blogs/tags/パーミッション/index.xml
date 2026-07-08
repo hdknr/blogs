@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>パーミッション on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%91%E3%83%BC%E3%83%9F%E3%83%83%E3%82%B7%E3%83%A7%E3%83%B3/</link><description>Recent content in パーミッション on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 31 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%91%E3%83%BC%E3%83%9F%E3%83%83%E3%82%B7%E3%83%A7%E3%83%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code の sensitive file チェックを回避する — git worktree の配置場所を .claude/ の外に移す</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-worktree-permission/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-worktree-permission/</guid><description>&lt;p&gt;Claude Code の auto モードでブログ記事作成を完全自動化しようとしたところ、&lt;code&gt;.claude/&lt;/code&gt; ディレクトリ配下のファイルへの書き込みで毎回同意を求められる問題に遭遇しました。原因と対処法を記録します。&lt;/p&gt;
+&lt;h2 id="問題claude-配下は-sensitive-file-扱い"&gt;問題：&lt;code&gt;.claude/&lt;/code&gt; 配下は sensitive file 扱い&lt;/h2&gt;
+&lt;p&gt;Claude Code には、&lt;code&gt;.claude/&lt;/code&gt; ディレクトリ内のファイルを「sensitive file」（設定やスキル定義など、ツールの動作に影響する重要ファイル）として扱う組み込みのセキュリティチェックがあります。&lt;code&gt;settings.local.json&lt;/code&gt; の &lt;code&gt;permissions.allow&lt;/code&gt; に Write/Edit の許可パターンを追加しても回避できません。sensitive file チェックは permissions とは別レイヤーで動作するためです。&lt;/p&gt;
+&lt;p&gt;実際に発生したメッセージ:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Claude requested permissions to edit .claude/temp/pr_body.md
+which is a sensitive file.
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="背景ブログ記事作成の自動化ワークフロー"&gt;背景：ブログ記事作成の自動化ワークフロー&lt;/h2&gt;
+&lt;p&gt;このブログでは &lt;code&gt;/blog&lt;/code&gt; スキルで記事作成から PR 作成まで自動化しています。ワークフローの概要:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;git worktree を作成してブランチを切る&lt;/li&gt;
+&lt;li&gt;worktree 内に記事ファイルを作成&lt;/li&gt;
+&lt;li&gt;Hugo ビルド確認&lt;/li&gt;
+&lt;li&gt;コミット・プッシュ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PR 本文ファイルを書き出し&lt;/strong&gt;、&lt;code&gt;gh pr create --body-file&lt;/code&gt; で PR 作成&lt;/li&gt;
+&lt;li&gt;ソース元に PR リンクを追記&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;問題が起きたのはステップ 5 です。PR 本文ファイル（&lt;code&gt;pr_body.md&lt;/code&gt;）を &lt;code&gt;.claude/temp/&lt;/code&gt; に Write ツールで書き込もうとすると、sensitive file チェックに引っかかります。&lt;/p&gt;</description></item></channel></rss>

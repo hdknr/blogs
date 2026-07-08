@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>開発プロセス on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9/</link><description>Recent content in 開発プロセス on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 23 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9/index.xml" rel="self" type="application/rss+xml"/><item><title>ハーネスエンジニアリングとの向き合い方 — ルールファイルを超えて開発プロセスを設計する</title><link>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-beyond-rule-files/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-beyond-rule-files/</guid><description>&lt;p&gt;2026 年 4 月、Findy が主催したオンラインイベント「&lt;strong&gt;Harness Engineering 入門 〜 AI エージェントを制御するアプローチ〜&lt;/strong&gt;」が開催された。r.kagaya 氏の登壇「エージェントの開発環境を内製して気づいた『これもハーネス』」は参加者から「レベル高すぎた」と評されるほど反響を呼んだ。本記事では、r.kagaya 氏が公開した SpeakerDeck 資料「ハーネスエンジニアリングにどう向き合うか 〜ルールファイルを超えて開発プロセスを設計する〜」をもとに、ルールファイルを超えたハーネスエンジニアリングの考え方を整理する。&lt;/p&gt;
+&lt;h2 id="イベント概要"&gt;イベント概要&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;【Harness Engineering 入門】AIエージェントを制御するアプローチ&lt;/strong&gt;（&lt;a href="https://findy.connpass.com/event/388471/"&gt;connpass #388471&lt;/a&gt;）は、AI エージェントによる開発が広まる中でハーネス設計がどのような意味を持つかを掘り下げるイベント。対象は AI エージェントを積極的に使っているエンジニア、チーム開発に AI を取り込もうとしているエンジニア層だ。&lt;/p&gt;
+&lt;p&gt;複数の登壇の中で r.kagaya 氏のセッションは、自社でエージェントの開発環境を内製する過程で見えてきた「これもハーネスだ」という気づきを軸に、ルールファイル設定で終わらないハーネスエンジニアリングの本質を語った。&lt;/p&gt;
+&lt;h2 id="ルールファイルから始まるハーネスエンジニアリング"&gt;ルールファイルから始まるハーネスエンジニアリング&lt;/h2&gt;
+&lt;p&gt;多くのエンジニアがハーネスエンジニアリングを始める入り口は &lt;strong&gt;CLAUDE.md などのルールファイル&lt;/strong&gt; だ。「こういうコードを書いてほしい」「このコマンドは使わないで」といった制約を自然言語で記述し、AI の振る舞いをコントロールする。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# CLAUDE.md の例
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Bash コマンドの必須ルール
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`&amp;amp;&amp;amp;`&lt;/span&gt; でコマンドを繋がない
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`/tmp`&lt;/span&gt; を使わない（&lt;span style="color:#e6db74"&gt;`.claude/temp/`&lt;/span&gt; を使う）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この段階では「うまく動くルールを育てる」フェーズであり、試行錯誤でルールを追加・削除していく。しかし、ここで止まってしまうと &lt;strong&gt;本当の意味でのハーネスエンジニアリング&lt;/strong&gt; には到達できない。&lt;/p&gt;
+&lt;h2 id="ルールファイルの限界"&gt;ルールファイルの限界&lt;/h2&gt;
+&lt;p&gt;ルールファイルだけに依存したアプローチには構造的な限界がある。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;課題&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;変更の影響が不透明&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;あるルールを変えたとき、どの程度・どの方向に結果が変わるか測定できない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;劣化の検知が困難&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;モデルのアップデートや使い方の変化でルールの有効性が静かに落ちる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;再現性の欠如&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;同じルールで試しても毎回違う結果が出る場合の原因特定が難しい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スケールしない&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;チームが大きくなるほど「誰がどのルールを管理しているか」が曖昧になる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="ルールファイルを超えた視点開発プロセスとして設計する"&gt;ルールファイルを超えた視点：開発プロセスとして設計する&lt;/h2&gt;
+&lt;p&gt;r.kagaya 氏が提示したのは、ハーネスエンジニアリングを「ルールを書く行為」ではなく &lt;strong&gt;「開発プロセスを設計する行為」&lt;/strong&gt; として捉え直す考え方だ。&lt;/p&gt;</description></item></channel></rss>

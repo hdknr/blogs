@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Claude Harness on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/claude-harness/</link><description>Recent content in Claude Harness on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 27 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/claude-harness/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Harness</title><link>https://hdknr.github.io/blogs/wiki/tools/claude-harness/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/claude-harness/</guid><description>Claude Code の拡張機構（hooks / permissions / skills / MCP）をワンパッケージで組み込んだ外装プラグイン。v4.0.0 &amp;#34;Hokage&amp;#34; で Go ネイティブ化・harness.toml 1 本管理を実現</description></item><item><title>Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-harness-v4-hokage/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-harness-v4-hokage/</guid><description>&lt;p&gt;Claude Code の拡張 OSS「Claude Harness」が v4.0.0 &amp;ldquo;Hokage&amp;rdquo; をリリースした。コア全体を Go ネイティブに書き換え、フック実行速度が約 30 倍に向上。設定ファイルも &lt;code&gt;harness.toml&lt;/code&gt; 1 本に集約され、大幅に扱いやすくなった。&lt;/p&gt;
+&lt;h2 id="claude-code-の拡張機構とは"&gt;Claude Code の拡張機構とは&lt;/h2&gt;
+&lt;p&gt;Claude Code には最初から強力な拡張機構が備わっている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;hooks&lt;/strong&gt; — &lt;code&gt;PreToolUse&lt;/code&gt; / &lt;code&gt;PostToolUse&lt;/code&gt; / &lt;code&gt;SessionStart&lt;/code&gt; などのイベントでスクリプトを差し込める&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;permissions&lt;/strong&gt; — &lt;code&gt;settings.json&lt;/code&gt; の deny ルールで危険なコマンドを事前ブロックできる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;plugin system&lt;/strong&gt; — &lt;code&gt;plugin.json&lt;/code&gt; で自作プラグインを作り、チーム配布できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;skills&lt;/strong&gt; — スラッシュコマンドで自作ワークフローを走らせられる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP&lt;/strong&gt; — 外部ツール（DB・Slack・GitHub…）をネイティブ連携できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;「AI がやらかしそうなこと」「自律運用のワークフロー」「危ないコマンドのブロック」はほぼ全部、Claude Code の機能で実現できる。&lt;/p&gt;
+&lt;h2 id="自分で全部セッティングするのは無理ゲー"&gt;自分で全部セッティングするのは無理ゲー&lt;/h2&gt;
+&lt;p&gt;強力だからといって、簡単ではない。&lt;br&gt;
+自作で「AI に危ないコマンドを通させない」ワークフローを組もうとすると、以下を理解しておかなければならない。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;plugin.json&lt;/code&gt; — プラグインマニフェスト&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hooks.json&lt;/code&gt; — PreToolUse に走らせるスクリプトを宣言&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;settings.json&lt;/code&gt; — deny ルールを人力で組み立てる&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.mcp.json&lt;/code&gt; — MCP サーバー設定&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.claude-plugin/hooks.json&lt;/code&gt; — プラグイン経由のフックも別途&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;整合させる JSON が 5〜6 本。どれか 1 つを直すと別がズレる。&lt;br&gt;
+さらに「Plan → Work → Review の自律運用」を乗せようとすると以下も必要になる。&lt;/p&gt;</description></item></channel></rss>

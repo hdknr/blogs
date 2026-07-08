@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>実測 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E5%AE%9F%E6%B8%AC/</link><description>Recent content in 実測 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 13 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E5%AE%9F%E6%B8%AC/index.xml" rel="self" type="application/rss+xml"/><item><title>CLAUDE.md+SKILL.md 英語化で 37.6% トークン削減 — tiktoken による実測結果と内訳</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-tiktoken-measurement/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-tiktoken-measurement/</guid><description>&lt;h2 id="結論を先に"&gt;結論を先に&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; と 4 つの &lt;code&gt;SKILL.md&lt;/code&gt; を日本語から英語に書き換えた結果、毎セッション読み込まれる固定資産のトークン量が &lt;strong&gt;13,538 → 8,441（-37.6%、絶対値で 5,097 トークン削減）&lt;/strong&gt; になった。&lt;/p&gt;
+&lt;p&gt;文字数は逆に &lt;strong&gt;+49%&lt;/strong&gt; 増えているのに、トークンは大幅に減るという一見矛盾した結果である。理由と内訳を以下に示す。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/05/2026-05-13-claude-md-english-prompt-caching/"&gt;CLAUDE.md 英語化の記事&lt;/a&gt; と Skills 英語化 PR (#394) の続編。&lt;/p&gt;
+&lt;p&gt;前 2 つの作業で、ハーネスの「内側」（LLM だけが読む固定資産）を英語化し、「外側」（人間が読むブログ記事や許可プロンプト）は日本語のまま維持する&lt;strong&gt;部分英語化パターン&lt;/strong&gt;を実装した。&lt;/p&gt;
+&lt;p&gt;ただし、その記事では「Anthropic 公開の日本語比率 1.94x」から &lt;strong&gt;推定 48% 削減&lt;/strong&gt; とラフに見積もっていた。実際の効果は推定モデル次第で 2% 〜 48% と幅があり、本当の値を知るには実測しかない。&lt;/p&gt;
+&lt;h2 id="計測手法"&gt;計測手法&lt;/h2&gt;
+&lt;h3 id="tiktoken-cl100k_base-を採用"&gt;tiktoken (cl100k_base) を採用&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;理由&lt;/strong&gt;: オフラインで動く、API key 不要、結果が再現可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;限界&lt;/strong&gt;: Anthropic Claude のトークナイザーではなく OpenAI GPT-4 系。ただし日本語のトークン化挙動は近似として広く使われる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対案&lt;/strong&gt;: Anthropic SDK の &lt;code&gt;count_tokens&lt;/code&gt; API が最も正確だが、API キーが必要&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="venv-で隔離"&gt;venv で隔離&lt;/h3&gt;
+&lt;p&gt;PEP 668 で system Python が保護されているため、&lt;code&gt;.claude/temp/venv-tiktoken/&lt;/code&gt; に隔離した venv を作って tiktoken だけ入れた。&lt;/p&gt;</description></item></channel></rss>

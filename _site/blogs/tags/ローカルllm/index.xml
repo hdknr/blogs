@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ローカルLLM on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%ABllm/</link><description>Recent content in ローカルLLM on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%ABllm/index.xml" rel="self" type="application/rss+xml"/><item><title>AMD Ryzen AI Max+ 395 がAIサブスクを終わらせる — ランチボックスサイズのPCで2350億パラメータモデルが走る時代</title><link>https://hdknr.github.io/blogs/posts/2026/06/amd-ryzen-ai-max-395-local-ai-subscription-killer/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/amd-ryzen-ai-max-395-local-ai-subscription-killer/</guid><description>AMD Ryzen AI Max+ 395 は x86 初の大容量 128GB 統合メモリ設計で Qwen3 235B などの巨大モデルをローカル実行可能にした。RTX 5080 比3倍の推論性能と Ollama による移行手順、年間 $5,280 のAIサブスク不要化の試算を解説。</description></item><item><title>Redis 作者 antirez の "ds4" — DeepSeek V4 Flash 専用ローカル推論エンジンが M3 Ultra 512GB で 26 token/sec を叩き出す</title><link>https://hdknr.github.io/blogs/posts/2026/05/antirez-ds4-deepseek-v4-flash/</link><pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/antirez-ds4-deepseek-v4-flash/</guid><description>Redis 作者 antirez が公開した DeepSeek V4 Flash 専用ローカル推論エンジン ds4（DwarfStar 4）を解説。Mac Studio M3 Ultra 512GB で 26 token/sec、KV キャッシュのディスク永続化、OpenAI / Anthropic 互換 API、Claude Code からの利用方法、2bit 非対称量子化、Exact Replay 設計まで網羅。</description></item><item><title>DeepSeek-V4 Preview — Claude Opus 4.6 匹敵・100万トークン対応のオープンソース LLM が無償公開</title><link>https://hdknr.github.io/blogs/posts/2026/04/deepseek-v4-open-source/</link><pubDate>Sat, 25 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/deepseek-v4-open-source/</guid><description>DeepSeek-V4 Preview は 2026 年 4 月公開のオープンソース LLM。Pro（1.6 兆パラメータ）と Flash の 2 バリアントで 100 万トークンに対応。Codeforces で GPT-5.4 を超え、MIT ライセンスで Hugging Face から無償取得可能。MoE アーキテクチャで推論演算量を 73% 削減。</description></item><item><title>Claude Code をローカル LLM（vLLM + MiniMax-M2.7）で爆速稼働させる方法</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-local-llm-vllm/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-local-llm-vllm/</guid><description>vLLM + MiniMax-M2.7 を使い Claude Code をローカル LLM で動かす方法。4× GPU / 8× GPU 構成のサーバー起動コマンド、環境変数設定、Prefix Caching による高速化、旧バージョン対応まで一通り解説する。</description></item><item><title>DFlash</title><link>https://hdknr.github.io/blogs/wiki/tools/dflash/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/dflash/</guid><description>Apple Silicon 向け MLX フレームワークで動作するブロック拡散型投機的デコード実装。ローカル LLM を最大 4.1 倍高速化</description></item><item><title>CanIRun.ai — ブラウザだけで自分のPCがどのローカルAIを動かせるか即判定</title><link>https://hdknr.github.io/blogs/posts/2026/04/canirun-ai-local-model-checker/</link><pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/canirun-ai-local-model-checker/</guid><description>&lt;p&gt;「自分のPCでローカルAIを動かしたい、でもどのモデルが動くか分からない」。そんな悩みを一発で解決してくれる Web サービスが &lt;strong&gt;&lt;a href="https://canirun.ai"&gt;CanIRun.ai&lt;/a&gt;&lt;/strong&gt; だ。インストール不要、登録不要で、サイトにアクセスするだけでハードウェアを自動検出し、数百のモデルに対して動作可否を判定してくれる。&lt;/p&gt;
+&lt;h2 id="何ができるのか"&gt;何ができるのか&lt;/h2&gt;
+&lt;p&gt;CanIRun.ai は、ブラウザの &lt;strong&gt;WebGPU API&lt;/strong&gt; を使って以下のハードウェア情報を自動取得する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GPU の種類と VRAM 容量（GPU 名を WebGPU/WebGL で取得し、内部 DB から VRAM を割り出す）&lt;/li&gt;
+&lt;li&gt;GPU メモリ帯域幅（内部スペックシート DB から参照）&lt;/li&gt;
+&lt;li&gt;システム RAM&lt;/li&gt;
+&lt;li&gt;CPU コア数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;取得した情報をもとに、カタログに登録された全モデルとの適合性を即座に算出する。&lt;/p&gt;
+&lt;h2 id="6-段階の互換性評価"&gt;6 段階の互換性評価&lt;/h2&gt;
+&lt;p&gt;各モデルに対して、&lt;strong&gt;S〜F の 6 段階グレード&lt;/strong&gt; が色分けで表示される。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;グレード&lt;/th&gt;
+&lt;th&gt;ラベル&lt;/th&gt;
+&lt;th&gt;意味&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;S&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Runs great&lt;/td&gt;
+&lt;td&gt;余裕で動作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;A&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Runs well&lt;/td&gt;
+&lt;td&gt;快適に動作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;B&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Decent&lt;/td&gt;
+&lt;td&gt;まずまず動作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;C&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Tight fit&lt;/td&gt;
+&lt;td&gt;ギリギリ動作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;D&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Barely runs&lt;/td&gt;
+&lt;td&gt;かろうじて動作&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;F&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Too heavy&lt;/td&gt;
+&lt;td&gt;動作不可&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;グレードに加え、アーキテクチャの種類・コンテキストウィンドウサイズ・量子化レベル（Q2_K〜F16 といった精度とサイズのトレードオフを示すレベル）ごとのメモリ要件など、詳細な技術情報も確認できる。&lt;/p&gt;
+&lt;h2 id="対応モデルの幅広さ"&gt;対応モデルの幅広さ&lt;/h2&gt;
+&lt;p&gt;カタログは &lt;strong&gt;1GB 未満の軽量モデルから数百 GB の巨大モデルまで&lt;/strong&gt; 網羅している。&lt;/p&gt;</description></item><item><title>Open-notebook — NotebookLM をセルフホストできる完全ローカル OSS</title><link>https://hdknr.github.io/blogs/posts/2026/04/open-notebook-notebooklm-oss/</link><pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/open-notebook-notebooklm-oss/</guid><description>NotebookLM の完全ローカル実装 OSS「open-notebook」の機能・導入手順・NotebookLM との比較を解説。Ollama 対応でゼロコスト運用も可能。</description></item><item><title>Claude のレート制限対策に Mac Mini とローカルモデルを活用する — Agent を指揮する時代へ</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-rate-limit-mac-mini-local-model/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-rate-limit-mac-mini-local-model/</guid><description>&lt;h2 id="claude-max-のレート制限問題と現実的な解決策"&gt;Claude Max のレート制限問題と現実的な解決策&lt;/h2&gt;
+&lt;p&gt;Claude Max に月 $200 を投じて、たった3時間で使い切ってしまった——そんな体験談がきっかけで生まれた、実用的な AI インフラ構成が話題になっています。&lt;/p&gt;
+&lt;p&gt;解決策はシンプルです。&lt;strong&gt;$599 の Mac Mini に5つのローカルモデル（合計約 350 億パラメーター）を用意し、Claude がレート制限に達したら自動でローカルモデルに切り替える&lt;/strong&gt;というものです。&lt;/p&gt;
+&lt;h2 id="構成の概要"&gt;構成の概要&lt;/h2&gt;
+&lt;p&gt;この構成で実現していること：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;メール整理の自動化&lt;/strong&gt;: エージェントがメールを分類・返信ドラフトを生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト圧縮&lt;/strong&gt;: 長い会話履歴を自動的に要約して継続利用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;深夜の継続稼働&lt;/strong&gt;: 就寝中もエージェントが動き続ける&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自動フォールバック&lt;/strong&gt;: 深夜4時に Claude がレート制限に達すると、ローカルモデルが自動で引き継ぎ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;コスト比較が圧倒的です。同じ業務を3人のエンジニアに依頼すると月 $15,000。これが Mac Mini 一台 + ローカルモデルで代替できるとするなら、ROI は明白です。&lt;/p&gt;
+&lt;h2 id="なぜ-mac-mini-が選ばれるのか"&gt;なぜ Mac Mini が選ばれるのか&lt;/h2&gt;
+&lt;p&gt;Apple Silicon 搭載の Mac Mini は、ローカル LLM の実行環境として優れた特性を持っています：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;統合メモリ（Unified Memory）&lt;/strong&gt;: CPU と GPU が同一メモリを共有するため、大容量モデルのロードが高速&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;省電力&lt;/strong&gt;: 24時間稼働でも電気代が安い&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MLX フレームワーク&lt;/strong&gt;: Apple が開発した機械学習フレームワークで、Apple Silicon 上の推論速度が大幅に向上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;静音設計&lt;/strong&gt;: 自宅・オフィスでも気にならない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;実際に Gemma 4、Qwen 3、Mistral などの 350 億パラメーター級モデルを複数搭載し、タスクに応じて使い分けることができます。&lt;/p&gt;</description></item><item><title>MacのローカルLLMが4.1倍速に！Apple Silicon向け新技術「DFlash」</title><link>https://hdknr.github.io/blogs/posts/2026/04/dflash-mlx-apple-silicon-llm/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/dflash-mlx-apple-silicon-llm/</guid><description>&lt;p&gt;Apple Silicon（M4/M5 Max など）搭載の Mac で、ローカル LLM を最大 4.1 倍高速化する新技術「DFlash」のオープンソース実装が公開されました。精度を落とさずに推論速度だけを大幅に向上できる点が注目されています。&lt;/p&gt;
+&lt;h2 id="dflash-とは"&gt;DFlash とは&lt;/h2&gt;
+&lt;p&gt;DFlash（Block Diffusion for Flash Speculative Decoding）は、投機的デコード（Speculative Decoding）を発展させた推論加速技術です。論文「Block Diffusion for Flash Speculative Decoding」で提案された手法を、Apple の MLX フレームワーク向けに実装したものが &lt;a href="https://github.com/Aryagm/dflash-mlx"&gt;dflash-mlx&lt;/a&gt; として公開されています。&lt;/p&gt;
+&lt;h2 id="仕組み"&gt;仕組み&lt;/h2&gt;
+&lt;h3 id="推測デコードspeculative-decoding"&gt;推測デコード（Speculative Decoding）&lt;/h3&gt;
+&lt;p&gt;通常の推測デコードでは、小さな「ドラフトモデル」が次のトークンを予測し、大きな「ターゲットモデル」がそれを検証します。ドラフトの予測が正しければそのまま採用するため、検証パスを有効活用してスループットを上げます。&lt;/p&gt;
+&lt;h3 id="ブロック拡散block-diffusion"&gt;ブロック拡散（Block Diffusion）&lt;/h3&gt;
+&lt;p&gt;DFlash では、ドラフトモデルが &lt;strong&gt;1 トークンずつではなく 16 トークンをまとめて並列生成&lt;/strong&gt;します。ターゲットモデルは 1 回のフォワードパスでこれらをまとめて検証するため、大幅なスループット向上が実現します。&lt;/p&gt;
+&lt;h3 id="apple-silicon--mlx-への最適化"&gt;Apple Silicon / MLX への最適化&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Apple 独自の &lt;strong&gt;MLX フレームワーク&lt;/strong&gt;をフル活用&lt;/li&gt;
+&lt;li&gt;ロールバック処理は「イノベーションテープ」を記録・再生する &lt;strong&gt;Metal カーネル&lt;/strong&gt; で実装し、長い生成でもオーバーヘッドを最小化&lt;/li&gt;
+&lt;li&gt;精度を落とさない &lt;strong&gt;exact speculative decoding&lt;/strong&gt;（ロスレス）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ベンチマーク"&gt;ベンチマーク&lt;/h2&gt;
+&lt;p&gt;Qwen3.5-9B モデルで &lt;strong&gt;4.1 倍&lt;/strong&gt;のスループット向上が確認されています。27B の大規模モデルでもクラウド API に匹敵する速度で動作するとされています。&lt;/p&gt;
+&lt;h2 id="インストールと使い方"&gt;インストールと使い方&lt;/h2&gt;
+&lt;h3 id="インストール"&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/aryagm/dflash-mlx.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd dflash-mlx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv sync
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="cli-で実行"&gt;CLI で実行&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv run dflash-mlx --max-new-tokens &lt;span style="color:#ae81ff"&gt;128&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="python-から利用"&gt;Python から利用&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; dflash_mlx &lt;span style="color:#f92672"&gt;import&lt;/span&gt; DFlashGenerator
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;runner &lt;span style="color:#f92672"&gt;=&lt;/span&gt; DFlashGenerator()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; runner&lt;span style="color:#f92672"&gt;.&lt;/span&gt;generate(&lt;span style="color:#e6db74"&gt;&amp;#34;Write a quicksort in Python.&amp;#34;&lt;/span&gt;, max_new_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;128&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="対話型チャット"&gt;対話型チャット&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv run dflash-mlx-chat
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="対応モデル"&gt;対応モデル&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ターゲットモデル&lt;/th&gt;
+&lt;th&gt;ドラフトモデル&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;mlx-community/Qwen3-4B-bf16&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;z-lab/Qwen3-4B-DFlash-b16&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;mlx-community/Qwen3.5-4B-MLX-bf16&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;z-lab/Qwen3.5-4B-DFlash&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="活用シナリオ"&gt;活用シナリオ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;機密情報の要約&lt;/strong&gt;: クラウドに送らずローカルで高速処理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コーディング支援&lt;/strong&gt;: 大規模モデルを使いながらリアルタイムに近いレスポンス&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コスト削減&lt;/strong&gt;: API 利用料ゼロで高品質な推論&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;DFlash は Apple Silicon の性能を最大限に引き出す投機的デコード技術です。MLX の最適化と組み合わせることで、プライバシーを守りながらクラウド並みの速度でローカル LLM を活用できるようになります。M4/M5 Mac ユーザーにとって試す価値の高いツールです。&lt;/p&gt;</description></item><item><title>Qwen（クウェン）</title><link>https://hdknr.github.io/blogs/wiki/tools/qwen/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/qwen/</guid><description>Alibaba の Qwen チームが開発するオープンソース LLM シリーズ。コーディング性能・長コンテキスト・メモリ効率に優れ、Apache 2.0 ライセンスで商用利用可能</description></item><item><title>ローカルLLM比較（2026年春）</title><link>https://hdknr.github.io/blogs/wiki/concepts/local-llm-comparison/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/local-llm-comparison/</guid><description>2026年春時点のローカル実行可能LLMの比較。Gemma 4、Qwen3.5、BitNetの特性とユースケース別の選び方</description></item><item><title>BitNet</title><link>https://hdknr.github.io/blogs/wiki/tools/bitnet/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/bitnet/</guid><description>Microsoft Research が開発した 1-bit LLM 専用の推論フレームワーク。GPU 不要で CPU 上で大規模 LLM を実行できる</description></item><item><title>Microsoft BitNet完全オープンソース化：GPUなしで1000億パラメータLLMをCPUで動かす時代へ</title><link>https://hdknr.github.io/blogs/posts/2026/04/microsoft-bitnet-open-source-1bit-llm/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/microsoft-bitnet-open-source-1bit-llm/</guid><description>Microsoft BitNet b1.58のオープンソース化を解説。1-bit量子化でGPU不要のCPU推論を実現するbitnet.cppの仕組み、ベンチマーク、セットアップ方法を紹介。</description></item><item><title>OpenClaw + Ollama + Gemma4 でローカル無料AIエージェントを構築する</title><link>https://hdknr.github.io/blogs/posts/2026/04/openclaw-gemma4-local-setup/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/openclaw-gemma4-local-setup/</guid><description>&lt;p&gt;API課金なしで、ローカル環境にAIエージェントを無制限で運用できるセットアップ方法を紹介します。OpenClaw（エージェントインターフェース）+ Ollama（ローカルモデルサーバー）+ Gemma4（推論エンジン）の組み合わせにより、Telegram・Discord・LINEなどの既存チャンネルともシームレスに連携できます。&lt;/p&gt;
+&lt;h2 id="構成概要"&gt;構成概要&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;コンポーネント&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;OpenClaw&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;AIエージェントのインターフェース・オーケストレーション&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Ollama&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ローカルLLMサーバー（モデルの管理・API提供）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Gemma4&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;推論エンジン（Google製オープンモデル）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この3つを組み合わせることで、クラウドAPIへの依存なしにフル機能のAIエージェントが動作します。&lt;/p&gt;
+&lt;h2 id="セットアップ手順"&gt;セットアップ手順&lt;/h2&gt;
+&lt;h3 id="1-ollama-のインストール"&gt;1. Ollama のインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# macOS / Linux&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://ollama.ai/install.sh | sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Windows&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# https://ollama.ai から インストーラーをダウンロード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="2-gemma4-モデルの取得"&gt;2. Gemma4 モデルの取得&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ollama pull gemma4
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3-openclaw-のインストール"&gt;3. OpenClaw のインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install -g openclaw
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="4-オンボーディングウィザードの実行"&gt;4. オンボーディングウィザードの実行&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openclaw onboard
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;ウィザードに従ってOllama接続設定とチャンネル連携（Telegram・Discord・LINEなど）を行います。&lt;/p&gt;</description></item><item><title>claw-code-local — Claude Code風のAIコーディングエージェントをローカルLLMで動かす</title><link>https://hdknr.github.io/blogs/posts/2026/04/claw-code-local/</link><pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claw-code-local/</guid><description>Claude Code風のAIコーディングエージェント claw-code-local の紹介。Ollama や LM Studio でローカルLLMを使い、API費用ゼロ・プライバシー保護でコード生成を実現する方法を解説。</description></item></channel></rss>

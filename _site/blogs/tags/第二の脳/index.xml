@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>第二の脳 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E7%AC%AC%E4%BA%8C%E3%81%AE%E8%84%B3/</link><description>Recent content in 第二の脳 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 13 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E7%AC%AC%E4%BA%8C%E3%81%AE%E8%84%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>ObsidianとN8Nで月$120の「一人ヘッジファンド」を構築 — 6ヶ月で$180,000を稼いだ自動トレーディングAIの全仕組み</title><link>https://hdknr.github.io/blogs/posts/2026/05/obsidian-n8n-trading-ai/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/obsidian-n8n-trading-ai/</guid><description>&lt;p&gt;海外で話題になっているある個人トレーダーの話が、X（旧Twitter）で拡散されている。彼はObsidianとN8Nを組み合わせて「自動トレーディングAI」を構築し、6ヶ月で$180,000（約2,700万円）を稼ぎ出したという。月のAPIコストはたった$120。クラウドサーバーも、アナリストチームも、Bloombergターミナルも不要だ。&lt;/p&gt;
+&lt;p&gt;元ネタのツイートは&lt;a href="https://x.com/browomo"&gt;@browomo&lt;/a&gt;によるもので、4,500以上のいいね、90万回以上の閲覧数を記録している。&lt;/p&gt;
+&lt;h2 id="システムの全体像"&gt;システムの全体像&lt;/h2&gt;
+&lt;p&gt;このシステムの核心は、Obsidianのローカルvaultをナレッジの「中枢」として、N8Nの6本のワークフローパイプラインが情報を自動収集・分析・配信する構造にある。構成要素は次の通りだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ハードウェア&lt;/strong&gt;: 自宅のMac Mini（ローカルでvaultを保管・パイプラインを常時稼働）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;モバイル&lt;/strong&gt;: iPhoneでvaultにアクセス・アイデアをキャプチャ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コスト&lt;/strong&gt;: Readwise・Whisper API・N8Nホスティングのサブスクリプションで月約$120&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;伝統的なクオンツファンドが同等のインサイトフローのために8人のチームを雇っている一方、このシステムはその機能を個人レベルで再現している。&lt;/p&gt;
+&lt;h2 id="vaultmd-に書かれたaiアナリストへの指示"&gt;VAULT.md に書かれた「AIアナリストへの指示」&lt;/h2&gt;
+&lt;p&gt;システムの起点となるのは、Obsidian vaultのルートに置かれた &lt;code&gt;VAULT.md&lt;/code&gt; ファイルだ。ここにAIアナリストへの役割定義と行動指針が記されている：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;you are the AI analyst of a solo trader. you read his vault every morning at 6:00,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find connections between fresh and old notes, and deliver 3 trading ideas he can verify
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;in the hour before the market opens.
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pipelines:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Reader (pulls every article and highlight from Readwise, Twitter bookmarks, and Kindle into /notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Listener (transcribes podcasts through Airr and voice notes through Whisper, puts them in /notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Catcher (accepts any message from the Telegram bot and writes it to /inbox with a timestamp)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Connector (every night reads across the entire vault and updates the connection graph between 4,000 notes)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Briefer (at 6:00 AM writes a brief: 3 trading ideas for today plus the emerging thesis of the week, puts it in /inbox)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// Mobile (lives in the iPhone, answers any question about the vault by voice, and confirms alerts while the owner is on the go).
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;you wake the owner with a push notification only when a fresh note contradicts his active thesis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;or when 1 of the 3 morning ideas has a confidence score above 90%.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この指示が秀逸なのは、AIに「何を自律的にやるか」と「いつ人間を介入させるか」の境界を明確に定義している点だ。&lt;/p&gt;</description></item><item><title>Claude Code + Obsidian で「AI 第二の脳」をたった 5 分で構築する方法</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-ai-second-brain/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-ai-second-brain/</guid><description>&lt;p&gt;Andrej Karpathy（元 OpenAI・元 Tesla AI ディレクター）が提唱した「Claude Code での第二の脳の作り方」。
+この記事では、&lt;strong&gt;Claude Code + Obsidian を組み合わせて知識を蓄積・進化させる「AI 第二の脳」システム&lt;/strong&gt;の仕組みとセットアップ手順を解説します。&lt;/p&gt;
+&lt;h2 id="普通の-rag-と何が違うのか"&gt;普通の RAG と何が違うのか&lt;/h2&gt;
+&lt;p&gt;ChatGPT へのファイルアップロードや NotebookLM のような一般的な RAG は、以下のように動きます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;ファイルを渡す&lt;/li&gt;
+&lt;li&gt;質問のたびに AI が関連部分を探す&lt;/li&gt;
+&lt;li&gt;毎回ゼロから答えを生成する&lt;/li&gt;
+&lt;li&gt;次の質問がきたら、また同じことをゼロから繰り返す&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;何も積み重ならない&lt;/strong&gt;のが問題です。&lt;/p&gt;
+&lt;p&gt;Karpathy が提唱したシステムは根本的に異なり、**AI が「Wiki を育て続ける」**仕組みです。新しい資料を入れるたびに、AI がその内容を読んで既存の知識と統合し、矛盾があれば修正し、関連ページを更新します。知識が一度まとめられると、常に最新状態に保たれます。&lt;/p&gt;
+&lt;h2 id="システムの全体像"&gt;システムの全体像&lt;/h2&gt;
+&lt;p&gt;このシステムには 4 つの動く部品があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;あなたのデータ&lt;/strong&gt; — 記事・ノート・文字起こし・アイデアなど&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;整理&lt;/strong&gt; — Claude Code が Obsidian に自動で整理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;即座の質問&lt;/strong&gt; — 育てたデータベースにいつでも質問可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;進化する記憶&lt;/strong&gt; — 使えば使うほど賢くなる仕組み&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="3-つの層構造"&gt;3 つの層構造&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;層&lt;/th&gt;
+&lt;th&gt;名称&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;層 1&lt;/td&gt;
+&lt;td&gt;生のソース（immutable）&lt;/td&gt;
+&lt;td&gt;記事・論文・画像・データファイル。AI は読むだけで書き換えない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;層 2&lt;/td&gt;
+&lt;td&gt;Wiki&lt;/td&gt;
+&lt;td&gt;要約・人物・概念・比較・総合分析ページ。AI が作成・更新し続ける&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;層 3&lt;/td&gt;
+&lt;td&gt;スキーマ（CLAUDE.md）&lt;/td&gt;
+&lt;td&gt;Wiki の構造・ルール・ワークフローを AI に教える設定ファイル&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この 3 層構造により、AI が「汎用チャットボット」ではなく「規律を持った Wiki 管理者」として動きます。&lt;/p&gt;</description></item><item><title>Claude Code × Obsidian で「第二の脳」を構築する完全解説 — 海外1,240万views超え、AI記憶設計の新標準</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-second-brain/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-second-brain/</guid><description>&lt;p&gt;海外 AI 活用シーンで &lt;strong&gt;Obsidian × Claude Code&lt;/strong&gt; の組み合わせが爆発的な注目を集めている。6本の主要記事だけで合計 &lt;strong&gt;1,240万 views&lt;/strong&gt;、ブックマーク数は &lt;strong&gt;8万件超え&lt;/strong&gt;。元 OpenAI 創設メンバーの Andrej Karpathy 氏が提唱し、Obsidian CEO の Steph Ango 氏自らが AI 連携スキルを GitHub で公開。ここまで業界の中心人物が動いたツール組み合わせは、近年なかった。&lt;/p&gt;
+&lt;p&gt;本記事は東大 ClaudeCode 研究所（&lt;a href="https://x.com/ClaudeCode_UT"&gt;@ClaudeCode_UT&lt;/a&gt;）が公開した解説記事「【決定版】ゼロから始めるClaudeCode × Obsidianの完全解説」をベースに、その要点をまとめる。&lt;/p&gt;
+&lt;h2 id="そもそも-obsidian-とは何か"&gt;そもそも Obsidian とは何か&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://obsidian.md/"&gt;Obsidian&lt;/a&gt; は、個人向けのローカル Markdown ノートアプリだ。2020 年公開、個人利用は無料で、Mac / Windows / Linux / iOS / Android に対応している。同じノート系の Notion や Evernote とは設計思想が根本的に異なる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ノート本体は Markdown ファイル&lt;/strong&gt; — 各ノートは &lt;code&gt;.md&lt;/code&gt; としてディスク上に実ファイルで存在する。独自データベースに閉じ込められない。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vault は OS のただのフォルダ&lt;/strong&gt; — ノートを束ねる「Vault」は普通のディレクトリ。Git でも Dropbox でも iCloud でも、好きな仕組みで同期・バックアップできる。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;双方向リンク &lt;code&gt;[[ノート名]]&lt;/code&gt;&lt;/strong&gt; — ノート同士をリンクで繋ぎ、知識をグラフ構造として可視化できる。Zettelkasten など既存 PKM 手法の基本機能を標準で備える。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ローカルファースト&lt;/strong&gt; — 規定ではすべて自分の PC 内に保存。クラウドに置くかどうかは利用者が選ぶ。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;豊富なプラグイン&lt;/strong&gt; — 2,000 以上のコミュニティプラグインで、PDF 注釈・タスク管理・グラフ可視化まで拡張できる。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="なぜai--記憶設計の目的に最適なのか"&gt;なぜ「AI × 記憶設計」の目的に最適なのか&lt;/h3&gt;
+&lt;p&gt;Obsidian のこれらの特徴は、Claude Code のような&lt;strong&gt;ファイルシステムを直接操作する AI エージェント&lt;/strong&gt;と噛み合う。理由は3点ある。&lt;/p&gt;</description></item></channel></rss>

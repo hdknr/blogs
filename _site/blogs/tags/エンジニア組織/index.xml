@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>エンジニア組織 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E7%B5%84%E7%B9%94/</link><description>Recent content in エンジニア組織 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E7%B5%84%E7%B9%94/index.xml" rel="self" type="application/rss+xml"/><item><title>Anthropicエンジニアリングチームの実態：1680人の経歴分析が明かすこと</title><link>https://hdknr.github.io/blogs/posts/2026/06/anthropic-engineer-team-analysis/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/anthropic-engineer-team-analysis/</guid><description>&lt;p&gt;採用コンサルタントのSebastian Cuadros氏が、LinkedInで「現在の雇用主：Anthropic」と登録している5306件のプロフィールをスクレイピングし、エンジニアリング職と判定できる1680人の経歴を詳細に分析した。入社前に記述していた職歴説明7986件を精査した結果、Anthropicの人材戦略について常識を覆すいくつかの事実が浮かび上がった。&lt;/p&gt;
+&lt;h2 id="常識を覆す4つの発見"&gt;常識を覆す4つの発見&lt;/h2&gt;
+&lt;h3 id="1-研究者ではなくインフラエンジニアを採用している"&gt;1. 研究者ではなくインフラエンジニアを採用している&lt;/h3&gt;
+&lt;p&gt;最も意外な事実として、1680人のうち&lt;strong&gt;40%がインフラのバックグラウンド&lt;/strong&gt;を持つ。バックエンド・分散システム・データベース・セキュリティ（backend / distributed systems / databases / security）の各分野がそれぞれ約20%を占める一方、強化学習（reinforcement learning）のバックグラウンドを持つのはわずか**3.3%**にとどまる。&lt;/p&gt;
+&lt;p&gt;「AIの研究拠点」というイメージとは裏腹に、Anthropicの典型的なエンジニアは過去10年をハイパースケーラーやインフラ重視のスタートアップで大規模生産システムを構築することに費やした人材だ。&lt;/p&gt;
+&lt;h3 id="2-新卒をほぼ採らない中位経験年数は122年"&gt;2. 新卒をほぼ採らない——中位経験年数は12.2年&lt;/h3&gt;
+&lt;p&gt;入社前の職歴年数の中央値は&lt;strong&gt;12.2年&lt;/strong&gt;。中間50%の範囲は8.8〜16.5年。1680人のうち経験年数が3年未満だったのは&lt;strong&gt;50人のみ&lt;/strong&gt;で、44%は13年以上のキャリアを持つ。博士号保有者は全体の**13.7%**にとどまる。&lt;/p&gt;
+&lt;p&gt;「典型的なAnthropicの新入り」とは、12年のキャリアを経て入社したばかりの人物だ。在職期間の中央値は10ヶ月と短く、長年の経験と浅い在社歴が同居している。&lt;/p&gt;
+&lt;p&gt;もし「ジュニアとして採用される」場合のプロフィールの典型例は非常に限定的だ。**MIT卒・IOI銀メダル・Codeforces 2900+**といった際立ったシグナルを持つ人材に絞られる。&lt;/p&gt;
+&lt;p&gt;なお、TPUカーネルエンジニアのポジションには年収&lt;strong&gt;最大85万ドル&lt;/strong&gt;（約1億2000万円）が提示されたと報じられている。経験豊富なシニア人材の獲得にかかるコストを惜しまない姿勢がうかがえる。&lt;/p&gt;
+&lt;h3 id="3-チームはほぼ一夜にして組み上げられた"&gt;3. チームはほぼ一夜にして組み上げられた&lt;/h3&gt;
+&lt;p&gt;現在Anthropicに在籍するエンジニアのうち、2021年以前から在籍しているのはわずか&lt;strong&gt;15人&lt;/strong&gt;。本格的な拡大は2025〜2026年に集中している。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;2025年&lt;/strong&gt;: 1年間で686人採用し、エンジニア組織がおよそ3倍に拡大&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2026年&lt;/strong&gt;: 6月時点ですでに455人を採用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;現在のチームの53%が過去12ヶ月以内に入社しており、在職期間の中央値は&lt;strong&gt;10ヶ月&lt;/strong&gt;。Anthropicのエンジニアリング組織は、約18ヶ月という短期間に急速に構築されたことになる。&lt;/p&gt;
+&lt;h3 id="4-最大の人材供給源はgoogleとmeta"&gt;4. 最大の人材供給源はGoogleとMeta&lt;/h3&gt;
+&lt;p&gt;「元OpenAI・元DeepMind」というイメージが広まっているが、実態はGoogle出身者が最も多く（405人）、Meta（273人）、Amazon（197人）、Microsoft（171人）と続く。&lt;/p&gt;
+&lt;p&gt;OpenAIやDeepMindからの流入よりも、&lt;strong&gt;Googleが圧倒的に大きな採用パイプライン&lt;/strong&gt;となっている。また、StripeやDatabricks、Snowflake、Palantir、Airbnbといった「エンジニアリングの厳格さで知られる」企業出身者も目立つ。&lt;/p&gt;
+&lt;h2 id="なぜanthropicはインフラエンジニアを最優先で採るのか"&gt;なぜAnthropicはインフラエンジニアを最優先で採るのか&lt;/h2&gt;
+&lt;p&gt;この分析から見えてくるのは、Anthropicが「研究コミュニティからの採用」よりも「大規模な生産システムを確実に動かすエンジニアの採用」を優先しているという判断だ。&lt;/p&gt;
+&lt;p&gt;AIモデルの学習・推論・デプロイには、インターネット規模のインフラを高い信頼性で運用する能力が必要となる。GoogleやMetaのような組織で10年以上キャリアを積んだシニアエンジニアは、まさにその能力を身につけている。「AIは研究で作られ、インフラで届けられる」という現実が、この採用戦略に表れているといえる。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;出典:&lt;/strong&gt; &lt;a href="https://www.techtimes.com/articles/318396/20260615/anthropic-engineering-team-infrastructure-army-new-analysis-1680-engineers.htm"&gt;Anthropic Engineering Team Is an Infrastructure Army: New Analysis of 1,680 Engineers（TechTimes, 2026-06-15）&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;元情報:&lt;/strong&gt; AI Dance / @AI_Whisper_X（X）&lt;/p&gt;</description></item></channel></rss>

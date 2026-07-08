@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ターミナル on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/</link><description>Recent content in ターミナル on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 02 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/index.xml" rel="self" type="application/rss+xml"/><item><title>Ghostty を VSCode みたいにする — FileTree・keifu・zellij で軽量なターミナル開発環境を組む</title><link>https://hdknr.github.io/blogs/posts/2026/06/ghostty-vscode-like-setup/</link><pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/ghostty-vscode-like-setup/</guid><description>&lt;p&gt;Claude Code でコーディングする時間が増えると、ふと気づくのが「VSCode って、けっこうメモリを食うな」という事実です。プロジェクトを 5 つも同時に開けば、エディタだけでメモリがカツカツになります。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://note.com/electrical_cat/n/n7a3b634a2b51"&gt;note の記事「GhosttyをVSCodeみたいにしよう！」&lt;/a&gt;（Naoki | 電電猫猫 氏）では、まさにこの悩みを起点に、高速なターミナルエミュレータ &lt;strong&gt;Ghostty&lt;/strong&gt; の上に VSCode 風の開発環境を再現する構成が紹介されていました。本記事ではその考え方を整理しつつ、使われている TUI ツール群を補足して紹介します。&lt;/p&gt;
+&lt;h2 id="なぜターミナルで-vscode-を再現するのか"&gt;なぜターミナルで VSCode を再現するのか&lt;/h2&gt;
+&lt;p&gt;VSCode の基本的な画面構成はだいたいこうなっています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;左サイドバー：ファイル一覧と Git のツリー表示&lt;/li&gt;
+&lt;li&gt;右側メイン：エディタ（または Claude Code）と、その下にターミナル&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;便利な一方で、Electron ベースの VSCode は 1 ウィンドウあたりのメモリ消費が大きく、プロジェクトを並行して開くほど重くなります。そこで「同じレイアウトを、軽量なターミナル上で組めないか？」という発想に至ります。&lt;/p&gt;
+&lt;p&gt;Ghostty は Mitchell Hashimoto 氏が開発する GPU アクセラレーション対応のターミナルエミュレータで、標準で画面分割（split）機能を持っています。この分割機能と、小さな TUI ツールを &lt;strong&gt;LEGO のように組み合わせる&lt;/strong&gt;ことで、VSCode のレイアウトをそのまま再現するというのが今回のアプローチです。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;前提&lt;/strong&gt;：以降の手順は Rust の &lt;code&gt;cargo&lt;/code&gt; と Ghostty がインストール済みであることを前提にしています。FileTree・keifu・zellij はいずれも &lt;code&gt;cargo install&lt;/code&gt; で導入できます。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/ghostty-vscode-like-setup-layout.png" alt="Ghostty の画面分割で VSCode 風レイアウトを再現する構成図。左の細いサイドバー列に上から FileTree（ファイルツリー）と keifu（Git 表示）を縦に並べ、右の広いメイン領域に Claude Code/エディタとターミナルを上下に配置している。メイン領域は zellij でセッション保存する。"&gt;&lt;/p&gt;
+&lt;p&gt;各パーツの役割は次のとおりです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;サイドバー（細い列）&lt;/strong&gt;：上に &lt;strong&gt;FileTree&lt;/strong&gt;、下に &lt;strong&gt;keifu&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メイン領域（広い列）&lt;/strong&gt;：上に &lt;strong&gt;Claude Code / エディタ&lt;/strong&gt;、下に &lt;strong&gt;ターミナル&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;高頻度で触るプロジェクトは &lt;strong&gt;zellij&lt;/strong&gt; のセッションとして保存しておく&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="filetree--vscode-風のファイルツリー-tui"&gt;FileTree — VSCode 風のファイルツリー TUI&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/nyanko3141592/filetree"&gt;FileTree&lt;/a&gt; は、VSCode のファイル一覧をターミナル上で模倣した TUI ファイルエクスプローラです。記事の著者（電電猫猫 氏 = Naoki Takahashi 氏）自身が作ったツールで、Vim キーバインドに対応した高速・軽量なファイルブラウザになっています。&lt;/p&gt;</description></item><item><title>Warp がオープンソース化 — AI エージェントが主役を担う新しい開発協働モデル</title><link>https://hdknr.github.io/blogs/posts/2026/04/warp-open-source-ai-native/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/warp-open-source-ai-native/</guid><description>2026年4月、Rust製AIターミナルWarpがAGPL-3.0でオープンソース化。注目はコード公開よりOzエージェント基盤の存在だ。Cal.comとの対比から読み解くAIネイティブOSS開発の新パラダイム。</description></item></channel></rss>

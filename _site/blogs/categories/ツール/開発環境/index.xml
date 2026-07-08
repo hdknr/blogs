@@ -1,0 +1,1218 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ツール/開発環境 on hdknr blog</title><link>https://hdknr.github.io/blogs/categories/%E3%83%84%E3%83%BC%E3%83%AB/%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83/</link><description>Recent content in ツール/開発環境 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/categories/%E3%83%84%E3%83%BC%E3%83%AB/%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83/index.xml" rel="self" type="application/rss+xml"/><item><title>ウェブサイトのスタイルを丸ごと抽出してDESIGN.md / SKILL.mdを自動生成するChrome拡張 — Claude Codeに渡すデザイン文脈を一瞬で構造化する</title><link>https://hdknr.github.io/blogs/posts/2026/06/chrome-extension-design-md-skill-md-extractor/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/chrome-extension-design-md-skill-md-extractor/</guid><description>Chrome拡張「DESIGN.md Style Extractor - TypeUI」を使えば、任意のWebサイトのカラー・タイポグラフィ・スペーシングをワンクリックでDESIGN.mdまたはSKILL.mdに書き出せる。Claude Code・Codex・Google Stitchに渡すデザイン文脈を自動構造化する方法を解説する。</description></item><item><title>寝ている間に仕事を自動化する2026年の GitHub リポジトリ 10 選 — 全部無料・オープンソース</title><link>https://hdknr.github.io/blogs/posts/2026/06/10-github-repos-automate-work-2026/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/10-github-repos-automate-work-2026/</guid><description>2026年注目の AI エージェント・自動化 GitHub OSS 10 選。OpenHands・CrewAI・n8n・Browser Use・LangGraph など、マルチエージェント/ワークフロー/ブラウザ操作の各カテゴリを無料で実現するツールをスター数付きで解説。</description></item><item><title>Ghostty を VSCode みたいにする — FileTree・keifu・zellij で軽量なターミナル開発環境を組む</title><link>https://hdknr.github.io/blogs/posts/2026/06/ghostty-vscode-like-setup/</link><pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/ghostty-vscode-like-setup/</guid><description>&lt;p&gt;Claude Code でコーディングする時間が増えると、ふと気づくのが「VSCode って、けっこうメモリを食うな」という事実です。プロジェクトを 5 つも同時に開けば、エディタだけでメモリがカツカツになります。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://note.com/electrical_cat/n/n7a3b634a2b51"&gt;note の記事「GhosttyをVSCodeみたいにしよう！」&lt;/a&gt;（Naoki | 電電猫猫 氏）では、まさにこの悩みを起点に、高速なターミナルエミュレータ &lt;strong&gt;Ghostty&lt;/strong&gt; の上に VSCode 風の開発環境を再現する構成が紹介されていました。本記事ではその考え方を整理しつつ、使われている TUI ツール群を補足して紹介します。&lt;/p&gt;
+&lt;h2 id="なぜターミナルで-vscode-を再現するのか"&gt;なぜターミナルで VSCode を再現するのか&lt;/h2&gt;
+&lt;p&gt;VSCode の基本的な画面構成はだいたいこうなっています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;左サイドバー：ファイル一覧と Git のツリー表示&lt;/li&gt;
+&lt;li&gt;右側メイン：エディタ（または Claude Code）と、その下にターミナル&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;便利な一方で、Electron ベースの VSCode は 1 ウィンドウあたりのメモリ消費が大きく、プロジェクトを並行して開くほど重くなります。そこで「同じレイアウトを、軽量なターミナル上で組めないか？」という発想に至ります。&lt;/p&gt;
+&lt;p&gt;Ghostty は Mitchell Hashimoto 氏が開発する GPU アクセラレーション対応のターミナルエミュレータで、標準で画面分割（split）機能を持っています。この分割機能と、小さな TUI ツールを &lt;strong&gt;LEGO のように組み合わせる&lt;/strong&gt;ことで、VSCode のレイアウトをそのまま再現するというのが今回のアプローチです。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;前提&lt;/strong&gt;：以降の手順は Rust の &lt;code&gt;cargo&lt;/code&gt; と Ghostty がインストール済みであることを前提にしています。FileTree・keifu・zellij はいずれも &lt;code&gt;cargo install&lt;/code&gt; で導入できます。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/ghostty-vscode-like-setup-layout.png" alt="Ghostty の画面分割で VSCode 風レイアウトを再現する構成図。左の細いサイドバー列に上から FileTree（ファイルツリー）と keifu（Git 表示）を縦に並べ、右の広いメイン領域に Claude Code/エディタとターミナルを上下に配置している。メイン領域は zellij でセッション保存する。"&gt;&lt;/p&gt;
+&lt;p&gt;各パーツの役割は次のとおりです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;サイドバー（細い列）&lt;/strong&gt;：上に &lt;strong&gt;FileTree&lt;/strong&gt;、下に &lt;strong&gt;keifu&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メイン領域（広い列）&lt;/strong&gt;：上に &lt;strong&gt;Claude Code / エディタ&lt;/strong&gt;、下に &lt;strong&gt;ターミナル&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;高頻度で触るプロジェクトは &lt;strong&gt;zellij&lt;/strong&gt; のセッションとして保存しておく&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="filetree--vscode-風のファイルツリー-tui"&gt;FileTree — VSCode 風のファイルツリー TUI&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/nyanko3141592/filetree"&gt;FileTree&lt;/a&gt; は、VSCode のファイル一覧をターミナル上で模倣した TUI ファイルエクスプローラです。記事の著者（電電猫猫 氏 = Naoki Takahashi 氏）自身が作ったツールで、Vim キーバインドに対応した高速・軽量なファイルブラウザになっています。&lt;/p&gt;</description></item><item><title>gh コマンドでトークン認証して非対話的にクローンする — CI/CD・使い捨てコンテナ向け認証パターン完全ガイド</title><link>https://hdknr.github.io/blogs/posts/2026/05/gh-cli-token-noninteractive-clone/</link><pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/gh-cli-token-noninteractive-clone/</guid><description>ブラウザもキーボードもない CI/CD・コンテナ環境で gh / git clone をトークン認証する方法を整理。GH_TOKEN 環境変数・--with-token・GitHub Apps の使い分けと、gh auth token --web という誤情報の訂正、トークン履歴残留のセキュリティ注意点を解説。</description></item><item><title>Obsidianの創業者が「有料Syncを使わずに済む方法」を公式公開 — iCloud・Git・ヘッドレスCLIで完全無料運用する選択肢</title><link>https://hdknr.github.io/blogs/posts/2026/05/obsidian-free-sync-without-paid-subscription/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/obsidian-free-sync-without-paid-subscription/</guid><description>&lt;p&gt;Obsidianの創業者が、自社の有料サービスである Obsidian Sync を &lt;strong&gt;使わずに&lt;/strong&gt; Vault を同期・バックアップする方法を公式ドキュメントとして明文化したことが話題になっている。&lt;/p&gt;
+&lt;h2 id="何が起きているのか"&gt;何が起きているのか&lt;/h2&gt;
+&lt;p&gt;Obsidian は「あなたのノートは永遠にあなたのもの」を掲げるローカルファースト型のナレッジ管理ツールだ。ノートはプレーンテキスト（Markdown）でローカルに保存され、クラウドへの依存を強制しない設計になっている。&lt;/p&gt;
+&lt;p&gt;そのObsidianの創業者が、有料の Obsidian Sync（$4〜/月・年払い、または $5/月・月払い）を契約しなくても Vault を複数デバイス間で同期できる方法を、公式ドキュメント上で余すところなく公開した。&lt;/p&gt;
+&lt;h2 id="公式が案内している無料同期の選択肢"&gt;公式が案内している無料同期の選択肢&lt;/h2&gt;
+&lt;p&gt;公式ヘルプ（&lt;a href="https://obsidian.md/help/sync-notes"&gt;Sync your notes across devices&lt;/a&gt;）によると、以下の方法が紹介されている。&lt;/p&gt;
+&lt;h3 id="1-icloudapple-デバイス間"&gt;1. iCloud（Apple デバイス間）&lt;/h3&gt;
+&lt;p&gt;Mac・iPhone・iPad を使うユーザーにとって最もシンプルな選択肢。iCloud Drive の中に Vault フォルダを配置するだけで、Apple デバイス間でシームレスに同期される。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MyVault
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;設定コストがほぼゼロで、iOS アプリとの相性も良い。&lt;/p&gt;
+&lt;h3 id="2-google-drive--dropbox--onedrive"&gt;2. Google Drive / Dropbox / OneDrive&lt;/h3&gt;
+&lt;p&gt;クラウドストレージのフォルダ配下に Vault を置くだけで同期が成立する。Windows や Android ユーザーにも対応できる汎用的な方法だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Google Drive のデスクトップアプリで同期するフォルダを指定&lt;/li&gt;
+&lt;li&gt;Vault を &lt;code&gt;~/Google Drive/MyVault&lt;/code&gt; などのパスに配置&lt;/li&gt;
+&lt;li&gt;モバイルでは公式の &lt;a href="https://obsidian.md"&gt;Obsidian アプリ&lt;/a&gt; + ファイルマネージャアプリで Vault フォルダを指定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-gitバージョン履歴も残したい人向け"&gt;3. Git（バージョン履歴も残したい人向け）&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/Vinzent03/obsidian-git"&gt;obsidian-git&lt;/a&gt; プラグインを使えば、Vault の変更を GitHub などに自動プッシュできる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# プラグイン設定後、Vault ルートで初期化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git init
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git remote add origin https://github.com/yourname/my-vault.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push -u origin main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;プラグイン設定で自動コミット・プッシュ間隔を指定できるため、&lt;strong&gt;バージョン履歴&lt;/strong&gt;まで残せる点が他の方法と異なる。&lt;/p&gt;</description></item><item><title>「言語税」対策として CLAUDE.md を英語化する — 日本語境界を残したまま prompt caching を効かせる部分英語化パターン</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-prompt-caching/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-prompt-caching/</guid><description>&lt;h2 id="背景-日本語の言語税をどこで払うか"&gt;背景: 日本語の「言語税」をどこで払うか&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/04/2026-04-30-llm-japanese-token-language-tax/"&gt;先日の記事&lt;/a&gt;で、日本語入出力が英語比 1.48 倍のトークンを消費すること、Claude では最大 1.94 倍にもなることを取り上げた。&lt;/p&gt;
+&lt;p&gt;しかし現実問題、ブログ記事本文・コミットメッセージ・GitHub PR の説明・許可プロンプトなど、&lt;strong&gt;最終アウトプットが日本語であること自体が要求である&lt;/strong&gt;ケースは避けられない。Claude Code を使い続ける限り、日本語コストはゼロにはならない。&lt;/p&gt;
+&lt;p&gt;問いを言い換えると、こうなる:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「日本語境界を保ったまま、実トークン消費を構造的に減らせる場所はどこか？」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="検討した-5-案"&gt;検討した 5 案&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;案&lt;/th&gt;
+&lt;th&gt;仕組み&lt;/th&gt;
+&lt;th&gt;効く場面&lt;/th&gt;
+&lt;th&gt;弱点&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;A. 翻訳プロキシ (Ollama)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ユーザー入力 ja→en、Claude 応答 en→ja を中間 LLM が翻訳&lt;/td&gt;
+&lt;td&gt;「思考・指示が日本語で出来ればよい」用途&lt;/td&gt;
+&lt;td&gt;ツール結果・ファイル内容・git diff まで翻訳経路に入り破綻&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;B. 部分英語化&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;思考・指示は英語、最終成果物は日本語のまま&lt;/td&gt;
+&lt;td&gt;大半の開発作業&lt;/td&gt;
+&lt;td&gt;削減率は応答側ほど効かない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;C. Prompt Caching 徹底&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;CLAUDE.md・Skills・MCP 出力をキャッシュ&lt;/td&gt;
+&lt;td&gt;日本語のまま実コストを大幅削減&lt;/td&gt;
+&lt;td&gt;設計工数が必要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;D. Caveman プロンプト&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;「原始人みたいに喋れ」で日本語応答を圧縮&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/04/2026-04-17-claude-caveman-token-reduction/"&gt;既存実績手法（最大 80% 削減）&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;文体が崩れるので公開記事には不向き&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;E. モデル切替&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Gemini など日本語効率の良いモデルへ部分委譲&lt;/td&gt;
+&lt;td&gt;翻訳・要約などコモディティ作業&lt;/td&gt;
+&lt;td&gt;Claude のハーネス連携を捨てる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="翻訳プロキシ案-a-が筋悪な理由"&gt;翻訳プロキシ案 (A) が筋悪な理由&lt;/h2&gt;
+&lt;p&gt;「ローカル LLM で Claude Code の入出力を翻訳する」というアイデアは一見魅力的だが、Claude Code は対話 AI ではなく &lt;strong&gt;エージェント環境&lt;/strong&gt; であることを思い出す必要がある。&lt;/p&gt;</description></item><item><title>Claude Code のスキルで「マージ後」の指示が PR 作成中に発火する罠 — バッチ並行実行で起きた wiki コンフリクトの原因と修正</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-skill-post-merge-trap/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-skill-post-merge-trap/</guid><description>&lt;h2 id="症状"&gt;症状&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;blog-batch.sh&lt;/code&gt; で夜間バッチを回した結果、こんな状態になっていた:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;同じ wiki ファイル（&lt;code&gt;content/wiki/concepts/harness-engineering.md&lt;/code&gt;、&lt;code&gt;content/wiki/tools/claude-code.md&lt;/code&gt;）が&lt;strong&gt;複数の blog PR で同時に変更&lt;/strong&gt;されていた&lt;/li&gt;
+&lt;li&gt;main にマージしようとすると毎回コンフリクト&lt;/li&gt;
+&lt;li&gt;直近の #368・#369・#371・#372 はすべてこの原因で手動コンフリクト解消が必要だった&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;調査して原因が判明したので、修正内容と「LLM スキルを書くときに気をつけるべきポイント」を共有する。&lt;/p&gt;
+&lt;h2 id="pr-の中身を見ると-3-コミットあった"&gt;PR の中身を見ると 3 コミットあった&lt;/h2&gt;
+&lt;p&gt;通常の &lt;code&gt;/blog&lt;/code&gt; で作った PR は「記事 1 本分の 1 コミット」のはずだが、見ると 3 コミットあった:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;35a61c2 Add blog post: トレーダーのSランクスキル5選...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;86e5bd4 Update wiki-last-ingest.txt: mark all posts through 2026-05-07 as ingested
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;0bc4e1f Update Wiki: ingest posts 2026-04-15 through 2026-04-21 (5 updated, 16 new pages)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;2 つ目と 3 つ目は &lt;strong&gt;wiki ingest の結果コミット&lt;/strong&gt;。これが各 blog PR に混入していて、複数 PR で同じ wiki ファイルを並行更新 → コンフリクトという流れ。&lt;/p&gt;</description></item><item><title>CLAUDE.md+SKILL.md 英語化で 37.6% トークン削減 — tiktoken による実測結果と内訳</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-tiktoken-measurement/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-tiktoken-measurement/</guid><description>&lt;h2 id="結論を先に"&gt;結論を先に&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; と 4 つの &lt;code&gt;SKILL.md&lt;/code&gt; を日本語から英語に書き換えた結果、毎セッション読み込まれる固定資産のトークン量が &lt;strong&gt;13,538 → 8,441（-37.6%、絶対値で 5,097 トークン削減）&lt;/strong&gt; になった。&lt;/p&gt;
+&lt;p&gt;文字数は逆に &lt;strong&gt;+49%&lt;/strong&gt; 増えているのに、トークンは大幅に減るという一見矛盾した結果である。理由と内訳を以下に示す。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/05/2026-05-13-claude-md-english-prompt-caching/"&gt;CLAUDE.md 英語化の記事&lt;/a&gt; と Skills 英語化 PR (#394) の続編。&lt;/p&gt;
+&lt;p&gt;前 2 つの作業で、ハーネスの「内側」（LLM だけが読む固定資産）を英語化し、「外側」（人間が読むブログ記事や許可プロンプト）は日本語のまま維持する&lt;strong&gt;部分英語化パターン&lt;/strong&gt;を実装した。&lt;/p&gt;
+&lt;p&gt;ただし、その記事では「Anthropic 公開の日本語比率 1.94x」から &lt;strong&gt;推定 48% 削減&lt;/strong&gt; とラフに見積もっていた。実際の効果は推定モデル次第で 2% 〜 48% と幅があり、本当の値を知るには実測しかない。&lt;/p&gt;
+&lt;h2 id="計測手法"&gt;計測手法&lt;/h2&gt;
+&lt;h3 id="tiktoken-cl100k_base-を採用"&gt;tiktoken (cl100k_base) を採用&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;理由&lt;/strong&gt;: オフラインで動く、API key 不要、結果が再現可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;限界&lt;/strong&gt;: Anthropic Claude のトークナイザーではなく OpenAI GPT-4 系。ただし日本語のトークン化挙動は近似として広く使われる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対案&lt;/strong&gt;: Anthropic SDK の &lt;code&gt;count_tokens&lt;/code&gt; API が最も正確だが、API キーが必要&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="venv-で隔離"&gt;venv で隔離&lt;/h3&gt;
+&lt;p&gt;PEP 668 で system Python が保護されているため、&lt;code&gt;.claude/temp/venv-tiktoken/&lt;/code&gt; に隔離した venv を作って tiktoken だけ入れた。&lt;/p&gt;</description></item><item><title>macOS キャッシュ掃除チートシート — 開発マシンの数百 GB を取り戻す</title><link>https://hdknr.github.io/blogs/posts/2026/05/macos-cache-cleanup/</link><pubDate>Thu, 07 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/macos-cache-cleanup/</guid><description>macOS 開発マシンに溜まる uv・npm・Docker・JetBrains・Ollama などのキャッシュを安全に削除するコマンド集。月 1 回の定期掃除スクリプト付き。</description></item><item><title>Claude Code のトークン消費を最大90%削減する10のGitHubリポジトリ</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-token-reduction-10-repos/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-token-reduction-10-repos/</guid><description>Claude Code のトークン消費を最大90%削減できる10のOSSツールを、出力フィルタリング・シンボル単位参照・プロンプト制御・MCPサーバーの4アプローチで分類・解説。導入コストの低い順にも整理。</description></item><item><title>Scrapling — BeautifulSoup比784倍速い適応型Webスクレイピング・Cloudflare突破・MCP対応まとめ</title><link>https://hdknr.github.io/blogs/posts/2026/05/scrapling-adaptive-web-scraping/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/scrapling-adaptive-web-scraping/</guid><description>&lt;p&gt;Webスクレイピングの定番ライブラリといえば BeautifulSoup だが、それを最大784倍上回るパフォーマンスを持つ Python フレームワーク &lt;strong&gt;Scrapling&lt;/strong&gt; が注目を集めている。GitHub スター数は約47,000（2026年5月時点）に達する。Cloudflare Turnstile 突破やサイト構造変化への自動適応など、現代のWebスクレイピング課題を一手に解決するのが特徴だ。&lt;/p&gt;
+&lt;h2 id="scrapling-とは"&gt;Scrapling とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/D4Vinci/Scrapling"&gt;Scrapling&lt;/a&gt; は Karim Shoair（D4Vinci）が開発した適応型Webスクレイピングフレームワークだ。単発リクエストからフルスケールクローリングまでをカバーし、以下の3つを柱とする。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Adaptive Scraping&lt;/strong&gt;: サイトのデザインが変わっても対象要素を自動的に再探索&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Anti-bot Bypass&lt;/strong&gt;: Cloudflare Turnstile 等のアンチボットを標準でバイパス&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spider Framework&lt;/strong&gt;: Scrapy ライクな Spider API で並列クロールをスケールアウト&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="パフォーマンスベンチマーク"&gt;パフォーマンスベンチマーク&lt;/h2&gt;
+&lt;p&gt;5,000 個のネスト要素に対するテキスト抽出速度（100回平均）。出典: &lt;a href="https://github.com/D4Vinci/Scrapling#performance-benchmarks"&gt;公式 README ベンチマーク&lt;/a&gt;：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ライブラリ&lt;/th&gt;
+&lt;th style="text-align: center"&gt;処理時間（ms）&lt;/th&gt;
+&lt;th style="text-align: center"&gt;Scrapling比&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Scrapling&lt;/strong&gt;&lt;/td&gt;
+&lt;td style="text-align: center"&gt;2.02&lt;/td&gt;
+&lt;td style="text-align: center"&gt;1.0x&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Parsel/Scrapy&lt;/td&gt;
+&lt;td style="text-align: center"&gt;2.04&lt;/td&gt;
+&lt;td style="text-align: center"&gt;1.01x&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Raw Lxml&lt;/td&gt;
+&lt;td style="text-align: center"&gt;2.54&lt;/td&gt;
+&lt;td style="text-align: center"&gt;1.26x&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;PyQuery&lt;/td&gt;
+&lt;td style="text-align: center"&gt;24.17&lt;/td&gt;
+&lt;td style="text-align: center"&gt;~12x&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Selectolax&lt;/td&gt;
+&lt;td style="text-align: center"&gt;82.63&lt;/td&gt;
+&lt;td style="text-align: center"&gt;~41x&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;MechanicalSoup&lt;/td&gt;
+&lt;td style="text-align: center"&gt;1549.71&lt;/td&gt;
+&lt;td style="text-align: center"&gt;~767x&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;BS4 with Lxml&lt;/td&gt;
+&lt;td style="text-align: center"&gt;1584.31&lt;/td&gt;
+&lt;td style="text-align: center"&gt;&lt;strong&gt;~784x&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;BS4 with html5lib&lt;/td&gt;
+&lt;td style="text-align: center"&gt;3391.91&lt;/td&gt;
+&lt;td style="text-align: center"&gt;~1679x&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;公式ドキュメントで強調されている「BeautifulSoup 比 784 倍」はこのベンチマークに基づいている。&lt;/p&gt;</description></item><item><title>Claude Code から Microsoft Teams を操作する3つの方法 — Workflows Webhook / M365 Connector / ms-365-mcp-server</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-teams-integration/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-teams-integration/</guid><description>Claude Code から Microsoft Teams を操作する3つの方法を初心者向けに解説。Workflows Webhook（5分セットアップ）、Microsoft 365 Connector（公式・読み取り）、ms-365-mcp-server（投稿+ファイル DL）を難易度順に比較し、2026年5月の Incoming Webhook 廃止にも対応。</description></item><item><title>Graphite 徹底解説 — スタックドPRとマージキューがAIファースト開発を加速する理由</title><link>https://hdknr.github.io/blogs/posts/2026/04/graphite-stacked-prs-merge-queue/</link><pubDate>Sun, 19 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/graphite-stacked-prs-merge-queue/</guid><description>&lt;p&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/04/ai-first-harness-engineering-creao/"&gt;CreaoAI が25名で6週間のリリースサイクルを1日に短縮した事例&lt;/a&gt;では、PR 管理ツールとして &lt;strong&gt;Graphite&lt;/strong&gt; が採用されていた。1日8回デプロイ・AI が大量に PR を量産する運用で、素の GitHub PR フローは何が詰まり、Graphite は何を解決するのか。本記事では Graphite の3本柱（スタックドPR・マージキュー・AIレビュー）を、CLI コマンドと具体的な運用シナリオで解説する。&lt;/p&gt;
+&lt;h2 id="graphite-とは"&gt;Graphite とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://graphite.com/"&gt;Graphite&lt;/a&gt; は GitHub 上の PR ワークフローを拡張する開発者プラットフォーム。2025年3月に Anthropic から $52M の Series B を調達し、同時に AI コードレビュー「Diamond」をローンチした（現在は &lt;strong&gt;Graphite Agent&lt;/strong&gt; に名称統合）。元 Airbnb・Meta のエンジニア出身チームが、Meta 内部で使われていた Phabricator / Sapling 的なスタック開発体験を GitHub に持ち込んだのが出発点だ。&lt;/p&gt;
+&lt;p&gt;主要機能は3つに整理できる。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;スタックドPR&lt;/strong&gt; — 大きな変更を依存関係のある小さな PR の連鎖に分割する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マージキュー&lt;/strong&gt; — スタックを理解した状態で main にマージを直列化する（stack-aware）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Graphite Agent（旧 Diamond）+ Chat&lt;/strong&gt; — AI によるコードレビューと対話的修正&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="スタックドpr大きな差分を小さなレビュー単位の連鎖に分解する"&gt;スタックドPR：大きな差分を「小さなレビュー単位の連鎖」に分解する&lt;/h2&gt;
+&lt;h3 id="何が問題だったのか"&gt;何が問題だったのか&lt;/h3&gt;
+&lt;p&gt;AI エージェントや生産性の高い開発者は、1つのフィーチャーを実装する過程でしばしば以下のような複数階層の変更を生む。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DBスキーマの追加&lt;/li&gt;
+&lt;li&gt;それを使う API エンドポイント&lt;/li&gt;
+&lt;li&gt;認証ミドルウェアの更新&lt;/li&gt;
+&lt;li&gt;フロントエンドの呼び出し&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;従来の GitHub PR モデルだと選択肢は2つしかない。&lt;/p&gt;</description></item><item><title>Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する</title><link>https://hdknr.github.io/blogs/posts/2026/04/obsidian-pkm-second-brain/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/obsidian-pkm-second-brain/</guid><description>&lt;p&gt;メモツールは世の中に溢れている。Notion、Evernote、Google Keep……。その中で &lt;strong&gt;Obsidian&lt;/strong&gt; が開発者やナレッジワーカーに支持され続けている理由は「ローカルファースト」という設計哲学にある。データは自分のマシンに Markdown ファイルとして保存され、ベンダーロックインが一切ない。&lt;/p&gt;
+&lt;p&gt;本記事では Obsidian の機能・利点・活用法を網羅的にまとめる。&lt;/p&gt;
+&lt;h2 id="obsidian-とは"&gt;Obsidian とは&lt;/h2&gt;
+&lt;p&gt;Obsidian は &lt;strong&gt;ローカルファイルベースの Markdown エディタ&lt;/strong&gt;であり、個人の知識管理（PKM: Personal Knowledge Management）に特化したツールだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;公式サイト&lt;/strong&gt;: &lt;a href="https://obsidian.md"&gt;obsidian.md&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;料金&lt;/strong&gt;: 個人利用は&lt;strong&gt;完全無料&lt;/strong&gt;。商用利用のみ Commercial License（$50/年）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対応 OS&lt;/strong&gt;: Windows / macOS / Linux / iOS / Android&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プラグイン数&lt;/strong&gt;: 2,700 種類以上のコミュニティプラグイン&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="設計哲学your-thoughts-are-yours"&gt;設計哲学：「Your thoughts are yours」&lt;/h3&gt;
+&lt;p&gt;Obsidian の根底にあるのは「あなたの思考はあなたのもの」という哲学だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ローカルファースト&lt;/strong&gt;: データはすべて自分のマシン上の &lt;code&gt;.md&lt;/code&gt; ファイル&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プレーンテキスト&lt;/strong&gt;: 専用フォーマットなし。他のエディタでも開ける&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ベンダーロックインなし&lt;/strong&gt;: Obsidian を辞めても、データはそのまま使える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オフライン動作&lt;/strong&gt;: インターネット接続なしで完全に機能する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="コア機能"&gt;コア機能&lt;/h2&gt;
+&lt;h3 id="内部リンク-記法"&gt;内部リンク（&lt;code&gt;[[]]&lt;/code&gt; 記法）&lt;/h3&gt;
+&lt;p&gt;Obsidian の最大の特徴が &lt;code&gt;[[ページ名]]&lt;/code&gt; で即座にノート間リンクを作れる内部リンク機能だ。リンク先が存在しなくても構わない。リンクをクリックした時点で新規ページが自動生成される。&lt;/p&gt;
+&lt;p&gt;これにより、メモを書いている最中に「あ、この概念は別ページにまとめたい」と思った瞬間に &lt;code&gt;[[概念名]]&lt;/code&gt; と書くだけで、知識のネットワークが自然に広がっていく。&lt;/p&gt;
+&lt;h3 id="グラフビュー"&gt;グラフビュー&lt;/h3&gt;
+&lt;p&gt;ノート間のリンク関係を視覚的にネットワーク図として表示する機能。知識の全体像や孤立したノートの発見に役立つ。ただし、実用面ではグラフビューよりも全文検索の方が圧倒的に使用頻度が高いという声も多い。&lt;/p&gt;
+&lt;h3 id="全文検索"&gt;全文検索&lt;/h3&gt;
+&lt;p&gt;Vault（Obsidian のワークスペース）内のすべてのファイルを横断的に検索できる。ローカルファイルなので検索速度が速く、数千ファイルでもストレスなく動作する。&lt;/p&gt;</description></item><item><title>Claude Code の /team-onboarding コマンドで新メンバーへの使い方説明が1コマンドで完結する</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-team-onboarding/</link><pubDate>Thu, 16 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-team-onboarding/</guid><description>&lt;p&gt;Claude Code に &lt;code&gt;/team-onboarding&lt;/code&gt; というコマンドが追加された。新メンバーが入るたびに口頭で説明していた「うちのチームの Claude Code の使い方」が、1コマンドで自動ドキュメント化されるようになった。&lt;/p&gt;
+&lt;h2 id="新メンバーへの説明を毎回繰り返す課題"&gt;新メンバーへの説明を毎回繰り返す課題&lt;/h2&gt;
+&lt;p&gt;チームで Claude Code を使っていると、新メンバーが入るたびに「うちってどうやって Claude Code 使ってるの？」という質問が飛んでくる。毎回同じことを口頭で説明するのは時間がかかるし、言語化が難しい暗黙知も多い。&lt;/p&gt;
+&lt;h2 id="team-onboarding-が解決すること"&gt;/team-onboarding が解決すること&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;/team-onboarding&lt;/code&gt; コマンドを実行すると、Claude Code が実行したユーザーの過去のセッション履歴を分析して、チーム向けのオンボーディング資料を自動生成してくれる。&lt;/p&gt;
+&lt;p&gt;生成される内容は以下のとおり：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;過去30日のセッションを自動分析&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;作業タイプの割合をテキスト形式で可視化&lt;/strong&gt;（例：Build 40%, Plan 25% など ※実行例）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;よく使うスキルを頻度順にランキング&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP 接続の使用回数を可視化&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;新メンバー向けセットアップチェックリストを生成&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;出力は Markdown 形式なので、Notion や GitHub Wiki にそのままコピペできる。ドキュメント整備の手間が省ける。&lt;/p&gt;
+&lt;h2 id="使い方"&gt;使い方&lt;/h2&gt;
+&lt;p&gt;プロジェクトルートで Claude Code を起動し、チャット欄に入力するだけ：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/team-onboarding
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;実行すると、セッション履歴が分析され、チームへの共有に適したオンボーディングドキュメントが生成される。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;「新メンバーのオンボーディングに毎回時間を取られる」という壁を崩すコマンドだ。チームの暗黙知を自動でドキュメント化し、Notion や GitHub にそのまま貼れる Markdown で出力される。Claude Code をチームで使っている場合は試してみる価値がある。&lt;/p&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;元ツイート（&lt;a href="https://x.com/SuguruKun_ai/status/2044704237402325249"&gt;@SuguruKun_ai&lt;/a&gt;）より&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>dmux：Claude Code / Codex を安全に並列実行するための git worktree 管理ツール</title><link>https://hdknr.github.io/blogs/posts/2026/04/dmux-parallel-ai-agents/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/dmux-parallel-ai-agents/</guid><description>&lt;p&gt;AI エージェントを並列実行する際に起きがちなファイル競合問題を、git worktree を活用して自動解決するツール「dmux」を紹介する。&lt;/p&gt;
+&lt;h2 id="背景ai-エージェント並列実行の落とし穴"&gt;背景：AI エージェント並列実行の落とし穴&lt;/h2&gt;
+&lt;p&gt;Claude Code や OpenAI Codex などの AI コーディングエージェントを複数同時に走らせると、次のような問題が起きやすい。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;共通ファイルの同時上書き&lt;/strong&gt;：複数エージェントが同じファイルを編集し、片方の変更が消える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;変更の消失&lt;/strong&gt;：あるエージェントが直したコードを、別のエージェントが元に戻してしまう&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ターミナルを複数開いたり、tmux でペインを分割して並列実行する方法は手軽だが、全エージェントが同一のワーキングディレクトリを共有しているため、この問題は常に起きうる。&lt;/p&gt;
+&lt;h2 id="dmux-とは"&gt;dmux とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;dmux&lt;/strong&gt; は、AI エージェントの並列実行環境を安全に管理するための CLI ツール。内部的には &lt;strong&gt;git worktree + branch の自動隔離&lt;/strong&gt; を行い、各エージェントが独立したディレクトリ・ブランチで作業できる環境を自動でセットアップする。&lt;/p&gt;
+&lt;h3 id="主な特徴"&gt;主な特徴&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;自動隔離&lt;/strong&gt;：難しい設定なしに git worktree + ブランチを自動作成し、エージェントごとに完全に分離した環境を提供する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;衝突の自動解決&lt;/strong&gt;：マージ競合が発生した場合、AI が自動で解決を試みる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント切り替え&lt;/strong&gt;：Claude Code、Codex、Claude Opus、Composer など任意のエージェントを簡単に切り替え可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;A/B テスト&lt;/strong&gt;：複数エージェントの出力を比較検証できる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="git-worktree-によるエージェント隔離の仕組み"&gt;git worktree によるエージェント隔離の仕組み&lt;/h2&gt;
+&lt;p&gt;git worktree は、同一リポジトリを複数のディレクトリに展開する Git 標準機能。通常の &lt;code&gt;git clone&lt;/code&gt; とは異なり、リポジトリのデータを共有しながら、異なるブランチを別ディレクトリでチェックアウトできる。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;リポジトリ
+├── (メインディレクトリ) ← ブランチ: main
+├── .worktrees/agent-1/ ← ブランチ: agent/task-a ← エージェント1
+└── .worktrees/agent-2/ ← ブランチ: agent/task-b ← エージェント2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;dmux はこの仕組みを自動化し、各エージェントを専用の worktree に割り当てる。エージェント同士は別ブランチで動くため、同一ファイルへの同時書き込みが発生しない。&lt;/p&gt;</description></item><item><title>Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-harness-v4-hokage/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-harness-v4-hokage/</guid><description>&lt;p&gt;Claude Code の拡張 OSS「Claude Harness」が v4.0.0 &amp;ldquo;Hokage&amp;rdquo; をリリースした。コア全体を Go ネイティブに書き換え、フック実行速度が約 30 倍に向上。設定ファイルも &lt;code&gt;harness.toml&lt;/code&gt; 1 本に集約され、大幅に扱いやすくなった。&lt;/p&gt;
+&lt;h2 id="claude-code-の拡張機構とは"&gt;Claude Code の拡張機構とは&lt;/h2&gt;
+&lt;p&gt;Claude Code には最初から強力な拡張機構が備わっている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;hooks&lt;/strong&gt; — &lt;code&gt;PreToolUse&lt;/code&gt; / &lt;code&gt;PostToolUse&lt;/code&gt; / &lt;code&gt;SessionStart&lt;/code&gt; などのイベントでスクリプトを差し込める&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;permissions&lt;/strong&gt; — &lt;code&gt;settings.json&lt;/code&gt; の deny ルールで危険なコマンドを事前ブロックできる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;plugin system&lt;/strong&gt; — &lt;code&gt;plugin.json&lt;/code&gt; で自作プラグインを作り、チーム配布できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;skills&lt;/strong&gt; — スラッシュコマンドで自作ワークフローを走らせられる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP&lt;/strong&gt; — 外部ツール（DB・Slack・GitHub…）をネイティブ連携できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;「AI がやらかしそうなこと」「自律運用のワークフロー」「危ないコマンドのブロック」はほぼ全部、Claude Code の機能で実現できる。&lt;/p&gt;
+&lt;h2 id="自分で全部セッティングするのは無理ゲー"&gt;自分で全部セッティングするのは無理ゲー&lt;/h2&gt;
+&lt;p&gt;強力だからといって、簡単ではない。&lt;br&gt;
+自作で「AI に危ないコマンドを通させない」ワークフローを組もうとすると、以下を理解しておかなければならない。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;plugin.json&lt;/code&gt; — プラグインマニフェスト&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hooks.json&lt;/code&gt; — PreToolUse に走らせるスクリプトを宣言&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;settings.json&lt;/code&gt; — deny ルールを人力で組み立てる&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.mcp.json&lt;/code&gt; — MCP サーバー設定&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.claude-plugin/hooks.json&lt;/code&gt; — プラグイン経由のフックも別途&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;整合させる JSON が 5〜6 本。どれか 1 つを直すと別がズレる。&lt;br&gt;
+さらに「Plan → Work → Review の自律運用」を乗せようとすると以下も必要になる。&lt;/p&gt;</description></item><item><title>Claude CodeからShopifyストアを直接操作できる「Shopify AI Toolkit」</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-shopify-ai-toolkit/</link><pubDate>Sun, 12 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-shopify-ai-toolkit/</guid><description>&lt;p&gt;Shopifyが「Shopify AI Toolkit」を公開した。Claude Code、Codex、Cursor、VS Codeなどのエージェント・IDE から直接 Shopify ストアを管理できる仕組みだ。&lt;/p&gt;
+&lt;h2 id="shopify-ai-toolkit-とは"&gt;Shopify AI Toolkit とは&lt;/h2&gt;
+&lt;p&gt;Shopify AI Toolkit は、AI エージェントや開発ツールから Shopify バックエンドへ直接アクセスできるようにするツールキットだ。Model Context Protocol（MCP）をベースにしており、対応クライアントであれば Claude Code を含む主要エージェントから利用できる。&lt;/p&gt;
+&lt;p&gt;公式アナウンスでは以下の対応ツールが挙げられている:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Claude Code&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;OpenAI Codex&lt;/li&gt;
+&lt;li&gt;Cursor&lt;/li&gt;
+&lt;li&gt;VS Code&lt;/li&gt;
+&lt;li&gt;その他 MCP 対応エージェント&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="主な機能"&gt;主な機能&lt;/h2&gt;
+&lt;p&gt;ツイートで紹介されている主要機能は以下のとおり:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;バックエンドへの直接書き込み&lt;/strong&gt;: Claude Code などのエージェントから Shopify のバックエンド API へ直接書き込み操作が可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1プロンプトで一括操作&lt;/strong&gt;: 商品・注文・在庫・SEO・画像を単一のプロンプトで一括管理できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;16スキル搭載&lt;/strong&gt;: 豊富な操作スキルが組み込み済み&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プラグイン経由で自動アップデート&lt;/strong&gt;: プラグイン機構により機能が自動的に最新化される&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="claude-code-での活用イメージ"&gt;Claude Code での活用イメージ&lt;/h2&gt;
+&lt;p&gt;Claude Code から Shopify AI Toolkit を使うと、たとえば次のような操作がプロンプトひとつで実行できる:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;新商品の登録（タイトル・説明・価格・在庫数の一括設定）&lt;/li&gt;
+&lt;li&gt;SEO メタデータの一括最適化&lt;/li&gt;
+&lt;li&gt;特定カテゴリの商品価格を一括変更&lt;/li&gt;
+&lt;li&gt;注文ステータスの確認・更新&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;従来は Shopify 管理画面を手動で操作するか、独自スクリプトを書く必要があったこれらの作業が、自然言語の指示だけで完結する。&lt;/p&gt;
+&lt;h2 id="shopify-制作への応用"&gt;Shopify 制作への応用&lt;/h2&gt;
+&lt;p&gt;チャエン氏（&lt;a href="https://x.com/masahirochaen"&gt;@masahirochaen&lt;/a&gt;）のツイートでは「Shopify制作代行で起業できる」と言及されており、EC サイト構築・運用における AI エージェント活用の可能性が広がっている。&lt;/p&gt;</description></item><item><title>Claude Code にカオスエンジニアリングエージェントを導入してリポジトリの弱点を発見する</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-chaos-engineer-agent/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-chaos-engineer-agent/</guid><description>&lt;p&gt;Claude Code のカスタムエージェント機能を使って「カオスエンジニア」を導入すると、リポジトリの潜在的な弱点を自動的に発見できる。&lt;code&gt;.md&lt;/code&gt; ファイルを1つ置くだけで有効化でき、驚くほど多くの問題が見つかることで話題になっている。&lt;/p&gt;
+&lt;h2 id="カオスエンジニアリングとは"&gt;カオスエンジニアリングとは&lt;/h2&gt;
+&lt;p&gt;カオスエンジニアリングは、本番システムに意図的に障害を注入してシステムの耐障害性を検証する手法だ。Netflix が提唱した概念で、&lt;code&gt;Chaos Monkey&lt;/code&gt; のような自動障害注入ツールが知られている。&lt;/p&gt;
+&lt;p&gt;Claude Code にカオスエンジニアリングの思考を持ったエージェントを持ち込むと、コードベースに対して「もし〇〇が壊れたら？」という視点で弱点分析を行ってくれる。&lt;/p&gt;
+&lt;h2 id="導入方法"&gt;導入方法&lt;/h2&gt;
+&lt;p&gt;Claude Code のカスタムエージェントは &lt;code&gt;.claude/agents/&lt;/code&gt; ディレクトリに &lt;code&gt;.md&lt;/code&gt; ファイルを置くだけで使える。&lt;/p&gt;
+&lt;p&gt;以下が chaos-engineer エージェントの定義例だ:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# chaos-engineer
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたはカオスエンジニアリングの専門家です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;システムに意図的に障害を起こす視点でリポジトリを分析し、
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;潜在的な弱点・単一障害点・エラーハンドリングの欠如を特定してください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 分析観点
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 単一障害点（SPOF）の特定
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; エラーハンドリングの欠如箇所
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; タイムアウト設定の不備
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; リトライ処理の欠如
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 環境変数・設定値のハードコーディング
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 依存サービスがダウンした場合の挙動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; データ整合性が保証されない処理
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; テストカバレッジが低い重要処理
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 出力形式
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;各問題について以下を明記する:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 問題箇所（ファイルパス・行番号）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 障害シナリオ
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 影響範囲
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 推奨する対策
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このファイルを &lt;code&gt;.claude/agents/chaos-engineer.md&lt;/code&gt; として保存する。&lt;/p&gt;</description></item><item><title>RTK（Rust Token Killer）でClaude Codeのトークン使用量を60〜90%削減する</title><link>https://hdknr.github.io/blogs/posts/2026/04/rtk-rust-token-killer-claude-code/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/rtk-rust-token-killer-claude-code/</guid><description>&lt;p&gt;Claude Code を使い続けると、トークン消費が思いのほか速く、使用制限に達してしまうことがある。その主な原因のひとつが、ターミナルコマンドの出力だ。&lt;code&gt;git status&lt;/code&gt; や &lt;code&gt;npm install&lt;/code&gt; が吐き出すプログレスバー・警告・ログといったノイズが、そのままコンテキストに流れ込んでいる。&lt;/p&gt;
+&lt;p&gt;この問題を解決するツールが &lt;strong&gt;RTK（Rust Token Killer）&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;h2 id="rtk-とは"&gt;RTK とは&lt;/h2&gt;
+&lt;p&gt;RTK は Claude Code とターミナルの間に挟む「CLI プロキシ」ツール。Rust 製の単一バイナリで、依存関係ゼロのオープンソースプロジェクトだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a href="https://github.com/rtk-ai/rtk"&gt;rtk-ai/rtk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;公式サイト: &lt;a href="https://www.rtk-ai.app/"&gt;https://www.rtk-ai.app/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;コマンドを透過的にラップして出力をフィルタリングし、LLM のコンテキストに送る情報量を大幅に削減する。実測で &lt;strong&gt;60〜90% のトークン削減&lt;/strong&gt;、1,000 万トークン以上の削減（89% 削減）を達成した事例も報告されている。&lt;/p&gt;
+&lt;h2 id="4-つの最適化戦略"&gt;4 つの最適化戦略&lt;/h2&gt;
+&lt;p&gt;RTK は以下の戦略でターミナル出力を圧縮する:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;戦略&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スマートフィルタリング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ANSI エスケープコード、スピナー、プログレスバーを除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;グルーピング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;関連する出力をまとめて集約&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;重複除去&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;繰り返しパターンを排除&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;トランケーション&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;エラーは保持しつつ、冗長な成功出力を切り詰め&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;オーバーヘッドは 1 コマンドあたり 10ms 未満で、100 以上の開発コマンドに対応している。&lt;/p&gt;
+&lt;h2 id="セットアップ"&gt;セットアップ&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rtk init -g
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;-g&lt;/code&gt; フラグでグローバルインストール。Claude Code / GitHub Copilot との統合も自動で設定される。&lt;/p&gt;
+&lt;p&gt;インストール後、RTK はコマンドを透過的に書き換える。たとえば &lt;code&gt;git status&lt;/code&gt; は内部で &lt;code&gt;rtk git status&lt;/code&gt; として実行され、Claude には圧縮済みの出力が渡される。ユーザーが意識する必要はない。&lt;/p&gt;</description></item><item><title>opencli-rs: Rust製の爆速Webスクレイピングツールで55以上のサイトをCLI化する</title><link>https://hdknr.github.io/blogs/posts/2026/03/opencli-rs/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/opencli-rs/</guid><description>&lt;p&gt;&lt;a href="https://github.com/nashsu/opencli-rs"&gt;opencli-rs&lt;/a&gt; は、55以上の主要サイトに対応したRust製のCLIツールです。サイトごとにAPIやスクレイピング方法が異なる煩雑さを解消し、1つのコマンドで各プラットフォームの情報を取得できます。&lt;/p&gt;
+&lt;h2 id="opencli-rs-とは"&gt;opencli-rs とは&lt;/h2&gt;
+&lt;p&gt;opencli-rs は、元々TypeScriptで実装されていた OpenCLI をRustで完全に書き直したツールです。X (Twitter)、YouTube、Reddit、Hacker News、Bilibili、Zhihu、Xiaohongshu（小紅書）など多数のプラットフォームに対応しています。Chromeのログインセッションを再利用するため、APIキーなしでデータを取得できます。&lt;/p&gt;
+&lt;p&gt;出力形式はテーブル、JSON、YAML、CSV、Markdownに対応しており、用途に応じて使い分けが可能です。また、Electronベースのデスクトップアプリをコマンドラインから制御する機能も備えており、GUIアプリの操作をスクリプト化できます。&lt;/p&gt;
+&lt;h3 id="主な特徴"&gt;主な特徴&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;処理速度が最大12倍に向上&lt;/strong&gt; — TypeScript版と比較して大幅な高速化（例: Bilibili Hot の取得が20.1秒から1.66秒に）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メモリ使用量を10分の1に削減&lt;/strong&gt; — 95-99MBから9-15MBへ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;シングルバイナリで動作&lt;/strong&gt; — わずか4.7MB、追加のランタイム不要でどの環境にも導入可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストール"&gt;インストール&lt;/h2&gt;
+&lt;p&gt;インストールスクリプトが用意されており、システムとアーキテクチャを自動検出してバイナリをダウンロードします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/nashsu/opencli-rs/main/scripts/install.sh | sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Rustの開発環境がある場合はソースからビルドすることもできます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/nashsu/opencli-rs.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd opencli-rs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cargo build --release
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="aiエージェントとの連携"&gt;AIエージェントとの連携&lt;/h2&gt;
+&lt;p&gt;opencli-rs はAIエージェントとの連携を前提に設計されています。Claude Code や Cursor などに組み込むことで、「Hacker Newsのトップ記事を取得して要約する」「競合のX投稿を定期的にチェックする」といったWeb情報収集の自動化が可能です。&lt;/p&gt;
+&lt;p&gt;AIエージェント向けのスキルパッケージ &lt;a href="https://github.com/nashsu/opencli-rs-skill"&gt;opencli-rs-skill&lt;/a&gt; も提供されています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx skills add https://github.com/nashsu/opencli-rs-skill
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これにより、AIエージェントが &lt;code&gt;AGENT.md&lt;/code&gt; や &lt;code&gt;.cursorrules&lt;/code&gt; の設定を通じて利用可能なツールを自動的に検出し、自然言語でWebスクレイピングを実行できるようになります。&lt;/p&gt;</description></item><item><title>Browser Use CLI 2.0 — Playwrightを超える次世代ブラウザ自動化ツール</title><link>https://hdknr.github.io/blogs/posts/2026/03/browser-use-cli-2/</link><pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/browser-use-cli-2/</guid><description>Browser Use CLI 2.0 は Playwright より2倍速く、コスト半減のブラウザ自動化ツール。CDP直接接続、既存Chromeセッションの再利用、AIエージェント連携に対応。セットアップ方法とPlaywrightとの使い分けを解説。</description></item><item><title>CLAUDE.mdを採点・改善してくれるClaude Code公式プラグイン claude-md-improver</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-md-improver/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-md-improver/</guid><description>&lt;p&gt;Claude Code を使っていると、プロジェクトのコンテキストを伝える &lt;code&gt;CLAUDE.md&lt;/code&gt; の質が作業効率に直結することに気づきます。Anthropic 公式プラグイン &lt;strong&gt;claude-md-management&lt;/strong&gt; に含まれる &lt;code&gt;claude-md-improver&lt;/code&gt; スキルは、CLAUDE.md を自動で採点し、改善点を提案してくれる便利なツールです。&lt;/p&gt;
+&lt;h2 id="claude-md-management-プラグインとは"&gt;claude-md-management プラグインとは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management"&gt;claude-md-management&lt;/a&gt; は、Anthropic が公式に管理している Claude Code プラグインです。CLAUDE.md ファイルの品質を監査し、セッションで得た知見を反映するための2つのスキルを提供します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;スキル&lt;/th&gt;
+&lt;th&gt;呼び出し方&lt;/th&gt;
+&lt;th&gt;目的&lt;/th&gt;
+&lt;th&gt;使いどころ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;claude-md-improver&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;会話で依頼&lt;/td&gt;
+&lt;td&gt;CLAUDE.md をコードベースの現状に合わせる&lt;/td&gt;
+&lt;td&gt;定期的なメンテナンス&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;revise-claude-md&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/claude-md-management:revise-claude-md&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;セッション中の学びを記録する&lt;/td&gt;
+&lt;td&gt;セッション終了時&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;: &lt;code&gt;/revise-claude-md&lt;/code&gt; のような短縮名では呼び出せません。必ず &lt;code&gt;/claude-md-management:revise-claude-md&lt;/code&gt; と完全修飾名を使ってください。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="インストール方法"&gt;インストール方法&lt;/h2&gt;
+&lt;p&gt;公式マーケットプレイスは Claude Code 起動時に自動で利用可能になっているため、以下のコマンドだけでインストールできます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/plugin install claude-md-management@claude-plugins-official
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;UI からインストールする場合は、&lt;code&gt;/plugin&lt;/code&gt; を実行して &lt;strong&gt;Discover&lt;/strong&gt; タブから &lt;code&gt;claude-md-management&lt;/code&gt; を選択します。インストールスコープは以下の3種類から選べます。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;スコープ&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;User&lt;/td&gt;
+&lt;td&gt;自分の全プロジェクトで有効（デフォルト）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Project&lt;/td&gt;
+&lt;td&gt;このリポジトリの全コラボレーターで有効（&lt;code&gt;.claude/settings.json&lt;/code&gt; に記録）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Local&lt;/td&gt;
+&lt;td&gt;このリポジトリの自分だけで有効&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;インストール後、&lt;code&gt;/reload-plugins&lt;/code&gt; を実行すると再起動なしで有効化されます。&lt;/p&gt;
+&lt;h2 id="claude-md-improver-の使い方"&gt;claude-md-improver の使い方&lt;/h2&gt;
+&lt;p&gt;Claude Code のセッション中に、以下のように話しかけるだけで起動します。&lt;/p&gt;</description></item><item><title>Figma プラグイン Image Translator：画像からテキストを抽出して多言語翻訳</title><link>https://hdknr.github.io/blogs/posts/2026/03/figma-image-translator-plugin/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/figma-image-translator-plugin/</guid><description>&lt;p&gt;海外サービスの UI を調査するとき、スクリーンショット内のテキストを手作業で翻訳するのは地味に手間がかかる。TSUMIKI INC. の鈴木慎吾氏（&lt;a href="https://x.com/shingo2000"&gt;@shingo2000&lt;/a&gt;）が公開した Figma プラグイン &lt;strong&gt;Image Translator&lt;/strong&gt; は、この作業を自動化してくれる。&lt;/p&gt;
+&lt;h2 id="image-translator-とは"&gt;Image Translator とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.figma.com/community/plugin/1539071623933265305/image-translator"&gt;Image Translator&lt;/a&gt; は、Figma 上で選択した画像からテキストを自動抽出（OCR）し、指定した言語に翻訳する Figma プラグインだ。&lt;/p&gt;
+&lt;p&gt;主な特徴：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;画像からのテキスト自動抽出&lt;/strong&gt; — スクリーンショットや UI キャプチャからテキストを認識&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多言語翻訳&lt;/strong&gt; — 英語、日本語、中国語、スペイン語、韓国語、ポルトガル語などに対応&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2つの表示モード&lt;/strong&gt; — Figma のアノテーション機能で表示するモードと、テキストレイヤーとして配置するモードを選択可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="使い方"&gt;使い方&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Figma で翻訳したい画像を選択する&lt;/li&gt;
+&lt;li&gt;プラグインメニューから Image Translator を起動する&lt;/li&gt;
+&lt;li&gt;翻訳先の言語を選択する&lt;/li&gt;
+&lt;li&gt;抽出・翻訳されたテキストがアノテーションまたはテキストレイヤーとして表示される&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="活用シーン"&gt;活用シーン&lt;/h2&gt;
+&lt;h3 id="海外サービスのデザイン調査"&gt;海外サービスのデザイン調査&lt;/h3&gt;
+&lt;p&gt;競合分析や UI リサーチで海外アプリのスクリーンショットを収集した際、画面内のテキストを素早く日本語で確認できる。翻訳結果がアノテーションとして画像に紐づくため、チームメンバーとの共有にも便利だ。&lt;/p&gt;
+&lt;h3 id="多言語対応の確認"&gt;多言語対応の確認&lt;/h3&gt;
+&lt;p&gt;自社サービスの多言語版スクリーンショットを取り込み、各言語のテキストが正しく表示されているか確認する用途にも使える。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;Image Translator は、デザイン調査における画像内テキストの翻訳という地味だが頻出する作業を自動化してくれるプラグインだ。海外サービスの UI を日常的に調査しているデザイナーにとって、ワークフローの効率化に役立つだろう。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Figma Community&lt;/strong&gt;: &lt;a href="https://www.figma.com/community/plugin/1539071623933265305/image-translator"&gt;Image Translator&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;作者&lt;/strong&gt;: &lt;a href="https://x.com/shingo2000"&gt;鈴木慎吾 / TSUMIKI INC.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Figma Make を使いこなす実践テクニック</title><link>https://hdknr.github.io/blogs/posts/2026/03/figma-make-tips/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/figma-make-tips/</guid><description>&lt;p&gt;Figma が提供する AI デザイン機能「Figma Make」を実務で活用するための実践的なコツをまとめる。1000 回以上のプロンプト作成を通じて見つかった知見や、効率的なワークフローを紹介する。&lt;/p&gt;
+&lt;h2 id="figma-make-とは"&gt;Figma Make とは&lt;/h2&gt;
+&lt;p&gt;Figma Make は、Figma に統合された AI 搭載のデザイン生成ツール。テキストプロンプトからUIデザインを自動生成でき、AutoLayout 付きの構造化されたデザインを高速に作成できる。&lt;/p&gt;
+&lt;h2 id="実践テクニック"&gt;実践テクニック&lt;/h2&gt;
+&lt;h3 id="1-context-設計を明確にする"&gt;1. Context 設計を明確にする&lt;/h3&gt;
+&lt;p&gt;AI に指示を出す前に、以下を明確にしておくことが重要:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ユーザーペルソナ&lt;/strong&gt;: 対象ユーザーの年齢層、IT リテラシーなど&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;実行アクション&lt;/strong&gt;: 何をデザインするのか具体的に&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;制約条件&lt;/strong&gt;: ブランドカラー、フォント指定、アニメーション仕様など&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;例: 「40代のITリテラシーが低いユーザー向けの、
+シンプルで直感的なダッシュボード画面を作成してください。
+フォントはNoto Sans JP、メインカラーは#2563EB」
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="2-大枠--ピンポイントの2段階アプローチ"&gt;2. 「大枠 → ピンポイント」の2段階アプローチ&lt;/h3&gt;
+&lt;p&gt;一度に完璧を目指すのではなく、2段階で進める:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第1段階（大枠）&lt;/strong&gt;: 初期プロンプトで全体構造を作る&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;対象画面の詳細説明&lt;/li&gt;
+&lt;li&gt;必要な機能リスト&lt;/li&gt;
+&lt;li&gt;デザインテイスト（既知のサービス名で参照すると有効）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;第2段階（ピンポイント）&lt;/strong&gt;: ファイル名やクラス名を指定して細部を修正&lt;/p&gt;
+&lt;h3 id="3-デザインシステムを活用する"&gt;3. デザインシステムを活用する&lt;/h3&gt;
+&lt;p&gt;既存のテンプレートやサンプルをインポートして効率化する:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;既存のデザインをキャンバスに置いて「これっぽく作って」と指示&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Guidelines.md&lt;/code&gt; にデザインシステムとコーディングルールを記載&lt;/li&gt;
+&lt;li&gt;「〇〇画面の△△表と同様の UI で」と既存 UI を参照指示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-figma-design-との往復ワークフロー"&gt;4. Figma Design との往復ワークフロー&lt;/h3&gt;
+&lt;p&gt;Figma Make 単体で完結させるのではなく、通常の Figma Design と組み合わせる:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Figma Make&lt;/strong&gt; でデザインを生成&lt;/li&gt;
+&lt;li&gt;コピーして &lt;strong&gt;Figma Design&lt;/strong&gt; にペースト&lt;/li&gt;
+&lt;li&gt;Design で手動修正して期待通りに調整&lt;/li&gt;
+&lt;li&gt;修正版を再度 &lt;strong&gt;Figma Make&lt;/strong&gt; に取り込んで再実行&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;このサイクルを回すことで、レイヤー構造が整理され、より高品質なコード生成が実現する。&lt;/p&gt;</description></item><item><title>MyScaleDB</title><link>https://hdknr.github.io/blogs/posts/2024/10/2e82eadffae8caea54192b999c7e512d/</link><pubDate>Wed, 02 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/2e82eadffae8caea54192b999c7e512d/</guid><description>&lt;h1 id="myscaledb"&gt;MyScaleDB&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/myscale/MyScaleDB"&gt;https://github.com/myscale/MyScaleDB&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://myscale.com/blog/unleashing-power-hnsw-indexes-pgvector/"&gt;Unleashing the Power of HNSW Indexes with pgvector&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>NoCode: Web制作</title><link>https://hdknr.github.io/blogs/posts/2024/05/2f8e5b32dc79dd0395bb01ea2026c13d/</link><pubDate>Tue, 28 May 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/05/2f8e5b32dc79dd0395bb01ea2026c13d/</guid><description>&lt;h1 id="nocode-web-制作"&gt;NoCode: Web 制作&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.fpb-japan.com/post/no-code#viewer-akh47"&gt;【2023 年最新】ノーコード WEB 制作の使い分け完全ガイド｜ Wix・Editor X・STUDIO・Webflow 各種ツールの特徴・機能・選び方&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Product:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://ja.wix.com/"&gt;Wix&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Editor X -&amp;gt; Wix Studio&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://studio.design/ja"&gt;STUDIO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://webflow.com/"&gt;Webflow&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="webflow"&gt;Webflow&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.funwork2020.com/post/about-webflow"&gt;最強のサイト制作ノーコードツール『Webflow』とは？ - メリットについて数字を交えてご紹介 -&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.likepay.jp/blog/posts/what-is-webflow"&gt;Webflow とは？ノーコードツールの中で最も人気がある理由は？&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>ngrok</title><link>https://hdknr.github.io/blogs/posts/2024/03/71595cc14e6c06d15fdf96ead079543e/</link><pubDate>Thu, 21 Mar 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/03/71595cc14e6c06d15fdf96ead079543e/</guid><description>&lt;h1 id="ngrok"&gt;ngrok&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install ngrok
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;シェルコンプリージョン:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; command -v ngrok &amp;amp;&amp;gt;/dev/null; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; eval &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;ngrok completion&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;ngrok config add-authtoken 1p09hGDXtLcDay6Jz3usWSG1z7L_2upHYxJggN7FbEKcRPP7U&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/opt/homebrew/bin/ngrok config add-authtoken ***********************************
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Authtoken saved to configuration file: /Users/hdknr/.ngrok2/ngrok.yml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Default version saved to configuration file: /Users/hdknr/.ngrok2/ngrok.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>devel を削除したたが devel/0 を作れない</title><link>https://hdknr.github.io/blogs/posts/2023/12/83732a84561200aae636226d759c0d40/</link><pubDate>Wed, 13 Dec 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/12/83732a84561200aae636226d759c0d40/</guid><description>&lt;h1 id="git-update-ref--d"&gt;git update-ref -d&lt;/h1&gt;
+&lt;p&gt;これだけだと devel/2023-12-14 を pull できない&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;git branch -d devel
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;error: cannot lock ref &amp;#39;refs/remotes/origin/devel/2023-12-14&amp;#39;: &amp;#39;refs/remotes/origin/devel&amp;#39; exists; cannot create &amp;#39;refs/remotes/origin/devel/2023-12-14&amp;#39;
+From github.com:spin-dd/taihei-epm-server
+! [new branch] devel/2023-12-14 -&amp;gt; origin/devel/2023-12-14 (unable to update local ref)
+error: some local refs could not be updated; try running
+&amp;#39;git remote prune origin&amp;#39; to remove any old, conflicting branches
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;update-ref&lt;/code&gt; でクリアされる&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;git update-ref -d refs/remotes/origin/devel
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Bash スクリプト</title><link>https://hdknr.github.io/blogs/posts/2023/11/010dbcbfdae5ea5adc5ac91fb526ea6e/</link><pubDate>Mon, 20 Nov 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/11/010dbcbfdae5ea5adc5ac91fb526ea6e/</guid><description>&lt;h1 id="bash-スクリプト"&gt;bash スクリプト&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/kawarimidoll/articles/d546892a6d36eb"&gt;bash シェルスクリプトで引数とオプションを解析する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://gist.github.com/doi-t/7853853"&gt;シェル変数のデフォルト値を設定する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="compdef"&gt;compdef&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;eval &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;uv generate-shell-completion zsh&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;_uv_run_mod&lt;span style="color:#f92672"&gt;()&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#f92672"&gt;[[&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$words&lt;span style="color:#e6db74"&gt;[2]&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;run&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$words&lt;span style="color:#e6db74"&gt;[CURRENT]&amp;#34;&lt;/span&gt; !&lt;span style="color:#f92672"&gt;=&lt;/span&gt; -* &lt;span style="color:#f92672"&gt;]]&lt;/span&gt;; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _arguments &lt;span style="color:#e6db74"&gt;&amp;#39;*:filename:_files&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _uv &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$@&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;compdef _uv_run_mod uv
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;uv というコマンドに対して、_uv_run_mod という補完関数を関連付けています。&lt;/li&gt;
+&lt;li&gt;uv の後に Tab キーを押すと、_uv_run_mod 関数で定義された補完候補が表示されます。&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>tmux: セッション名</title><link>https://hdknr.github.io/blogs/posts/2023/04/f01b083dfbfb43c9cebab6da7504c179/</link><pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/f01b083dfbfb43c9cebab6da7504c179/</guid><description>&lt;h1 id="tmux-セッション名"&gt;tmux セッション名&lt;/h1&gt;
+&lt;h2 id="tmuxで現在のセッション名を変更するにはどうしたらいいでしょうか"&gt;&lt;code&gt;tmuxで現在のセッション名を変更するにはどうしたらいいでしょうか？&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;tmuxで現在のセッション名を変更するには、以下の方法があります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;セッションを作成する時に &lt;code&gt;tmux new-session -s &amp;lt;name&amp;gt;&lt;/code&gt; と指定する²⁴。&lt;/li&gt;
+&lt;li&gt;アタッチしている状態で &lt;code&gt;C-b + $&lt;/code&gt; または、 &lt;code&gt;:rename-session &amp;lt;name&amp;gt;&lt;/code&gt; で変更する²⁴。&lt;/li&gt;
+&lt;li&gt;アタッチしてない状態で &lt;code&gt;tmux rename -t &amp;lt;old-name&amp;gt; &amp;lt;new-name&amp;gt;&lt;/code&gt; でも可能です²⁴。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ソース: Bing との会話 2023/4/19&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) tmuxの基本的な使い方とコマンドのまとめ - TASK NOTES. &lt;a href="https://www.task-notes.com/entry/20150711/1436583600"&gt;https://www.task-notes.com/entry/20150711/1436583600&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(2) tmuxでよく使うコマンド - Qiita. &lt;a href="https://qiita.com/suisuina/items/fb7cf7590595d62957fd"&gt;https://qiita.com/suisuina/items/fb7cf7590595d62957fd&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(3) tmuxでよく使うコマンド - Qiita. &lt;a href="https://bing.com/search?q=tmux+%e3%82%bb%e3%83%83%e3%82%b7%e3%83%a7%e3%83%b3%e5%90%8d+%e5%a4%89%e6%9b%b4"&gt;https://bing.com/search?q=tmux+%e3%82%bb%e3%83%83%e3%82%b7%e3%83%a7%e3%83%b3%e5%90%8d+%e5%a4%89%e6%9b%b4&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(4) tmuxを使いこなそう（ウインドウ、ペイン、セッション、ア &amp;hellip;. &lt;a href="https://qiita.com/shoma2da/items/2e68c1e59938eb0c2f83"&gt;https://qiita.com/shoma2da/items/2e68c1e59938eb0c2f83&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(5) tmuxでセッションの名前を変更するにはどうすればよいですか？. &lt;a href="https://qastack.jp/superuser/428016/how-do-i-rename-a-session-in-tmux"&gt;https://qastack.jp/superuser/428016/how-do-i-rename-a-session-in-tmux&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>チャットコマース</title><link>https://hdknr.github.io/blogs/posts/2023/04/4199606562f115bf82bbe6a1eb44a39e/</link><pubDate>Sat, 15 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/4199606562f115bf82bbe6a1eb44a39e/</guid><description>&lt;h2 id="チャットコマース"&gt;チャットコマース&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://gist.github.com/hdknr/1613861645cad5daf541b5f10dfb52ef"&gt;ゼロパーティデータ&lt;/a&gt;の収集手段のひとつ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="bing"&gt;Bing&lt;/h3&gt;
+&lt;p&gt;日本では、メンズスキンケアブランドの&lt;strong&gt;バルクオム&lt;/strong&gt;がチャットコマースを活用しています²。バルクオムでは、ウェブサイトやLINEでチャットボットを使って、顧客にスキンケアのアドバイスや商品の紹介を行っています。チャットボットは、顧客の肌質や悩みに合わせたオススメの商品や使い方を教えてくれます。また、チャットボットから直接商品を購入することもできます。&lt;/p&gt;
+&lt;p&gt;海外では、ファッションブランドの&lt;strong&gt;H＆M&lt;/strong&gt;がチャットコマースを活用しています¹。H＆Mでは、メッセージングアプリのKikでチャットボットを使って、顧客にファッションのアドバイスや商品の紹介を行っています。チャットボットは、顧客の年齢や性別、好みなどに応じてコーディネートの提案や商品のレコメンドを行ってくれます。また、チャットボットから直接商品を購入することもできます。&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/4/15&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) チャットコマースとは？メリットや導入事例を解説｜EC Work. &lt;a href="https://ecwork.jp/3498"&gt;https://ecwork.jp/3498&lt;/a&gt; アクセス日時 2023/4/15.&lt;/li&gt;
+&lt;li&gt;(2) 2022年に132億円市場となる、チャットコマースとは？注目・成長 &amp;hellip;. &lt;a href="https://bing.com/search?q=%e3%83%81%e3%83%a3%e3%83%83%e3%83%88%e3%82%b3%e3%83%9e%e3%83%bc%e3%82%b9%e3%81%ae%e4%ba%8b%e4%be%8b"&gt;https://bing.com/search?q=%e3%83%81%e3%83%a3%e3%83%83%e3%83%88%e3%82%b3%e3%83%9e%e3%83%bc%e3%82%b9%e3%81%ae%e4%ba%8b%e4%be%8b&lt;/a&gt; アクセス日時 2023/4/15.&lt;/li&gt;
+&lt;li&gt;(3) 【5分で理解！】チャットコマースとは？市場・活用事例を紹介 &amp;hellip;. &lt;a href="https://atone.be/blog/%e3%83%81%e3%83%a3%e3%83%83%e3%83%88%e3%82%b3%e3%83%9e%e3%83%bc%e3%82%b9%e3%82%92%e3%82%8f%e3%81%8b%e3%82%8a%e3%82%84%e3%81%99%e3%81%8f%e8%a7%a3%e8%aa%ac/"&gt;https://atone.be/blog/%e3%83%81%e3%83%a3%e3%83%83%e3%83%88%e3%82%b3%e3%83%9e%e3%83%bc%e3%82%b9%e3%82%92%e3%82%8f%e3%81%8b%e3%82%8a%e3%82%84%e3%81%99%e3%81%8f%e8%a7%a3%e8%aa%ac/&lt;/a&gt; アクセス日時 2023/4/15.&lt;/li&gt;
+&lt;li&gt;(4) 【比較事例10選】チャットコマースとは？導入企業やLINEなどの &amp;hellip;. &lt;a href="https://obot-ai.com/column/9689/"&gt;https://obot-ai.com/column/9689/&lt;/a&gt; アクセス日時 2023/4/15.&lt;/li&gt;
+&lt;li&gt;(5) チャット型コマース(会話型コマース)とは何か？注目される理由 &amp;hellip;. &lt;a href="https://aixdesign.goo.ne.jp/column/chat-commerce/"&gt;https://aixdesign.goo.ne.jp/column/chat-commerce/&lt;/a&gt; アクセス日時 2023/4/15.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>tmux: バッファーの全テキストを選択</title><link>https://hdknr.github.io/blogs/posts/2023/04/a8e14fd27893dd3f379501b6e4f7459c/</link><pubDate>Tue, 11 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/a8e14fd27893dd3f379501b6e4f7459c/</guid><description>&lt;h2 id="tmux-バッファーの全テキストを選択"&gt;tmux: バッファーの全テキストを選択&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;vi&lt;/code&gt;キーバインド前提:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;コピーモードに入る(&lt;code&gt;:copy-mode&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;g&lt;/code&gt; でバッファーの先頭へ移動&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Space&lt;/code&gt;でバッファのコピー開始&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;G&lt;/code&gt; でバッファーの最後へ移動&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Enter&lt;/code&gt;でバッファーのコピー&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;あとは、&lt;code&gt;:paste-buffer&lt;/code&gt; で &lt;code&gt;vi&lt;/code&gt; とかに貼り付けする。&lt;/p&gt;
+&lt;h2 id="edge"&gt;Edge&lt;/h2&gt;
+&lt;p&gt;To copy all text in the current tmux screen, you need to enter copy-mode, select the entire scrollback, and yank it into the tmux buffer. Then you can paste it in another tmux pane or window. The exact keys you need to press may vary depending on your mode-keys option (vi or emacs) and your system (Mac or Linux). For example, if you use vi mode-keys on Linux, you can press &lt;code&gt;Ctrl + b&lt;/code&gt; followed by &lt;code&gt;[&lt;/code&gt; to enter copy-mode, then press &lt;code&gt;g&lt;/code&gt; to go to the top of the scrollback, then press &lt;code&gt;Ctrl + Space&lt;/code&gt; to start copying, then press &lt;code&gt;G&lt;/code&gt; to go to the bottom of the scrollback, then press &lt;code&gt;Alt + w&lt;/code&gt; or &lt;code&gt;Ctrl + w&lt;/code&gt; to yank the text into the tmux buffer. To paste the text, you can press &lt;code&gt;Ctrl + b&lt;/code&gt; followed by &lt;code&gt;]&lt;/code&gt;. Does this answer your question?&lt;/p&gt;</description></item><item><title>Homebrew Applie Silicon</title><link>https://hdknr.github.io/blogs/posts/2021/08/4d5857cdd59ed2e26dc82059bb596dde/</link><pubDate>Thu, 26 Aug 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/08/4d5857cdd59ed2e26dc82059bb596dde/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;% /bin/bash -c &amp;#34;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&amp;#34;
+==&amp;gt; Checking for `sudo` access (which may request your password).
+==&amp;gt; This script will install:
+/opt/homebrew/bin/brew
+/opt/homebrew/share/doc/homebrew
+/opt/homebrew/share/man/man1/brew.1
+/opt/homebrew/share/zsh/site-functions/_brew
+/opt/homebrew/etc/bash_completion.d/brew
+/opt/homebrew
+==&amp;gt; The following new directories will be created:
+/opt/homebrew/bin
+/opt/homebrew/etc
+/opt/homebrew/include
+/opt/homebrew/lib
+/opt/homebrew/sbin
+/opt/homebrew/share
+/opt/homebrew/var
+/opt/homebrew/opt
+/opt/homebrew/share/zsh
+/opt/homebrew/share/zsh/site-functions
+/opt/homebrew/var/homebrew
+/opt/homebrew/var/homebrew/linked
+/opt/homebrew/Cellar
+/opt/homebrew/Caskroom
+/opt/homebrew/Frameworks
+Press RETURN to continue or any other key to abort
+==&amp;gt; /usr/bin/sudo /bin/mkdir -p /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/sbin /opt/homebrew/share /opt/homebrew/var /opt/homebrew/opt /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions /opt/homebrew/var/homebrew /opt/homebrew/var/homebrew/linked /opt/homebrew/Cellar /opt/homebrew/Caskroom /opt/homebrew/Frameworks
+==&amp;gt; /usr/bin/sudo /bin/chmod u=rwx,g=rwx /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/sbin /opt/homebrew/share /opt/homebrew/var /opt/homebrew/opt /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions /opt/homebrew/var/homebrew /opt/homebrew/var/homebrew/linked /opt/homebrew/Cellar /opt/homebrew/Caskroom /opt/homebrew/Frameworks
+==&amp;gt; /usr/bin/sudo /bin/chmod g-w,o-w /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions
+==&amp;gt; /usr/bin/sudo /usr/sbin/chown hdknr /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/sbin /opt/homebrew/share /opt/homebrew/var /opt/homebrew/opt /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions /opt/homebrew/var/homebrew /opt/homebrew/var/homebrew/linked /opt/homebrew/Cellar /opt/homebrew/Caskroom /opt/homebrew/Frameworks
+==&amp;gt; /usr/bin/sudo /usr/bin/chgrp admin /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/sbin /opt/homebrew/share /opt/homebrew/var /opt/homebrew/opt /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions /opt/homebrew/var/homebrew /opt/homebrew/var/homebrew/linked /opt/homebrew/Cellar /opt/homebrew/Caskroom /opt/homebrew/Frameworks
+==&amp;gt; /usr/bin/sudo /usr/sbin/chown -R hdknr:admin /opt/homebrew
+==&amp;gt; Downloading and installing Homebrew...
+remote: Enumerating objects: 189971, done.
+remote: Counting objects: 100% (44/44), done.
+remote: Compressing objects: 100% (44/44), done.
+remote: Total 189971 (delta 0), reused 44 (delta 0), pack-reused 189927
+Receiving objects: 100% (189971/189971), 51.67 MiB | 5.76 MiB/s, done.
+Resolving deltas: 100% (140767/140767), done.
+From https://github.com/Homebrew/brew
+* [new branch] automerge-linux -&amp;gt; origin/automerge-linux
+* [new branch] dependabot/bundler/Library/Homebrew/mechanize-2.8.2 -&amp;gt; origin/dependabot/bundler/Library/Homebrew/mechanize-2.8.2
+* [new branch] dependabot/bundler/Library/Homebrew/mini_portile2-2.6.1 -&amp;gt; origin/dependabot/bundler/Library/Homebrew/mini_portile2-2.6.1
+* [new branch] dependabot/bundler/Library/Homebrew/nokogiri-1.12.3 -&amp;gt; origin/dependabot/bundler/Library/Homebrew/nokogiri-1.12.3
+* [new branch] master -&amp;gt; origin/master
+* [new tag] 0.1 -&amp;gt; 0.1
+* [new tag] 0.2 -&amp;gt; 0.2
+* [new tag] 0.3 -&amp;gt; 0.3
+* [new tag] 0.4 -&amp;gt; 0.4
+* [new tag] 0.5 -&amp;gt; 0.5
+* [new tag] 0.6 -&amp;gt; 0.6
+* [new tag] 0.7 -&amp;gt; 0.7
+* [new tag] 0.7.1 -&amp;gt; 0.7.1
+* [new tag] 0.8 -&amp;gt; 0.8
+* [new tag] 0.8.1 -&amp;gt; 0.8.1
+* [new tag] 0.9 -&amp;gt; 0.9
+* [new tag] 0.9.1 -&amp;gt; 0.9.1
+* [new tag] 0.9.2 -&amp;gt; 0.9.2
+* [new tag] 0.9.3 -&amp;gt; 0.9.3
+* [new tag] 0.9.4 -&amp;gt; 0.9.4
+* [new tag] 0.9.5 -&amp;gt; 0.9.5
+* [new tag] 0.9.8 -&amp;gt; 0.9.8
+* [new tag] 0.9.9 -&amp;gt; 0.9.9
+* [new tag] 1.0.0 -&amp;gt; 1.0.0
+* [new tag] 1.0.1 -&amp;gt; 1.0.1
+* [new tag] 1.0.2 -&amp;gt; 1.0.2
+* [new tag] 1.0.3 -&amp;gt; 1.0.3
+* [new tag] 1.0.4 -&amp;gt; 1.0.4
+* [new tag] 1.0.5 -&amp;gt; 1.0.5
+* [new tag] 1.0.6 -&amp;gt; 1.0.6
+* [new tag] 1.0.7 -&amp;gt; 1.0.7
+* [new tag] 1.0.8 -&amp;gt; 1.0.8
+* [new tag] 1.0.9 -&amp;gt; 1.0.9
+* [new tag] 1.1.0 -&amp;gt; 1.1.0
+* [new tag] 1.1.1 -&amp;gt; 1.1.1
+* [new tag] 1.1.10 -&amp;gt; 1.1.10
+* [new tag] 1.1.11 -&amp;gt; 1.1.11
+* [new tag] 1.1.12 -&amp;gt; 1.1.12
+* [new tag] 1.1.13 -&amp;gt; 1.1.13
+* [new tag] 1.1.2 -&amp;gt; 1.1.2
+* [new tag] 1.1.3 -&amp;gt; 1.1.3
+* [new tag] 1.1.4 -&amp;gt; 1.1.4
+* [new tag] 1.1.5 -&amp;gt; 1.1.5
+* [new tag] 1.1.6 -&amp;gt; 1.1.6
+* [new tag] 1.1.7 -&amp;gt; 1.1.7
+* [new tag] 1.1.8 -&amp;gt; 1.1.8
+* [new tag] 1.1.9 -&amp;gt; 1.1.9
+* [new tag] 1.2.0 -&amp;gt; 1.2.0
+* [new tag] 1.2.1 -&amp;gt; 1.2.1
+* [new tag] 1.2.2 -&amp;gt; 1.2.2
+* [new tag] 1.2.3 -&amp;gt; 1.2.3
+* [new tag] 1.2.4 -&amp;gt; 1.2.4
+* [new tag] 1.2.5 -&amp;gt; 1.2.5
+* [new tag] 1.2.6 -&amp;gt; 1.2.6
+* [new tag] 1.3.0 -&amp;gt; 1.3.0
+* [new tag] 1.3.1 -&amp;gt; 1.3.1
+* [new tag] 1.3.2 -&amp;gt; 1.3.2
+* [new tag] 1.3.3 -&amp;gt; 1.3.3
+* [new tag] 1.3.4 -&amp;gt; 1.3.4
+* [new tag] 1.3.5 -&amp;gt; 1.3.5
+* [new tag] 1.3.6 -&amp;gt; 1.3.6
+* [new tag] 1.3.7 -&amp;gt; 1.3.7
+* [new tag] 1.3.8 -&amp;gt; 1.3.8
+* [new tag] 1.3.9 -&amp;gt; 1.3.9
+* [new tag] 1.4.0 -&amp;gt; 1.4.0
+* [new tag] 1.4.1 -&amp;gt; 1.4.1
+* [new tag] 1.4.2 -&amp;gt; 1.4.2
+* [new tag] 1.4.3 -&amp;gt; 1.4.3
+* [new tag] 1.5.0 -&amp;gt; 1.5.0
+* [new tag] 1.5.1 -&amp;gt; 1.5.1
+* [new tag] 1.5.10 -&amp;gt; 1.5.10
+* [new tag] 1.5.11 -&amp;gt; 1.5.11
+* [new tag] 1.5.12 -&amp;gt; 1.5.12
+* [new tag] 1.5.13 -&amp;gt; 1.5.13
+* [new tag] 1.5.14 -&amp;gt; 1.5.14
+* [new tag] 1.5.2 -&amp;gt; 1.5.2
+* [new tag] 1.5.3 -&amp;gt; 1.5.3
+* [new tag] 1.5.4 -&amp;gt; 1.5.4
+* [new tag] 1.5.5 -&amp;gt; 1.5.5
+* [new tag] 1.5.6 -&amp;gt; 1.5.6
+* [new tag] 1.5.7 -&amp;gt; 1.5.7
+* [new tag] 1.5.8 -&amp;gt; 1.5.8
+* [new tag] 1.5.9 -&amp;gt; 1.5.9
+* [new tag] 1.6.0 -&amp;gt; 1.6.0
+* [new tag] 1.6.1 -&amp;gt; 1.6.1
+* [new tag] 1.6.10 -&amp;gt; 1.6.10
+* [new tag] 1.6.11 -&amp;gt; 1.6.11
+* [new tag] 1.6.12 -&amp;gt; 1.6.12
+* [new tag] 1.6.13 -&amp;gt; 1.6.13
+* [new tag] 1.6.14 -&amp;gt; 1.6.14
+* [new tag] 1.6.15 -&amp;gt; 1.6.15
+* [new tag] 1.6.16 -&amp;gt; 1.6.16
+* [new tag] 1.6.17 -&amp;gt; 1.6.17
+* [new tag] 1.6.2 -&amp;gt; 1.6.2
+* [new tag] 1.6.3 -&amp;gt; 1.6.3
+* [new tag] 1.6.4 -&amp;gt; 1.6.4
+* [new tag] 1.6.5 -&amp;gt; 1.6.5
+* [new tag] 1.6.6 -&amp;gt; 1.6.6
+* [new tag] 1.6.7 -&amp;gt; 1.6.7
+* [new tag] 1.6.8 -&amp;gt; 1.6.8
+* [new tag] 1.6.9 -&amp;gt; 1.6.9
+* [new tag] 1.7.0 -&amp;gt; 1.7.0
+* [new tag] 1.7.1 -&amp;gt; 1.7.1
+* [new tag] 1.7.2 -&amp;gt; 1.7.2
+* [new tag] 1.7.3 -&amp;gt; 1.7.3
+* [new tag] 1.7.4 -&amp;gt; 1.7.4
+* [new tag] 1.7.5 -&amp;gt; 1.7.5
+* [new tag] 1.7.6 -&amp;gt; 1.7.6
+* [new tag] 1.7.7 -&amp;gt; 1.7.7
+* [new tag] 1.8.0 -&amp;gt; 1.8.0
+* [new tag] 1.8.1 -&amp;gt; 1.8.1
+* [new tag] 1.8.2 -&amp;gt; 1.8.2
+* [new tag] 1.8.3 -&amp;gt; 1.8.3
+* [new tag] 1.8.4 -&amp;gt; 1.8.4
+* [new tag] 1.8.5 -&amp;gt; 1.8.5
+* [new tag] 1.8.6 -&amp;gt; 1.8.6
+* [new tag] 1.9.0 -&amp;gt; 1.9.0
+* [new tag] 1.9.1 -&amp;gt; 1.9.1
+* [new tag] 1.9.2 -&amp;gt; 1.9.2
+* [new tag] 1.9.3 -&amp;gt; 1.9.3
+* [new tag] 2.0.0 -&amp;gt; 2.0.0
+* [new tag] 2.0.1 -&amp;gt; 2.0.1
+* [new tag] 2.0.2 -&amp;gt; 2.0.2
+* [new tag] 2.0.3 -&amp;gt; 2.0.3
+* [new tag] 2.0.4 -&amp;gt; 2.0.4
+* [new tag] 2.0.5 -&amp;gt; 2.0.5
+* [new tag] 2.0.6 -&amp;gt; 2.0.6
+* [new tag] 2.1.0 -&amp;gt; 2.1.0
+* [new tag] 2.1.1 -&amp;gt; 2.1.1
+* [new tag] 2.1.10 -&amp;gt; 2.1.10
+* [new tag] 2.1.11 -&amp;gt; 2.1.11
+* [new tag] 2.1.12 -&amp;gt; 2.1.12
+* [new tag] 2.1.13 -&amp;gt; 2.1.13
+* [new tag] 2.1.14 -&amp;gt; 2.1.14
+* [new tag] 2.1.15 -&amp;gt; 2.1.15
+* [new tag] 2.1.16 -&amp;gt; 2.1.16
+* [new tag] 2.1.2 -&amp;gt; 2.1.2
+* [new tag] 2.1.3 -&amp;gt; 2.1.3
+* [new tag] 2.1.4 -&amp;gt; 2.1.4
+* [new tag] 2.1.5 -&amp;gt; 2.1.5
+* [new tag] 2.1.6 -&amp;gt; 2.1.6
+* [new tag] 2.1.7 -&amp;gt; 2.1.7
+* [new tag] 2.1.8 -&amp;gt; 2.1.8
+* [new tag] 2.1.9 -&amp;gt; 2.1.9
+* [new tag] 2.2.0 -&amp;gt; 2.2.0
+* [new tag] 2.2.1 -&amp;gt; 2.2.1
+* [new tag] 2.2.10 -&amp;gt; 2.2.10
+* [new tag] 2.2.11 -&amp;gt; 2.2.11
+* [new tag] 2.2.12 -&amp;gt; 2.2.12
+* [new tag] 2.2.13 -&amp;gt; 2.2.13
+* [new tag] 2.2.14 -&amp;gt; 2.2.14
+* [new tag] 2.2.15 -&amp;gt; 2.2.15
+* [new tag] 2.2.16 -&amp;gt; 2.2.16
+* [new tag] 2.2.17 -&amp;gt; 2.2.17
+* [new tag] 2.2.2 -&amp;gt; 2.2.2
+* [new tag] 2.2.3 -&amp;gt; 2.2.3
+* [new tag] 2.2.4 -&amp;gt; 2.2.4
+* [new tag] 2.2.5 -&amp;gt; 2.2.5
+* [new tag] 2.2.6 -&amp;gt; 2.2.6
+* [new tag] 2.2.7 -&amp;gt; 2.2.7
+* [new tag] 2.2.8 -&amp;gt; 2.2.8
+* [new tag] 2.2.9 -&amp;gt; 2.2.9
+* [new tag] 2.3.0 -&amp;gt; 2.3.0
+* [new tag] 2.4.0 -&amp;gt; 2.4.0
+* [new tag] 2.4.1 -&amp;gt; 2.4.1
+* [new tag] 2.4.10 -&amp;gt; 2.4.10
+* [new tag] 2.4.11 -&amp;gt; 2.4.11
+* [new tag] 2.4.12 -&amp;gt; 2.4.12
+* [new tag] 2.4.13 -&amp;gt; 2.4.13
+* [new tag] 2.4.14 -&amp;gt; 2.4.14
+* [new tag] 2.4.15 -&amp;gt; 2.4.15
+* [new tag] 2.4.16 -&amp;gt; 2.4.16
+* [new tag] 2.4.2 -&amp;gt; 2.4.2
+* [new tag] 2.4.3 -&amp;gt; 2.4.3
+* [new tag] 2.4.4 -&amp;gt; 2.4.4
+* [new tag] 2.4.5 -&amp;gt; 2.4.5
+* [new tag] 2.4.6 -&amp;gt; 2.4.6
+* [new tag] 2.4.7 -&amp;gt; 2.4.7
+* [new tag] 2.4.8 -&amp;gt; 2.4.8
+* [new tag] 2.4.9 -&amp;gt; 2.4.9
+* [new tag] 2.5.0 -&amp;gt; 2.5.0
+* [new tag] 2.5.1 -&amp;gt; 2.5.1
+* [new tag] 2.5.10 -&amp;gt; 2.5.10
+* [new tag] 2.5.11 -&amp;gt; 2.5.11
+* [new tag] 2.5.12 -&amp;gt; 2.5.12
+* [new tag] 2.5.2 -&amp;gt; 2.5.2
+* [new tag] 2.5.3 -&amp;gt; 2.5.3
+* [new tag] 2.5.4 -&amp;gt; 2.5.4
+* [new tag] 2.5.5 -&amp;gt; 2.5.5
+* [new tag] 2.5.6 -&amp;gt; 2.5.6
+* [new tag] 2.5.7 -&amp;gt; 2.5.7
+* [new tag] 2.5.8 -&amp;gt; 2.5.8
+* [new tag] 2.5.9 -&amp;gt; 2.5.9
+* [new tag] 2.6.0 -&amp;gt; 2.6.0
+* [new tag] 2.6.1 -&amp;gt; 2.6.1
+* [new tag] 2.6.2 -&amp;gt; 2.6.2
+* [new tag] 2.7.0 -&amp;gt; 2.7.0
+* [new tag] 2.7.1 -&amp;gt; 2.7.1
+* [new tag] 2.7.2 -&amp;gt; 2.7.2
+* [new tag] 2.7.3 -&amp;gt; 2.7.3
+* [new tag] 2.7.4 -&amp;gt; 2.7.4
+* [new tag] 2.7.5 -&amp;gt; 2.7.5
+* [new tag] 2.7.6 -&amp;gt; 2.7.6
+* [new tag] 2.7.7 -&amp;gt; 2.7.7
+* [new tag] 3.0.0 -&amp;gt; 3.0.0
+* [new tag] 3.0.1 -&amp;gt; 3.0.1
+* [new tag] 3.0.10 -&amp;gt; 3.0.10
+* [new tag] 3.0.11 -&amp;gt; 3.0.11
+* [new tag] 3.0.2 -&amp;gt; 3.0.2
+* [new tag] 3.0.3 -&amp;gt; 3.0.3
+* [new tag] 3.0.4 -&amp;gt; 3.0.4
+* [new tag] 3.0.5 -&amp;gt; 3.0.5
+* [new tag] 3.0.6 -&amp;gt; 3.0.6
+* [new tag] 3.0.7 -&amp;gt; 3.0.7
+* [new tag] 3.0.8 -&amp;gt; 3.0.8
+* [new tag] 3.0.9 -&amp;gt; 3.0.9
+* [new tag] 3.1.0 -&amp;gt; 3.1.0
+* [new tag] 3.1.1 -&amp;gt; 3.1.1
+* [new tag] 3.1.10 -&amp;gt; 3.1.10
+* [new tag] 3.1.11 -&amp;gt; 3.1.11
+* [new tag] 3.1.12 -&amp;gt; 3.1.12
+* [new tag] 3.1.2 -&amp;gt; 3.1.2
+* [new tag] 3.1.3 -&amp;gt; 3.1.3
+* [new tag] 3.1.4 -&amp;gt; 3.1.4
+* [new tag] 3.1.5 -&amp;gt; 3.1.5
+* [new tag] 3.1.6 -&amp;gt; 3.1.6
+* [new tag] 3.1.7 -&amp;gt; 3.1.7
+* [new tag] 3.1.8 -&amp;gt; 3.1.8
+* [new tag] 3.1.9 -&amp;gt; 3.1.9
+* [new tag] 3.2.0 -&amp;gt; 3.2.0
+* [new tag] 3.2.1 -&amp;gt; 3.2.1
+* [new tag] 3.2.2 -&amp;gt; 3.2.2
+* [new tag] 3.2.3 -&amp;gt; 3.2.3
+* [new tag] 3.2.4 -&amp;gt; 3.2.4
+* [new tag] 3.2.5 -&amp;gt; 3.2.5
+* [new tag] 3.2.6 -&amp;gt; 3.2.6
+* [new tag] 3.2.7 -&amp;gt; 3.2.7
+* [new tag] 3.2.8 -&amp;gt; 3.2.8
+* [new tag] 3.2.9 -&amp;gt; 3.2.9
+HEAD is now at 858f3fbaa Merge pull request #11921 from Homebrew/dependabot/bundler/Library/Homebrew/sorbet-0.5.9070
+==&amp;gt; Tapping homebrew/core
+remote: Enumerating objects: 1030054, done.
+remote: Counting objects: 100% (138/138), done.
+remote: Compressing objects: 100% (67/67), done.
+remote: Total 1030054 (delta 77), reused 132 (delta 71), pack-reused 1029916
+Receiving objects: 100% (1030054/1030054), 386.75 MiB | 19.32 MiB/s, done.
+Resolving deltas: 100% (705903/705903), done.
+From https://github.com/Homebrew/homebrew-core
+* [new branch] master -&amp;gt; origin/master
+HEAD is now at ad32cdaac0 ezstream: update 1.0.2 bottle.
+Warning: /opt/homebrew/bin is not in your PATH.
+Instructions on how to configure your shell for Homebrew
+can be found in the &amp;#39;Next steps&amp;#39; section below.
+==&amp;gt; Installation successful!
+==&amp;gt; Homebrew has enabled anonymous aggregate formulae and cask analytics.
+Read the analytics documentation (and how to opt-out) here:
+https://docs.brew.sh/Analytics
+No analytics data has been sent yet (or will be during this `install` run).
+==&amp;gt; Homebrew is run entirely by unpaid volunteers. Please consider donating:
+https://github.com/Homebrew/brew#donations
+==&amp;gt; Next steps:
+- Run these two commands in your terminal to add Homebrew to your PATH:
+echo &amp;#39;eval &amp;#34;$(/opt/homebrew/bin/brew shellenv)&amp;#34;&amp;#39; &amp;gt;&amp;gt; /Users/hdknr/.zprofile
+eval &amp;#34;$(/opt/homebrew/bin/brew shellenv)&amp;#34;
+- Run `brew help` to get started
+- Further documentation:
+https://docs.brew.sh
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Windows Termnal</title><link>https://hdknr.github.io/blogs/posts/2021/02/278c6c9f7262f4cef2e229a801b645ba/</link><pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/02/278c6c9f7262f4cef2e229a801b645ba/</guid><description>&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/ja-jp/windows/terminal/customize-settings/color-schemes"&gt;https://docs.microsoft.com/ja-jp/windows/terminal/customize-settings/color-schemes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/y-tsutsu/items/833020344aa03539856e"&gt;https://qiita.com/y-tsutsu/items/833020344aa03539856e&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Windows 関連</title><link>https://hdknr.github.io/blogs/posts/2020/11/b26c9e9302438a1303f7ecd58533a621/</link><pubDate>Sat, 21 Nov 2020 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2020/11/b26c9e9302438a1303f7ecd58533a621/</guid><description>&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dev.to/hymanzhan/setting-up-wsl-2-for-web-development-3202"&gt;Setting up WSL 2 for Web Development&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/v2okimochi/items/f53edcf79a4b71f519b1"&gt;https://qiita.com/v2okimochi/items/f53edcf79a4b71f519b1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack"&gt;https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>都道府県</title><link>https://hdknr.github.io/blogs/posts/2018/01/5d4652c00dfd893ca87ba4d709951089/</link><pubDate>Tue, 23 Jan 2018 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2018/01/5d4652c00dfd893ca87ba4d709951089/</guid><description>&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ curl https://gist.githubusercontent.com/hdknr/5d4652c00dfd893ca87ba4d709951089/raw/d12a3b2c2108317720c37a51c905be3314558188/prefectures.json | jq &lt;span style="color:#e6db74"&gt;&amp;#34;.[]&amp;#34;&lt;/span&gt; -r
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Coffee</title><link>https://hdknr.github.io/blogs/posts/2015/07/8bbdff7f366574a9d1eb/</link><pubDate>Thu, 30 Jul 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/07/8bbdff7f366574a9d1eb/</guid><description>&lt;h2 id="stand--cafe"&gt;Stand / Cafe&lt;/h2&gt;
+&lt;h3 id="渋谷"&gt;渋谷&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;千駄ヶ谷 &lt;a href="http://beagoodneighbor.net/sendagaya"&gt;Be a Good Neighbor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;道玄坂 &lt;a href="http://www.about-life.coffee/"&gt;ABOUT LIFE COFFEE BREWERS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;富ヶ谷&lt;a href="https://www.facebook.com/Fuglen.Tokyo"&gt;Fuglen Tokyo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;猿楽町 &lt;a href="http://shop.thecoffeeshop.jp/shopinfo/"&gt;THE COFFEESHOP&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="目黒"&gt;目黒&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;中目黒 &lt;a href="http://www.onibuscoffee.com/post/138145679285/nakameguro"&gt;Onibus&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="日本橋"&gt;日本橋&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;東日本橋 &lt;a href="http://goodcoffee.me/coffeeshop/mighty-steps-coffee-stop/"&gt;Mighty steps coffee stop&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="港区"&gt;港区&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;東麻布&lt;a href="http://macaro-ni.jp/7745?page=2"&gt;Towers 188&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;六本木&lt;a href="http://beagoodneighbor.net/roppongi"&gt;Be a Good Neighbor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;西新橋&lt;a href="http://peace-coffee.jp/"&gt;PEACE COFFEE ROASTERS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="中野"&gt;中野&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;中野 &lt;a href="http://bar-zingaro.jp/"&gt;Bar Zingaro&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="江東区"&gt;江東区&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;清澄 &lt;a href="http://arisecoffee.jp/"&gt;ARISE COFFEE&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="roastery"&gt;Roastery&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;鹿児島 [VOILA] (&lt;a href="http://www.inouecoffee.com/"&gt;http://www.inouecoffee.com/&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;奥沢 &lt;a href="http://onibuscoffee.com/top.html"&gt;ONIBUS COFFEE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;富ヶ谷 &lt;a href="http://shop.thecoffeeshop.jp/shopinfo/"&gt;ROAST WORKS THE COFFEESHOP&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="beans"&gt;Beans&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.caffe-fresco.net/beans17.html"&gt;コスタリカ ラ・ロマ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.kohikobo.co.jp/papa/green-beans/548/"&gt;エチオピア ナチュラル&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://onibuscoffee.com/lineup.html"&gt;ルワンダ　ニャカブエ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="resource"&gt;Resource&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.kohikobo.co.jp/papa/green-beans/"&gt;HORIGUCHI COFFEE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.discovery-cafe.jp/1_coffee/index.html"&gt;DISCOVERY&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.maruyamacoffee.com/blog/knowledge/"&gt;丸山珈琲&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Configure Windows Git ssh</title><link>https://hdknr.github.io/blogs/posts/2015/03/7428c579c3b5078975c0/</link><pubDate>Sun, 29 Mar 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/03/7428c579c3b5078975c0/</guid><description>&lt;h2 id="git-mv-permission-denied"&gt;git mv “permission denied&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://academe.co.uk/2011/12/git-mv-permission-denied/"&gt;git mv “permission denied”&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;レポジトリのフォルダーから explorer 起動している？閉じてください。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="gitignore"&gt;.gitignore&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://stackoverflow.com/questions/2143956/gitignore-for-visual-studio-projects-and-solutions"&gt;.gitignore for Visual Studio Projects and Solutions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ssh関連"&gt;ssh関連&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr&amp;gt;where ssh-keygen
+C:\ProgramData\chocolatey\bin\ssh-keygen
+C:\ProgramData\chocolatey\bin\ssh-keygen.bat
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr\Documents\hoge&amp;gt;ssh-keygen -b 4096 -f \Users\hdknr\.ssh\win8.key
+Generating public/private rsa key pair.
+cygwin warning:
+MS-DOS style path detected: \Users\hdknr\.ssh\win8.key
+Preferred POSIX equivalent is: /cygdrive/c/Users/hdknr/.ssh/win8.key
+CYGWIN environment variable option &amp;#34;nodosfilewarning&amp;#34; turns off this warning.
+Consult the user&amp;#39;s guide for more details about POSIX paths:
+http://cygwin.com/cygwin-ug-net/using.html#using-pathnames
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in \Users\hdknr\.ssh\win8.key.
+Your public key has been saved in \Users\hdknr\.ssh\win8.key.pub.
+The key fingerprint is:
+93:66:5a:0e:7b:e4:a1:2d:fc:ee:46:4f:46:1c:07:fa hdknr@Blacky
+The key&amp;#39;s randomart image is:
++--[ RSA 4096]----+
+| .. |
+| .. . |
+| .. o |
+| oo |
+| . S.E |
+| . &amp;amp;.oo |
+| *.=+ |
+| +. . |
+| ++ |
++-----------------+
+C:\Users\hdknr\Documents\hoge&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr\Documents\hoge&amp;gt;dir \Users\hdknr\.ssh
+ドライブ C のボリューム ラベルは Acer です
+ボリューム シリアル番号は 9AAA-8637 です
+C:\Users\hdknr\.ssh のディレクトリ
+2015/03/29 17:35 &amp;lt;DIR&amp;gt; .
+2015/03/29 17:35 &amp;lt;DIR&amp;gt; ..
+2015/03/29 16:51 410 known_hosts
+2015/03/29 17:35 3,243 win8.key
+2015/03/29 17:35 738 win8.key.pub
+5 個のファイル 8,372 バイト
+2 個のディレクトリ 807,079,927,808 バイトの空き領域
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr\Documents\hoge&amp;gt;where git
+C:\Program Files (x86)\Git\cmd\git.exe
+C:\Users\hdknr\Documents\hoge&amp;gt;cd C:\Program Files (x86)\Git\etc
+C:\Program Files (x86)\Git\etc&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Program Files (x86)\Git\etc&amp;gt;mkdir ssh
+C:\Program Files (x86)\Git\etc&amp;gt;gvim ssh\ssh_config
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Program Files (x86)\Git\etc&amp;gt;more ssh\ssh_config
+Host bitbucket.org
+IdentityFile C:\Users\hdknr\.ssh\win8.key
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr\Documents\hoge&amp;gt;git clone git@bitbucket.org:hdknr/photo.git
+Cloning into &amp;#39;photo&amp;#39;...
+remote: Counting objects: 33, done.
+remote: Compressing objects: 100% (31/31), done.
+remote: Total 33 (delta 1), reused 0 (delta 0)
+Receiving objects: 100% (33/33), 9.72 MiB | 400.00 KiB/s, done.
+Resolving deltas: 100% (1/1), done.
+Checking connectivity... done.
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>

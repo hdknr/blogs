@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>フリーランス on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%95%E3%83%AA%E3%83%BC%E3%83%A9%E3%83%B3%E3%82%B9/</link><description>Recent content in フリーランス on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Sat, 02 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%95%E3%83%AA%E3%83%BC%E3%83%A9%E3%83%B3%E3%82%B9/index.xml" rel="self" type="application/rss+xml"/><item><title>英語圏のClaude Codeガチ勢が月50万〜200万円稼ぐ手法 — Anthropic公式が語った5つのテクニック</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-freelance-gachisei-anthropic-techniques/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-freelance-gachisei-anthropic-techniques/</guid><description>&lt;p&gt;2026年5月、SNSで注目を集めた一本のポストがある。会社員として働きながらAI×SNS副業で月30万円を達成したエンジニア・おさぼり（@1osabori）氏が「英語圏のClaude Codeガチ勢がクライアントから月50万〜200万取ってる手法、Anthropic公式が30分でほぼ全部喋っちゃう」と発信した。そのポストは83万インプレッションを超えた。&lt;/p&gt;
+&lt;p&gt;この記事では、Anthropicが公式に公開しているドキュメントとガイドをもとに、英語圏のフリーランサーたちが実践している具体的なテクニックを解説する。&lt;/p&gt;
+&lt;h2 id="なぜ日本人が知らないのか"&gt;なぜ日本人が知らないのか&lt;/h2&gt;
+&lt;p&gt;英語圏では Claude Code を活用した高単価フリーランスという働き方が急速に広まっている。Anthropicは「&lt;a href="https://www-cdn.anthropic.com/58284b19e702b49db9302d5b6f135ad8871e7658.pdf"&gt;How Anthropic teams use Claude Code&lt;/a&gt;」という公式ドキュメントや「&lt;a href="https://code.claude.com/docs/en/best-practices"&gt;Best practices for Claude Code&lt;/a&gt;」で、社内エンジニアが実際に使っているワークフローを詳細に公開している。&lt;/p&gt;
+&lt;p&gt;しかしこれらのコンテンツはすべて英語で書かれており、日本語圏には届いていない。おさぼり氏が「日本人で知ってる人1%もおらん」と指摘するとおり、この情報格差が収益格差に直結している。&lt;/p&gt;
+&lt;h2 id="テクニック1-計画先行ワークフローplan-first-approach"&gt;テクニック1: 計画先行ワークフロー（Plan-First Approach）&lt;/h2&gt;
+&lt;p&gt;Anthropicエンジニアが最も強調するのが「実装より前に計画を立てる」という原則だ。&lt;/p&gt;
+&lt;p&gt;Claude Code には &lt;strong&gt;plan モード&lt;/strong&gt;（&lt;code&gt;Shift+Tab&lt;/code&gt; を2回押して切り替え）があり、このモードでClaudeはコードを書かずに計画だけを提案する。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;# プロンプト例
+「まずコードには触れずに、このAPIの認証機能をどう実装するか
+設計案を提示してください」
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;実装と探索を分離することで「間違った問題を解決する」リスクを排除できる。一度のプロンプトで複雑なタスクを丸ごと投げるのではなく、ステップバイステップで進めることが品質の鍵だと公式ドキュメントは述べている。&lt;/p&gt;
+&lt;h2 id="テクニック2-並列エージェントパターン"&gt;テクニック2: 並列エージェントパターン&lt;/h2&gt;
+&lt;p&gt;英語圏の高単価エンジニアが特に活用しているのが「複数のClaude Codeセッションを同時に立ち上げて並列で動かす」手法だ。&lt;/p&gt;
+&lt;p&gt;Anthropicの社内実践として紹介されているのは以下のようなパターンだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;エージェント1&lt;/strong&gt;: スタイルガイドの確認&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント2&lt;/strong&gt;: プロジェクト履歴のレビュー&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント3&lt;/strong&gt;: バグのフラグ立て&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント4〜8&lt;/strong&gt;: 元の発見の検証&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一人のエンジニアが複数のClaudeインスタンスを「チーム」として運用することで、従来は複数人が必要だったコードレビューや品質保証を一人でこなせるようになる。これがクライアントから高い報酬を得られる直接の理由だ。&lt;/p&gt;
+&lt;h2 id="テクニック3-ストップフックによる自動化"&gt;テクニック3: ストップフックによる自動化&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Stop Hooks&lt;/strong&gt;は、Claudeがタスクを完了したときに自動でアクションを実行する仕組みだ。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;settings.json&lt;/code&gt; の設定例:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;hooks&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Stop&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;matcher&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;hooks&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;command&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;command&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;npm test &amp;amp;&amp;amp; npm run lint&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Claudeがコードを書き終わると自動でテストが実行され、失敗があればClaudeが修正する。このサイクルを人間が介在せずに回すことで、Anthropicエンジニアは「2〜3倍の品質向上」を報告している（プロジェクトによって異なる）。なお &lt;code&gt;npm test&lt;/code&gt; の部分は実際のプロジェクト構成に合わせて変更すること。&lt;/p&gt;</description></item><item><title>フリーランスが1年以内に4割廃業する現実：月収100万の壁を超える「覚悟」とは</title><link>https://hdknr.github.io/blogs/posts/2026/03/freelance-survival-commitment/</link><pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/freelance-survival-commitment/</guid><description>&lt;p&gt;X（旧 Twitter）で &lt;a href="https://x.com/Via00Via"&gt;VIA(@Via00Via)&lt;/a&gt; 氏が投稿した、フリーランスの厳しい生存率と月収100万円の壁を超えるための「覚悟」についての記事が話題になっている。中小企業白書のデータを交えながら、その要点を整理する。&lt;/p&gt;
+&lt;h2 id="フリーランスの廃業率数字が示す厳しい現実"&gt;フリーランスの廃業率：数字が示す厳しい現実&lt;/h2&gt;
+&lt;p&gt;日本のフリーランスの廃業率は以下のように報告されている：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;1年以内&lt;/strong&gt;: 約4割が廃業&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;3年以内&lt;/strong&gt;: 約6割が廃業&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;10年後&lt;/strong&gt;: わずか1割程度しか生き残れない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;多くの人が「スキルさえあれば」と信じて参入するが、現実はもっとシビアだ。&lt;/p&gt;
+&lt;h2 id="月収100万以下のフリーランスに共通する行動パターン"&gt;月収100万以下のフリーランスに共通する行動パターン&lt;/h2&gt;
+&lt;p&gt;月収100万円という壁を前に足踏みしている人には共通点がある。それは &lt;strong&gt;無意識のうちに「今の延長線上」の努力に逃げていること&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;p&gt;低単価な案件を寝る間も惜しんで数でこなす。一見すると努力に見えるが、本質的には以下のリスクから目を背けている：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;高単価な提案をして断られるリスク&lt;/li&gt;
+&lt;li&gt;責任範囲を広げる恐怖&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;今の作業を繰り返すだけで壁を越えようとするのは、正直やめたほうがいい。&lt;/p&gt;
+&lt;h2 id="時給の呪縛から抜け出す"&gt;「時給」の呪縛から抜け出す&lt;/h2&gt;
+&lt;p&gt;なぜあと一歩が届かないのか。それは &lt;strong&gt;「時給」という概念に縛られ、自分の時間を切り売りすることに安心しているから&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;p&gt;1万円の作業を100回こなそうとする努力は一見尊い。しかしその実態は、100万円の価値を1回で提供するプレッシャーから逃げているだけ。今のままのやり方でどうにかしようとする甘えが一番のブレーキになっている。&lt;/p&gt;
+&lt;h2 id="壁を突破するために必要な行動変革"&gt;壁を突破するために必要な行動変革&lt;/h2&gt;
+&lt;p&gt;この壁を突破したいなら、今日から行動を180度変える必要がある：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;自分の安売りを即座にやめる&lt;/strong&gt; — 作業員としてではなく、クライアントの利益に直接貢献する「事業パートナー」として振る舞う&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;相手の売上に責任を持つ覚悟を決める&lt;/strong&gt; — 100万円の価値を届けるために何が必要かを考え、泥臭く提案し続ける&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;チームで成果を出す仕組みを作る&lt;/strong&gt; — 時には自分より優秀な人を巻き込み、個人の限界を超える&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="報酬は覚悟に比例する"&gt;報酬は「覚悟」に比例する&lt;/h2&gt;
+&lt;p&gt;フリーランスの報酬は「自分がどれだけの責任を背負うと決めたか」に比例する。100万円以下で停滞しているのは、心のどこかで「今のままでも生きていける」と自分を甘やかしている証拠かもしれない。&lt;/p&gt;
+&lt;p&gt;廃業率のデータに飲み込まれる側に回るのか、それとも突き抜ける側に回るのか。その差は、今この瞬間に &lt;strong&gt;「退路を断つ覚悟」&lt;/strong&gt; を持てるかどうかにかかっている。&lt;/p&gt;
+&lt;p&gt;成功しているフリーランスは、例外なく「覚悟」を決めた日から人生のギアが変わっている。&lt;/p&gt;
+&lt;h2 id="参考"&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://x.com/Via00Via/status/2035857227429630228"&gt;元ポスト — VIA(@Via00Via)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://itpropartners.com/blog/39995/"&gt;フリーランスの廃業率は1年で30%以上？ — ITプロマガジン&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>月商100〜300万の作り方は2パターンしかない — 「1本で100万」vs「20万×5本」</title><link>https://hdknr.github.io/blogs/posts/2026/03/monthly-revenue-two-patterns/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/monthly-revenue-two-patterns/</guid><description>&lt;p&gt;株式会社SWIFT代表の井口亮平氏（&lt;a href="https://x.com/Ryohei_Iguchi"&gt;@Ryohei_Iguchi&lt;/a&gt;）がX（旧Twitter）で公開した記事が、月商100〜300万円を目指すフリーランスや小規模事業者にとって示唆に富む内容だったので紹介する。&lt;/p&gt;
+&lt;h2 id="2つのパターン"&gt;2つのパターン&lt;/h2&gt;
+&lt;p&gt;月商100〜300万円を作る方法は、突き詰めると &lt;strong&gt;2パターン&lt;/strong&gt; しかないという。&lt;/p&gt;
+&lt;h3 id="パターン1-100万を1本取る"&gt;パターン1: 100万を1本取る&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;高単価案件を1本受注する戦略&lt;/li&gt;
+&lt;li&gt;例: コンサルティング、システム開発、ハイエンドなクリエイティブ制作&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メリット&lt;/strong&gt;: クライアント管理がシンプル、1案件に集中できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;デメリット&lt;/strong&gt;: 案件が途切れたときのリスクが大きい、営業コストが高い&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="パターン2-20万を5本積む"&gt;パターン2: 20万を5本積む&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;中単価の案件を複数積み上げる戦略&lt;/li&gt;
+&lt;li&gt;例: 月額制のSNS運用代行、サブスク型サービス、定期的な制作案件&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メリット&lt;/strong&gt;: 収益が安定しやすい、1案件がなくなっても致命傷にならない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;デメリット&lt;/strong&gt;: マルチタスクの管理能力が必要、スケーリングに限界がある&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="どちらを選ぶべきか"&gt;どちらを選ぶべきか&lt;/h2&gt;
+&lt;p&gt;どちらが正解というわけではなく、自分のスキルセットや事業の性質に合ったパターンを選ぶことが重要だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;専門性が高い人&lt;/strong&gt; → パターン1（高単価×少数）が向いている&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オペレーションが得意な人&lt;/strong&gt; → パターン2（中単価×複数）で安定収益を作りやすい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;実際には、パターン2で安定した基盤を作りつつ、パターン1の高単価案件を狙うハイブリッド型が現実的なアプローチになることも多い。&lt;/p&gt;
+&lt;h2 id="エンジニアフリーランスへの示唆"&gt;エンジニア・フリーランスへの示唆&lt;/h2&gt;
+&lt;p&gt;エンジニアやIT系フリーランスの場合:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;パターン1&lt;/strong&gt;: 技術顧問、アーキテクト案件、受託開発&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;パターン2&lt;/strong&gt;: 保守運用契約、技術メンター、複数社への業務委託&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;月商300万円を超えるには、いずれのパターンでも「自分が動く」だけでは限界が来る。仕組み化やチーム化を見据えた設計が、次のステージへの鍵になる。&lt;/p&gt;
+&lt;h2 id="参考"&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://x.com/ryohei_iguchi/status/2032028181134524450"&gt;元ツイート（X記事）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://corp-swift.co.jp/"&gt;株式会社SWIFT&lt;/a&gt; — X運用のプロフェッショナル集団&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

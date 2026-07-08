@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>株式投資 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E6%A0%AA%E5%BC%8F%E6%8A%95%E8%B3%87/</link><description>Recent content in 株式投資 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E6%A0%AA%E5%BC%8F%E6%8A%95%E8%B3%87/index.xml" rel="self" type="application/rss+xml"/><item><title>Claudeは株式取引の天才 — X（旧Twitter）で70万ビューを記録した「AI投資自動化プロンプト」7選の実践ガイド</title><link>https://hdknr.github.io/blogs/posts/2026/06/claude-kabushiki-jidoka-prompts/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/claude-kabushiki-jidoka-prompts/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;2026年6月14日、X（旧Twitter）にこんな投稿が現れた。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「Claudeは株式取引の天才です。99％の凡人はこれを使えてない。株式取引の自動化を解放する7つのプロンプトをここに置きます↓」
+— 月島くん（&lt;a href="https://x.com/wancoro_xx/status/2066144351496110340"&gt;@wancoro_xx&lt;/a&gt;）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;わずか数日で &lt;strong&gt;70万ビュー超え、ブックマーク6,500以上&lt;/strong&gt;。この投稿は個人投資家・トレーダーとAIユーザーの双方を席巻した。「AIを投資に使う」という発想の民主化を象徴する現象だ。&lt;/p&gt;
+&lt;p&gt;本記事では、このポストが示唆する「株式取引を自動化するプロンプト」の概念を展開し、Claudeで実際に使えるプロンプト7領域を具体的に紹介する。&lt;/p&gt;
+&lt;h2 id="なぜclaudeが株式取引に強いのか"&gt;なぜClaudeが株式取引に強いのか&lt;/h2&gt;
+&lt;h3 id="長大な金融文書を一度に処理できる"&gt;長大な金融文書を一度に処理できる&lt;/h3&gt;
+&lt;p&gt;有価証券報告書・決算短信・アナリストレポートといった金融文書は長い。Claudeは&lt;strong&gt;数万トークン規模の文書&lt;/strong&gt;を一度に処理できるため、「この決算書を読んでリスク要因を洗い出して」という指示だけで、数十ページのPDFをまとめてくれる。&lt;/p&gt;
+&lt;h3 id="コードを生成してそのまま実行できる"&gt;コードを生成してそのまま実行できる&lt;/h3&gt;
+&lt;p&gt;Claude Codeを使えば、&lt;strong&gt;PythonやPine Scriptのコードを生成→デバッグ→実行&lt;/strong&gt;まで一気通貫で行える。TradingViewのスクリプト作成やバックテストコードの生成も、プロンプト一つで完結する。&lt;/p&gt;
+&lt;h3 id="感情に左右されない論理推論が得意"&gt;感情に左右されない論理推論が得意&lt;/h3&gt;
+&lt;p&gt;「なぜこの銘柄を買うのか」という定性判断において、Claudeは&lt;strong&gt;根拠を連鎖させた推論&lt;/strong&gt;を行う。個人投資家が陥りがちな損切りできない・ナンピンしすぎる、といった感情バイアスを補正する役割を担える。&lt;/p&gt;
+&lt;h2 id="株式取引を自動化する7つのプロンプト領域"&gt;株式取引を自動化する7つのプロンプト領域&lt;/h2&gt;
+&lt;h3 id="プロンプト-決算短信の高速分析"&gt;プロンプト① 決算短信の高速分析&lt;/h3&gt;
+&lt;p&gt;決算発表日に速報として使うと、一晩で数十銘柄の定量分析が可能になる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;以下の決算短信を読んで、下記4点を簡潔にまとめてください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1. 前期比の売上・営業利益の変化率
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2. 通期業績予想に対する達成率
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3. キャッシュフローと財務体質上の懸念点
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4. 競合他社との相対的ポジション変化
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;最後に、この決算を「強い / 中立 / 弱い」で評価し、その根拠を1文で述べてください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[決算短信テキストをここに貼り付け]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Yahoo Finance・EDINETから取得した決算テキストをそのまま貼り付けるだけで動く。&lt;/p&gt;</description></item><item><title>moomoo × AI でセクターローテーションを察知する — 44のルールで構築した定量売買システム</title><link>https://hdknr.github.io/blogs/posts/2026/05/moomoo-ai-sector-rotation/</link><pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/moomoo-ai-sector-rotation/</guid><description>&lt;p&gt;セクターローテーションは、景気サイクルに合わせて資金が特定のセクターへ移動する現象だ。この動きを早期に察知できれば、相場の追い風を受けながら売買できる。しかし「どのセクターが今動いているか」を毎日人手で追うのは難しい。&lt;/p&gt;
+&lt;p&gt;ある個人投資家（&lt;a href="https://x.com/hm_emememem"&gt;@hm_emememem&lt;/a&gt;）は、moomooとAIを組み合わせてこの問題を解決し、44のルールで構成された定量的な売買システムへと発展させた。そのアプローチを紐解く。&lt;/p&gt;
+&lt;h2 id="moomoo-でセクターを一覧監視する"&gt;moomoo でセクターを一覧監視する&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.moomoo.com/jp/"&gt;moomoo&lt;/a&gt;（ムームー）は、香港上場のFintech企業 Futu Holdings（ナスダック: FUTU）が提供するグローバル投資プラットフォームだ。2023年9月に日本でサービスを開始し、2024年3月には日本株取引にも対応。2024年時点で日本国内のダウンロード数が100万件を超えている。&lt;/p&gt;
+&lt;p&gt;moomooには、セクター監視に役立つ機能が揃っている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ヒートマップ&lt;/strong&gt;: セクターごとのパフォーマンスを色とサイズで視覚化。大型株が緑（上昇）／赤（下落）で一目でわかる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セクタースクリーナー&lt;/strong&gt;: 14種類の指標（バリュエーション、テクニカル、収益性など）でフィルタリング&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マーケットモニター&lt;/strong&gt;: カスタムアラートで価格ブレイクアウトなどの条件を自動通知&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンセプトセクター&lt;/strong&gt;: テーマ投資視点でホットな市場を可視化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらを使い、複数セクターを一覧にまとめたウォッチリストを構築することで、AIに毎日渡すデータセットの土台を作る。moomooのデータをさらにプログラムで活用したい場合は、&lt;a href="../../03/2026-03-18-moomoo-openapi/"&gt;moomoo OpenAPIを使った自動売買&lt;/a&gt;も参照してほしい。&lt;/p&gt;
+&lt;h2 id="aiを毎日のセクター監視役にする"&gt;AIを毎日のセクター監視役にする&lt;/h2&gt;
+&lt;p&gt;構築したウォッチリストのデータを毎日AIに読み込ませ、以下を問いかける運用を行っている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;今日はどのセクターに資金が流入しているか？&lt;/li&gt;
+&lt;li&gt;過去数日と比較して傾向に変化はあるか？&lt;/li&gt;
+&lt;li&gt;新しいカタリスト（触媒となる材料）が発生していないか？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AIは過去データとの差分を解析し、「ようやく新しいカタリストが動き始めた」といった変化の兆候をテキストでフィードバックする。人間がチャートを目視確認するより、変化の記述が言語化されるため見落としが減る。&lt;/p&gt;
+&lt;h2 id="44のルールで売買を定量化する"&gt;44のルールで売買を定量化する&lt;/h2&gt;
+&lt;p&gt;AIとの対話を繰り返して投資ルールを精緻化した結果、最終的に44のルールを体系化し、それらを複合することで売買判断を定量的に行う仕組みを構築した。&lt;/p&gt;
+&lt;p&gt;ルールの例として考えられるのは次のような構造だ。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ルール例（概念的な構成 — 実際の44ルールの内容は非公開）:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1. セクター強度スコア: 過去5日の相対リターンが上位3セクターに入る
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2. 出来高確認: 20日平均の1.5倍以上の出来高を伴う
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;3. 主力株のブレイクアウト: セクター内主力銘柄が52週高値更新
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;4. マクロ環境チェック: 利上げ局面/利下げ局面に応じた対象セクター除外
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;5. リスク管理: 単一セクターへの集中を資産の20%以内に抑える
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...（計44ルール）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これらを「AND条件」「OR条件」で組み合わせ、シグナルが複数の基準を満たしたときのみ発動する構造にすることで、フォールスポジティブ（誤検知）を減らしている。&lt;/p&gt;</description></item><item><title>押し目買い（Buy the Dip）— 上昇トレンドの一時的な下落を狙う王道の投資戦略</title><link>https://hdknr.github.io/blogs/posts/2026/05/oshi-me-gai-buy-the-dip/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/oshi-me-gai-buy-the-dip/</guid><description>押し目買い（Buy the Dip）とは、上昇トレンド中の一時的な下落（調整局面）を狙って買いを入れる投資手法。移動平均線・一目均衡表・心理的節目を使った見極め方と、「落ちてくるナイフ」リスクの回避方法を解説。</description></item><item><title>AI電力テーマのセクターローテーション — 半導体から蓄電池へ、先回りする投資家の視点</title><link>https://hdknr.github.io/blogs/posts/2026/05/ai-power-sector-rotation/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/ai-power-sector-rotation/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;AIブームが引き起こした「電力テーマ」は、単なる半導体株の上昇にとどまらず、複数のセクターを順番に押し上げるセクターローテーションとして進行しています。&lt;/p&gt;
+&lt;p&gt;株式市場で成果を出している投資家の間で「半導体はもう買っていない」という声が増えています。なぜか。答えはシンプルで、&lt;strong&gt;上がる前に買う&lt;/strong&gt;という鉄則を実践しているからです。&lt;/p&gt;
+&lt;p&gt;この記事では、AI電力テーマのセクターローテーション4段階の構造と、現在の注目フェーズである蓄電池への移行ロジック、そして「上がる前に仕込む」実践的な視点を解説します。&lt;/p&gt;
+&lt;h2 id="ai電力テーマのローテーション構造"&gt;AI電力テーマのローテーション構造&lt;/h2&gt;
+&lt;p&gt;AI電力テーマは次の4段階でセクターを移動していると分析されています。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/ai-power-sector-rotation.png" alt="AI電力テーマのセクターローテーション構造：第1フェーズの半導体から、データセンター建設・REIT、発電・電力株を経て、現在第4フェーズの蓄電池へ資金が流れる4段階の図"&gt;&lt;/p&gt;
+&lt;p&gt;各フェーズを順番に見ていきます。&lt;/p&gt;
+&lt;h3 id="第1フェーズ半導体"&gt;第1フェーズ：半導体&lt;/h3&gt;
+&lt;p&gt;AIの計算需要が爆発的に増大し、NVIDIAのGPUや関連半導体株が急騰しました。ChatGPT登場以降のAIブームをけん引した最初の波です。この段階では「AI = 半導体」という図式が定着し、多くの資金が流入しました。&lt;/p&gt;
+&lt;p&gt;しかし、すでに市場価格に織り込まれており、上昇余地が限定的になってきています。賢い投資家はここから次のフェーズへ資金を移動させています。&lt;/p&gt;
+&lt;h3 id="第2フェーズデータセンター建設reit"&gt;第2フェーズ：データセンター建設・REIT&lt;/h3&gt;
+&lt;p&gt;AIを動かすには大量のサーバーを収容するデータセンターが必要です。建設・不動産投資信託（REIT）セクターへの資金移動が起きました。Alphabet・Amazon・Microsoft・Metaによるデータセンター投資拡大の発表が相次ぎ、関連銘柄が注目を集めました。&lt;/p&gt;
+&lt;h3 id="第3フェーズ発電電力株"&gt;第3フェーズ：発電・電力株&lt;/h3&gt;
+&lt;p&gt;データセンターの電力消費は膨大です。米国では三マイル島原発の再稼働（Microsoftとの長期契約）や小型モジュール炉（SMR）への投資発表など、電力インフラへの関心が高まりました。日本でも原発再稼働の動きが加速し、発電会社や電力関連インフラ株がこのフェーズの主役となりました。&lt;/p&gt;
+&lt;h3 id="第4フェーズ蓄電池現在進行中"&gt;第4フェーズ：蓄電池（現在進行中）&lt;/h3&gt;
+&lt;p&gt;現在注目されているのが蓄電池セクターです。&lt;/p&gt;
+&lt;p&gt;電力需要の増大に対して、安定した電力供給を実現するには蓄電技術が不可欠です。再生可能エネルギーの出力変動を平準化し、データセンターの無停電を支える基盤として、蓄電池の重要性が増しています。&lt;/p&gt;
+&lt;h2 id="なぜ蓄電池が次のフェーズなのか"&gt;なぜ蓄電池が次のフェーズなのか&lt;/h2&gt;
+&lt;h3 id="電力安定化の需要"&gt;電力安定化の需要&lt;/h3&gt;
+&lt;p&gt;太陽光・風力など再生可能エネルギーは発電量が天候に左右されます。データセンターのような24時間365日稼働が必要な施設には、安定した電力供給が不可欠です。電力会社レベルの大規模蓄電（グリッドスケールESS: Energy Storage System）が、この変動を吸収する役割を担います。テスラのMegapackに代表されるユーティリティスケール蓄電製品への需要が世界的に拡大しています。&lt;/p&gt;
+&lt;h3 id="evモビリティとの相乗効果"&gt;EV・モビリティとの相乗効果&lt;/h3&gt;
+&lt;p&gt;電気自動車（EV）の普及加速も蓄電池需要を押し上げています。EV向けと定置型蓄電はどちらもリチウムイオン技術を基盤としており、製造規模の拡大がコスト低下に相乗効果をもたらしています。ただし化学系統には差異があり、EV向けはNMC（ニッケル・マンガン・コバルト）、定置型蓄電はLFP（リン酸鉄リチウム）が主流です。テスラ自身もMegapackをLFP系統に切り替えており、安全性・コスト面でのLFP優位性が定置型市場のトレンドとなっています。&lt;/p&gt;
+&lt;h3 id="グリッドレベルの蓄電"&gt;グリッドレベルの蓄電&lt;/h3&gt;
+&lt;p&gt;電力会社レベルの大規模蓄電への投資も世界的に拡大しています。再生可能エネルギーの比率が上がるほど、出力変動を吸収する蓄電インフラの整備が急務となるためです。&lt;/p&gt;
+&lt;h2 id="上がる前に買うという鉄則"&gt;「上がる前に買う」という鉄則&lt;/h2&gt;
+&lt;p&gt;セクターローテーションで重要なのは&lt;strong&gt;次に資金が流入するセクターを先読みすること&lt;/strong&gt;です。&lt;/p&gt;
+&lt;p&gt;すでに上昇したセクターに遅れて入るのは、リスクとリターンのバランスが悪化します。先行して動いた投資家が利益確定に動く場面で、後から入った投資家が損失を被る構図になりがちです。&lt;/p&gt;
+&lt;p&gt;セクターローテーションを意識した投資では、以下の4点を意識します。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;現在の主役セクターを把握する&lt;/strong&gt; — 今どこに資金が集中しているか&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;次の受益セクターを特定する&lt;/strong&gt; — インフラ整備の連鎖を読む&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;材料出尽くし前に仕込む&lt;/strong&gt; — ニュースが広まる前に入る&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;過熱感を見極めて乗り換える&lt;/strong&gt; — 次のフェーズへの移動タイミングを逃さない&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;AI電力テーマのセクターローテーションは「半導体 → データセンター → 電力 → 蓄電池」という流れで進行しており、現在は蓄電池フェーズにあるとされています。&lt;/p&gt;
+&lt;p&gt;投資で成果を上げる人たちに共通するのは、注目が集まる前に動き、注目が集まったときに次を見ているという姿勢です。「上がってから買うのではなく、上がる前に買う」——この原則はセクターローテーション戦略の本質を突いています。&lt;/p&gt;
+&lt;p&gt;もちろん、投資判断は自己責任であり、相場には常に不確実性があります。セクターローテーションの読みが外れることもありますが、市場のテーマ性と資金の流れを理解しておくことは、投資戦略を立てる上での重要な視座になります。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;参考: &lt;a href="https://x.com/KB_Hiragi/status/2056682142277697969"&gt;@KB_Hiragi さんのポスト (X)&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</description></item><item><title>機械学習で他社株TOBを予測し TOPIX を上回るリターン — Random Forest と SHAP 分析</title><link>https://hdknr.github.io/blogs/posts/2026/04/ml-tob-prediction-random-forest/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ml-tob-prediction-random-forest/</guid><description>&lt;p&gt;企業の財務データや株主構成から「1年以内に他社株TOB（公開買い付け）の対象となる確率」を機械学習で予測し、その確率を使ったポートフォリオが TOPIX を上回るリターンを出せる——そんな研究結果が発表されました。&lt;/p&gt;
+&lt;p&gt;久保正裕・梶並俊彦・鈴木智也（2026）による論文「機械学習による他社株TOBの予測可能性」（人工知能学会第二種研究会資料・金融情報学研究会、FIN-036 巻 41 号、p.257-263）の内容を紹介します。&lt;/p&gt;
+&lt;p&gt;論文DOI: &lt;a href="https://doi.org/10.11517/jsaisigtwo.2026.FIN-036_257"&gt;10.11517/jsaisigtwo.2026.FIN-036_257&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="研究の概要"&gt;研究の概要&lt;/h2&gt;
+&lt;p&gt;TOBが発生すると対象企業の株価にはプレミアムが上乗せされるため、投資家にとって非常に魅力的なイベントです。この研究では、東京証券取引所の上場全銘柄（データ取得期間：2011年1月〜2025年5月）を対象に、&lt;strong&gt;財務指標だけでなく「株主構成」に関する特徴量&lt;/strong&gt;を加えて予測モデルを構築しました。&lt;/p&gt;
+&lt;h2 id="分析1-不均衡データへの徹底した前処理"&gt;分析1: 不均衡データへの徹底した前処理&lt;/h2&gt;
+&lt;p&gt;TOBは上場企業全体から見ると年間数十件程度と非常にレアなイベントです。そのまま学習すると多数派（TOB非発生）のデータに過剰適合してしまいます。この問題を解決するため、複数ステップの前処理を実施しています。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;時系列分割&lt;/strong&gt;: 予測対象年から過去5年間を学習データとして分割し、TOB発生メカニズムの時変性に対応&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Random UnderSampling&lt;/strong&gt;: 多数派を減らしてクラス比を調整&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tomek Links&lt;/strong&gt;: クラス境界付近のノイズとなる多数派データを削除&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SMOTENC&lt;/strong&gt;: 少数派（TOB発生銘柄）の疑似データを生成し、機械学習による分類が容易な学習環境を整備&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="分析2-予測精度と決定要因shap分析"&gt;分析2: 予測精度と決定要因（SHAP分析）&lt;/h2&gt;
+&lt;p&gt;再学習した Random Forest モデルは &lt;strong&gt;ROC-AUC で 0.60〜0.75&lt;/strong&gt; を達成しました（ランダム予測の AUC=0.50 を大きく上回り、十分な予測能力があることが確認されています）。&lt;/p&gt;
+&lt;p&gt;SHAP 分析によって TOB 予測に寄与する要因も明らかになっています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;特徴量&lt;/th&gt;
+&lt;th&gt;解釈&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;筆頭株主の保有割合&lt;/strong&gt;（最重要）&lt;/td&gt;
+&lt;td&gt;親会社が子会社を完全子会社化する「親子上場の解消」などのケースを示唆&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;個人保有比率（低いほどTOB対象になりやすい）&lt;/td&gt;
+&lt;td&gt;個人投資家が多いと売却を促すためのプレミアムが高くなり、買収コストが嵩む&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;時価総額（LnMV）・PBR・配当性向（低い企業）&lt;/td&gt;
+&lt;td&gt;必要なコストが少ない点や非効率な投資への懸念（フリーキャッシュフロー仮説）から狙われやすい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="分析3-ポートフォリオ運用シミュレーション"&gt;分析3: ポートフォリオ運用シミュレーション&lt;/h2&gt;
+&lt;p&gt;この予測モデルの出力を実際の株式運用に応用した結果が特に注目されます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;機械学習が算出した予測確率の**上位5%・15%・25%**の銘柄で等ウェイトのロングポートフォリオを構築し、年1回リバランスするシミュレーションを実施&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;いずれのポートフォリオも TOPIX を上回るリターンを獲得&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;上位5% &amp;gt; 上位15% &amp;gt; 上位25% の順でリターンが段階的に高くなる傾向を示し、予測確率の有用性が示された&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="最も有益な発見-tobが発生しなかった銘柄の動き"&gt;最も有益な発見: TOBが発生しなかった銘柄の動き&lt;/h2&gt;
+&lt;p&gt;この研究の最も重要な発見は「実際にはTOBが発生しなかった銘柄」の動きです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;TOBが発生しなくても、予測確率が高い銘柄群は&lt;strong&gt;統計的に有意にプラスのリターン&lt;/strong&gt;を生み出していました&lt;/li&gt;
+&lt;li&gt;これは、市場の先行指標である株価が、&lt;strong&gt;TOBの発生可能性を先読みして価格上昇している&lt;/strong&gt;可能性を示唆しています&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり、TOBが発生する・しないにかかわらず、「TOB予測確率」という指標自体がポートフォリオの銘柄選択において非常に有用であるという、実務的応用価値の高い性質を示す結論となっています。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;手法&lt;/td&gt;
+&lt;td&gt;Random Forest + 不均衡データ対策（RUS / Tomek Links / SMOTENC）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;データ&lt;/td&gt;
+&lt;td&gt;東証上場全銘柄（2011年1月〜2025年5月）、財務指標＋株主構成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;予測精度&lt;/td&gt;
+&lt;td&gt;ROC-AUC 0.60〜0.75&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;最重要特徴量&lt;/td&gt;
+&lt;td&gt;筆頭株主の保有割合&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;運用結果&lt;/td&gt;
+&lt;td&gt;上位5%・15%・25%いずれのポートフォリオも TOPIX をアウトパフォーム&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;重要示唆&lt;/td&gt;
+&lt;td&gt;TOB未発生銘柄でも予測確率が高い銘柄群は統計的に有意なプラスリターン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;財務データと株主構成データを組み合わせたこのアプローチは、個人投資家にとっても参考になる視点を提供しています。「TOB予測確率」を独自に計算することは難しいですが、筆頭株主の保有割合や個人保有比率、PBR、時価総額といった公開情報を活用した銘柄スクリーニングは、誰でも実践できる投資戦略のヒントになりそうです。&lt;/p&gt;</description></item><item><title>Claude Code で株式投資を自動化する — Alpaca API + 期待値計算で3週間4.19%の実績</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-stock-trading-automation/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-stock-trading-automation/</guid><description>Claude Code と Alpaca API を組み合わせた米国株自動売買システムの構築方法を解説。期待値計算ベースのルールで損切り・利確を自動化し、3週間で月次リターン4.19%を達成した実装例を紹介。</description></item><item><title>株式投資の売買スタイル</title><link>https://hdknr.github.io/blogs/wiki/concepts/stock-trading-styles/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/stock-trading-styles/</guid><description>スキャルピング・デイトレード・スイングトレード・中長期投資の4スタイルを保有期間・リスク・メリット・デメリットで整理した概念ページ</description></item><item><title>株式投資の短期売買とは — デイトレード/スイングトレード/スキャルピング/中長期投資の違いとメリット・デメリット</title><link>https://hdknr.github.io/blogs/posts/2026/04/day-trade-swing-trade/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/day-trade-swing-trade/</guid><description>株式投資の 4 つの売買スタイル（スキャルピング・デイトレード・スイングトレード・中長期投資）を保有期間・取引回数・メリット・デメリットで比較し、自分に合うスタイルの選び方を解説。</description></item><item><title>四季報（会社四季報）</title><link>https://hdknr.github.io/blogs/wiki/tools/shikiho/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/shikiho/</guid><description>東洋経済新報社が発行する上場企業の財務・業績データ集。財務欄の8指標を読み解くことで、企業の安全性・収益性・成長性を評価できる</description></item><item><title>四季報の財務欄から「安心な投資先」を探す7つのポイント — 自己資本の増減に注目</title><link>https://hdknr.github.io/blogs/posts/2026/04/shikiho-financial-7points/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/shikiho-financial-7points/</guid><description>会社四季報の財務欄に載る8つの数字（ROE・自己資本比率・有利子負債など）から安心な投資先を見つける7つのチェックポイントを解説。債務超過の見分け方やROICの活用法も紹介</description></item><item><title>Claude Codeで東証の株取引を半自動化する【ペーパートレードで-19万円編】</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-stock-trading-paper-trade/</link><pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-stock-trading-paper-trade/</guid><description>&lt;p&gt;Claude Code を使って東証の株取引を半自動化するシリーズ。ペーパートレード開始から5日間で14件の決済が行われ、勝率0%、実現損失は-186,250円。全敗だった。しかし、これはペーパートレードだからこそ見つけられた17件のバグの記録でもある。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;免責事項:&lt;/strong&gt; 本記事は技術的な解説であり、特定の投資戦略や銘柄を推奨するものではない。株式投資には元本割れのリスクがある。投資判断は自己責任で行うこと。また、APIを介した自動売買にはプログラムの不具合による意図しない発注のリスクが伴う。必ず少額から始め、十分な検証を経てから運用すること。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="8連敗からの始まり"&gt;8連敗からの始まり&lt;/h2&gt;
+&lt;p&gt;ペーパートレード開始から3日目。決算データを使った戦略が8連敗した。損失は-68,550円。&lt;/p&gt;
+&lt;p&gt;下降トレンド中でも買う。損切り直後に同じ銘柄を再び買う。ストップ幅が狭すぎて、通常の値動きで損切りに引っかかる。人間のトレーダーなら「3連敗したら今日はやめよう」と判断する。AIにはその判断が最初からプログラムされていなかった。&lt;/p&gt;
+&lt;p&gt;タイミングも悪かった。ペーパートレードを始めた週、イラン情勢の緊迫化で日経平均もTOPIXも大幅に下落していた。バグだらけのシステムが、下落相場に突っ込んだ格好だ。&lt;/p&gt;
+&lt;h2 id="aiが書いたコードは動くだが正しく動くとは限らない"&gt;AIが書いたコードは「動く」。だが「正しく動く」とは限らない&lt;/h2&gt;
+&lt;p&gt;このシリーズでは、Claude Code を使って東証の株取引を半自動化する方法を紹介してきた。プログラミング不要で、AIに「やって」と言うだけ。それは嘘ではない。実際に Claude Code はスクリーニングから発注まで、動くコードを書いてくれた。&lt;/p&gt;
+&lt;p&gt;問題は「動く」と「正しく動く」の間に深い溝があることだ。&lt;/p&gt;
+&lt;p&gt;ペーパートレードを始めてから5日間で、17件のバグが見つかった。全て、ライブでも同じように発生するバグだ。一つ残らず実弾を撃つ前に発見できた。逆に言えば、ペーパートレードをスキップしていたら、17個の地雷を踏みながらライブトレードをしていたことになる。&lt;/p&gt;
+&lt;p&gt;「AIで簡単に自動売買」はSNSでよく見かけるフレーズだ。ツールとしてのAIは確かに強力だが、「簡単に」の部分は幻想だ。少なくとも私の場合はそうだった。長年コードを書いてきたエンジニアが、Claude Code にコードを書かせて、それでも17件のバグを出した。&lt;/p&gt;
+&lt;p&gt;ここから先は、その17件のうち特に危険だったものを紹介する。&lt;/p&gt;
+&lt;h2 id="放置すれば資金が溶けるバグ"&gt;放置すれば資金が溶けるバグ&lt;/h2&gt;
+&lt;h3 id="8連敗して止まらない"&gt;8連敗して止まらない&lt;/h3&gt;
+&lt;p&gt;冒頭の決算系戦略8連敗。-68,550円。&lt;/p&gt;
+&lt;p&gt;原因は安全機構の欠如だ。クールダウン（損切り後に一定期間エントリーを見送る仕組み）がない。戦略あたりのポジション上限がない。動的ストップ（値動き幅に応じて損切りラインを調整する仕組み）がない。&lt;/p&gt;
+&lt;p&gt;AIは「損切りラインを-5%に設定する」コードは書ける。だが「この銘柄のボラティリティなら-5%は狭すぎる」という判断はしない。ATR（平均的な1日の値動き幅）が3%の銘柄に5%のストップを置けば、2日間の通常の値動きで引っかかる。&lt;/p&gt;
+&lt;h3 id="ポジションサイズが制御されていない"&gt;ポジションサイズが制御されていない&lt;/h3&gt;
+&lt;p&gt;1銘柄あたりの投資上限を設定するパラメータが、コードのどこにも参照されていなかった。パラメータは存在するが、使われていない。設定画面だけ立派で中身が空のセキュリティソフトのようなものだ。&lt;/p&gt;
+&lt;p&gt;ライブなら、1銘柄に資金が偏り、その銘柄が暴落したときに取り返しのつかない損失になる。&lt;/p&gt;
+&lt;h3 id="損切りしても枠が空かない"&gt;損切りしても枠が空かない&lt;/h3&gt;
+&lt;p&gt;「損切りが先、新規エントリーが後」であるべき処理が、逆の順序で実行されていた。&lt;/p&gt;
+&lt;p&gt;1戦略あたりのポジション上限は3件。朝の処理で、まず新規エントリーを判定し、その後でストップ注文を処理する。すると、損切りで空くはずの枠が認識されず、新規エントリーがブロックされる。損切りされた銘柄の代わりに入るべき新しい銘柄が、いつまでも入れない。&lt;/p&gt;
+&lt;h3 id="暴落の朝に無防備にエントリーする"&gt;暴落の朝に無防備にエントリーする&lt;/h3&gt;
+&lt;p&gt;前日比10%のギャップダウン。市場が恐慌状態にある朝に、通常通りエントリーしていた。&lt;/p&gt;
+&lt;p&gt;ギャップの大きさを検出するロジックが存在しなかった。修正後は、10%以上のギャップで停止、5%以上でストップ幅を自動拡張するようにした。&lt;/p&gt;
+&lt;h3 id="50銘柄を超えると価格が取れなくなる"&gt;50銘柄を超えると価格が取れなくなる&lt;/h3&gt;
+&lt;p&gt;kabu Station API には銘柄登録の上限がある。50件だ。株価の取得を要求するたびに銘柄が自動登録され、上限に達すると51件目以降は全てエラーになる。&lt;/p&gt;
+&lt;p&gt;110件の候補のうち36件が脱落した。ライブなら、高スコアの候補が価格を取得できずエントリー機会を逃す。あるいは、保有銘柄の価格が取れずストップ注文が発動しない。&lt;/p&gt;
+&lt;h2 id="動いているが正しく動いているではないバグ"&gt;「動いている」が「正しく動いている」ではないバグ&lt;/h2&gt;
+&lt;h3 id="荒れた板でも平気でエントリーする"&gt;荒れた板でも平気でエントリーする&lt;/h3&gt;
+&lt;p&gt;寄り付き直後の特別気配（売り買いの注文が極端に偏った状態）、スプレッドが通常の10倍、出来高ゼロ——そんな状態でも注文が通っていた。&lt;/p&gt;
+&lt;p&gt;板の品質を評価する仕組みが、単一時点のスプレッドチェックしかなかった。修正後は、出来高・スプレッド・気配の状態・特別気配・ストップ高ストップ安を総合的に評価し、回復可能な状態なら最大5分間リトライする仕組みにした。&lt;/p&gt;
+&lt;h3 id="全候補がqty0で1件もエントリーできない"&gt;全候補がQTY=0で1件もエントリーできない&lt;/h3&gt;
+&lt;p&gt;ある朝、40件の候補全てが「数量ゼロ」で見送られた。&lt;/p&gt;
+&lt;p&gt;資金300万円を5戦略で均等割りすると、1戦略あたり48万円。株価1,000円以上の銘柄は最低購入単位（100株＝10万円）を確保できるが、戦略ごとの予算上限に引っかかって多くの銘柄が除外された。高株価の優良銘柄ほど買えないという、本末転倒な状態だった。&lt;/p&gt;
+&lt;h3 id="戦略の成績評価が壊れている"&gt;戦略の成績評価が壊れている&lt;/h3&gt;
+&lt;p&gt;戦略の良し悪しを評価する指標（プロフィットファクター）の計算に、まだ決済していない注文のデータが混入していた。買い注文（損益ゼロ）が分母に加算され、評価値が実態と乖離する。&lt;/p&gt;
+&lt;p&gt;本来なら停止すべき戦略が「成績は悪くない」と判定され、損失を出し続ける。&lt;/p&gt;
+&lt;h3 id="ポジション管理がデータ不整合"&gt;ポジション管理がデータ不整合&lt;/h3&gt;
+&lt;p&gt;取引ログでは全件決済済みなのに、ポジション管理ファイルには9件が残存していた。ゴーストポジション——実在しないポジションに対してストップ注文が出され続けるか、あるいは実在するポジションが管理から漏れる。&lt;/p&gt;
+&lt;h2 id="aiから見えない世界のバグ"&gt;AIから見えない世界のバグ&lt;/h2&gt;
+&lt;h3 id="スケジュールが誰にもキックされていない"&gt;スケジュールが誰にもキックされていない&lt;/h3&gt;
+&lt;p&gt;朝8:10のスクリーニングが、3日間実行されていなかった。&lt;/p&gt;
+&lt;p&gt;設定ファイルにはちゃんと書いてある。だが、それを読んで実行するスケジューラが、別件で停止したまま放置されていた。設定ファイルに書いた＝実行される、ではない。&lt;/p&gt;
+&lt;p&gt;3日前の古い候補で取引するところだった。手動で気づいたから事なきを得た。&lt;/p&gt;
+&lt;h3 id="キャッシュが空で30分タイムアウト"&gt;キャッシュが空で30分タイムアウト&lt;/h3&gt;
+&lt;p&gt;スクリーニングが30分以上かかり、朝9:10のエントリーに間に合わない。&lt;/p&gt;
+&lt;p&gt;ローカルに株価データのキャッシュを持つ仕組みを作ったが、キャッシュを更新する定期ジョブの登録を忘れていた。キャッシュが空なので、毎回APIから全銘柄のデータを個別取得する。1,590銘柄×APIレート制限で30分超。&lt;/p&gt;
+&lt;h3 id="時計が9時間ずれている"&gt;時計が9時間ずれている&lt;/h3&gt;
+&lt;p&gt;「9:10にエントリーを開始する」と書いたコードが、UTC基準で動いていた。WSL（Windows上のLinux環境）のシステム時刻がUTCで、Python の &lt;code&gt;datetime.now()&lt;/code&gt; がタイムゾーン指定なしで呼ばれていた。&lt;/p&gt;
+&lt;p&gt;日本時間の9:10に動いたのは偶然だ。JST前提で書いたはずのコードがUTCで動いている——この種のバグは、テスト環境と本番環境でタイムゾーンが異なるだけで発生する。&lt;/p&gt;
+&lt;h3 id="slack通知が全部失敗している"&gt;Slack通知が全部失敗している&lt;/h3&gt;
+&lt;p&gt;損切りもエントリーも、通知が何も届いていなかった。&lt;/p&gt;</description></item><item><title>正則化PCAで米国→日本の業種モメンタムを捉える — 時差を利用したクロスマーケット戦略</title><link>https://hdknr.github.io/blogs/posts/2026/03/regularized-pca-cross-market-momentum/</link><pubDate>Fri, 20 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/regularized-pca-cross-market-momentum/</guid><description>&lt;p&gt;米国市場の業種別リターンから翌日の日本市場を予測する — そんな論文の解説が X で話題になっていました。ポイントは「正則化 PCA（主成分分析）」によるノイズ除去です。本記事ではこの手法の仕組みと、なぜ通常の PCA より優れた結果を出せるのかを整理します。&lt;/p&gt;
+&lt;h2 id="基本アイデア時差を利用した業種間伝播"&gt;基本アイデア：時差を利用した業種間伝播&lt;/h2&gt;
+&lt;p&gt;米国市場が夜に動き、数時間後に日本市場が開く。同業種のリターンは国をまたいで伝播する傾向がある — この「時差」を収益機会として捉えるのが基本的な発想です。&lt;/p&gt;
+&lt;p&gt;具体的には、&lt;strong&gt;米国の 11 業種の当日リターン&lt;/strong&gt;から、&lt;strong&gt;日本の 17 業種の翌日リターン&lt;/strong&gt;を予測します。&lt;/p&gt;
+&lt;h2 id="データソース日米の業種別-etf"&gt;データソース：日米の業種別 ETF&lt;/h2&gt;
+&lt;p&gt;分析対象は &lt;strong&gt;日米の業種別 ETF&lt;/strong&gt; です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;米国側&lt;/strong&gt;: 業種 ETF の &lt;strong&gt;当日 Close-to-Close リターン&lt;/strong&gt;（終値ベース）を情報集合とする&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;日本側&lt;/strong&gt;: 業種 ETF の &lt;strong&gt;翌営業日 Open-to-Close リターン&lt;/strong&gt;（寄付→引け）を予測対象とする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;米国市場の終値で確定した情報が、翌朝の日本市場の寄付きから日中にかけて反映される — この「リード・ラグ仮説」を ETF の日次リターンデータで検証する構成です。&lt;/p&gt;
+&lt;h3 id="データの入手方法"&gt;データの入手方法&lt;/h3&gt;
+&lt;p&gt;業種別 ETF の価格データは誰でも無料で入手できます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;米国の業種 ETF（SPDR Select Sector シリーズ）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;XLK（テクノロジー）、XLF（金融）、XLE（エネルギー）など 11 セクターの ETF が上場しています。Yahoo Finance や Google Finance で日次データを取得可能です。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;日本の業種 ETF（TOPIX-17 業種別シリーズ）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;NEXT FUNDS TOPIX-17 シリーズ（野村アセットマネジメント）など、17 業種に対応する ETF があります。JPX（日本取引所グループ）や Yahoo!ファイナンスで取得できます。&lt;/p&gt;</description></item></channel></rss>

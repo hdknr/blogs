@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Wordpress on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/wordpress/</link><description>Recent content in Wordpress on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 17 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/wordpress/index.xml" rel="self" type="application/rss+xml"/><item><title>Wordpress: 脆弱性</title><link>https://hdknr.github.io/blogs/posts/2024/10/2e055199d28e75993f4f211ffbad6ccb/</link><pubDate>Mon, 14 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/2e055199d28e75993f4f211ffbad6ccb/</guid><description>&lt;h1 id="wordpress脆弱性"&gt;Wordpress脆弱性&lt;/h1&gt;
+&lt;h2 id="advanced-custom-fields-acf"&gt;Advanced Custom Fields (ACF)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://rocket-boys.co.jp/7886/"&gt;https://rocket-boys.co.jp/7886/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>JAMStack</title><link>https://hdknr.github.io/blogs/posts/2024/09/17653404c84d0052305d5cb6857abf2e/</link><pubDate>Thu, 19 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/17653404c84d0052305d5cb6857abf2e/</guid><description>&lt;h1 id="jamstack"&gt;JAMStack&lt;/h1&gt;
+&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://gini.co.jp/blog/jamstack-vs-wordpress#index_1LgVpQeO"&gt;【徹底比較】Jamstack vs WordPress｜これからのWebはJamstack！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://stackshare.io/stackups/netlify-vs-wix"&gt;Netlify vs Wix&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kinsta.com/jp/blog/react-static-site-generator/"&gt;【2024年版】おすすめのReactベース静的サイトジェネレーター6選&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://unicorn-blog.jp/archives/26894"&gt;静的サイトジェネレータについて初心者向けに分かりやすく解説&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/kazuki_tachikawa/items/5a04de1174d30e7b5c0e"&gt;【2024年】Webデザインのトレンド・参考サイトまとめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.cloudflare.com/ja-jp/the-net/jamstack-websites/"&gt;JamstackによりWebサイト構築のあり方が一変する可能性&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://re-cd.com/blog/2024%E5%B9%B4%E3%81%AEweb%E9%96%8B%E7%99%BA%E6%A5%AD%E7%95%8C%E3%83%88%E3%83%AC%E3%83%B3%E3%83%89%E3%81%A8%E6%9C%80%E6%96%B0%E6%8A%80%E8%A1%93/"&gt;2024年のWeb開発業界トレンドと最新技術&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://webdesigning.book.mynavi.jp/cms/100027/"&gt;Jamstackで制作はどう変わる？ 「削減できるもの」と「必要になるもの」&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.commte.co.jp/blog/What-is-the-Jamstack"&gt;Jamstack とは何なの？メリットとデメリットはあるの？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.issoh.co.jp/column/details/3121/"&gt;Jamstackとは何か？その意味と重要性について詳しく解説&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/rsi_dev/articles/0347be46270f90"&gt;JamStack簡単まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.issoh.co.jp/tech/details/1889/"&gt;Jamstack入門：次世代ウェブ開発のための革新的なアーキテクチャとは何か？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://appmaster.io/ja/blog/2023-uebukai-fa-reda-totsupu10torendo"&gt;2024 年の Web 開発トレンド トップ 10&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.torat.jp/what-is-jamstack/"&gt;Jamstackとは？パフォーマンスの高いフロントエンド構築&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.hakoreco.com/2024/06/11/hakoreco-jamstack/"&gt;Jamstackによるサイト構築について&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://annai.co.jp/article/new-old-jamstack-and-mach-journey-towards-traditional-cms-concepts"&gt;新しい古典：Jamstack と MACH が従来の CMS の概念に向け進化する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://codezine.jp/article/detail/15054"&gt;今話題の「ヘッドレスCMS」とは？ Jamstack、マルチデバイスにも対応したCMSの新潮流&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;セキュリティ:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://cybersecurity-jp.com/column/3928"&gt;【2024年】サイバーセキュリティの現状と今後の方向性&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="wordpress"&gt;Wordpress&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=urG5ITacmYU"&gt;Jamstack、ノーコード vs WordPress？　2024年のWeb制作トレンドを予想しよう【おすすめUdemy講座紹介&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;ブロックエディタ&lt;/li&gt;
+&lt;li&gt;FSE&lt;/li&gt;
+&lt;li&gt;Snow Monkey, SWell&lt;/li&gt;
+&lt;li&gt;Wordpress + Snow Monkey, Wordpress + Astro&lt;/li&gt;
+&lt;li&gt;データ主権&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="マーケットシェア"&gt;マーケットシェア&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Wordpressは 60% (40%など調査主体による)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://w3techs.com/technologies/details/cm-gatsby"&gt;シェア&lt;/a&gt; 0.2% 高トラフィックサイトで利用されている。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="netlify対wix違いは何ですか"&gt;Netlify対Wix:違いは何ですか？&lt;/h2&gt;
+&lt;p&gt;はじめに:&lt;/p&gt;
+&lt;p&gt;この記事では、NetlifyとWixの主な違いについて説明します。
+これらのプラットフォームはさまざまな目的を果たし、Netlifyは人気のあるWeb開発およびホスティングプラットフォームですが、WixはWebサイトビルダーおよびホスティングプラットフォームです。
+それらの違いを理解することは、個人や企業がWeb関連のニーズに合った適切なプラットフォームを選択するときに、情報に基づいた決定を行うのに役立ちます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;導入プロセス&lt;/strong&gt;:Netlifyは、開発者がGitを使用してWebサイトを簡単に構築、テスト、および展開できるようにする、最新の合理化された展開プロセスを提供します。
+継続的な展開、バージョン管理、ワンクリック展開を提供し、高速で効率的なワークフローを求める開発者に最適です。
+一方、Wixは、Webサイトを作成するためのよりユーザーフレンドリーなドラッグアンドドロップインターフェイスを提供します。
+これは、技術的な専門知識のない個人に対応する簡略化されたWebサイト構築エクスペリエンスを提供します。&lt;/p&gt;</description></item><item><title>apache redirect</title><link>https://hdknr.github.io/blogs/posts/2024/05/f513a99d06d8ea4e766347669774ba30/</link><pubDate>Mon, 13 May 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/05/f513a99d06d8ea4e766347669774ba30/</guid><description>&lt;h1 id="apache-リダイレクト"&gt;apache リダイレクト&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.javadrive.jp/apache/htaccess/index6.html"&gt;RewriteCond ディレクティブ：URL のリライト/リダイレクトを行う条件を定義する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="wordpress"&gt;Wordpress&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;# BEGIN WordPress&lt;/code&gt;よりも上に書くこと&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;IfModule&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;mod_rewrite.c&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteEngine On
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteBase /
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteRule ^old-page/$ https://example.com/new-page/ [R=302,L]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/IfModule&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# BEGIN WordPress
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# &amp;#34;BEGIN WordPress&amp;#34; から &amp;#34;END WordPress&amp;#34; までのディレクティブ (行) は
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# 動的に生成され、WordPress フィルターによってのみ修正が可能です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# これらのマーカー間にあるディレクティブへのいかなる変更も上書きされてしまいます。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;IfModule&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;mod_rewrite.c&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteEngine On
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteBase /
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteRule ^index\.php$ - [L]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteCond %{REQUEST_FILENAME} !-f
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteCond %{REQUEST_FILENAME} !-d
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RewriteRule . /index.php [L]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/IfModule&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# END WordPress
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>PHP: LightSpeed</title><link>https://hdknr.github.io/blogs/posts/2024/03/8e36bbbb0841e69c12f70b4096f4771e/</link><pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/03/8e36bbbb0841e69c12f70b4096f4771e/</guid><description>&lt;h1 id="php--ligthspeed"&gt;PHP : LigthSpeed&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/BRSF/items/ed838139a97e5d702d09"&gt;第 4 の WEB サーバ「LiteSpeed」は Nginx より高速か、centOS7 に環境構築し動作検証&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kosen.monster/?p=1494"&gt;Ubuntu 20.04 + OpenLiteSpeed で爆速 WordPress 構築の夢を見るのか&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.apar.jp/linux/10121/"&gt;LiteSpeed Web Server の HTTPS（SSL/TLS）設定メモ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Wordpress Plugin with WP-CLI</title><link>https://hdknr.github.io/blogs/posts/2015/08/2ec22d39de388f78c660/</link><pubDate>Sun, 09 Aug 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/08/2ec22d39de388f78c660/</guid><description>&lt;h2 id="wordpress-development-environment"&gt;Wordpress Development Environment&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;vim wp-cli.yml&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;./scaffold.bash&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo $(phpenv prefix)/sbin/php-fpm -y conf/php-fpm.conf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo ln -s $PWD/conf/nginx.conf /etc/nginx/sites-enabled/your_wp_cname.conf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo /etc/init.d/nginx start&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>WordPress</title><link>https://hdknr.github.io/blogs/posts/2015/07/5d5dd1a04cb0456c5ef4/</link><pubDate>Thu, 30 Jul 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/07/5d5dd1a04cb0456c5ef4/</guid><description>&lt;h2 id="wordpress"&gt;Wordpress&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://ja.wordpress.org/"&gt;https://ja.wordpress.org/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="note"&gt;Note&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/hdknr/scriptogr.am/tree/master/php/wordpress"&gt;php/wordpress&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://beautifulajax.dip.jp/?p=785"&gt;Wordpressのプラグイン作成（作成手順編）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="url-route"&gt;URL Route&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://codex.wordpress.org/Rewrite_API"&gt;Rewrite API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://ruslanbes.com/devblog/2013/04/03/wordpress-routing-explained/"&gt;WordPress routing explained&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://wordpress.org/plugins/wp-router/"&gt;WP Router&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="test"&gt;Test&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://wp-cli.org/"&gt;WP-CLI A command line interface for WordPress&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/sebastianbergmann/phpunit#installation"&gt;PHPUnit&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/wp-cli/wp-cli/wiki/Plugin-Unit-Tests"&gt;Plugin Unit Tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://pippinsplugins.com/unit-tests-wordpress-plugins-setting-up-testing-suite/"&gt;Unit Tests for WordPress Plugins – Setting Up Our Testing Suite&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="debug"&gt;Debug&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://codex.wordpress.org/Debugging_in_WordPress"&gt;Debugging in WordPress&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.wpoptimus.com/527/debugging-tools-plugins-wordpress/"&gt;10 WordPress Debugging Tools to Find Errors and Warnings&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://fuelyourcoding.com/simple-debugging-with-wordpress/"&gt;Simple Debugging with WordPress&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="authentication"&gt;Authentication&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/miled/wordpress-social-login"&gt;Wordpress-Social-Login&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/fumikito/Gianism"&gt;Gianism&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

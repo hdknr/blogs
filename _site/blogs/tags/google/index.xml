@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Google on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/google/</link><description>Recent content in Google on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/google/index.xml" rel="self" type="application/rss+xml"/><item><title>Google シニア SRE 面接を突破する5つのポイント（2026年版）</title><link>https://hdknr.github.io/blogs/posts/2026/04/google-senior-sre-interview-2026/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/google-senior-sre-interview-2026/</guid><description>&lt;p&gt;2026年の今、Google のシニア SRE 面接に「LeetCode をひたすら解けば受かる」という時代は終わった。本記事は韓国エンジニアコミュニティでバズったツイートとその英語スレッドをもとに、2026年版の攻略ポイントをまとめたものだ。&lt;/p&gt;
+&lt;p&gt;元ツイートの要旨：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;2026年には、アルゴリズムパズルよりも「5PB のデータを 10Gbps で転送したら 46 日かかる」をすぐに暗算できる物理的感覚がはるかに重要。図を描く前に暗算をして、障害時は原因分析より先にシステムを安定化させる習慣が身についていないといけない。コーディングテストも連結リストの逆転ではなく、限られたメモリで数十 GB のログを処理する実践的な問題に変わっている。&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="1-nalsd-ラウンドはアーキテクチャではなく物理"&gt;1. NALSD ラウンドは「アーキテクチャ」ではなく「物理」&lt;/h2&gt;
+&lt;p&gt;NALSD（Non-Abstract Large Systems Design）ラウンドで最も多い失敗は、まず図を描いてしまうことだ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;典型的な落とし穴：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;問題: 「4 時間 SLA で 5PB クラスターの DR を設計してください」&lt;/li&gt;
+&lt;li&gt;NG 回答: きれいな active-passive 構成図を描く → 即アウト&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;なぜ即アウトか：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;5 PB = 5 × 10^15 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;10 Gbps = 10 × 10^9 bps = 1.25 × 10^9 bytes/sec
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;転送時間 = 5 × 10^15 / 1.25 × 10^9 = 4,000,000 秒 ≈ 46 日
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これを暗算で弾ければ「この要件では 4 時間 SLA は物理的に不可能」とわかる。図を描く前に数字を出すのがシニア SRE の姿勢だ。&lt;/p&gt;</description></item><item><title>Gemma 4</title><link>https://hdknr.github.io/blogs/wiki/concepts/gemma4/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/gemma4/</guid><description>Google DeepMind が 2026年4月にリリースしたオープンソース LLM シリーズ。Apache 2.0 ライセンスで、エッジ向けから高性能サーバー向けまで4サイズを提供</description></item><item><title>Googleが1000億の実データで学習した予測AI「TimesFM」をひっそり公開していた</title><link>https://hdknr.github.io/blogs/posts/2026/04/google-timesfm-prediction-ai/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/google-timesfm-prediction-ai/</guid><description>&lt;p&gt;Googleが時系列予測のための基盤モデル &lt;strong&gt;TimesFM&lt;/strong&gt;（Time Series Foundation Model）をひっそりと公開していた。1000億以上の実データで学習済みで、自分のデータをファインチューニングすることなく（ゼロショットで）すぐに使える点が特徴だ。&lt;/p&gt;
+&lt;h2 id="timesfm-とは"&gt;TimesFM とは&lt;/h2&gt;
+&lt;p&gt;TimesFM は Google Research が開発した時系列予測に特化した基盤モデルだ。GPT-3 などの大規模言語モデルに着想を得たデコーダーのみのトランスフォーマーアーキテクチャを採用しており、テキストではなく「時系列データのパターン」を学習する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;パラメータ数&lt;/strong&gt;: 2億パラメータ（TimesFM 2.5 では最適化済み）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;アーキテクチャ&lt;/strong&gt;: デコーダーのみのトランスフォーマー&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト長&lt;/strong&gt;: TimesFM 2.5 で 16,384 タイムポイント（8倍に拡張）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="何が予測できるのか"&gt;何が予測できるのか&lt;/h2&gt;
+&lt;p&gt;TimesFM が得意とするユースケースは多岐にわたる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;売上・需要予測&lt;/strong&gt;: 小売の週次売上、在庫需要、サプライチェーン計画&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;市場価格予測&lt;/strong&gt;: 株式市場、コモディティ、仮想通貨の価格変動&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;電力需要予測&lt;/strong&gt;: 電力負荷、エネルギー価格、スマートグリッド最適化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ユーザートラフィック予測&lt;/strong&gt;: Web サイトのアクセス、API リクエスト量、サーバー負荷計画&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ゼロショットで使えるのが最大の強み"&gt;ゼロショットで使えるのが最大の強み&lt;/h2&gt;
+&lt;p&gt;従来の深層学習モデルは、予測したいデータセットに合わせて個別にトレーニングする必要があった。TimesFM はそれとは異なり、&lt;strong&gt;一切のファインチューニングなしに新しいデータセットに対して高精度な予測&lt;/strong&gt;を実現する。&lt;/p&gt;
+&lt;p&gt;公式の評価によると、ゼロショット状態の TimesFM は多くの個別学習済み深層学習モデルを上回るパフォーマンスを示している。&lt;/p&gt;
+&lt;h2 id="学習データ"&gt;学習データ&lt;/h2&gt;
+&lt;p&gt;TimesFM は以下のデータソースから 1000 億以上のデータポイントを使って学習されている。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;データソース&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Wikipedia ページビュー&lt;/td&gt;
+&lt;td&gt;2012〜2023年の閲覧数時系列データ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Google トレンド&lt;/td&gt;
+&lt;td&gt;22,000 件の検索関心度時系列データ（時間単位〜週単位）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;公開データセット&lt;/td&gt;
+&lt;td&gt;M4、電力、トラフィックなどのベンチマークデータ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;合成データ&lt;/td&gt;
+&lt;td&gt;ARMA 生成の 300 万件のシリーズ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最新バージョンでは 4000 億以上の実世界タイムポイントで学習されているとも報告されている。&lt;/p&gt;
+&lt;h2 id="使い方"&gt;使い方&lt;/h2&gt;
+&lt;h3 id="インストール"&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install timesfm
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="python-での基本的な使い方"&gt;Python での基本的な使い方&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; timesfm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# モデルの初期化（Hugging Face からダウンロード）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tfm &lt;span style="color:#f92672"&gt;=&lt;/span&gt; timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFm(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; hparams&lt;span style="color:#f92672"&gt;=&lt;/span&gt;timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFmHparams(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; backend&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;pytorch&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; per_core_batch_size&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;32&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; horizon_len&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;128&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; checkpoint&lt;span style="color:#f92672"&gt;=&lt;/span&gt;timesfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;TimesFmCheckpoint(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; huggingface_repo_id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;google/timesfm-2.5-200m-pytorch&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 配列から予測&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;forecast_array, _ &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;forecast(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[context_time_series],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; freq&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;], &lt;span style="color:#75715e"&gt;# 0: 高頻度（日次以下）、1: 週次・月次、2: 四半期・年次&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# DataFrame から予測&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;forecast_df &lt;span style="color:#f92672"&gt;=&lt;/span&gt; tfm&lt;span style="color:#f92672"&gt;.&lt;/span&gt;forecast_on_df(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; inputs&lt;span style="color:#f92672"&gt;=&lt;/span&gt;df,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; freq&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;D&amp;#34;&lt;/span&gt;, &lt;span style="color:#75715e"&gt;# 日次&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; value_name&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;target&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; num_jobs&lt;span style="color:#f92672"&gt;=-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="hugging-face-モデル"&gt;Hugging Face モデル&lt;/h3&gt;
+&lt;p&gt;複数のバリアントが公開されている。&lt;/p&gt;</description></item><item><title>TimesFM</title><link>https://hdknr.github.io/blogs/wiki/tools/timesfm/</link><pubDate>Tue, 14 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/timesfm/</guid><description>Google Research が開発した時系列予測の基盤モデル。1000億以上の実データで学習済みで、ゼロショット（ファインチューニング不要）で売上・需要・市場価格・トラフィック予測が可能</description></item><item><title>AIモデルは意図的に性能を低下させている？ OpenAI・Google・Anthropicに共通するパターン</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-model-performance-degradation/</link><pubDate>Sat, 11 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-model-performance-degradation/</guid><description>&lt;p&gt;AIモデルのリリース後、時間が経つにつれてパフォーマンスが落ちた気がする——そんな経験をしたユーザーは少なくないだろう。最近、SNS上でこの「体感」に関する興味深い主張が話題になった。&lt;/p&gt;
+&lt;h2 id="性能放血戦略という仮説"&gt;「性能放血」戦略という仮説&lt;/h2&gt;
+&lt;p&gt;中国のテック系アカウント「墓碑科技（mubeitech）」が2026年4月10日に投稿したツイートは、約21万回以上閲覧され、1,600件以上のいいねを集めた。&lt;/p&gt;
+&lt;p&gt;その内容はこうだ：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;OpenAI・Google・Anthropicは同様の戦略を採用している。新モデルのリリース初日には性能が最高（100%）に達し、その後「放血」と呼ぶ数ヶ月間の段階的な低下を経験し、最終的に約60%まで落ちる。この目的は、次世代製品リリース時に「劇的な改善」を強調するためだ。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;このパターンを同氏は「放血（bloodletting）」と表現した。意図的に性能を落としておき、次世代モデルの登場時に比較対象を都合よく用意するという戦略的操作だという主張だ。&lt;/p&gt;
+&lt;h2 id="この主張の背景"&gt;この主張の背景&lt;/h2&gt;
+&lt;p&gt;同様の「体感」を持つユーザーはこれまでにも多く、特にGPT-4が登場直後より時間が経つにつれ「鈍くなった」「回答が短くなった」と感じるユーザーの声はX（Twitter）やRedditで繰り返し話題になってきた。&lt;/p&gt;
+&lt;p&gt;一方で、OpenAIは過去にGPT-4モデルへの変更内容を公開し、変化があったことを認めつつも「意図的な品質低下」は否定している。また、2023年に行われたスタンフォード大学の研究（&amp;ldquo;How Is ChatGPT&amp;rsquo;s Behavior Changing over Time?&amp;quot;）では、GPT-4の一部タスクで時間的な性能変動が確認されたことも報告されている。&lt;/p&gt;
+&lt;h2 id="なぜこの主張が広がるのか"&gt;なぜこの主張が広がるのか&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ユーザーの体感との一致&lt;/strong&gt;: モデルの応答品質の変化はユーザーが実感しやすく、「意図的」という説明が腑に落ちやすい&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;商業的インセンティブへの不信感&lt;/strong&gt;: 次世代モデルの販促のために旧モデルを陳腐化させるというシナリオは、ビジネス的に合理的に見える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;検証困難性&lt;/strong&gt;: APIの内部変更は外部からの完全な検証が難しく、陰謀論的な解釈が入り込みやすい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="実際のところはどうなのか"&gt;実際のところはどうなのか&lt;/h2&gt;
+&lt;p&gt;「意図的な性能低下」説については、現時点で公開情報による明確な裏付けはない。ただし、以下のような要因で性能変動が起きることは事実だ：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;モデルの量子化・最適化&lt;/strong&gt;: コスト削減のためにより軽量な推論方法に移行することで、一部タスクの精度が変化する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全性フィルタリングの調整&lt;/strong&gt;: ガイドラインの変更により、出力の傾向が変わることがある&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プロンプト処理の変更&lt;/strong&gt;: 内部のシステムプロンプトや前処理ロジックの変更が応答に影響する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;インフラのスケーリング&lt;/strong&gt;: 急激なユーザー増加に対応する際の一時的なサービス品質の変化&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;「意図的放血戦略」は現時点では未確認の仮説だが、AIモデルの品質管理と透明性に対するユーザーの関心の高さを示している。実際、リリース初期と数ヶ月後でモデルの挙動が変わることは多くの利用者が実感しており、各社がより詳細な変更履歴を公開することで、こうした不信感を払拭できる余地はあるだろう。&lt;/p&gt;
+&lt;p&gt;AI企業の透明性とユーザーの信頼構築は、今後ますます重要な課題となっていきそうだ。&lt;/p&gt;</description></item><item><title>Gemma 4</title><link>https://hdknr.github.io/blogs/wiki/tools/gemma4/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/gemma4/</guid><description>Google DeepMind が開発したオープンソース LLM シリーズ。Apache 2.0 ライセンスで商用利用可能。26B MoE はアクティブパラメータ約 3.8B、E2B はスマートフォンで動作する</description></item></channel></rss>

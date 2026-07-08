@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Huggingface on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/huggingface/</link><description>Recent content in Huggingface on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Sat, 25 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/huggingface/index.xml" rel="self" type="application/rss+xml"/><item><title>DeepSeek-V4 Preview — Claude Opus 4.6 匹敵・100万トークン対応のオープンソース LLM が無償公開</title><link>https://hdknr.github.io/blogs/posts/2026/04/deepseek-v4-open-source/</link><pubDate>Sat, 25 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/deepseek-v4-open-source/</guid><description>DeepSeek-V4 Preview は 2026 年 4 月公開のオープンソース LLM。Pro（1.6 兆パラメータ）と Flash の 2 バリアントで 100 万トークンに対応。Codeforces で GPT-5.4 を超え、MIT ライセンスで Hugging Face から無償取得可能。MoE アーキテクチャで推論演算量を 73% 削減。</description></item><item><title>HuggingFace hf-mount: AIモデルをダウンロードせずに仮想ファイルシステムとしてマウント</title><link>https://hdknr.github.io/blogs/posts/2026/03/huggingface-hf-mount/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/huggingface-hf-mount/</guid><description>&lt;p&gt;2026年3月、HuggingFace が新ツール &lt;strong&gt;hf-mount&lt;/strong&gt; を&lt;a href="https://x.com/ClementDelangue/status/2036452081750409383"&gt;発表&lt;/a&gt;しました。HuggingFace Hub にホスティングされている巨大な AI モデルやデータセットを、ダウンロードせずに仮想ファイルシステムとして直接マウントできるツールです。&lt;/p&gt;
+&lt;h2 id="hf-mount-とは"&gt;hf-mount とは&lt;/h2&gt;
+&lt;p&gt;hf-mount は、HuggingFace の Storage Bucket、モデルリポジトリ、データセットをローカルファイルシステムとしてマウントするツールです。バックエンドには FUSE（Filesystem in Userspace: ユーザー空間でファイルシステムを実装する仕組み）または NFS を使用します。ファイルは最初の読み取り時に遅延フェッチ（lazy fetch）され、実際にアクセスしたバイトだけがネットワークを通ります。&lt;/p&gt;
+&lt;p&gt;HuggingFace CEO の Clement Delangue 氏は「ローカルマシンのディスクの 100 倍大きなリモートストレージをアタッチできる」と&lt;a href="https://x.com/ClementDelangue/status/2036452081750409383"&gt;述べています&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="主な特徴"&gt;主な特徴&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ダウンロード不要&lt;/strong&gt;: モデルやデータセットを事前にダウンロードする必要がない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;遅延フェッチ&lt;/strong&gt;: 実際にアクセスしたファイルだけがネットワーク経由で取得される&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2つのバックエンド&lt;/strong&gt;: NFS（推奨）と FUSE から選択可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;読み書き対応&lt;/strong&gt;: Storage Bucket は読み書き両対応、モデル・データセットは読み取り専用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Kubernetes 対応&lt;/strong&gt;: CSI ドライバー（&lt;a href="https://github.com/huggingface/hf-csi-driver"&gt;hf-csi-driver&lt;/a&gt;）で Pod 内に FUSE ボリュームとしてマウント可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストール"&gt;インストール&lt;/h2&gt;
+&lt;p&gt;Linux（x86_64, aarch64）と macOS（Apple Silicon）に対応しています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/huggingface/hf-mount/main/install.sh | sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;デフォルトでは &lt;code&gt;~/.local/bin/&lt;/code&gt; にインストールされます。&lt;code&gt;INSTALL_DIR&lt;/code&gt; 環境変数で変更可能です。&lt;/p&gt;</description></item></channel></rss>

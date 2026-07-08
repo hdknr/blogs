@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>BigQuery on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/bigquery/</link><description>Recent content in BigQuery on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 01 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/bigquery/index.xml" rel="self" type="application/rss+xml"/><item><title>「AIエージェントのORM」としての仮想グラフ — Snowflake・Databricks・Google が挑む Zero-copy グラフ戦略の全体像</title><link>https://hdknr.github.io/blogs/posts/2026/06/virtual-graph-as-orm-for-ai-agents/</link><pubDate>Mon, 01 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/virtual-graph-as-orm-for-ai-agents/</guid><description>Snowflake・Databricks・Google Cloud が打ち出す仮想グラフ（Virtual Graph）戦略を解説。Zero-copy・ガバナンス継続・GQL対応という特性が、AIエージェントにとってのセマンティックレイヤー＝ORMとなる理由と、物理グラフとのトレードオフを整理する。</description></item><item><title>BigQuery ARRAY/STRUCT で速度3倍・コスト25%削減 --- JOINを消す「データの持ち方」最適化</title><link>https://hdknr.github.io/blogs/posts/2026/03/b32313de621a699d6b0e80a47d982cbf/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/b32313de621a699d6b0e80a47d982cbf/</guid><description>&lt;h1 id="bigquery-arraystruct-で速度-3-倍コスト-25-削減--join-を消すデータの持ち方最適化"&gt;BigQuery ARRAY/STRUCT で速度 3 倍・コスト 25% 削減 &amp;mdash; JOIN を消す「データの持ち方」最適化&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/yoshitake_l/status/2029521392534991282"&gt;@yoshitake_l 氏が X で共有&lt;/a&gt;した、BigQuery のデータ構造変更による劇的な改善結果が注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;BigQuery でデータの持ち方を変えるだけで、クエリ処理速度を 3 倍に、クエリコストを 25% 削減できたので共有。試したクエリは、1:N の 2 つのテーブルの N 側を集計し、1 側と JOIN するシンプルなもの。使ったのは、ARRAY と STRUCT というデータ構造です。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「データの持ち方を変えるだけ」で速度 3 倍・コスト 25% 削減。SQL のチューニングではなく、&lt;strong&gt;テーブル設計の変更&lt;/strong&gt;でこの結果を得ています。本記事では、なぜ ARRAY/STRUCT が JOIN より高速でコストが低いのか、その技術的な仕組みと実践方法を解説します。&lt;/p&gt;
+&lt;h2 id="なぜ-join-は遅くて高いのか"&gt;なぜ JOIN は遅くて高いのか&lt;/h2&gt;
+&lt;h3 id="bigquery-の分散処理とシャッフル"&gt;BigQuery の分散処理とシャッフル&lt;/h3&gt;
+&lt;p&gt;BigQuery の課金と速度の問題を理解するには、まず分散処理の仕組みを知る必要があります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;BigQuery の JOIN 処理の流れ:
+1. テーブル A を複数のスロット（ワーカーノード）に分散読み込み
+2. テーブル B を複数のスロットに分散読み込み
+3. JOIN キーに基づいて、データを適切なスロットに「再配置」
+→ これが「シャッフル」
+4. 各スロットでマッチング処理を実行
+5. 結果を統合
+問題:
+ステップ 3 のシャッフルが最大のボトルネック
+├── スロット間のネットワーク通信が発生
+├── 大量の中間データが移動
+└── 通信待ちの間、スロットが遊休状態になる
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;BigQuery のオンデマンド課金は「スキャンしたバイト数」に比例します。JOIN では&lt;strong&gt;両方のテーブルのキー列と必要列をすべてスキャン&lt;/strong&gt;するため、スキャン量が増えます。さらに、JOIN に必要なシャッフル処理が実行時間を大幅に伸ばします。&lt;/p&gt;</description></item><item><title>生成AI（ジェネレーティブAI）</title><link>https://hdknr.github.io/blogs/posts/2024/02/df62029431b61d02be1ea6b3bc76c04c/</link><pubDate>Fri, 02 Feb 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/02/df62029431b61d02be1ea6b3bc76c04c/</guid><description>&lt;h1 id="生成-aiジェネレーティブ-aigenai"&gt;生成 AI（ジェネレーティブ AI/GenAI）&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.softbank.jp/biz/solutions/generative-ai/"&gt;Softbank&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/moritata9/items/f1f8538b559a007217af"&gt;データマネジメントと生成 AI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://japan.zdnet.com/article/35205383/"&gt;Snowflake の製品管理担当幹部が考える「生成 AI×DWH」の新たな可能性&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://it.impress.co.jp/articles/-/24702"&gt;AI 活用で目指すべきは“脱 DWH” データレイクと DWH のデータを統合管理する真の“データ活用”時代の「レイクハウス」&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.meti.go.jp/press/2023/02/20240202003/20240202003.html"&gt;生成 AI の開発力強化に向けたプロジェクト「GENIAC」を開始します&lt;/a&gt; （Generative AI Accelerator Challenge）&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://xtech.nikkei.com/atcl/nxt/news/18/15261/"&gt;Microsoft がデータ分析基盤「Fabric」発表、DWH・AI・ストリーム分析を統合&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="プログラミングコード生成-ai"&gt;プログラミングコード生成 AI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub Copilot&lt;/li&gt;
+&lt;li&gt;Amazon CodeWhisperer&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="bigquery"&gt;BigQuery&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://developers.cyberagent.co.jp/blog/archives/45241/"&gt;総合職の新卒 1 年目が、自社のデータ構造に合わせた SQL 生成 AI を作ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/YoshinagaYuta/items/643b40b3600304958800"&gt;BigQuery からデータを抽出して生成 AI に分析してもらうまでが SQL で完結する手順&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="amazon-redshiftamazon-q-generative-sql"&gt;Amazon Redshift/Amazon Q generative SQL&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/sasashu/articles/b00e41a92f707e"&gt;自然言語から SQL のクエリ生成ができる Amazon Q generative SQL を触ってみた（プレビュー）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/20231130-amazon-redshift-amazon-q-generative-sql/"&gt;[速報] Amazon Redshift クエリエディタが Amazon Q generative SQL の新機能が発表されました（プレビュー） #AWSreInvent&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="amazon-bedrock"&gt;Amazon Bedrock&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;LLM: Claude 2&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://textcortex.com/ja/post/claude-2-vs-gpt-4"&gt;アンソロピックのクロード 2 Vs GPT-4（徹底比較）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/minorun365/items/fbbd26a71b4e72fc883c"&gt;OpenAI の GPT シリーズと Bedrock の Claude をコスト比較してみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="pingcaptidb"&gt;PingCAP/TiDB&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://pingcap.co.jp/chat2query-ai-powered-sql-generator/"&gt;ChatGPT を搭載した革新的な SQL ジェネレータ「Chat2Query」とは&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://recruit.gmo.jp/engineer/jisedai/blog/chatgpt-x-mysql-shell/"&gt;ChatGPT × MySQL Shell：SQL を AI に考えてもらうプラグイン&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="azure"&gt;Azure&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/masakikato/articles/azure-openai-prompt-sql"&gt;Azure Open AI Service で SQL を生成するプロンプト例&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://news.mynavi.jp/techplus/article/20231214-2841323/"&gt;日本語プロンプト指示で SQL 文を生成できるデータベース開発支援ツール - システムインテグレータ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="fabric"&gt;Fabric&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="ttps://learn.microsoft.com/ja-jp/fabric/get-started/microsoft-fabric-overview"&gt;Microsoft Fabric とは&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://learn.microsoft.com/ja-jp/fabric/data-warehouse/data-warehousing"&gt;Microsoft Fabric のデータ ウェアハウスとは&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/ryoma-nagata/items/daeebd71e40312a42e22"&gt;Microsoft Fabric の組み込みの AI モデルで自然言語に対する解析・分析をしてみる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="snowflake"&gt;Snowflake&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.snowflake.com/blog/https-www-snowflake-com-blog-generative-ai-llms-summit-2023/?lang=ja"&gt;Gen AI と LLM をデータに導入しよう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://note.com/morph_db/n/nd31bd136a23d"&gt;AI 機能を使って、SQL なしで Snowflake のデータを分析する方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.snowflake.com/blog/https-www-snowflake-com-blog-snowpark-container-services-deploy-genai-full-stack-apps/?lang=ja"&gt;Snowpark Container Services:Snowflake で洗練された生成 AI とフルスタック アプリを安全に展開して実行する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.snowflake.com/blog/use-ai-snowflake-cortex/?lang=ja"&gt;Snowflake Cortex で AI を数秒で使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.snowflake.com/ja/guides-overview-ml-powered-functions"&gt;Snowflake Cortex ML ベースの関数&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/motoy3d/items/3104b1d67368bbd09d93"&gt;Snowflake Cortex について調べてたら凄いワクワクしてきた！&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="morph"&gt;Morph&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.morphdb.io/"&gt;https://www.morphdb.io/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://note.com/morph_db/n/n63286393c2c2"&gt;データのための、Notion や Figma のようなツールをつくりたい&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://note.com/morph_db/n/n0e41edc71e9b"&gt;Figma や Miro のように直感的なデータ分析体験を！Canvas 機能のご紹介&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

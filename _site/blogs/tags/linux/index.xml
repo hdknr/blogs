@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Linux on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/linux/</link><description>Recent content in Linux on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Google シニア SRE 面接を突破する5つのポイント（2026年版）</title><link>https://hdknr.github.io/blogs/posts/2026/04/google-senior-sre-interview-2026/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/google-senior-sre-interview-2026/</guid><description>&lt;p&gt;2026年の今、Google のシニア SRE 面接に「LeetCode をひたすら解けば受かる」という時代は終わった。本記事は韓国エンジニアコミュニティでバズったツイートとその英語スレッドをもとに、2026年版の攻略ポイントをまとめたものだ。&lt;/p&gt;
+&lt;p&gt;元ツイートの要旨：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;2026年には、アルゴリズムパズルよりも「5PB のデータを 10Gbps で転送したら 46 日かかる」をすぐに暗算できる物理的感覚がはるかに重要。図を描く前に暗算をして、障害時は原因分析より先にシステムを安定化させる習慣が身についていないといけない。コーディングテストも連結リストの逆転ではなく、限られたメモリで数十 GB のログを処理する実践的な問題に変わっている。&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="1-nalsd-ラウンドはアーキテクチャではなく物理"&gt;1. NALSD ラウンドは「アーキテクチャ」ではなく「物理」&lt;/h2&gt;
+&lt;p&gt;NALSD（Non-Abstract Large Systems Design）ラウンドで最も多い失敗は、まず図を描いてしまうことだ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;典型的な落とし穴：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;問題: 「4 時間 SLA で 5PB クラスターの DR を設計してください」&lt;/li&gt;
+&lt;li&gt;NG 回答: きれいな active-passive 構成図を描く → 即アウト&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;なぜ即アウトか：&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;5 PB = 5 × 10^15 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;10 Gbps = 10 × 10^9 bps = 1.25 × 10^9 bytes/sec
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;転送時間 = 5 × 10^15 / 1.25 × 10^9 = 4,000,000 秒 ≈ 46 日
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これを暗算で弾ければ「この要件では 4 時間 SLA は物理的に不可能」とわかる。図を描く前に数字を出すのがシニア SRE の姿勢だ。&lt;/p&gt;</description></item><item><title>ANOLISA</title><link>https://hdknr.github.io/blogs/wiki/tools/anolisa/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/anolisa/</guid><description>Alibaba が公開した AI Agent 向け Linux OS（Agentic OS）。Copilot Shell / Agent Sec Core / AgentSight / OS Skills の 4 コンポーネント構成</description></item><item><title>Pay2Key の Linux ランサムウェアが x64/ARM64 サーバーを標的に — 防御機構を無効化する高度な手口</title><link>https://hdknr.github.io/blogs/posts/2026/03/pay2key-linux-ransomware/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/pay2key-linux-ransomware/</guid><description>イラン系攻撃グループ Pay2Key の Linux ランサムウェア新亜種 Pay2Key.I2P の技術分析。SELinux/AppArmor 無効化、ChaCha20 暗号化、I2P 匿名通信の手口と対策を解説。</description></item><item><title>CVE-2026-32746: GNU Inetutils telnetd に32年間潜んでいた認証前リモートコード実行の脆弱性</title><link>https://hdknr.github.io/blogs/posts/2026/03/cve-2026-32746-telnetd/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cve-2026-32746-telnetd/</guid><description>GNU Inetutils telnetd の認証前リモートコード実行脆弱性 CVE-2026-32746（CVSS 9.8）の技術的詳細、攻撃手法、パッチ状況、対策を解説。</description></item></channel></rss>

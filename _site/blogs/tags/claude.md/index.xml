@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>CLAUDE.md on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/claude.md/</link><description>Recent content in CLAUDE.md on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 25 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/claude.md/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code の「毎回ゼロスタート」問題 — CLAUDE.md・メモリ・行動ルールでセッション間の文脈を継続させる</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-session-context-persistence/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-session-context-persistence/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;2026年1月、Google のプリンシパルエンジニア Jaana Dogan 氏が X にこう投稿した。「Claude Code を使ったら、チームが1年かけて構築した分散エージェントオーケストレータを1時間で再現できた」——このツイートは 800 万以上のビューを獲得し、エンジニアリングコミュニティに衝撃を与えた。&lt;/p&gt;
+&lt;p&gt;しかし、その生産性の前提条件がある。&lt;strong&gt;Claude Code を正しく設定すること&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;p&gt;あるアラビア語圏の開発者がX（旧Twitter）で指摘した問題が、多くの開発者の共感を呼んでいる。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code を毎日使っている開発者の 90% は、毎セッション、ゼロから始めている。
+スタックのコンテキストなし、以前の会話の記憶なし、コードスタイルを統一する行動ルールなし。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この「毎回ゼロスタート」問題は、週あたり相当な生産性損失をもたらすという。同氏は正しい設定を導入した結果、月次で &lt;strong&gt;週15時間以上の節約&lt;/strong&gt; と大幅な token コスト削減を実現したと報告している。&lt;/p&gt;
+&lt;p&gt;では、どうすれば解決できるのか？&lt;/p&gt;
+&lt;h2 id="問題の本質-claude-code-はセッションをまたいで記憶しない"&gt;問題の本質: Claude Code はセッションをまたいで記憶しない&lt;/h2&gt;
+&lt;p&gt;Claude Code は強力なツールだが、デフォルトでは&lt;strong&gt;セッションをまたいで文脈を保持しない&lt;/strong&gt;。新しいセッションを開くたびに以下を繰り返すことになる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロジェクトのアーキテクチャを再説明する&lt;/li&gt;
+&lt;li&gt;コーディング規約や好みを再度伝える&lt;/li&gt;
+&lt;li&gt;前回の作業内容や設計上の決定事項を再共有する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この繰り返しは、時間と token の両方の無駄になる。毎日 Claude Code を使う開発者にとって、これは積み重なると無視できないコストになる。&lt;/p&gt;
+&lt;h2 id="解決策-3-つの永続化レイヤー"&gt;解決策: 3 つの永続化レイヤー&lt;/h2&gt;
+&lt;p&gt;Claude Code でセッション間の文脈を維持するには、次の 3 つの仕組みを組み合わせる。&lt;/p&gt;
+&lt;h3 id="1-claudemd--プロジェクトコンテキストの永続化"&gt;1. CLAUDE.md — プロジェクトコンテキストの永続化&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; は、Claude Code がセッション開始時に自動的に読み込む設定ファイルだ。プロジェクトのルートに置いておけば、毎回説明しなくていい情報を一度記載しておける。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# プロジェクト名
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 技術スタック
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; フロントエンド: React + TypeScript
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; バックエンド: FastAPI (Python)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; データベース: PostgreSQL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## コーディング規約
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 変数名はキャメルケース
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 関数は 50 行以内に収める
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; テストは pytest を使用
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## よく使うコマンド
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`npm run dev`&lt;/span&gt; — 開発サーバー起動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`pytest`&lt;/span&gt; — テスト実行
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`docker compose up -d`&lt;/span&gt; — DB 起動
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これだけで、毎セッションの「説明コスト」を大幅に削減できる。&lt;/p&gt;</description></item><item><title>Claude Code から個人 Obsidian Vault に「書き戻す」設計 — inbox-first / Daily Note / ADR 二重書きの3パターン</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-obsidian-vault-writeback/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-obsidian-vault-writeback/</guid><description>プロジェクトで得た知見を個人 Obsidian Vault に循環させるための、Claude Code 側の書き戻し（writeback）設計をまとめる。inbox-first を基本に、サマリスキル・Daily Note 追記・ADR 二重書きの3パターンを、permissions と週次レビュー運用まで含めて解説。</description></item><item><title>Obsidian Vault を Claude Code に繋ぐ実践編 — CLAUDE.md / Skills / Settings のプロジェクト別管理パターン</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-obsidian-vault-project-config/</link><pubDate>Mon, 18 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-obsidian-vault-project-config/</guid><description>個人 Obsidian Vault を特定プロジェクトの Claude Code セッションに併用させたいときの設定パターンを実用例で解説。global / project / local の3層と、MCP filesystem サーバ・symlink の組み合わせで、機密を漏らさず Vault のサブセットだけを AI Agent に渡す構成を示す。</description></item><item><title>「言語税」対策として CLAUDE.md を英語化する — 日本語境界を残したまま prompt caching を効かせる部分英語化パターン</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-prompt-caching/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-prompt-caching/</guid><description>&lt;h2 id="背景-日本語の言語税をどこで払うか"&gt;背景: 日本語の「言語税」をどこで払うか&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/04/2026-04-30-llm-japanese-token-language-tax/"&gt;先日の記事&lt;/a&gt;で、日本語入出力が英語比 1.48 倍のトークンを消費すること、Claude では最大 1.94 倍にもなることを取り上げた。&lt;/p&gt;
+&lt;p&gt;しかし現実問題、ブログ記事本文・コミットメッセージ・GitHub PR の説明・許可プロンプトなど、&lt;strong&gt;最終アウトプットが日本語であること自体が要求である&lt;/strong&gt;ケースは避けられない。Claude Code を使い続ける限り、日本語コストはゼロにはならない。&lt;/p&gt;
+&lt;p&gt;問いを言い換えると、こうなる:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「日本語境界を保ったまま、実トークン消費を構造的に減らせる場所はどこか？」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="検討した-5-案"&gt;検討した 5 案&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;案&lt;/th&gt;
+&lt;th&gt;仕組み&lt;/th&gt;
+&lt;th&gt;効く場面&lt;/th&gt;
+&lt;th&gt;弱点&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;A. 翻訳プロキシ (Ollama)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ユーザー入力 ja→en、Claude 応答 en→ja を中間 LLM が翻訳&lt;/td&gt;
+&lt;td&gt;「思考・指示が日本語で出来ればよい」用途&lt;/td&gt;
+&lt;td&gt;ツール結果・ファイル内容・git diff まで翻訳経路に入り破綻&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;B. 部分英語化&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;思考・指示は英語、最終成果物は日本語のまま&lt;/td&gt;
+&lt;td&gt;大半の開発作業&lt;/td&gt;
+&lt;td&gt;削減率は応答側ほど効かない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;C. Prompt Caching 徹底&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;CLAUDE.md・Skills・MCP 出力をキャッシュ&lt;/td&gt;
+&lt;td&gt;日本語のまま実コストを大幅削減&lt;/td&gt;
+&lt;td&gt;設計工数が必要&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;D. Caveman プロンプト&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;「原始人みたいに喋れ」で日本語応答を圧縮&lt;/td&gt;
+&lt;td&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/04/2026-04-17-claude-caveman-token-reduction/"&gt;既存実績手法（最大 80% 削減）&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;文体が崩れるので公開記事には不向き&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;E. モデル切替&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Gemini など日本語効率の良いモデルへ部分委譲&lt;/td&gt;
+&lt;td&gt;翻訳・要約などコモディティ作業&lt;/td&gt;
+&lt;td&gt;Claude のハーネス連携を捨てる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="翻訳プロキシ案-a-が筋悪な理由"&gt;翻訳プロキシ案 (A) が筋悪な理由&lt;/h2&gt;
+&lt;p&gt;「ローカル LLM で Claude Code の入出力を翻訳する」というアイデアは一見魅力的だが、Claude Code は対話 AI ではなく &lt;strong&gt;エージェント環境&lt;/strong&gt; であることを思い出す必要がある。&lt;/p&gt;</description></item><item><title>CLAUDE.md+SKILL.md 英語化で 37.6% トークン削減 — tiktoken による実測結果と内訳</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-tiktoken-measurement/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-md-english-tiktoken-measurement/</guid><description>&lt;h2 id="結論を先に"&gt;結論を先に&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; と 4 つの &lt;code&gt;SKILL.md&lt;/code&gt; を日本語から英語に書き換えた結果、毎セッション読み込まれる固定資産のトークン量が &lt;strong&gt;13,538 → 8,441（-37.6%、絶対値で 5,097 トークン削減）&lt;/strong&gt; になった。&lt;/p&gt;
+&lt;p&gt;文字数は逆に &lt;strong&gt;+49%&lt;/strong&gt; 増えているのに、トークンは大幅に減るという一見矛盾した結果である。理由と内訳を以下に示す。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://hdknr.github.io/blogs/posts/2026/05/2026-05-13-claude-md-english-prompt-caching/"&gt;CLAUDE.md 英語化の記事&lt;/a&gt; と Skills 英語化 PR (#394) の続編。&lt;/p&gt;
+&lt;p&gt;前 2 つの作業で、ハーネスの「内側」（LLM だけが読む固定資産）を英語化し、「外側」（人間が読むブログ記事や許可プロンプト）は日本語のまま維持する&lt;strong&gt;部分英語化パターン&lt;/strong&gt;を実装した。&lt;/p&gt;
+&lt;p&gt;ただし、その記事では「Anthropic 公開の日本語比率 1.94x」から &lt;strong&gt;推定 48% 削減&lt;/strong&gt; とラフに見積もっていた。実際の効果は推定モデル次第で 2% 〜 48% と幅があり、本当の値を知るには実測しかない。&lt;/p&gt;
+&lt;h2 id="計測手法"&gt;計測手法&lt;/h2&gt;
+&lt;h3 id="tiktoken-cl100k_base-を採用"&gt;tiktoken (cl100k_base) を採用&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;理由&lt;/strong&gt;: オフラインで動く、API key 不要、結果が再現可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;限界&lt;/strong&gt;: Anthropic Claude のトークナイザーではなく OpenAI GPT-4 系。ただし日本語のトークン化挙動は近似として広く使われる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対案&lt;/strong&gt;: Anthropic SDK の &lt;code&gt;count_tokens&lt;/code&gt; API が最も正確だが、API キーが必要&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="venv-で隔離"&gt;venv で隔離&lt;/h3&gt;
+&lt;p&gt;PEP 668 で system Python が保護されているため、&lt;code&gt;.claude/temp/venv-tiktoken/&lt;/code&gt; に隔離した venv を作って tiktoken だけ入れた。&lt;/p&gt;</description></item><item><title>Claude Code 作者直伝のワークフロー設計術 — 計画モード・CLAUDE.md・検証ループで品質を上げる</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-creator-setup/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-creator-setup/</guid><description>Claude Code 作者が30分動画で公開したワークフロー設計術。計画モード（Plan Mode）・CLAUDE.md へのフィードバック・検証ループの3テクニックで出力品質を高める実践ガイド。</description></item><item><title>CLAUDE.md に1行追加するだけで Claude Code のコストが 1/3 に — plan モード強制テクニック</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-plan-mode-cost-reduction/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-plan-mode-cost-reduction/</guid><description>CLAUDE.md に plan モード強制の1行を追加するだけでトークン消費を 64%、コストを 69% 削減できる設定方法と仕組みを解説。</description></item><item><title>ハーネスエンジニアリングとの向き合い方 — ルールファイルを超えて開発プロセスを設計する</title><link>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-beyond-rule-files/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-beyond-rule-files/</guid><description>&lt;p&gt;2026 年 4 月、Findy が主催したオンラインイベント「&lt;strong&gt;Harness Engineering 入門 〜 AI エージェントを制御するアプローチ〜&lt;/strong&gt;」が開催された。r.kagaya 氏の登壇「エージェントの開発環境を内製して気づいた『これもハーネス』」は参加者から「レベル高すぎた」と評されるほど反響を呼んだ。本記事では、r.kagaya 氏が公開した SpeakerDeck 資料「ハーネスエンジニアリングにどう向き合うか 〜ルールファイルを超えて開発プロセスを設計する〜」をもとに、ルールファイルを超えたハーネスエンジニアリングの考え方を整理する。&lt;/p&gt;
+&lt;h2 id="イベント概要"&gt;イベント概要&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;【Harness Engineering 入門】AIエージェントを制御するアプローチ&lt;/strong&gt;（&lt;a href="https://findy.connpass.com/event/388471/"&gt;connpass #388471&lt;/a&gt;）は、AI エージェントによる開発が広まる中でハーネス設計がどのような意味を持つかを掘り下げるイベント。対象は AI エージェントを積極的に使っているエンジニア、チーム開発に AI を取り込もうとしているエンジニア層だ。&lt;/p&gt;
+&lt;p&gt;複数の登壇の中で r.kagaya 氏のセッションは、自社でエージェントの開発環境を内製する過程で見えてきた「これもハーネスだ」という気づきを軸に、ルールファイル設定で終わらないハーネスエンジニアリングの本質を語った。&lt;/p&gt;
+&lt;h2 id="ルールファイルから始まるハーネスエンジニアリング"&gt;ルールファイルから始まるハーネスエンジニアリング&lt;/h2&gt;
+&lt;p&gt;多くのエンジニアがハーネスエンジニアリングを始める入り口は &lt;strong&gt;CLAUDE.md などのルールファイル&lt;/strong&gt; だ。「こういうコードを書いてほしい」「このコマンドは使わないで」といった制約を自然言語で記述し、AI の振る舞いをコントロールする。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# CLAUDE.md の例
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## Bash コマンドの必須ルール
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`&amp;amp;&amp;amp;`&lt;/span&gt; でコマンドを繋がない
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`/tmp`&lt;/span&gt; を使わない（&lt;span style="color:#e6db74"&gt;`.claude/temp/`&lt;/span&gt; を使う）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この段階では「うまく動くルールを育てる」フェーズであり、試行錯誤でルールを追加・削除していく。しかし、ここで止まってしまうと &lt;strong&gt;本当の意味でのハーネスエンジニアリング&lt;/strong&gt; には到達できない。&lt;/p&gt;
+&lt;h2 id="ルールファイルの限界"&gt;ルールファイルの限界&lt;/h2&gt;
+&lt;p&gt;ルールファイルだけに依存したアプローチには構造的な限界がある。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;課題&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;変更の影響が不透明&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;あるルールを変えたとき、どの程度・どの方向に結果が変わるか測定できない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;劣化の検知が困難&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;モデルのアップデートや使い方の変化でルールの有効性が静かに落ちる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;再現性の欠如&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;同じルールで試しても毎回違う結果が出る場合の原因特定が難しい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スケールしない&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;チームが大きくなるほど「誰がどのルールを管理しているか」が曖昧になる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="ルールファイルを超えた視点開発プロセスとして設計する"&gt;ルールファイルを超えた視点：開発プロセスとして設計する&lt;/h2&gt;
+&lt;p&gt;r.kagaya 氏が提示したのは、ハーネスエンジニアリングを「ルールを書く行為」ではなく &lt;strong&gt;「開発プロセスを設計する行為」&lt;/strong&gt; として捉え直す考え方だ。&lt;/p&gt;</description></item><item><title>エージェントハーネスとユーザーハーネス — ハーネスエンジニアリングの全体像を正しく理解する</title><link>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-agent-vs-user-harness/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/harness-engineering-agent-vs-user-harness/</guid><description>&lt;p&gt;r.kagaya 氏（@ry0_kaga、AstarMinds CTO）が Zenn に公開した記事がある。「&lt;a href="https://zenn.dev/r_kaga/articles/329afdc151899f"&gt;ハーネスエンジニアリングとは何で、何ではないのか 〜作る側のハーネス、使う側のハーネス〜&lt;/a&gt;」という記事だ。ハーネスエンジニアリングをめぐる言葉の混乱を整理し、エージェントハーネスとユーザーハーネスという2層の区分を提示している。&lt;/p&gt;
+&lt;p&gt;CLAUDE.md や Skills を書けば「ハーネスエンジニアリングをやっている」と言える。でも、それはハーネスエンジニアリングの全体ではない。この記事ではその全体像を整理する。&lt;/p&gt;
+&lt;h2 id="そもそもハーネスの定義が割れている"&gt;そもそも「ハーネス」の定義が割れている&lt;/h2&gt;
+&lt;p&gt;前提として、ハーネスエンジニアリングという言葉には統一された定義がない。同じ言葉を使いながら、各社・各人が指しているものが違う。&lt;/p&gt;
+&lt;h3 id="用語の来歴"&gt;用語の来歴&lt;/h3&gt;
+&lt;p&gt;「ハーネス」の原義は馬具だ。馬を馬車に繋ぎ、方向を制御し、力を伝達する装備。ソフトウェア文脈では 2020 年の &lt;a href="https://github.com/EleutherAI/lm-evaluation-harness"&gt;lm-eval-harness&lt;/a&gt;（言語モデル評価ハーネス）が初出とされる（r.kagaya 氏による整理）。2024 年に All Hands AI / OpenHands が「エージェントハーネス」に拡張。2026 年に Mitchell Hashimoto（Terraform 創業者）が「Engineer the Harness」と命名し、OpenAI の記事で広まった。&lt;/p&gt;
+&lt;h3 id="各社の定義"&gt;各社の定義&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;誰が&lt;/th&gt;
+&lt;th&gt;何と言っているか&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;LangChain (Vivek Trivedy)&lt;/td&gt;
+&lt;td&gt;「Agent = Model + Harness。モデルでなければハーネス」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Anthropic&lt;/td&gt;
+&lt;td&gt;「LLM を呼び出し、ツールコールをルーティングする制御ループ」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;OpenAI&lt;/td&gt;
+&lt;td&gt;宣言的制約 + サンドボックス + スケーリング&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Böckeler / Martin Fowler&lt;/td&gt;
+&lt;td&gt;サイバネティクス的制御。フィードフォワード × フィードバック&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Phil Schmid (Hugging Face)&lt;/td&gt;
+&lt;td&gt;Model = CPU, Harness = OS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Bedi (Composio CEO)&lt;/td&gt;
+&lt;td&gt;「システムエンジニアリングのサブセットに新しい名前をつけているだけ」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;LangChain の「モデルでなければハーネス」は極めて広い。Anthropic の「制御ループ」はエージェント実装寄り。「そもそも新しい概念ですらない」と言う人もいる。さらにベンダー（作り手）と利用者（使い手）で意味が違うという構造的な問題もある。&lt;/p&gt;</description></item><item><title>Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-level5/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-level5/</guid><description>&lt;p&gt;Qiita に投稿された「&lt;a href="https://qiita.com/teppei19980914/items/8da88b33ffa8cf88dfa2"&gt;Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった — 実ファイル構成で解説&lt;/a&gt;」が大きな反響を呼んでいる。CLAUDE.md・Skills・Hooks・Agents を組み合わせて Claude Code を 5 段階で「育てる」ことで、人間の作業を「指示と確認だけ」に絞り込むアプローチを実ファイル構成とともに解説した記事だ。&lt;/p&gt;
+&lt;h2 id="ai-にコードを書かせているとai-と開発しているは違う"&gt;「AI にコードを書かせている」と「AI と開発している」は違う&lt;/h2&gt;
+&lt;p&gt;Claude Code を導入した当初は、毎回こんなプロンプトを書いていたという：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;UIテキストはハードコーディングしないでください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;src/i18n/ja.ts に追加してから使ってください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;テストも書いてください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;外部リンクには rel=&amp;#34;noopener noreferrer&amp;#34; を付けてください。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;コミット前に npx astro check と npm test を実行してください。
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;毎回同じことを書くのは「AI にコードを書かせている」状態であり、「AI と開発している」とは言えない。同氏は 1 か月の試行錯誤を経て、作業は「何を作るか指示する」と「動作確認する」だけになったという。&lt;/p&gt;
+&lt;h2 id="claude-code-5-つのレベルの全体像"&gt;Claude Code 5 つのレベルの全体像&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Level&lt;/th&gt;
+&lt;th&gt;追加要素&lt;/th&gt;
+&lt;th&gt;何が自動化されるか&lt;/th&gt;
+&lt;th&gt;人間がやること&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;素のプロンプト&lt;/td&gt;
+&lt;td&gt;なし&lt;/td&gt;
+&lt;td&gt;全指示を毎回手打ち&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;+ CLAUDE.md&lt;/td&gt;
+&lt;td&gt;プロジェクトルールの自動読み込み&lt;/td&gt;
+&lt;td&gt;ルール違反の指摘が不要に&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;+ Skills&lt;/td&gt;
+&lt;td&gt;手順書のオンデマンド注入&lt;/td&gt;
+&lt;td&gt;定型作業の手順説明が不要に&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;+ Hooks&lt;/td&gt;
+&lt;td&gt;品質チェックの自動実行&lt;/td&gt;
+&lt;td&gt;「テスト実行して」が不要に&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;+ Agents&lt;/td&gt;
+&lt;td&gt;並行レビューの自動実行&lt;/td&gt;
+&lt;td&gt;レビュー依頼が不要に&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="level-2-claudemd--プロジェクトの憲法を持たせる"&gt;Level 2: CLAUDE.md — 「プロジェクトの憲法」を持たせる&lt;/h2&gt;
+&lt;p&gt;プロジェクトルートに &lt;code&gt;CLAUDE.md&lt;/code&gt; を置くと、Claude Code が会話開始時に自動で読み込む。これは「プロジェクトの憲法」だ。&lt;/p&gt;</description></item><item><title>ハーネスエンジニアリング</title><link>https://hdknr.github.io/blogs/wiki/concepts/harness-engineering/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/harness-engineering/</guid><description>AI エージェントの出力品質を保証する設計パターン。検証層・制約層・フィードバック層で構成</description></item><item><title>Claude Codeベストプラクティス疲れに終止符 — claude-code-best-practiceリポジトリ一本で運用する方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-best-practice-repo/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-best-practice-repo/</guid><description>&lt;p&gt;Claude Codeのベストプラクティスが毎日TLに流れてくる。追いかけるのに疲れた人向けに、&lt;strong&gt;1つのリポジトリだけをフォローして運用する方法&lt;/strong&gt;を紹介する。&lt;/p&gt;
+&lt;h2 id="ベストプラクティス疲れという問題"&gt;ベストプラクティス疲れという問題&lt;/h2&gt;
+&lt;p&gt;Claude Codeの普及に伴い、SNS上には日々さまざまなベストプラクティスやTipsが投稿されている。しかし、情報が断片的で、どれを採用すべきか判断するだけでも消耗する。&lt;/p&gt;
+&lt;p&gt;結論として、&lt;strong&gt;ベストプラクティスを追うことに時間を費やすより、具体的な仕組みの実装に時間を割いた方が生産的&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;h2 id="claude-code-best-practiceリポジトリとは"&gt;claude-code-best-practiceリポジトリとは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/shanraisshan/claude-code-best-practice"&gt;shanraisshan/claude-code-best-practice&lt;/a&gt; は、Claude Codeの設計や運用に関するベストプラクティスを体系的にまとめたリポジトリだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub Star数: 約24,800（2026年3月時点）&lt;/li&gt;
+&lt;li&gt;海外コミュニティで広く参照されている&lt;/li&gt;
+&lt;li&gt;設計思想から具体的な設定まで、日々更新されている&lt;/li&gt;
+&lt;li&gt;日本のSNSでバズるClaude Code Tipsも、元ネタはこのリポジトリ周辺であることが多い&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="導入手順"&gt;導入手順&lt;/h2&gt;
+&lt;p&gt;やることは2ステップだけ。&lt;/p&gt;
+&lt;h3 id="step-1-リポジトリをクローン"&gt;Step 1: リポジトリをクローン&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/shanraisshan/claude-code-best-practice.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="step-2-claude-codeにプロジェクト固有のベストプラクティスを提案させる"&gt;Step 2: Claude Codeにプロジェクト固有のベストプラクティスを提案させる&lt;/h3&gt;
+&lt;p&gt;自分のプロジェクトディレクトリでClaude Codeを起動し、以下のように依頼する:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;このリポジトリ（claude-code-best-practice）を参考に、
+うちのプロジェクトに合ったベストプラクティスを提案して
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Claude Codeがプロジェクトの構成を読み取り、適切なCLAUDE.mdの設定やSkills、エージェント構成を提案してくれる。&lt;/p&gt;
+&lt;h2 id="startup-hookで常に最新化する"&gt;startup hookで常に最新化する&lt;/h2&gt;
+&lt;p&gt;クローンしたリポジトリは時間とともに古くなる。Claude Codeの &lt;code&gt;SessionStart&lt;/code&gt; hook（セッション開始時に自動実行される仕組み）に &lt;code&gt;git pull&lt;/code&gt; を設定しておけば、起動のたびに自動で最新化される。&lt;/p&gt;
+&lt;p&gt;Claude Codeのユーザー設定ファイル（&lt;code&gt;~/.claude/settings.json&lt;/code&gt;）に以下を追加する:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;hooks&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;SessionStart&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;command&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;command&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;cd /path/to/claude-code-best-practice &amp;amp;&amp;amp; git pull --quiet&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;timeout&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;10000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;/path/to/&lt;/code&gt; の部分は、Step 1でクローンした実際のパスに置き換えること。&lt;/p&gt;</description></item><item><title>非エンジニアでも1分で始められる Claude Code — CLAUDE.md 3行から始める仕事委任術</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-setup-for-non-engineers/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-setup-for-non-engineers/</guid><description>&lt;p&gt;Claude Code は「コード」という名前のせいでエンジニア向けツールだと思われがちですが、実は日本語で仕事を渡すツールです。インストール1分、コード0行——非エンジニアこそ今すぐ使い始めるべき理由と、効果を最大化する CLAUDE.md の作り方を解説します。&lt;/p&gt;
+&lt;!-- 本記事は [@wad0427](https://x.com/wad0427) 氏の X 記事 (2026-03-17) を元に構成しています --&gt;
+&lt;h2 id="claude-code-はプログラミングツールではない"&gt;Claude Code はプログラミングツールではない&lt;/h2&gt;
+&lt;p&gt;X を見ると、デザイナーがコード1行も書かずにニュース収集→記事→サムネ→SNS投稿まで全部自動化していたり、会計士が Excel 作成・PowerPoint 操作・Gmail 連携まで全部 AI に回していたりします。&lt;/p&gt;
+&lt;p&gt;エンジニアではない人たちがガンガン使っている。それなのに「難しそう」で止まっている人は、素手で戦っているようなものです。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ChatGPT は「聞く」ツール。Claude Code は「やらせる」ツール。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude の強みはライティング・分析・思考・ファイル操作です。ここは今の AI の中でも頭一つ抜けています。「仕事を渡す」用途に限れば、現時点で最も実用的なツールのひとつです。&lt;/p&gt;
+&lt;p&gt;怖い人はまずブラウザ版の Claude Chat（claude.ai）だけでも十分です。文体カスタマイズ、会話記憶、Excel/PowerPoint の直接作成、Gmail 連携——ブラウザだけでかなりのことができます。そこから始めて、「もっとやらせたい」と思ったら Claude Code に進む、この順番でいいと思います。&lt;/p&gt;
+&lt;h2 id="セットアップ--1分で終わる"&gt;セットアップ — 1分で終わる&lt;/h2&gt;
+&lt;p&gt;やることは3ステップだけです。&lt;/p&gt;
+&lt;h3 id="ステップ1-インストール"&gt;ステップ1: インストール&lt;/h3&gt;
+&lt;p&gt;ターミナル（Mac）または PowerShell（Windows）を開いて、以下のコマンドを1行貼り付けます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mac:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://claude.ai/install.sh | bash
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Windows:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;irm https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//claude.ai/install.ps1 | iex
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;約1分で完了します。&lt;/p&gt;</description></item></channel></rss>

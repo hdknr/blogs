@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Vscode on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/vscode/</link><description>Recent content in Vscode on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 19 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/vscode/index.xml" rel="self" type="application/rss+xml"/><item><title>ForceMemo: GitHub アカウントを乗っ取り Python リポジトリにバックドアを仕込む新型攻撃</title><link>https://hdknr.github.io/blogs/posts/2026/03/forcememo-github-attack/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/forcememo-github-attack/</guid><description>&lt;p&gt;2026年3月上旬から、GitHub アカウントを侵害して Python リポジトリに悪意あるコードを注入する「ForceMemo」と呼ばれる大規模攻撃キャンペーンが確認されています。force-push によるコミット履歴の書き換えと、Solana ブロックチェーンを利用した C2（Command and Control: 攻撃者がマルウェアに指令を送る仕組み）通信という巧妙な手法が特徴です。&lt;/p&gt;
+&lt;h2 id="攻撃の概要"&gt;攻撃の概要&lt;/h2&gt;
+&lt;p&gt;ForceMemo は、以下の流れで Python プロジェクトを侵害します:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;GitHub アカウントの侵害&lt;/strong&gt; — GlassWorm と呼ばれる情報窃取マルウェアが VS Code / Cursor 拡張機能から GitHub トークンを抽出&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コードの改ざん&lt;/strong&gt; — 侵害したアカウントで &lt;code&gt;setup.py&lt;/code&gt;、&lt;code&gt;main.py&lt;/code&gt;、&lt;code&gt;app.py&lt;/code&gt;、&lt;code&gt;manage.py&lt;/code&gt; 等に難読化されたマルウェアを注入&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;痕跡の隠蔽&lt;/strong&gt; — force-push でコミット履歴を書き換え、タイムスタンプを維持することで改ざんを検知困難に&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;C2 通信&lt;/strong&gt; — Solana ブロックチェーンのメモ機能を使ったコマンド＆コントロール通信&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="glassworm-による初期侵入"&gt;GlassWorm による初期侵入&lt;/h2&gt;
+&lt;p&gt;攻撃の起点となる GlassWorm は情報窃取型マルウェアで、VS Code および Cursor の拡張機能を経由して感染します。窃取対象となる GitHub トークンの格納先は多岐にわたります:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VS Code / Cursor 拡張機能のストレージ&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;git credential fill&lt;/code&gt; の出力&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.git-credentials&lt;/code&gt; ファイル&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GITHUB_TOKEN&lt;/code&gt; 環境変数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;窃取されたトークンを使って正規のアカウントとしてリポジトリにアクセスし、コードを改ざんします。&lt;/p&gt;
+&lt;h2 id="force-push-による履歴改ざん"&gt;force-push による履歴改ざん&lt;/h2&gt;
+&lt;p&gt;通常のコミットであれば &lt;code&gt;git log&lt;/code&gt; で変更履歴を追跡できますが、ForceMemo は force-push を使ってコミット履歴自体を書き換えます。さらにタイムスタンプも維持するため、リポジトリのメンテナーやユーザーが改ざんに気づきにくい構造になっています。&lt;/p&gt;</description></item><item><title>VS Code AI コーディングアシスタントのインストール数推移：GitHub Copilot の急落と競合の台頭</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-coding-assistant-vscode-installs/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-coding-assistant-vscode-installs/</guid><description>&lt;p&gt;VS Code マーケットプレイスにおける AI コーディングアシスタントの日次インストール数を示すグラフが話題になっている。GitHub Copilot のインストール数が急激に落ち込む「崖」が鮮明に表れており、SaaS 事業者やプロダクトマネージャーにとって示唆に富む内容だ。&lt;/p&gt;
+&lt;h2 id="グラフが示すもの"&gt;グラフが示すもの&lt;/h2&gt;
+&lt;p&gt;「Daily Install Counts of AI Coding Assistants in Visual Studio Code」と題されたグラフには、以下の 3 つの AI コーディングアシスタントの日次インストール数（30日移動平均）が描かれている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GitHub Copilot&lt;/strong&gt;（オレンジ）：2021年末から着実に成長し、2025年後半には日次 150,000 インストール近くまで到達。しかし 2026年に入って急落し、現在は 60,000 前後まで落ち込んでいる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude Code&lt;/strong&gt;（シアン）：2025年後半に登場し、直近で急速に伸長。日次 60,000 近くまで上昇&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OpenAI Codex&lt;/strong&gt;（イエロー）：同じく直近で伸びを見せているが、Claude Code よりやや控えめ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;注目すべきは、GitHub Copilot のインストール数がピークから半分以下に急落している点だ。この「崖」は、競合の台頭と GitHub Copilot 自体の変化の両方が要因と考えられる。&lt;/p&gt;
+&lt;h2 id="急落の背景"&gt;急落の背景&lt;/h2&gt;
+&lt;h3 id="github-copilot-の課金モデル変更"&gt;GitHub Copilot の課金モデル変更&lt;/h3&gt;
+&lt;p&gt;GitHub Copilot は 2024年12月に無料ティアを導入し、月 2,000 回のコード補完と 50 回のチャットリクエストという制限付きで提供を開始した。同時に、有料プランの価格体系も複雑化している。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Free&lt;/strong&gt;：月 2,000 補完 / 50 チャット&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Pro&lt;/strong&gt;：$10/月&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Pro+&lt;/strong&gt;：$39/月&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Business&lt;/strong&gt;：$19/ユーザー/月&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Enterprise&lt;/strong&gt;：$39/ユーザー/月&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;無料ティアの導入は新規ユーザー獲得を狙った施策だが、既存の有料ユーザーが無料枠で十分と判断して解約するケースもあり得る。また、Microsoft は従来の IntelliCode を廃止し、AI 支援を Copilot に一本化する戦略を取っている。&lt;/p&gt;</description></item><item><title>Ghostty + Claude Code 連携ガイド</title><link>https://hdknr.github.io/blogs/posts/2026/02/540f79d12ee4c647af939ae154414543/</link><pubDate>Wed, 04 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/540f79d12ee4c647af939ae154414543/</guid><description>&lt;h1 id="ghostty--claude-code-連携ガイド"&gt;Ghostty + Claude Code 連携ガイド&lt;/h1&gt;
+&lt;p&gt;GhosttyとClaude Codeの組み合わせは、多くの開発者が推奨する構成です。主なポイントをまとめます。&lt;/p&gt;
+&lt;h2 id="すぐに使える機能"&gt;すぐに使える機能&lt;/h2&gt;
+&lt;h3 id="shiftenter-がネイティブ対応"&gt;Shift+Enter がネイティブ対応&lt;/h3&gt;
+&lt;p&gt;Ghosttyでは &lt;strong&gt;Shift+Enter による改行入力がそのまま動作&lt;/strong&gt;します。他のターミナルでは &lt;code&gt;/terminal-setup&lt;/code&gt; で設定が必要ですが、Ghosttyでは不要です。&lt;/p&gt;
+&lt;h3 id="gpu-アクセラレーション"&gt;GPU アクセラレーション&lt;/h3&gt;
+&lt;p&gt;Claude Codeの出力が大量になっても、GPUレンダリングのおかげでスムーズにスクロール・表示されます。VS Codeのターミナルでは大量テキストのペースト時にフリーズすることがありますが、Ghosttyではその問題がありません。&lt;/p&gt;
+&lt;h2 id="おすすめワークフロー"&gt;おすすめワークフロー&lt;/h2&gt;
+&lt;h3 id="1-スプリットペイン活用最も人気の構成"&gt;1. スプリットペイン活用（最も人気の構成）&lt;/h3&gt;
+&lt;p&gt;Ghosttyのビルトインスプリット機能でClaude Codeと作業画面を並べられます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;# ~/.config/ghostty/config に追加
+# スプリット作成
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+# Vim風のペイン移動
+keybind = ctrl+h=goto_split:left
+keybind = ctrl+j=goto_split:bottom
+keybind = ctrl+k=goto_split:top
+keybind = ctrl+l=goto_split:right
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;典型的な3ペイン構成:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;左&lt;/strong&gt;: Claude Code&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;右&lt;/strong&gt;: エディタ (Neovim/Vim等)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;下&lt;/strong&gt;: 通常のターミナル (ビルド・テスト実行用)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-タブで複数プロジェクト管理"&gt;2. タブで複数プロジェクト管理&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Cmd+数字&lt;/code&gt; でタブ間を素早く切り替えられるので、プロジェクトごとにタブを分けてClaude Codeセッションを使い分けられます。&lt;/p&gt;
+&lt;h3 id="3-kitty-graphics-protocol"&gt;3. Kitty Graphics Protocol&lt;/h3&gt;
+&lt;p&gt;GhosttyはKitty Graphics Protocolに対応しているため、ターミナル内で画像をインライン表示できます。&lt;/p&gt;</description></item><item><title>color</title><link>https://hdknr.github.io/blogs/posts/2023/06/fe7df259245a66f2b5f9f01636f5b64a/</link><pubDate>Thu, 01 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/fe7df259245a66f2b5f9f01636f5b64a/</guid><description>&lt;h2 id="html-カラーコードカラーネーム"&gt;HTML カラーコード/カラーネーム&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.rapidtables.org/ja/web/color/html-color-codes.html"&gt;HTML カラーコード&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://beginners-hp.com/color-code.html"&gt;CSS カラーコード一覧&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.htmq.com/color/colorname.shtml"&gt;カラーネーム&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://memopad.bitter.jp/w3c/css3/css3_ref_colornames.html"&gt;CSS3 色名&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="vscode"&gt;VSCode&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock"&gt;Peacock&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://creators.members.co.jp/2021/02/knowledge_007/"&gt;VSCode を自分の好きな色に染める&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>jupyter: Django</title><link>https://hdknr.github.io/blogs/posts/2023/05/fc7ee4d1b91d841dd9955ac611e3af2d/</link><pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/fc7ee4d1b91d841dd9955ac611e3af2d/</guid><description>&lt;h2 id="jupyter-django"&gt;Jupyter: Django&lt;/h2&gt;
+&lt;h3 id="準備"&gt;準備&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;django_extensions , notebookを入れておく&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;settgins.py:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INSTALLED_APPS &lt;span style="color:#f92672"&gt;+=&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#39;django_extensions&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="vscode"&gt;VSCode&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;VSCodeでJupyterのPythonランタイムを選んでから以下を実行する&lt;/li&gt;
+&lt;li&gt;環境変数で、&lt;code&gt;DJANGO_ALLOW_ASYNC_UNSAFE=true&lt;/code&gt; をセットしておく(.envとか)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; sys&lt;span style="color:#f92672"&gt;,&lt;/span&gt; os&lt;span style="color:#f92672"&gt;,&lt;/span&gt; django
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;BASE_DIR &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;path_ot_manage_py&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sys&lt;span style="color:#f92672"&gt;.&lt;/span&gt;path&lt;span style="color:#f92672"&gt;.&lt;/span&gt;insert(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, BASE_DIR)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;os&lt;span style="color:#f92672"&gt;.&lt;/span&gt;environ&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setdefault(&lt;span style="color:#e6db74"&gt;&amp;#34;DJANGO_SETTINGS_MODULE&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;app.settings&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;django&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="リモートサーバー"&gt;リモートサーバー&lt;/h3&gt;
+&lt;h4 id="autossh-でポートフォワード"&gt;autossh でポートフォワード&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;PCの &lt;code&gt;8.8.8.8&lt;/code&gt; -&amp;gt; リモート(&lt;code&gt;EC2&lt;/code&gt;とか)の &lt;code&gt;8.8.8.8&lt;/code&gt; にフォワードする:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;autossh -M &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; -F .secrets/ssh.ec2.conf server -N -L 8888:localhost:8888 -4
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="カーネル起動"&gt;カーネル起動&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DJANGO_ALLOW_ASYNC_UNSAFE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;true python manage.py shell_plus --notebook
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;URLが表示されるので、ブラウザでアクセスする&lt;/p&gt;</description></item><item><title>AWS CodeWhisperer &amp; IAM Identity Center</title><link>https://hdknr.github.io/blogs/posts/2023/04/39ed7413bfc834267ec909b3b140de0b/</link><pubDate>Sat, 15 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/39ed7413bfc834267ec909b3b140de0b/</guid><description>&lt;h2 id="aws-codewhisperer--iam-identity-center"&gt;AWS CodeWhisperer &amp;amp; IAM Identity Center&lt;/h2&gt;
+&lt;h3 id="codewhisperer"&gt;CodeWhisperer&lt;/h3&gt;
+&lt;p&gt;IAM Identity Center:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;IAM Identity Centerを有効にする&lt;/li&gt;
+&lt;li&gt;ユーザーを追加する&lt;/li&gt;
+&lt;li&gt;ユーザーのメアド認証&lt;/li&gt;
+&lt;li&gt;パスワードリセットをメアドに送り、パスワード設定してログイン可能にする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;CodeWhisperer:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Codewhiper の利用を開始する&lt;/li&gt;
+&lt;li&gt;CodeWhispererを IAM Identity Centerのアプリケーションに登録する&lt;/li&gt;
+&lt;li&gt;IAM Identity Centerで登録したユーザーを CodeWhispererで使えるようにする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;VSCode:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AWS Toolkit プラグインを入れる&lt;/li&gt;
+&lt;li&gt;CodeWhisperer の利用を開始:&lt;code&gt;Connect using AWS Identity Center&lt;/code&gt; で&lt;/li&gt;
+&lt;li&gt;AWS Identity Center URLを入力 (&lt;a href="https://x-xxxxxxx.awsapps.com/start"&gt;https://x-xxxxxxx.awsapps.com/start&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;AWS Toolkitにアクセストークンを取得( 認証コードをブラウザに入力して、IAM Identity Centerにログイン)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="資料"&gt;資料&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/yaasita/articles/aa48bfa06b9a53"&gt;AWS IAM Identity CenterでIAMアカウントを統一する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.engineer.adways.net/entry/2022/10/21/150000"&gt;AWS IAM Identity Center(旧：AWS SSO)を使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/amazon-codewhisperer-iam-identity-center/"&gt;Amazon CodeWhisperer を IAM Identity Center に統合させて使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Windows 関連</title><link>https://hdknr.github.io/blogs/posts/2020/11/b26c9e9302438a1303f7ecd58533a621/</link><pubDate>Sat, 21 Nov 2020 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2020/11/b26c9e9302438a1303f7ecd58533a621/</guid><description>&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dev.to/hymanzhan/setting-up-wsl-2-for-web-development-3202"&gt;Setting up WSL 2 for Web Development&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/v2okimochi/items/f53edcf79a4b71f519b1"&gt;https://qiita.com/v2okimochi/items/f53edcf79a4b71f519b1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack"&gt;https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

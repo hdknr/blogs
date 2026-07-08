@@ -1,0 +1,63 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="trellis-workflow-loop" name="Trellis Workflow Loop">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="Trellis の 4 フェーズ・ループと .trellis ディレクトリ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="540" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Center: .trellis store -->
+        <mxCell id="store" value=".trellis/&#xa;&#xa;spec/  … 規約・パターン・ガイド&#xa;tasks/ … PRD・進捗・状態&#xa;workspace/ … 作業ログ・継続メモ&#xa;&#xa;= プロジェクトの脳（永続化）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;verticalAlign=middle;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="320" width="260" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Phase 1: Plan (top) -->
+        <mxCell id="plan" value="① Plan（計画）&#xa;&#xa;要件を分析し prd.md に&#xa;実装計画を書き出す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="340" y="90" width="220" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Phase 2: Implement (right) -->
+        <mxCell id="impl" value="② Implement（実装）&#xa;&#xa;計画に沿ってコードを生成&#xa;（この時点では commit しない）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="630" y="320" width="220" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Phase 3: Verify (bottom) -->
+        <mxCell id="verify" value="③ Verify（検証）&#xa;&#xa;diff をレビューし&#xa;lint / 型チェック / テストを実行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="340" y="590" width="220" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Phase 4: Finish (left) -->
+        <mxCell id="finish" value="④ Finish（仕上げ）&#xa;&#xa;得られた学びを&#xa;.trellis/spec/ に書き戻す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="50" y="320" width="220" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Loop arrows -->
+        <mxCell id="a-pi" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="plan" target="impl">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-iv" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;exitX=0.5;exitY=1;entryX=1;entryY=0.5;" edge="1" parent="1" source="impl" target="verify">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-vf" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=2;exitX=0;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="verify" target="finish">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a-fp" value="次のタスクへ" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;exitX=0.5;exitY=0;entryX=0;entryY=0.5;fontSize=11;" edge="1" parent="1" source="finish" target="plan">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Store read/write links (dashed) -->
+        <mxCell id="r-store-plan" value="読込" style="edgeStyle=none;html=1;strokeColor=#9673a6;strokeWidth=1;dashed=1;endArrow=open;fontSize=10;" edge="1" parent="1" source="store" target="plan">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="w-finish-store" value="書戻し" style="edgeStyle=none;html=1;strokeColor=#9673a6;strokeWidth=1;dashed=1;endArrow=open;fontSize=10;" edge="1" parent="1" source="finish" target="store">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

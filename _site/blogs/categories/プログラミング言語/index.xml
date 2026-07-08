@@ -1,0 +1,1170 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>プログラミング言語 on hdknr blog</title><link>https://hdknr.github.io/blogs/categories/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E/</link><description>Recent content in プログラミング言語 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/categories/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E/index.xml" rel="self" type="application/rss+xml"/><item><title>「対策済みのはず」のバグはなぜ生まれるのか — 規約が形だけ守られて意図を外すとき</title><link>https://hdknr.github.io/blogs/posts/2026/06/convention-vs-intent-test-isolation/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/convention-vs-intent-test-isolation/</guid><description>pytest のテストが常に緑なのにバグが通り抜けた。マイグレーション fixture の忠実度ギャップとテスト DB 分離不備、その共通根本原因と autouse fixture による「規約の機構化」を解説する。</description></item><item><title>pytest.mark.chaos で始めるカオスエンジニアリング — Python テストに障害注入を組み込む</title><link>https://hdknr.github.io/blogs/posts/2026/04/pytest-chaos-engineering/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/pytest-chaos-engineering/</guid><description>&lt;p&gt;「本番で障害が起きてから対処する」のではなく、「テスト段階で意図的に障害を起こして耐性を確認する」。これがカオスエンジニアリングの基本思想だ。Python の pytest には、この考え方をテストコードに組み込むためのシンプルな仕組みがある。&lt;/p&gt;
+&lt;h2 id="pytestmarkchaos-とは"&gt;pytest.mark.chaos とは&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;@pytest.mark.chaos&lt;/code&gt; は、pytest のカスタムマーカー機能を使って「カオステスト」を分類するためのラベルだ。pytest にはビルトインのマーカー（&lt;code&gt;@pytest.mark.skip&lt;/code&gt;、&lt;code&gt;@pytest.mark.parametrize&lt;/code&gt; など）があるが、&lt;code&gt;chaos&lt;/code&gt; は&lt;strong&gt;ユーザーが自由に定義するカスタムマーカー&lt;/strong&gt;に該当する。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pytest
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@pytest.mark.chaos&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;test_network_timeout&lt;/span&gt;():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;ネットワークタイムアウト時にフォールバックが機能するか&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; call_api_with_timeout(timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;0.001&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;assert&lt;/span&gt; result &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;fallback_response&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="マーカーの登録"&gt;マーカーの登録&lt;/h3&gt;
+&lt;p&gt;カスタムマーカーは &lt;code&gt;pyproject.toml&lt;/code&gt; または &lt;code&gt;pytest.ini&lt;/code&gt; に登録しておくと、&lt;code&gt;PytestUnknownMarkWarning&lt;/code&gt; 警告を抑制できる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-toml" data-lang="toml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# pyproject.toml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[&lt;span style="color:#a6e22e"&gt;tool&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;pytest&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ini_options&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;markers&lt;/span&gt; = [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;chaos: カオスエンジニアリング関連のテスト（障害注入・耐性検証）&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="選択実行"&gt;選択実行&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カオステストだけを実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytest -m chaos
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カオステスト以外を実行（通常の CI）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytest -m &lt;span style="color:#e6db74"&gt;&amp;#34;not chaos&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# カオステストと統合テストを実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pytest -m &lt;span style="color:#e6db74"&gt;&amp;#34;chaos or integration&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これにより、通常の CI パイプラインではカオステストをスキップし、定期的なレジリエンス検証時にだけ実行するという運用が可能になる。&lt;/p&gt;</description></item><item><title>EDINET XBRLをPythonで扱う — edinet-xbrlライブラリの使い方</title><link>https://hdknr.github.io/blogs/posts/2026/04/edinet-xbrl-python/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/edinet-xbrl-python/</guid><description>EDINETのXBRLファイルをPythonで解析する方法を解説。edinet-xbrlライブラリのインストールからXBRLパース、EDINET APIでの書類取得まで、サンプルコード付きで紹介</description></item><item><title>Swift for Android vs Kotlin Multiplatform — マルチプラットフォーム時代の「Xbox vs PlayStation」</title><link>https://hdknr.github.io/blogs/posts/2026/03/409a67e9ec9608be7b4149ab99491116/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/409a67e9ec9608be7b4149ab99491116/</guid><description>&lt;h1 id="swift-for-android-vs-kotlin-multiplatform--マルチプラットフォーム時代のxbox-vs-playstation"&gt;Swift for Android vs Kotlin Multiplatform — マルチプラットフォーム時代の「Xbox vs PlayStation」&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://levelup.gitconnected.com/swift-for-android-vs-kotlin-multiplatform-18e94063d524"&gt;Level Up Coding の記事&lt;/a&gt;（Jacob Bartlett 氏）が注目を集めています。同じローラーコースターアプリを Swift for Android と Kotlin Multiplatform（KMP）の両方で構築し、開発体験を徹底比較した実践レポートです。&lt;/p&gt;
+&lt;p&gt;著者はこの 2 つの技術を「Xbox vs PlayStation」に例えています。どちらも「ビジネスロジックを共有し、UI はネイティブで書く」という同じアーキテクチャ思想を持ちながら、アプローチが正反対です。iOS 開発者が Android に進出するか、Android 開発者が iOS に進出するか — その出発点の違いが設計全体に反映されています。&lt;/p&gt;
+&lt;h2 id="2-つのアプローチ--同じ目的逆の方向"&gt;2 つのアプローチ — 同じ目的、逆の方向&lt;/h2&gt;
+&lt;p&gt;両技術の根本的な違いは「どちらのプラットフォームを起点にするか」です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Swift for Android:
+iOS (SwiftUI) ← Swift コア → Android (Jetpack Compose)
+&amp;#34;iOS ファーストの開発者が Android に展開&amp;#34;
+Kotlin Multiplatform:
+Android (Jetpack Compose) ← Kotlin コア → iOS (SwiftUI)
+&amp;#34;Android ファーストの開発者が iOS に展開&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;Swift for Android&lt;/th&gt;
+&lt;th&gt;Kotlin Multiplatform&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;共有言語&lt;/td&gt;
+&lt;td&gt;Swift&lt;/td&gt;
+&lt;td&gt;Kotlin&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;コンパイル方式&lt;/td&gt;
+&lt;td&gt;Swift → ネイティブ .so（JNI 経由）&lt;/td&gt;
+&lt;td&gt;Kotlin → ネイティブバイナリ（Obj-C ヘッダ生成）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Android 側 UI&lt;/td&gt;
+&lt;td&gt;Jetpack Compose&lt;/td&gt;
+&lt;td&gt;Jetpack Compose&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;iOS 側 UI&lt;/td&gt;
+&lt;td&gt;SwiftUI&lt;/td&gt;
+&lt;td&gt;SwiftUI&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;境界技術&lt;/td&gt;
+&lt;td&gt;JNI + swift-java 自動バインディング&lt;/td&gt;
+&lt;td&gt;Kotlin/Native + Obj-C 互換&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;開発開始年&lt;/td&gt;
+&lt;td&gt;2025 年（プレビュー）&lt;/td&gt;
+&lt;td&gt;2017 年&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="swift-for-android-の仕組み--swift-java-と-jni"&gt;Swift for Android の仕組み — swift-java と JNI&lt;/h2&gt;
+&lt;p&gt;Swift for Android は 2025 年 10 月に公式プレビューとしてリリースされました。Swift Android Workgroup が Swift.org の公式ワークグループとして設立され、Android を Swift の正式サポートプラットフォームにする取り組みが進行中です。&lt;/p&gt;</description></item><item><title>請求入金</title><link>https://hdknr.github.io/blogs/posts/2025/02/1474a1ca0f43f1dd4e5c41feccd2f51f/</link><pubDate>Thu, 13 Feb 2025 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2025/02/1474a1ca0f43f1dd4e5c41feccd2f51f/</guid><description>&lt;h1 id="請求入金"&gt;請求入金&lt;/h1&gt;
+&lt;h2 id="マッチング"&gt;マッチング&lt;/h2&gt;
+&lt;p&gt;文字列の揺らぎがある場合、ベクトルデータを使ったマッチングは非常に有効です。
+具体的には、文字列の類似度を計算するために、自然言語処理（NLP）の技術を利用することができます。
+以下は、&lt;code&gt;fuzzywuzzy&lt;/code&gt;ライブラリを使用して文字列の類似度を計算し、マッチングを行うサンプルコードです：&lt;/p&gt;
+&lt;p&gt;まず、必要なライブラリをインストールします：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install pandas openpyxl fuzzywuzzy
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;次に、サンプルコードです：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;28
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;29
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;30
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;31
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;32
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;33
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;34
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;35
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;36
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;37
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;38
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;39
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;40
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;41
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;42
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; fuzzywuzzy &lt;span style="color:#f92672"&gt;import&lt;/span&gt; fuzz
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 入金リストと請求明細のファイルパス&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payments_file &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;payments.xlsx&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;invoices_file &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;invoices.xlsx&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Excelファイルからデータを読み込む&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;payments_df &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;read_excel(payments_file)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;invoices_df &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;read_excel(invoices_file)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 類似度の閾値を設定&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;similarity_threshold &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;80&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# マッチング結果を格納するリスト&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;matched_records &lt;span style="color:#f92672"&gt;=&lt;/span&gt; []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 入金リストと請求明細をマッチングさせる&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; _, payment &lt;span style="color:#f92672"&gt;in&lt;/span&gt; payments_df&lt;span style="color:#f92672"&gt;.&lt;/span&gt;iterrows():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; _, invoice &lt;span style="color:#f92672"&gt;in&lt;/span&gt; invoices_df&lt;span style="color:#f92672"&gt;.&lt;/span&gt;iterrows():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 金額が一致するか確認&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; payment[&lt;span style="color:#e6db74"&gt;&amp;#39;金額&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;==&lt;/span&gt; invoice[&lt;span style="color:#e6db74"&gt;&amp;#39;請求金額&amp;#39;&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 振り込み依頼人と顧客名の類似度を計算&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; similarity &lt;span style="color:#f92672"&gt;=&lt;/span&gt; fuzz&lt;span style="color:#f92672"&gt;.&lt;/span&gt;token_sort_ratio(payment[&lt;span style="color:#e6db74"&gt;&amp;#39;振り込み依頼人&amp;#39;&lt;/span&gt;], invoice[&lt;span style="color:#e6db74"&gt;&amp;#39;顧客名&amp;#39;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; similarity &lt;span style="color:#f92672"&gt;&amp;gt;=&lt;/span&gt; similarity_threshold:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; matched_records&lt;span style="color:#f92672"&gt;.&lt;/span&gt;append({
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;入金ID&amp;#39;&lt;/span&gt;: payment[&lt;span style="color:#e6db74"&gt;&amp;#39;入金ID&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;請求ID&amp;#39;&lt;/span&gt;: invoice[&lt;span style="color:#e6db74"&gt;&amp;#39;請求ID&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;金額&amp;#39;&lt;/span&gt;: payment[&lt;span style="color:#e6db74"&gt;&amp;#39;金額&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;振り込み依頼人&amp;#39;&lt;/span&gt;: payment[&lt;span style="color:#e6db74"&gt;&amp;#39;振り込み依頼人&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;顧客名&amp;#39;&lt;/span&gt;: invoice[&lt;span style="color:#e6db74"&gt;&amp;#39;顧客名&amp;#39;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;類似度&amp;#39;&lt;/span&gt;: similarity
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# マッチング結果をデータフレームに変換&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;matched_df &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(matched_records)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# マッチング結果を表示&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(matched_df)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# マッチング結果を新しいExcelファイルに保存&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;matched_df&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_excel(&lt;span style="color:#e6db74"&gt;&amp;#39;matched_results.xlsx&amp;#39;&lt;/span&gt;, index&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;このコードでは、以下の手順を実行しています：&lt;/p&gt;</description></item><item><title>hatch</title><link>https://hdknr.github.io/blogs/posts/2025/01/f73230d1db218b8ccb13f12d1348f971/</link><pubDate>Sun, 26 Jan 2025 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2025/01/f73230d1db218b8ccb13f12d1348f971/</guid><description>&lt;h1 id="hatch"&gt;hatch&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://hatch.pypa.io/1.9/"&gt;https://hatch.pypa.io/1.9/&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://gihyo.jp/article/2024/05/monthly-python-2405"&gt;最近気になるツール「Hatch」でPythonプロジェクトを管理する&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>nix</title><link>https://hdknr.github.io/blogs/posts/2025/01/82cb06f0d6388a21ec3e8cadd36cde18/</link><pubDate>Sun, 05 Jan 2025 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2025/01/82cb06f0d6388a21ec3e8cadd36cde18/</guid><description>&lt;h1 id="nix"&gt;nix&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/Sumi-Sumi/items/8e43d970e7b54e969cbe"&gt;NIXで管理するpython環境&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="uv"&gt;uv&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.astral.sh/uv/"&gt;https://docs.astral.sh/uv/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;nix: &lt;a href="https://github.com/pyproject-nix/uv2nix"&gt;https://github.com/pyproject-nix/uv2nix&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>SQLModel</title><link>https://hdknr.github.io/blogs/posts/2024/10/386d255a38f0f7cee4bd95ad75802417/</link><pubDate>Thu, 17 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/386d255a38f0f7cee4bd95ad75802417/</guid><description>&lt;h1 id="sqlmodel"&gt;SQLModel&lt;/h1&gt;
+&lt;h2 id="テーブル定義"&gt;テーブル定義&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://laid-back-scientist.com/sqlmodel"&gt;SQLModel で簡単なテーブルを作成する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="alembic-マイグレーション"&gt;Alembic マイグレーション&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/haruki-lo-shelon/items/6184d626892e062c7a0d"&gt;SQLModel で設計したモデルを Alembic でマイグレーション&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/haruki-lo-shelon/items/c469132f6b81b2c650a7"&gt;Alembic で複数モデルを扱う&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://kabueye.com/articles/python-alembic-sqlmodel#alembic%E8%A8%AD%E5%AE%9A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92sqlmodel%E5%90%91%E3%81%91%E3%81%AB%E4%BF%AE%E6%AD%A3"&gt;alembic + SQLModelでデータベースをマイグレーションする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>gunicorn</title><link>https://hdknr.github.io/blogs/posts/2024/10/d73630b702b019970f93f48d4fa6dbe2/</link><pubDate>Fri, 11 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/d73630b702b019970f93f48d4fa6dbe2/</guid><description>&lt;h1 id="gunicorn"&gt;Gunicorn&lt;/h1&gt;
+&lt;h2 id="max_requests--max_requests_jitter"&gt;&lt;code&gt;max_requests&lt;/code&gt; / &lt;code&gt;max_requests_jitter&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;Gunicornでメモリリークを避けるために子プロセスを定期的に再起動するには、&lt;code&gt;max_requests&lt;/code&gt;と&lt;code&gt;max_requests_jitter&lt;/code&gt;の設定を利用するのが効果的です。これにより、一定のリクエスト数を処理した後にワーカープロセスが自動的に再起動されます。&lt;/p&gt;
+&lt;p&gt;以下はその設定方法です：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;max_requests&lt;/code&gt;&lt;/strong&gt;: 各ワーカープロセスが再起動される前に処理するリクエストの最大数を指定します。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;max_requests_jitter&lt;/code&gt;&lt;/strong&gt;: 再起動のタイミングをランダム化するためのオプションです。これにより、全てのワーカープロセスが同時に再起動されるのを防ぎます。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Gunicornの設定ファイル（例：&lt;code&gt;gunicorn.conf.py&lt;/code&gt;）に以下のように追加します：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# gunicorn.conf.py&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;max_requests &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt; &lt;span style="color:#75715e"&gt;# 1000リクエストごとに再起動&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;max_requests_jitter &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;50&lt;/span&gt; &lt;span style="color:#75715e"&gt;# 再起動タイミングをランダム化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;または、コマンドラインで起動する際にオプションとして指定することもできます：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gunicorn --max-requests &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt; --max-requests-jitter &lt;span style="color:#ae81ff"&gt;50&lt;/span&gt; myapp:app
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これにより、各ワーカープロセスは1000回のリクエストを処理した後、ランダムに最大50回のリクエストを追加で処理してから再起動されます¹(&lt;a href="https://qiita.com/ryu22e/items/2668a2243a5191bcdc78)%C2%B2(https://zenn.dev/xknzw/articles/d2d337ae2f8966)%C2%B3(https://qiita.com/_konishi_/items/1dc2bbfc386f57d06934)%E3%80%82"&gt;https://qiita.com/ryu22e/items/2668a2243a5191bcdc78)²(https://zenn.dev/xknzw/articles/d2d337ae2f8966)³(https://qiita.com/_konishi_/items/1dc2bbfc386f57d06934)。&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;この設定により、メモリリークの影響を最小限に抑えつつ、サービスの安定性を保つことができます。&lt;/p&gt;
+&lt;p&gt;¹(&lt;a href="https://qiita.com/ryu22e/items/2668a2243a5191bcdc78"&gt;https://qiita.com/ryu22e/items/2668a2243a5191bcdc78&lt;/a&gt;): &lt;a href="https://qiita.com/ryu22e/items/2668a2243a5191bcdc78"&gt;gunicorn(&amp;gt;=19.2)ではmax_requestsと一緒にmax_requests_jitterも使おう - Qiita&lt;/a&gt;
+²(&lt;a href="https://zenn.dev/xknzw/articles/d2d337ae2f8966"&gt;https://zenn.dev/xknzw/articles/d2d337ae2f8966&lt;/a&gt;): &lt;a href="https://zenn.dev/xknzw/articles/d2d337ae2f8966"&gt;gunicorn syncワーカーの全体像メモ - Zenn&lt;/a&gt;
+³(&lt;a href="https://qiita.com/_konishi_/items/1dc2bbfc386f57d06934"&gt;https://qiita.com/_konishi_/items/1dc2bbfc386f57d06934&lt;/a&gt;): &lt;a href="https://qiita.com/_konishi_/items/1dc2bbfc386f57d06934"&gt;gunicornでディスク使用量が増え続ける現象への対処 - Qiita&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;(1) gunicorn(&amp;gt;=19.2)ではmax_requestsと一緒にmax_requests_jitterも使おう. &lt;a href="https://qiita.com/ryu22e/items/2668a2243a5191bcdc78"&gt;https://qiita.com/ryu22e/items/2668a2243a5191bcdc78&lt;/a&gt;.
+(2) gunicorn syncワーカーの全体像メモ - Zenn. &lt;a href="https://zenn.dev/xknzw/articles/d2d337ae2f8966"&gt;https://zenn.dev/xknzw/articles/d2d337ae2f8966&lt;/a&gt;.
+(3) gunicornでディスク使用量が増え続ける現象への対処 - Qiita. &lt;a href="https://qiita.com/_konishi_/items/1dc2bbfc386f57d06934"&gt;https://qiita.com/_konishi_/items/1dc2bbfc386f57d06934&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>ltsv</title><link>https://hdknr.github.io/blogs/posts/2024/10/eb0e057830beda5efc3e5590c54e8e4f/</link><pubDate>Fri, 11 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/eb0e057830beda5efc3e5590c54e8e4f/</guid><description>&lt;h1 id="ltsv"&gt;ltsv&lt;/h1&gt;
+&lt;h2 id="ltsv-から-csvに変換"&gt;ltsv から　 csvに変換&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;28
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;29
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;30
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;31
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; click
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; csv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; re
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@click.group&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@click.option&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;--tf_output&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-to&amp;#34;&lt;/span&gt;, default&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@click.pass_context&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;group&lt;/span&gt;(ctx, tf_output):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@group.command&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@click.argument&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;src&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;@click.pass_context&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ltsv2csv&lt;/span&gt;(ctx, src):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;LTSV to CSV&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; output &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;src&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;.csv&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_line_dict&lt;/span&gt;(line):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; dict(re&lt;span style="color:#f92672"&gt;.&lt;/span&gt;search(&lt;span style="color:#e6db74"&gt;r&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;^([^\:]+)\:(.*)$&amp;#34;&lt;/span&gt;, i)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;groups() &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; line)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; open(src) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; f:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame(map(get_line_dict, csv&lt;span style="color:#f92672"&gt;.&lt;/span&gt;reader(f, delimiter&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\t&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data&lt;span style="color:#f92672"&gt;.&lt;/span&gt;to_csv(output, index&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; __name__ &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;__main__&amp;#34;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; group()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Python: 文字烈ケース変換</title><link>https://hdknr.github.io/blogs/posts/2024/09/861dcda183ae26784f560f317a63a628/</link><pubDate>Fri, 06 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/861dcda183ae26784f560f317a63a628/</guid><description>&lt;h1 id="python-文字列ケース変換"&gt;Python 文字列ケース変換&lt;/h1&gt;
+&lt;h2 id="camel"&gt;Camel&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case"&gt;Elegant Python function to convert CamelCase to snake_case?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; re
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;name &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;CamelCaseName&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;name &lt;span style="color:#f92672"&gt;=&lt;/span&gt; re&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sub(&lt;span style="color:#e6db74"&gt;r&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;(?&amp;lt;!^)(?=[A-Z])&amp;#39;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;_&amp;#39;&lt;/span&gt;, name)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;lower()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(name) &lt;span style="color:#75715e"&gt;# camel_case_name&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Ruff[object Object]</title><link>https://hdknr.github.io/blogs/posts/2024/06/43d7524f8aa2a189a5c5ed6ff4270e62/</link><pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/06/43d7524f8aa2a189a5c5ed6ff4270e62/</guid><description>&lt;h1 id="ruff"&gt;Ruff&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.astral.sh/ruff/rules/"&gt;https://docs.astral.sh/ruff/rules/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://gihyo.jp/article/2023/03/monthly-python-2303"&gt;新しい静的コード解析ツール「Ruff」をご紹介&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>StreamIt</title><link>https://hdknr.github.io/blogs/posts/2024/03/390c364be30f3e4ad9b0d32b381d8651/</link><pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/03/390c364be30f3e4ad9b0d32b381d8651/</guid><description>&lt;h1 id="streamit"&gt;StreamIt&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/tamura__246/items/366b5581c03dd74f4508"&gt;Streamlit 入門＋応用 ～ データ分析 Web アプリを爆速で開発する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://toukei-lab.com/streamlit"&gt;Streamlit の使い方を解説！Python で簡単に Web アプリを作ってみよう！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/sypn/items/80962d84126be4092d3c"&gt;streamlit を使ったお手軽 Web アプリ開発&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Python プロファイリング</title><link>https://hdknr.github.io/blogs/posts/2023/12/d1b68f2519493ca55934926cec9763d5/</link><pubDate>Sun, 24 Dec 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/12/d1b68f2519493ca55934926cec9763d5/</guid><description>&lt;h1 id="cprofile"&gt;cProfile&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://note.com/navitime_tech/n/nce5d5f50af95"&gt;Python プログラムが遅い原因を調べる方法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python -m cProfile -o /tmp/epm.prof manage.py reports build &lt;span style="color:#ae81ff"&gt;7646&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;snakeviz /tmp/epm.prof
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;名前&lt;/th&gt;
+&lt;th&gt;意味&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ncalls&lt;/td&gt;
+&lt;td&gt;呼び出し回数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tottime&lt;/td&gt;
+&lt;td&gt;関数の処理時間の合計 (呼び出した関数の処理時間は除外)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;percall ( tottime の隣)&lt;/td&gt;
+&lt;td&gt;tottime を ncalls で割った値。一回の実行にかかる平均時間&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;cumtime&lt;/td&gt;
+&lt;td&gt;関数の処理時間の合計 (呼び出した関数の処理時間も含める)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;percall (sumtime の隣)&lt;/td&gt;
+&lt;td&gt;cumtime を ncalls で割った値。一回の実行にかかる平均時間&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;filename:lineno(function)&lt;/td&gt;
+&lt;td&gt;ファイル名、行番号、関数名&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description></item><item><title>MySQL: 𠮷（つちよし）</title><link>https://hdknr.github.io/blogs/posts/2023/10/3ab8dd96be79984a5d2cb31a95bd1c1e/</link><pubDate>Sun, 01 Oct 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/10/3ab8dd96be79984a5d2cb31a95bd1c1e/</guid><description>&lt;h1 id="mysql-𠮷つちよし"&gt;MySQL: 𠮷（つちよし）&lt;/h1&gt;
+&lt;h2 id="データベーステーブル-utf8mb4にすること"&gt;データベース/テーブル &lt;code&gt;utf8mb4&lt;/code&gt;にすること&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ALTER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; customers_customer &lt;span style="color:#66d9ef"&gt;CONVERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TO&lt;/span&gt; CHARACTER &lt;span style="color:#66d9ef"&gt;SET&lt;/span&gt; utf8mb4 &lt;span style="color:#66d9ef"&gt;COLLATE&lt;/span&gt; utf8mb4_unicode_ci;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;確認:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;$ echo &amp;#34;show variables like &amp;#39;character%&amp;#39;;&amp;#34; | python manage.py dbshell
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;Variable_name Value
+character_set_client utf8mb4
+character_set_connection utf8mb4
+character_set_database utf8mb4
+character_set_filesystem binary
+character_set_results utf8mb4
+character_set_server utf8mb4
+character_set_system utf8mb3
+character_sets_dir /rdsdbbin/mysql-8.0.28.R4/share/charsets/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;character_set_system utf8mb3&lt;/code&gt; が問題&lt;/p&gt;
+&lt;h2 id="接続-を-utf8mb4-にすること"&gt;接続 を &lt;code&gt;utf8mb4&lt;/code&gt; にすること&lt;/h2&gt;
+&lt;p&gt;django: &lt;code&gt;OPTIONS/charset=utf8mb4&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;In [&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;]: &lt;span style="color:#f92672"&gt;from&lt;/span&gt; django.conf &lt;span style="color:#f92672"&gt;import&lt;/span&gt; settings
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;In [&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;]: settings&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DATABASES
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Out[&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;]:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#e6db74"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#39;ENGINE&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;django.db.backends.mysql&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;HOST&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;prod-db-instance.xxxxxxxx.ap-northeast-1.rds.amazonaws.com&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;coresys_masters&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;USER&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;coresys_masters&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;PASSWORD&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;va0Gaighoo3Paez8&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;OPTIONS&amp;#39;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#39;charset&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;utf8mb4&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;init_command&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;SET sql_mode=&amp;#39;STRICT_TRANS_TABLES&amp;#39;&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;ATOMIC_REQUESTS&amp;#39;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;False&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;AUTOCOMMIT&amp;#39;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;CONN_MAX_AGE&amp;#39;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;TIME_ZONE&amp;#39;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;PORT&amp;#39;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;TEST&amp;#39;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#39;CHARSET&amp;#39;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;COLLATION&amp;#39;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;MIGRATE&amp;#39;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;MIRROR&amp;#39;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;}}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>pandas memo</title><link>https://hdknr.github.io/blogs/posts/2023/08/4ea825f953be081bac2a7aa9001fb5c6/</link><pubDate>Wed, 02 Aug 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/08/4ea825f953be081bac2a7aa9001fb5c6/</guid><description>&lt;h1 id="pandas-dataframe"&gt;pandas: Dataframe&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://note.nkmk.me/python-pandas-str-contains-match/"&gt;pandas で特定の文字列を含む行を抽出（完全一致、部分一致）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href="https://note.nkmk.me/python-pandas-multiple-conditions/"&gt;複数条件&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;amp;&lt;/code&gt;, &lt;code&gt;|&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;否定:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;~&lt;/code&gt; (&lt;strong&gt;NOT&lt;/strong&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;型変換&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://blog.amedama.jp/entry/2017/11/01/211110"&gt;Python: pandas でカラムの型を変換する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="検索"&gt;検索&lt;/h2&gt;
+&lt;p&gt;選択肢: &lt;code&gt;.isin(list)&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; df[df[&lt;span style="color:#e6db74"&gt;&amp;#34;code&amp;#34;&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;isin([&lt;span style="color:#e6db74"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;1&amp;#34;&lt;/span&gt;])] &lt;span style="color:#75715e"&gt;# 0,1 のみ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; df[&lt;span style="color:#f92672"&gt;~&lt;/span&gt;(df[&lt;span style="color:#e6db74"&gt;&amp;#34;code&amp;#34;&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;isin([&lt;span style="color:#e6db74"&gt;&amp;#34;0&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;1&amp;#34;&lt;/span&gt;]))] &lt;span style="color:#75715e"&gt;# 0, 1以外&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="ユニーク"&gt;ユニーク&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;unique&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;items &lt;span style="color:#f92672"&gt;=&lt;/span&gt; df[&lt;span style="color:#e6db74"&gt;&amp;#34;code&amp;#34;&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;unique()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;重複を除外(&lt;code&gt;drop_duplicates&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; df[[&lt;span style="color:#e6db74"&gt;&amp;#34;code&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;]]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;drop_duplicates()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;重複を抽出:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;size &lt;span style="color:#f92672"&gt;=&lt;/span&gt; df&lt;span style="color:#f92672"&gt;.&lt;/span&gt;groupby(keys)&lt;span style="color:#f92672"&gt;.&lt;/span&gt;size()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;res &lt;span style="color:#f92672"&gt;=&lt;/span&gt; size[ size &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; res&lt;span style="color:#f92672"&gt;.&lt;/span&gt;shape[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;] &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(res)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="変換"&gt;変換&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;dict&lt;/code&gt; 一覧:&lt;/p&gt;</description></item><item><title>ruff</title><link>https://hdknr.github.io/blogs/posts/2023/08/0ad1a5980e4f23bc92314d52383248bd/</link><pubDate>Tue, 01 Aug 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/08/0ad1a5980e4f23bc92314d52383248bd/</guid><description>&lt;h1 id="ruff"&gt;ruff&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://gihyo.jp/article/2023/03/monthly-python-2303"&gt;新しい静的コード解析ツール「Ruff」をご紹介&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/harupy/articles/a14b146d289a6c"&gt;Ruff の紹介&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/ciscorn/items/bf78b7ad8e0e332f891b"&gt;Python の Ruff (linter) でコード整形もできるようになりました&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/tk_resilie/articles/python_ruff_setup"&gt;Python の Linter Formatter は、もう Ruff 一択。最短 5 分でプロジェクトに導入&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;poetry run ruff format .
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;poetry run ruff check . --fix
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Pandas Sort</title><link>https://hdknr.github.io/blogs/posts/2023/07/75114548074c84a913aa16e688dc368d/</link><pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/75114548074c84a913aa16e688dc368d/</guid><description>&lt;h1 id="pandas-ソート"&gt;Pandas: ソート&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/32072076/find-the-unique-values-in-a-column-and-then-sort-them"&gt;Find the unique values in a column and then sort them&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/26977076/pandas-unique-values-multiple-columns"&gt;pandas unique values multiple columns&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://note.nkmk.me/python-numpy-ravel-flatten/"&gt;NumPy 配列 ndarray を一次元化（平坦化）する ravel と flatten&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>poetry version requirements</title><link>https://hdknr.github.io/blogs/posts/2023/07/b79bd8d8d0815d422d1c4e87da68195d/</link><pubDate>Mon, 17 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/b79bd8d8d0815d422d1c4e87da68195d/</guid><description>&lt;h1 id="poetry--パッケージ依存定義-dependency-specification"&gt;Poetry : パッケージ依存定義 (Dependency specification)&lt;/h1&gt;
+&lt;h2 id="バージョン要件requirements"&gt;バージョン要件(requirements)&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;要件&lt;/th&gt;
+&lt;th&gt;例&lt;/th&gt;
+&lt;th&gt;意味&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#caret-requirements"&gt;Caret requirements&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;^1.2.3&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;gt;=1.2.3 &amp;lt;2.0.0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#tilde-requirements"&gt;Tilde requirements&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;~1.2.3&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;gt;=1.2.3 &amp;lt;1.3.0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#wildcard-requirements"&gt;Wildcard requirements&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;1.*&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;gt;=1.0.0 &amp;lt;2.0.0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#inequality-requirements"&gt;Inequality requirements&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt; 2&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt; 2.0.0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#exact-requirements"&gt;Exact requirements&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;==1.2.3&lt;/code&gt; もしくは &lt;code&gt;1.2.3&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;==1.2.3&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#using-the--operator"&gt;@ operator&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="依存dependancies"&gt;依存(dependancies)&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;依存&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#git-dependencies"&gt;git dependencies&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#path-dependencies"&gt;path dependencies&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#url-dependencies"&gt;url dependencies&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#dependency-extras"&gt;extras&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#source-dependencies"&gt;source dependencies&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#python-restricted-dependencies"&gt;python&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#multiple-constraints-dependencies"&gt;Multiple constraints dependencies&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href="https://python-poetry.org/docs/dependency-specification/#expanded-dependency-specification-syntax"&gt;拡張&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description></item><item><title>ltsv</title><link>https://hdknr.github.io/blogs/posts/2023/06/e933a0fab25309cc385b8d20a4312b0f/</link><pubDate>Fri, 16 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/e933a0fab25309cc385b8d20a4312b0f/</guid><description>&lt;h1 id="ltsv-形式"&gt;&lt;code&gt;ltsv&lt;/code&gt; 形式&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://ltsv.org/"&gt;http://ltsv.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/hekyou/python-ltsv"&gt;https://github.com/hekyou/python-ltsv&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="pip-install-ltsv"&gt;pip install ltsv&lt;/h2&gt;
+&lt;p&gt;To process LTSV files in Python, you can use the &lt;strong&gt;ltsv&lt;/strong&gt; package available on PyPI ².
+Here is an example of how to use it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; ltsv
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; open(&lt;span style="color:#e6db74"&gt;&amp;#39;file.ltsv&amp;#39;&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; f:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; record &lt;span style="color:#f92672"&gt;in&lt;/span&gt; ltsv&lt;span style="color:#f92672"&gt;.&lt;/span&gt;reader(f):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; print(record)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;This code will read the LTSV file line by line and print each record as a dictionary ¹.&lt;/p&gt;</description></item><item><title>ndjson</title><link>https://hdknr.github.io/blogs/posts/2023/06/58f89edbfd0d7760fa2228d928f306bc/</link><pubDate>Wed, 14 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/58f89edbfd0d7760fa2228d928f306bc/</guid><description>&lt;h2 id="ndjson"&gt;ndjson&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/rhgrant10/ndjson"&gt;https://github.com/rhgrant10/ndjson&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://gist.github.com/hdknr/3d92e36bb3bbe85b7e913e61a6490be8"&gt;Snowflake: CREATE FILE FORMAT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dk521123.hatenablog.com/entry/2022/08/30/224248"&gt;【Python】Python ～ ndjson を扱う ～&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;tablib は ndjson をサポートしていない&lt;/li&gt;
+&lt;li&gt;pandas は ndjson を読み込める&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>pandas MySQL</title><link>https://hdknr.github.io/blogs/posts/2023/06/64e4e8c108604fb06469b6214e434b5b/</link><pubDate>Wed, 07 Jun 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/06/64e4e8c108604fb06469b6214e434b5b/</guid><description>&lt;h2 id="pandas-mysql"&gt;pandas: MySQL&lt;/h2&gt;
+&lt;p&gt;sqlalchemy で mysqlclient を使うには、まず mysqlclient をインストールする必要があります。次に、SQLAlchemy のエンジン構成で mysqlclient を使用するように設定します。以下は、Qiita の記事 ¹ からの例です。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; sqlalchemy &lt;span style="color:#f92672"&gt;import&lt;/span&gt; create_engine
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;engine &lt;span style="color:#f92672"&gt;=&lt;/span&gt; create_engine(&lt;span style="color:#e6db74"&gt;&amp;#39;mysql+mysqldb://user:password@host/dbname&amp;#39;&lt;/span&gt;, echo&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;また、CData Python Connector for MySQL³ を使用することもできます。これは、SQLAlchemy ORM を使用して Python で MySQL データに連携するためのドライバです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; sqlalchemy &lt;span style="color:#f92672"&gt;import&lt;/span&gt; create_engine
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;engine &lt;span style="color:#f92672"&gt;=&lt;/span&gt; create_engine(&lt;span style="color:#e6db74"&gt;&amp;#34;mysql+mysqlconnector://user:password@host/dbname&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;どちらの方法でも、SQLAlchemy で MySQL に接続することができます。&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/6/7&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) 【Python】SQLAlchemy で MySQL に接続する - Qiita. &lt;a href="https://qiita.com/curry__30/items/432a21426c02a68e77e8"&gt;https://qiita.com/curry__30/items/432a21426c02a68e77e8&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(2) SQLAlchemy ORM を使って、Python で MySQL データに連携 &amp;hellip;. &lt;a href="https://www.cdata.com/jp/kb/tech/mysql-python-sqlalchemy.rst"&gt;https://www.cdata.com/jp/kb/tech/mysql-python-sqlalchemy.rst&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(3) 【Python】SQLAlchemy を試してみる - Qiita. &lt;a href="https://qiita.com/ktamido/items/ebdbe5a85dbc3e6004ae"&gt;https://qiita.com/ktamido/items/ebdbe5a85dbc3e6004ae&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="django"&gt;django&lt;/h2&gt;
+&lt;p&gt;.env に　 django の &lt;code&gt;DATABASE_URL&lt;/code&gt; が定義されているとする&lt;/p&gt;</description></item><item><title>pandas: カラム連結</title><link>https://hdknr.github.io/blogs/posts/2023/05/c0a5e71d2a48119b5aa74b17abe0867f/</link><pubDate>Thu, 11 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/c0a5e71d2a48119b5aa74b17abe0867f/</guid><description>&lt;h2 id="pandas-カラム連結"&gt;pandas: カラム連結&lt;/h2&gt;
+&lt;p&gt;pandasで数値カラム同士を文字列に変換するには、&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;df['新しい列名'] = df['数値カラム1名'].astype(str) + df['数値カラム2名'].astype(str)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;と書くことができます。&lt;/p&gt;
+&lt;p&gt;例えば、以下のようになります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; pandas &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; pd
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;df &lt;span style="color:#f92672"&gt;=&lt;/span&gt; pd&lt;span style="color:#f92672"&gt;.&lt;/span&gt;DataFrame({&lt;span style="color:#e6db74"&gt;&amp;#39;A&amp;#39;&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;], &lt;span style="color:#e6db74"&gt;&amp;#39;B&amp;#39;&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;]})
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;df[&lt;span style="color:#e6db74"&gt;&amp;#39;C&amp;#39;&lt;/span&gt;] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; df[&lt;span style="color:#e6db74"&gt;&amp;#39;A&amp;#39;&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;astype(str) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; df[&lt;span style="color:#e6db74"&gt;&amp;#39;B&amp;#39;&lt;/span&gt;]&lt;span style="color:#f92672"&gt;.&lt;/span&gt;astype(str)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;print(df)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;出力:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt; A B C
+0 1 3 13
+1 2 4 24
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;以上のように、&lt;code&gt;df['新しい列名'] = df['数値カラム1名'].astype(str) + df['数値カラム2名'].astype(str)&lt;/code&gt; を使って、2つの数値の列を文字列に変換してから連結して新しい列を追加することができます。&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/5/11&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) python - dataframe内の数値から文字列に変換する方法 - スタック &amp;hellip;. &lt;a href="https://ja.stackoverflow.com/questions/74518/dataframe%e5%86%85%e3%81%ae%e6%95%b0%e5%80%a4%e3%81%8b%e3%82%89%e6%96%87%e5%ad%97%e5%88%97%e3%81%ab%e5%a4%89%e6%8f%9b%e3%81%99%e3%82%8b%e6%96%b9%e6%b3%95"&gt;https://ja.stackoverflow.com/questions/74518/dataframe%e5%86%85%e3%81%ae%e6%95%b0%e5%80%a4%e3%81%8b%e3%82%89%e6%96%87%e5%ad%97%e5%88%97%e3%81%ab%e5%a4%89%e6%8f%9b%e3%81%99%e3%82%8b%e6%96%b9%e6%b3%95&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(2) 【Pandas】DataFrameから文字列と数値データのcolumnを分ける. &lt;a href="https://mochablog.org/pandas-saparate-numerical-col/"&gt;https://mochablog.org/pandas-saparate-numerical-col/&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Python: モジュールの実装パス</title><link>https://hdknr.github.io/blogs/posts/2023/04/aaf56c127559e9a4ad8e1af89c1b6dbe/</link><pubDate>Sun, 23 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/aaf56c127559e9a4ad8e1af89c1b6dbe/</guid><description>&lt;h2 id="モジュール名からファイルを見つける"&gt;モジュール名からファイルを見つける&lt;/h2&gt;
+&lt;p&gt;Pythonのモジュール名が与えられた時、そのモジュールの実装されているファイルのパスを調べるには、以下のようにします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; importlib.util
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_module_path&lt;/span&gt;(module_name):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; spec &lt;span style="color:#f92672"&gt;=&lt;/span&gt; importlib&lt;span style="color:#f92672"&gt;.&lt;/span&gt;util&lt;span style="color:#f92672"&gt;.&lt;/span&gt;find_spec(module_name)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; spec &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; spec&lt;span style="color:#f92672"&gt;.&lt;/span&gt;origin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;上記のように、importlib.util.find_spec()関数を使って、モジュール名からspecオブジェクトを取得し、spec.origin属性を参照することで、モジュールが実装されているファイルのパスを取得することができます。&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/4/23&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) 6. モジュール — Python 3.11.3 ドキュメント. &lt;a href="https://docs.python.org/ja/3/tutorial/modules.html"&gt;https://docs.python.org/ja/3/tutorial/modules.html&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(2) Pythonで独自モジュールのディレクトリパスを通す方法 &amp;hellip;. &lt;a href="https://lightgauge.net/language/python/add-module-path"&gt;https://lightgauge.net/language/python/add-module-path&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(3) 【Python】パッケージ・モジュールの検索と import - Qiita. &lt;a href="https://qiita.com/shinsa82/items/5004a3ea63594f20190d"&gt;https://qiita.com/shinsa82/items/5004a3ea63594f20190d&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="djangoのアプリケーションの場合"&gt;Djangoのアプリケーションの場合&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; django.apps &lt;span style="color:#f92672"&gt;import&lt;/span&gt; apps
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Def&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@property&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;path&lt;/span&gt;(self):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; app_label &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;__module__&lt;span style="color:#f92672"&gt;.&lt;/span&gt;split(&lt;span style="color:#e6db74"&gt;&amp;#34;.&amp;#34;&lt;/span&gt;)[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; conf &lt;span style="color:#f92672"&gt;=&lt;/span&gt; apps&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get_app_config(app_label)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; conf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;path
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>PYPI</title><link>https://hdknr.github.io/blogs/posts/2023/04/913f7f509f8f548b7eeac491a578b48e/</link><pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/913f7f509f8f548b7eeac491a578b48e/</guid><description>&lt;h2 id="cryptgraphycffi"&gt;cryptgraphy/cffi&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.ytyng.com/blog/m1-mac-python-install-cryptgraphy-cffi/"&gt;M1 Mac に cryptgraphy ( cffi ) をインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Python: ThreadPoolExecutor: マルチスレッド</title><link>https://hdknr.github.io/blogs/posts/2023/03/74a303477d8ad98d6b0ab216f61a83f8/</link><pubDate>Thu, 30 Mar 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/03/74a303477d8ad98d6b0ab216f61a83f8/</guid><description>&lt;h2 id="python-threadpoolexecutor-マルチスレッド"&gt;Python: ThreadPoolExecutor: マルチスレッド&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;bind_all&lt;/span&gt;(self):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_bind&lt;/span&gt;(instance):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; instance&lt;span style="color:#f92672"&gt;.&lt;/span&gt;bind_to_debt()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; executor &lt;span style="color:#f92672"&gt;=&lt;/span&gt; ThreadPoolExecutor(max_workers&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;4&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; i &lt;span style="color:#f92672"&gt;in&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;all():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; executor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;submit(_bind, i)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; executor&lt;span style="color:#f92672"&gt;.&lt;/span&gt;shutdown() &lt;span style="color:#75715e"&gt;# 全てのスレッドが終わるのを待つ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Snowfale : MySQL 移行データ比較</title><link>https://hdknr.github.io/blogs/posts/2023/03/39c7d696d87c672b28c5a2a68a72e826/</link><pubDate>Fri, 17 Mar 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/03/39c7d696d87c672b28c5a2a68a72e826/</guid><description>&lt;h2 id="mysql---snowflake-データ移行後の比較"&gt;MySQL -&amp;gt; Snowflake データ移行後の比較&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;対象フィールド型(Python)&lt;/th&gt;
+&lt;th&gt;集計&lt;/th&gt;
+&lt;th&gt;MySQL&lt;/th&gt;
+&lt;th&gt;Snowflake&lt;/th&gt;
+&lt;th&gt;補足&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Decimal&lt;/td&gt;
+&lt;td&gt;単純合計&lt;/td&gt;
+&lt;td&gt;SUM(field)&lt;/td&gt;
+&lt;td&gt;SUM(field)&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;float&lt;/td&gt;
+&lt;td&gt;単純合計&lt;/td&gt;
+&lt;td&gt;SUM(field)&lt;/td&gt;
+&lt;td&gt;SUM(field)&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;int&lt;/td&gt;
+&lt;td&gt;単純合計&lt;/td&gt;
+&lt;td&gt;SUM(field)&lt;/td&gt;
+&lt;td&gt;SUM(field)&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;str&lt;/td&gt;
+&lt;td&gt;MD5の合計&lt;/td&gt;
+&lt;td&gt;SUM(CONV(SUBSTRING(MD5(field)), 1, 8), 16, 10)&lt;/td&gt;
+&lt;td&gt;SUM(TO_NUMBER(SUBSTR(MD5(field), 1, 8), &amp;lsquo;XXXXXXXX&amp;rsquo;))&lt;/td&gt;
+&lt;td&gt;MySQLの整数が小さいので先頭8バイトだけ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;datetime&lt;/td&gt;
+&lt;td&gt;Unixエポック合計&lt;/td&gt;
+&lt;td&gt;SUM(UNIX_TIMESTAMP(field))&lt;/td&gt;
+&lt;td&gt;SUM(ZEROIFNULL(DATE_PART(EPOCH_SECOND, field)) - 32400)&lt;/td&gt;
+&lt;td&gt;Snowflakeはローカルタイムゾーン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;date&lt;/td&gt;
+&lt;td&gt;Unixエポック合計&lt;/td&gt;
+&lt;td&gt;SUM(UNIX_TIMESTAMP(field))&lt;/td&gt;
+&lt;td&gt;SUM(ZEROIFNULL(DATE_PART(EPOCH_SECOND, field)) - 32400)&lt;/td&gt;
+&lt;td&gt;Snowflakeはローカルタイムゾーン&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;秒数の合計&lt;/td&gt;
+&lt;td&gt;SUM(TIME_TO_SEC(field))&lt;/td&gt;
+&lt;td&gt;SUM(TIMEDIFF(SECOND, &amp;lsquo;00:00:00&amp;rsquo;::TIME, field::TIME))&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;</description></item><item><title>cairocffi</title><link>https://hdknr.github.io/blogs/posts/2021/08/ee655d9fd11b3415ce518231713f26bc/</link><pubDate>Fri, 27 Aug 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/08/ee655d9fd11b3415ce518231713f26bc/</guid><description>&lt;h2 id="結局"&gt;結局&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;x86_64 でhomebrew 作り直し&lt;/li&gt;
+&lt;li&gt;anyenv, python を入れ直し&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/ktgw0316/items/b5358a471ae9ee84f771"&gt;https://qiita.com/ktgw0316/items/b5358a471ae9ee84f771&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;arch -arch x86_64 zsh&lt;/code&gt; で x86_64 環境で作業する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;% uname -m
+x86_64
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="問題"&gt;問題&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt; % pip install cairocffi lCollecting cairocffi Downloading cairocffi-1.2.0.tar.gz (70 kB) ( |████████████████████████████████| 70 kB 5.4 MB/s
+ERROR: Command errored out with exit status 1:
+command: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/bin/python3.9 -c &amp;#39;import io, os, sys, setuptools, tokenize; sys.argv[0] = &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-instal
+l-uxwwpx3n/cairocffi_949ddafebb174433b898b1d60614bf77/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;; __file__=&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_949ddafebb174433b898b1d60614bf77/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;;f
+= getattr(tokenize, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;open&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, open)(__file__) if os.path.exists(__file__) else io.StringIO(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;from setuptools import setup; setup()&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);code = f.read().replace(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\r\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);f.close();exec(compi
+le(code, __file__, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;exec&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;))&amp;#39; egg_info --egg-base /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-pip-egg-info-952byczr
+cwd: /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_949ddafebb174433b898b1d60614bf77/
+Complete output (31 lines):
+WARNING: The wheel package is not available.
+Traceback (most recent call last):
+File &amp;#34;&amp;lt;string&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+File &amp;#34;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_949ddafebb174433b898b1d60614bf77/setup.py&amp;#34;, line 10, in &amp;lt;module&amp;gt;
+setup(
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/__init__.py&amp;#34;, line 153, in setup
+return distutils.core.setup(**attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/core.py&amp;#34;, line 108, in setup
+_setup_distribution = dist = klass(attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 434, in __init__
+_Distribution.__init__(self, {
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/dist.py&amp;#34;, line 292, in __init__
+self.finalize_options()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 743, in finalize_options
+ep(self)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 750, in _finalize_setup_keywords
+ep.load()(self, ep.name, value)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 219, in cffi_modules
+add_cffi_module(dist, cffi_module)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 49, in add_cffi_module
+execfile(build_file_name, mod_vars)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 25, in execfile
+exec(code, glob, glob)
+File &amp;#34;cairocffi/ffi_build.py&amp;#34;, line 26, in &amp;lt;module&amp;gt;
+ffi = FFI()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/api.py&amp;#34;, line 48, in __init__
+import _cffi_backend as backend
+ImportError: dlopen(/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so, 2): Symbol not found: _ffi_prep_closure 9 Referenced from: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+Expected in: flat namespace
+in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+----------------------------------------
+WARNING: Discarding https://files.pythonhosted.org/packages/84/ca/0bffed5116d21251469df200448667e90acaa5131edea869b44a3fbc73d0/cairocffi-1.2.0.tar.gz#sha256=9a979b500c64c8179fec286f337e8fe644eca2f2cd05860ce0b62d25f22ea14
+0 (from https://pypi.org/simple/cairocffi/) (requires-python:&amp;gt;=3.6). Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt; Downloading cairocffi-1.1.0.tar.gz (68 kB)
+|████████████████████████████████| 68 kB 41.2 MB/s
+ERROR: Command errored out with exit status 1:
+command: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/bin/python3.9 -c &amp;#39;import io, os, sys, setuptools, tokenize; sys.argv[0] = &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-instal
+l-uxwwpx3n/cairocffi_0871e9b26c6442869a897d8d8df7ca3f/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;; __file__=&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_0871e9b26c6442869a897d8d8df7ca3f/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;;f
+= getattr(tokenize, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;open&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, open)(__file__) if os.path.exists(__file__) else io.StringIO(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;from setuptools import setup; setup()&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);code = f.read().replace(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\r\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);f.close();exec(compi
+le(code, __file__, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;exec&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;))&amp;#39; egg_info --egg-base /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-pip-egg-info-2h4amr27
+cwd: /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_0871e9b26c6442869a897d8d8df7ca3f/
+Complete output (31 lines):
+WARNING: The wheel package is not available.
+Traceback (most recent call last):
+File &amp;#34;&amp;lt;string&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+File &amp;#34;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_0871e9b26c6442869a897d8d8df7ca3f/setup.py&amp;#34;, line 10, in &amp;lt;module&amp;gt;
+setup(
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/__init__.py&amp;#34;, line 153, in setup
+return distutils.core.setup(**attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/core.py&amp;#34;, line 108, in setup
+_setup_distribution = dist = klass(attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 434, in __init__
+_Distribution.__init__(self, {
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/dist.py&amp;#34;, line 292, in __init__
+self.finalize_options()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 743, in finalize_options
+ep(self)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 750, in _finalize_setup_keywords
+ep.load()(self, ep.name, value)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 219, in cffi_modules
+add_cffi_module(dist, cffi_module)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 49, in add_cffi_module
+execfile(build_file_name, mod_vars)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 25, in execfile
+exec(code, glob, glob)
+File &amp;#34;cairocffi/ffi_build.py&amp;#34;, line 26, in &amp;lt;module&amp;gt;
+ffi = FFI()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/api.py&amp;#34;, line 48, in __init__
+import _cffi_backend as backend
+ImportError: dlopen(/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so, 2): Symbol not found: _ffi_prep_closure
+Referenced from: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+Expected in: flat namespace
+in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+----------------------------------------
+WARNING: Discarding https://files.pythonhosted.org/packages/f7/99/b3a2c6393563ccbe081ffcceb359ec27a6227792c5169604c1bd8128031a/cairocffi-1.1.0.tar.gz#sha256=f1c0c5878f74ac9ccb5d48b2601fcc75390c881ce476e79f4cfedd288b1b05d
+b (from https://pypi.org/simple/cairocffi/) (requires-python:&amp;gt;= 3.5). Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt; Downloading cairocffi-1.0.2.tar.gz (68 kB) [24/677]
+|████████████████████████████████| 68 kB 46.3 MB/s
+ERROR: Command errored out with exit status 1:
+command: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/bin/python3.9 -c &amp;#39;import io, os, sys, setuptools, tokenize; sys.argv[0] = &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-instal
+l-uxwwpx3n/cairocffi_6df35727083e4413bfaa3e41ad38bc09/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;; __file__=&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_6df35727083e4413bfaa3e41ad38bc09/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;;f
+= getattr(tokenize, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;open&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, open)(__file__) if os.path.exists(__file__) else io.StringIO(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;from setuptools import setup; setup()&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);code = f.read().replace(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\r\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);f.close();exec(compi
+le(code, __file__, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;exec&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;))&amp;#39; egg_info --egg-base /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-pip-egg-info-wdq78cuo
+cwd: /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_6df35727083e4413bfaa3e41ad38bc09/
+Complete output (31 lines):
+WARNING: The wheel package is not available.
+Traceback (most recent call last):
+File &amp;#34;&amp;lt;string&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+File &amp;#34;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_6df35727083e4413bfaa3e41ad38bc09/setup.py&amp;#34;, line 10, in &amp;lt;module&amp;gt;
+setup(
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/__init__.py&amp;#34;, line 153, in setup
+return distutils.core.setup(**attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/core.py&amp;#34;, line 108, in setup
+_setup_distribution = dist = klass(attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 434, in __init__
+_Distribution.__init__(self, {
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/dist.py&amp;#34;, line 292, in __init__
+self.finalize_options()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 743, in finalize_options
+ep(self)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 750, in _finalize_setup_keywords
+ep.load()(self, ep.name, value)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 219, in cffi_modules
+add_cffi_module(dist, cffi_module)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 49, in add_cffi_module
+execfile(build_file_name, mod_vars)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 25, in execfile
+exec(code, glob, glob)
+File &amp;#34;cairocffi/ffi_build.py&amp;#34;, line 26, in &amp;lt;module&amp;gt;
+ffi = FFI()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/api.py&amp;#34;, line 48, in __init__
+import _cffi_backend as backend
+ImportError: dlopen(/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so, 2): Symbol not found: _ffi_prep_closure
+Referenced from: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+Expected in: flat namespace
+in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+----------------------------------------
+WARNING: Discarding https://files.pythonhosted.org/packages/0f/0f/7e21b5ddd31b610e46a879c0d21e222dd0fef428c1fc86bbd2bd57fed8a7/cairocffi-1.0.2.tar.gz#sha256=01ac51ae12c4324ca5809ce270f9dd1b67f5166fe63bd3e497e9ea3ca91946f
+f (from https://pypi.org/simple/cairocffi/) (requires-python:&amp;gt;= 3.5). Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt; Downloading cairocffi-1.0.1.tar.gz (68 kB)
+|████████████████████████████████| 68 kB 48.1 MB/s
+ERROR: Command errored out with exit status 1:
+command: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/bin/python3.9 -c &amp;#39;import io, os, sys, setuptools, tokenize; sys.argv[0] = &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-instal
+l-uxwwpx3n/cairocffi_60641da3bfa74b2abbdcfd8f77811245/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;; __file__=&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_60641da3bfa74b2abbdcfd8f77811245/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;;f
+= getattr(tokenize, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;open&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, open)(__file__) if os.path.exists(__file__) else io.StringIO(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;from setuptools import setup; setup()&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);code = f.read().replace(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\r\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);f.close();exec(compi
+le(code, __file__, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;exec&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;))&amp;#39; egg_info --egg-base /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-pip-egg-info-d6t_qnin
+cwd: /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_60641da3bfa74b2abbdcfd8f77811245/
+Complete output (31 lines):
+WARNING: The wheel package is not available.
+Traceback (most recent call last):
+File &amp;#34;&amp;lt;string&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+File &amp;#34;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_60641da3bfa74b2abbdcfd8f77811245/setup.py&amp;#34;, line 10, in &amp;lt;module&amp;gt;
+setup(
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/__init__.py&amp;#34;, line 153, in setup
+return distutils.core.setup(**attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/core.py&amp;#34;, line 108, in setup
+_setup_distribution = dist = klass(attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 434, in __init__
+_Distribution.__init__(self, {
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/dist.py&amp;#34;, line 292, in __init__
+self.finalize_options()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 743, in finalize_options
+ep(self)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 750, in _finalize_setup_keywords
+ep.load()(self, ep.name, value)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 219, in cffi_modules
+add_cffi_module(dist, cffi_module)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 49, in add_cffi_module
+execfile(build_file_name, mod_vars)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 25, in execfile
+exec(code, glob, glob)
+File &amp;#34;cairocffi/ffi_build.py&amp;#34;, line 26, in &amp;lt;module&amp;gt;
+ffi = FFI()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/api.py&amp;#34;, line 48, in __init__
+import _cffi_backend as backend
+ImportError: dlopen(/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so, 2): Symbol not found: _ffi_prep_closure
+Referenced from: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+Expected in: flat namespace
+in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+----------------------------------------
+WARNING: Discarding https://files.pythonhosted.org/packages/3e/f1/0d1dad825f6ec75d3d79d5673e7b836e7a23bf57fde0028fb8bf252d4259/cairocffi-1.0.1.tar.gz#sha256=9ca49d9bb0a52bd6a8263de137b4818e0889f3cd8d933165fb122669924ae3b
+9 (from https://pypi.org/simple/cairocffi/) (requires-python:&amp;gt;= 3.5). Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+Downloading cairocffi-1.0.0-py3-none-any.whl (88 kB)
+|████████████████████████████████| 88 kB 52.9 MB/s
+Requirement already satisfied: cffi&amp;gt;=1.1.0 in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages (from cairocffi) (1.14.5)
+Requirement already satisfied: pycparser in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages (from cffi&amp;gt;=1.1.0-&amp;gt;cairocffi) (2.20)
+Installing collected packages: cairocffi
+Successfully installed cairocffi-1.0.0
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>pyenv install 3.9.6</title><link>https://hdknr.github.io/blogs/posts/2021/08/76ef9037fc24218bf2a667e4e58017fe/</link><pubDate>Fri, 27 Aug 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/08/76ef9037fc24218bf2a667e4e58017fe/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;% pyenv install 3.9.6
+python-build: use openssl@1.1 from homebrew
+python-build: use readline from homebrew
+Downloading Python-3.9.6.tar.xz...
+-&amp;gt; https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tar.xz
+Installing Python-3.9.6...
+python-build: use readline from homebrew
+python-build: use zlib from xcode sdk
+WARNING: The Python readline extension was not compiled. Missing the GNU readline lib?
+ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?
+Please consult to the Wiki page to fix the problem.
+https://github.com/pyenv/pyenv/wiki/Common-build-problems
+BUILD FAILED (OS X 11.5.2 using python-build 2.0.5-2-gb2eb2d28)
+Inspect or clean up the working tree at /var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/python-build.20210827141959.69396
+Results logged to /var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/python-build.20210827141959.69396.log
+Last 10 log lines:
+./python.exe -E -m ensurepip \
+$ensurepip --root=/ ; \
+fi
+Looking in links: /var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/tmp24q45onf
+Processing /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/tmp24q45onf/setuptools-56.0.0-py3-none-any.whl
+Processing /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/tmp24q45onf/pip-21.1.3-py3-none-any.whl
+Installing collected packages: setuptools, pip
+WARNING: The scripts pip3 and pip3.9 are installed in &amp;#39;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/bin&amp;#39; which is not on PATH.
+Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Successfully installed pip-21.1.3 setuptools-56.0.0
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Python: singledispatch</title><link>https://hdknr.github.io/blogs/posts/2021/05/daaff11faefc082cb9fd645249532f20/</link><pubDate>Mon, 24 May 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/05/daaff11faefc082cb9fd645249532f20/</guid><description>&lt;h1 id="singledispatch"&gt;singledispatch&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.python.org/dev/peps/pep-0443/"&gt;PEP 443 &amp;ndash; Single-dispatch generic functions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;single-dispatch generic functions&lt;/code&gt; : form of generic programming&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://rafiqul.rocks/generic-function-in-python-with-singledispatch"&gt;Generic Function in Python with Singledispatch&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Editors</title><link>https://hdknr.github.io/blogs/posts/2015/08/2ea82ce5bfbb06d6a881/</link><pubDate>Fri, 07 Aug 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/08/2ea82ce5bfbb06d6a881/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;$ apm install atom-print
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://atom.io/packages/ex-mode"&gt;ex-mode&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="proxy"&gt;Proxy&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://qiita.com/tsukamoto/items/cef0f2d7e2b33a26a9e5"&gt;ATOMエディタのproxy設定&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\&amp;gt; apm config set https-proxy http://172.165.101.254:8080
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;C:\&amp;gt;apm config get https-proxy
+http://172.165.101.254:8080/
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="windowsで-ccコンパイラが必要"&gt;Windowsで C/C++コンパイラが必要&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;VS2015 Communitiy Edition をインストール&lt;/li&gt;
+&lt;li&gt;Windows再起動&lt;/li&gt;
+&lt;li&gt;デベロッパーコンソールでインストール&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Program Files (x86)\Microsoft Visual Studio 14.0&amp;gt;apm install vim-mode
+Installing vim-mode to C:\Users\h-nara\.atom\packages done
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Homebrew</title><link>https://hdknr.github.io/blogs/posts/2015/07/89dea9127fed7d93d67d/</link><pubDate>Fri, 31 Jul 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/07/89dea9127fed7d93d67d/</guid><description>&lt;h2 id="muliti-admin"&gt;Muliti-Admin&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.rubycoloredglasses.com/2014/06/sharing-administrative-rights-with-homebrew/"&gt;Sharing Administrative Rights with Homebrew&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dseditgroup -o edit -a hide -t user admin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo chmod -R g+w /usr/local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo chmod -R g+w /Library/Caches/Homebrew
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Swift Related</title><link>https://hdknr.github.io/blogs/posts/2015/07/21e27f695d49912d7aaa/</link><pubDate>Sun, 05 Jul 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/07/21e27f695d49912d7aaa/</guid><description>&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.evernote.com/l/AS7cnsYvrohMfKyBL9fLoH7je_DnLL6Ub4g"&gt;xcrun swift on command line generate &lt;unknown&gt;:0: error: could not load shared library&lt;/a&gt; (ライブラリのロード)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.evernote.com/shard/s302/sh/ba163bcb-73c2-4cec-91f8-c8e440bf3210/8df47227fec7d701a48cb3421f38879a"&gt;Regex in Swift&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://timekl.com/blog/2014/06/02/learning-swift-ordered-dictionaries/"&gt;Learning Swift: Ordered Dictionaries&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/lithium3141/SwiftDataStructures"&gt;lithium3141/SwiftDataStructures&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

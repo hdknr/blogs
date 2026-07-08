@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Rust on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/rust/</link><description>Recent content in Rust on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/rust/index.xml" rel="self" type="application/rss+xml"/><item><title>Warp がオープンソース化 — ターミナルから生まれた Agentic Development Environment（ADE）の全貌</title><link>https://hdknr.github.io/blogs/posts/2026/04/warp-agentic-development-environment/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/warp-agentic-development-environment/</guid><description>AI ターミナル Warp が 2026-04-28 に Rust 製クライアントを AGPL v3 / MIT のデュアルライセンスでオープンソース化。OpenAI 設立スポンサー、Claude Code・Codex・Gemini CLI 連携、クラウドエージェント基盤 Oz まで含めた ADE の全貌を解説。</description></item><item><title>RTK（Rust Token Killer）でClaude Codeのトークン使用量を60〜90%削減する</title><link>https://hdknr.github.io/blogs/posts/2026/04/rtk-rust-token-killer-claude-code/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/rtk-rust-token-killer-claude-code/</guid><description>&lt;p&gt;Claude Code を使い続けると、トークン消費が思いのほか速く、使用制限に達してしまうことがある。その主な原因のひとつが、ターミナルコマンドの出力だ。&lt;code&gt;git status&lt;/code&gt; や &lt;code&gt;npm install&lt;/code&gt; が吐き出すプログレスバー・警告・ログといったノイズが、そのままコンテキストに流れ込んでいる。&lt;/p&gt;
+&lt;p&gt;この問題を解決するツールが &lt;strong&gt;RTK（Rust Token Killer）&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;h2 id="rtk-とは"&gt;RTK とは&lt;/h2&gt;
+&lt;p&gt;RTK は Claude Code とターミナルの間に挟む「CLI プロキシ」ツール。Rust 製の単一バイナリで、依存関係ゼロのオープンソースプロジェクトだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a href="https://github.com/rtk-ai/rtk"&gt;rtk-ai/rtk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;公式サイト: &lt;a href="https://www.rtk-ai.app/"&gt;https://www.rtk-ai.app/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;コマンドを透過的にラップして出力をフィルタリングし、LLM のコンテキストに送る情報量を大幅に削減する。実測で &lt;strong&gt;60〜90% のトークン削減&lt;/strong&gt;、1,000 万トークン以上の削減（89% 削減）を達成した事例も報告されている。&lt;/p&gt;
+&lt;h2 id="4-つの最適化戦略"&gt;4 つの最適化戦略&lt;/h2&gt;
+&lt;p&gt;RTK は以下の戦略でターミナル出力を圧縮する:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;戦略&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スマートフィルタリング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ANSI エスケープコード、スピナー、プログレスバーを除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;グルーピング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;関連する出力をまとめて集約&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;重複除去&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;繰り返しパターンを排除&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;トランケーション&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;エラーは保持しつつ、冗長な成功出力を切り詰め&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;オーバーヘッドは 1 コマンドあたり 10ms 未満で、100 以上の開発コマンドに対応している。&lt;/p&gt;
+&lt;h2 id="セットアップ"&gt;セットアップ&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rtk init -g
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;-g&lt;/code&gt; フラグでグローバルインストール。Claude Code / GitHub Copilot との統合も自動で設定される。&lt;/p&gt;
+&lt;p&gt;インストール後、RTK はコマンドを透過的に書き換える。たとえば &lt;code&gt;git status&lt;/code&gt; は内部で &lt;code&gt;rtk git status&lt;/code&gt; として実行され、Claude には圧縮済みの出力が渡される。ユーザーが意識する必要はない。&lt;/p&gt;</description></item><item><title>claw-code-local — Claude Code風のAIコーディングエージェントをローカルLLMで動かす</title><link>https://hdknr.github.io/blogs/posts/2026/04/claw-code-local/</link><pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claw-code-local/</guid><description>Claude Code風のAIコーディングエージェント claw-code-local の紹介。Ollama や LM Studio でローカルLLMを使い、API費用ゼロ・プライバシー保護でコード生成を実現する方法を解説。</description></item><item><title>opencli-rs: Rust製の爆速Webスクレイピングツールで55以上のサイトをCLI化する</title><link>https://hdknr.github.io/blogs/posts/2026/03/opencli-rs/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/opencli-rs/</guid><description>&lt;p&gt;&lt;a href="https://github.com/nashsu/opencli-rs"&gt;opencli-rs&lt;/a&gt; は、55以上の主要サイトに対応したRust製のCLIツールです。サイトごとにAPIやスクレイピング方法が異なる煩雑さを解消し、1つのコマンドで各プラットフォームの情報を取得できます。&lt;/p&gt;
+&lt;h2 id="opencli-rs-とは"&gt;opencli-rs とは&lt;/h2&gt;
+&lt;p&gt;opencli-rs は、元々TypeScriptで実装されていた OpenCLI をRustで完全に書き直したツールです。X (Twitter)、YouTube、Reddit、Hacker News、Bilibili、Zhihu、Xiaohongshu（小紅書）など多数のプラットフォームに対応しています。Chromeのログインセッションを再利用するため、APIキーなしでデータを取得できます。&lt;/p&gt;
+&lt;p&gt;出力形式はテーブル、JSON、YAML、CSV、Markdownに対応しており、用途に応じて使い分けが可能です。また、Electronベースのデスクトップアプリをコマンドラインから制御する機能も備えており、GUIアプリの操作をスクリプト化できます。&lt;/p&gt;
+&lt;h3 id="主な特徴"&gt;主な特徴&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;処理速度が最大12倍に向上&lt;/strong&gt; — TypeScript版と比較して大幅な高速化（例: Bilibili Hot の取得が20.1秒から1.66秒に）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メモリ使用量を10分の1に削減&lt;/strong&gt; — 95-99MBから9-15MBへ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;シングルバイナリで動作&lt;/strong&gt; — わずか4.7MB、追加のランタイム不要でどの環境にも導入可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストール"&gt;インストール&lt;/h2&gt;
+&lt;p&gt;インストールスクリプトが用意されており、システムとアーキテクチャを自動検出してバイナリをダウンロードします。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://raw.githubusercontent.com/nashsu/opencli-rs/main/scripts/install.sh | sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Rustの開発環境がある場合はソースからビルドすることもできます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/nashsu/opencli-rs.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd opencli-rs
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cargo build --release
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="aiエージェントとの連携"&gt;AIエージェントとの連携&lt;/h2&gt;
+&lt;p&gt;opencli-rs はAIエージェントとの連携を前提に設計されています。Claude Code や Cursor などに組み込むことで、「Hacker Newsのトップ記事を取得して要約する」「競合のX投稿を定期的にチェックする」といったWeb情報収集の自動化が可能です。&lt;/p&gt;
+&lt;p&gt;AIエージェント向けのスキルパッケージ &lt;a href="https://github.com/nashsu/opencli-rs-skill"&gt;opencli-rs-skill&lt;/a&gt; も提供されています。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx skills add https://github.com/nashsu/opencli-rs-skill
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これにより、AIエージェントが &lt;code&gt;AGENT.md&lt;/code&gt; や &lt;code&gt;.cursorrules&lt;/code&gt; の設定を通じて利用可能なツールを自動的に検出し、自然言語でWebスクレイピングを実行できるようになります。&lt;/p&gt;</description></item><item><title>Goose 完全ガイド — Block が作った無料オープンソース AI エージェントの全貌</title><link>https://hdknr.github.io/blogs/posts/2026/03/79be6da14ac16c7e51167d5a9747228f/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/79be6da14ac16c7e51167d5a9747228f/</guid><description>&lt;h1 id="goose-完全ガイド--block-が作った無料オープンソース-ai-エージェントの全貌"&gt;Goose 完全ガイド — Block が作った無料オープンソース AI エージェントの全貌&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://block.xyz"&gt;Block（旧 Square）&lt;/a&gt;が開発するオープンソース AI エージェント &lt;strong&gt;Goose&lt;/strong&gt; は、GitHub で 32,400 スターを獲得し、Linux Foundation の Agentic AI Foundation（AAIF）の創設プロジェクトに選ばれた、エージェント AI 時代の基盤ソフトウェアです。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code costs up to $200 a month. Goose does the same thing for free.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://venturebeat.com/infrastructure/claude-code-costs-up-to-usd200-a-month-goose-does-the-same-thing-for-free"&gt;VentureBeat の見出し&lt;/a&gt;が示すように、Goose は無料・ローカル実行・モデル非依存という特徴で、商用 AI コーディングツールの対抗馬として注目されています。Block 内部では従業員 12,000 人の &lt;strong&gt;60%&lt;/strong&gt; が毎週 Goose を使用し、開発時間 &lt;strong&gt;50〜75% 削減&lt;/strong&gt;を報告しています。&lt;/p&gt;
+&lt;h2 id="goose-とは何か"&gt;Goose とは何か&lt;/h2&gt;
+&lt;p&gt;Goose は「ローカルで動く、拡張可能な、オープンソースの AI エージェント」です。単なるコード補完ではなく、プロジェクトの構築・コード実行・デバッグ・ワークフローの統合を自律的に行います。&lt;/p&gt;
+&lt;h3 id="基本情報"&gt;基本情報&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;開発元&lt;/td&gt;
+&lt;td&gt;Block, Inc.（旧 Square / Jack Dorsey 創業）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;公開日&lt;/td&gt;
+&lt;td&gt;2025年1月28日&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ライセンス&lt;/td&gt;
+&lt;td&gt;Apache 2.0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;言語構成&lt;/td&gt;
+&lt;td&gt;Rust 57.4%、TypeScript 34.9%&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GitHub Stars&lt;/td&gt;
+&lt;td&gt;32,400+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;コントリビューター&lt;/td&gt;
+&lt;td&gt;409 人&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;リリース&lt;/td&gt;
+&lt;td&gt;121 回以上（最新 v1.27.0）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;インターフェース&lt;/td&gt;
+&lt;td&gt;CLI + デスクトップアプリ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;対応 OS&lt;/td&gt;
+&lt;td&gt;macOS / Linux / Windows&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;費用&lt;/td&gt;
+&lt;td&gt;無料（LLM API 費用は別途）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="なぜ-block-が作ったのか"&gt;なぜ Block が作ったのか&lt;/h3&gt;
+&lt;p&gt;Goose は Block のエンジニアがソフトウェア開発を効率化するために内部ツールとして開発したことに端を発します。Jack Dorsey はオープンソースの推進者として知られ、Goose は Block の新設オープンソースオフィスから公開された最初のプロジェクトです。&lt;/p&gt;</description></item><item><title>OpenFang × Rust製シングルバイナリ「エージェントOS」のHandsアーキテクチャと自律型AI設計</title><link>https://hdknr.github.io/blogs/posts/2026/03/bdc5082e2f5f8160644bd0ba01f52c76/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/bdc5082e2f5f8160644bd0ba01f52c76/</guid><description>&lt;h1 id="openfang--rust-製シングルバイナリのエージェント-osが再定義する自律型-ai-の設計"&gt;OpenFang &amp;mdash; Rust 製シングルバイナリの「エージェント OS」が再定義する自律型 AI の設計&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/mikefutia/status/2029220162818453968"&gt;@mikefutia 氏が X で紹介&lt;/a&gt;した OpenFang v0.3.7 のリリースが注目を集めています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;OpenFang v0.3.7 is out! here&amp;rsquo;s everything since v0.3.3&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://github.com/RightNow-AI/openfang"&gt;OpenFang&lt;/a&gt; は RightNow AI の創設者 Jaber 氏が開発する、&lt;strong&gt;Rust で一から構築されたオープンソースのエージェントオペレーティングシステム&lt;/strong&gt;です。チャットボットフレームワークではなく、自律的にタスクを実行する「エージェント OS」を標榜しています。2026 年 2 月 24 日の公開から 4 日で GitHub スター 4,037 を獲得し、パーソナル AI エージェント領域で最速級の立ち上がりを見せました。&lt;/p&gt;
+&lt;p&gt;本記事では、OpenFang のアーキテクチャ、独自の「Hands」機構、Python 製フレームワークとの構造的な違いを技術的に解説します。&lt;/p&gt;
+&lt;h2 id="なぜエージェント-osなのか"&gt;なぜ「エージェント OS」なのか&lt;/h2&gt;
+&lt;h3 id="チャットボットフレームワークとの違い"&gt;チャットボットフレームワークとの違い&lt;/h3&gt;
+&lt;p&gt;LangChain や CrewAI のような既存のエージェントフレームワークは、基本的に&lt;strong&gt;ユーザーのプロンプトを起点&lt;/strong&gt;に動作します。ユーザーが指示を出し、エージェントが実行し、結果を返す。この対話ループが基本構造です。&lt;/p&gt;
+&lt;p&gt;OpenFang が「OS」と名乗る理由は、&lt;strong&gt;プロンプトなしで自律的に動作する&lt;/strong&gt;設計にあります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;既存フレームワーク:
+ユーザー → プロンプト → エージェント → 結果 → ユーザー
+（対話ループ）
+OpenFang:
+スケジュール → エージェント → タスク実行 → 知識グラフ更新
+↓
+ダッシュボードに報告
+（自律ループ、ユーザーの介入は承認ゲートのみ）
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;24 時間 365 日、バックグラウンドでエージェントが動き続ける。リード獲得、競合監視、SNS 投稿、コンテンツ生成を自動で行い、ユーザーはダッシュボードで結果を確認する。これが OpenFang の設計思想です。&lt;/p&gt;</description></item><item><title>Rust の仕事が増えていく理由 — インフラコスト削減の圧力と LLM が学習コストを消し去る構造変化</title><link>https://hdknr.github.io/blogs/posts/2026/03/9c4d7fade500b4c0399fc689053e6819/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/9c4d7fade500b4c0399fc689053e6819/</guid><description>&lt;h1 id="rust-の仕事が増えていく理由--インフラコスト削減の圧力と-llm-が学習コストを消し去る構造変化"&gt;Rust の仕事が増えていく理由 — インフラコスト削減の圧力と LLM が学習コストを消し去る構造変化&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/helloyuki_/status/2029019523219873847"&gt;@helloyuki_ 氏のポスト&lt;/a&gt;が、Zenn の記事を紹介し反響を呼んでいます（いいね 177、ブックマーク 124）。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;前職の同僚がなんか書いてた。広告配信でRustを採用した際のインフラ費の話を聞いた気がするんだけど、たしかにRustにするとこんなに削減できるのかと思った記憶がある🤔&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;引用元は yukinarit 氏による Zenn 記事「&lt;a href="https://zenn.dev/yukinarit/articles/e3fd03a62c3da0"&gt;Rustの仕事が増えていく理由&lt;/a&gt;」。地図・ゲーム・証券・広告・メッセージングと多様な業界で Rust を使ってきたエンジニアが、なぜ Rust の仕事が増えていくのかを構造的に分析した記事です。&lt;/p&gt;
+&lt;p&gt;本記事では、元記事の論点を整理し、企業の実績データとLLM時代の変化を加えて解説します。&lt;/p&gt;
+&lt;h2 id="rust-採用の構造的理由--2軸モデル"&gt;Rust 採用の構造的理由 — 2軸モデル&lt;/h2&gt;
+&lt;h3 id="性能要求--開発コストの2軸"&gt;性能要求 × 開発コストの2軸&lt;/h3&gt;
+&lt;p&gt;元記事が提示するフレームワークは、言語選定を&lt;strong&gt;性能要求&lt;/strong&gt;と&lt;strong&gt;開発コスト許容度&lt;/strong&gt;の2軸で整理するものです。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt; 高性能要求
+↑
+領域D | 領域C
+Rust / C++ | ML研究等
+|
+───────────────┼───────────────→ 高コスト許容
+|
+領域B | 領域A
+Go / Java | Ruby / Python
+| TypeScript
+低性能要求
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;領域&lt;/th&gt;
+&lt;th&gt;言語&lt;/th&gt;
+&lt;th&gt;典型的なプロダクト&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;A（低性能・低コスト）&lt;/td&gt;
+&lt;td&gt;Ruby, Python, TypeScript&lt;/td&gt;
+&lt;td&gt;Web アプリ、管理画面、MVP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;B（中性能・中コスト）&lt;/td&gt;
+&lt;td&gt;Go, Java, C#&lt;/td&gt;
+&lt;td&gt;マイクロサービス、API サーバー&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;C（低性能・高コスト）&lt;/td&gt;
+&lt;td&gt;Python + CUDA&lt;/td&gt;
+&lt;td&gt;機械学習研究&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;D（高性能・高コスト）&lt;/td&gt;
+&lt;td&gt;Rust, C++&lt;/td&gt;
+&lt;td&gt;HFT、ゲームエンジン、広告配信&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="領域-b--d-への圧力"&gt;領域 B → D への圧力&lt;/h3&gt;
+&lt;p&gt;重要なのは、&lt;strong&gt;クラウドの普及が領域 B のプロダクトを領域 D に押し上げている&lt;/strong&gt;ことです。オンプレミス時代はサーバーを買い切りだったため、CPU やメモリの使用効率が直接コストに響きにくかった。しかしクラウドでは CPU 時間・メモリ量が従量課金されるため、「Go/Java で十分」だったサービスが&lt;strong&gt;コスト削減のために Rust を検討する&lt;/strong&gt;フェーズに入っています。&lt;/p&gt;</description></item></channel></rss>

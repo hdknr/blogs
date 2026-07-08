@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>第2の脳 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E7%AC%AC2%E3%81%AE%E8%84%B3/</link><description>Recent content in 第2の脳 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 20 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E7%AC%AC2%E3%81%AE%E8%84%B3/index.xml" rel="self" type="application/rss+xml"/><item><title>claude-obsidian × Obsidianで「勝手に育つ第2の脳」を構築する — AIが自動でリンクを張り、使うほど賢くなるVaultの作り方</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-obsidian-second-brain/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-obsidian-second-brain/</guid><description>&lt;p&gt;「メモはたくさん溜まるのに、結局どこに何を書いたか分からない」
+「AIを活用したいけど、毎回コンテキストを一から説明するのが面倒」&lt;/p&gt;
+&lt;p&gt;こういった悩みを一気に解決するツールが注目を集めています。GitHubで5000スター超えを達成した &lt;strong&gt;claude-obsidian&lt;/strong&gt; です。&lt;/p&gt;
+&lt;h2 id="claude-obsidianとは何か"&gt;claude-obsidianとは何か&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/AgriciDaniel/claude-obsidian"&gt;claude-obsidian&lt;/a&gt; は、Claude Code × Obsidian を連携させるオープンソースプラグインです（MIT License）。Andrej Karpathy氏（OpenAI創設メンバー、元Tesla AI部門ディレクター）が提唱した &lt;strong&gt;LLM Wikiパターン&lt;/strong&gt; を実装したもので、一言でいうと「知識が複利で増えるObsidian Vault」を作るツールです。&lt;/p&gt;
+&lt;p&gt;従来のAI × ノートツールの問題点は、&lt;strong&gt;毎回セッションが切れるとコンテキストがリセットされること&lt;/strong&gt;。claude-obsidianはこの問題を根本から解決します。&lt;/p&gt;
+&lt;p&gt;ソースを投げれば、Claudeが以下を自動実行します：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;内容を読み込み、エンティティと概念を抽出&lt;/li&gt;
+&lt;li&gt;既存ページへの相互参照を更新&lt;/li&gt;
+&lt;li&gt;構造化されたObsidian Vaultにファイリング&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;1つの記事を入れるだけで8〜15の相互リンクされたWikiページが自動生成されます。使えば使うほどVaultが賢くなる — 知識が「複利」で積み上がっていく仕組みです。&lt;/p&gt;
+&lt;h2 id="始め方--3つのインストール方法"&gt;始め方 — 3つのインストール方法&lt;/h2&gt;
+&lt;p&gt;必要なものは以下の3つです：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Obsidian（デスクトップ版）&lt;/li&gt;
+&lt;li&gt;Node.js 18以上&lt;/li&gt;
+&lt;li&gt;Claude Code（CLIまたはデスクトップアプリ）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="方法1-vault-clone推奨2分で完了"&gt;方法1: Vault Clone（推奨・2分で完了）&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/AgriciDaniel/claude-obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd claude-obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bash bin/setup-vault.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;クローンしたフォルダをObsidianで開くだけ。最も簡単です。&lt;/p&gt;
+&lt;h3 id="方法2-claude-codeプラグインとして追加"&gt;方法2: Claude Codeプラグインとして追加&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude plugin marketplace add AgriciDaniel/claude-obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude plugin install claude-obsidian@claude-obsidian-marketplace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="方法3-既存のvaultに導入"&gt;方法3: 既存のVaultに導入&lt;/h3&gt;
+&lt;p&gt;GitHubリポジトリから &lt;code&gt;WIKI.md&lt;/code&gt; をコピーして自分のVaultに配置し、Claudeにセットアップを指示するだけです。&lt;/p&gt;</description></item></channel></rss>

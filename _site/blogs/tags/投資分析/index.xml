@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>投資分析 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E6%8A%95%E8%B3%87%E5%88%86%E6%9E%90/</link><description>Recent content in 投資分析 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 29 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E6%8A%95%E8%B3%87%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code Skills × 投資分析シリーズ — スクリプト自動化からマルチ AI エージェントへの進化</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-skills-investment-analysis/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-skills-investment-analysis/</guid><description>&lt;p&gt;ChatGPT に「Claude Code で株ツールを作っている人の事例を調べてくれ」と聞いて見つかった記事シリーズが話題になっている。Zenn の &lt;a href="https://zenn.dev/okikusan"&gt;okikusan&lt;/a&gt; さんによる &lt;strong&gt;Claude Code Skills × 投資分析シリーズ&lt;/strong&gt; は、試行錯誤の過程が詳らかに書かれており、Claude Code を使った個人開発の実践例として非常に参考になる。&lt;/p&gt;
+&lt;p&gt;本記事ではこのシリーズ（Vol.1〜5）の内容を紹介する。&lt;/p&gt;
+&lt;h2 id="シリーズ概要"&gt;シリーズ概要&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://zenn.dev/okikusan/articles/23041c3800a927"&gt;Claude Code Skills × 投資分析シリーズ — 記事一覧&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;「自然言語で話しかけるだけで、銘柄探索・分析・ポートフォリオ管理・リスク評価が自動実行される」投資分析システムを Claude Code Skills を使って構築・進化させてきたシリーズ。&lt;/p&gt;
+&lt;p&gt;全 5 本の記事で、&lt;strong&gt;スクリプトによる自動化&lt;/strong&gt; から始まり、&lt;strong&gt;GraphRAG による学習&lt;/strong&gt;、&lt;strong&gt;高度な分析機能の追加&lt;/strong&gt;を経て、最終的には &lt;strong&gt;6 つの AI エージェントが自律的に連鎖するマルチエージェントオーケストレーション&lt;/strong&gt;、さらには &lt;strong&gt;4 つの異なる AI が反証し合う DeepThink&lt;/strong&gt; へと進化している。&lt;/p&gt;
+&lt;h2 id="vol1-株スクリーニングを自動化した話"&gt;Vol.1: 株スクリーニングを自動化した話&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;テーマ: スクリプトで自動化&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://zenn.dev/okikusan/articles/eacc59ca26e566"&gt;記事リンク&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Python × yfinance × Claude Code Skills で、株式スクリーニングからポートフォリオ管理まで投資分析を自動化した第一弾。4 つのスクリーナーエンジンとヘルスチェック機能を実装している。&lt;/p&gt;
+&lt;p&gt;主な実装内容:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;yfinance を使った株価データ取得&lt;/li&gt;
+&lt;li&gt;4 つのスクリーナーエンジン（QueryScreener・PullbackScreener・AlphaScreener・ValueScreener）&lt;/li&gt;
+&lt;li&gt;ポートフォリオのヘルスチェック機能&lt;/li&gt;
+&lt;li&gt;Claude Code Skills による自然言語インターフェース&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="vol2-使うほど賢くなる投資分析-ai"&gt;Vol.2: 使うほど賢くなる投資分析 AI&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;テーマ: GraphRAG で学習&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>

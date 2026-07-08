@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Auto-Memory on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/auto-memory/</link><description>Recent content in Auto-Memory on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 21 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/auto-memory/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code の Skills が会話ごとにずれる原因は auto-memory だった — 1行で直す方法</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-auto-memory-skills/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-auto-memory-skills/</guid><description>&lt;p&gt;Claude Code の Skills を使い込むうちに「あれ、前と挙動が違う……」と感じたことはないだろうか。&lt;code&gt;~/.claude/settings.json&lt;/code&gt; に 1 行追記するだけで解決できる。原因は &lt;strong&gt;auto-memory&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;h2 id="claude-code-の-auto-memory-が-skills-の挙動を変える仕組み"&gt;Claude Code の auto-memory が Skills の挙動を変える仕組み&lt;/h2&gt;
+&lt;p&gt;Claude Code は会話のたびに学習内容を &lt;strong&gt;Memory&lt;/strong&gt;（&lt;code&gt;~/.claude/projects/.../memory/MEMORY.md&lt;/code&gt;）へ自動で書き込む機能（auto-memory）を持っている。
+問題はこの Memory の内容が&lt;strong&gt;次の会話でコンテキストウィンドウに自動挿入される&lt;/strong&gt;点だ。これにより、Skills に記述した指示と競合し、設計どおりの挙動から少しずつずれていく。&lt;/p&gt;
+&lt;p&gt;会話を重ねるほど症状が顕著になるため、原因の特定に時間がかかりやすい。&lt;/p&gt;
+&lt;h2 id="解決策automemoryenabled-false"&gt;解決策：&lt;code&gt;autoMemoryEnabled: false&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;~/.claude/settings.json&lt;/code&gt; に 1 行追記するだけで解決する。ファイルが存在しない場合は新規作成し、既存の設定がある場合は &lt;code&gt;{}&lt;/code&gt; 内に追記する。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;autoMemoryEnabled&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これで Memory への自動書き込み・読み込みが停止し、auto-memory 機能全体が無効化される。&lt;/p&gt;
+&lt;h2 id="影響範囲"&gt;影響範囲&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;&lt;code&gt;autoMemoryEnabled: false&lt;/code&gt; にしたときの変化&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Memory への自動書き込み・読み込み&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;停止&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; の読み込み&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;変化なし（従来どおり動作）&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Skills に書いたルールの適用&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;変化なし（従来どおり動作）&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; や Skills の設定はそのまま有効なので、プロジェクト固有のルールが失われる心配はない。&lt;/p&gt;</description></item></channel></rss>
