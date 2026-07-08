@@ -59,15 +59,15 @@ Anthropic は Extensions エリアを準備しており、ユーザーがカス�
 
 - **Claude Desktop**: 対話型チャット、ユーザーがプロンプトを送信して応答を得る
 - **Claude Code**: CLI ベースの開発支援ツール、ユーザーの指示に基づいて動作
-- **[Cowork](/posts/2026/03/claude-cowork-guide/)**: クラウド上でタスクを非同期実行、[Dispatch](/posts/2026/03/anthropic-dispatch-claude-cowork/) でスマホから遠隔指示も可能
+- **[Cowork](/blogs/posts/2026/03/claude-cowork-guide/)**: クラウド上でタスクを非同期実行、[Dispatch](/blogs/posts/2026/03/anthropic-dispatch-claude-cowork/) でスマホから遠隔指示も可能
 - **Conway**: 常駐型エージェント、外部イベントやスケジュールに基づいて自律的に動作
 
 ## 現在のステータス
 
-Conway は現時点では Anthropic 内部でテスト段階にあり、一般公開の時期は未定です。[Claude Code のソースコードリーク](/posts/2026/03/claude-code-source-map-leak/)をきっかけに TestingCatalog が発見・報道したもので、公式なアナウンスはまだ行われていません。
+Conway は現時点では Anthropic 内部でテスト段階にあり、一般公開の時期は未定です。[Claude Code のソースコードリーク](/blogs/posts/2026/03/claude-code-source-map-leak/)をきっかけに TestingCatalog が発見・報道したもので、公式なアナウンスはまだ行われていません。
 
 ## まとめ
 
 Conway は、AIが「アシスタント」から「自律的なエージェント」へと進化する方向性を示すプロダクトです。Always-On の常時稼働、Webhook によるイベント駆動、ブラウザ操作、拡張機能など、従来のチャットボットの枠を超えた機能セットを備えています。
 
-正式リリースされれば、例えばメール対応の自動化、GitHub Issue の自律的なトリアージ、定期的なデータ収集・レポート生成など、これまで人間が手動で回していたワークフローをAIに委ねられるようになります。[Cowork](/posts/2026/03/claude-cowork-guide/) や [Auto Mode](/posts/2026/03/claude-code-auto-mode-agi/) で見えてきたAIの自律性が、Conway でさらに一段階進む可能性があります。
+正式リリースされれば、例えばメール対応の自動化、GitHub Issue の自律的なトリアージ、定期的なデータ収集・レポート生成など、これまで人間が手動で回していたワークフローをAIに委ねられるようになります。[Cowork](/blogs/posts/2026/03/claude-cowork-guide/) や [Auto Mode](/blogs/posts/2026/03/claude-code-auto-mode-agi/) で見えてきたAIの自律性が、Conway でさらに一段階進む可能性があります。

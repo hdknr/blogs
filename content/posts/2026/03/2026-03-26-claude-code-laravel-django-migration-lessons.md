@@ -9,7 +9,7 @@ categories: ["AI/LLM"]
 tags: ["Claude Code", "Laravel", "Django", "Python", "自動化"]
 ---
 
-[計画編](/posts/2026/03/claude-code-laravel-django-migration-plan/)で方針を、[自動化基盤編](/posts/2026/03/claude-code-laravel-django-migration-automation/)でフレームワークを紹介しました。最終回では、実際に 15 Issue を自律実行した結果と、得られた教訓を共有します。
+[計画編](/blogs/posts/2026/03/claude-code-laravel-django-migration-plan/)で方針を、[自動化基盤編](/blogs/posts/2026/03/claude-code-laravel-django-migration-automation/)でフレームワークを紹介しました。最終回では、実際に 15 Issue を自律実行した結果と、得られた教訓を共有します。
 
 ---
 
