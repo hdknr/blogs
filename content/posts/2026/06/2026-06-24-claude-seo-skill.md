@@ -220,6 +220,24 @@ claude-seoはMCP（Model Context Protocol）サーバーと連携することで
 
 MCPサーバーがなくても、HTMLの静的解析による基本的な分析は実行できます。
 
+### データソースと必要な設定
+
+claude-seoのデータソースは2層に分かれます。**入口は認証不要**で、Googleなどのライブデータが欲しいときだけ追加設定が必要になります。
+
+| 層 | データソース | 必要な設定 |
+|---|---|---|
+| **デフォルト** | HTML静的解析（クロール＋パース）、Playwrightによるスクリーンショット | **なし**（APIキー不要） |
+| **オプション** | Ahrefs / Semrush / Google Search Console / PageSpeed Insights のライブデータ | 各MCPサーバーの認証情報 |
+
+`/seo audit` の大部分はデフォルトのHTML静的解析だけで動作します。Google系のライブデータを使う場合のみ、次の設定が必要です。
+
+- **Google Search Console（GSC）** — Google Cloudで Search Console API を有効化し、OAuthクライアントまたはサービスアカウントの認証情報を発行してMCPに設定します。
+- **PageSpeed Insights** — Google Cloudで PageSpeed Insights API を有効化し、APIキーを発行します。少量なら鍵なしでも動く場合がありますが、実運用ではレート制限を避けるためAPIキーの設定が推奨されます。
+
+> **GA4（Google Analytics）はclaude-seoの標準データソースではありません。** 標準で連携するGoogle系データはGSCとPageSpeed Insightsで、GA4の分析を組み込みたい場合はGA4対応のMCPサーバーを別途用意する必要があります。
+
+具体的な認証設定の手順は各MCPサーバーのREADMEが最終的な正となるため、導入時にそちらを確認してください。
+
 ### 2026年最新のSEOトレンドに対応
 
 - Core Web VitalsのINP（FIDから2024年3月に移行済み）
