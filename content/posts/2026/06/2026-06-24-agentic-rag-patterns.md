@@ -181,6 +181,8 @@ class MultiStepRAGWorkflow(Workflow):
 
 Agentic RAG の対象データはテキスト文書に限りません。金融取引履歴や株価推移のような**構造化・数値・時系列データ**を Arrow 形式や PostgreSQL のような RDBMS に持たせ、それを検索対象にすることも可能です。むしろ、こうした数値データこそ Agentic RAG が従来 RAG より効く典型例です。
 
+![Router が数値質問を Text-to-SQL・DuckDB 経由で PostgreSQL や Arrow/Parquet に、文書質問をベクトル検索に振り分け、結果を統合して回答するフロー図](/blogs/images/agentic-rag-structured-data.png)
+
 ### なぜベクトル検索ではなくクエリなのか
 
 従来 RAG は「テキストを埋め込みベクトルに変換し、意味的類似度で検索する」ことが前提でした。しかし「2026年 Q1 の平均株価」のような質問は、埋め込みの類似度では正確に取得できません。**集計・フィルタ・結合はクエリエンジンに任せる**のが正解です。
