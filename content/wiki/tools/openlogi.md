@@ -49,6 +49,8 @@ Shopify、Amazon、楽天、Yahoo!ショッピングなど主要ECサイトとAP
 ## 関連ページ
 
 - [キュレーション型EC・リテールDX](/blogs/wiki/concepts/curated-ec/) — EC の新しいアプローチ
+- [EC 一元管理（OMS/WMS）](/blogs/wiki/concepts/ec-order-management/) — OMS/WMS と物流アウトソースの役割の違い
+- [LOGILESS](/blogs/wiki/tools/logiless/) — OMS/WMS 一体型（システムで自社/代行倉庫を動かす）との対比
 
 ## ソース記事
 

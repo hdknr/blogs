@@ -2,7 +2,7 @@
 title: "Brownfield リファクタリング"
 description: "改修を重ねた既存コード（brownfield）を、振る舞いを固定してから安全に作り替えるための原則・ワークフロー・パターン。greenfield との対比で捉える。"
 date: 2026-07-03
-lastmod: 2026-07-03
+lastmod: 2026-07-15
 aliases: ["brownfield", "greenfield", "レガシーコード リファクタリング", "特性テスト", "Characterization Test", "Strangler Fig"]
 related_posts:
   - "/posts/2026/07/brownfield-refactoring-django-react/"
@@ -54,6 +54,9 @@ tags: ["refactoring", "brownfield", "テスト", "django", "react"]
 
 ## 関連ページ
 
+- [Ponytail](/blogs/wiki/tools/ponytail/) — 過剰実装を抑える greenfield の武器（brownfield とは適用条件が対）
+- [AI エージェントにリファクタさせる時の完了の定義](/blogs/wiki/concepts/ai-refactor-completion-boundary/) — 「正しさの後退」を指示側の検証境界で防ぐ
+- [Django の on_commit と TestCase](/blogs/wiki/guides/django-on-commit-testcase/) — 共有層を触ると離れた場所で壊れる具体例
 - [AI 開発と保守コスト](/blogs/wiki/concepts/ai-maintenance-cost/) — 保守コスト削減とリファクタリングの関係
 - [Vibe Coding](/blogs/wiki/concepts/vibe-coding/) — AI 主導コーディングのスタイル
 - [pytest でカオスエンジニアリング](/blogs/wiki/guides/pytest-chaos-engineering/) — テストで堅牢性を担保する
