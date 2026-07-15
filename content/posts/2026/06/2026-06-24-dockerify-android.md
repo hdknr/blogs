@@ -38,6 +38,8 @@ egrep -c '(vmx|svm)' /proc/cpuinfo
 
 0以外の数値が表示されればKVM対応です。
 
+> **macOS・Windows は非対応:** KVM は Linux カーネルの機能であり、`/dev/kvm` がコンテナから見えることが前提です。macOS（Docker Desktop・OrbStack など）や Windows では、Docker が内部の Linux VM 上でコンテナを動かす構成のため、そのさらに内側でハードウェア仮想化を使う「ネストされた仮想化」が必要になります。しかし macOS のハイパーバイザ（Virtualization.framework）はこれをゲストへ公開しないため、`/dev/kvm` が現れず、エミュレーターは起動に失敗するか、実用にならないほど低速なソフトウェアエミュレーションに落ちます。**このツールは実質、KVM 対応の Linux ホスト専用**と考えてください（CI では KVM 対応の Linux ランナーを利用します）。
+
 ## セットアップ手順
 
 リポジトリをクローンして、Docker Composeで起動するだけです。
