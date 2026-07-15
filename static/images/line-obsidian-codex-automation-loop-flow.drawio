@@ -1,0 +1,75 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="flow" id="flow1">
+    <mxGraphModel dx="1200" dy="800" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="n1" value="01 LINE&#10;メモ・URLを送る" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f5e3;strokeColor=#27ae60;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n2" value="02 LINE Notes Sync Plugin&#10;Obsidianへ同期" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f5e3;strokeColor=#27ae60;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="320" y="80" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n3" value="03 Obsidian&#10;Markdownで蓄積" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8daef;strokeColor=#8e44ad;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="620" y="80" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n4" value="04 Codex Automation&#10;深掘り・要約を実行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d6eaf8;strokeColor=#2980b9;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="900" y="80" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n5" value="05 HTML&#10;視覚化して保存" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdebd0;strokeColor=#d35400;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="900" y="240" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n6" value="06 Cloudflare Pages&#10;デプロイ (Zero Trust 認証)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdebd0;strokeColor=#d35400;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="620" y="240" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n7" value="07 スマホで確認&#10;生成ページを読む" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf2e9;strokeColor=#e67e22;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="320" y="240" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n8" value="08 ユーザー&#10;気づきをまた送る" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf2e9;strokeColor=#e67e22;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="loop" value="Continuous Input Loop&#10;読んで、気づいて、またメモする" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7f8c8d;dashed=1;fontSize=12;align=center;" vertex="1" parent="1">
+          <mxGeometry x="330" y="150" width="580" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="n1" target="n2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="n2" target="n3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="n3" target="n4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="n4" target="n5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="n6" target="n7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="n7" target="n8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="気づきを次のメモへ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;fontSize=11;" edge="1" parent="1" source="n8" target="n1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="140" y="40" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
