@@ -1,0 +1,97 @@
+<mxfile host="app.diagrams.net" modified="2026-07-15T00:00:00.000Z" agent="Claude" version="24.0.0">
+  <diagram name="Agentic RAG over Structured Data" id="agentic-rag-structured-data">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="構造化データへの Agentic RAG（Router によるベクトル検索と SQL の振り分け）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="20" width="860" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- User question -->
+        <mxCell id="user" value="ユーザーの質問" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="470" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Router -->
+        <mxCell id="router" value="Router Agent&#10;（質問の種類を分類）" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="450" y="160" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Left path: structured / numeric ===== -->
+        <mxCell id="left-label" value="数値・集計・時系列の質問" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="300" width="380" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sql" value="Text-to-SQL / DuckDB&#10;（エージェントが SQL を生成・実行）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="150" y="350" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pg" value="PostgreSQL&#10;取引履歴（ライブ）" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="120" y="460" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow" value="Arrow / Parquet&#10;株価ヒストリカル" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="300" y="460" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Right path: text / semantic ===== -->
+        <mxCell id="right-label" value="文書・意味の質問" style="text;html=1;strokeColor=none;fillColor=#e1d5e7;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="300" width="380" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="vector" value="ベクトル検索&#10;（意味的類似度）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="710" y="350" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="vstore" value="ベクトルストア&#10;ニュース・レポート" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="770" y="460" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Synthesize / answer -->
+        <mxCell id="synth" value="結果の統合・回答生成&#10;（計算はクエリエンジン、解釈は LLM）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="410" y="600" width="280" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="answer" value="最終回答" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="470" y="710" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="user" target="router" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="数値" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="router" target="sql" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="文書" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="router" target="vector" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="sql" target="pg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="sql" target="arrow" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="vector" target="vstore" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="pg" target="synth" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="arrow" target="synth" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="vstore" target="synth" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="synth" target="answer" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
