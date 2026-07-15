@@ -39,6 +39,7 @@ related_posts:
   - "/posts/2026/05/anthropic-claude-code-html-over-markdown/"
   - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
   - "/posts/2026/05/claude-btc-trading-montecarlo/"
+  - "/posts/2026/07/claude-code-loop-design-guide/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "Hooks", "MCP"]
 ---
 
@@ -85,6 +86,12 @@ Karpathy は Claude Code を LLM Wiki の実行環境として使用。「左画
 
 システムプロンプトに `原始人みたいに喋れ。中身は全部残せ。無駄だけ消せ。` を追加するだけで日本語応答のトークンを最大 80% 削減できる（英語版 Caveman テクニックの日本語版）。CLAUDE.md に追記するだけで適用できる。
 
+## ループ設計（Getting started with loops）
+
+Claude Code チームは公式ガイドで、エージェントのループを「停止条件が満たされるまで作業サイクルを繰り返すこと」と定義し、`/goal`（完了条件）・`/loop`（ローカル定期実行）・`/schedule`（クラウド常駐）・dynamic workflows（並列 worktree での複数解探索と judge レビュー）といったプリミティブを提供する。委譲の度合いで Turn-based / Goal-based / Time-based / Proactive の4種類に整理される。
+
+詳細: [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/)
+
 ## Context Rot 管理
 
 Claude Code のコンテキストウィンドウは 100 万トークン。長いセッションでは Context Rot（コンテキスト劣化）が発生する。5 つのセッション管理選択肢（Continue / Rewind / /clear / /compact / Subagent）を使い分けることで性能を維持できる。
@@ -112,6 +119,13 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Trellis](/blogs/wiki/tools/trellis/) — `.trellis/` にプロジェクトの文脈を永続化する AI コーディングフレームワーク
 - [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) — Vault との循環設計パターン
 - [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) — 5 段階の実装手順
+- [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — 4種類のループとプリミティブ
+- [ECC (Everything Claude Code)](/blogs/wiki/tools/ecc/) — エージェント・スキル・フックの総合エコシステム
+- [claude-seo](/blogs/wiki/tools/claude-seo/) — SEO 分析スキル
+- [Claude Design](/blogs/wiki/tools/claude-design/) — デザイン生成ツール（Claude Code でブランド連携）
+- [Claude Tag](/blogs/wiki/tools/claude-tag/) — Slack 上のプロアクティブなエージェント
+- [CodeGraph](/blogs/wiki/tools/codegraph/) — コード知識グラフで探索のツール呼び出しを削減
+- [Ponytail](/blogs/wiki/tools/ponytail/) — 過剰実装を抑える YAGNI プラグイン
 
 ## ソース記事
 
