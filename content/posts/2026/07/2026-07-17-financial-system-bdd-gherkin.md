@@ -109,7 +109,23 @@ end
 
 - **[`gherkin2mkdocs`](https://github.com/mohamedaittaleb/gherkin2mkdocs)** — `.feature` を `docs/` 配下の `.md` に変換し、CI で MkDocs サイトを生成するビルド型。テスト結果まではひも付けず、**仕様の可読化に振り切った**シンプルな構成です。
 
-「今この仕様が通っている証拠」を監査で求められる金融の文脈では前者、まず仕様の共有から始めるなら後者、という使い分けになります。いずれも仕様書・テスト・公開ドキュメントを 1 つの `.feature` に一本化できる点が本質です。
+- **`pymdownx.snippets`（PyMdown Extensions）** — 専用プラグインも変換ステップも要らない、最も軽量な方法。Material for MkDocs にバンドルされている拡張で、`--8<--` 記法を使ってコードブロックに `.feature` の中身を**そのまま差し込む**だけです。ビルド時に元ファイルが読み込まれるため、仕様書の実体は常に 1 つの `.feature` に保てます。
+
+  ```yaml
+  # mkdocs.yml
+  markdown_extensions:
+    - pymdownx.snippets
+    - pymdownx.superfences
+  ```
+
+  ````markdown
+  <!-- docs 内の .md に記述。gherkin ハイライトで .feature を埋め込む -->
+  ```gherkin
+  --8<-- "features/account_withdrawal.feature"
+  ```
+  ````
+
+「今この仕様が通っている証拠」を監査で求められる金融の文脈では `mkdocs-gherkin-plugin`、まず仕様を読める形で公開したいだけなら `gherkin2mkdocs` か `pymdownx.snippets`、という使い分けになります。いずれも仕様書・テスト・公開ドキュメントを 1 つの `.feature` に一本化できる点が本質です。
 
 ### 膨大な「計算パターン（マトリクス）」を網羅できる
 
