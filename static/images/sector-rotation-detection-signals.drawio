@@ -1,0 +1,40 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="detection-signals" id="detection-signals-1">
+    <mxGraphModel dx="1200" dy="760" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="セクターローテーションを検知する4つの層（先行 → 遅行）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#1a1a1a;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="600" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" value="① マクロ先行変数&#10;&#10;長期金利↑&#10;イールドカーブの&#10;スティープ化&#10;&#10;（循環の上流）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0fd;strokeColor=#2f6fc0;fontSize=12;fontColor=#12345b;align=center;verticalAlign=middle;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="200" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" value="② 相対力（RS比）の転換&#10;&#10;銀行株指数 ÷ 半導体株指数&#10;の比がトレンド転換&#10;&#10;（循環の本体）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f3e6;strokeColor=#27803a;fontSize=12;fontColor=#12401d;align=center;verticalAlign=middle;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="270" y="120" width="200" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="b3" value="③ 出来高の裏付け&#10;&#10;買われる側は大商いで上昇&#10;売られる側は投げ売り&#10;&#10;（本物度の確認）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4d6;strokeColor=#d39e00;fontSize=12;fontColor=#6b5200;align=center;verticalAlign=middle;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="200" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="b4" value="④ ブレッドス・信用残&#10;&#10;業種別騰落率で金融が上位&#10;信用買いの一極集中は&#10;「終盤」のサイン&#10;&#10;（確認・遅行）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde7e7;strokeColor=#c0392b;fontSize=12;fontColor=#5b1a12;align=center;verticalAlign=middle;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="730" y="120" width="200" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2.5;" edge="1" parent="1" source="b1" target="b2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2.5;" edge="1" parent="1" source="b2" target="b3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2.5;" edge="1" parent="1" source="b3" target="b4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tl" value="先行（先回りに使う）　←　　　時間軸　　　→　遅行（確認・乗り遅れやすい）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=13;fontStyle=2;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="120" y="360" width="760" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="※ ①→④ の順で確度は上がるが、遅くなる。①②で仮説、③④で確認するのが実務的" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=12;fontColor=#777777;" vertex="1" parent="1">
+          <mxGeometry x="120" y="400" width="760" height="24" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
