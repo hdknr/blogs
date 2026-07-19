@@ -64,6 +64,41 @@ Seeed Studio が手がける **Wio シリーズ** は、IoT に特化した開�
 
 Wi-Fi の届かない屋外や、電波環境の限られた場所でのセンサー計測では、通信モジュールが最初から載っている Wio シリーズが扱いやすい。
 
+## セルラー以外の選択肢：スマホ中継によるクラウドソース測位
+
+Wio シリーズは「基板自身が LTE で通信する」方式だが、位置情報の追跡に限れば、**LTE も GPS も積まずに、通りすがりの他人のスマホに位置を中継させる**という選択肢がある。Apple の AirTag と同じ「**クラウドソース測位（crowdsourced / offline finding）**」と呼ばれる仕組みだ。
+
+### 仕組み
+
+タグが BLE（Bluetooth Low Energy）ビーコンを発信し、たまたま近くにいた他人のスマホがそれを拾って、匿名・エンドツーエンド暗号化で位置をクラウドへ報告する。持ち主だけが地図で位置を確認できる。**タグ側にセルラーも GPS も不要**なのが最大の特徴だ。この中継役を担う巨大なネットワークが 2 つある。
+
+| ネットワーク | 中継する端末 | 規模 | サードパーティ対応 |
+| --- | --- | --- | --- |
+| Apple **「探す」(Find My)** | iPhone / iPad / Mac | 数億台 | MFi の [Find My network accessory program](https://developer.apple.com/find-my/)（"Works with Apple Find My" バッジ） |
+| Google **Find My Device / Find Hub** | Android 9+ 端末 | 10億台以上（[2024年4月開始](https://9to5google.com/2024/04/08/find-my-device-network-launch/)） | SDK / 対応チップで実装可 |
+
+### ESP32 で自作できる
+
+面白いのは、この記事で扱った **ESP32 がそのままタグのハードウェアになる**点だ。
+
+- **[OpenHaystack](https://github.com/seemoo-lab/openhaystack)**（TU Darmstadt の研究プロジェクト）：ESP32 / nRF51822 に専用ファームウェアを書き込むと、Apple「探す」ネットワークに乗る AirTag 互換タグが作れる。近くの iPhone が位置を上げてくれるため、**セルラー圏外でも追跡できる**。
+- **[macless-haystack](https://github.com/dchristl/macless-haystack)**（OpenHaystack の後継フォーク）：Mac が不要で、ESP32 / nRF5x なら **1 個あたり $5 以下**。バックエンドは Docker（Raspberry Pi でも可）で動き、Android / PC / Home Assistant からも位置を確認できる。
+
+量産・製品化する場合は、Nordic Semiconductor や Renesas が **Apple Find My と Google Find My Device の両対応 BLE SoC + SDK** を提供しているので、そちらを使うのが現実的だ。
+
+### Wio(LTE) 方式との使い分け
+
+| | Wio(LTE)＝セルラー直結 | AirTag方式＝スマホ中継 |
+| --- | --- | --- |
+| 消費電力・コスト | SIM + 通信料、電力も必要 | 超低消費電力、通信料ゼロ |
+| 位置の更新 | **リアルタイム**・任意タイミング | **人（スマホ）が通ったときだけ** |
+| 圏外・無人地帯 | 電波があれば取得可 | 人がいない山奥・農地では**ほぼ取れない** |
+| 送れるデータ | センサー値など任意 | 基本的に**位置情報のみ** |
+
+つまり「人通りのある場所で、モノや資産の紛失・置き忘れを追う」用途なら AirTag 方式が圧倒的に低コスト。一方で「無人の農地の温湿度をリアルタイムに送る」ような**任意のセンサーデータや、人がいない場所の計測は Wio(LTE) の領域**になる。位置情報だけなら中継、センサーデータも送るならセルラー、という切り分けだ。
+
+> ⚠️ Apple / Google は現在、見知らぬタグが付いて回っていると**ストーカー対策として警告を出す**仕組みを相互に導入している。自作タグでこの検知を回避するような使い方は避けるべきで、正規の "Works with Find My" 準拠での実装が推奨される。
+
 ## 具体的な用途例で見る使い分け
 
 「試作向き／量産向き」という抽象的な軸だけではイメージしにくいので、実際に各基板でどんなソリューションが作られているのか、代表的な事例を見てみよう。
