@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="subsidy-map" name="Maintenance Subsidy Map">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="680" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="保全高度化ラダー × 補助金制度 対応マップ（2026年時点）" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="280" y="15" width="560" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Ladder level labels (L5 top .. L1 bottom) -->
+        <mxCell id="lbl-l5" value="L5 エネルギー最適化（省エネ/BEMS）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl-l4" value="L4 予知保全（PdM）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="135" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl-l3" value="L3 状態基準保全（CBM）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl-l2" value="L2 点検の省力化（TBM遠隔化）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="265" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl-l1" value="L1 遠隔見える化（事後保全の高速化）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="330" width="200" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Subsidy span bars -->
+        <mxCell id="bar-shoryoku" value="中小企業&#xa;省力化投資補助金&#xa;（一般型/カタログ）&#xa;&#xa;最大750万〜1億円&#xa;補助率 最大2/3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e8d0;strokeColor=#5a9e5a;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="260" y="135" width="180" height="250" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="bar-it" value="デジタル化・AI導入補助金&#xa;（旧 IT導入補助金）&#xa;&#xa;稼働モニタリング&#xa;・センサー導入が対象&#xa;最大450万円程度" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cfe2f3;strokeColor=#4a86c8;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="460" y="265" width="180" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="bar-mono" value="ものづくり補助金&#xa;（→後継制度へ移行）&#xa;&#xa;革新的な予知保全&#xa;・CBM 設備投資" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b3;strokeColor=#d79b00;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="660" y="135" width="180" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="bar-shoene" value="省エネ・非化石&#xa;転換補助金（SII）&#xa;&#xa;BEMS/EMS・高効率設備&#xa;省エネ計画(2年/2%)要件" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4cccc;strokeColor=#c0504d;fontSize=11;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="860" y="70" width="220" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Column header note -->
+        <mxCell id="hdr" value="↑ 各バーは、その補助金がカバーしやすい保全レイヤの範囲を示す（民間・中小企業向け）" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="260" y="45" width="700" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Municipal band -->
+        <mxCell id="band-local" value="自治体レベル ── 東京都「DX推進助成金」/「躍進的事業推進のための設備投資支援事業」、区市町村の独自 IT/設備補助（IoT・AI・ロボット導入が対象）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="410" width="1040" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Public infra band -->
+        <mxCell id="band-infra" value="公共施設側（発注者＝自治体） ── 国交省「インフラ長寿命化計画」で事後保全→予防保全へ転換、地方公共団体へ技術的・財政的支援、センサー/ロボット/非破壊検査の活用。地方債（公共施設等適正管理推進事業債）も併存" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="475" width="1040" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Caveat -->
+        <mxCell id="caveat" value="※ 制度は年度・公募回で要件が変動。「設備保全専用」の補助金は少なく、省力化・DX・省エネのいずれかの枠に『設備保全の IoT 化』を当てはめて申請するのが定石。" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="40" y="545" width="1040" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
