@@ -165,5 +165,5 @@ Claude Code を使って OpenClaw 用のカスタムスキルを開発するこ�
 
 - [Managing OpenClaw with Claude Code](https://trilogyai.substack.com/p/managing-openclaw-with-claude-code)
 - [openclaw-claude-code-skill (GitHub)](https://github.com/Enderfga/openclaw-claude-code-skill)
-- [everything-claude-code: The OpenClaw Guide](https://github.com/affaan-m/everything-claude-code/blob/main/the-openclaw-guide.md)
+- [everything-claude-code: The OpenClaw Guide](https://github.com/affaan-m/ECC/blob/main/docs/ja-JP/the-openclaw-guide.md)
 - [OpenClaw vs Claude Code (DataCamp)](https://www.datacamp.com/blog/openclaw-vs-claude-code)

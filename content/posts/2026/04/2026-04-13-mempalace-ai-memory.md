@@ -76,7 +76,7 @@ MemPalace は以下のスコアを公表した。
 
 **96.6% スコアの実態**
 
-GitHub Issue [#214](https://github.com/milla-jovovich/mempalace/issues/214) で指摘された通り、96.6% のスコアは `collection.add()` + `collection.query()` という ChromaDB のデフォルト埋め込み（all-MiniLM-L6-v2）による Recall@5 の数値であり、MemPalace の特徴である宮殿構造（Wing、Room など）は一切関与していない。つまり、ChromaDB 単体のベクトル検索性能を測定した結果といえる。
+GitHub Issue [#214](https://github.com/MemPalace/mempalace/issues/214) で指摘された通り、96.6% のスコアは `collection.add()` + `collection.query()` という ChromaDB のデフォルト埋め込み（all-MiniLM-L6-v2）による Recall@5 の数値であり、MemPalace の特徴である宮殿構造（Wing、Room など）は一切関与していない。つまり、ChromaDB 単体のベクトル検索性能を測定した結果といえる。
 
 **100% スコアの問題**
 
