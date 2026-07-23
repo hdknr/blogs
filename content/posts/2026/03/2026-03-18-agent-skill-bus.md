@@ -10,7 +10,7 @@ tags: ["agent", "llm", "claude-code", "github"]
 description: "42体のAIエージェント運用から生まれたOSS agent-skill-bus の紹介。スキルの劣化検知、DAGベースのタスクキュー、自己改善ループの3モジュール構成で、エージェントスキルの健全性を自動管理する。"
 ---
 
-AIエージェントを本番運用していると、スキルが静かに壊れていく問題に直面する。[agent-skill-bus](https://github.com/ShunsukeHayashi/agent-skill-bus) は、エージェントスキルのヘルスモニタリング・自己改善・依存管理を担うフレームワーク非依存の運用基盤だ。
+AIエージェントを本番運用していると、スキルが静かに壊れていく問題に直面する。agent-skill-bus は、エージェントスキルのヘルスモニタリング・自己改善・依存管理を担うフレームワーク非依存の運用基盤だ。
 
 ## 背景: 42体のAIエージェント運用で見えた課題
 
@@ -102,5 +102,5 @@ AIエージェントの運用が長期化するほど、スキルの劣化やタ
 
 まずは `npx agent-skill-bus init` で試してみてほしい。
 
-- **リポジトリ**: [ShunsukeHayashi/agent-skill-bus](https://github.com/ShunsukeHayashi/agent-skill-bus)
+- **リポジトリ**: ShunsukeHayashi/agent-skill-bus
 - **ライセンス**: MIT

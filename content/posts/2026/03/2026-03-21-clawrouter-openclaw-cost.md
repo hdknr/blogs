@@ -63,7 +63,7 @@ cd ClawRouter
 ClawRouter 以外にも、OpenClaw の API コストを最適化するツールが登場しています:
 
 - **[ibl.ai OpenClaw Router](https://github.com/iblai/iblai-openclaw-router)** — 最大70%のコスト削減を謳うインテリジェントモデルルーター
-- **[ClawRoute](https://github.com/atharv404/ClawRoute)** — 60〜90%のコスト削減を目指す別実装
+- **ClawRoute** — 60〜90%のコスト削減を目指す別実装
 
 LLM ルーティングは、OpenClaw エコシステムにおける重要なインフラレイヤーとして注目を集めています。
 

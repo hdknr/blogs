@@ -159,7 +159,7 @@ Qwen3.5-27B の Apple Silicon 上での公式ベンチマークは 2026年4月�
 - [Gemma 4 公式ブログ](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/)
 - [Gemma 4 — Google DeepMind](https://deepmind.google/models/gemma/gemma-4/)
 - [Qwen3.5-27B — Hugging Face](https://huggingface.co/Qwen/Qwen3.5-27B)
-- [Qwen 3.5 vs Gemma 4 ベンチマーク比較（Maniac）](https://www.maniac.ai/blog/qwen-3-5-vs-gemma-4-benchmarks-by-size)
+- Qwen 3.5 vs Gemma 4 ベンチマーク比較（Maniac）
 - [Gemma 4 31B vs Qwen3.5-27B（Artificial Analysis）](https://artificialanalysis.ai/models/comparisons/gemma-4-31b-vs-qwen3-5-27b)
 - [Ollama — gemma4:31b](https://ollama.com/library/gemma4:31b)
 - [Ollama — qwen3.5:27b](https://ollama.com/library/qwen3.5:27b)
