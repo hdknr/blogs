@@ -18,9 +18,11 @@ remap = ["https://hdknr.github.io/ http://127.0.0.1:8099/"]
 
 # Accept soft-block / partial-content / transient codes as reachable so the
 # report is dominated by real dead links (404/410), not bot walls.
-#   202 Accepted, 401/405/406/415 = non-browser client rejected by anti-bot /
-#   auth walls though the page is reachable in a browser. 404 and 410 are NOT
-#   accepted — those are genuine dead links we want reported.
+# 202 (Accepted), 401 (auth wall), 405 (method not allowed), 406 (not
+# acceptable) and 415 (unsupported media type) are returned by some hosts to
+# non-browser clients even though the page renders fine in a browser; treat
+# them as reachable too. 410 (Gone) is deliberately NOT accepted — it signals
+# a genuinely removed page.
 accept = ["200", "202", "206", "401", "403", "405", "406", "415", "429", "500", "503"]
 
 max_retries = 2
@@ -55,16 +57,16 @@ exclude = [
   "^https?://zhuanlan\\.zhihu\\.com/",
   "^https?://(developers|access)\\.redhat\\.com/",
   "^https?://app\\.getzep\\.com/",
-  # X/Twitter: returns 404 to bots for valid tweets (SPA).
-  "^https?://(x|twitter)\\.com/",
-  # Hosts that return HTTP/2 protocol errors to lychee (reachable in browser).
+  # Hosts whose servers mishandle lychee's HTTP/2 client ("HTTP/2 protocol
+  # error") but load fine in a browser. Verified reachable manually.
   "^https?://(www\\.)?washingtonpost\\.com/",
   "^https?://(www\\.)?mckinsey\\.com/",
   "^https?://(www\\.)?businesswire\\.com/",
+  "^https?://(www\\.)?tricentis\\.com/",
+  "^https?://(www\\.)?printables\\.com/",
+  "^https?://(www\\.)?webflow\\.com/",
   "^https?://(www\\.)?adobe\\.com/",
   "^https?://(www\\.)?polymarket\\.com/",
-  "^https?://(www\\.)?printables\\.com/",
-  "^https?://(www\\.)?tricentis\\.com/",
   "^https?://(www\\.)?coveo\\.com/",
   "^https?://(www\\.)?ainvest\\.com/",
   # Hosts with expired / self-signed / untrusted certs (reachable in browser).
@@ -75,4 +77,6 @@ exclude = [
   "^https?://10000\\.co\\.jp/",
   "^https?://pgjones\\.dev/",
   "^https?://(www\\.)?agentsworkshop\\.ai/",
+  # X/Twitter: returns 404 to bots for valid tweets (SPA).
+  "^https?://(x|twitter)\\.com/",
 ]

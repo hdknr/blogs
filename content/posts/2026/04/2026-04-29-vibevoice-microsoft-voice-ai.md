@@ -39,7 +39,7 @@ LLM（Qwen2.5 1.5B ベース）が文脈・対話の流れを理解し、Diffusi
 - **vLLM による高速推論**: 通常の Transformers 経由に加えて vLLM 推論にも対応
 - **Hugging Face Transformers 統合**: 2026-03-06 のリリースで `transformers` ライブラリから直接利用可能に
 
-オンラインの [Playground](https://aka.ms/vibevoice-asr) で試せる。
+オンラインの Playground で試せる。
 
 ### 2. VibeVoice-Realtime-0.5B — 300ms 起動のリアルタイム音声合成
 
@@ -398,7 +398,7 @@ VibeVoice の **2026-04-29 時点で利用可能なもの**:
 
 - [microsoft/VibeVoice (GitHub)](https://github.com/microsoft/VibeVoice)
 - [VibeVoice Project Page](https://microsoft.github.io/VibeVoice)
-- [VibeVoice-ASR Playground](https://aka.ms/vibevoice-asr)
+- VibeVoice-ASR Playground
 - [VibeVoice-Realtime-0.5B Colab](https://colab.research.google.com/github/microsoft/VibeVoice/blob/main/demo/vibevoice_realtime_colab.ipynb)
 - [Hugging Face Collection](https://huggingface.co/collections/microsoft/vibevoice-68a2ef24a875c44be47b034f)
 - [TTS Paper (ICLR 2026 Oral)](https://openreview.net/pdf?id=FihSkzyxdv)
