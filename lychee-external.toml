@@ -18,11 +18,12 @@ remap = ["https://hdknr.github.io/ http://127.0.0.1:8099/"]
 
 # Accept soft-block / partial-content / transient codes as reachable so the
 # report is dominated by real dead links (404/410), not bot walls.
-# 202 (Accepted), 401 (auth wall), 405 (method not allowed) and 406 (not
-# acceptable) are returned by some hosts to non-browser clients even though the
-# page renders fine in a browser; treat them as reachable too. 410 (Gone) is
-# deliberately NOT accepted — it signals a genuinely removed page.
-accept = ["200", "202", "206", "401", "403", "405", "406", "429", "500", "503"]
+# 202 (Accepted), 401 (auth wall), 405 (method not allowed), 406 (not
+# acceptable) and 415 (unsupported media type) are returned by some hosts to
+# non-browser clients even though the page renders fine in a browser; treat
+# them as reachable too. 410 (Gone) is deliberately NOT accepted — it signals
+# a genuinely removed page.
+accept = ["200", "202", "206", "401", "403", "405", "406", "415", "429", "500", "503"]
 
 max_retries = 2
 retry_wait_time = 3
@@ -67,6 +68,15 @@ exclude = [
   "^https?://(www\\.)?adobe\\.com/",
   "^https?://(www\\.)?polymarket\\.com/",
   "^https?://(www\\.)?coveo\\.com/",
+  "^https?://(www\\.)?ainvest\\.com/",
+  # Hosts with expired / self-signed / untrusted certs (reachable in browser).
+  "^https?://pycaret\\.org/",
+  "^https?://agent-tars\\.com/",
+  "^https?://(www\\.)?zeals\\.co\\.jp/",
+  "^https?://(www\\.)?skyarch\\.net/",
+  "^https?://10000\\.co\\.jp/",
+  "^https?://pgjones\\.dev/",
+  "^https?://(www\\.)?agentsworkshop\\.ai/",
   # X/Twitter: returns 404 to bots for valid tweets (SPA).
   "^https?://(x|twitter)\\.com/",
 ]

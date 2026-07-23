@@ -146,9 +146,11 @@ subprocess.run([claude_cmd, "--print", "--permission-mode", "default", "--model"
 
 ## 関連 PR
 
-- [hdknr/trader#313](https://github.com/hdknr/trader/pull/313) — 期限切れ CLAUDE_CODE_OAUTH_TOKEN 削除
-- [hdknr/trader#314](https://github.com/hdknr/trader/pull/314) — HOME 明示（効果なし）
-- [hdknr/trader#315](https://github.com/hdknr/trader/pull/315) — keychain から動的取得（ランナーからアクセス不可）
-- [hdknr/trader#316](https://github.com/hdknr/trader/pull/316) — ファイルベーストークン取得
-- [hdknr/trader#317](https://github.com/hdknr/trader/pull/317) — 全エージェント Sonnet 化（暫定）
-- [hdknr/trader#318](https://github.com/hdknr/trader/pull/318) — `--permission-mode default` で Opus 復活（最終解決）
+以下は private リポジトリ `hdknr/trader` 内の PR のため外部からは参照できません（作業記録として掲載）。
+
+- `hdknr/trader#313` — 期限切れ CLAUDE_CODE_OAUTH_TOKEN 削除
+- `hdknr/trader#314` — HOME 明示（効果なし）
+- `hdknr/trader#315` — keychain から動的取得（ランナーからアクセス不可）
+- `hdknr/trader#316` — ファイルベーストークン取得
+- `hdknr/trader#317` — 全エージェント Sonnet 化（暫定）
+- `hdknr/trader#318` — `--permission-mode default` で Opus 復活（最終解決）
