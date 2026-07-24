@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="record-a-skill-flow" name="Record a Skill Flow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="640" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="Record a Skill：デモから再利用可能な Skill へ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="340" y="20" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 1: Record -->
+        <mxCell id="step1" value="&#x1f534; 録画開始&#xa;&#xa;デスクトップアプリの&#xa;+ メニューから&#xa;&quot;Record a skill&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;verticalAlign=middle;align=center;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="180" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 2: Demonstrate + Narrate -->
+        <mxCell id="step2" value="&#x1f5e3;&#xfe0f; 作業＋ナレーション&#xa;&#xa;いつも通り作業しながら&#xa;・何を確認しているか&#xa;・なぜこの順番か&#xa;・例外ルール&#xa;を声で説明" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;align=center;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="290" y="120" width="200" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 3: Claude synthesizes -->
+        <mxCell id="step3" value="&#x1f9e0; Claude が合成&#xa;&#xa;画面操作＋意図の説明を&#xa;手順・ルール・例外として&#xa;構造化し、Agent Skill&#xa;形式にまとめる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;verticalAlign=middle;align=center;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="560" y="120" width="200" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 4: Reusable Skill -->
+        <mxCell id="step4" value="&#x1f9e9; 再利用可能な Skill&#xa;&#xa;保存され、次回以降は&#xa;指示なしで呼び出せる&#xa;（Team プランなら&#xa;組織内で共有）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;align=center;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="830" y="120" width="200" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 5: Verify loop -->
+        <mxCell id="step5" value="&#x2705; 別の入力で検証&#xa;&#xa;新しいファイル・日付・顧客で試し、&#xa;「たまたまの詳細」ではなく&#xa;背後のルールを学べているか確認する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;verticalAlign=middle;align=center;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="560" y="340" width="470" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows -->
+        <mxCell id="a12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a23" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="step2" target="step3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a34" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="step3" target="step4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a45" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="step4" target="step5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a53" value="修正して再録画" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;strokeWidth=2;endArrow=block;dashed=1;fontSize=11;fontColor=#7c4daa;exitX=0;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="step5" target="step3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
