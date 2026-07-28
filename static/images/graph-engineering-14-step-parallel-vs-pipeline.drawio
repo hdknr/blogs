@@ -1,0 +1,149 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="parallel-vs-pipeline" name="parallel vs pipeline">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1080" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="parallel()（バリア）と pipeline()（バリアなし）の待ち時間の差" style="text;html=1;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="18" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== TOP: parallel with barrier ===== -->
+        <mxCell id="p-group" value="parallel() を段ごとに挟む：各段が最も遅いノードを待つ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="65" width="1000" height="218" as="geometry"/>
+        </mxCell>
+
+        <!-- stage labels -->
+        <mxCell id="p-s1" value="Stage 1：調査" style="text;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="150" y="95" width="240" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-s2" value="Stage 2：検証" style="text;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="400" y="95" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- item rows -->
+        <mxCell id="p-lblA" value="項目 A" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="65" y="125" width="60" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-lblB" value="項目 B" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="65" y="163" width="60" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-lblC" value="項目 C（遅い）" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="65" y="201" width="90" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p-a1" value="A1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="160" y="125" width="70" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-b1" value="B1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="160" y="163" width="110" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-c1" value="C1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="160" y="201" width="230" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- idle bars -->
+        <mxCell id="p-a1i" value="待ち" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#cccccc;fontSize=10;fontColor=#999999;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="125" width="160" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-b1i" value="待ち" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#cccccc;fontSize=10;fontColor=#999999;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="163" width="120" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- barrier line -->
+        <mxCell id="p-bar" value="" style="endArrow=none;html=1;strokeColor=#b85450;strokeWidth=3;dashed=1;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="118" as="sourcePoint"/>
+            <mxPoint x="400" y="235" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-barlbl" value="バリア" style="text;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="370" y="240" width="60" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p-a2" value="A2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="410" y="125" width="80" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-b2" value="B2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="410" y="163" width="80" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-c2" value="C2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="410" y="201" width="80" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p-total" value="全体の所要時間" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="253" width="130" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="p-totalbar" value="" style="endArrow=blockThin;startArrow=blockThin;html=1;strokeColor=#b85450;strokeWidth=2;endFill=1;startFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="266" as="sourcePoint"/>
+            <mxPoint x="490" y="266" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p-note" value="A も B も、遅い C が終わるまで&#10;次の段に進めない。この空白が&#10;実測できる無駄になる。" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="660" y="135" width="340" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== BOTTOM: pipeline ===== -->
+        <mxCell id="q-group" value="pipeline()：各項目が独立に全段を流れる（バリアなし）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="1000" height="205" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-lblA" value="項目 A" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="65" y="345" width="60" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="q-lblB" value="項目 B" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="65" y="393" width="60" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="q-lblC" value="項目 C（遅い）" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="65" y="441" width="90" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-a1" value="A1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="160" y="345" width="70" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="q-a2" value="A2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="230" y="345" width="80" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="q-adone" value="A 完了" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="315" y="345" width="60" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-b1" value="B1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="160" y="393" width="110" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="q-b2" value="B2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="270" y="393" width="80" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="q-bdone" value="B 完了" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="355" y="393" width="60" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-c1" value="C1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="160" y="441" width="230" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="q-c2" value="C2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="390" y="441" width="80" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-total" value="全体の所要時間" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="467" width="130" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="q-totalbar" value="" style="endArrow=blockThin;startArrow=blockThin;html=1;strokeColor=#82b366;strokeWidth=2;endFill=1;startFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="480" as="sourcePoint"/>
+            <mxPoint x="470" y="480" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="q-note" value="全体の所要時間は「最も遅い 1 項目が&#10;全段を通り抜ける時間」。速い項目は&#10;先に抜けて待たない。" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="660" y="385" width="340" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-time" value="→ 時間" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#999999;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="636" y="470" width="70" height="20" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
