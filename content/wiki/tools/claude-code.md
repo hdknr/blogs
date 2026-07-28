@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-05-18
+lastmod: 2026-07-28
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -40,6 +40,8 @@ related_posts:
   - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
   - "/posts/2026/05/claude-btc-trading-montecarlo/"
   - "/posts/2026/07/claude-code-loop-design-guide/"
+  - "/posts/2026/07/graph-engineering-14-step-roadmap/"
+  - "/posts/2026/07/ai-agent-rate-limit-circuit-breaker/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "Hooks", "MCP"]
 ---
 
@@ -92,6 +94,16 @@ Claude Code チームは公式ガイドで、エージェントのループを�
 
 詳細: [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/)
 
+## 動的ワークフロー（Dynamic Workflows）
+
+サブエージェントのフリートをグラフとして走らせる仕組み。Claude が素の JavaScript でオーケストレーションスクリプトを書き、それがサブエージェント群を起動する。**調整レイヤ自体はコードなのでモデルのトークンを消費しない**（ただし実行全体のトークンは会話より増える）。
+
+API 面は 3 つ。`agent()` がノード 1 個（`schema` に JSON Schema を渡すとツール呼び出し層で検証され、不一致ならリトライされる）、`parallel()` がバリア付きの fan out（例外を投げた thunk は `null` に解決されるので `.filter(Boolean)` が封じ込めになる）、`pipeline()` がバリアなしで要素ごとに全段を独立に流す形。並行数は最大 16（CPU コア数依存）、1 実行あたりのエージェント総数は 1,000 が上限。`isolation: 'worktree'` でノードを隔離でき、`model` オプションでノード単位にモデルを段階化できる。
+
+入口はプロンプトに `workflow` の語を入れる／保存済みワークフローを実行する（`/deep-research` は同梱の実在グラフ）／`/effort ultracode` でセッション全体をワークフロー計画モードにする、の 3 つ。うまくいったものは `.claude/workflows/` に保存するとスラッシュコマンドとして再利用できる。
+
+詳細: [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/)
+
 ## Context Rot 管理
 
 Claude Code のコンテキストウィンドウは 100 万トークン。長いセッションでは Context Rot（コンテキスト劣化）が発生する。5 つのセッション管理選択肢（Continue / Rewind / /clear / /compact / Subagent）を使い分けることで性能を維持できる。
@@ -125,6 +137,9 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude Design](/blogs/wiki/tools/claude-design/) — デザイン生成ツール（Claude Code でブランド連携）
 - [Claude Tag](/blogs/wiki/tools/claude-tag/) — Slack 上のプロアクティブなエージェント
 - [CodeGraph](/blogs/wiki/tools/codegraph/) — コード知識グラフで探索のツール呼び出しを削減
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 動的ワークフローでグラフを組む設計論
+- [外部境界の耐障害性とサーキットブレーカー](/blogs/wiki/concepts/circuit-breaker/) — `claude --print` のレートリミット対策
+- [Claude Cowork と Record a skill](/blogs/wiki/tools/claude-cowork/) — 作業録画から Skill を生成するデスクトップ製品
 - [Ponytail](/blogs/wiki/tools/ponytail/) — 過剰実装を抑える YAGNI プラグイン
 
 ## ソース記事

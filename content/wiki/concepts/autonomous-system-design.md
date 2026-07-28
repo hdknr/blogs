@@ -2,11 +2,13 @@
 title: "自律改善システムの設計と盲点"
 description: "目標駆動で自律的に改善するシステムを Claude Code で作るときの設計原則と、なぜ自分の欠陥に気づけないのか。データ鮮度・観測と制御の分離・サバイバーシップバイアス・安全ゲート・メタ盲点を実インシデントから整理する"
 date: 2026-07-15
-lastmod: 2026-07-15
+lastmod: 2026-07-28
 aliases: ["自律システム", "自律改善", "autonomous system", "GIGO", "鮮度ガード", "メタ盲点"]
 related_posts:
   - "/posts/2026/07/autonomous-improvement-best-practices/"
   - "/posts/2026/07/autonomous-system-blind-spots/"
+  - "/posts/2026/07/already-swarm-autonomous-trader/"
+  - "/posts/2026/07/ai-agent-rate-limit-circuit-breaker/"
 tags: ["claude-code", "agent", "自律システム", "自己改善", "設計原則"]
 ---
 
@@ -41,15 +43,28 @@ tags: ["claude-code", "agent", "自律システム", "自己改善", "設計原�
 
 > 一言で: **速く作れることは、盲点も速く量産する。** 効くのは派手な自律機能でなく「境界で鮮度を見る/ソース乖離を監視する/ループを閉じる/避けたことを測る/計器を正直に保つ/人間の問いを織り込む」という地味な規律。
 
+### 外部境界の冷却機構
+
+上の原則 2（境界での能動チェック）の続きにあたる論点として、**外部 API のレートリミットに対する冷却機構**がある。個々のコンポーネントが degrade-first に書かれていても、待たずに retry すると並列ワーカーが同時に壁に当たり系全体で雪崩れる。指数バックオフとサーキットブレーカーの設計、および「制御機能は壊れるより no-op で失敗する」という検証の話は [外部境界の耐障害性とサーキットブレーカー](/blogs/wiki/concepts/circuit-breaker/) に分けてある。
+
+### 段階モデルによる自己診断
+
+自律システムの現在地は「プロンプト → ループ → スワーム → グラフ」の 4 段階モデルで名指しできる。ただし段階を**ツール名（名詞）ではなく性質**——並列がネイティブか、失敗がノードに限定されるか——で判定しないと、すでに持っているものを別の名前で買い直すことになる。詳細は [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) を参照。
+
 ## 関連ページ
 
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — ハーネス自体を AI が改善するパターン
 - [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — Proactive ループの4分類
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 4段階モデルと協調構造の宣言的設計
+- [外部境界の耐障害性とサーキットブレーカー](/blogs/wiki/concepts/circuit-breaker/) — レートリミット対策と no-op 検証
 - [自動テスト修正パイプライン](/blogs/wiki/guides/auto-test-fix-pipeline/) — 安全ゲート付き自律修正の実装例
 - [AI エージェントにリファクタさせる時の完了の定義](/blogs/wiki/concepts/ai-refactor-completion-boundary/) — 検証境界の引き方
+- [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/approval-gate-design/) — 自己判断を構造で禁じる
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — CLAUDE.md・フックによる規約注入
 
 ## ソース記事
 
 - [目標駆動・自律改善システムの構築ベストプラクティス](/blogs/posts/2026/07/autonomous-improvement-best-practices/) — 2026-07-01（実践編）
 - [自律システムはなぜ自分の欠陥に気づけないのか](/blogs/posts/2026/07/autonomous-system-blind-spots/) — 2026-07-01（インシデント編）
+- [すでにスワームだった —— 自律トレーディングシステムに「スワーム導入」が不要な理由](/blogs/posts/2026/07/already-swarm-autonomous-trader/) — 2026-07-24（自己診断編）
+- [AI エージェントのレートリミット対策 — 指数バックオフとサーキットブレーカー](/blogs/posts/2026/07/ai-agent-rate-limit-circuit-breaker/) — 2026-07-28（外部境界編）
