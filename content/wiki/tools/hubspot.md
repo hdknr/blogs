@@ -2,11 +2,12 @@
 title: "HubSpot"
 description: "インバウンドマーケティングを軸とした CRM・MA・営業統合プラットフォーム"
 date: 2026-04-28
-lastmod: 2026-04-28
+lastmod: 2026-07-28
 aliases: ["hubspot crm", "hubspot pro"]
 related_posts:
   - "/posts/2026/04/hubspot-hscachebuster/"
   - "/posts/2026/04/hubspot-pro-merits/"
+  - "/posts/2026/07/hubspot-eu-email-tracking-consent/"
 tags: ["hubspot", "crm", "ma", "インバウンドマーケティング", "営業"]
 ---
 
@@ -40,11 +41,19 @@ Pro プランは「機能の網羅性」と「価格」のバランス点で、�
 
 CMS Hub のテーマ開発では **`hsCacheBuster`** などの内部キャッシュ制御パラメータが付与される。テンプレート上書きやキャッシュ無効化の挙動把握が、フロント実装のトラブルシュート上重要になる。
 
+## EU/UK 宛メールの注意点
+
+EU/UK のコンタクトにマーケティングメールを送る場合、**HubSpot の機能名と法令が 1 対 1 で対応していない**ため設計を誤りやすい。「送れるか」（ePrivacy 13条）と「開封・クリックを測れるか」（ePrivacy 5条3項）は別問題であり、送信可・トラッキング不可という状態が普通に発生する。
+
+既存コンタクトの同意状態を「一旦リセットして全員に許諾メールを送る」のは最もリスクの高い操作にあたる。詳細は [EU/UK 宛メールのトラッキング同意設計](/blogs/wiki/guides/hubspot-eu-email-consent/) を参照。
+
 ## 関連ページ
 
 - [インバウンドマーケティング](/blogs/wiki/concepts/inbound-marketing/) — HubSpot の根幹思想
+- [EU/UK 宛メールのトラッキング同意設計](/blogs/wiki/guides/hubspot-eu-email-consent/) — GDPR / ePrivacy 対応
 
 ## ソース記事
 
 - [HubSpot Pro プランの実用メリット](/blogs/posts/2026/04/hubspot-pro-merits/) — 2026-04-28
 - [HubSpot CMS の hsCacheBuster](/blogs/posts/2026/04/hubspot-hscachebuster/) — 2026-04-23
+- [HubSpot で EU/UK 宛にメールを送るときの注意点 ── トラッキング同意と製品仕様の実務メモ](/blogs/posts/2026/07/hubspot-eu-email-tracking-consent/) — 2026-07-28

@@ -2,7 +2,7 @@
 title: "ハーネスエンジニアリング"
 description: "AI エージェントの出力品質を保証する設計パターン。検証層・制約層・フィードバック層で構成"
 date: 2026-04-06
-lastmod: 2026-04-29
+lastmod: 2026-07-28
 aliases: ["Harness Engineering"]
 related_posts:
   - "/posts/2026/03/harness-engineering/"
@@ -99,6 +99,9 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — ハーネス自体を AI が改善するパターン
 - [Graphite](/blogs/wiki/tools/graphite/) — AI ファースト開発での PR 管理ツール
 - [RAG](/blogs/wiki/concepts/rag/) — ハーネスとの組み合わせ判断
+- [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — ハーネスが第3層として位置づく全体地図
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — ハーネスの上に積む最上位レイヤー
+- [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — ゲートを仕組みとして強制する実装例
 
 ## ソース記事
 
