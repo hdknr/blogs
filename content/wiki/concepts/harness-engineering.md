@@ -12,6 +12,7 @@ related_posts:
   - "/posts/2026/04/agent-harness-memory-lock-in/"
   - "/posts/2026/04/ai-agent-harness-confusion/"
   - "/posts/2026/04/ai-first-harness-engineering-creao/"
+  - "/posts/2026/07/ai-agent-design-engineering-layers/"
   - "/posts/2026/04/agent-harness-rag-context-size/"
   - "/posts/2026/04/claude-harness-v4-hokage/"
   - "/posts/2026/04/harness-engineering-agent-vs-user-harness/"
@@ -92,6 +93,7 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 
 ## 関連ページ
 
+- [AIエージェント設計レイヤー](/blogs/wiki/concepts/agent-design-layers/) — ハーネスがどのレイヤーを担当するかの地図
 - [AI エージェント](/blogs/wiki/concepts/ai-agent/) — ハーネスで品質保証される対象
 - [エージェントメモリのロックイン](/blogs/wiki/concepts/agent-memory-lock-in/) — ハーネスとメモリの不可分性とロックインリスク
 - [Claude Code](/blogs/wiki/tools/claude-code/) — ハーネスエンジニアリングの主要実装環境

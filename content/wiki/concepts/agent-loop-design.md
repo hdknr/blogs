@@ -6,6 +6,7 @@ lastmod: 2026-07-15
 aliases: ["ループ設計", "agent loop", "エージェントループ", "Getting started with loops"]
 related_posts:
   - "/posts/2026/07/claude-code-loop-design-guide/"
+  - "/posts/2026/07/ai-agent-design-engineering-layers/"
 tags: ["Claude Code", "エージェント", "自動化", "ループ設計", "プロンプトエンジニアリング"]
 ---
 
@@ -39,6 +40,7 @@ Claude Code チームが公開した公式ガイド「Getting started with loops
 
 ## 関連ページ
 
+- [AIエージェント設計レイヤー](/blogs/wiki/concepts/agent-design-layers/) — ループが積み重なりのどこに位置するか
 - [Claude Code](/blogs/wiki/tools/claude-code/) — ループを構成するプリミティブの提供元
 - [自律改善システムの設計](/blogs/wiki/concepts/autonomous-system-design/) — Proactive ループを安全に回す設計原則
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — 「プロンプトを書かない」自己改善ループの先の姿

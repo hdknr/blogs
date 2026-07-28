@@ -8,6 +8,7 @@ related_posts:
   - "/posts/2026/07/graph-engineering-multi-factor-alpha/"
   - "/posts/2026/07/graph-engineering-14-step-roadmap/"
   - "/posts/2026/07/already-swarm-autonomous-trader/"
+  - "/posts/2026/07/ai-agent-design-engineering-layers/"
 tags: ["agent", "グラフエンジニアリング", "マルチエージェント", "claude-code", "ワークフロー"]
 ---
 
@@ -16,6 +17,8 @@ tags: ["agent", "グラフエンジニアリング", "マルチエージェン�
 グラフエンジニアリングとは、複数エージェントの**協調構造を宣言的に一度だけ設計する**実践。ノードがエージェント（判断）、エッジがデータの受け渡しにあたり、「いつ並列に走り、いつ待ち、いつ再試行し、いつエスカレーションするか」をグラフ自体が知っている状態を目指す。
 
 出発点は「AIエージェント運用は **プロンプト → ループ → スワーム → グラフ** の順に進化する」という 4 段階モデル。ただしこのモデルの正しい使い方は**今どこにいるかを名指しすること**であって、段階を「導入すべきツール名」として消費すると、すでに持っているものを別の名前で買い直すことになる。
+
+なお 4 段階モデルは「段階が進むと前の段階が不要になる」とは言っていない。LangChain 自身が「**ループは単純なグラフにすぎず、ループエンジニアリングはグラフの代替ではなくその簡略版である**」と述べており、グラフの各ノードは依然としてループである。この積み重なりの構造は [AIエージェント設計レイヤー](/blogs/wiki/concepts/agent-design-layers/) で整理している。
 
 ## 4 段階モデル
 
@@ -113,6 +116,7 @@ fan out と統合の間にある reduce ステップ（平坦化、重複排除�
 
 ## 関連ページ
 
+- [AIエージェント設計レイヤー](/blogs/wiki/concepts/agent-design-layers/) — グラフを含む 5 レイヤーと横断 7 領域の地図
 - [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — Anthropic が体系化した 5 パターン
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — グラフの土台となる「エージェントが立つ床」
 - [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — 前段の「ループ」段階
