@@ -64,9 +64,15 @@ Anthropic が 2026年4月に公開した、複数 AI エージェントを協調
 
 実際のプロダクションでは複数パターンを組み合わせることも多い。
 
+## グラフとして捉え直す
+
+これら 5 パターンが「誰と誰がどう話すか」の分類だとすると、そこから一歩進んで**協調構造そのものを宣言的に設計する**のが [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) である。ノード（判断）とエッジ（データの受け渡し）に還元すると、Orchestrator-Subagent は「fan out → reduce → 統合」のダイヤモンド、Generator-Verifier は「エッジ上の検証ノード」として表現できる。
+
 ## 関連ページ
 
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/)
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — ノードとエッジによる協調構造の設計
+- [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/orchestrator-coder-split/) — オーケストレーターとコーダーの分業
 - [エージェントメモリのロックイン](/blogs/wiki/concepts/agent-memory-lock-in/)
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/)
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 協調構造を宣言的に設計するスワームの次段階

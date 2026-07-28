@@ -41,16 +41,19 @@ Pro プランは「機能の網羅性」と「価格」のバランス点で、�
 
 CMS Hub のテーマ開発では **`hsCacheBuster`** などの内部キャッシュ制御パラメータが付与される。テンプレート上書きやキャッシュ無効化の挙動把握が、フロント実装のトラブルシュート上重要になる。
 
-## EU/UK 宛メールの注意点
+## EU/UK 宛メールでの制約
 
 EU/UK のコンタクトにマーケティングメールを送る場合、**HubSpot の機能名と法令が 1 対 1 で対応していない**ため設計を誤りやすい。「送れるか」（ePrivacy 13条）と「開封・クリックを測れるか」（ePrivacy 5条3項）は別問題であり、送信可・トラッキング不可という状態が普通に発生する。
+
+製品仕様上の制約も大きい。メールトラッキング（開封ピクセル・計測リンク）は ePrivacy の同意対象になるが、HubSpot 側には**地域別・コンタクト別のトラッキング切替が上位プランにも存在しない**。アカウントレベルの 4 トグルとメール単位の ON/OFF しかなく、しかもメール単位の設定は**送信後に変更できない**。「処理の法的根拠」プロパティーは GDPR 6条・ePrivacy 13条に効くもので、**5条3項（計測の同意）には効かない**点も設計ミスの温床になる。
 
 既存コンタクトの同意状態を「一旦リセットして全員に許諾メールを送る」のは最もリスクの高い操作にあたる。詳細は [EU/UK 宛メールのトラッキング同意設計](/blogs/wiki/guides/hubspot-eu-email-consent/) を参照。
 
 ## 関連ページ
 
 - [インバウンドマーケティング](/blogs/wiki/concepts/inbound-marketing/) — HubSpot の根幹思想
-- [EU/UK 宛メールのトラッキング同意設計](/blogs/wiki/guides/hubspot-eu-email-consent/) — GDPR / ePrivacy 対応
+- [EU/UK 宛メールのトラッキング同意設計](/blogs/wiki/guides/hubspot-eu-email-consent/) — 法令の3層整理と製品仕様
+- [メール認証（SPF/DKIM/DMARC）](/blogs/wiki/concepts/email-authentication/) — 到達性の前提
 
 ## ソース記事
 
