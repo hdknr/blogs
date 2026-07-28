@@ -2,7 +2,7 @@
 title: "マルチエージェント調整パターン"
 description: "複数 AI エージェントを協調させる5つの設計パターン。Anthropic が体系化した Generator-Verifier・Orchestrator-Subagent・Agent Teams・Message Bus・Shared State"
 date: 2026-04-11
-lastmod: 2026-04-16
+lastmod: 2026-07-28
 aliases: ["マルチエージェントパターン", "multi-agent-coordination"]
 related_posts:
   - "/posts/2026/04/anthropic-multi-agent-coordination-patterns/"
@@ -69,6 +69,9 @@ Anthropic が 2026年4月に公開した、複数 AI エージェントを協調
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/)
 - [エージェントメモリのロックイン](/blogs/wiki/concepts/agent-memory-lock-in/)
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/)
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 協調構造を宣言的に設計するスワームの次段階
+- [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — 協調パターンが位置づく全体地図
+- [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — 2役に絞った最小の協調構成
 
 ## ソース記事
 

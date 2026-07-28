@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-05-18
+lastmod: 2026-07-28
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -40,6 +40,10 @@ related_posts:
   - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
   - "/posts/2026/05/claude-btc-trading-montecarlo/"
   - "/posts/2026/07/claude-code-loop-design-guide/"
+  - "/posts/2026/07/graph-engineering-14-step-roadmap/"
+  - "/posts/2026/07/codex-build-orchestrator-coder-split/"
+  - "/posts/2026/07/ai-agent-rate-limit-circuit-breaker/"
+  - "/posts/2026/07/claude-code-restaurant-automation/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "Hooks", "MCP"]
 ---
 
@@ -104,6 +108,18 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 
 詳細: [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) / [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) / [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/)
 
+## 動的ワークフロー（Dynamic Workflows）
+
+サブエージェントを直列に並べるのではなく、グラフとして組むための仕組み。Claude が素の JavaScript でオーケストレーション用スクリプトを書き、`agent()` / `parallel()` / `pipeline()` / `schema` を組み合わせてサブエージェントのフリートを動かす。**調整レイヤ自体はコードなのでモデルのトークンを消費しない**（ただし実行全体のトークンは会話でやるより増える）。
+
+詳細: [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/)
+
+## 非エンジニア業務での活用
+
+コードを書かない業務自動化でも使える。ローカルの CSV・PDF を直接読み、計算し、ファイルとして書き出せる点が「ブラウザで会話する AI」との決定的な差になる。個人経営の飲食店で原価計算（3時間→12分）・レジ締め（毎晩40分→ゼロ）・シフト作成（2時間→15分）を自動化した事例がある。
+
+繰り返す作業は `.claude/skills/<名前>/SKILL.md` として保存すると、次回から `/<名前>` で呼び出せる。**個人・プロジェクトのスキルではコマンド名はディレクトリ名から決まり**、フロントマターの `name` は一覧表示用のラベルとして働く。
+
 ## 関連ページ
 
 - [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/) — Claude Code のコンテキスト管理戦略
@@ -118,6 +134,11 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/) — ライフサイクルイベントへのフック仕組み
 - [Trellis](/blogs/wiki/tools/trellis/) — `.trellis/` にプロジェクトの文脈を永続化する AI コーディングフレームワーク
 - [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) — Vault との循環設計パターン
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 動的ワークフローでグラフを組む
+- [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — Claude Code が担うレイヤーの位置づけ
+- [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — Skills による分業実装
+- [Claude Cowork](/blogs/wiki/tools/claude-cowork/) — 同じ Agent Skills 形式を扱うデスクトップ製品
+- [サーキットブレーカーと指数バックオフ](/blogs/wiki/concepts/circuit-breaker/) — CLI 大量呼び出し時のレート制限対策
 - [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) — 5 段階の実装手順
 - [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — 4種類のループとプリミティブ
 - [ECC (Everything Claude Code)](/blogs/wiki/tools/ecc/) — エージェント・スキル・フックの総合エコシステム
@@ -139,3 +160,7 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/claude-caveman-token-reduction/) — 2026-04-17
 - [Claude Code のコンテキスト管理術 — Context Rot を防ぐ 5 つの選択肢](/blogs/posts/2026/04/claude-code-context-rot-session-management/) — 2026-04-17
 - [Video Use — Claude Code で動画編集を完全自動化するオープンソーススキル](/blogs/posts/2026/04/video-use-claude-code-video-editing/) — 2026-04-17
+- [個人経営の飲食店 × Claude Code：原価計算・レジ締め・シフト・廃棄ロスを丸ごと自動化する](/blogs/posts/2026/07/claude-code-restaurant-automation/) — 2026-07-06
+- [「計画するAI」と「書くAI」を分ける開発手法 — codex-build に学ぶ承認ゲート設計](/blogs/posts/2026/07/codex-build-orchestrator-coder-split/) — 2026-07-23
+- [Claude Code の動的ワークフローで組むグラフエンジニアリング 14 ステップ](/blogs/posts/2026/07/graph-engineering-14-step-roadmap/) — 2026-07-27
+- [AI エージェントのレートリミット対策 — 指数バックオフとサーキットブレーカー](/blogs/posts/2026/07/ai-agent-rate-limit-circuit-breaker/) — 2026-07-28

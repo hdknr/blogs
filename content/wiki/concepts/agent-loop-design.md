@@ -43,6 +43,9 @@ Claude Code チームが公開した公式ガイド「Getting started with loops
 - [自律改善システムの設計](/blogs/wiki/concepts/autonomous-system-design/) — Proactive ループを安全に回す設計原則
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — 「プロンプトを書かない」自己改善ループの先の姿
 - [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — dynamic workflows での並列・judge レビュー
+- [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — ループが第4層として位置づく全体地図
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — ループは「単純なグラフ」であり、その先の拡張
+- [サーキットブレーカーと指数バックオフ](/blogs/wiki/concepts/circuit-breaker/) — 停止条件の実装
 
 ## ソース記事
 
