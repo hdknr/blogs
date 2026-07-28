@@ -59,7 +59,7 @@ tags: ["claude-code", "agent", "自律システム", "自己改善", "設計原�
 - [外部境界の耐障害性とサーキットブレーカー](/blogs/wiki/concepts/circuit-breaker/) — レートリミット対策と no-op 検証
 - [自動テスト修正パイプライン](/blogs/wiki/guides/auto-test-fix-pipeline/) — 安全ゲート付き自律修正の実装例
 - [AI エージェントにリファクタさせる時の完了の定義](/blogs/wiki/concepts/ai-refactor-completion-boundary/) — 検証境界の引き方
-- [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/approval-gate-design/) — 自己判断を構造で禁じる
+- [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/orchestrator-coder-split/) — 自己判断を構造で禁じる
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — CLAUDE.md・フックによる規約注入
 
 ## ソース記事

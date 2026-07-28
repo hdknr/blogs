@@ -83,7 +83,7 @@ end
 
 - [pytest によるカオスエンジニアリング](/blogs/wiki/guides/pytest-chaos-engineering/) — 障害注入によるテスト
 - [自動テスト修正パイプライン](/blogs/wiki/guides/auto-test-fix-pipeline/) — テストを軸にした自律修正
-- [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/approval-gate-design/) — テストをゲートとして使う設計
+- [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/orchestrator-coder-split/) — テストをゲートとして使う設計
 - [形式手法](/blogs/wiki/concepts/formal-methods/) — 仕様の厳密化という別アプローチ
 
 ## ソース記事

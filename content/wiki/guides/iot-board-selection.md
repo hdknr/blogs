@@ -60,6 +60,7 @@ Wi-Fi が届かない屋外では、Wio LTE のようなセルラー直結のほ
 
 ## 関連ページ
 
+- [ESP32](/blogs/wiki/tools/esp32/) — チップ単体としての詳細
 - [SORACOM](/blogs/wiki/tools/soracom/) — LTE-M/NB-IoT 開発ボード Wio BG770A と接続サービス
 - [予知保全と保全高度化ラダー](/blogs/wiki/concepts/predictive-maintenance/) — PoC から本番運用へ進む先の設計思想
 

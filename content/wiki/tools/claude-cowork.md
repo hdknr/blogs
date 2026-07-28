@@ -57,7 +57,7 @@ Record a skill は突然出てきた機能ではなく、Anthropic が進めて�
 
 - [Claude Code](/blogs/wiki/tools/claude-code/) — Skills を扱うもう一つのハーネス
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 手順を規約として注入する考え方
-- [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/approval-gate-design/) — Skill として設計を配布する例
+- [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/orchestrator-coder-split/) — Skill として設計を配布する例
 
 ## ソース記事
 

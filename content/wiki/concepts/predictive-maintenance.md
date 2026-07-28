@@ -54,8 +54,8 @@ IoT を検討するなら、まず自社が保全ラダーのどの段にいて�
 ## 関連ページ
 
 - [SORACOM](/blogs/wiki/tools/soracom/) — 接続・収集・導入の3レイヤと製品群
-- [設備保全 IoT に使える補助金](/blogs/wiki/guides/iot-subsidy-programs/) — ラダー別の制度対応マップ
-- [IoT 開発ボードの使い分け](/blogs/wiki/concepts/iot-development-boards/) — PoC 段階のボード選定
+- [設備保全 IoT に使える補助金](/blogs/wiki/guides/iot-maintenance-subsidy/) — ラダー別の制度対応マップ
+- [IoT 開発ボードの使い分け](/blogs/wiki/guides/iot-board-selection/) — PoC 段階のボード選定
 
 ## ソース記事
 

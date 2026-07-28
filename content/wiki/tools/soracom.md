@@ -71,8 +71,8 @@ SORACOM は IoT 向けのセルラー接続（IoT SIM / iSIM / 通信モジュ�
 ## 関連ページ
 
 - [予知保全と保全高度化ラダー](/blogs/wiki/concepts/predictive-maintenance/) — BM→TBM→CBM→PdM の成熟度モデル
-- [設備保全 IoT に使える補助金](/blogs/wiki/guides/iot-subsidy-programs/) — 省力化／DX／省エネの3系統
-- [IoT 開発ボードの使い分け](/blogs/wiki/concepts/iot-development-boards/) — PoC 用ボードの選定
+- [設備保全 IoT に使える補助金](/blogs/wiki/guides/iot-maintenance-subsidy/) — 省力化／DX／省エネの3系統
+- [IoT 開発ボードの使い分け](/blogs/wiki/guides/iot-board-selection/) — PoC 用ボードの選定
 
 ## ソース記事
 
