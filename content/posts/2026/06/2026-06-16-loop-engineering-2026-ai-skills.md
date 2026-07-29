@@ -333,3 +333,8 @@ Rahul が最後に言っていることが一番刺さった。
 - Addy Osmani 「Loop Engineering」— addyosmani.com, 2026.06.07
 - Acrosstudio テックブログ（シン・ウフム）「もうプロンプトを書くな──『Loop Engineering』という新しいパラダイムの正体」— zenn.dev
 - Boris Cherny（Claude Code 責任者）— Acquired Podcast 出演, 2026
+
+## 関連記事
+
+- [ループエンジニアリング14ステップ — 4条件テストと失敗パターン](/blogs/posts/2026/06/loop-engineering-14-step-roadmap/) — 「そのループは作るべきか」の判断基準、撤退ライン（cost per accepted change）、無人ループのセキュリティリスク
+- [プロンプトからループへ](/blogs/posts/2026/06/loop-engineering-ai-agents-2026/) — Boris Cherny / Peter Steinberger の発言を軸にした概観
