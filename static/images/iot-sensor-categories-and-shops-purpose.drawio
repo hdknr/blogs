@@ -1,0 +1,110 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="iot-sensor-purpose" name="IoT Sensor Purpose Categories">
+    <mxGraphModel dx="1300" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="建設・設備現場の IoT センサー — 目的で分ける5大分類" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="270" y="20" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Root -->
+        <mxCell id="root" value="何のために&#xa;測るのか" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="360" width="120" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 1. 人員・作業安全 ===== -->
+        <mxCell id="c1" value="1. 人員・作業安全管理&#xa;作業員の命と健康を守る" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="70" width="230" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="・バイタル（心拍・体温）→ 熱中症の前兆&#xa;・慣性センサー（加速度・ジャイロ）→ 転倒・転落&#xa;・測位（GPS / BLE ビーコン / UWB）→ 重機接近、立入検知" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdeaea;strokeColor=#e0a0a0;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="510" y="70" width="440" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="t1" value="義務化&#xa;対応" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="95" width="80" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="t4" value="義務化&#xa;対応" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="515" width="80" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 2. 構造物・地盤 ===== -->
+        <mxCell id="c2" value="2. 構造物・地盤の健全性&#xa;変形や崩壊の前兆を察知する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="210" width="230" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="・変形・傾斜（ひずみゲージ、傾斜計）→ 足場・山留めの倒壊&#xa;・振動応答（高精度加速度）→ 地震後の健全性、固有振動数&#xa;・地盤・地下水（水位計、間隙水圧計、土壌水分計）→ 土砂崩れ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3edf6;strokeColor=#b9a4c9;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="510" y="210" width="440" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 3. 設備・重機 ===== -->
+        <mxCell id="c3" value="3. 設備・重機モニタリング&#xa;故障の前兆と稼働状態を掴む" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="350" width="230" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="・振動・音響（加速度、AE センサー）→ 軸受の摩耗、異音&#xa;・電力・電流（CT クランプ）→ 稼働 / 非稼働の自動判別&#xa;・温度（サーミスタ、赤外線）→ 配電盤の発熱、養生温度&#xa;・流体（圧力・流量・レベル）→ 漏水、タンク残量" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf2fd;strokeColor=#9db8dc;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="510" y="350" width="440" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="t3" value="費用対効果&#xa;が最も高い" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="375" width="80" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 4. 環境・空間 ===== -->
+        <mxCell id="c4" value="4. 環境・空間モニタリング&#xa;暑さ・空気質・公害・省エネ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="490" width="230" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="d4" value="・暑熱・気象（WBGT、風速計）→ 熱中症警戒、クレーン中断判断&#xa;・空気質（CO2、PM2.5、CO、酸素）→ 酸欠・中毒防止、自動換気&#xa;・人感・照度（PIR、ToF）→ 滞留に応じた照明・空調制御&#xa;・騒音・振動（公害計測）→ 敷地境界の連続測定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffaeb;strokeColor=#e3ce8f;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="510" y="490" width="440" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== 5. 画像・空間認識 ===== -->
+        <mxCell id="c5" value="5. 画像・空間認識&#xa;AI で視覚的に監視・計測する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="630" width="230" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="d5" value="・AI カメラ（RGB / 赤外線）→ ヘルメット・安全帯の未着用検知、&#xa;　資材の自動カウント、メーターの読み取り&#xa;・LiDAR（2D / 3D）→ 盛り土の体積測定、&#xa;　点検ロボットの自己位置推定（SLAM）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef7ed;strokeColor=#a8ccA4;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="510" y="630" width="440" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges root -> categories -->
+        <mxCell id="e1" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=1;" edge="1" parent="1" source="root" target="c1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=1;" edge="1" parent="1" source="root" target="c2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=1;" edge="1" parent="1" source="root" target="c3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=1;" edge="1" parent="1" source="root" target="c4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;rounded=1;" edge="1" parent="1" source="root" target="c5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges categories -> details -->
+        <mxCell id="f1" style="endArrow=none;html=1;strokeColor=#e0a0a0;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="c1" target="d1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2" style="endArrow=none;html=1;strokeColor=#b9a4c9;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="c2" target="d2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3" style="endArrow=none;html=1;strokeColor=#9db8dc;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="c3" target="d3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f4" style="endArrow=none;html=1;strokeColor=#e3ce8f;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="c4" target="d4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f5" style="endArrow=none;html=1;strokeColor=#a8cca4;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="c5" target="d5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Footnote -->
+        <mxCell id="note" value="※「義務化対応」= 2025年6月施行の改正労働安全衛生規則（職場の熱中症対策）　「費用対効果が最も高い」= 既設設備の接点・電流を拾うだけで始められる" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#888888;" vertex="1" parent="1">
+          <mxGeometry x="140" y="760" width="960" height="24" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
