@@ -93,6 +93,7 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 
 ## 関連ページ
 
+- [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — ハーネスの上に載る制御プレーン層
 - [AIエージェント設計レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — ハーネスがどのレイヤーを担当するかの地図
 - [AI エージェント](/blogs/wiki/concepts/ai-agent/) — ハーネスで品質保証される対象
 - [エージェントメモリのロックイン](/blogs/wiki/concepts/agent-memory-lock-in/) — ハーネスとメモリの不可分性とロックインリスク
