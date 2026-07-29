@@ -14,7 +14,7 @@ tags: ["ループエンジニアリング", "AIエージェント", "Claude Code
 
 [@0xCodez](https://x.com/0xCodez) が公開した記事「Loop engineering: the 14-step roadmap from prompter to loop designer」は、Anthropicのエンジニアリングドキュメント、Addy Osmaniのループエンジニアリング論文、最近の計測研究を元に、プロンプターからループデザイナーへ移行するための14ステップをまとめたロードマップだ。
 
-> **既存記事との棲み分け**：ループエンジニアリングの概念そのものは [プロンプトからループへ](/blogs/posts/2026/06/loop-engineering-ai-agents-2026/) と [2026年AI必須スキル「ループエンジニアリング」とは](/blogs/posts/2026/06/loop-engineering-2026-ai-skills/) で扱った。本記事が焦点を当てるのは、**作るべきかどうかの判断基準（4条件テスト）、撤退ライン、そして失敗の回避**である。構成要素の解説は必要最小限にとどめる。
+> **既存記事との棲み分け**：ループエンジニアリングの概念そのものは [プロンプトからループへ](/blogs/posts/2026/06/loop-engineering-ai-agents-2026/) と [2026年AI必須スキル「ループエンジニアリング」とは](/blogs/posts/2026/06/loop-engineering-2026-ai-skills/) で扱った。本記事が焦点を当てるのは、**作るべきかどうかの判断基準（4条件テスト）、撤退ライン、そして失敗の回避**である。Step 05〜10 の構成要素はロードマップの通し道として一巡するが、各部品を深く知りたい場合は [6コアモジュールの解説](/blogs/posts/2026/06/loop-engineering-2026-ai-skills/) を正典として参照してほしい。
 
 ---
 
