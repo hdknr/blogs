@@ -63,3 +63,7 @@ AI ツールの進化により、2026年はソロファウンダーや極小チ�
 ---
 
 *ソース: [@gagarot200 on X (2026-04-06)](https://x.com/gagarot200/status/2041103628799483905)*
+
+## 関連記事
+
+- [人を抱えず売上22.9億円、GENDA に40億円で売却](/blogs/posts/2026/07/ctraum-kleiner-exclusive-import-40oku/) — 実際に人を抱えず22.9億円を作った事例

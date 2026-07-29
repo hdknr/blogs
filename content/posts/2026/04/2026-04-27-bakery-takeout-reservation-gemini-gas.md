@@ -78,3 +78,7 @@ Google スプレッドシートの拡張として動作するため、特別な�
 - 「注文受付とピッキング作業を楽にしたい」という現場ニーズに特化した設計
 
 詳細・導入方法は [note 記事](https://note.com/ichinichiippo/n/n5614629215bb) を参照してください。
+
+## 関連記事
+
+- [個人経営の飲食店 × Claude Code](/blogs/posts/2026/07/claude-code-restaurant-automation/) — 個人店 × AI の別事例（原価計算・レジ締め・シフト）
