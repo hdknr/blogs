@@ -161,7 +161,7 @@ tags: ["地方創生", "関係人口", "ふるさと住民登録制度", "地域
 
 ## 参考リンク
 
-- [総務省「関係人口・ふるさと住民」ポータルサイト](https://www.soumu.go.jp/kankeijinkou/about/index.html)
+- [総務省「関係人口・ふるさと住民」ポータルサイト](https://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/kankeijinkou.html)
 - [地方創生「関係人口の創出・拡大」](https://www.chisou.go.jp/sousei/about/kankei/index.html)
 - [国土交通省「地域との関わりについてのアンケート」調査結果](https://www.mlit.go.jp/report/press/kokudoseisaku03_hh_000223.html)
 - [SMOUT（スマウト）- 地域とつながるプラットフォーム](https://smout.jp/)

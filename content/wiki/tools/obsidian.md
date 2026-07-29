@@ -2,8 +2,8 @@
 title: "Obsidian"
 description: "ローカルファーストの Markdown ベース PKM（個人知識管理）ツール。データはすべて自分のマシンに保存されベンダーロックインなし"
 date: 2026-04-23
-lastmod: 2026-05-18
-aliases: ["オブシディアン", "PKM", "Personal Knowledge Management", "第二の脳"]
+lastmod: 2026-07-15
+aliases: ["オブシディアン", "PKM", "Personal Knowledge Management", "第二の脳", "LINE Notes Sync"]
 related_posts:
   - "/posts/2026/04/obsidian-pkm-second-brain/"
   - "/posts/2026/05/github-vs-obsidian-ai-agent/"
@@ -11,6 +11,7 @@ related_posts:
   - "/posts/2026/05/claude-code-obsidian-vault-writeback/"
   - "/posts/2026/05/claude-code-vault-writeback-automation/"
   - "/posts/2026/05/self-hosted-runner-vault-writeback/"
+  - "/posts/2026/06/line-obsidian-codex-automation-loop/"
 tags: ["PKM", "ナレッジ管理", "Markdown", "ツール", "Claude Code"]
 ---
 
@@ -29,6 +30,7 @@ Obsidian はローカルファイルベースの Markdown エディタであり�
 - **Templater**: 動的テンプレートで繰り返し作業を自動化
 - **Canvas**: ホワイトボード的なビジュアル思考ツール
 - **AI 連携**: Smart Composer / Copilot プラグインで LLM をノート作成に統合
+- **LINE Notes Sync**: LINE で送ったメッセージを Vault のノートとして自動保存するコミュニティプラグイン。摩擦ゼロのメモ入口として継続入力ループの起点になる
 
 ## 料金
 
@@ -59,6 +61,7 @@ Vault が AI Agent 越しに自己強化される循環構造を構築できる�
 ## ソース記事
 
 - [Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する](/blogs/posts/2026/04/obsidian-pkm-second-brain/) — 2026-04-17
+- [LINEに雑メモを投げるだけで深掘りレポートが届く: Obsidian × Codex × Cloudflare の自動化ループ](/blogs/posts/2026/06/line-obsidian-codex-automation-loop/) — 2026-06-26
 - [GitHubで全部完結する開発者にObsidianは本当に必要か？](/blogs/posts/2026/05/github-vs-obsidian-ai-agent/) — 2026-05-18
 - [Obsidian Vault を Claude Code に繋ぐ実践編](/blogs/posts/2026/05/claude-code-obsidian-vault-project-config/) — 2026-05-18
 - [Claude Code から個人 Obsidian Vault に「書き戻す」設計](/blogs/posts/2026/05/claude-code-obsidian-vault-writeback/) — 2026-05-18

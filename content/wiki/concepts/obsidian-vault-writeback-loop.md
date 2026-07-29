@@ -2,15 +2,16 @@
 title: "Obsidian Vault Writeback Loop"
 description: "AI Agent と個人ナレッジを循環させる設計パターン。Vault から AI に文脈を渡し、得た学びを Vault に書き戻すループを構成する"
 date: 2026-05-18
-lastmod: 2026-05-18
-aliases: ["Vault 書き戻し", "ナレッジ循環ループ", "writeback loop", "PKM フィードバックループ"]
+lastmod: 2026-07-15
+aliases: ["Vault 書き戻し", "ナレッジ循環ループ", "writeback loop", "PKM フィードバックループ", "継続入力ループ", "Continuous Input Loop"]
 related_posts:
   - "/posts/2026/05/github-vs-obsidian-ai-agent/"
   - "/posts/2026/05/claude-code-obsidian-vault-project-config/"
   - "/posts/2026/05/claude-code-obsidian-vault-writeback/"
   - "/posts/2026/05/claude-code-vault-writeback-automation/"
   - "/posts/2026/05/self-hosted-runner-vault-writeback/"
-tags: ["Obsidian", "Claude Code", "PKM", "writeback", "ナレッジマネジメント"]
+  - "/posts/2026/06/line-obsidian-codex-automation-loop/"
+tags: ["Obsidian", "Claude Code", "PKM", "writeback", "ナレッジマネジメント", "自動化"]
 ---
 
 ## 概要
@@ -43,6 +44,21 @@ Obsidian Vault Writeback Loop は、AI Agent が個人ナレッジ（Obsidian Va
 
 cloud-hosted Actions は Vault に書けない・Skills が使えない・会話文脈ゼロという三重苦のため、書き戻し用途では self-hosted runner に切り替えるのが正解。
 
+## 派生形：継続入力ループ（LINE × Codex × Cloudflare）
+
+書き戻しループと対をなすのが、**入力側**を摩擦ゼロにして「読んだ気づきを次のインプットに変える」継続入力ループ（Continuous Input Loop）。8ステップで構成される。
+
+1. **LINE** に気になった URL・思いつきを投げる（入力の入口を1つに統一）
+2. **LINE Notes Sync**（Obsidian コミュニティプラグイン）が LINE メッセージを Vault へ同期
+3. **Obsidian** に Markdown として蓄積
+4. **Codex Automation**（OpenAI Codex）が溜まったメモをトリガーに自動で深掘り・要約
+5. 結果を **HTML** 化
+6. **Cloudflare Pages** にデプロイ（Zero Trust Access で認証をかければ非公開の下書き置き場に向く）
+7. スマホで読む
+8. 読んで得た気づきを再び LINE へ → 1 に戻る
+
+この設計の肝は、単に「メモを自動要約する」で終わらせず、**アウトプットを読んだ気づきを次のインプットに変える**導線にある。ツール自体は既存の組み合わせで、特別なインフラの新規構築は要らない。書き戻しループ（AI → Vault）が「知識を積み上げる」方向なら、継続入力ループ（人 → Vault → AI → 人）は「気づきを回し続ける」方向で、両者は補完関係にある。
+
 ## なぜループを閉じることが重要か
 
 読み取り側だけ設定しても、Vault は「過去の自分のノート集」のスナップショットに固定される。書き戻し側を実装して初めて、AI Agent が「3 ヶ月前に別プロジェクトで試したあの技術、いまのバグに応用できるか？」という **プロジェクトを跨いだ伏線回収** を提案できるようになる。Vault が時間とともに自己強化される構造は、ループを閉じた瞬間に立ち上がる。
@@ -63,3 +79,4 @@ cloud-hosted Actions は Vault に書けない・Skills が使えない・会話
 - [Claude Code から個人 Obsidian Vault に「書き戻す」設計](/blogs/posts/2026/05/claude-code-obsidian-vault-writeback/) — 2026-05-18（書き戻し設計）
 - [Obsidian Vault 書き戻しの自動化](/blogs/posts/2026/05/claude-code-vault-writeback-automation/) — 2026-05-18（フック自動化）
 - [GitHub Actions self-hosted runner で Obsidian Vault 書き戻しを完成させる](/blogs/posts/2026/05/self-hosted-runner-vault-writeback/) — 2026-05-18（self-hosted runner）
+- [LINEに雑メモを投げるだけで深掘りレポートが届く: Obsidian × Codex × Cloudflare の自動化ループ](/blogs/posts/2026/06/line-obsidian-codex-automation-loop/) — 2026-06-26（継続入力ループ）

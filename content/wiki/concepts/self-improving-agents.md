@@ -2,11 +2,12 @@
 title: "自己改善エージェント"
 description: "AI エージェントのハーネスを AI 自身が自律的に最適化するパターン"
 date: 2026-04-06
-lastmod: 2026-04-06
-aliases: ["Self-Improving Agents", "メタエージェント"]
+lastmod: 2026-07-15
+aliases: ["Self-Improving Agents", "メタエージェント", "Self-Improving Loops", "自己改善ループ"]
 related_posts:
   - "/posts/2026/04/autoagent-self-improving-agents/"
-tags: ["agent", "LLM", "自動最適化"]
+  - "/posts/2026/06/andrew-ng-ai-agents-development-bottleneck/"
+tags: ["agent", "LLM", "自動最適化", "自己改善ループ"]
 ---
 
 ## 概要
@@ -40,11 +41,23 @@ AI エージェントの構成一式（ハーネス: システムプロンプト
 - 自前テスト作成（ユニットテストの自律生成）
 - サブエージェント生成（ドメイン別の役割分担）
 
+## Self-Improving Loops（Andrew Ng の予測）
+
+DeepLearning.AI 創設者 Andrew Ng は「自分のタスクの100%はもう AI エージェントがやっている」「3〜6か月で誰もが自己改善ループを使い、プロンプトを手で書く時代は終わる」と述べた。現在の「プロンプトを書く → エージェントが実行する」の先に、「エージェントが自分でプロンプトを改善しながらタスクをこなす」フェーズが来るという見立てで、上記の最適化ループを人間の手離れした形で回すのがゴールになる。
+
+### 開発速度が生む新たなボトルネック
+
+ソフトウェア開発が10〜100倍速くなると、詰まる場所が **エンジニアリングから非エンジニア職へ移動**する。コードが数秒〜数分で生成できる以上、次の律速は PM（何を作るか）・法務（規約/コンプラ）・マーケ（ポジショニング）・デザイン（UX 承認）になる。Andrew Ng は「1〜10人の小規模チーム」が次の標準になると予測する（承認プロセス・調整コストを迂回できるため）。この「ボトルネックの移動」は、自律改善ループを組織にどう組み込むかの設計課題でもある。
+
 ## 関連ページ
 
 - [AutoAgent](/blogs/wiki/tools/autoagent/) — このパターンを実装した OSS ライブラリ
 - [LLM Wiki パターン](/blogs/wiki/concepts/llm-wiki-pattern/) — AI による知識保守という関連パターン
+- [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — 「自己改善ループ」を実装する4種類のループ分類
+- [自律改善システムの設計](/blogs/wiki/concepts/autonomous-system-design/) — 自己改善を安全ゲート付きで回す設計原則
+- [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 改善対象となるハーネスの構造
 
 ## ソース記事
 
 - [AutoAgent — AIがAIを育てる自己改善エージェントOSSライブラリ](/blogs/posts/2026/04/autoagent-self-improving-agents/) — 2026-04-05
+- [Andrew Ng「タスクの100%はAIエージェントが実行」─ 開発速度向上が生んだ新たなボトルネック](/blogs/posts/2026/06/andrew-ng-ai-agents-development-bottleneck/) — 2026-06-24

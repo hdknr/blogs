@@ -71,7 +71,7 @@ GitHub ログ
 
 OpenClaw のトレーディング関連エコシステムも充実しています:
 
-- **[openclaw-trader](https://github.com/gcmsg/openclaw-trader)**: OpenClaw ベースの暗号通貨トレーディングボット
+- **openclaw-trader**: OpenClaw ベースの暗号通貨トレーディングボット
 - **[BankrBot Skills](https://github.com/BankrBot/skills)**: Polymarket、DeFi 操作などのスキルライブラリ
 - **ClawHub マーケットプレイス**: 公式スキルストアに金融・投資カテゴリだけで 311 以上のスキルが登録
 
