@@ -53,6 +53,7 @@ tags: ["claude-code", "agent", "自律システム", "自己改善", "設計原�
 
 ## 関連ページ
 
+- [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — 無人ループを設計する側の手法
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — ハーネス自体を AI が改善するパターン
 - [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — Proactive ループの4分類
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 4段階モデルと協調構造の宣言的設計

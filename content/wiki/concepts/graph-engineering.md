@@ -116,6 +116,7 @@ fan out と統合の間にある reduce ステップ（平坦化、重複排除�
 
 ## 関連ページ
 
+- [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — 1つのループで足りているうちの段階
 - [AIエージェント設計レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — グラフを含む 5 レイヤーと横断 7 領域の地図
 - [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — Anthropic が体系化した 5 パターン
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — グラフの土台となる「エージェントが立つ床」

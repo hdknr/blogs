@@ -2,7 +2,7 @@
 title: "エージェントループ設計（4種類のループ）"
 description: "Claude Code チーム公式ガイドが定義する『停止条件を満たすまでエージェントが作業サイクルを繰り返す』ループの4分類。Turn-based / Goal-based / Time-based / Proactive を委譲の度合いで整理する"
 date: 2026-07-15
-lastmod: 2026-07-15
+lastmod: 2026-07-29
 aliases: ["ループ設計", "agent loop", "エージェントループ", "Getting started with loops"]
 related_posts:
   - "/posts/2026/07/claude-code-loop-design-guide/"
@@ -45,7 +45,7 @@ Claude Code チームが公開した公式ガイド「Getting started with loops
 - [自律改善システムの設計](/blogs/wiki/concepts/autonomous-system-design/) — Proactive ループを安全に回す設計原則
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — 「プロンプトを書かない」自己改善ループの先の姿
 - [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — dynamic workflows での並列・judge レビュー
-- [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — ループが第4層として位置づく全体地図
+- [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — 6つの構成部品・4条件テスト・3つの罠を含む規律全体
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — ループは「単純なグラフ」であり、その先の拡張
 - [サーキットブレーカーと指数バックオフ](/blogs/wiki/concepts/circuit-breaker/) — 停止条件の実装
 

@@ -120,6 +120,7 @@ LangChain はさらに、コアのエージェントループの周囲にルー�
 
 ## 関連ページ
 
+- [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — 第4層（ループ）の規律全体
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 最上位レイヤーの詳細
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 第3レイヤーの詳細
 - [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — 第4レイヤーの詳細
