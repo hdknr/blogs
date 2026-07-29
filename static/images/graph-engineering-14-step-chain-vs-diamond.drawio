@@ -1,0 +1,111 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="chain-vs-diamond" name="Chain vs Diamond">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="640" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="直列チェーン → ダイヤモンド型グラフ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- LEFT: linear chain -->
+        <mxCell id="left-group" value="Before：直列チェーン（退化したグラフ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="300" height="520" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="l-a" value="A：分割" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="110" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-b" value="B：調査①" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="200" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-c" value="C：調査②" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="290" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-d" value="D：調査③" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="380" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-e" value="E：統合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="470" width="120" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="l-e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="l-a" target="l-b"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="l-e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;strokeWidth=2;dashed=1;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="l-b" target="l-c"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="l-e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;strokeWidth=2;dashed=1;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="l-c" target="l-d"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="l-e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="l-d" target="l-e"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="l-note1" value="データが流れない偽エッジ&#10;（打った順に並べただけ）" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="255" y="240" width="90" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-cost" value="所要時間 = B + C + D の合計" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="540" width="240" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ARROW between -->
+        <mxCell id="mid-arrow" style="html=1;strokeColor=#666666;strokeWidth=3;endArrow=blockThin;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="320" as="sourcePoint"/>
+            <mxPoint x="430" y="320" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mid-label" value="偽エッジを消す" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="345" y="285" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- RIGHT: diamond -->
+        <mxCell id="right-group" value="After：ダイヤモンド（fan out → reduce → 統合）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="450" y="70" width="610" height="520" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r-a" value="A：分割ノード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="675" y="110" width="160" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r-b" value="B：調査①" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="490" y="210" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-c" value="C：調査②" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="690" y="210" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-d" value="D：調査③" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="890" y="210" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r-par" value="parallel() で同時実行（コンテキストは各サブエージェントが持つ）" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="490" y="255" width="530" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r-reduce" value="reduce：flatMap / Set で平坦化・重複排除&#10;— 素の JavaScript・0 トークン —" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="310" width="270" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r-verify" value="検証ノード（別エージェント）&#10;findings を反証しに行く" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="620" y="400" width="270" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r-syn" value="E：統合ノード（高性能モデル）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="485" width="270" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="re1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="r-a" target="r-b"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="re2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="r-a" target="r-c"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="re3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="r-a" target="r-d"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="re4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=blockThin;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="r-b" target="r-reduce"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="re5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=blockThin;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="r-c" target="r-reduce"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="re6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=blockThin;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="r-d" target="r-reduce"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="re7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673a6;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="r-reduce" target="r-verify"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="re8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="r-verify" target="r-syn"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="r-cost" value="所要時間 = max(B, C, D) + 統合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="540" width="270" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r-note-cheap" value="安いモデル&#10;で回す" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="915" y="150" width="100" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

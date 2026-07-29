@@ -52,6 +52,7 @@ tags: ["財務分析", "四季報", "投資", "ROE", "自己資本比率"]
 
 - [バフェット・コード](/blogs/wiki/tools/buffett-code/) — EDINET データを活用した財務分析ツール
 - [EDINET XBRL Python ガイド](/blogs/wiki/guides/edinet-xbrl-python/) — 財務データの取得・加工
+- [セクターローテーション](/blogs/wiki/concepts/sector-rotation/) — グロース⇄バリューの資金循環と検知
 
 ## ソース記事
 

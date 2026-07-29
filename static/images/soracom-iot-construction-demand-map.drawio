@@ -1,0 +1,108 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="soracom-construction-demand" name="Construction IoT Demand Map">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1160" pageHeight="760" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="建設現場の課題 × SORACOM ソリューション 需要マップ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="280" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Column headers -->
+        <mxCell id="h-challenge" value="建設現場の課題（ドライバー）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="330" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="h-solution" value="対応する #562 ソリューション" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="450" y="60" width="470" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="h-demand" value="需要度" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="60" width="120" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: 人手不足・高齢化 -->
+        <mxCell id="ch1" value="人手不足・技能者の高齢化&#xa;（10年で100万人引退）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fbe4e2;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="330" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="so1" value="① 位置測位・トラッキング（重機稼働管理・資材管理）&#xa;③ 遠隔監視・映像（遠隔臨場で移動を削減）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f2e5;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="450" y="110" width="470" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="◎" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="110" width="120" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 2: 労働災害・重機事故 -->
+        <mxCell id="ch2" value="労働災害・重機事故&#xa;（死亡事故の約2割が建機起因）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fbe4e2;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="330" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="so2" value="① 位置測位（接近検知・入退場管理）&#xa;③ AI カメラ（立入禁止エリア検知）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f2e5;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="450" y="180" width="470" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="◎" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="180" width="120" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 3: 熱中症・健康リスク -->
+        <mxCell id="ch3" value="熱中症・健康リスク&#xa;（屋外・高温環境の長時間作業）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fbe4e2;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="330" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="so3" value="② 環境モニタリング（WBGT・暑さ指数）&#xa;＋ ウェアラブルでバイタル・転倒検知" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f2e5;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="450" y="250" width="470" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="◎" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="250" width="120" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 4: 遠隔臨場・進捗管理 -->
+        <mxCell id="ch4" value="遠隔臨場・施工管理の効率化&#xa;（国交省が推進、移動コスト削減）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fbe4e2;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="320" width="330" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="so4" value="③ クラウドカメラ「ソラカメ」（常時録画・遠隔確認）&#xa;① GPS で複数現場を横断管理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f2e5;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="450" y="320" width="470" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="d4" value="◎" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="320" width="120" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 5: 近隣対応・環境規制 -->
+        <mxCell id="ch5" value="近隣対応・環境規制&#xa;（騒音・振動・粉塵の規制値監視）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fbe4e2;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="390" width="330" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="so5" value="② 環境モニタリング（騒音・振動・粉塵センサー）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f2e5;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="450" y="390" width="470" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="d5" value="○" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="390" width="120" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 6: 構造物・仮設の安全 -->
+        <mxCell id="ch6" value="構造物・仮設設備の安全&#xa;（法面・トンネル・足場の変位）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fbe4e2;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="460" width="330" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="so6" value="⑤ 設備監視・予知保全（傾斜・振動・ひずみセンサー）&#xa;④ 異常時のワンタッチ／自動通知" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f2e5;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="450" y="460" width="470" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="d6" value="◎" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="460" width="120" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Foundation bar: 接続 -->
+        <mxCell id="found" value="⑥ 接続レイヤ — 現場は電源・固定回線が乏しい → 電池駆動＋ LTE-M / セルラー通信がほぼ前提（すべての土台）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="535" width="1080" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Enablement bar -->
+        <mxCell id="enable" value="⑦⑧ 導入・拡張レイヤ — 開発ボード／既設設備 IoT 化無線ユニットで PoC、補助金活用で本格導入へ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="600" width="1080" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend" value="◎ = 需要が非常に高い／実事例あり　　○ = 需要あり" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="665" width="600" height="25" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
