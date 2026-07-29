@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="ssbj-asset-matrix" name="ASSET-SSBJ Cross Content Matrix">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1080" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="ASSET-SSBJ の「コンテンツ別表示」が横断する範囲" style="text;html=1;fontSize=19;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="140" y="20" width="800" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="縦軸＝4 つのコア・コンテンツ／横軸＝テーマ別基準 2 本（項番は 2026 年改正基準時点）" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="140" y="50" width="800" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- Column headers -->
+        <mxCell id="hdr-axis" value="コア・コンテンツ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#999999;fontSize=12;fontStyle=1;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="60" y="94" width="240" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="hdr-general" value="テーマ別基準 第1号&#xa;「一般開示基準」" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;fontColor=#1f3864;" vertex="1" parent="1">
+          <mxGeometry x="320" y="94" width="340" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="hdr-climate" value="テーマ別基準 第2号&#xa;「気候関連開示基準」" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#274e13;" vertex="1" parent="1">
+          <mxGeometry x="680" y="94" width="340" height="58" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: Governance -->
+        <mxCell id="row1-label" value="ガバナンス&#xa;horizontal=01" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="164" width="240" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="row1-general" value="第8項〜第10項&#xa;監督に責任を負うガバナンス機関／個人、&#xa;経営者の役割" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef4fd;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="320" y="164" width="340" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="row1-climate" value="第9項〜第12項&#xa;「サステナビリティ関連」を「気候関連」に&#xa;置き換えた同一文言＋不必要な繰り返しの回避" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef7ec;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="680" y="164" width="340" height="88" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 2: Strategy -->
+        <mxCell id="row2-label" value="戦 略&#xa;horizontal=02" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="260" width="240" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="row2-general" value="第11項〜第27項&#xa;リスク及び機会／ビジネス・モデル及び&#xa;バリュー・チェーン／財務的影響／レジリエンス" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef4fd;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="320" y="260" width="340" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="row2-climate" value="第13項〜第39項&#xa;気候レジリエンス／気候関連のシナリオ分析&#xa;＋別紙A（シナリオ分析に対して用いるアプローチ）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef7ec;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="680" y="260" width="340" height="88" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 3: Risk management -->
+        <mxCell id="row3-label" value="リスク管理&#xa;horizontal=03" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="356" width="240" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="row3-general" value="第28項〜第29項&#xa;識別・評価・優先順位付け・モニタリングの&#xa;プロセス／シナリオ分析の利用／全体的な統合" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef4fd;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="320" y="356" width="340" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="row3-climate" value="第40項〜第42項&#xa;「気候関連」に置き換えた同一文言&#xa;＋不必要な繰り返しの回避（BC103）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef7ec;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="680" y="356" width="340" height="88" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 4: Metrics and targets -->
+        <mxCell id="row4-label" value="指標及び目標&#xa;horizontal=04" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="60" y="452" width="240" height="104" as="geometry"/>
+        </mxCell>
+        <mxCell id="row4-general" value="第30項〜第39項&#xa;指標（産業横断／産業別／独自）と目標、&#xa;目標の設定・見直し・進捗" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef4fd;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="320" y="452" width="340" height="104" as="geometry"/>
+        </mxCell>
+        <mxCell id="row4-climate" value="第43項〜第99項（最大の分量）&#xa;スコープ1／2／3 の絶対総量、測定アプローチ、&#xa;内部炭素価格、報酬、気候関連の目標&#xa;＋別紙B（スコープ3測定フレームワーク）&#xa;＋別紙C（ファイナンスド・エミッション）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2f0df;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=12;verticalAlign=middle;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="680" y="452" width="340" height="104" as="geometry"/>
+        </mxCell>
+
+        <!-- Basics band -->
+        <mxCell id="basics" value="ユニバーサル基準「適用基準」＝ ASSET-SSBJ の「基本となる事項」（全基準に共通する土台）&#xa;報告企業／関連する財務諸表／法令との関係／商業上の機密情報／質的特性／集約及び分解／つながりのある情報／&#xa;情報の記載場所／報告のタイミング／比較情報／準拠表明／判断／測定の不確実性／誤謬 ほか（全 20 項目）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;align=center;verticalAlign=middle;dashed=1;dashPattern=6 4;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="60" y="580" width="960" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Practical standard note -->
+        <mxCell id="practical" value="サステナビリティ開示実務対応基準 第1号（2026年6月11日公表）&#xa;温対法の SHK 制度が定める方法で測定・報告した温室効果ガス排出を用いて「気候基準」に従う場合の開示を明確化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;align=center;verticalAlign=middle;fontColor=#7f3f00;" vertex="1" parent="1">
+          <mxGeometry x="60" y="676" width="960" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Footnote -->
+        <mxCell id="footnote" value="※ 各セルには「開示基準」本体と「結論の背景（BC）」の両方が並び、元の基準条文へのリンクが張られる" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#888888;" vertex="1" parent="1">
+          <mxGeometry x="60" y="748" width="960" height="24" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
