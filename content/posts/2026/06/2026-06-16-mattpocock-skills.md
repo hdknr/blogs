@@ -144,3 +144,7 @@ AI の登場により、コードの増加速度が人間だけの時代とは�
 - GitHub: [mattpocock/skills](https://github.com/mattpocock/skills)
 - インストール: `npx skills@latest add mattpocock/skills`
 - 詳細な使い方はニュースレター: [aihero.dev/s/skills-newsletter](https://www.aihero.dev/s/skills-newsletter)
+
+## 関連記事
+
+- [SuperpowersとGrill with Docs](/blogs/posts/2026/07/superpowers-grill-with-docs-agent-workflow/) — Superpowers との設計思想比較

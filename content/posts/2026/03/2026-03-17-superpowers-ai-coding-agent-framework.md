@@ -71,3 +71,7 @@ Git Worktreeを活用することで、自分がメインブランチで作業�
 ## まとめ
 
 superpowersはAIコーディングエージェントの「使い方の型」を提供するフレームワークだ。7段階ワークフロー、TDD、Git Worktreeという3つの柱により、AIに任せる範囲を広げながらも品質を担保できる。GitHub 9万スターという数字が、その実用性を物語っている。
+
+## 関連記事
+
+- [SuperpowersとGrill with Docs](/blogs/posts/2026/07/superpowers-grill-with-docs-agent-workflow/) — grill-with-docs 系との設計思想比較
