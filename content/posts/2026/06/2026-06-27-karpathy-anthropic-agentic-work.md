@@ -25,17 +25,17 @@ LLMの能力は大きく「pretraining(事前学習で知識・推論力の土�
 Karpathy氏の入社から約1週間後の2026年5月28日、Anthropicは[Claude Opus 4.8](https://www.anthropic.com/news/claude-opus-4-8)を発表した。目立った新機能は次の2つだ。
 
 - **effort control**: タスクごとにClaudeがどれだけ計算・推論を使うかを low / medium / high / xhigh / max の5段階から選べる仕組み（`xhigh` は high と max の間の水準で、コーディングやエージェント用途で推奨される）
-- **Dynamic Workflows**: Claude Codeがタスクに応じて自らオーケストレーション用のスクリプトを組み、数百規模のサブエージェントを並列に動かす研究プレビュー機能。コードベース全体の移行やセキュリティ監査など大規模な作業を対象とする
+- **Dynamic Workflows**: Claude Codeがタスクに応じて自らオーケストレーション用のスクリプトを組み、数百規模のサブエージェントを並列に動かす研究プレビュー機能。コードベース全体の移行やセキュリティ監査など大規模な作業を対象とする（機能そのものの検証は [Claude Code の「Dynamic Workflows」を冷静に検証](/blogs/posts/2026/05/claude-code-dynamic-workflows-ultracode/) で扱った）
 
 ## AIのUIは「サイト→アプリ→組織」へ：Claude Tag
 
 2026年6月23日、AnthropicはClaudeをSlackのチームメンバーとして参加させる**Claude Tag**をベータ公開した。チームで1つのClaudeを共有し、非同期に作業を任せ、必要に応じて自発的に通知する仕組みだ。Karpathy氏はこれを「LLMのUI/UXにおける3回目の大きな再設計」と評しており、第1がWebサイト(ChatGPTなど)、第2がアプリ(Claude Codeなど)、第3が組織常駐型のAIだとしている。
 
-Claude Tagの実務的な検証は、Enterprise環境での試用レポートを扱った既報([Claude Tag を Enterprise 環境で検証](/blogs/posts/2026/06/claude-tag-enterprise-slack-workflow/))で詳しく取り上げているので、そちらも参照してほしい。
+Claude Tagの実務的な検証は、Enterprise環境での試用レポートを扱った既報([Claude Tag を Enterprise 環境で検証](/blogs/posts/2026/06/claude-tag-enterprise-slack-workflow/))で詳しく取り上げている。機能そのものの解説は [Claude Tag — Slack のチームメンバーとしての Claude](/blogs/posts/2026/06/claude-tag-slack-team-member/) を参照。
 
 ## Fable 5とMythos 5：発表3日後の停止と輸出規制解除
 
-2026年6月9日、Anthropicは[Claude Fable 5とClaude Mythos 5](https://www.anthropic.com/news/claude-fable-5-mythos-5)を発表した。両者は同じ基盤モデルで、Fable 5は一般利用向けに安全策を強化したモデル、Mythos 5はガードレールを一部緩和した限定提供版だ。Mythos 5は「Project Glasswing」という米政府との協業プログラムを通じて、承認済みの利用者(サイバー防御など)にのみ提供されている。
+2026年6月9日、Anthropicは[Claude Fable 5とClaude Mythos 5](https://www.anthropic.com/news/claude-fable-5-mythos-5)を発表した。両者は同じ基盤モデルで、Fable 5は一般利用向けに安全策を強化したモデル、Mythos 5はガードレールを一部緩和した限定提供版だ。Mythos 5は「Project Glasswing」という米政府との協業プログラムを通じて、承認済みの利用者(サイバー防御など)にのみ提供されている。Project Glasswing とゼロデイ発見能力については [Claude Mythos Preview](/blogs/posts/2026/04/claude-mythos-preview/) が詳しい。
 
 ところが発表からわずか3日後の6月12日、[Anthropicは両モデルへのアクセスを停止した](https://www.anthropic.com/news/fable-mythos-access)。米政府が国家安全保障・輸出管理上の権限を根拠に、外国籍の利用者(Anthropicの外国籍従業員を含む)へのアクセス制限を指示したためだ。国籍を正確に判別して制御するのが難しいことから、Anthropicはすべての顧客に対して両モデルを一時停止する形で対応した。指摘されたのは特定のjailbreak手法(コードベースの脆弱性修正をClaudeに依頼する形での回避)だったが、Anthropicは他の公開モデルでも同様の手法で回避可能な既知の小さな脆弱性だと反論している。
 
@@ -45,11 +45,11 @@ Claude Tagの実務的な検証は、Enterprise環境での試用レポートを
 
 Karpathy氏はソフトウェア開発の歴史をSoftware 1.0(人間が明示的にコードを書く)、2.0(ニューラルネットワークを学習させる)、3.0(自然言語でLLMをプログラムする)という3段階で説明している。Software 3.0では、プロンプト・文脈・ツール・メモリ・評価基準そのものがプログラムの一部になる。
 
-同氏は2025年に広めた「vibe coding」(自然言語でAIに指示しながら作る開発スタイル)に続き、「Agentic Engineering」という言葉も使い始めている。vibe codingが開発の参入障壁を下げる一方、Agentic Engineeringは要件定義・タスク分解・権限設計・レビューといった、人間側の設計力を問う工学だと位置づけられている。
+同氏は2025年に広めた「vibe coding」(自然言語でAIに指示しながら作る開発スタイル)に続き、「Agentic Engineering」という言葉も使い始めている。vibe codingが開発の参入障壁を下げる一方、Agentic Engineeringは要件定義・タスク分解・権限設計・レビューといった、人間側の設計力を問う工学だと位置づけられている。両者の境界については [vibe coding と Agentic Engineering](/blogs/posts/2026/05/vibe-coding-and-agentic-engineering/) でも整理した。
 
 ## 数字で見るAI開発の加速
 
-Anthropicは自社の分析結果として以下を公開している([When AI builds itself](https://www.anthropic.com/institute/recursive-self-improvement))。
+Anthropicは自社の分析結果として以下を公開している（開発速度の内訳は [Anthropic の開発スピードを支える7要素](/blogs/posts/2026/05/anthropic-development-speed-7-factors/) も参照）([When AI builds itself](https://www.anthropic.com/institute/recursive-self-improvement))。
 
 - 2026年5月時点で、Anthropicのコードベースにマージされたコードの80%以上をClaudeが作成
 - 2026年第2四半期、エンジニア1人あたりの1日のマージ量が2024年比で約8倍に増加

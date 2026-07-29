@@ -39,6 +39,8 @@ ChatGPT のようにブラウザ上で会話する AI と異なり、Claude Code
 
 元記事はこの違いを「口で道を教えてくれる案内人」と「ハンドルを握って目的地まで運ぶ運転代行」の対比で説明している。プログラミングの知識は不要で、やりたいことを日本語で伝えるだけでよい。
 
+導入手順そのものは本記事では扱わないので、まだ環境がない場合は [非エンジニアでも1分で始められる Claude Code](/blogs/posts/2026/03/claude-code-setup-for-non-engineers/) を先に読んでほしい。ターミナルに抵抗がある場合は、画面録画から手順を覚えさせる [Claude Cowork の「Record a skill」](/blogs/posts/2026/07/claude-cowork-record-a-skill/) という選択肢もある。
+
 ## 飲食店の現場で活きる5つの特徴
 
 元記事が挙げる Claude Code ならではの特徴は次の 5 つだ。
@@ -72,7 +74,7 @@ ChatGPT のようにブラウザ上で会話する AI と異なり、Claude Code
 
 **Before**: 閉店後に現金を数え、POS の売上を手でエクセルに転記。毎晩40分。
 
-**After**: 毎晩23時にスケジュール実行で自動集計。
+**After**: 毎晩23時にスケジュール実行で自動集計（この「決まった時刻に自動で走らせる」部分は [Claude Code Routines](/blogs/posts/2026/04/claude-code-routines/) が担う）。
 
 - 接続ツール: POS（スマレジ等）MCP ＋ Notion MCP
 - Phase 1: その日の売上・客数・客単価を POS から取得
@@ -153,7 +155,7 @@ ChatGPT のようにブラウザ上で会話する AI と異なり、Claude Code
 
 便利な反面、万能ではない点にも元記事は触れている。
 
-- 売上や仕入れの数字を扱うため、POS やクラウド会計と MCP 連携する際は ID やパスワードの管理に注意が必要
+- 売上や仕入れの数字を扱うため、POS やクラウド会計と MCP 連携する際は ID やパスワードの管理に注意が必要（[SOPS による AI エージェントのシークレット管理](/blogs/posts/2026/05/sops-ai-agent-secrets-management/) が具体的な対策になる）
 - 予約者名・連絡先などの個人情報を扱う場合は、外部サービスへ不用意に渡さない運用を事前に決めておく必要がある
 - AI の計算結果は最後に必ず人の目で確認する（請求や発注に直結する数字は特に）
 - 仕入れ CSV の形式が業者ごとに異なると読み取りでつまずくことがあるが、CLAUDE.md にルールを書けば解決する場合が多い
@@ -168,3 +170,10 @@ Claude Code は、話しかけて答えをもらうだけの AI ではなく、�
 - [Extend Claude with skills — Claude Code Docs](https://code.claude.com/docs/en/skills)
 - [MCP を使用して Claude Code をツールに接続する — Claude Code Docs](https://code.claude.com/docs/ja/mcp)
 - [line/line-bot-mcp-server](https://github.com/line/line-bot-mcp-server)
+
+## 関連記事
+
+- [料理写真のライティング実践ガイド](/blogs/posts/2026/07/food-product-photography-lighting/) — ⑤ の SNS 投稿とセットで効く
+- [パン屋がAI（Gemini）と500時間かけて作ったテイクアウト予約管理システム](/blogs/posts/2026/04/bakery-takeout-reservation-gemini-gas/) — 個人店 × AI の別事例
+- [freee MCP × Claude Code で確定申告の仕訳1,428件を20分で](/blogs/posts/2026/03/freee-mcp-claude-code/) — 会計まわりの MCP 連携事例
+- [Claude Code Skills 構築完全ガイド](/blogs/posts/2026/03/claude-code-skills-guide/) — スキルの作り方の詳細

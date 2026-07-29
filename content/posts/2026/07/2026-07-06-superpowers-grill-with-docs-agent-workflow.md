@@ -18,7 +18,7 @@ X（旧Twitter）で `@kasong2048`（書籍『React設計原理』の著者）�
 
 ## Superpowers：詳細な実行計画で長期タスクを支える
 
-[Superpowers](https://github.com/obra/superpowers) は Jesse Vincent 氏（Prime Radiant）が開発した、Claude Code 向けの「エージェント的スキルフレームワーク兼ソフトウェア開発方法論」です。Anthropic 公式のプラグインマーケットプレイスからも、Claude Code のセッション内で次を実行してインストールできます（シェルではなくスラッシュコマンドです）。
+[Superpowers](https://github.com/obra/superpowers) は Jesse Vincent 氏（Prime Radiant）が開発した、Claude Code 向けの「エージェント的スキルフレームワーク兼ソフトウェア開発方法論」です。7段階ワークフローの詳細は [Superpowers — AIコーディングエージェント・フレームワーク](/blogs/posts/2026/03/superpowers-ai-coding-agent-framework/) で解説した。Anthropic 公式のプラグインマーケットプレイスからも、Claude Code のセッション内で次を実行してインストールできます（シェルではなくスラッシュコマンドです）。
 
 ```text
 /plugin install superpowers@claude-plugins-official
@@ -35,9 +35,9 @@ Superpowers の中核には、着手前にアイデアを深掘りする `brains
 
 ## Grill with Docs：5行のGoalで足りるという前提
 
-一方 [mattpocock/skills](https://github.com/mattpocock/skills)（Matt Pocock 氏が公開している「Skills for Real Engineers」）は、`grill-with-docs → to-spec → to-tickets → implement → code-review` という一連のスキルチェーンを提供しています。
+一方 [mattpocock/skills](https://github.com/mattpocock/skills)（Matt Pocock 氏が公開している「Skills for Real Engineers」）は、`grill-with-docs → to-spec → to-tickets → implement → code-review` という一連のスキルチェーンを提供しています。スキル15種の全体像は [mattpocock/skills](/blogs/posts/2026/06/mattpocock-skills/) と [Skills for Real Engineers](/blogs/posts/2026/04/matt-pocock-skills-for-real-engineers/) で扱いました。
 
-`grill-with-docs` は、実装に入る前に設計案をコードベースの実際の用語や既存の `CONTEXT.md`・ADR（Architecture Decision Record）と突き合わせ、あいまいな用語や既存の決定と矛盾する箇所を一問一答形式で洗い出すスキルです。ここで用語や決定事項が固まったら、それを共有ドキュメントに書き戻します。
+`grill-with-docs` は、実装に入る前に設計案をコードベースの実際の用語や既存の `CONTEXT.md`・ADR（Architecture Decision Record）と突き合わせ、あいまいな用語や既存の決定と矛盾する箇所を一問一答形式で洗い出すスキルです（この深さ優先の質問戦略は [grill-me](/blogs/posts/2026/05/claude-code-grill-me/) で詳しく見た）。ここで用語や決定事項が固まったら、それを共有ドキュメントに書き戻します。
 
 `implement` スキルは次のコマンドで導入できます。
 
@@ -73,3 +73,10 @@ npx skills add mattpocock/skills --skill=implement
 - どちらも「エージェントの実行能力に応じたベストプラクティス」であり、コーディングエージェントの進化とともに主流のワークフローも変化していくことがうかがえます
 
 自分のチームで Claude Code のスキルを導入する際は、エージェントにどこまで自律的な判断を任せられるかを見極めた上で、どちらの思想に寄せるか（あるいは両者を組み合わせるか）を検討すると良さそうです。
+
+## 関連記事
+
+- [AIエージェント設計の5レイヤー](/blogs/posts/2026/07/ai-agent-design-engineering-layers/) — 「計画側で担保するか、事前合意側で担保するか」を上位のレイヤー論に接続する
+- [Superpowers — AIコーディングエージェント・フレームワーク](/blogs/posts/2026/03/superpowers-ai-coding-agent-framework/) — Superpowers 側の使い方
+- [mattpocock/skills](/blogs/posts/2026/06/mattpocock-skills/) — grill-with-docs 系スキルの全体像
+- [Sandcastle と AFK 開発](/blogs/posts/2026/05/matt-pocock-sandcastle-afk-development/) — 自律実行能力をめぐる別角度の議論

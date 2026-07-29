@@ -80,3 +80,7 @@ AI が変える企業規模の常識については「[AIが変える企業規�
 - [TechCrunch: 6-month-old, solo-owned vibe coder Base44 sells to Wix for $80M cash](https://techcrunch.com/2025/06/18/6-month-old-solo-owned-vibe-coder-base44-sells-to-wix-for-80m-cash/)
 - [Lenny's Newsletter: The Base44 bootstrapped startup success story | Maor Shlomo](https://www.lennysnewsletter.com/p/the-base44-bootstrapped-startup-success-story-maor-shlomo)
 - [How a Founder Sold His 1-Person AI Startup for 9 Figures in 6 months](https://henrythe9th.substack.com/p/how-a-founder-sold-his-1-person-ai)
+
+## 関連記事
+
+- [人を抱えず売上22.9億円、GENDA に40億円で売却](/blogs/posts/2026/07/ctraum-kleiner-exclusive-import-40oku/) — ソフトウェア以外での一人 Exit 事例。高マルチプル型の本記事とは対照的に、キャッシュを厚く残す出口の作り方
