@@ -69,7 +69,7 @@
         </mxCell>
 
         <!-- Basics band -->
-        <mxCell id="basics" value="「基本となる事項」（コンテンツ別表示のもう 1 つの入口）&#xa;報告企業／関連する財務諸表／法令との関係／商業上の機密情報／質的特性／集約及び分解／つながりのある情報／&#xa;情報の記載場所／報告のタイミング／比較情報／準拠表明／判断／測定の不確実性／誤謬 ほか（全 20 項目）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;align=center;verticalAlign=middle;dashed=1;dashPattern=6 4;fontColor=#444444;" vertex="1" parent="1">
+        <mxCell id="basics" value="ユニバーサル基準「適用基準」＝ ASSET-SSBJ の「基本となる事項」（全基準に共通する土台）&#xa;報告企業／関連する財務諸表／法令との関係／商業上の機密情報／質的特性／集約及び分解／つながりのある情報／&#xa;情報の記載場所／報告のタイミング／比較情報／準拠表明／判断／測定の不確実性／誤謬 ほか（全 20 項目）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;align=center;verticalAlign=middle;dashed=1;dashPattern=6 4;fontColor=#444444;" vertex="1" parent="1">
           <mxGeometry x="60" y="580" width="960" height="80" as="geometry"/>
         </mxCell>
 
