@@ -4,9 +4,10 @@ date: 2026-07-06
 lastmod: 2026-07-06
 slug: "superpowers-grill-with-docs-agent-workflow"
 draft: false
+description: "Claude Code のスキル運用は Superpowers の詳細な実行計画から、mattpocock/skills の grill-with-docs → to-spec → implement へ。両者が前提とするエージェントの実行能力の違いから、設計思想の分岐を整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4888313217"
 categories: ["AI/LLM"]
-tags: ["claude-code", "superpowers", "grill-with-docs", "agent", "tdd"]
+tags: ["claude-code", "superpowers", "grill-with-docs", "AIエージェント", "mattpocock"]
 ---
 
 ## はじめに
@@ -17,9 +18,9 @@ X（旧Twitter）で `@kasong2048`（書籍『React設計原理』の著者）�
 
 ## Superpowers：詳細な実行計画で長期タスクを支える
 
-[Superpowers](https://github.com/obra/superpowers) は Jesse Vincent 氏（Prime Radiant）が開発した、Claude Code 向けの「エージェント的スキルフレームワーク兼ソフトウェア開発方法論」です。Anthropic 公式のプラグインマーケットプレイスからも次のコマンドでインストールできます。
+[Superpowers](https://github.com/obra/superpowers) は Jesse Vincent 氏（Prime Radiant）が開発した、Claude Code 向けの「エージェント的スキルフレームワーク兼ソフトウェア開発方法論」です。Anthropic 公式のプラグインマーケットプレイスからも、Claude Code のセッション内で次を実行してインストールできます（シェルではなくスラッシュコマンドです）。
 
-```bash
+```text
 /plugin install superpowers@claude-plugins-official
 ```
 
@@ -69,6 +70,6 @@ npx skills add mattpocock/skills --skill=implement
 
 - **Superpowers**（`obra/superpowers`）は、エージェントがまだ長時間タスクを安定してこなせない前提に立ち、詳細な実行計画で確実性を担保するスキルフレームワーク
 - **Grill with Docs系**（`mattpocock/skills` の `grill-with-docs → to-spec → to-tickets → implement → code-review`）は、事前に seam や仕様を固めておけば、エージェントは簡潔な目標だけで実行できるという前提に立つ
-- どちらも「エージェントの実行能力に応じたベストプラクティス」であり、コーディングエージェントの進化とともに主流のワークフローも変化していくことが伺えます
+- どちらも「エージェントの実行能力に応じたベストプラクティス」であり、コーディングエージェントの進化とともに主流のワークフローも変化していくことがうかがえます
 
 自分のチームで Claude Code のスキルを導入する際は、エージェントにどこまで自律的な判断を任せられるかを見極めた上で、どちらの思想に寄せるか（あるいは両者を組み合わせるか）を検討すると良さそうです。
