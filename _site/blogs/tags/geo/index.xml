@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>GEO on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/geo/</link><description>Recent content in GEO on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 12 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/geo/index.xml" rel="self" type="application/rss+xml"/><item><title>geo-seo-claude：AI検索時代のSEO最適化をClaude Codeで自動化するオープンソースツール</title><link>https://hdknr.github.io/blogs/posts/2026/03/geo-seo-claude/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/geo-seo-claude/</guid><description>&lt;p&gt;ChatGPTやClaude、Perplexityなどの AI 検索エンジンに自社サイトを見つけてもらうための最適化ツール「&lt;a href="https://github.com/zubair-trabzada/geo-seo-claude"&gt;geo-seo-claude&lt;/a&gt;」がオープンソースで公開されている。従来の SEO に加えて、AI が引用・参照しやすいコンテンツ構造を自動分析・提案してくれる Claude Code 用スキルだ。&lt;/p&gt;
+&lt;h2 id="geogenerative-engine-optimizationとは"&gt;GEO（Generative Engine Optimization）とは&lt;/h2&gt;
+&lt;p&gt;従来の SEO が Google などの検索エンジンでの上位表示を目指すのに対し、GEO は AI 検索エンジン（ChatGPT、Claude、Perplexity、Gemini、Google AI Overviews）での「引用されやすさ」を最適化する考え方だ。&lt;/p&gt;
+&lt;p&gt;AI がウェブ上の情報を参照して回答を生成する際、どのサイトが引用されるかは以下のような要素に左右される：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;コンテンツの構造化の度合い&lt;/li&gt;
+&lt;li&gt;AI クローラーへのアクセス許可（robots.txt）&lt;/li&gt;
+&lt;li&gt;ブランドの権威性（各プラットフォームでの言及）&lt;/li&gt;
+&lt;li&gt;スキーママークアップの品質&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="geo-seo-claude-の主な機能"&gt;geo-seo-claude の主な機能&lt;/h2&gt;
+&lt;h3 id="引用可能性スコアリングcitability-scoring"&gt;引用可能性スコアリング（Citability Scoring）&lt;/h3&gt;
+&lt;p&gt;コンテンツが AI に引用されやすい構造になっているかを評価する。134〜167語の最適な段落長、明確な見出し構造、事実ベースの記述かどうかなどをチェックする。&lt;/p&gt;
+&lt;h3 id="ai-クローラー分析"&gt;AI クローラー分析&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;robots.txt&lt;/code&gt; を解析し、14以上の AI ボット（GPTBot、ClaudeBot、PerplexityBot など）へのアクセス許可状況を確認する。ブロックしているボットがあれば、許可すべきかの推奨事項を提示する。&lt;/p&gt;
+&lt;h3 id="ブランド言及スキャン"&gt;ブランド言及スキャン&lt;/h3&gt;
+&lt;p&gt;YouTube、Reddit、Wikipedia、LinkedIn など7つ以上のプラットフォームでのブランド言及を検出する。AI は複数ソースでの言及が多いサイトをより信頼性が高いと判断する傾向がある。&lt;/p&gt;
+&lt;h3 id="プラットフォーム別最適化"&gt;プラットフォーム別最適化&lt;/h3&gt;
+&lt;p&gt;ChatGPT、Perplexity、Google AI Overviews それぞれの特性に合わせた最適化提案を行う。各 AI 検索エンジンがコンテンツを処理する方法は異なるため、プラットフォームごとのカスタマイズが重要になる。&lt;/p&gt;
+&lt;h3 id="llmstxt-生成"&gt;llms.txt 生成&lt;/h3&gt;
+&lt;p&gt;AI クローラーがサイト構造を理解しやすくするための新興標準ファイル &lt;code&gt;llms.txt&lt;/code&gt; を自動生成する。Answer.AI の Jeremy Howard が提案した規格で、&lt;code&gt;robots.txt&lt;/code&gt; の AI 版のような位置づけを目指している（現時点ではまだ提案段階）。&lt;/p&gt;
+&lt;h3 id="pdf-レポート生成"&gt;PDF レポート生成&lt;/h3&gt;
+&lt;p&gt;スコアゲージ、棒グラフ、カラーコード付きテーブルなど、視覚的にわかりやすいプロフェッショナルな監査レポートを PDF 形式で出力できる。&lt;/p&gt;</description></item></channel></rss>

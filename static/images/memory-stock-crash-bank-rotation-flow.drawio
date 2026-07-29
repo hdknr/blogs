@@ -1,0 +1,31 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="capital-rotation" id="capital-rotation-1">
+    <mxGraphModel dx="1100" dy="700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="資金のセクターローテーション（2026年7月）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#1a1a1a;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="500" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="memory" value="メモリ・半導体株（グロース）&#10;&#10;キオクシア／SKハイニックス&#10;サムスン／マイクロン&#10;&#10;AI相場で急騰 → 高値警戒で反落" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde7e7;strokeColor=#c0392b;fontSize=13;fontColor=#5b1a12;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="150" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cash" value="利益確定で&#10;いったん抜ける&#10;&#10;（金は蒸発せず&#10;移動するだけ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4d6;strokeColor=#d39e00;fontSize=12;fontColor=#6b5200;align=center;verticalAlign=middle;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="175" width="180" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bank" value="銀行・金融株（バリュー）&#10;&#10;三菱UFJ／三井住友／みずほ&#10;地方銀行・証券・保険&#10;&#10;「金利ある世界」で利ざや拡大" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f3e6;strokeColor=#27803a;fontSize=13;fontColor=#12401d;align=center;verticalAlign=middle;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="600" y="150" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" style="endArrow=classic;html=1;strokeColor=#555555;strokeWidth=2.5;fontSize=12;" edge="1" parent="1" source="memory" target="cash">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2" style="endArrow=classic;html=1;strokeColor=#555555;strokeWidth=2.5;fontSize=12;" edge="1" parent="1" source="cash" target="bank">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="主役交代：グロース（成長期待）→ バリュー（今しっかり稼ぐ割安株）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=13;fontStyle=2;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="150" y="360" width="600" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

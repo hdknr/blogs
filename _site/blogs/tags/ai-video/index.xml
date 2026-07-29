@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Ai-Video on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ai-video/</link><description>Recent content in Ai-Video on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 24 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ai-video/index.xml" rel="self" type="application/rss+xml"/><item><title>Renoise：Claude Code + Seedance 2.0 で動画広告制作を100倍スケールさせるAIツール</title><link>https://hdknr.github.io/blogs/posts/2026/03/renoise-claude-code-seedance/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/renoise-claude-code-seedance/</guid><description>&lt;p&gt;Claude Code と ByteDance の Seedance 2.0 を組み合わせた動画広告制作ツール「Renoise」が登場した。1枚の商品写真から数百パターンの動画クリエイティブを自動生成できるという。&lt;/p&gt;
+&lt;h2 id="renoise-とは"&gt;Renoise とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://renoise.ai/"&gt;Renoise&lt;/a&gt; は「動画をつくるな、プログラムしろ（Don&amp;rsquo;t make videos — program them）」をコンセプトに掲げる AI 動画制作ツール。Claude Code のコード生成能力と、ByteDance が開発した動画生成 AI「Seedance 2.0」を組み合わせることで、動画広告の制作を従来の100倍にスケールさせることを目指している。&lt;/p&gt;
+&lt;p&gt;主な特徴：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1枚の商品写真から数百パターンの動画クリエイティブを生成&lt;/li&gt;
+&lt;li&gt;手動編集ではなく、コードベースで動画を「設計・展開」するアプローチ&lt;/li&gt;
+&lt;li&gt;広告やマーケティング向けのクリエイティブ量産に特化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="seedance-20-について"&gt;Seedance 2.0 について&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://seed.bytedance.com/en/seedance2_0"&gt;Seedance 2.0&lt;/a&gt; は ByteDance の Seed 研究チームが開発した次世代 AI 動画生成モデル。2026年2月にベータ版が公開され、SNS で大きな話題となった。&lt;/p&gt;
+&lt;h3 id="主な機能"&gt;主な機能&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;マルチモーダル入力&lt;/strong&gt;: テキスト、画像（最大9枚）、動画（最大3本）、音声（最大3ファイル）を組み合わせて動画を生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;音声・動画の同時生成&lt;/strong&gt;: デュアルチャンネルステレオ技術で映像と完全同期した音声を生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;高解像度出力&lt;/strong&gt;: ネイティブ 2K 解像度（2048×1080）に対応&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;高速生成&lt;/strong&gt;: 前モデル Seedance 1.5 Pro と比べて30%の速度向上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;物理演算の改善&lt;/strong&gt;: 人物の動きや物体の相互作用がよりリアルに&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="claude-code-との連携"&gt;Claude Code との連携&lt;/h2&gt;
+&lt;p&gt;Claude Code は Anthropic が提供する CLI ベースの AI コーディングアシスタント。Renoise では、Claude Code の自然言語によるコード生成能力を活かして、動画制作のワークフローをプログラマブルに制御する。&lt;/p&gt;</description></item></channel></rss>

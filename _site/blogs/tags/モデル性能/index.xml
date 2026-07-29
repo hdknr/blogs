@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>モデル性能 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%A2%E3%83%87%E3%83%AB%E6%80%A7%E8%83%BD/</link><description>Recent content in モデル性能 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Sat, 11 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%A2%E3%83%87%E3%83%AB%E6%80%A7%E8%83%BD/index.xml" rel="self" type="application/rss+xml"/><item><title>AIモデルは意図的に性能を低下させている？ OpenAI・Google・Anthropicに共通するパターン</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-model-performance-degradation/</link><pubDate>Sat, 11 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-model-performance-degradation/</guid><description>&lt;p&gt;AIモデルのリリース後、時間が経つにつれてパフォーマンスが落ちた気がする——そんな経験をしたユーザーは少なくないだろう。最近、SNS上でこの「体感」に関する興味深い主張が話題になった。&lt;/p&gt;
+&lt;h2 id="性能放血戦略という仮説"&gt;「性能放血」戦略という仮説&lt;/h2&gt;
+&lt;p&gt;中国のテック系アカウント「墓碑科技（mubeitech）」が2026年4月10日に投稿したツイートは、約21万回以上閲覧され、1,600件以上のいいねを集めた。&lt;/p&gt;
+&lt;p&gt;その内容はこうだ：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;OpenAI・Google・Anthropicは同様の戦略を採用している。新モデルのリリース初日には性能が最高（100%）に達し、その後「放血」と呼ぶ数ヶ月間の段階的な低下を経験し、最終的に約60%まで落ちる。この目的は、次世代製品リリース時に「劇的な改善」を強調するためだ。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;このパターンを同氏は「放血（bloodletting）」と表現した。意図的に性能を落としておき、次世代モデルの登場時に比較対象を都合よく用意するという戦略的操作だという主張だ。&lt;/p&gt;
+&lt;h2 id="この主張の背景"&gt;この主張の背景&lt;/h2&gt;
+&lt;p&gt;同様の「体感」を持つユーザーはこれまでにも多く、特にGPT-4が登場直後より時間が経つにつれ「鈍くなった」「回答が短くなった」と感じるユーザーの声はX（Twitter）やRedditで繰り返し話題になってきた。&lt;/p&gt;
+&lt;p&gt;一方で、OpenAIは過去にGPT-4モデルへの変更内容を公開し、変化があったことを認めつつも「意図的な品質低下」は否定している。また、2023年に行われたスタンフォード大学の研究（&amp;ldquo;How Is ChatGPT&amp;rsquo;s Behavior Changing over Time?&amp;quot;）では、GPT-4の一部タスクで時間的な性能変動が確認されたことも報告されている。&lt;/p&gt;
+&lt;h2 id="なぜこの主張が広がるのか"&gt;なぜこの主張が広がるのか&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ユーザーの体感との一致&lt;/strong&gt;: モデルの応答品質の変化はユーザーが実感しやすく、「意図的」という説明が腑に落ちやすい&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;商業的インセンティブへの不信感&lt;/strong&gt;: 次世代モデルの販促のために旧モデルを陳腐化させるというシナリオは、ビジネス的に合理的に見える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;検証困難性&lt;/strong&gt;: APIの内部変更は外部からの完全な検証が難しく、陰謀論的な解釈が入り込みやすい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="実際のところはどうなのか"&gt;実際のところはどうなのか&lt;/h2&gt;
+&lt;p&gt;「意図的な性能低下」説については、現時点で公開情報による明確な裏付けはない。ただし、以下のような要因で性能変動が起きることは事実だ：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;モデルの量子化・最適化&lt;/strong&gt;: コスト削減のためにより軽量な推論方法に移行することで、一部タスクの精度が変化する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全性フィルタリングの調整&lt;/strong&gt;: ガイドラインの変更により、出力の傾向が変わることがある&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プロンプト処理の変更&lt;/strong&gt;: 内部のシステムプロンプトや前処理ロジックの変更が応答に影響する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;インフラのスケーリング&lt;/strong&gt;: 急激なユーザー増加に対応する際の一時的なサービス品質の変化&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;「意図的放血戦略」は現時点では未確認の仮説だが、AIモデルの品質管理と透明性に対するユーザーの関心の高さを示している。実際、リリース初期と数ヶ月後でモデルの挙動が変わることは多くの利用者が実感しており、各社がより詳細な変更履歴を公開することで、こうした不信感を払拭できる余地はあるだろう。&lt;/p&gt;
+&lt;p&gt;AI企業の透明性とユーザーの信頼構築は、今後ますます重要な課題となっていきそうだ。&lt;/p&gt;</description></item></channel></rss>

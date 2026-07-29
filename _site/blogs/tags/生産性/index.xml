@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>生産性 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E7%94%9F%E7%94%A3%E6%80%A7/</link><description>Recent content in 生産性 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 25 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E7%94%9F%E7%94%A3%E6%80%A7/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code の「毎回ゼロスタート」問題 — CLAUDE.md・メモリ・行動ルールでセッション間の文脈を継続させる</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-session-context-persistence/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-session-context-persistence/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;2026年1月、Google のプリンシパルエンジニア Jaana Dogan 氏が X にこう投稿した。「Claude Code を使ったら、チームが1年かけて構築した分散エージェントオーケストレータを1時間で再現できた」——このツイートは 800 万以上のビューを獲得し、エンジニアリングコミュニティに衝撃を与えた。&lt;/p&gt;
+&lt;p&gt;しかし、その生産性の前提条件がある。&lt;strong&gt;Claude Code を正しく設定すること&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;p&gt;あるアラビア語圏の開発者がX（旧Twitter）で指摘した問題が、多くの開発者の共感を呼んでいる。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code を毎日使っている開発者の 90% は、毎セッション、ゼロから始めている。
+スタックのコンテキストなし、以前の会話の記憶なし、コードスタイルを統一する行動ルールなし。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この「毎回ゼロスタート」問題は、週あたり相当な生産性損失をもたらすという。同氏は正しい設定を導入した結果、月次で &lt;strong&gt;週15時間以上の節約&lt;/strong&gt; と大幅な token コスト削減を実現したと報告している。&lt;/p&gt;
+&lt;p&gt;では、どうすれば解決できるのか？&lt;/p&gt;
+&lt;h2 id="問題の本質-claude-code-はセッションをまたいで記憶しない"&gt;問題の本質: Claude Code はセッションをまたいで記憶しない&lt;/h2&gt;
+&lt;p&gt;Claude Code は強力なツールだが、デフォルトでは&lt;strong&gt;セッションをまたいで文脈を保持しない&lt;/strong&gt;。新しいセッションを開くたびに以下を繰り返すことになる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロジェクトのアーキテクチャを再説明する&lt;/li&gt;
+&lt;li&gt;コーディング規約や好みを再度伝える&lt;/li&gt;
+&lt;li&gt;前回の作業内容や設計上の決定事項を再共有する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この繰り返しは、時間と token の両方の無駄になる。毎日 Claude Code を使う開発者にとって、これは積み重なると無視できないコストになる。&lt;/p&gt;
+&lt;h2 id="解決策-3-つの永続化レイヤー"&gt;解決策: 3 つの永続化レイヤー&lt;/h2&gt;
+&lt;p&gt;Claude Code でセッション間の文脈を維持するには、次の 3 つの仕組みを組み合わせる。&lt;/p&gt;
+&lt;h3 id="1-claudemd--プロジェクトコンテキストの永続化"&gt;1. CLAUDE.md — プロジェクトコンテキストの永続化&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; は、Claude Code がセッション開始時に自動的に読み込む設定ファイルだ。プロジェクトのルートに置いておけば、毎回説明しなくていい情報を一度記載しておける。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# プロジェクト名
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 技術スタック
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; フロントエンド: React + TypeScript
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; バックエンド: FastAPI (Python)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; データベース: PostgreSQL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## コーディング規約
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 変数名はキャメルケース
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 関数は 50 行以内に収める
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; テストは pytest を使用
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## よく使うコマンド
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`npm run dev`&lt;/span&gt; — 開発サーバー起動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`pytest`&lt;/span&gt; — テスト実行
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`docker compose up -d`&lt;/span&gt; — DB 起動
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これだけで、毎セッションの「説明コスト」を大幅に削減できる。&lt;/p&gt;</description></item><item><title>AI 開発と保守コスト</title><link>https://hdknr.github.io/blogs/wiki/concepts/ai-maintenance-cost/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/ai-maintenance-cost/</guid><description>AI エージェントの速度向上が長期生産性に効くには『速度向上率 × 保守コスト削減率 ≥ 1』を満たす必要があるという James Shore の定量モデル</description></item><item><title>AI 駆動開発の生産性向上、現場が静かに支払っているコストの話</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-driven-dev-hidden-costs/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-driven-dev-hidden-costs/</guid><description>AI 駆動開発で速度は上がったのに現場が疲弊する構造的な理由を解説。意思決定疲労・やり直し増加・評価の不可視化という3つの問題と、経営・PM・開発者それぞれの対策を整理します。</description></item><item><title>Obsidian × Claude Code で「24時間365日動く AI 秘書」を構築する — Greg Isenberg の 10 ステップ</title><link>https://hdknr.github.io/blogs/posts/2026/04/obsidian-claude-code-personal-os/</link><pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/obsidian-claude-code-personal-os/</guid><description>&lt;p&gt;スタートアップコミュニティで知名度の高い Greg Isenberg が、Obsidian と Claude Code を組み合わせて「24時間365日稼働するパーソナル AI オペレーティングシステム」を構築する方法を公開した。閲覧数 110 万超、ブックマーク 17,000 超と大きな反響を呼んでいる。&lt;/p&gt;
+&lt;h2 id="なぜ-obsidian--claude-code-なのか"&gt;なぜ Obsidian × Claude Code なのか&lt;/h2&gt;
+&lt;p&gt;多くの人は AI を「汎用チャットボット」として使っている。セッションを開くたびに自己紹介し、プロジェクトの背景を説明し直す——この繰り返しが生産性のボトルネックになっている。&lt;/p&gt;
+&lt;p&gt;Greg が提案するアプローチは、&lt;strong&gt;自分の思考・知識・文脈をすべて Obsidian ボルト（ノート群）に蓄積し、Claude Code がそれを読み込んで行動する&lt;/strong&gt;というものだ。人間が書き、AI が読んで実行する、という明確な役割分担がポイントになる。&lt;/p&gt;
+&lt;h2 id="10-ステップで始めるパーソナル-os"&gt;10 ステップで始めるパーソナル OS&lt;/h2&gt;
+&lt;h3 id="ステップ-1-全てを-markdown-で書く"&gt;ステップ 1: 全てを Markdown で書く&lt;/h3&gt;
+&lt;p&gt;日報・プロジェクト概要・自分の信念・人脈・議事録——あらゆる情報を Markdown ファイルとして Obsidian ボルトに記録する。フォーマットを統一することで、Claude Code が構造的に読み取れるようになる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vault/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── daily/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── 2026-04-22.md # 日報
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── projects/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── my-startup.md # プロジェクト概要
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── people/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── john-doe.md # 人脈メモ
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;├── beliefs/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;│ └── product-philosophy.md # 信念・哲学
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;└── meetings/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; └── 2026-04-22-kickoff.md # 議事録
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="ステップ-2-ノート同士を自分の思考回路のようにリンクする"&gt;ステップ 2: ノート同士を自分の思考回路のようにリンクする&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;[[プロジェクト名]]&lt;/code&gt; 形式のウィキリンクでノートを繋ぎ、自分の思考の連鎖を反映させる。単なるメモの集合ではなく、&lt;strong&gt;考え方のグラフ&lt;/strong&gt;を構築することが目的だ。&lt;/p&gt;</description></item><item><title>AIが変える企業規模の常識——「才能密度」と少人数で100億を狙う時代</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-solo-company-talent-density/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-solo-company-talent-density/</guid><description>&lt;p&gt;2026年、「1人で100億稼ぐ企業」が大量発生するという予測が現実味を帯びてきた。すでに海外では1人で30億円規模の売上を達成した事例も登場している。AI が業務を圧縮し続ける今、「大人数＝強い会社」という常識が根本から覆されつつある。&lt;/p&gt;
+&lt;h2 id="obsidian-が示す新しいモデル"&gt;Obsidian が示す新しいモデル&lt;/h2&gt;
+&lt;p&gt;ノートアプリとして世界中のナレッジワーカーに愛用されている Obsidian は、わずか &lt;strong&gt;9人&lt;/strong&gt;のチームで運営されており、エンジニアは &lt;strong&gt;3人&lt;/strong&gt; のみ。さらに 9人目のチームメンバーは &amp;ldquo;Sandy&amp;rdquo; という猫だ。&lt;/p&gt;
+&lt;p&gt;それでも Obsidian の1人あたり売上は、Apple や Google を大きく上回る水準にあると言われている。この数字が示すのは、&lt;strong&gt;規模ではなく密度&lt;/strong&gt;が競争力を左右するという現実だ。&lt;/p&gt;
+&lt;h2 id="才能密度が企業の強さを決める"&gt;「才能密度」が企業の強さを決める&lt;/h2&gt;
+&lt;p&gt;これまでの組織論では、人数を増やすことが成長の証であり、大企業が有利とされてきた。しかし AI が以下のような業務を自動化・圧縮できるようになった今、その前提が崩れている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ルーティンのコーディング・テスト作業&lt;/li&gt;
+&lt;li&gt;ドキュメント生成・翻訳・要約&lt;/li&gt;
+&lt;li&gt;カスタマーサポートの一次対応&lt;/li&gt;
+&lt;li&gt;マーケティングコンテンツの初稿作成&lt;/li&gt;
+&lt;li&gt;データ集計・レポート作成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;結果として、少人数の高スキル人材が AI をフル活用することで、かつては数十人を要した仕事を完結させられるようになった。重要なのは「何人いるか」ではなく、&lt;strong&gt;「才能の密度（Talent Density）」&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;h2 id="無駄を削ることで生まれる速度"&gt;無駄を削ることで生まれる速度&lt;/h2&gt;
+&lt;p&gt;Obsidian が象徴するような高効率企業には、共通する特徴がある。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;全社 MTG なし&lt;/strong&gt; — 意思決定コストを最小化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;評価制度の簡素化&lt;/strong&gt; — 時間を消耗するプロセスを廃止&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;小さなチームへの強い信頼&lt;/strong&gt; — 自律性と責任が同時に与えられる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらは単なるコスト削減ではなく、&lt;strong&gt;スピードを生むための構造設計&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;h2 id="2026年一人会社極小チームが台頭する年"&gt;2026年：一人会社・極小チームが台頭する年&lt;/h2&gt;
+&lt;p&gt;AI ツールの進化により、2026年はソロファウンダーや極小チームが本格的に大企業と競合できる年になると見られている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SaaS プロダクト&lt;/strong&gt;: コーディング・インフラ管理を AI が補助&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテンツビジネス&lt;/strong&gt;: 調査・執筆・SEO 対策を AI が効率化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンサルティング&lt;/strong&gt;: レポート作成・分析を AI が加速&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;単に「AI を使う」のではなく、&lt;strong&gt;「AI で何を削れるか」を徹底的に考える&lt;/strong&gt;組織が次の覇者になる可能性が高い。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;旧来の成功モデル&lt;/th&gt;
+&lt;th&gt;新しい成功モデル&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;大人数 = 強い&lt;/td&gt;
+&lt;td&gt;才能密度 = 強い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;多くの管理職&lt;/td&gt;
+&lt;td&gt;フラットな自律組織&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;プロセス重視&lt;/td&gt;
+&lt;td&gt;スピード・結果重視&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;人手でスケール&lt;/td&gt;
+&lt;td&gt;AI でスケール&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;「1人で100億」はもはや夢物語ではない。AI が業務を圧縮し、才能密度の高い少人数チームが巨大企業の生産性を上回る——そんな時代がすでに始まっている。&lt;/p&gt;</description></item><item><title>AI Brain Fry: AIの使いすぎで脳が焼ける現象とその対策</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-brain-fry/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-brain-fry/</guid><description>BCGの1,488名調査で判明したAIツールの過度な使用による認知疲労「AI Brain Fry」。症状、業務への影響、個人・組織レベルの対策を解説。</description></item><item><title>AI時代の「ダラダラ働き」のすすめ — AIエージェント並列実行の落とし穴</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-agent-parallel-execution-efficiency/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-agent-parallel-execution-efficiency/</guid><description>&lt;p&gt;AIエージェントを複数並列で動かせば効率が上がる——そう思っていないだろうか。実は、「ダラダラと1つのエージェントと長時間向き合う」方が、最終的に良い成果を出せるかもしれない。K.Ishi氏（&lt;a href="https://x.com/K_Ishi_AI"&gt;@K_Ishi_AI&lt;/a&gt;）がX（旧Twitter）で提唱した、AI時代の新しい働き方の視点を紹介する。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h2 id="並列実行は本当に効率的か"&gt;並列実行は本当に効率的か？&lt;/h2&gt;
+&lt;p&gt;AIエージェントを2つ同時に走らせれば効率は2倍、3つなら3倍——直感的にはそう思える。しかし現実はそうならない。&lt;/p&gt;
+&lt;p&gt;ボトルネックは &lt;strong&gt;人間の脳&lt;/strong&gt; にある。&lt;/p&gt;
+&lt;p&gt;人間の脳はタスクを切り替えるたびに「切り替えコスト（スイッチングオーバーヘッド）」が発生する。エージェントAの結果を確認している最中にエージェントBが返答を返してくる。Bに意識を向けた瞬間、Aの文脈が薄れる。Aに戻ると、また状況を思い出すところからやり直しになる。&lt;/p&gt;
+&lt;p&gt;この繰り返しが積み重なると：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;同時実行するエージェント数が増えるほど、1つあたりの注意力が低下する&lt;/li&gt;
+&lt;li&gt;脳が疲弊し、集中力が落ちる&lt;/li&gt;
+&lt;li&gt;思考の質が悪化し、「浅い判断」が増える&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="浅い判断が生む大きな手戻り"&gt;浅い判断が生む大きな手戻り&lt;/h2&gt;
+&lt;p&gt;表面的な処理速度は上がっても、判断の質が下がれば意味がない。&lt;/p&gt;
+&lt;p&gt;1つのエージェントにじっくり向き合っていれば気づけたはずのミスを見逃す。そのミスが後になって発覚し、大規模な手戻りが発生する——このリスクが、並列実行では増大する。&lt;/p&gt;
+&lt;p&gt;並列実行の「速さ」は、手戻りコストを考慮すると、実は遅くなっている可能性がある。&lt;/p&gt;
+&lt;h2 id="ダラダラ長時間働くという逆張り戦略"&gt;「ダラダラ長時間働く」という逆張り戦略&lt;/h2&gt;
+&lt;p&gt;では、どうすれば良いのか。K.Ishi氏が提案するのは、シンプルな逆張りだ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;AIの実行ログをボーっと眺め、脳のエネルギーを温存し、AIに任せた仕事の分だけ楽になれば良い。そして、楽になった分だけちょっと長く働いた方が、案外最終的には並列実行よりも良質な成果を出すかもしれない。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;つまり：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;エージェントは1つに絞る&lt;/strong&gt; — 並列実行を避け、1つのエージェントの出力に集中する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ログをゆっくり眺める&lt;/strong&gt; — 急いで判断せず、じっくりと結果を吟味する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;脳のエネルギーを温存する&lt;/strong&gt; — タスク切り替えをなくし、深い思考力を保つ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;楽になった分、少し長く働く&lt;/strong&gt; — 集中力を維持しながら、より長い時間作業する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;この結果、「浅くて速い」並列作業より、「深くて丁寧な」直列作業の方が最終的な成果の質が高くなる可能性がある。&lt;/p&gt;
+&lt;h2 id="ai時代の集中の価値"&gt;AI時代の「集中」の価値&lt;/h2&gt;
+&lt;p&gt;AIの登場で「何タスクを並列でこなせるか」が生産性の指標になりつつある。しかし、タスクの数ではなく &lt;strong&gt;タスクの質&lt;/strong&gt; を追求する視点も重要だ。&lt;/p&gt;
+&lt;p&gt;AI時代において、人間に求められる価値が「AIの高速な実行を監督・統制する判断力」にシフトしていくとすれば、その判断力を最大化するために「集中」に投資することは理にかなっている。&lt;/p&gt;
+&lt;p&gt;並列実行を前提としたワークフロー設計が主流になる中、あえて「1エージェント集中型」のワークスタイルを選択するという議論がもっと盛り上がっても良いのかもしれない。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;並列実行型&lt;/th&gt;
+&lt;th&gt;集中型（直列）&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;処理速度&lt;/td&gt;
+&lt;td&gt;速い&lt;/td&gt;
+&lt;td&gt;遅い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;脳への負担&lt;/td&gt;
+&lt;td&gt;大きい&lt;/td&gt;
+&lt;td&gt;小さい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;判断の質&lt;/td&gt;
+&lt;td&gt;浅くなりがち&lt;/td&gt;
+&lt;td&gt;深く保てる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;手戻りリスク&lt;/td&gt;
+&lt;td&gt;高い&lt;/td&gt;
+&lt;td&gt;低い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;最終的な成果の質&lt;/td&gt;
+&lt;td&gt;場合による&lt;/td&gt;
+&lt;td&gt;安定して高い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;AIエージェントが増えた時代だからこそ、「どう使うか」だけでなく「何個使うか」「どのくらい並列にするか」を意識的に設計することが重要になってくる。あなたのAI活用スタイルは、並列型か集中型か、どちらが合っているだろうか。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;元ツイート: &lt;a href="https://x.com/K_Ishi_AI/status/2033892749829967970"&gt;K.Ishi (@K_Ishi_AI) — X, 2026-03-17&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Claude Coworkを「完璧な右腕」に変える最強の初期設定</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-cowork-initial-setup/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-cowork-initial-setup/</guid><description>&lt;p&gt;Claude Coworkは今年最強の生産性ツールだ。しかし9割の人はインストールして10分ほど適当に触り、「へえ、すごいね」と言って結局ChatGPTに戻ってしまう。&lt;/p&gt;
+&lt;p&gt;理由は明確で、「初期設定」をサボっているからだ。海外のガチ勢が数ヶ月かけて検証したCoworkを本物の従業員にするための初期設定がエグすぎたので、すべて解説する。&lt;/p&gt;
+&lt;p&gt;これさえやれば、今日からあなたの働き方は完全に自動化される。&lt;/p&gt;
+&lt;h2 id="claude-coworkとは"&gt;Claude Coworkとは&lt;/h2&gt;
+&lt;p&gt;Claude Coworkは、Claude Desktopアプリに組み込まれたエージェント型デスクトップツールだ。&lt;/p&gt;
+&lt;p&gt;PCのフォルダへの直接読み書きアクセス、マルチステップタスクの自律実行、複雑な作業のための並列サブエージェント起動ができる。ターミナルもコマンドラインも不要。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Claude Chat&lt;/strong&gt;：質問に答えるアシスタント&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude Code&lt;/strong&gt;：ソフトウェアを構築するデベロッパー&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude Cowork&lt;/strong&gt;：タスクを完遂する従業員&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ビジネスオーナーにとってゲームチェンジャーになるのがCoworkだ。&lt;/p&gt;
+&lt;h2 id="1-必須の4大プラグイン"&gt;1. 必須の「4大プラグイン」&lt;/h2&gt;
+&lt;p&gt;まずは土台となるプラグインを入れる。ここからすべてが始まる。&lt;/p&gt;
+&lt;h3 id="productivity全員必須"&gt;Productivity（全員必須）&lt;/h3&gt;
+&lt;p&gt;すべての基礎。&lt;code&gt;/schedule&lt;/code&gt; でカレンダーに予定を直接ブロックし、&lt;code&gt;/workflow&lt;/code&gt; で自動化を走らせる。Slack、Notion、Asana、Linearなど主要サービスと連携する。&lt;/p&gt;
+&lt;h3 id="marketingコンテンツ作成の要"&gt;Marketing（コンテンツ作成の要）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;/repurpose&lt;/code&gt; を叩けば、1つの記事から5媒体分（X、LinkedIn、メルマガ等）の投稿を自動生成する。&lt;/p&gt;
+&lt;h3 id="dataスプレッドシート連携"&gt;Data（スプレッドシート連携）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;/analyze&lt;/code&gt; でCSVを読み込ませるだけで、数式を一切書かずにインサイトを抽出する。&lt;/p&gt;
+&lt;h3 id="sales商談準備を3分に圧縮"&gt;Sales（商談準備を3分に圧縮）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;/research-account&lt;/code&gt; で企業情報やキーマンを一瞬で丸裸にする。30分かかる商談準備が3分になる。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;インストール方法：&lt;/strong&gt; 左サイドバーの「Customize」→「Browse plugins」→「Install」&lt;/p&gt;
+&lt;p&gt;まずは2つから始めて、基礎が固まったら追加していくのが正解だ。&lt;/p&gt;
+&lt;h2 id="2-aiを覚醒させるコンテキストファイルmd"&gt;2. AIを覚醒させる「コンテキストファイル（.md）」&lt;/h2&gt;
+&lt;p&gt;ここからが本番だ。毎回AIに「私はこういう立場で…」と説明するのは三流のやること。以下のMarkdownファイルをPCの専用フォルダに入れ、Coworkに常に読み込ませる。&lt;/p&gt;
+&lt;h3 id="about-memd"&gt;about-me.md&lt;/h3&gt;
+&lt;p&gt;あなたの役職、連絡の好み、稼働時間などをまとめた「プロの身分証明書」。&lt;/p&gt;
+&lt;h3 id="brand-voicemd超重要"&gt;brand-voice.md（超重要）&lt;/h3&gt;
+&lt;p&gt;あなたが「使う言葉・使わない言葉」、トーン、過去の文章サンプルをまとめた2,000字のファイル。これがあれば、AIの出力は「無修正でそのまま使える」レベルになる。&lt;/p&gt;
+&lt;h3 id="current-projectsmd"&gt;current-projects.md&lt;/h3&gt;
+&lt;p&gt;今週のデッドラインや課題を書いた生きたドキュメント。週1で更新すれば、AIは「あなたの今のタスク状況」を完全に把握した秘書になる。&lt;/p&gt;
+&lt;p&gt;これら3ファイルで「汎用AIアウトプット」問題が解消される。設定なしでは毎回セッションがゼロスタートだが、あれば最初からあなたの声とスタンダードをClaudeが把握している。&lt;/p&gt;
+&lt;h3 id="コンテキストファイルの配置例"&gt;コンテキストファイルの配置例&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;~/Claude-Workspace/
+├── context/ # 常設コンテキストファイル
+├── projects/ # アクティブなプロジェクトフォルダ
+└── outputs/ # Claudeが成果物を届ける場所
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;フォルダの「ブラスト半径」を限定するため、Documents全体ではなく専用フォルダだけを共有するのが鉄則だ。&lt;/p&gt;
+&lt;h2 id="3-pcを直接操作する破壊的ワークフロー"&gt;3. PCを直接操作する「破壊的ワークフロー」&lt;/h2&gt;
+&lt;p&gt;アプリを横断してPCを直接操作できるCoworkの真骨頂。&lt;/p&gt;
+&lt;h3 id="朝のダッシュボード構築"&gt;朝のダッシュボード構築&lt;/h3&gt;
+&lt;p&gt;「いつものアプリ（Gmail、カレンダー、Notionなど）を全部開いて、今日の予定を要約して」と指示。10分かかる朝の準備が30秒で終わる。&lt;/p&gt;
+&lt;h3 id="商談の全自動リサーチ"&gt;商談の全自動リサーチ&lt;/h3&gt;
+&lt;p&gt;「30分後の〇〇さんとのMTGに向けて、LinkedIn、企業HP、過去のメール履歴を調べてペライチの要約を作って」。この機能のためだけにChatGPTを捨てる価値がある。&lt;/p&gt;
+&lt;h3 id="終業時のシャットダウン"&gt;終業時のシャットダウン&lt;/h3&gt;
+&lt;p&gt;「タスク漏れを確認して、明日の優先事項TOP3をデスクトップに付箋で貼って」。これで翌朝の不安がゼロになる。&lt;/p&gt;</description></item><item><title>寝る前の2分指示で3,000万円分の仕事をこなす Claude Code の衝撃</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-overnight-tasks/</link><pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-overnight-tasks/</guid><description>&lt;p&gt;Claude Code の使い方として注目を集めているのが、「就寝前タスク投げ」スタイルだ。デジライズ CEO のチャエン氏（@masahirochaen）が X（旧 Twitter）に投稿した体験談が多くの反響を呼んでいる。&lt;/p&gt;
+&lt;h2 id="就寝前に大量タスクを投げ朝には完成している世界"&gt;就寝前に大量タスクを投げ、朝には完成している世界&lt;/h2&gt;
+&lt;p&gt;チャエン氏の投稿要旨はこうだ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code の良さは、寝る前にえげつない量のタスクを振れること。
+私は毎晩、検証したい事業アイデアへの指示を出してからベッドに入る。
+今日は市場リサーチから要件定義、モック作成、コードレビューまで——
+人間だったら 25 人月 × 5 ヶ月はかかる業務量。
+人件費換算で約 3,000 万円分らしい。
+これを寝る前の 2 分の指示だけで動かして、朝起きたら完成してる世界線半端ないです。シンギュラリティ味を感じます。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この投稿は 2026 年 3 月 16 日時点で約 39 万インプレッション、2,800 件超のいいねを記録し、大きな話題となった。&lt;/p&gt;
+&lt;h2 id="claude-code-がこのワークフローを可能にする理由"&gt;Claude Code がこのワークフローを可能にする理由&lt;/h2&gt;
+&lt;p&gt;Claude Code は Anthropic が提供するターミナルベースの AI コーディングエージェントだ。単なるコード補完ではなく、以下のような複合的な作業を自律的にこなせる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;市場リサーチ&lt;/strong&gt;: Web 検索・情報収集・競合分析&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;要件定義&lt;/strong&gt;: ユーザーストーリーや仕様書の作成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;モック作成&lt;/strong&gt;: UI/API のプロトタイプ生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コードレビュー&lt;/strong&gt;: 品質チェックと改善提案&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;従来これらは専門の担当者が分担して進める工程だが、Claude Code は一連の指示をもとに自律的に連鎖実行できる。「エージェント型」と呼ばれるゆえんだ。&lt;/p&gt;
+&lt;h2 id="就寝前-2-分指示スタイルの実践ポイント"&gt;「就寝前 2 分指示」スタイルの実践ポイント&lt;/h2&gt;
+&lt;p&gt;チャエン氏の使い方から読み取れる実践のコツをまとめる。&lt;/p&gt;
+&lt;h3 id="1-具体的なゴールを宣言する"&gt;1. 具体的なゴールを宣言する&lt;/h3&gt;
+&lt;p&gt;「事業アイデアを検証したい」という大きなゴールを明示することで、Claude Code が必要なサブタスクを自律的に分解・実行できる。&lt;/p&gt;
+&lt;h3 id="2-タスクを細かく区切りすぎない"&gt;2. タスクを細かく区切りすぎない&lt;/h3&gt;
+&lt;p&gt;「市場リサーチ → 要件定義 → モック → レビュー」という流れを一気に渡すことで、成果物間の整合性が取れた状態で仕上がる。&lt;/p&gt;</description></item></channel></rss>

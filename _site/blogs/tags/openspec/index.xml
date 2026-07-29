@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>OpenSpec on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/openspec/</link><description>Recent content in OpenSpec on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 26 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/openspec/index.xml" rel="self" type="application/rss+xml"/><item><title>Anthropic 社員が使う implementation-notes プロンプト — 計画レビューとの違いと AI 時代の監査レイヤー論</title><link>https://hdknr.github.io/blogs/posts/2026/05/anthropic-implementation-notes-prompt/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/anthropic-implementation-notes-prompt/</guid><description>Anthropic 社員が「いちばん使っている」と紹介された implementation-notes プロンプトを、計画レビューとの対比で読み解く。事前合意と事後監査が解いているリスクの違い、AI コーディング時代に支配的になる『サイレント逸脱』、計画 → 実装 → ノートの統合パターンまでを考察。</description></item><item><title>OpenSpec — 仕様駆動開発でVibe Codingの「あとから全部作り直し」を防ぐ</title><link>https://hdknr.github.io/blogs/posts/2026/05/openspec-spec-driven-development/</link><pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/openspec-spec-driven-development/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;「AIにコードを書かせるのは得意になったが、完成品が要件とずれていて全部作り直しになった」——そんな経験はないだろうか。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Vibe coding&lt;/strong&gt;（感覚的なプロンプトだけでAIにコーディングさせるスタイル）は手軽な反面、AIとの認識齟齬が後から発覚してリワークが発生するリスクをはらんでいる。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OpenSpec&lt;/strong&gt; は、その問題を「仕様駆動開発（SDD: Spec-Driven Development）」で解消するフレームワークだ。2025年8月に登場してから急速に普及し、2026年5月時点で⭐50,000超を獲得している。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a href="https://github.com/Fission-AI/OpenSpec"&gt;Fission-AI/OpenSpec&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;npm: &lt;code&gt;@fission-ai/openspec&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;ライセンス: MIT&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="vibe-codingの落とし穴"&gt;Vibe Codingの落とし穴&lt;/h2&gt;
+&lt;p&gt;AIコーディングアシスタントは非常に強力だが、要件がチャット履歴の中にしか存在しない場合、出力は予測不能になりやすい。よくある失敗パターンは次のとおり。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;「ざっくり作って」と頼んだら意図と全く異なる設計になった&lt;/li&gt;
+&lt;li&gt;途中で要件変更を伝えたら、AIが古い前提を引きずった&lt;/li&gt;
+&lt;li&gt;長いセッションでコンテキストが失われ、最初の仕様が無視された&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;OpenSpecはこれを「コードを書く前にAIと仕様に合意する」プロセスを導入することで防ぐ。&lt;/p&gt;
+&lt;h2 id="openspecとは"&gt;OpenSpecとは&lt;/h2&gt;
+&lt;p&gt;OpenSpecは、AIコーディングアシスタント向けの軽量な仕様レイヤーを提供するフレームワーク。プロジェクトに &lt;code&gt;openspec/&lt;/code&gt; ディレクトリを作り、変更ごとに &lt;strong&gt;proposal・specs・design・tasks&lt;/strong&gt; の4つのアーティファクトを生成・管理する。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;設計哲学:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;→ fluid not rigid （柔軟、固定フェーズなし）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;→ iterative not waterfall （反復的、ウォーターフォールではない）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;→ easy not complex （シンプル）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;→ built for brownfield （既存プロジェクトにも対応）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;→ scalable from personal projects to enterprises
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="主要コマンドopsx-スラッシュコマンド"&gt;主要コマンド（&lt;code&gt;/opsx:*&lt;/code&gt; スラッシュコマンド）&lt;/h2&gt;
+&lt;p&gt;OpenSpecは &lt;code&gt;/opsx:propose&lt;/code&gt; から始まる一連のスラッシュコマンドで動作する。&lt;/p&gt;</description></item></channel></rss>

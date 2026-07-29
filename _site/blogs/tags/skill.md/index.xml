@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>SKILL.md on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/skill.md/</link><description>Recent content in SKILL.md on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/skill.md/index.xml" rel="self" type="application/rss+xml"/><item><title>ウェブサイトのスタイルを丸ごと抽出してDESIGN.md / SKILL.mdを自動生成するChrome拡張 — Claude Codeに渡すデザイン文脈を一瞬で構造化する</title><link>https://hdknr.github.io/blogs/posts/2026/06/chrome-extension-design-md-skill-md-extractor/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/chrome-extension-design-md-skill-md-extractor/</guid><description>Chrome拡張「DESIGN.md Style Extractor - TypeUI」を使えば、任意のWebサイトのカラー・タイポグラフィ・スペーシングをワンクリックでDESIGN.mdまたはSKILL.mdに書き出せる。Claude Code・Codex・Google Stitchに渡すデザイン文脈を自動構造化する方法を解説する。</description></item><item><title>Skills vs Agents — Anthropic の研究チームが設計哲学を全転換した理由と Claude Code 実践ガイド</title><link>https://hdknr.github.io/blogs/posts/2026/05/anthropic-agents-to-skills-redesign/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/anthropic-agents-to-skills-redesign/</guid><description>&lt;p&gt;Anthropic の研究・プロダクトチーム（Barry Zhang・Mahesh Murag）が、2025年11月の AI Engineering Code Summit で衝撃的な発言をした。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;「Agents をやめて、Skills に全振りした」&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Agent ツールを実際に開発してきた当事者が、この言葉を口にした意味は重い。単なる命名変更ではなく、AI 自動化の設計哲学そのものが変わった瞬間だ。&lt;/p&gt;
+&lt;p&gt;この記事では、なぜ Anthropic が Agents から Skills へシフトしたのか、その背景と技術的な理由、そして今すぐ自分のワークフローに活かせるポイントを解説する。&lt;/p&gt;
+&lt;h2 id="agents-の限界--何が問題だったのか"&gt;Agents の限界 — 何が問題だったのか&lt;/h2&gt;
+&lt;p&gt;従来の「Agent」アプローチの核心は、&lt;strong&gt;中央集権型オーケストレーター&lt;/strong&gt;だった。1 つの LLM が多数のツールを持ち、あらゆるタスクに対応しようとする構成だ。具体的には以下の 4 点が問題になった。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ツールオーバーロード&lt;/strong&gt;: ツール数が増えるほど、LLM はどのツールを使うべきか判断しにくくなる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;再現性の低さ&lt;/strong&gt;: 複雑なシナリオで中央オーケストレーターが混乱し、同じ入力に対して異なる結果が出やすい&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;モデル依存&lt;/strong&gt;: Claude 専用に設計された Agent は、他のモデルでは動かない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト肥大化&lt;/strong&gt;: すべての能力を一度にロードするため、トークンが無駄に消費される&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Barry Zhang と Mahesh Murag はこれらの問題を実装レベルで体験し、「根本から再設計が必要だ」という結論に至った。&lt;/p&gt;
+&lt;h2 id="skills-とは何か--agent-との本質的な違い"&gt;Skills とは何か — Agent との本質的な違い&lt;/h2&gt;
+&lt;p&gt;Skills は、Claude Code の拡張機能の単位だ。&lt;code&gt;SKILL.md&lt;/code&gt; と必要なスクリプト・設定ファイルを 1 つのフォルダにまとめて定義し、必要なときだけオンデマンドでメイン会話コンテキストに注入される。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;観点&lt;/th&gt;
+&lt;th&gt;Agents&lt;/th&gt;
+&lt;th&gt;Skills&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;設計思想&lt;/td&gt;
+&lt;td&gt;中央集権型オーケストレーター&lt;/td&gt;
+&lt;td&gt;モジュラー・再利用可能な能力単位&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;モデル対応&lt;/td&gt;
+&lt;td&gt;Claude 専用&lt;/td&gt;
+&lt;td&gt;Claude + 他モデル両対応&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;実行コンテキスト&lt;/td&gt;
+&lt;td&gt;独立した隔離環境&lt;/td&gt;
+&lt;td&gt;メイン会話内（記憶・フォローアップが可能）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ロード方式&lt;/td&gt;
+&lt;td&gt;常時ロード&lt;/td&gt;
+&lt;td&gt;オンデマンド（トークン節約）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;再現性&lt;/td&gt;
+&lt;td&gt;複雑なシナリオで低下しやすい&lt;/td&gt;
+&lt;td&gt;実用レベルで高い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最も重要な変化は&lt;strong&gt;モデル非依存&lt;/strong&gt;になったことだ。Anthropic は 2025年12月に Skills をオープンスタンダードとして &lt;a href="https://agentskills.io"&gt;agentskills.io&lt;/a&gt; で公開し、Microsoft/VS Code・OpenAI・Cursor・GitHub・Google Gemini CLI・JetBrains Junie など主要プラットフォームが採用済みだ。Claude だけでなく、他のモデルでも同じスキルが動作する。&lt;/p&gt;</description></item><item><title>Claude Code のスキルで「マージ後」の指示が PR 作成中に発火する罠 — バッチ並行実行で起きた wiki コンフリクトの原因と修正</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-skill-post-merge-trap/</link><pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-skill-post-merge-trap/</guid><description>&lt;h2 id="症状"&gt;症状&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;blog-batch.sh&lt;/code&gt; で夜間バッチを回した結果、こんな状態になっていた:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;同じ wiki ファイル（&lt;code&gt;content/wiki/concepts/harness-engineering.md&lt;/code&gt;、&lt;code&gt;content/wiki/tools/claude-code.md&lt;/code&gt;）が&lt;strong&gt;複数の blog PR で同時に変更&lt;/strong&gt;されていた&lt;/li&gt;
+&lt;li&gt;main にマージしようとすると毎回コンフリクト&lt;/li&gt;
+&lt;li&gt;直近の #368・#369・#371・#372 はすべてこの原因で手動コンフリクト解消が必要だった&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;調査して原因が判明したので、修正内容と「LLM スキルを書くときに気をつけるべきポイント」を共有する。&lt;/p&gt;
+&lt;h2 id="pr-の中身を見ると-3-コミットあった"&gt;PR の中身を見ると 3 コミットあった&lt;/h2&gt;
+&lt;p&gt;通常の &lt;code&gt;/blog&lt;/code&gt; で作った PR は「記事 1 本分の 1 コミット」のはずだが、見ると 3 コミットあった:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;35a61c2 Add blog post: トレーダーのSランクスキル5選...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;86e5bd4 Update wiki-last-ingest.txt: mark all posts through 2026-05-07 as ingested
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;0bc4e1f Update Wiki: ingest posts 2026-04-15 through 2026-04-21 (5 updated, 16 new pages)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;2 つ目と 3 つ目は &lt;strong&gt;wiki ingest の結果コミット&lt;/strong&gt;。これが各 blog PR に混入していて、複数 PR で同じ wiki ファイルを並行更新 → コンフリクトという流れ。&lt;/p&gt;</description></item></channel></rss>

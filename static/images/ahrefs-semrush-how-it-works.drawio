@@ -1,0 +1,61 @@
+<mxfile host="app.diagrams.net" modified="2026-07-15T00:00:00.000Z" agent="Claude" version="24.0.0">
+  <diagram name="How SEO Tools Work" id="ahrefs-semrush-how-it-works">
+    <mxGraphModel dx="1000" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="SEO ツール共通の仕組み：クロール → インデックス → 分析" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="20" width="660" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Web -->
+        <mxCell id="web" value="World Wide Web&#10;（数十億の Web ページ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="340" y="90" width="220" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Crawler -->
+        <mxCell id="crawler" value="① 独自クローラー&#10;（AhrefsBot / SemrushBot）&#10;毎分数百万ページを巡回" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="200" width="240" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Index (backlinks) -->
+        <mxCell id="linkdb" value="② 被リンク・インデックス&#10;（リンクグラフ / アンカーテキスト）&#10;数十兆リンク規模" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="330" width="230" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Index (keywords / SERP) -->
+        <mxCell id="kwdb" value="② キーワード / SERP DB&#10;（検索結果の定点観測）&#10;100〜260 億キーワード規模" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="550" y="330" width="230" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Analysis tools -->
+        <mxCell id="tools" value="③ 分析ツール群" style="text;html=1;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="120" y="470" width="660" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t1" value="被リンク分析&#10;(Site Explorer)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="140" y="510" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="キーワード調査&#10;(Keywords Explorer /&#10;Keyword Magic)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="510" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" value="サイト監査&#10;(Site Audit)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="480" y="510" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" value="順位・AI可視性&#10;トラッキング" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="510" width="120" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="web" target="crawler" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="crawler" target="linkdb" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="crawler" target="kwdb" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="linkdb" target="tools" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="kwdb" target="tools" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

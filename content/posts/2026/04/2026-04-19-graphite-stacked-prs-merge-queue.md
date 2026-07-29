@@ -174,7 +174,7 @@ CreaoAI の事例で「PR ごとに Claude Opus 4.6 を3並列で走らせる」
 ## 参考リンク
 
 - [Graphite 公式サイト](https://graphite.com/)
-- [Graphite Docs: Stacked PRs](https://graphite.com/docs/stacked-prs)
+- Graphite Docs: Stacked PRs
 - [Graphite Docs: Merge Queue](https://graphite.com/docs/graphite-merge-queue)
 - [How we built the first stack-aware merge queue (Graphite Blog)](https://graphite.com/blog/the-first-stack-aware-merge-queue)
 - [Graphite raises $52M and launches Diamond](https://graphite.com/blog/series-b-diamond-launch)

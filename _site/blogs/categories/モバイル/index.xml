@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>モバイル on hdknr blog</title><link>https://hdknr.github.io/blogs/categories/%E3%83%A2%E3%83%90%E3%82%A4%E3%83%AB/</link><description>Recent content in モバイル on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 18 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/categories/%E3%83%A2%E3%83%90%E3%82%A4%E3%83%AB/index.xml" rel="self" type="application/rss+xml"/><item><title>flutter/ios</title><link>https://hdknr.github.io/blogs/posts/2024/06/8527c336ad39c5df8ba53ad6c84fdda8/</link><pubDate>Tue, 18 Jun 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/06/8527c336ad39c5df8ba53ad6c84fdda8/</guid><description>&lt;h1 id="flutterios"&gt;Flutter/iOS&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/temoki/items/fc3b62bc088f96184f8f"&gt;iOS でホーム画面に表示されるアプリ名はどこで決まるのか？変更するには？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/kasa_le/items/fed9f25b92091bd162ce"&gt;Flutter アプリを iOS 版ビルドに必要な手順のまとめ(debug/release)と TestFlight に上げるまで&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/blendthink/articles/392607db0a65dd"&gt;Flutter の環境分けの新時代&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/flutter/flutter/pull/124533"&gt;Allow .xcworkspace and .xcodeproj to be renamed from default name &amp;lsquo;Runner&amp;rsquo; #124533&lt;/a&gt; (Runner から名称の変更)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="product_name"&gt;&lt;code&gt;$PRODUCT_NAME&lt;/code&gt;&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;PRODUCT_NAME&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;$(TARGET_NAME)&amp;#34;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Appium</title><link>https://hdknr.github.io/blogs/posts/2024/04/f5025e8e8a30f7c22abf95ea683efd61/</link><pubDate>Thu, 25 Apr 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/04/f5025e8e8a30f7c22abf95ea683efd61/</guid><description>&lt;h1 id="appium"&gt;Appium&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/appium-android-native/"&gt;Appium + Android で ネイティブアプリの自動実行を試してみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tech-blog.optim.co.jp/entry/2020/09/09/090000"&gt;Appium を使って、リグレッションテストを自動化する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://shiftasia.com/ja/column/%E3%83%AA%E3%82%B0%E3%83%AC%E3%83%83%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%86%E3%82%B9%E3%83%88%E3%81%A8%E3%81%AF/"&gt;リグレッションテスト（回帰テスト）とは｜目的や重要性、実施のポイント&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.capa.co.jp/archives/27328"&gt;【Appium】モバイルアプリのテストを自動化する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.scriptlife.jp/contents/programming/2020/02/09/appium-sample-2020/"&gt;[2020 年 2 月版] Mac で Appium を動かしてみる (iOS シミュレーターでサンプル実行まで)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://progzakki.sanachan.com/tools/mobile-apps-automation-test-by-appium/"&gt;Appium を使って Android/iOS アプリの試験を自動化&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/emurin/items/a880e360c40ccdbc7ae5"&gt;[Set up] appium 2.x in Mac for iOS APP (Ventura)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;WARN AppiumDoctor ✖ adb, android, emulator could NOT be found in C:\work\Android\sdk!&lt;/code&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/jyunji_watanabe/items/32c582c2c630873953ee"&gt;https://qiita.com/jyunji_watanabe/items/32c582c2c630873953ee&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストール"&gt;インストール&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;JDK&lt;/li&gt;
+&lt;li&gt;Android Studio&lt;/li&gt;
+&lt;li&gt;Xcode&lt;/li&gt;
+&lt;li&gt;brew&lt;/li&gt;
+&lt;li&gt;npm&lt;/li&gt;
+&lt;li&gt;Carthage&lt;/li&gt;
+&lt;li&gt;Appium&lt;/li&gt;
+&lt;li&gt;Appium Driver&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="jdk"&gt;JDK&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.oracle.com/java/technologies/downloads/#java20"&gt;https://www.oracle.com/java/technologies/downloads/#java20&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;ARM64 DMG Installer&lt;/code&gt;のインストール:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# .zshrc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export JAVA_HOME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;JAVA_HOME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;/usr/libexec/java_home&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% java -version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;java version &lt;span style="color:#e6db74"&gt;&amp;#34;22.0.1&amp;#34;&lt;/span&gt; 2024-04-16
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Java&lt;span style="color:#f92672"&gt;(&lt;/span&gt;TM&lt;span style="color:#f92672"&gt;)&lt;/span&gt; SE Runtime Environment &lt;span style="color:#f92672"&gt;(&lt;/span&gt;build 22.0.1+8-16&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Java HotSpot&lt;span style="color:#f92672"&gt;(&lt;/span&gt;TM&lt;span style="color:#f92672"&gt;)&lt;/span&gt; 64-Bit Server VM &lt;span style="color:#f92672"&gt;(&lt;/span&gt;build 22.0.1+8-16, mixed mode, sharing&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="android-studio"&gt;Android Studio&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Mac with Apple Chip でインストール&lt;/p&gt;</description></item><item><title>Flutter</title><link>https://hdknr.github.io/blogs/posts/2024/04/7982d7481bbbf42e180708b8354599f0/</link><pubDate>Thu, 25 Apr 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/04/7982d7481bbbf42e180708b8354599f0/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;Doctor summary (to see all details, run flutter doctor -v):
+[✓] Flutter (Channel stable, 3.19.6, on macOS 14.4.1 23E224 darwin-arm64, locale ja-JP)
+[!] Android toolchain - develop for Android devices (Android SDK version 34.0.0)
+✗ cmdline-tools component is missing
+Run `path/to/sdkmanager --install &amp;#34;cmdline-tools;latest&amp;#34;`
+See https://developer.android.com/studio/command-line for more details.
+✗ Android license status unknown.
+Run `flutter doctor --android-licenses` to accept the SDK licenses.
+See https://flutter.dev/docs/get-started/install/macos#android-setup for more details.
+[!] Xcode - develop for iOS and macOS (Xcode 15.3)
+✗ CocoaPods not installed.
+CocoaPods is used to retrieve the iOS and macOS platform side&amp;#39;s plugin code that responds to your plugin usage on the Dart side.
+Without CocoaPods, plugins will not work on iOS or macOS.
+For more info, see https://flutter.dev/platform-plugins
+To install see https://guides.cocoapods.org/using/getting-started.html#installation for instructions.
+[✓] Chrome - develop for the web
+[✓] Android Studio (version 2023.2)
+[✓] VS Code (version 1.88.1)
+[✓] Connected device (3 available)
+[✓] Network resources
+! Doctor found issues in 2 categories.
+The Flutter CLI developer tool uses Google Analytics to report usage and diagnostic
+data along with package dependencies, and crash reporting to send basic crash
+reports. This data is used to help improve the Dart platform, Flutter framework,
+and related tools.
+Telemetry is not sent on the very first run. To disable reporting of telemetry,
+run this terminal command:
+flutter --disable-analytics
+If you opt out of telemetry, an opt-out event will be sent, and then no further
+information will be sent. This data is collected in accordance with the Google
+Privacy Policy (https://policies.google.com/privacy).
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>XCode: A valid provisioning profile for this executable was not found</title><link>https://hdknr.github.io/blogs/posts/2021/04/202cc8ee2f3efae5c4c8643b58705d26/</link><pubDate>Sat, 24 Apr 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/04/202cc8ee2f3efae5c4c8643b58705d26/</guid><description>&lt;h2 id="原因"&gt;原因&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;時間がおかしい(有効期限切れ)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Legacy Build System&lt;/code&gt; にする (&lt;code&gt;File &amp;gt;Project Settings...&amp;gt;Build System&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;(&lt;strong&gt;今回はこれ&lt;/strong&gt;) テスト実機端末のスキーマがおかしい(&lt;code&gt;Products &amp;gt; Schema &amp;gt; Edit Schema&lt;/code&gt; で &lt;code&gt;Run&lt;/code&gt;, &lt;code&gt;Profile&lt;/code&gt; の &lt;code&gt;Build Configuration&lt;/code&gt; を &lt;code&gt;DEBUG&lt;/code&gt; にする)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="librarymobiledeviceprovisioning-profiles"&gt;&lt;code&gt;~/Library/MobileDevice/Provisioning Profiles&lt;/code&gt;&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;% ls -l ~/Library/MobileDevice/Provisioning&lt;span style="color:#ae81ff"&gt;\ &lt;/span&gt;Profiles
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;total &lt;span style="color:#ae81ff"&gt;456&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-r--r-- &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; hdknr staff &lt;span style="color:#ae81ff"&gt;10352&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;17&lt;/span&gt; 13:52 0179a51b-7303-4fef-b1a0-4a3cf541b737.mobileprovision
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.....
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/nyancook/items/a7d642dd6a55e310e420"&gt;【Xcode】ビルドは成功するが、実機にインストールできない問題&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/Ryuya_Sakai/items/16057d47538d56cbaf3a"&gt;エラー：A valid provisioning prof&amp;hellip; の対処法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/64294387/unable-to-install-ios-app-on-device-domain-com-apple-dt-mobiledeviceerrordomai"&gt;Unable to install iOS app on device. Domain: com.apple.dt.MobileDeviceErrorDomain Code: -402653179&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=TDN1Dp_GqnM"&gt;Easy fix! &amp;ldquo;A valid provisioning profile for this executable was not found&amp;rdquo;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://developer.apple.com/forums/thread/128121"&gt;A valid provisioning profile for this executable was not found&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

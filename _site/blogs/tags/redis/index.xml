@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Redis on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/redis/</link><description>Recent content in Redis on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 06 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/redis/index.xml" rel="self" type="application/rss+xml"/><item><title>Celery</title><link>https://hdknr.github.io/blogs/wiki/tools/celery/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/celery/</guid><description>分散タスクキュー。非同期処理と定期タスク実行を実現</description></item><item><title>Redis</title><link>https://hdknr.github.io/blogs/wiki/tools/redis/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/redis/</guid><description>高速インメモリデータストア。キャッシュ・セッション・キューイング・分散ロックに利用</description></item><item><title>分散ロック</title><link>https://hdknr.github.io/blogs/wiki/concepts/distributed-lock/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/distributed-lock/</guid><description>複数サーバー環境で共有リソースへのアクセスを排他制御する仕組み</description></item><item><title>redis-py の Lock をサブクラス化してフェンシングトークンを実装する</title><link>https://hdknr.github.io/blogs/posts/2026/03/redis-fenced-lock-python/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/redis-fenced-lock-python/</guid><description>&lt;p&gt;redis-py の &lt;code&gt;Lock&lt;/code&gt; クラスは UUID ベースのトークンでロックの所有権を管理するが、フェンシングトークン（単調増加する数値）は提供しない。しかし、&lt;code&gt;Lock&lt;/code&gt; クラスは &lt;code&gt;do_acquire&lt;/code&gt; や Lua スクリプトをオーバーライドできる設計になっており、サブクラス化でフェンシングトークンを追加できる。&lt;/p&gt;
+&lt;p&gt;本記事では、redis-py の &lt;code&gt;Lock&lt;/code&gt; を拡張してフェンシングトークンを発行する &lt;code&gt;FencedLock&lt;/code&gt; クラスの実装例を紹介する。&lt;/p&gt;
+&lt;h2 id="前提知識redis-の-lua-スクリプティング"&gt;前提知識：Redis の Lua スクリプティング&lt;/h2&gt;
+&lt;p&gt;Redis はバージョン 2.6 から &lt;a href="https://redis.io/docs/latest/develop/interact/programmability/eval-intro/"&gt;Lua スクリプトの実行機能&lt;/a&gt;を内蔵している。&lt;code&gt;EVAL&lt;/code&gt; コマンドで Lua スクリプトを Redis サーバー上で直接実行でき、&lt;strong&gt;複数の Redis コマンドをアトミック（不可分）に実行&lt;/strong&gt;できる。&lt;/p&gt;
+&lt;h3 id="なぜ-lua-スクリプトが必要か"&gt;なぜ Lua スクリプトが必要か&lt;/h3&gt;
+&lt;p&gt;通常、Redis コマンドは1つずつ実行される。例えば「キーが存在しなければセットし、同時にカウンターをインクリメントする」という処理を2つのコマンドで行うと、その間に他のクライアントが割り込む可能性がある：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;クライアント A: SET mykey value NX → 成功
+← クライアント B が割り込む余地
+クライアント A: INCR counter → インクリメント
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Lua スクリプトを使えば、この2つの操作を&lt;strong&gt;1回のアトミックな呼び出し&lt;/strong&gt;にまとめられる：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-lua" data-lang="lua"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Redis サーバー上で実行される（他のコマンドは割り込めない）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;local&lt;/span&gt; ok &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis.call(&lt;span style="color:#e6db74"&gt;&amp;#39;SET&amp;#39;&lt;/span&gt;, KEYS[&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;], ARGV[&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;], &lt;span style="color:#e6db74"&gt;&amp;#39;NX&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; ok &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; redis.call(&lt;span style="color:#e6db74"&gt;&amp;#39;INCR&amp;#39;&lt;/span&gt;, KEYS[&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="redis-cli-での実行例"&gt;Redis CLI での実行例&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# EVAL &amp;#34;スクリプト&amp;#34; キーの数 キー1 キー2 ... 引数1 引数2 ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis-cli EVAL &lt;span style="color:#e6db74"&gt;&amp;#34;return redis.call(&amp;#39;SET&amp;#39;, KEYS[1], ARGV[1])&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; mykey myvalue
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="redis-py-での実行例"&gt;redis-py での実行例&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; redis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;r &lt;span style="color:#f92672"&gt;=&lt;/span&gt; redis&lt;span style="color:#f92672"&gt;.&lt;/span&gt;Redis()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 方法1: eval で直接実行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;r&lt;span style="color:#f92672"&gt;.&lt;/span&gt;eval(&lt;span style="color:#e6db74"&gt;&amp;#34;return redis.call(&amp;#39;SET&amp;#39;, KEYS[1], ARGV[1])&amp;#34;&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;mykey&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;myvalue&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 方法2: register_script で事前登録（推奨）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# サーバー側に SHA1 でキャッシュされ、2回目以降はスクリプト本文の転送が不要&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;script &lt;span style="color:#f92672"&gt;=&lt;/span&gt; r&lt;span style="color:#f92672"&gt;.&lt;/span&gt;register_script(&lt;span style="color:#e6db74"&gt;&amp;#34;return redis.call(&amp;#39;GET&amp;#39;, KEYS[1])&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; script(keys&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;mykey&amp;#34;&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="セキュリティ上の注意"&gt;セキュリティ上の注意&lt;/h3&gt;
+&lt;p&gt;Lua スクリプトのパラメータは &lt;code&gt;KEYS[]&lt;/code&gt; と &lt;code&gt;ARGV[]&lt;/code&gt; で渡される。SQL のプリペアドステートメントと同様に、パラメータが文字列としてスクリプトに展開されることはないため、&lt;strong&gt;パラメータ経由でのインジェクションはできない&lt;/strong&gt;。ただし、ユーザー入力でスクリプト文字列自体を動的に組み立てると危険なので、スクリプトは固定文字列として定義すること。&lt;/p&gt;</description></item><item><title>Redisを「共有状態」として使うアンチパターン：キー設計の落とし穴</title><link>https://hdknr.github.io/blogs/posts/2026/03/redis-shared-state-antipattern/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/redis-shared-state-antipattern/</guid><description>&lt;p&gt;Redis はキャッシュとして非常に優秀なツールだが、複数のチームやサービスが**共有状態（shared state）**として Redis を使い始めると、設計上の問題が発生しやすくなる。&lt;/p&gt;
+&lt;h2 id="キャッシュと共有状態の違い"&gt;キャッシュと共有状態の違い&lt;/h2&gt;
+&lt;p&gt;Redis をキャッシュとして使う場合、データは一時的なものであり、いつ消えても問題ない。元データは RDB などに存在し、キャッシュミス時に再構築できる。&lt;/p&gt;
+&lt;p&gt;一方、共有状態として使う場合は話が変わる。複数のサービスが同じ Redis キーを読み書きし、そのデータが「正」として扱われる。RDB のようなスキーマや制約がないため、以下の問題が起きやすい。&lt;/p&gt;
+&lt;h2 id="暗黙の契約に依存したデータ構造"&gt;暗黙の契約に依存したデータ構造&lt;/h2&gt;
+&lt;p&gt;RDB であればスキーマによってデータ構造が明示的に定義される。カラム名、型、制約、外部キーなどが設計書の役割を果たす。&lt;/p&gt;
+&lt;p&gt;Redis にはそのような仕組みがない。キーの命名規則やデータ形式は開発者間の「暗黙の契約」に依存する。チームが増えると、以下のような問題が顕在化する：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;キーの命名が衝突する&lt;/strong&gt; — 異なるチームが同じプレフィックスを使ってしまう&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;データ形式の不一致&lt;/strong&gt; — あるサービスは JSON、別のサービスは MessagePack で書き込む&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;バージョン管理の欠如&lt;/strong&gt; — データ構造を変更しても、読み取り側が追従できない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="削除できないキー問題"&gt;「削除できないキー」問題&lt;/h2&gt;
+&lt;p&gt;最も厄介な問題の一つが、&lt;strong&gt;誰が所有しているのか分からないキー&lt;/strong&gt;が残り続けることだ。&lt;/p&gt;
+&lt;p&gt;本番環境で以下のような状況が発生する：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;# このキーは誰が作った？いつ expire する？削除していい？
+GET user:session:abc123:metadata
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;作成したサービスがすでに廃止されている&lt;/li&gt;
+&lt;li&gt;TTL が設定されていないため、永遠に残る&lt;/li&gt;
+&lt;li&gt;他のサービスが依存している可能性があり、安易に削除できない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="キーをパブリック-apiとして扱う"&gt;キーを「パブリック API」として扱う&lt;/h2&gt;
+&lt;p&gt;この問題に対する実践的なアプローチとして、&lt;strong&gt;Redis キーをパブリック API のように扱う&lt;/strong&gt;という考え方がある：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;バージョニング&lt;/strong&gt; — キー名にバージョンを含める（例: &lt;code&gt;v2:user:session:{id}&lt;/code&gt;）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ドキュメント化&lt;/strong&gt; — どのキーがどのサービスによって管理されているかを明文化する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オーナーの明確化&lt;/strong&gt; — 各キーに責任を持つチーム・サービスを割り当てる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;TTL の必須化&lt;/strong&gt; — 共有キーには必ず TTL を設定し、期限切れを明示する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="補足分散ロック基盤としての-redis"&gt;補足：分散ロック基盤としての Redis&lt;/h2&gt;
+&lt;p&gt;Redis を共有状態として使うもう一つの典型例が、&lt;strong&gt;トランザクション境界をまたぐ分散ロック&lt;/strong&gt;だ。&lt;code&gt;SET key value NX PX timeout&lt;/code&gt; を使ったロックや、Redlock アルゴリズムは広く利用されているが、ここにも落とし穴がある。&lt;/p&gt;</description></item><item><title>Redis Pub/Sub から Streams への移行で帯域 99% 削減 --- 同時接続 30 万超チャットの実践記録</title><link>https://hdknr.github.io/blogs/posts/2026/03/92ce5b95cd28ffb9ca25100b1991d6d3/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/92ce5b95cd28ffb9ca25100b1991d6d3/</guid><description>&lt;h1 id="redis-pubsub-から-streams-への移行で帯域-99-削減--同時接続-30-万超チャットの実践記録"&gt;Redis Pub/Sub から Streams への移行で帯域 99% 削減 &amp;mdash; 同時接続 30 万超チャットの実践記録&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/Keisuke69/status/2027704204853411996"&gt;Keisuke Nishitani 氏(@Keisuke69)のポスト&lt;/a&gt;で、LY Corp（旧 LINE）の技術ブログ記事が紹介されていました。同時接続数 30 万超の LINE 公式アカウント（OA）チャットが、メッセージ配信基盤を Redis Cluster の Pub/Sub から Redis Streams へ移行した事例です。ピーク時 1.5 Gbps だったノードあたりの帯域が 11 Mbps まで削減されたという結果は、大規模リアルタイムシステムを運用するエンジニアにとって示唆に富む内容です。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;同時接続数30万超のチャットサービスのメッセージ配信基盤をRedis Pub/SubからRedis Streamsにした話
+&amp;mdash; &lt;a href="https://x.com/Keisuke69/status/2027704204853411996"&gt;@Keisuke69&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="背景--redis-cluster-pubsub-のスケール限界"&gt;背景 &amp;mdash; Redis Cluster Pub/Sub のスケール限界&lt;/h2&gt;
+&lt;p&gt;LINE 公式アカウントのチャット機能（OA チャット）は、ユーザーから送られたメッセージを OA オーナーにリアルタイムで配信する仕組みを持っています。この配信基盤として Redis Cluster の Pub/Sub を使用していました。&lt;/p&gt;
+&lt;p&gt;問題は Redis Cluster における Pub/Sub の仕様にあります。あるシャードに publish されたメッセージは、クラスター内の&lt;strong&gt;全シャードにブロードキャスト&lt;/strong&gt;されます。24 シャード構成であれば、1 メッセージが残り 23 シャードに伝搬するため、アウトバウンドトラフィックはインバウンドの 23 倍になります。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;指標&lt;/th&gt;
+&lt;th&gt;値&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;クラスター構成&lt;/td&gt;
+&lt;td&gt;24 シャード / 48 ノード&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ノードあたり帯域（平常時）&lt;/td&gt;
+&lt;td&gt;500 Mbps&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ノードあたり帯域（ピーク時）&lt;/td&gt;
+&lt;td&gt;1.5 Gbps&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;シャードを増やせばクラスター性能は上がりますが、同時にブロードキャストのトラフィックも増えるというジレンマがあり、スケールアウトが頭打ちになっていました。&lt;/p&gt;</description></item><item><title>django-redis: lock</title><link>https://hdknr.github.io/blogs/posts/2024/01/c45b85d58be2dac1c4375750d75b0904/</link><pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/01/c45b85d58be2dac1c4375750d75b0904/</guid><description>&lt;h1 id="djanog-redis-cachelock"&gt;djanog-redis: cache.lock&lt;/h1&gt;
+&lt;h2 id="lock"&gt;&lt;code&gt;lock&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/jazzband/django-redis/blob/d94a7f9644b96cc37743914fce899cca942c032a/django_redis/cache.py#L177"&gt;https://github.com/jazzband/django-redis/blob/d94a7f9644b96cc37743914fce899cca942c032a/django_redis/cache.py#L177&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;RedisCache&lt;/span&gt;(BaseCache):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;@omit_exception&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;lock&lt;/span&gt;(self, &lt;span style="color:#f92672"&gt;*&lt;/span&gt;args, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;kwargs):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;lock(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;args, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;kwargs)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;__init__&lt;/span&gt;(self, server: str, params: Dict[str, Any]) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_client_cls &lt;span style="color:#f92672"&gt;=&lt;/span&gt; options&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;CLIENT_CLASS&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;django_redis.client.DefaultClient&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_client_cls &lt;span style="color:#f92672"&gt;=&lt;/span&gt; import_string(self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_client_cls)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="defaultclient"&gt;DefaultClient&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/jazzband/django-redis/blob/d94a7f9644b96cc37743914fce899cca942c032a/django_redis/client/default.py#L29"&gt;https://github.com/jazzband/django-redis/blob/d94a7f9644b96cc37743914fce899cca942c032a/django_redis/client/default.py#L29&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;28
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;29
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;30
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;31
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;32
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;33
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;34
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;35
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;36
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;37
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;38
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;39
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;40
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;41
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;42
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;43
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;44
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;45
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;46
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;47
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;48
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; redis &lt;span style="color:#f92672"&gt;import&lt;/span&gt; Redis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;DefaultClient&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;__init__&lt;/span&gt;(self, server, params: Dict[str, Any], backend: BaseCache) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_clients: List[Optional[Redis]] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;] &lt;span style="color:#f92672"&gt;*&lt;/span&gt; len(self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_server)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;lock&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; key: KeyT,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; version: Optional[int] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; timeout: Optional[float] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sleep: float &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; blocking_timeout: Optional[float] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; client: Optional[Redis] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; thread_local: bool &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; client &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; client &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get_client(write&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; key &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;make_key(key, version&lt;span style="color:#f92672"&gt;=&lt;/span&gt;version)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; client&lt;span style="color:#f92672"&gt;.&lt;/span&gt;lock(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; key,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;timeout,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sleep&lt;span style="color:#f92672"&gt;=&lt;/span&gt;sleep,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; blocking_timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;blocking_timeout,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; thread_local&lt;span style="color:#f92672"&gt;=&lt;/span&gt;thread_local,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;get_client&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; write: bool &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tried: Optional[List[int]] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; Redis:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; Method used for obtain a raw redis client.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; This function is used by almost all cache backend
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; operations for obtain a native redis client/connection
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; instance.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; index &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;get_next_client_index(write&lt;span style="color:#f92672"&gt;=&lt;/span&gt;write, tried&lt;span style="color:#f92672"&gt;=&lt;/span&gt;tried)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_clients[index] &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_clients[index] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;connect(index)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;_clients[index] &lt;span style="color:#75715e"&gt;# type:ignore&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="redis"&gt;Redis&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/redis/redis-py/blob/6d77c6d715430c30f22147f8c572659d77380a9f/redis/client.py#L88"&gt;https://github.com/redis/redis-py/blob/6d77c6d715430c30f22147f8c572659d77380a9f/redis/client.py#L88&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;lock: &lt;a href="https://github.com/redis/redis-py/blob/6d77c6d715430c30f22147f8c572659d77380a9f/redis/client.py#L439C1-L511C10"&gt;https://github.com/redis/redis-py/blob/6d77c6d715430c30f22147f8c572659d77380a9f/redis/client.py#L439C1-L511C10&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;20
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;21
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;22
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;23
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;24
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;25
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;26
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;27
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;28
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;29
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;30
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;31
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;32
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;33
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;34
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;35
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;36
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;37
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;38
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;39
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;40
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;41
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;42
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;43
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;44
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;45
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;46
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;47
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;48
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;49
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;50
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;51
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;52
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;53
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;54
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;55
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;56
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;57
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;58
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;59
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;60
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;61
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;62
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;63
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;64
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;65
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;66
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;67
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;68
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;69
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;70
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;71
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;72
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;73
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;74
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;75
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;76
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;class&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Redis&lt;/span&gt;(RedisModuleCommands, CoreCommands, SentinelCommands):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;lock&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name: str,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; timeout: Optional[float] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sleep: float &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0.1&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; blocking: bool &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; blocking_timeout: Optional[float] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; lock_class: Union[&lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;, Any] &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; thread_local: bool &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;True&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; Return a new Lock object using key ``name`` that mimics
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; the behavior of threading.Lock.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; If specified, ``timeout`` indicates a maximum life for the lock.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; By default, it will remain locked until release() is called.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ``sleep`` indicates the amount of time to sleep per loop iteration
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; when the lock is in blocking mode and another client is currently
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; holding the lock.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ``blocking`` indicates whether calling ``acquire`` should block until
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; the lock has been acquired or to fail immediately, causing ``acquire``
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; to return False and the lock not being acquired. Defaults to True.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; Note this value can be overridden by passing a ``blocking``
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; argument to ``acquire``.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ``blocking_timeout`` indicates the maximum amount of time in seconds to
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; spend trying to acquire the lock. A value of ``None`` indicates
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; continue trying forever. ``blocking_timeout`` can be specified as a
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; float or integer, both representing the number of seconds to wait.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ``lock_class`` forces the specified lock implementation. Note that as
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; of redis-py 3.0, the only lock class we implement is ``Lock`` (which is
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; a Lua-based lock). So, it&amp;#39;s unlikely you&amp;#39;ll need this parameter, unless
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; you have created your own custom lock class.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ``thread_local`` indicates whether the lock token is placed in
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; thread-local storage. By default, the token is placed in thread local
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; storage so that a thread only sees its token, not a token set by
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; another thread. Consider the following timeline:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; time: 0, thread-1 acquires `my-lock`, with a timeout of 5 seconds.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; thread-1 sets the token to &amp;#34;abc&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; time: 1, thread-2 blocks trying to acquire `my-lock` using the
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; Lock instance.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; time: 5, thread-1 has not yet completed. redis expires the lock
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; key.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; time: 5, thread-2 acquired `my-lock` now that it&amp;#39;s available.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; thread-2 sets the token to &amp;#34;xyz&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; time: 6, thread-1 finishes its work and calls release(). if the
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; token is *not* stored in thread local storage, then
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; thread-1 would see the token value as &amp;#34;xyz&amp;#34; and would be
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; able to successfully release the thread-2&amp;#39;s lock.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; In some use cases it&amp;#39;s necessary to disable thread local storage. For
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; example, if you have code where one thread acquires a lock and passes
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; that lock instance to a worker thread to release later. If thread
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; local storage isn&amp;#39;t disabled in this case, the worker thread won&amp;#39;t see
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; the token set by the thread that acquired the lock. Our assumption
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; is that these cases aren&amp;#39;t common and as such default to using
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; thread local storage.&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; lock_class &lt;span style="color:#f92672"&gt;is&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;None&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; lock_class &lt;span style="color:#f92672"&gt;=&lt;/span&gt; Lock
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; lock_class(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; self,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; name,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;timeout,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; sleep&lt;span style="color:#f92672"&gt;=&lt;/span&gt;sleep,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; blocking&lt;span style="color:#f92672"&gt;=&lt;/span&gt;blocking,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; blocking_timeout&lt;span style="color:#f92672"&gt;=&lt;/span&gt;blocking_timeout,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; thread_local&lt;span style="color:#f92672"&gt;=&lt;/span&gt;thread_local,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>MPTT tree_id</title><link>https://hdknr.github.io/blogs/posts/2023/11/555c59c60329f5cfad2043b4153015e8/</link><pubDate>Mon, 06 Nov 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/11/555c59c60329f5cfad2043b4153015e8/</guid><description>&lt;h1 id="mptt-tree-id"&gt;MPTT Tree ID&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/koukikun1105/items/f2b4c014bd8f95038a21"&gt;Django + mysql： transaction.atomic() で select_for_update() を使ってレコードをロックしたときのメモ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/Nyokki/items/c68dddff2368c557c4bf"&gt;MySQL で採番機能（シーケンス）を実装する方法を整理する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/ham0215/items/f53dda06dd43e6be12c9"&gt;MySQL のロックについて公式ドキュメントを読みながら動作検証してみた〜テーブルレベルロック〜&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="分散ロック"&gt;分散ロック&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://lincolnloop.com/insights/distributed-locking-django/"&gt;Distributed Locking in Django&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; django.core.cache &lt;span style="color:#f92672"&gt;import&lt;/span&gt; cache
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;with&lt;/span&gt; cache&lt;span style="color:#f92672"&gt;.&lt;/span&gt;lock(&lt;span style="color:#e6db74"&gt;&amp;#34;somekey&amp;#34;&lt;/span&gt;):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; do_some_thing()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;redis-py:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/redis/redis-py/blob/d3a3ada03e080f39144807c9fbe44876c40e0548/redis/client.py#L394"&gt;https://github.com/redis/redis-py/blob/d3a3ada03e080f39144807c9fbe44876c40e0548/redis/client.py#L394&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="デッドロック"&gt;デッドロック&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/17183434/hook-available-for-automatic-retry-after-deadlock-in-django-and-mysql-setup"&gt;Hook available for automatic retry after deadlock in django and mysql setup&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; django.db.backends.utils
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; django.db &lt;span style="color:#f92672"&gt;import&lt;/span&gt; OperationalError
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; time
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;original &lt;span style="color:#f92672"&gt;=&lt;/span&gt; django&lt;span style="color:#f92672"&gt;.&lt;/span&gt;db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;backends&lt;span style="color:#f92672"&gt;.&lt;/span&gt;utils&lt;span style="color:#f92672"&gt;.&lt;/span&gt;CursorWrapper&lt;span style="color:#f92672"&gt;.&lt;/span&gt;execute
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;execute_wrapper&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;args, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;kwargs):
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; attempts &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;while&lt;/span&gt; attempts &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; original(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;args, &lt;span style="color:#f92672"&gt;**&lt;/span&gt;kwargs)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;except&lt;/span&gt; OperationalError &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; e:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; code &lt;span style="color:#f92672"&gt;=&lt;/span&gt; e&lt;span style="color:#f92672"&gt;.&lt;/span&gt;args[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; attempts &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#f92672"&gt;or&lt;/span&gt; code &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1213&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;raise&lt;/span&gt; e
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; attempts &lt;span style="color:#f92672"&gt;+=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; time&lt;span style="color:#f92672"&gt;.&lt;/span&gt;sleep(&lt;span style="color:#ae81ff"&gt;0.2&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;django&lt;span style="color:#f92672"&gt;.&lt;/span&gt;db&lt;span style="color:#f92672"&gt;.&lt;/span&gt;backends&lt;span style="color:#f92672"&gt;.&lt;/span&gt;utils&lt;span style="color:#f92672"&gt;.&lt;/span&gt;CursorWrapper&lt;span style="color:#f92672"&gt;.&lt;/span&gt;execute &lt;span style="color:#f92672"&gt;=&lt;/span&gt; execute_wrapper
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Redis キーの作成時刻</title><link>https://hdknr.github.io/blogs/posts/2023/11/44e397ac03deaa013c125c49c0d33904/</link><pubDate>Mon, 06 Nov 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/11/44e397ac03deaa013c125c49c0d33904/</guid><description>&lt;h1 id="redis-キーの登録日時"&gt;Redis キーの登録日時&lt;/h1&gt;
+&lt;p&gt;Redis でキーを登録した時刻を取得するには、残念ながら直接的な方法はありません。Redis はキーの作成日時や更新日時を保存していないからです ¹。ただし、いくつかの回避策があります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;キーを登録するときに、別のキーにタイムスタンプを保存する。
+例えば、&lt;code&gt;SET foo bar&lt;/code&gt;とするときに、&lt;code&gt;SET foo:timestamp 1636106362&lt;/code&gt;というように、キーの名前に&lt;code&gt;:timestamp&lt;/code&gt;を付けて現在の UNIX 時間を値として保存する。
+この方法では、キーの数が増えるとメモリの消費量も増えることに注意が必要です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;キーの値にタイムスタンプを含める。
+例えば、&lt;code&gt;SET foo bar:1636106362&lt;/code&gt;というように、値の末尾に&lt;code&gt;:&lt;/code&gt;と現在の UNIX 時間を付ける。
+この方法では、値の取得や操作において、タイムスタンプを除去する必要があることに注意が必要です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;キーに有効期限を設定する。
+例えば、&lt;code&gt;EXPIRE foo 3600&lt;/code&gt;とすると、キー&lt;code&gt;foo&lt;/code&gt;は 1 時間後に削除される。
+このとき、&lt;code&gt;TTL foo&lt;/code&gt;とすると、キーの残りの有効期限が秒単位で返される。
+この値から、キーの登録時刻を逆算することができる。この方法では、キーが削除されると時刻を取得できなくなることに注意が必要です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上の方法のいずれも完璧ではありませんが、Redis でキーの登録時刻を取得するための可能な解決策として参考にしてください。&lt;/p&gt;
+&lt;p&gt;¹: &lt;a href="%5E1%5E"&gt;Redis でキーの作成日時や更新日時を取得する方法はありますか？ - スタック・オーバーフロー&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/11/6
+(1) redis-cli でよく使うコマンド 20 選 #Redis - Qiita. &lt;a href="https://qiita.com/hatsu/items/a52817364160e0b6bb60"&gt;https://qiita.com/hatsu/items/a52817364160e0b6bb60&lt;/a&gt;.
+(2) redis-cli でよく使うコマンド 20 選 #Redis - Qiita. &lt;a href="https://qiita.com/hatsu/items/a52817364160e0b6bb60"&gt;https://qiita.com/hatsu/items/a52817364160e0b6bb60&lt;/a&gt;.
+(3) 全データ型対応の操作 — redis 2.0.3 documentation - shibu.jp. &lt;a href="http://redis.shibu.jp/commandreference/alldata.html"&gt;http://redis.shibu.jp/commandreference/alldata.html&lt;/a&gt;.
+(4) 【2022 年最新版】【Redis メモ・3】キーに有効期限を付与し &amp;hellip;. &lt;a href="https://www.servernote.net/article.cgi?id=redis-note-3"&gt;https://www.servernote.net/article.cgi?id=redis-note-3&lt;/a&gt;.
+(5) セッション管理として Redis を使用する - RAKUS Developers Blog &amp;hellip;. &lt;a href="https://tech-blog.rakus.co.jp/entry/2017/10/17/111828"&gt;https://tech-blog.rakus.co.jp/entry/2017/10/17/111828&lt;/a&gt;.
+(6) ja.wikipedia.org. &lt;a href="https://ja.wikipedia.org/wiki/Redis"&gt;https://ja.wikipedia.org/wiki/Redis&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>redis</title><link>https://hdknr.github.io/blogs/posts/2023/07/0e2885fa164ec64417cf750beafb9e04/</link><pubDate>Fri, 14 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/0e2885fa164ec64417cf750beafb9e04/</guid><description>&lt;h1 id="elasic-cache-for-redis"&gt;Elasic Cache for Redis&lt;/h1&gt;
+&lt;h2 id="バージョン"&gt;バージョン&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli --version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis-cli 5.0.7
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-server -v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Redis server v&lt;span style="color:#f92672"&gt;=&lt;/span&gt;5.0.7 sha&lt;span style="color:#f92672"&gt;=&lt;/span&gt;00000000:0 malloc&lt;span style="color:#f92672"&gt;=&lt;/span&gt;jemalloc-5.2.1 bits&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;64&lt;/span&gt; build&lt;span style="color:#f92672"&gt;=&lt;/span&gt;66bd629f924ac924
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;接続:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;REDIS_URL&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;redis://mycloud-stage-redis-nc.sigrvp.ng.0001.apne1.cache.amazonaws.com:6379/0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ export &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;cat .env|xargs&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli -u $REDIS_URL PING
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PONG
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="python"&gt;Python&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;redis-py&lt;/code&gt;: &lt;a href="https://github.com/redis/redis-py"&gt;https://github.com/redis/redis-py&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;django-redis&lt;/code&gt;: &lt;a href="https://github.com/jazzband/django-redis"&gt;https://github.com/jazzband/django-redis&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;channels_redis&lt;/code&gt;: &lt;a href="https://github.com/django/channels_redis"&gt;https://github.com/django/channels_redis&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="クラスターモードへの接続"&gt;クラスターモードへの接続&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://redis.readthedocs.io/en/stable/connections.html#cluster-client"&gt;Cluster Client&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; logging
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; redis.cluster &lt;span style="color:#f92672"&gt;import&lt;/span&gt; RedisCluster
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENDPOINT &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;mycloud-stage-redis-test.sigrvp.clustercfg.apne1.cache.amazonaws.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;basicConfig(level&lt;span style="color:#f92672"&gt;=&lt;/span&gt;logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;INFO)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RedisCluster(host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ENDPOINT, port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;6379&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; redis&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ping():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;info(&lt;span style="color:#e6db74"&gt;&amp;#34;Connected to Redis&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;django-redis:&lt;/p&gt;</description></item><item><title>Celery AWS ECS</title><link>https://hdknr.github.io/blogs/posts/2023/07/9b947258d31059c56fec5000faa190ca/</link><pubDate>Thu, 13 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/9b947258d31059c56fec5000faa190ca/</guid><description>&lt;h1 id="celery-on-ecs"&gt;Celery on ECS&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/hankehly/items/c3e0496eb04327a53ac4#redis"&gt;【Python Celery】本番運用時に知っておくべき 10 のこと&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/Alexmhack/Django-Celery-Redis-AWSEB"&gt;https://github.com/Alexmhack/Django-Celery-Redis-AWSEB&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="redis"&gt;Redis&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://ken0-1n.hatenablog.com/entry/2017/12/05/114653"&gt;Celery + AWS Redis で使ってみる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="クラスターモード"&gt;クラスターモード&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Redis &amp;gt;= 3.2&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://dev.classmethod.jp/articles/elasticache-cluster-mode/"&gt;ElastiCache for Redis のクラスターモードについて調べてみる&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="sqs"&gt;SQS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;broker&lt;/code&gt; としてつかえるが、 &lt;code&gt;backend&lt;/code&gt; としては使えない(SQS + RabbitMQ/Redis/SQLAlchemy を考える)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://medium.com/nerd-for-tech/celery-sqs-on-django-on-elastic-beanstalk-98e20ccf95c1"&gt;Celery + SQS on Django on Elastic Beanstalk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://python.plainenglish.io/deploying-django-on-aws-setting-up-celery-and-sqs-95632a6e79cb"&gt;Deploying Django on AWS: Setting up Celery and SQS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.to/daiquiri_team/deploying-django-application-on-aws-with-terraform-setting-up-celery-and-sqs-38ik"&gt;Deploying Django Application on AWS with Terraform. Setting up Celery and SQS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ecs"&gt;ECS&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.com/questions/61989311/running-celery-tasks-and-celery-beat-in-ecs-with-django"&gt;running celery tasks and celery beat in ECS with Django&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/docker/compose/issues/8040"&gt;docker compose ecs deploy aws tutorial: celery incompatible attribute #8040&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tech.quartetcom.co.jp/2018/11/09/byebye-aws-batch/"&gt;AWS Batch を検討したけど AWS Fargate を採用した話&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="celery-logging"&gt;Celery Logging&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.celeryq.dev/en/stable/reference/celery.app.log.html"&gt;celery.app.log&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://distributedpython.com/posts/three-ideas-to-customise-celery-logging-handlers/"&gt;Three Ideas to Customise Celery logging handlers&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;標準出力:&lt;/p&gt;</description></item><item><title>redis</title><link>https://hdknr.github.io/blogs/posts/2023/05/6f0abad12df8bc996fece3fef54f29e1/</link><pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/6f0abad12df8bc996fece3fef54f29e1/</guid><description>&lt;h2 id="redis"&gt;redis&lt;/h2&gt;
+&lt;h3 id="ubuntu"&gt;Ubuntu&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo apt install redis-server -y
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ps ax | grep redis
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;1083463&lt;/span&gt; ? Ssl 0:00 /usr/bin/redis-server 127.0.0.1:6379
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="redis-cli"&gt;redis-cli&lt;/h2&gt;
+&lt;p&gt;redis-cliコマンドでデータベース1に接続するには、次のように入力します。¹²&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;redis-cli -n 1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;このコマンドは、データベース1に接続するためのものです。&lt;code&gt;-n&lt;/code&gt;オプションを使用して、データベース番号を指定します。&lt;/p&gt;
+&lt;p&gt;上記の例では、データベース番号が1であることを示しています。&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/5/5&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) redis-cliの接続時によく使うコマンド使い方メモ - Qiita. &lt;a href="https://qiita.com/a-nishimura/items/54b0d85dbce47685a36f"&gt;https://qiita.com/a-nishimura/items/54b0d85dbce47685a36f&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(2) 【入門】Redis - Qiita. &lt;a href="https://qiita.com/wind-up-bird/items/f2d41d08e86789322c71"&gt;https://qiita.com/wind-up-bird/items/f2d41d08e86789322c71&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(3) redis-cliの使い方 - Qiita. &lt;a href="https://qiita.com/sawada_masahiko/items/1f60936c421ecab8dfbf"&gt;https://qiita.com/sawada_masahiko/items/1f60936c421ecab8dfbf&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(4) redis-cliでよく使うコマンド20選 - Qiita. &lt;a href="https://qiita.com/hatsu/items/a52817364160e0b6bb60"&gt;https://qiita.com/hatsu/items/a52817364160e0b6bb60&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(5) Redisコマンド一覧 - Qiita. &lt;a href="https://qiita.com/taiba/items/18016906d80c13e88853"&gt;https://qiita.com/taiba/items/18016906d80c13e88853&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(6) リモート環境にあるRedisに接続する - 箱のプログラミング日記。. &lt;a href="https://www.y-hakopro.com/entry/2020/10/31/185235"&gt;https://www.y-hakopro.com/entry/2020/10/31/185235&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="django"&gt;Django&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;poetry add django&lt;span style="color:#f92672"&gt;-&lt;/span&gt;redis
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;settings.py:&lt;/p&gt;</description></item><item><title>Python: ジョブキューイング</title><link>https://hdknr.github.io/blogs/posts/2023/04/bfe76b81c50797270ccec6b441c406b4/</link><pubDate>Fri, 07 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/bfe76b81c50797270ccec6b441c406b4/</guid><description>&lt;h2 id="タスクキューシステム"&gt;タスクキューシステム&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.fullstackpython.com/task-queues.html"&gt;Full Stack Python&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="celery"&gt;Celery&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.celeryq.dev/en/stable/"&gt;https://docs.celeryq.dev/en/stable/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;PYPI:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;celery&lt;/li&gt;
+&lt;li&gt;redis&lt;/li&gt;
+&lt;li&gt;django-celery-results&lt;/li&gt;
+&lt;li&gt;django-redis&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Redis:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/redis.html"&gt;Using Redis&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;poetry add &amp;quot;celery[redis]&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;djang-celery-results:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html#django-celery-results-using-the-django-orm-cache-as-a-result-backend"&gt;django-celery-results - Using the Django ORM/Cache as a result backend&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;poetry add django-celery-results&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Periodic Task:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html"&gt;Periodic Tasks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;記事:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://kosuke-space.com/django-celery-redis"&gt;【Django】CeleryとRedisで非同期処理を実装する方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/ridai/items/5060e806573b553a33fc"&gt;DjangoとCeleryを使った非同期処理の結果取得までの流れ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://zats-firm.com/2022/02/05/django_cerery_redis%e3%81%ab%e3%82%88%e3%82%8b%e9%9d%9e%e5%90%8c%e6%9c%9f%e5%87%a6%e7%90%86%e3%81%ae%e5%ae%9f%e8%a3%85/"&gt;【Python x Django】Djangoによる非同期処理実装(Cerery,Redis)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://python.plainenglish.io/deploying-django-on-aws-setting-up-celery-and-sqs-95632a6e79cb"&gt;Deploying Django on AWS: Setting up Celery and SQS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://python.plainenglish.io/celery-task-queue-with-aws-sqs-dd51f350ae50"&gt;Celery Task Queue with AWS SQS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="mysqldatabase-returned-an-invalid-datetime-value-are-time-zone-definitions-for-your-database-installed"&gt;MySQL:&lt;code&gt;Database returned an invalid datetime value. Are time zone definitions for your database installed?&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;macOS:&lt;/p&gt;</description></item><item><title>Redis Windows</title><link>https://hdknr.github.io/blogs/posts/2015/04/ecf1cb51339d7447a19e/</link><pubDate>Tue, 21 Apr 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/04/ecf1cb51339d7447a19e/</guid><description>&lt;h1 id="redis-64-on-windows"&gt;Redis-64 on Windows&lt;/h1&gt;
+&lt;h2 id="install"&gt;Install&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr&amp;gt;choco install redis-64
+Chocolatey v0.9.9.2
+Installing the following packages:
+redis-64
+By installing you accept licenses for the packages.
+redis-64 v2.8.19
+ShimGen has successfully created a shim for redis-benchmark.exe
+ShimGen has successfully created a shim for redis-check-aof.exe
+ShimGen has successfully created a shim for redis-check-dump.exe
+ShimGen has successfully created a shim for redis-cli.exe
+ShimGen has successfully created a shim for redis-server.exe
+redis-64 has been installed successfully.
+Chocolatey installed 1/1 package(s). 0 package(s) failed.
+See the log for details.
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="redis-server"&gt;redis-server&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr&amp;gt;redis-server
+[7308] 21 Apr 10:26:02.432 # Warning: no config file specified, using the defaul
+t config.
+In order to specify a config file use C:\ProgramData\chocolatey\lib\redis-64\redis-server.exe /path/to/redis.conf
+_._
+_.-``__ &amp;#39;&amp;#39;-._
+_.-`` `. `_. &amp;#39;&amp;#39;-._ Redis 2.8.19 (00000000/0) 64 bit
+.-`` .-```. ```\/ _.,_ &amp;#39;&amp;#39;-._
+( &amp;#39; , .-` | `, ) Running in stand alone mode
+|`-._`-...-` __...-.``-._|&amp;#39;` _.-&amp;#39;| Port: 6379
+| `-._ `._ / _.-&amp;#39; | PID: 7308
+`-._ `-._ `-./ _.-&amp;#39; _.-&amp;#39;
+|`-._`-._ `-.__.-&amp;#39; _.-&amp;#39;_.-&amp;#39;|
+| `-._`-._ _.-&amp;#39;_.-&amp;#39; | http://redis.io
+`-._ `-._`-.__.-&amp;#39;_.-&amp;#39; _.-&amp;#39;
+|`-._`-._ `-.__.-&amp;#39; _.-&amp;#39;_.-&amp;#39;|
+| `-._`-._ _.-&amp;#39;_.-&amp;#39; |
+`-._ `-._`-.__.-&amp;#39;_.-&amp;#39; _.-&amp;#39;
+`-._ `-.__.-&amp;#39; _.-&amp;#39;
+`-._ _.-&amp;#39;
+`-.__.-&amp;#39;
+[7308] 21 Apr 10:26:02.455 # Server started, Redis version 2.8.19
+[7308] 21 Apr 10:26:02.456 * The server is now ready to accept connections on port 6379
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="redis-cli"&gt;redis-cli&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;C:\Users\hdknr&amp;gt;redis-cli
+127.0.0.1:6379&amp;gt; set testkey testvalue
+OK
+127.0.0.1:6379&amp;gt; get testkey
+&amp;#34;testvalue&amp;#34;
+127.0.0.1:6379&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="stackexchangeredis"&gt;StackExchange.Redis&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.nuget.org/packages/StackExchange.Redis/"&gt;NuGet&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;PM&amp;gt; Install-Package StackExchange.Redis
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Windows Forms&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-csharp" data-lang="csharp"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;private&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;void&lt;/span&gt; button1_Click(&lt;span style="color:#66d9ef"&gt;object&lt;/span&gt; sender, EventArgs e)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; connect = StackExchange.Redis.ConnectionMultiplexer.Connect(&lt;span style="color:#e6db74"&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; cb = connect.GetDatabase(); &lt;span style="color:#75715e"&gt;// StackExchange.Redis.IDatabase&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cb.StringSet(&lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;hdknr&amp;#34;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; MessageBox.Show(cb.StringGet(&lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Console Client&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;127.0.0.1:6379&amp;gt; get name
+&amp;#34;hdknr&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>

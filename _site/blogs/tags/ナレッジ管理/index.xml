@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ナレッジ管理 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%8A%E3%83%AC%E3%83%83%E3%82%B8%E7%AE%A1%E7%90%86/</link><description>Recent content in ナレッジ管理 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 21 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%8A%E3%83%AC%E3%83%83%E3%82%B8%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml"/><item><title>Obsidianの創業者が「有料Syncを使わずに済む方法」を公式公開 — iCloud・Git・ヘッドレスCLIで完全無料運用する選択肢</title><link>https://hdknr.github.io/blogs/posts/2026/05/obsidian-free-sync-without-paid-subscription/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/obsidian-free-sync-without-paid-subscription/</guid><description>&lt;p&gt;Obsidianの創業者が、自社の有料サービスである Obsidian Sync を &lt;strong&gt;使わずに&lt;/strong&gt; Vault を同期・バックアップする方法を公式ドキュメントとして明文化したことが話題になっている。&lt;/p&gt;
+&lt;h2 id="何が起きているのか"&gt;何が起きているのか&lt;/h2&gt;
+&lt;p&gt;Obsidian は「あなたのノートは永遠にあなたのもの」を掲げるローカルファースト型のナレッジ管理ツールだ。ノートはプレーンテキスト（Markdown）でローカルに保存され、クラウドへの依存を強制しない設計になっている。&lt;/p&gt;
+&lt;p&gt;そのObsidianの創業者が、有料の Obsidian Sync（$4〜/月・年払い、または $5/月・月払い）を契約しなくても Vault を複数デバイス間で同期できる方法を、公式ドキュメント上で余すところなく公開した。&lt;/p&gt;
+&lt;h2 id="公式が案内している無料同期の選択肢"&gt;公式が案内している無料同期の選択肢&lt;/h2&gt;
+&lt;p&gt;公式ヘルプ（&lt;a href="https://obsidian.md/help/sync-notes"&gt;Sync your notes across devices&lt;/a&gt;）によると、以下の方法が紹介されている。&lt;/p&gt;
+&lt;h3 id="1-icloudapple-デバイス間"&gt;1. iCloud（Apple デバイス間）&lt;/h3&gt;
+&lt;p&gt;Mac・iPhone・iPad を使うユーザーにとって最もシンプルな選択肢。iCloud Drive の中に Vault フォルダを配置するだけで、Apple デバイス間でシームレスに同期される。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;~/Library/Mobile Documents/iCloud~md~obsidian/Documents/MyVault
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;設定コストがほぼゼロで、iOS アプリとの相性も良い。&lt;/p&gt;
+&lt;h3 id="2-google-drive--dropbox--onedrive"&gt;2. Google Drive / Dropbox / OneDrive&lt;/h3&gt;
+&lt;p&gt;クラウドストレージのフォルダ配下に Vault を置くだけで同期が成立する。Windows や Android ユーザーにも対応できる汎用的な方法だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Google Drive のデスクトップアプリで同期するフォルダを指定&lt;/li&gt;
+&lt;li&gt;Vault を &lt;code&gt;~/Google Drive/MyVault&lt;/code&gt; などのパスに配置&lt;/li&gt;
+&lt;li&gt;モバイルでは公式の &lt;a href="https://obsidian.md"&gt;Obsidian アプリ&lt;/a&gt; + ファイルマネージャアプリで Vault フォルダを指定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-gitバージョン履歴も残したい人向け"&gt;3. Git（バージョン履歴も残したい人向け）&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://github.com/Vinzent03/obsidian-git"&gt;obsidian-git&lt;/a&gt; プラグインを使えば、Vault の変更を GitHub などに自動プッシュできる。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# プラグイン設定後、Vault ルートで初期化&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git init
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git remote add origin https://github.com/yourname/my-vault.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push -u origin main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;プラグイン設定で自動コミット・プッシュ間隔を指定できるため、&lt;strong&gt;バージョン履歴&lt;/strong&gt;まで残せる点が他の方法と異なる。&lt;/p&gt;</description></item><item><title>claude-obsidian × Obsidianで「勝手に育つ第2の脳」を構築する — AIが自動でリンクを張り、使うほど賢くなるVaultの作り方</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-obsidian-second-brain/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-obsidian-second-brain/</guid><description>&lt;p&gt;「メモはたくさん溜まるのに、結局どこに何を書いたか分からない」
+「AIを活用したいけど、毎回コンテキストを一から説明するのが面倒」&lt;/p&gt;
+&lt;p&gt;こういった悩みを一気に解決するツールが注目を集めています。GitHubで5000スター超えを達成した &lt;strong&gt;claude-obsidian&lt;/strong&gt; です。&lt;/p&gt;
+&lt;h2 id="claude-obsidianとは何か"&gt;claude-obsidianとは何か&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/AgriciDaniel/claude-obsidian"&gt;claude-obsidian&lt;/a&gt; は、Claude Code × Obsidian を連携させるオープンソースプラグインです（MIT License）。Andrej Karpathy氏（OpenAI創設メンバー、元Tesla AI部門ディレクター）が提唱した &lt;strong&gt;LLM Wikiパターン&lt;/strong&gt; を実装したもので、一言でいうと「知識が複利で増えるObsidian Vault」を作るツールです。&lt;/p&gt;
+&lt;p&gt;従来のAI × ノートツールの問題点は、&lt;strong&gt;毎回セッションが切れるとコンテキストがリセットされること&lt;/strong&gt;。claude-obsidianはこの問題を根本から解決します。&lt;/p&gt;
+&lt;p&gt;ソースを投げれば、Claudeが以下を自動実行します：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;内容を読み込み、エンティティと概念を抽出&lt;/li&gt;
+&lt;li&gt;既存ページへの相互参照を更新&lt;/li&gt;
+&lt;li&gt;構造化されたObsidian Vaultにファイリング&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;1つの記事を入れるだけで8〜15の相互リンクされたWikiページが自動生成されます。使えば使うほどVaultが賢くなる — 知識が「複利」で積み上がっていく仕組みです。&lt;/p&gt;
+&lt;h2 id="始め方--3つのインストール方法"&gt;始め方 — 3つのインストール方法&lt;/h2&gt;
+&lt;p&gt;必要なものは以下の3つです：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Obsidian（デスクトップ版）&lt;/li&gt;
+&lt;li&gt;Node.js 18以上&lt;/li&gt;
+&lt;li&gt;Claude Code（CLIまたはデスクトップアプリ）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="方法1-vault-clone推奨2分で完了"&gt;方法1: Vault Clone（推奨・2分で完了）&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/AgriciDaniel/claude-obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd claude-obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bash bin/setup-vault.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;クローンしたフォルダをObsidianで開くだけ。最も簡単です。&lt;/p&gt;
+&lt;h3 id="方法2-claude-codeプラグインとして追加"&gt;方法2: Claude Codeプラグインとして追加&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude plugin marketplace add AgriciDaniel/claude-obsidian
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude plugin install claude-obsidian@claude-obsidian-marketplace
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="方法3-既存のvaultに導入"&gt;方法3: 既存のVaultに導入&lt;/h3&gt;
+&lt;p&gt;GitHubリポジトリから &lt;code&gt;WIKI.md&lt;/code&gt; をコピーして自分のVaultに配置し、Claudeにセットアップを指示するだけです。&lt;/p&gt;</description></item><item><title>Claude Code + Obsidian で「AI 第二の脳」をたった 5 分で構築する方法</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-ai-second-brain/</link><pubDate>Wed, 29 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-ai-second-brain/</guid><description>&lt;p&gt;Andrej Karpathy（元 OpenAI・元 Tesla AI ディレクター）が提唱した「Claude Code での第二の脳の作り方」。
+この記事では、&lt;strong&gt;Claude Code + Obsidian を組み合わせて知識を蓄積・進化させる「AI 第二の脳」システム&lt;/strong&gt;の仕組みとセットアップ手順を解説します。&lt;/p&gt;
+&lt;h2 id="普通の-rag-と何が違うのか"&gt;普通の RAG と何が違うのか&lt;/h2&gt;
+&lt;p&gt;ChatGPT へのファイルアップロードや NotebookLM のような一般的な RAG は、以下のように動きます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;ファイルを渡す&lt;/li&gt;
+&lt;li&gt;質問のたびに AI が関連部分を探す&lt;/li&gt;
+&lt;li&gt;毎回ゼロから答えを生成する&lt;/li&gt;
+&lt;li&gt;次の質問がきたら、また同じことをゼロから繰り返す&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;何も積み重ならない&lt;/strong&gt;のが問題です。&lt;/p&gt;
+&lt;p&gt;Karpathy が提唱したシステムは根本的に異なり、**AI が「Wiki を育て続ける」**仕組みです。新しい資料を入れるたびに、AI がその内容を読んで既存の知識と統合し、矛盾があれば修正し、関連ページを更新します。知識が一度まとめられると、常に最新状態に保たれます。&lt;/p&gt;
+&lt;h2 id="システムの全体像"&gt;システムの全体像&lt;/h2&gt;
+&lt;p&gt;このシステムには 4 つの動く部品があります。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;あなたのデータ&lt;/strong&gt; — 記事・ノート・文字起こし・アイデアなど&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;整理&lt;/strong&gt; — Claude Code が Obsidian に自動で整理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;即座の質問&lt;/strong&gt; — 育てたデータベースにいつでも質問可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;進化する記憶&lt;/strong&gt; — 使えば使うほど賢くなる仕組み&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="3-つの層構造"&gt;3 つの層構造&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;層&lt;/th&gt;
+&lt;th&gt;名称&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;層 1&lt;/td&gt;
+&lt;td&gt;生のソース（immutable）&lt;/td&gt;
+&lt;td&gt;記事・論文・画像・データファイル。AI は読むだけで書き換えない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;層 2&lt;/td&gt;
+&lt;td&gt;Wiki&lt;/td&gt;
+&lt;td&gt;要約・人物・概念・比較・総合分析ページ。AI が作成・更新し続ける&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;層 3&lt;/td&gt;
+&lt;td&gt;スキーマ（CLAUDE.md）&lt;/td&gt;
+&lt;td&gt;Wiki の構造・ルール・ワークフローを AI に教える設定ファイル&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この 3 層構造により、AI が「汎用チャットボット」ではなく「規律を持った Wiki 管理者」として動きます。&lt;/p&gt;</description></item><item><title>Claude Code × Obsidian で「第二の脳」を構築する完全解説 — 海外1,240万views超え、AI記憶設計の新標準</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-second-brain/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-obsidian-second-brain/</guid><description>&lt;p&gt;海外 AI 活用シーンで &lt;strong&gt;Obsidian × Claude Code&lt;/strong&gt; の組み合わせが爆発的な注目を集めている。6本の主要記事だけで合計 &lt;strong&gt;1,240万 views&lt;/strong&gt;、ブックマーク数は &lt;strong&gt;8万件超え&lt;/strong&gt;。元 OpenAI 創設メンバーの Andrej Karpathy 氏が提唱し、Obsidian CEO の Steph Ango 氏自らが AI 連携スキルを GitHub で公開。ここまで業界の中心人物が動いたツール組み合わせは、近年なかった。&lt;/p&gt;
+&lt;p&gt;本記事は東大 ClaudeCode 研究所（&lt;a href="https://x.com/ClaudeCode_UT"&gt;@ClaudeCode_UT&lt;/a&gt;）が公開した解説記事「【決定版】ゼロから始めるClaudeCode × Obsidianの完全解説」をベースに、その要点をまとめる。&lt;/p&gt;
+&lt;h2 id="そもそも-obsidian-とは何か"&gt;そもそも Obsidian とは何か&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://obsidian.md/"&gt;Obsidian&lt;/a&gt; は、個人向けのローカル Markdown ノートアプリだ。2020 年公開、個人利用は無料で、Mac / Windows / Linux / iOS / Android に対応している。同じノート系の Notion や Evernote とは設計思想が根本的に異なる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ノート本体は Markdown ファイル&lt;/strong&gt; — 各ノートは &lt;code&gt;.md&lt;/code&gt; としてディスク上に実ファイルで存在する。独自データベースに閉じ込められない。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vault は OS のただのフォルダ&lt;/strong&gt; — ノートを束ねる「Vault」は普通のディレクトリ。Git でも Dropbox でも iCloud でも、好きな仕組みで同期・バックアップできる。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;双方向リンク &lt;code&gt;[[ノート名]]&lt;/code&gt;&lt;/strong&gt; — ノート同士をリンクで繋ぎ、知識をグラフ構造として可視化できる。Zettelkasten など既存 PKM 手法の基本機能を標準で備える。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ローカルファースト&lt;/strong&gt; — 規定ではすべて自分の PC 内に保存。クラウドに置くかどうかは利用者が選ぶ。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;豊富なプラグイン&lt;/strong&gt; — 2,000 以上のコミュニティプラグインで、PDF 注釈・タスク管理・グラフ可視化まで拡張できる。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="なぜai--記憶設計の目的に最適なのか"&gt;なぜ「AI × 記憶設計」の目的に最適なのか&lt;/h3&gt;
+&lt;p&gt;Obsidian のこれらの特徴は、Claude Code のような&lt;strong&gt;ファイルシステムを直接操作する AI エージェント&lt;/strong&gt;と噛み合う。理由は3点ある。&lt;/p&gt;</description></item><item><title>Obsidian</title><link>https://hdknr.github.io/blogs/wiki/tools/obsidian/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/obsidian/</guid><description>ローカルファーストの Markdown ベース PKM（個人知識管理）ツール。データはすべて自分のマシンに保存されベンダーロックインなし</description></item><item><title>Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する</title><link>https://hdknr.github.io/blogs/posts/2026/04/obsidian-pkm-second-brain/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/obsidian-pkm-second-brain/</guid><description>&lt;p&gt;メモツールは世の中に溢れている。Notion、Evernote、Google Keep……。その中で &lt;strong&gt;Obsidian&lt;/strong&gt; が開発者やナレッジワーカーに支持され続けている理由は「ローカルファースト」という設計哲学にある。データは自分のマシンに Markdown ファイルとして保存され、ベンダーロックインが一切ない。&lt;/p&gt;
+&lt;p&gt;本記事では Obsidian の機能・利点・活用法を網羅的にまとめる。&lt;/p&gt;
+&lt;h2 id="obsidian-とは"&gt;Obsidian とは&lt;/h2&gt;
+&lt;p&gt;Obsidian は &lt;strong&gt;ローカルファイルベースの Markdown エディタ&lt;/strong&gt;であり、個人の知識管理（PKM: Personal Knowledge Management）に特化したツールだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;公式サイト&lt;/strong&gt;: &lt;a href="https://obsidian.md"&gt;obsidian.md&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;料金&lt;/strong&gt;: 個人利用は&lt;strong&gt;完全無料&lt;/strong&gt;。商用利用のみ Commercial License（$50/年）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;対応 OS&lt;/strong&gt;: Windows / macOS / Linux / iOS / Android&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プラグイン数&lt;/strong&gt;: 2,700 種類以上のコミュニティプラグイン&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="設計哲学your-thoughts-are-yours"&gt;設計哲学：「Your thoughts are yours」&lt;/h3&gt;
+&lt;p&gt;Obsidian の根底にあるのは「あなたの思考はあなたのもの」という哲学だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ローカルファースト&lt;/strong&gt;: データはすべて自分のマシン上の &lt;code&gt;.md&lt;/code&gt; ファイル&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;プレーンテキスト&lt;/strong&gt;: 専用フォーマットなし。他のエディタでも開ける&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ベンダーロックインなし&lt;/strong&gt;: Obsidian を辞めても、データはそのまま使える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オフライン動作&lt;/strong&gt;: インターネット接続なしで完全に機能する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="コア機能"&gt;コア機能&lt;/h2&gt;
+&lt;h3 id="内部リンク-記法"&gt;内部リンク（&lt;code&gt;[[]]&lt;/code&gt; 記法）&lt;/h3&gt;
+&lt;p&gt;Obsidian の最大の特徴が &lt;code&gt;[[ページ名]]&lt;/code&gt; で即座にノート間リンクを作れる内部リンク機能だ。リンク先が存在しなくても構わない。リンクをクリックした時点で新規ページが自動生成される。&lt;/p&gt;
+&lt;p&gt;これにより、メモを書いている最中に「あ、この概念は別ページにまとめたい」と思った瞬間に &lt;code&gt;[[概念名]]&lt;/code&gt; と書くだけで、知識のネットワークが自然に広がっていく。&lt;/p&gt;
+&lt;h3 id="グラフビュー"&gt;グラフビュー&lt;/h3&gt;
+&lt;p&gt;ノート間のリンク関係を視覚的にネットワーク図として表示する機能。知識の全体像や孤立したノートの発見に役立つ。ただし、実用面ではグラフビューよりも全文検索の方が圧倒的に使用頻度が高いという声も多い。&lt;/p&gt;
+&lt;h3 id="全文検索"&gt;全文検索&lt;/h3&gt;
+&lt;p&gt;Vault（Obsidian のワークスペース）内のすべてのファイルを横断的に検索できる。ローカルファイルなので検索速度が速く、数千ファイルでもストレスなく動作する。&lt;/p&gt;</description></item></channel></rss>

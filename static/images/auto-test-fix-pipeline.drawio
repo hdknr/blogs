@@ -1,0 +1,91 @@
+<mxfile host="app.diagrams.net" modified="2026-07-01T00:00:00.000Z" agent="Claude" version="24.0.0">
+  <diagram name="Auto Test Fix Pipeline" id="auto-test-fix-pipeline">
+    <mxGraphModel dx="1000" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="テスト失敗を自律消化する 3 フェーズ・パイプライン" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="20" width="600" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Phase 1 label -->
+        <mxCell id="p1label" value="Phase 1&lt;br&gt;監査ツール" style="text;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="120" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="triage" value="triage&lt;br&gt;サブパッケージ単位の bulk 実行で候補を絞る（速いが pollution 込み）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="150" width="320" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="verify" value="verify&lt;br&gt;per-file 単独実行で real（単独でも失敗）と pollution（単独 green）を切り分け" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="230" width="320" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="report" value="report&lt;br&gt;real 失敗を per-file Issue に冪等同期 / green 復帰は自動クローズ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="315" width="320" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Phase 2 -->
+        <mxCell id="p2label" value="Phase 2&lt;br&gt;Issue 起票" style="text;html=1;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="405" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="queue" value="Issue キュー&lt;br&gt;1 ファイル = 1 Issue&lt;br&gt;（安定マーカーで冪等同期）" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="360" y="400" width="200" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Phase 3 label -->
+        <mxCell id="p3label" value="Phase 3&lt;br&gt;自律修正スキル&lt;br&gt;（1 イテレーション&lt;br&gt;= 1 Issue）" style="text;html=1;fillColor=#f8cecc;strokeColor=#b85450;rounded=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="520" width="120" height="330" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pick" value="① Issue を 1 件取得（actionable のみ / 0 件でループ終了）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="520" width="320" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="repro" value="② 単独で再現 → ③ 根本原因を git log で特定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="595" width="320" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="classify" value="分類&lt;br&gt;A / B / C / D" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="665" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fix" value="A/B/C：テスト側を修正&lt;br&gt;worktree で green・linter 確認 → PR 作成（Closes #N）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="150" y="790" width="280" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="needshuman" value="D：実バグ疑い&lt;br&gt;直さず needs-human でエスカレーション" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="500" y="790" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="review" value="人手レビュー → マージ&lt;br&gt;（マージはエージェントに任せない＝安全境界）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="890" width="280" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Edges Phase 1 -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="triage" target="verify" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="verify" target="report" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="report" target="queue" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="queue" target="pick" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="pick" target="repro" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="repro" target="classify" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" value="A/B/C" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;fontColor=#82b366;fontStyle=1;" edge="1" source="classify" target="fix" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" value="D" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;fontColor=#b85450;fontStyle=1;" edge="1" source="classify" target="needshuman" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;" edge="1" source="fix" target="review" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Loop back -->
+        <mxCell id="eloop" value="次の 1 件へ（ループ）" style="edgeStyle=orthogonalEdgeStyle;endArrow=classic;dashed=1;rounded=1;strokeColor=#6c8ebf;fontColor=#6c8ebf;strokeWidth=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="review" target="pick" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="920" />
+              <mxPoint x="200" y="545" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>

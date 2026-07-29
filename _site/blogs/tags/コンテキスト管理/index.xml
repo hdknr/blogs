@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>コンテキスト管理 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%AE%A1%E7%90%86/</link><description>Recent content in コンテキスト管理 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 25 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code の「毎回ゼロスタート」問題 — CLAUDE.md・メモリ・行動ルールでセッション間の文脈を継続させる</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-session-context-persistence/</link><pubDate>Mon, 25 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-session-context-persistence/</guid><description>&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;2026年1月、Google のプリンシパルエンジニア Jaana Dogan 氏が X にこう投稿した。「Claude Code を使ったら、チームが1年かけて構築した分散エージェントオーケストレータを1時間で再現できた」——このツイートは 800 万以上のビューを獲得し、エンジニアリングコミュニティに衝撃を与えた。&lt;/p&gt;
+&lt;p&gt;しかし、その生産性の前提条件がある。&lt;strong&gt;Claude Code を正しく設定すること&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;p&gt;あるアラビア語圏の開発者がX（旧Twitter）で指摘した問題が、多くの開発者の共感を呼んでいる。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code を毎日使っている開発者の 90% は、毎セッション、ゼロから始めている。
+スタックのコンテキストなし、以前の会話の記憶なし、コードスタイルを統一する行動ルールなし。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この「毎回ゼロスタート」問題は、週あたり相当な生産性損失をもたらすという。同氏は正しい設定を導入した結果、月次で &lt;strong&gt;週15時間以上の節約&lt;/strong&gt; と大幅な token コスト削減を実現したと報告している。&lt;/p&gt;
+&lt;p&gt;では、どうすれば解決できるのか？&lt;/p&gt;
+&lt;h2 id="問題の本質-claude-code-はセッションをまたいで記憶しない"&gt;問題の本質: Claude Code はセッションをまたいで記憶しない&lt;/h2&gt;
+&lt;p&gt;Claude Code は強力なツールだが、デフォルトでは&lt;strong&gt;セッションをまたいで文脈を保持しない&lt;/strong&gt;。新しいセッションを開くたびに以下を繰り返すことになる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;プロジェクトのアーキテクチャを再説明する&lt;/li&gt;
+&lt;li&gt;コーディング規約や好みを再度伝える&lt;/li&gt;
+&lt;li&gt;前回の作業内容や設計上の決定事項を再共有する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;この繰り返しは、時間と token の両方の無駄になる。毎日 Claude Code を使う開発者にとって、これは積み重なると無視できないコストになる。&lt;/p&gt;
+&lt;h2 id="解決策-3-つの永続化レイヤー"&gt;解決策: 3 つの永続化レイヤー&lt;/h2&gt;
+&lt;p&gt;Claude Code でセッション間の文脈を維持するには、次の 3 つの仕組みを組み合わせる。&lt;/p&gt;
+&lt;h3 id="1-claudemd--プロジェクトコンテキストの永続化"&gt;1. CLAUDE.md — プロジェクトコンテキストの永続化&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt; は、Claude Code がセッション開始時に自動的に読み込む設定ファイルだ。プロジェクトのルートに置いておけば、毎回説明しなくていい情報を一度記載しておける。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# プロジェクト名
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 技術スタック
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; フロントエンド: React + TypeScript
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; バックエンド: FastAPI (Python)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; データベース: PostgreSQL
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## コーディング規約
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 変数名はキャメルケース
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 関数は 50 行以内に収める
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; テストは pytest を使用
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## よく使うコマンド
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`npm run dev`&lt;/span&gt; — 開発サーバー起動
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`pytest`&lt;/span&gt; — テスト実行
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`docker compose up -d`&lt;/span&gt; — DB 起動
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これだけで、毎セッションの「説明コスト」を大幅に削減できる。&lt;/p&gt;</description></item><item><title>Claude Code のトークン消費を最大90%削減する10のGitHubリポジトリ</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-token-reduction-10-repos/</link><pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-token-reduction-10-repos/</guid><description>Claude Code のトークン消費を最大90%削減できる10のOSSツールを、出力フィルタリング・シンボル単位参照・プロンプト制御・MCPサーバーの4アプローチで分類・解説。導入コストの低い順にも整理。</description></item><item><title>Context Rot（コンテキスト劣化）</title><link>https://hdknr.github.io/blogs/wiki/concepts/context-rot/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/concepts/context-rot/</guid><description>会話が長くなるにつれ LLM の性能がトークン数に比例して低下する現象。能動的なセッション管理で防げる</description></item><item><title>Claude Code のコンテキスト管理術 — Context Rot を防ぐ5つの選択肢</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-context-rot-session-management/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-context-rot-session-management/</guid><description>&lt;p&gt;Anthropic テクニカルスタッフ（Claude Code 担当）の Thariq（@trq212）が公開した記事「Using Claude Code: Session Management &amp;amp; 1M Context」が注目を集めている。「1M トークンのコンテキストウィンドウがあれば大丈夫」という誤解を正し、&lt;strong&gt;長いタスクを成功させるカギはコンテキストの能動的な管理にある&lt;/strong&gt;と明示した内容だ。本記事では、その内容をもとに 5 つのセッション管理手法を整理する。&lt;/p&gt;
+&lt;h2 id="context-rot-とは何か"&gt;Context Rot とは何か&lt;/h2&gt;
+&lt;p&gt;コンテキストウィンドウとは、モデルが次のレスポンスを生成する際に「見える」すべての情報のことだ。システムプロンプト・会話履歴・ツール呼び出しとその出力・読み込んだファイルがすべて含まれる。Claude Code のコンテキストウィンドウは 100 万トークン。&lt;/p&gt;
+&lt;p&gt;しかし、コンテキストを使うことには静かなコストがある。それが &lt;strong&gt;Context Rot&lt;/strong&gt; だ。&amp;ldquo;Rot&amp;rdquo; は英語で「腐る・朽ちる」を意味する単語で、ソフトウェアの世界では「Bit Rot」や「Code Rot」のように、時間経過や使用とともに静かに劣化していく現象を指す慣用表現として使われる。直訳すれば「コンテキストの腐敗」、意訳すれば「コンテキストの劣化」となる。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;コンテキストが増えるにつれてモデルの性能がトークン数に比例して低下する。会話が長くなるほど、モデルの注意力が分散し、古い・無関係なコンテンツが現在のタスクを妨害するようになる。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Context Rot が始まるタイミングはタスクに大きく依存するため固定のルールはないが、長いセッションになるほど確実に忍び寄る。&lt;/p&gt;
+&lt;h2 id="ターンの終わりは5択の分岐点"&gt;ターンの終わりは「5択の分岐点」&lt;/h2&gt;
+&lt;p&gt;ここが本質だ。AI が出力を終えるたびに、ユーザーには 5 つの選択肢がある。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;選択肢&lt;/th&gt;
+&lt;th&gt;意味&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Continue&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;同じセッションで次のメッセージを送る&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Rewind&lt;/strong&gt;（Esc×2 または &lt;code&gt;/rewind&lt;/code&gt;）&lt;/td&gt;
+&lt;td&gt;前のメッセージに戻り、そこから再プロンプト&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;&lt;code&gt;/clear&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;新しいセッションを開始する（核心だけ手動で持ち込む）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;&lt;code&gt;/compact&lt;/code&gt;&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;セッションをモデル自身に要約させ、要約の上に続ける&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Subagent&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;汚れ仕事を別エージェントに委譲し、結果だけ受け取る&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;多くのユーザーは「Continue」しか選ばない傾向がある。残り 4 つの選択肢を使ったことがない人も多い。&lt;/p&gt;
+&lt;h2 id="各選択肢の使いどき"&gt;各選択肢の使いどき&lt;/h2&gt;
+&lt;h3 id="rewind--修正より巻き戻し"&gt;Rewind — 修正より巻き戻し&lt;/h3&gt;
+&lt;p&gt;Claude がファイルを 5 つ読み、あるアプローチを試みて失敗したとする。「うまくいかなかった、X を試して」と打つより、&lt;strong&gt;ファイルを読み終えた直後のメッセージに巻き戻して再プロンプト&lt;/strong&gt;するほうが良い。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;# 悪い例
+「それはうまくいかなかった、代わりに Y を試して」
+# 良い例
+（/rewind でファイル読み込み直後に戻る）
+「アプローチ A は foo モジュールがそれを公開していないので使えない。B に直接進んで」
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;誤った方向に費やした試行錯誤がコンテキストから消え、モデルが新鮮な状態で再出発できる。&lt;/p&gt;</description></item></channel></rss>

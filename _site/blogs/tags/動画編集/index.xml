@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>動画編集 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E5%8B%95%E7%94%BB%E7%B7%A8%E9%9B%86/</link><description>Recent content in 動画編集 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 23 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E5%8B%95%E7%94%BB%E7%B7%A8%E9%9B%86/index.xml" rel="self" type="application/rss+xml"/><item><title>Video Use</title><link>https://hdknr.github.io/blogs/wiki/tools/video-use/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/video-use/</guid><description>Claude Code のスキルとして動作する動画編集自動化ツール。音声トランスクリプトを主インターフェースとして LLM で動画編集を行う</description></item><item><title>Video Use — Claude Code で動画編集を完全自動化するオープンソーススキル</title><link>https://hdknr.github.io/blogs/posts/2026/04/video-use-claude-code-video-editing/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/video-use-claude-code-video-editing/</guid><description>&lt;p&gt;Claude Code で動画編集が完全自動化できる「&lt;strong&gt;Video Use&lt;/strong&gt;」が公開されました。browser-use チームが開発したオープンソーススキルです。カメラに向かって話した素材を Claude に渡すだけで &lt;code&gt;final.mp4&lt;/code&gt; が完成します。&lt;/p&gt;
+&lt;h2 id="video-use-とは"&gt;Video Use とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Video Use&lt;/strong&gt; は、Claude Code のスキルとして動作する動画編集自動化ツールです。GitHub リポジトリ &lt;a href="https://github.com/browser-use/video-use"&gt;browser-use/video-use&lt;/a&gt; で公開されており、100% オープンソースで利用できます（ただし ElevenLabs API キーが必要です）。&lt;/p&gt;
+&lt;p&gt;ブラウザ操作を自動化する &lt;a href="https://github.com/browser-use/browser-use"&gt;browser-use&lt;/a&gt; を開発したチームが作成したもので、同じ「LLM に情報を読ませる」思想が動画編集に応用されています。&lt;/p&gt;
+&lt;h2 id="主な機能"&gt;主な機能&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;フィラーワード自動カット&lt;/strong&gt; — 「えー」「あの」「umm」「uh」などの無駄な言葉や、テイク間の無音部分を自動で除去&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自動カラーグレーディング&lt;/strong&gt; — セグメントごとにカラーグレード（ウォームシネマティック、ニュートラルパンチ、カスタム ffmpeg チェーンなど）を適用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;字幕自動生成&lt;/strong&gt; — デフォルトでは 2 ワードの大文字チャンク形式。スタイルは完全カスタマイズ可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;30ms オーディオフェード&lt;/strong&gt; — すべてのカット点で自動的に適用され、ポップノイズを防止&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;アニメーションオーバーレイ&lt;/strong&gt; — &lt;a href="https://www.manim.community/"&gt;Manim&lt;/a&gt; / &lt;a href="https://www.remotion.dev/"&gt;Remotion&lt;/a&gt; / PIL によるアニメーションをサブエージェントで並列生成して追加可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自己評価ループ&lt;/strong&gt; — レンダリング後にすべてのカット境界を自動チェック。問題があれば最大 3 回まで自動修正&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セッションメモリ&lt;/strong&gt; — &lt;code&gt;project.md&lt;/code&gt; に状態を保存し、次回セッションで継続作業が可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="なぜ-llm-で動画編集できるのか"&gt;なぜ LLM で動画編集できるのか&lt;/h2&gt;
+&lt;p&gt;Video Use の設計で興味深いのは、&lt;strong&gt;LLM は動画を「見ない」&lt;/strong&gt; という点です。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Naive approach: 30,000 frames × 1,500 tokens = &lt;strong&gt;45M tokens of noise&lt;/strong&gt;.&lt;br&gt;
+Video Use: &lt;strong&gt;12KB text + a handful of PNGs&lt;/strong&gt;.&lt;/p&gt;</description></item></channel></rss>

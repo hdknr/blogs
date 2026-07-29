@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Handoff on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/handoff/</link><description>Recent content in Handoff on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Tue, 16 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/handoff/index.xml" rel="self" type="application/rss+xml"/><item><title>/handoff スキルが海外でバズった理由 — Claude Code で計画して複数 Codex に並列投入する新ワークフロー</title><link>https://hdknr.github.io/blogs/posts/2026/06/claude-code-handoff-codex-parallel/</link><pubDate>Mon, 15 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/claude-code-handoff-codex-parallel/</guid><description>&lt;p&gt;複数の案件を1人で抱えているエンジニアにとって、AIコーディングエージェントへの「実装待ち」は深刻な時間ロスだ。X（旧Twitter）で海外エンジニアの投稿が1万回以上閲覧されて注目を集めた。その投稿が紹介するのが、Claude Code の &lt;code&gt;/handoff&lt;/code&gt; スキルを使って計画を立て、複数の Codex エージェントに並列で投げるワークフローだ。&lt;/p&gt;
+&lt;h2 id="handoff-スキルとは何か"&gt;&lt;code&gt;/handoff&lt;/code&gt; スキルとは何か&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;/handoff&lt;/code&gt; は Matt Pocock の &lt;a href="https://github.com/mattpocock/skills"&gt;mattpocock/skills&lt;/a&gt; で公開されている Claude Code 用スキルだ（パス：&lt;code&gt;skills/productivity/handoff/&lt;/code&gt;）。&lt;/p&gt;
+&lt;p&gt;その役割は「現在の Claude Code セッションの文脈を、別のエージェントが引き継げる形の構造化 Markdown に圧縮すること」に特化している。&lt;/p&gt;
+&lt;p&gt;生成されるドキュメントには、セッションの目標・現在の状況・未決定事項・次のエージェントが呼び出すべきスキルの提案（&amp;ldquo;suggested skills&amp;rdquo;）などが含まれる。実際の出力フォーマットはセッション内容によって柔軟に変わる。&lt;/p&gt;
+&lt;p&gt;重要な設計原則として、&lt;strong&gt;既存の PRD やコミット・差分の内容はドキュメント内に繰り返さない&lt;/strong&gt;。パスや URL で参照するだけにとどめることで、handoff ドキュメント自体をコンパクトに保つ。センシティブな情報も自動的に編集される。&lt;/p&gt;
+&lt;h2 id="なぜこれが問題を解決するのか"&gt;なぜこれが問題を解決するのか&lt;/h2&gt;
+&lt;p&gt;副業や複数案件を抱えているエンジニアが直面する典型的な詰まり：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AIに「実装して」と指示して待っている間、別の案件は手が止まる&lt;/li&gt;
+&lt;li&gt;直列に処理していると、単純なタスクでも1日が終わる&lt;/li&gt;
+&lt;li&gt;コンテキストを切り替えるたびに Claude Code に状況を再説明する手間がかかる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;/handoff&lt;/code&gt; はこの「コンテキスト再説明コスト」を排除し、複数エージェントへの同時投入を可能にする。&lt;/p&gt;
+&lt;h2 id="ワークフローの全体像"&gt;ワークフローの全体像&lt;/h2&gt;
+&lt;p&gt;Ben Holmes が YouTube でデモを公開し、daily.dev にも掲載された。実践的なワークフローは次のとおりだ。&lt;/p&gt;
+&lt;h3 id="ステップ1-claude-code-で計画を立てる"&gt;ステップ1: Claude Code で計画を立てる&lt;/h3&gt;
+&lt;p&gt;まず Claude Code 上でタスクを整理し、&lt;strong&gt;&lt;code&gt;/grill-me&lt;/code&gt;&lt;/strong&gt; スキルで計画を徹底的に問い詰める（&lt;code&gt;/grill-me&lt;/code&gt; については&lt;a href="https://hdknr.github.io/blogs/posts/2026/05/2026-05-22-claude-code-grill-me/"&gt;こちらの記事&lt;/a&gt;を参照）。この段階で曖昧さを潰しておくことが後の並列化の精度を左右する。&lt;/p&gt;
+&lt;h3 id="ステップ2-handoff-でドキュメントを生成する"&gt;ステップ2: &lt;code&gt;/handoff&lt;/code&gt; でドキュメントを生成する&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/handoff
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;これだけで、現在のセッション状態を5セクションの Markdown に圧縮したドキュメントが生成される。このドキュメントが「次のエージェントへの引き継ぎ書」になる。&lt;/p&gt;
+&lt;h3 id="ステップ3-並列化できるタスクを分割する"&gt;ステップ3: 並列化できるタスクを分割する&lt;/h3&gt;
+&lt;p&gt;handoff ドキュメントを見ながら、独立して実装できるサブタスクを洗い出す。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;並列化に向いているタスク&lt;/strong&gt;：&lt;/p&gt;</description></item></channel></rss>

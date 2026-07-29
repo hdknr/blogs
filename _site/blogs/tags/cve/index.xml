@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>CVE on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/cve/</link><description>Recent content in CVE on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 06 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/cve/index.xml" rel="self" type="application/rss+xml"/><item><title>fast-jwt の認証バイパス脆弱性 CVE-2026-34950 — 空白文字一つで JWT 認証が突破される</title><link>https://hdknr.github.io/blogs/posts/2026/04/fast-jwt-cve-2026-34950/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/fast-jwt-cve-2026-34950/</guid><description>&lt;p&gt;JWT 認証ライブラリ &lt;code&gt;fast-jwt&lt;/code&gt; に重大な脆弱性が発見された。公開鍵の先頭に空白文字や改行があるだけで認証が突破される可能性があり、影響はバージョン 6.1.0 以下に及ぶ。&lt;/p&gt;
+&lt;h2 id="fast-jwt-とは"&gt;fast-jwt とは&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;fast-jwt&lt;/code&gt; は Node.js 向けの高速な JWT（JSON Web Token）の署名・検証ライブラリ。パフォーマンスを重視した実装で広く利用されているが、今回その内部の文字列処理と正規表現の甘さが致命的な脆弱性につながった。&lt;/p&gt;
+&lt;h2 id="cve-2026-34950-空白文字による認証バイパス"&gt;CVE-2026-34950: 空白文字による認証バイパス&lt;/h2&gt;
+&lt;h3 id="問題の概要"&gt;問題の概要&lt;/h3&gt;
+&lt;p&gt;CVSS スコア &lt;strong&gt;9.1（Critical）&lt;/strong&gt; の深刻な脆弱性。公開鍵の検証に使われている正規表現が、文字列の&lt;strong&gt;先頭を厳密に検証していない&lt;/strong&gt;という欠陥に起因する。&lt;/p&gt;
+&lt;h3 id="攻撃メカニズム"&gt;攻撃メカニズム&lt;/h3&gt;
+&lt;p&gt;公開鍵の先頭にスペースや改行文字（&lt;code&gt;\n&lt;/code&gt;）が含まれると、正規表現による公開鍵の検証が失敗する。その結果、公開鍵が &lt;strong&gt;HMAC 用の秘密鍵として誤って扱われ&lt;/strong&gt;、攻撃者は任意のトークンを署名できてしまう。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// 通常の公開鍵（検証成功）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-----BEGIN PUBLIC KEY-----
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-----END PUBLIC KEY-----
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// 先頭に空白が入った場合（検証失敗 → HMAC 鍵として扱われる）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -----BEGIN PUBLIC KEY-----
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-----END PUBLIC KEY-----
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これは過去に修正されたはずの &lt;strong&gt;CVE-2023-48223&lt;/strong&gt;（アルゴリズム混同攻撃）と同様の攻撃を再び可能にする。前回の修正が不完全だったことが根本原因だ。&lt;/p&gt;</description></item><item><title>CVE-2026-32746: GNU Inetutils telnetd に32年間潜んでいた認証前リモートコード実行の脆弱性</title><link>https://hdknr.github.io/blogs/posts/2026/03/cve-2026-32746-telnetd/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cve-2026-32746-telnetd/</guid><description>GNU Inetutils telnetd の認証前リモートコード実行脆弱性 CVE-2026-32746（CVSS 9.8）の技術的詳細、攻撃手法、パッチ状況、対策を解説。</description></item></channel></rss>

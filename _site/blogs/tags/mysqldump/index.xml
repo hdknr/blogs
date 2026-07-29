@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Mysqldump on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/mysqldump/</link><description>Recent content in Mysqldump on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 26 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/mysqldump/index.xml" rel="self" type="application/rss+xml"/><item><title>mysqldump エラー 1449: DEFINER が存在しないユーザーを参照している場合の対処法</title><link>https://hdknr.github.io/blogs/posts/2026/03/mysqldump-definer-error-1449/</link><pubDate>Thu, 26 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/mysqldump-definer-error-1449/</guid><description>&lt;p&gt;&lt;code&gt;mysqldump&lt;/code&gt; でデータベースをダンプしようとしたら、こんなエラーが出て止まった経験はないでしょうか。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;mysqldump: Got error: 1449: The user specified as a definer (&amp;#39;root&amp;#39;@&amp;#39;%&amp;#39;) does not exist when using LOCK TABLES
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;これは MySQL の &lt;strong&gt;DEFINER&lt;/strong&gt; という仕組みに起因するエラーです。ビューやストアドプロシージャの作成時に記録された「定義者（DEFINER）」ユーザーが、現在のサーバー上に存在しない場合に発生します。&lt;/p&gt;
+&lt;h2 id="なぜ起きるのか"&gt;なぜ起きるのか&lt;/h2&gt;
+&lt;p&gt;MySQL のビュー、ストアドプロシージャ、トリガー、イベントには &lt;code&gt;DEFINER&lt;/code&gt; 属性があります。これはそのオブジェクトを作成した MySQL ユーザーを記録したもので、&lt;code&gt;SQL SECURITY DEFINER&lt;/code&gt;（デフォルト）の場合、オブジェクトの実行は &lt;strong&gt;DEFINER ユーザーの権限&lt;/strong&gt; で行われます。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;mysqldump&lt;/code&gt; は &lt;code&gt;LOCK TABLES&lt;/code&gt; を実行する際、ダンプ対象のビューなどの &lt;code&gt;DEFINER&lt;/code&gt; ユーザーを参照します。このとき、DEFINER に設定されたユーザー（例: &lt;code&gt;'root'@'%'&lt;/code&gt;）がサーバー上に存在しなければ、エラー 1449 で処理が中断されます。&lt;/p&gt;
+&lt;p&gt;よくあるシナリオ:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;本番環境から別環境にデータベースをコピーした際、元の環境にいた &lt;code&gt;root@'%'&lt;/code&gt; が移行先に存在しない&lt;/li&gt;
+&lt;li&gt;MySQL のユーザーを整理した際、ビューの DEFINER を更新し忘れた&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;root@'localhost'&lt;/code&gt; しか存在しないのに、ビューが &lt;code&gt;root@'%'&lt;/code&gt; で作成されていた&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="definer-が問題のオブジェクトを特定する"&gt;DEFINER が問題のオブジェクトを特定する&lt;/h2&gt;
+&lt;p&gt;まず、どのオブジェクトが問題の原因かを &lt;code&gt;information_schema&lt;/code&gt; で確認します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;18
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- ビュー
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt;, TABLE_SCHEMA, &lt;span style="color:#66d9ef"&gt;TABLE_NAME&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; information_schema.VIEWS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;LIKE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;%root@%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- ストアドプロシージャ / ファンクション
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;ROUTINE_SCHEMA&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;ROUTINE_NAME&lt;/span&gt;, ROUTINE_TYPE
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; information_schema.ROUTINES
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;LIKE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;%root@%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- イベント
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; EVENT_CATALOG, EVENT_SCHEMA, EVENT_NAME, &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; information_schema.EVENTS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;LIKE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;%root@%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- トリガー
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TRIGGER_SCHEMA&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;TRIGGER_NAME&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; information_schema.TRIGGERS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DEFINER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;LIKE&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;%root@%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;多くの場合、ビューが原因です。該当するオブジェクトが見つかったら、その定義を確認しましょう。&lt;/p&gt;</description></item></channel></rss>

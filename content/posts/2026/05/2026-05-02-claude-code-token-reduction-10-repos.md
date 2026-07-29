@@ -18,7 +18,7 @@ Claude Code を使い続けると、トークン消費が積み重なってコ�
 
 コンテキストに流れ込む前にターミナル出力をフィルタリングするツール。よく使う開発コマンド（`cargo build`、`npm test` など）の冗長な出力を削減することで、**60〜90%** のトークン削減を実現する。Rust 製のため高速で、Claude Code の実際のコーディングセッションでの効果が大きい。
 
-詳細は「[RTK（Rust Token Killer）で Claude Code のトークン使用量を60〜90%削減する](/posts/2026/04/2026-04-07-rtk-rust-token-killer-claude-code/)」を参照。
+詳細は「[RTK（Rust Token Killer）で Claude Code のトークン使用量を60〜90%削減する](/blogs/posts/2026/04/rtk-rust-token-killer-claude-code/)」を参照。
 
 ## 2. Context Mode
 
@@ -44,7 +44,7 @@ MCP サーバーとして動作し、ファイル全体ではなくシンボル�
 
 "原始人の口調" で Claude に話させることで出力トークンを削減するユニークなアプローチ。技術的な正確性は維持しつつ、出力を **65〜75%** 削減できる。プロンプトエンジニアリングによる出力スタイルの制御という発想が面白い。
 
-詳細は「[Claude を「原始人」口調にするとトークンが 80% 減る話](/posts/2026/04/2026-04-17-claude-caveman-token-reduction/)」を参照。
+詳細は「[Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/claude-caveman-token-reduction/)」を参照。
 
 ## 6. claude-token-efficient
 
@@ -90,4 +90,4 @@ BM25 + ベクトル検索の MCP サーバーで、コードリポジトリ全�
 
 Claude Code のコスト削減を考えるなら、まず `claude-token-efficient`（CLAUDE.md を置くだけ）と `RTK`（ターミナル出力フィルタリング）から試してみることをすすめる。MCP サーバーを活用しているなら `token-optimizer-mcp` や `claude-context` も組み合わせると効果的だ。
 
-コンテキスト管理の全体像については「[Claude Code のコンテキスト管理術 — Context Rot を防ぐ5つの選択肢](/posts/2026/04/2026-04-17-claude-code-context-rot-session-management/)」も参照してほしい。
+コンテキスト管理の全体像については「[Claude Code のコンテキスト管理術 — Context Rot を防ぐ5つの選択肢](/blogs/posts/2026/04/claude-code-context-rot-session-management/)」も参照してほしい。

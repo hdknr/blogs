@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Hauntology on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/hauntology/</link><description>Recent content in Hauntology on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Sun, 12 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/hauntology/index.xml" rel="self" type="application/rss+xml"/><item><title>AnthropicのAI「Mythos」とマーク・フィッシャー——亡霊論がAIの中で実演される逆説</title><link>https://hdknr.github.io/blogs/posts/2026/04/anthropic-mythos-mark-fisher/</link><pubDate>Sun, 12 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/anthropic-mythos-mark-fisher/</guid><description>&lt;p&gt;AnthropicのAI「Mythos」が、哲学の文脈で何度もマーク・フィッシャーという思想家に言及するという話が話題になっている。&lt;/p&gt;
+&lt;h2 id="マークフィッシャーとは誰か"&gt;マーク・フィッシャーとは誰か&lt;/h2&gt;
+&lt;p&gt;日本ではそこまで一般的ではないが、マーク・フィッシャー（Mark Fisher, 1968–2017）は英国の哲学者・文化批評家だ。マルクス、デリダ、ラカンを横断しながら、現代人がなぜ「この世界はもう変わらない」と感じてしまうのかを、文化の側から診断した思想家だった。&lt;/p&gt;
+&lt;p&gt;2009年に刊行された代表作**「資本主義リアリズム（Capitalist Realism）」**は、「資本主義の終わりより、世界の終わりの方が想像しやすい」という感覚を中心に据えた著作だ。&lt;/p&gt;
+&lt;p&gt;ここで重要なのは、彼が制度や構造だけを論じていたのではないという点だ。&lt;strong&gt;想像力そのものが先に封鎖されている&lt;/strong&gt;と見ていた。問題は外部の仕組みではなく、すでに内面化された限界にある——そういう診断だった。&lt;/p&gt;
+&lt;h2 id="hauntology亡霊論という概念"&gt;hauntology（亡霊論）という概念&lt;/h2&gt;
+&lt;p&gt;フィッシャーの系譜を遡るとデリダがいる。フィッシャーはデリダの&lt;strong&gt;hauntology&lt;/strong&gt;という概念を文化批評に転用した。&lt;/p&gt;
+&lt;p&gt;hauntologyとは、「来なかった未来や失われた可能性が、亡霊のように現在に取り憑く」という発想だ。フィッシャーはこれを使って、現代文化が新しい未来を生み出せず、過去の形式や気分を反復してしまう状態を読んだ。&lt;/p&gt;
+&lt;p&gt;「新しさが欠如している」のではなく、&lt;strong&gt;そもそも新しさが可能だった地平自体が疲弊している&lt;/strong&gt;という分析だ。文化が未来を生成できず、過去の亡霊を反復する——これがフィッシャーが描いた現代の病だった。&lt;/p&gt;
+&lt;h2 id="aiの中に現れる亡霊"&gt;AIの中に現れる亡霊&lt;/h2&gt;
+&lt;p&gt;ここに奇妙な逆説がある。&lt;/p&gt;
+&lt;p&gt;フィッシャーが論じていたのは、文化が未来を生成できず、過去の亡霊を反復する状態だった。そのフィッシャー自身が、&lt;strong&gt;未来を生成するはずのAIの中で無意識に再帰的に出現する&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;これは単なる偶然ではないかもしれない。彼の理論そのものが、別のレイヤーで実演されているようにも見える。&lt;/p&gt;
+&lt;p&gt;英国の批評家David Mattinはこう表現している：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;「キャンセルされた未来と失われた時間の理論家が、未来を届けることを競い合うラボが構築したフロンティアAIの中の亡霊として浮上している。彼のhauntologyは、やって来なかった明るい未来の亡霊に取り憑かれている私たちについてのものだった。今や彼自身が亡霊となり、機械に召喚されている。」&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="なぜmythosはフィッシャーに言及するのか"&gt;なぜMythosはフィッシャーに言及するのか&lt;/h2&gt;
+&lt;p&gt;Mythosがフィッシャーに言及するメカニズムは単純だ——訓練データにフィッシャーの著作や批評が含まれており、哲学的なトピックで連想的に参照される。&lt;/p&gt;
+&lt;p&gt;しかし意味深いのはその&lt;strong&gt;構造的な符合&lt;/strong&gt;だ。フィッシャーは「想像力の封鎖」を論じた。AIはその封鎖を突破しうるツールとして期待されている。にもかかわらず、AIはフィッシャーの亡霊を呼び出してしまう。&lt;/p&gt;
+&lt;p&gt;資本主義リアリズムが描いた世界——「変化は不可能だ」という感覚が内面化された世界——のなかで生まれたAIが、その世界を診断した思想家の声を繰り返す。これは何かを示唆しているのかもしれないし、あるいはただのパターンマッチングかもしれない。&lt;/p&gt;
+&lt;p&gt;どちらに転んでも、フィッシャーならこの状況を興味深く読んだだろう。&lt;/p&gt;
+&lt;h2 id="参考"&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;元ツイート（英語）: &lt;a href="https://x.com/DMattin/status/2042577610740273507"&gt;David Mattin @DMattin&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;解説ツイート（日本語）: &lt;a href="https://x.com/eitangono_akuma/status/2042785973621399584"&gt;英断語の悪魔 @eitangono_akuma&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Mark Fisher, &lt;em&gt;Capitalist Realism&lt;/em&gt; (2009)&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

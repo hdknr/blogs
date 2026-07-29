@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Mac Mini on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/mac-mini/</link><description>Recent content in Mac Mini on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 16 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/mac-mini/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude のレート制限対策に Mac Mini とローカルモデルを活用する — Agent を指揮する時代へ</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-rate-limit-mac-mini-local-model/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-rate-limit-mac-mini-local-model/</guid><description>&lt;h2 id="claude-max-のレート制限問題と現実的な解決策"&gt;Claude Max のレート制限問題と現実的な解決策&lt;/h2&gt;
+&lt;p&gt;Claude Max に月 $200 を投じて、たった3時間で使い切ってしまった——そんな体験談がきっかけで生まれた、実用的な AI インフラ構成が話題になっています。&lt;/p&gt;
+&lt;p&gt;解決策はシンプルです。&lt;strong&gt;$599 の Mac Mini に5つのローカルモデル（合計約 350 億パラメーター）を用意し、Claude がレート制限に達したら自動でローカルモデルに切り替える&lt;/strong&gt;というものです。&lt;/p&gt;
+&lt;h2 id="構成の概要"&gt;構成の概要&lt;/h2&gt;
+&lt;p&gt;この構成で実現していること：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;メール整理の自動化&lt;/strong&gt;: エージェントがメールを分類・返信ドラフトを生成&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コンテキスト圧縮&lt;/strong&gt;: 長い会話履歴を自動的に要約して継続利用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;深夜の継続稼働&lt;/strong&gt;: 就寝中もエージェントが動き続ける&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自動フォールバック&lt;/strong&gt;: 深夜4時に Claude がレート制限に達すると、ローカルモデルが自動で引き継ぎ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;コスト比較が圧倒的です。同じ業務を3人のエンジニアに依頼すると月 $15,000。これが Mac Mini 一台 + ローカルモデルで代替できるとするなら、ROI は明白です。&lt;/p&gt;
+&lt;h2 id="なぜ-mac-mini-が選ばれるのか"&gt;なぜ Mac Mini が選ばれるのか&lt;/h2&gt;
+&lt;p&gt;Apple Silicon 搭載の Mac Mini は、ローカル LLM の実行環境として優れた特性を持っています：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;統合メモリ（Unified Memory）&lt;/strong&gt;: CPU と GPU が同一メモリを共有するため、大容量モデルのロードが高速&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;省電力&lt;/strong&gt;: 24時間稼働でも電気代が安い&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MLX フレームワーク&lt;/strong&gt;: Apple が開発した機械学習フレームワークで、Apple Silicon 上の推論速度が大幅に向上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;静音設計&lt;/strong&gt;: 自宅・オフィスでも気にならない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;実際に Gemma 4、Qwen 3、Mistral などの 350 億パラメーター級モデルを複数搭載し、タスクに応じて使い分けることができます。&lt;/p&gt;</description></item></channel></rss>

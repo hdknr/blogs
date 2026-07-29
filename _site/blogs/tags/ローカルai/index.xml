@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>ローカルAI on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%ABai/</link><description>Recent content in ローカルAI on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 27 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%ABai/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenHuman — 完全ローカルで動くパーソナルAIアシスタント：プライバシー最優先でChatGPT級の体験を自分のPCで</title><link>https://hdknr.github.io/blogs/posts/2026/05/openhuman-local-ai-assistant/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/openhuman-local-ai-assistant/</guid><description>OpenHumanはRust製オープンソースのローカルAIアシスタント。Memory Tree・Ollama連携・118サービスAuto-fetchでChatGPT級の体験を実現する。ただしデフォルト構成ではTinyHumansへのサブスク課金が前提で、本当に「完全ローカル」にするには追加設定が必要——その構造を解説。</description></item><item><title>Rowboat：100%ローカルで動くオープンソースAI同僚ツール</title><link>https://hdknr.github.io/blogs/posts/2026/04/rowboat-local-ai-coworker/</link><pubDate>Sun, 12 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/rowboat-local-ai-coworker/</guid><description>&lt;p&gt;完全オープンソースで動く AI 同僚ツール「Rowboat」が注目を集めている。音声制御、MCP ツール連携、バックグラウンドエージェントなど、有料 AI アシスタントサービスに相当する機能を、データをローカルに保ったまま利用できる点が特徴だ。&lt;/p&gt;
+&lt;h2 id="rowboat-とは"&gt;Rowboat とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/rowboatlabs/rowboat"&gt;Rowboat&lt;/a&gt;（rowboatlabs/rowboat）は「Open-source AI coworker, with memory」を謳う AI 同僚ツール。GitHub スター数は 12,000 以上（2026年4月時点）に達しており、急速に注目が高まっている。&lt;/p&gt;
+&lt;p&gt;主な特徴は以下の通り。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;100% ローカル動作&lt;/strong&gt; — データが外部に出ない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;音声制御&lt;/strong&gt; — リアルなアシスタントのように話しかけられる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;任意の LLM に接続可能&lt;/strong&gt; — Claude、GPT-4 系などを選択できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCP ツール + Obsidian ブレイン&lt;/strong&gt; — ナレッジグラフと外部ツールを組み合わせた記憶管理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;バックグラウンド自律エージェント&lt;/strong&gt; — 裏側で自律的にタスクをこなすエージェント群&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;知識グラフの自動構築&lt;/strong&gt; — 会話・作業履歴から知識を蓄積&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ローカルで動く-ai-同僚のインパクト"&gt;ローカルで動く AI 同僚のインパクト&lt;/h2&gt;
+&lt;p&gt;これまでの AI アシスタントの多くはクラウド型であり、プロンプト・ドキュメントなどのデータが外部サーバーに送信される仕組みだった。Rowboat はすべてローカルで処理するため、機密情報を扱う業務でも安心して利用できる。&lt;/p&gt;
+&lt;p&gt;また、任意の LLM を接続できる柔軟性も魅力だ。Anthropic の Claude を接続しながら推論はローカルで完結させるといった構成も可能で、API コストの制御がしやすい。&lt;/p&gt;
+&lt;h2 id="mcp-ツール連携と-obsidian-ブレイン"&gt;MCP ツール連携と Obsidian ブレイン&lt;/h2&gt;
+&lt;p&gt;Rowboat が対応している MCP（Model Context Protocol）は、AI ツールが外部サービスや情報源と標準化されたインターフェースで通信するためのプロトコルだ。これにより、ファイルシステム、Web 検索、カレンダーなど様々なツールをエージェントに組み込める。&lt;/p&gt;</description></item></channel></rss>

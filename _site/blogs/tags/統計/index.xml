@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>統計 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E7%B5%B1%E8%A8%88/</link><description>Recent content in 統計 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 20 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E7%B5%B1%E8%A8%88/index.xml" rel="self" type="application/rss+xml"/><item><title>正則化PCAで米国→日本の業種モメンタムを捉える — 時差を利用したクロスマーケット戦略</title><link>https://hdknr.github.io/blogs/posts/2026/03/regularized-pca-cross-market-momentum/</link><pubDate>Fri, 20 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/regularized-pca-cross-market-momentum/</guid><description>&lt;p&gt;米国市場の業種別リターンから翌日の日本市場を予測する — そんな論文の解説が X で話題になっていました。ポイントは「正則化 PCA（主成分分析）」によるノイズ除去です。本記事ではこの手法の仕組みと、なぜ通常の PCA より優れた結果を出せるのかを整理します。&lt;/p&gt;
+&lt;h2 id="基本アイデア時差を利用した業種間伝播"&gt;基本アイデア：時差を利用した業種間伝播&lt;/h2&gt;
+&lt;p&gt;米国市場が夜に動き、数時間後に日本市場が開く。同業種のリターンは国をまたいで伝播する傾向がある — この「時差」を収益機会として捉えるのが基本的な発想です。&lt;/p&gt;
+&lt;p&gt;具体的には、&lt;strong&gt;米国の 11 業種の当日リターン&lt;/strong&gt;から、&lt;strong&gt;日本の 17 業種の翌日リターン&lt;/strong&gt;を予測します。&lt;/p&gt;
+&lt;h2 id="データソース日米の業種別-etf"&gt;データソース：日米の業種別 ETF&lt;/h2&gt;
+&lt;p&gt;分析対象は &lt;strong&gt;日米の業種別 ETF&lt;/strong&gt; です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;米国側&lt;/strong&gt;: 業種 ETF の &lt;strong&gt;当日 Close-to-Close リターン&lt;/strong&gt;（終値ベース）を情報集合とする&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;日本側&lt;/strong&gt;: 業種 ETF の &lt;strong&gt;翌営業日 Open-to-Close リターン&lt;/strong&gt;（寄付→引け）を予測対象とする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;米国市場の終値で確定した情報が、翌朝の日本市場の寄付きから日中にかけて反映される — この「リード・ラグ仮説」を ETF の日次リターンデータで検証する構成です。&lt;/p&gt;
+&lt;h3 id="データの入手方法"&gt;データの入手方法&lt;/h3&gt;
+&lt;p&gt;業種別 ETF の価格データは誰でも無料で入手できます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;米国の業種 ETF（SPDR Select Sector シリーズ）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;XLK（テクノロジー）、XLF（金融）、XLE（エネルギー）など 11 セクターの ETF が上場しています。Yahoo Finance や Google Finance で日次データを取得可能です。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;日本の業種 ETF（TOPIX-17 業種別シリーズ）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;NEXT FUNDS TOPIX-17 シリーズ（野村アセットマネジメント）など、17 業種に対応する ETF があります。JPX（日本取引所グループ）や Yahoo!ファイナンスで取得できます。&lt;/p&gt;</description></item></channel></rss>

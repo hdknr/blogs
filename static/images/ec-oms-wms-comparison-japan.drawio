@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net" modified="2026-07-02T00:00:00.000Z" agent="Claude" version="24.0.0">
+  <diagram name="EC OMS WMS Positioning" id="ec-oms-wms-comparison-japan">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1040" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="国内 EC 自動化サービスのポジショニング" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="20" width="600" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="受注管理だけを担うか、倉庫作業まで一体で自動化するか" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="220" y="52" width="600" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Zone A: OMS -->
+        <mxCell id="zoneA" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eefb;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="300" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneA-t" value="① OMS（EC 一元管理）中心" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#3b5998;" vertex="1" parent="1">
+          <mxGeometry x="50" y="122" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneA-d" value="受注・在庫を一元管理。倉庫（WMS）は外部連携" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="50" y="148" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ne" value="ネクストエンジン&#10;最大手・50以上のモール/カート・API公開" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="190" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="assist" value="アシスト店長 / スマレジEC&#10;受注一元管理・顧客分析に強み" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="260" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cross" value="CROSS MALL&#10;固定料金・多店舗一元管理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="325" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="tempo" value="TEMPOSTAR&#10;商品数×受注数の従量・カスタマイズ性" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="390" width="260" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Zone B: OMS/WMS一体型 -->
+        <mxCell id="zoneB" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="370" y="110" width="300" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneB-t" value="② OMS/WMS 一体型" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#4a7a3a;" vertex="1" parent="1">
+          <mxGeometry x="380" y="122" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneB-d" value="受注〜倉庫作業〜出荷を1システムで自動化" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="380" y="148" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="logiless" value="LOGILESS&#10;OMS+WMS一体型・自動出荷率90%超&#10;OAuth2 開発者API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="390" y="200" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="crobo" value="コマースロボ&#10;RPA内蔵で受注処理を最大95%削減&#10;初期0円・従量課金" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="390" y="300" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Zone C: Fulfillment -->
+        <mxCell id="zoneC" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="700" y="110" width="300" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneC-t" value="③ 物流アウトソース（参考）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#7a6a2a;" vertex="1" parent="1">
+          <mxGeometry x="710" y="122" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneC-d" value="倉庫そのものを借りる（発送代行）。役割が異なる" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="710" y="148" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="openlogi" value="オープンロジ など&#10;在庫を預けて出荷を丸ごと委託&#10;API で EC と連携" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe9a8;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="720" y="200" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneC-note" value="システム（自社/代行倉庫を動かす）ではなく、物流機能そのものを外注するモデル" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#8a7a3a;" vertex="1" parent="1">
+          <mxGeometry x="710" y="300" width="280" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Spectrum arrow -->
+        <mxCell id="arrow" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#999999;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="60" y="520" as="sourcePoint" />
+            <mxPoint x="980" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow-l" value="受注管理に特化" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="60" y="530" width="160" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow-r" value="物流まで丸ごとカバー" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="820" y="530" width="160" height="24" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

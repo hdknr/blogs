@@ -29,7 +29,7 @@ tags: ["deepseek-v4-flash", "antirez", "ローカルLLM", "apple-silicon", "clau
 
 ## ds4 (DwarfStar 4) とは
 
-[antirez/ds4](https://github.com/antirez/ds4) は、[**DeepSeek V4 Flash**](/blogs/posts/2026/04/2026-04-25-deepseek-v4-open-source/) 専用に作られたネイティブ推論エンジンだ。README の第一段落がこの設計思想を端的に表している。
+[antirez/ds4](https://github.com/antirez/ds4) は、[**DeepSeek V4 Flash**](/blogs/posts/2026/04/deepseek-v4-open-source/) 専用に作られたネイティブ推論エンジンだ。README の第一段落がこの設計思想を端的に表している。
 
 > DwarfStar 4 is a small native inference engine for DeepSeek V4 Flash. It is intentionally narrow: not a generic GGUF runner, not a wrapper around another runtime, and not a framework.
 
@@ -46,7 +46,7 @@ README ではこのモデルを「専用エンジンを書く価値がある」�
 3. コンテキストウィンドウが **100 万トークン**
 4. 284B のスケールで「知識の端」の質問でも 27B/35B より明確に強い
 5. 英語・イタリア語の出力が「準フロンティアモデル感」
-6. [**KV キャッシュ**](/blogs/posts/2026/03/2026-03-13-claude-code-local-llm-kv-cache/)が極端に圧縮されており、**ローカルマシンでの長コンテキスト** と **ディスクへの KV キャッシュ永続化** が現実的
+6. [**KV キャッシュ**](/blogs/posts/2026/03/claude-code-local-llm-kv-cache/)が極端に圧縮されており、**ローカルマシンでの長コンテキスト** と **ディスクへの KV キャッシュ永続化** が現実的
 7. **2bit 量子化** で品質が崩れない（特殊な非対称量子化を使う）
 8. DeepSeek 側からの v4 Flash の **継続的なアップデート** が期待できる
 
@@ -159,7 +159,7 @@ export ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION="ds4.c local GGUF"
 exec claude "$@"
 ```
 
-ローカルで完結する Claude Code 環境が手に入る、というのは応用範囲が広い。コードがネットを出ない、料金がかからない、レイテンシが下がる――と利点が並ぶ。なお [Apple Silicon の MLX ベース推論加速](/blogs/posts/2026/04/2026-04-15-dflash-mlx-apple-silicon-llm/) と組み合わせる発想も同じ系譜にある。
+ローカルで完結する Claude Code 環境が手に入る、というのは応用範囲が広い。コードがネットを出ない、料金がかからない、レイテンシが下がる――と利点が並ぶ。なお [Apple Silicon の MLX ベース推論加速](/blogs/posts/2026/04/dflash-mlx-apple-silicon-llm/) と組み合わせる発想も同じ系譜にある。
 
 ### opencode から使う
 
@@ -288,6 +288,6 @@ ds4 は単なる「速い推論エンジン」ではなく、**ローカル推�
 
 ### 関連記事
 
-- [DeepSeek-V4 Preview — Claude Opus 4.6 匹敵・100 万トークン対応のオープンソース LLM が無償公開](/blogs/posts/2026/04/2026-04-25-deepseek-v4-open-source/)
-- [Claude Code × ローカル LLM で KV キャッシュが毎回無効化される問題と対策](/blogs/posts/2026/03/2026-03-13-claude-code-local-llm-kv-cache/)
-- [Mac の ローカル LLM が 4.1 倍速に — Apple Silicon 向け新技術「DFlash」](/blogs/posts/2026/04/2026-04-15-dflash-mlx-apple-silicon-llm/)
+- [DeepSeek-V4 Preview — Claude Opus 4.6 匹敵・100 万トークン対応のオープンソース LLM が無償公開](/blogs/posts/2026/04/deepseek-v4-open-source/)
+- [Claude Code × ローカル LLM で KV キャッシュが毎回無効化される問題と対策](/blogs/posts/2026/03/claude-code-local-llm-kv-cache/)
+- [Mac の ローカル LLM が 4.1 倍速に — Apple Silicon 向け新技術「DFlash」](/blogs/posts/2026/04/dflash-mlx-apple-silicon-llm/)

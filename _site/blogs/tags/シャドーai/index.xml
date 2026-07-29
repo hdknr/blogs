@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>シャドーAI on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%82%B7%E3%83%A3%E3%83%89%E3%83%BCai/</link><description>Recent content in シャドーAI on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 15 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%82%B7%E3%83%A3%E3%83%89%E3%83%BCai/index.xml" rel="self" type="application/rss+xml"/><item><title>シャドーAIがもたらす見えないリスク：IT承認外のAIツール利用が企業に生む新たな盲点</title><link>https://hdknr.github.io/blogs/posts/2026/04/shadow-ai-risks/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/shadow-ai-risks/</guid><description>&lt;p&gt;生成 AI ツールの急速な普及により、IT 部門の承認を経ずに従業員が独自に AI を活用する「シャドー AI」が企業セキュリティの新たな盲点として注目されている。本記事では、シャドー AI が引き起こすリスクと、その対策について整理する。&lt;/p&gt;
+&lt;h2 id="シャドー-ai-とは"&gt;シャドー AI とは&lt;/h2&gt;
+&lt;p&gt;「シャドー IT」は以前からある概念だが、生成 AI の登場でその問題は一段と深刻になった。**シャドー AI（Shadow AI）**とは、IT 部門や情報セキュリティ部門の審査・承認を受けずに、従業員が業務で使用する AI ツールやサービスのことを指す。&lt;/p&gt;
+&lt;p&gt;ChatGPT・Gemini・Claude・Copilot などの生成 AI サービスは、個人アカウントで無料または低コストで利用できる。利便性が高いため、IT 部門の手続きを待たずに「とりあえず使ってみる」ケースが後を絶たない。&lt;/p&gt;
+&lt;p&gt;調査によれば、&lt;strong&gt;従業員の約 40% が業務で非承認の生成 AI ツールを使用している&lt;/strong&gt;とされており、多くの企業でシャドー AI が組織的な管理の外に広がっている。&lt;/p&gt;
+&lt;h2 id="シャドー-ai-が生む具体的なリスク"&gt;シャドー AI が生む具体的なリスク&lt;/h2&gt;
+&lt;h3 id="1-機密情報個人情報の漏洩"&gt;1. 機密情報・個人情報の漏洩&lt;/h3&gt;
+&lt;p&gt;最も深刻なリスクは、社内の機密情報が AI サービス側に送信されることによるデータ漏洩だ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;実例: Samsung の機密漏洩事件（2023年）&lt;/strong&gt;&lt;br&gt;
+Samsung の半導体部門の社員が、ChatGPT に機密のソースコードを貼り付けてデバッグを依頼したり、社内会議の音声を要約させたりした結果、社内機密が外部サーバーに送信されたインシデントが発生した。この件が発覚した後、Samsung は社内での ChatGPT 利用を一時禁止している。&lt;/p&gt;
+&lt;p&gt;社員が AI に入力する情報として問題になりやすいのは:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ソースコード・設計仕様書&lt;/li&gt;
+&lt;li&gt;顧客情報・個人情報（氏名、メールアドレス、契約情報など）&lt;/li&gt;
+&lt;li&gt;財務データ・未公開の経営情報&lt;/li&gt;
+&lt;li&gt;社内メール・会議議事録&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;多くの商用 AI サービスは、無料プランやデフォルト設定では入力データをモデルの学習・改善に利用する場合がある。エンタープライズ契約や特定のオプト設定が必要だが、シャドー利用ではそのような設定は行われていない。&lt;/p&gt;
+&lt;h3 id="2-コンプライアンス規制違反"&gt;2. コンプライアンス・規制違反&lt;/h3&gt;
+&lt;p&gt;個人情報保護法（GDPR、日本の個人情報保護法）や業界固有の規制（医療分野の HIPAA、金融分野の各種規制）では、個人情報の取り扱いに厳しい要件がある。IT 部門の審査を通じて利用規約・データ処理契約を確認せずに AI ツールを使用すると、意図せず法令違反を犯す可能性がある。&lt;/p&gt;
+&lt;h3 id="3-ai-の出力に対する品質責任管理の欠如"&gt;3. AI の出力に対する品質・責任管理の欠如&lt;/h3&gt;
+&lt;p&gt;生成 AI はハルシネーション（事実と異なる情報の生成）を起こす。IT 部門・品質管理部門が把握していないツールを使って作成された成果物がそのままリリースや提案書に使われると、品質問題に発展しうる。&lt;/p&gt;</description></item></channel></rss>

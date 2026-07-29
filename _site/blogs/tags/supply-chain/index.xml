@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Supply-Chain on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/supply-chain/</link><description>Recent content in Supply-Chain on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 27 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/supply-chain/index.xml" rel="self" type="application/rss+xml"/><item><title>PyPI公式パッケージ telnyx がサプライチェーン攻撃で汚染 — TeamPCPによるWAVステガノグラフィ攻撃の全容</title><link>https://hdknr.github.io/blogs/posts/2026/03/telnyx-pypi-supply-chain-attack/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/telnyx-pypi-supply-chain-attack/</guid><description>PyPI公式パッケージ telnyx がTeamPCPのサプライチェーン攻撃で汚染。WAVステガノグラフィ手法の詳細と、Python開発者が今すぐ取るべき対策を解説。</description></item><item><title>ForceMemo: GitHub アカウントを乗っ取り Python リポジトリにバックドアを仕込む新型攻撃</title><link>https://hdknr.github.io/blogs/posts/2026/03/forcememo-github-attack/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/forcememo-github-attack/</guid><description>&lt;p&gt;2026年3月上旬から、GitHub アカウントを侵害して Python リポジトリに悪意あるコードを注入する「ForceMemo」と呼ばれる大規模攻撃キャンペーンが確認されています。force-push によるコミット履歴の書き換えと、Solana ブロックチェーンを利用した C2（Command and Control: 攻撃者がマルウェアに指令を送る仕組み）通信という巧妙な手法が特徴です。&lt;/p&gt;
+&lt;h2 id="攻撃の概要"&gt;攻撃の概要&lt;/h2&gt;
+&lt;p&gt;ForceMemo は、以下の流れで Python プロジェクトを侵害します:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;GitHub アカウントの侵害&lt;/strong&gt; — GlassWorm と呼ばれる情報窃取マルウェアが VS Code / Cursor 拡張機能から GitHub トークンを抽出&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コードの改ざん&lt;/strong&gt; — 侵害したアカウントで &lt;code&gt;setup.py&lt;/code&gt;、&lt;code&gt;main.py&lt;/code&gt;、&lt;code&gt;app.py&lt;/code&gt;、&lt;code&gt;manage.py&lt;/code&gt; 等に難読化されたマルウェアを注入&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;痕跡の隠蔽&lt;/strong&gt; — force-push でコミット履歴を書き換え、タイムスタンプを維持することで改ざんを検知困難に&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;C2 通信&lt;/strong&gt; — Solana ブロックチェーンのメモ機能を使ったコマンド＆コントロール通信&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="glassworm-による初期侵入"&gt;GlassWorm による初期侵入&lt;/h2&gt;
+&lt;p&gt;攻撃の起点となる GlassWorm は情報窃取型マルウェアで、VS Code および Cursor の拡張機能を経由して感染します。窃取対象となる GitHub トークンの格納先は多岐にわたります:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VS Code / Cursor 拡張機能のストレージ&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;git credential fill&lt;/code&gt; の出力&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.git-credentials&lt;/code&gt; ファイル&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GITHUB_TOKEN&lt;/code&gt; 環境変数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;窃取されたトークンを使って正規のアカウントとしてリポジトリにアクセスし、コードを改ざんします。&lt;/p&gt;
+&lt;h2 id="force-push-による履歴改ざん"&gt;force-push による履歴改ざん&lt;/h2&gt;
+&lt;p&gt;通常のコミットであれば &lt;code&gt;git log&lt;/code&gt; で変更履歴を追跡できますが、ForceMemo は force-push を使ってコミット履歴自体を書き換えます。さらにタイムスタンプも維持するため、リポジトリのメンテナーやユーザーが改ざんに気づきにくい構造になっています。&lt;/p&gt;</description></item></channel></rss>

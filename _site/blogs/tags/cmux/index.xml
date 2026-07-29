@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Cmux on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/cmux/</link><description>Recent content in Cmux on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 15 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/cmux/index.xml" rel="self" type="application/rss+xml"/><item><title>dmux：Claude Code / Codex を安全に並列実行するための git worktree 管理ツール</title><link>https://hdknr.github.io/blogs/posts/2026/04/dmux-parallel-ai-agents/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/dmux-parallel-ai-agents/</guid><description>&lt;p&gt;AI エージェントを並列実行する際に起きがちなファイル競合問題を、git worktree を活用して自動解決するツール「dmux」を紹介する。&lt;/p&gt;
+&lt;h2 id="背景ai-エージェント並列実行の落とし穴"&gt;背景：AI エージェント並列実行の落とし穴&lt;/h2&gt;
+&lt;p&gt;Claude Code や OpenAI Codex などの AI コーディングエージェントを複数同時に走らせると、次のような問題が起きやすい。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;共通ファイルの同時上書き&lt;/strong&gt;：複数エージェントが同じファイルを編集し、片方の変更が消える&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;変更の消失&lt;/strong&gt;：あるエージェントが直したコードを、別のエージェントが元に戻してしまう&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ターミナルを複数開いたり、tmux でペインを分割して並列実行する方法は手軽だが、全エージェントが同一のワーキングディレクトリを共有しているため、この問題は常に起きうる。&lt;/p&gt;
+&lt;h2 id="dmux-とは"&gt;dmux とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;dmux&lt;/strong&gt; は、AI エージェントの並列実行環境を安全に管理するための CLI ツール。内部的には &lt;strong&gt;git worktree + branch の自動隔離&lt;/strong&gt; を行い、各エージェントが独立したディレクトリ・ブランチで作業できる環境を自動でセットアップする。&lt;/p&gt;
+&lt;h3 id="主な特徴"&gt;主な特徴&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;自動隔離&lt;/strong&gt;：難しい設定なしに git worktree + ブランチを自動作成し、エージェントごとに完全に分離した環境を提供する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;衝突の自動解決&lt;/strong&gt;：マージ競合が発生した場合、AI が自動で解決を試みる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;エージェント切り替え&lt;/strong&gt;：Claude Code、Codex、Claude Opus、Composer など任意のエージェントを簡単に切り替え可能&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;A/B テスト&lt;/strong&gt;：複数エージェントの出力を比較検証できる&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="git-worktree-によるエージェント隔離の仕組み"&gt;git worktree によるエージェント隔離の仕組み&lt;/h2&gt;
+&lt;p&gt;git worktree は、同一リポジトリを複数のディレクトリに展開する Git 標準機能。通常の &lt;code&gt;git clone&lt;/code&gt; とは異なり、リポジトリのデータを共有しながら、異なるブランチを別ディレクトリでチェックアウトできる。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;リポジトリ
+├── (メインディレクトリ) ← ブランチ: main
+├── .worktrees/agent-1/ ← ブランチ: agent/task-a ← エージェント1
+└── .worktrees/agent-2/ ← ブランチ: agent/task-b ← エージェント2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;dmux はこの仕組みを自動化し、各エージェントを専用の worktree に割り当てる。エージェント同士は別ブランチで動くため、同一ファイルへの同時書き込みが発生しない。&lt;/p&gt;</description></item></channel></rss>

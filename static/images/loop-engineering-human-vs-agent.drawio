@@ -1,0 +1,48 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="human-vs-agent" name="human-vs-agent">
+    <mxGraphModel dx="800" dy="600" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t1" value="プロンプト時代（ループするのは人間）" style="text;html=1;align=center;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="380" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="人間" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="160" y="70" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="プロンプト" style="rounded=1;fillColor=#ffffff;strokeColor=#999999;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="160" y="140" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="AI（出力）" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="160" y="210" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="人間が確認・修正" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="160" y="280" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="a1" target="a2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="a2" target="a3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="a3" target="a4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="また入力" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="a4" target="a1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="t2" value="ループエンジニアリング（ループするのはAI）" style="text;html=1;align=center;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="20" width="380" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" value="人間：ゴールを定義" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="600" y="70" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" value="ループ（仕組み）" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="140" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b3" value="AI：発見→計画→実行" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="600" y="210" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b4" value="検証ゲート" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="600" y="280" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="f1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="b1" target="b2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="b2" target="b3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;" edge="1" parent="1" source="b3" target="b4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f4" value="未達なら再実行" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="b4" target="b2"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

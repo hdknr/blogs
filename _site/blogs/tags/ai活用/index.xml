@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>AI活用 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/ai%E6%B4%BB%E7%94%A8/</link><description>Recent content in AI活用 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 22 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/ai%E6%B4%BB%E7%94%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>grill-me — コードを1行も書く前にAIに徹底的に詰められる、最も人気の Claude Code スキル</title><link>https://hdknr.github.io/blogs/posts/2026/05/claude-code-grill-me/</link><pubDate>Fri, 22 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/claude-code-grill-me/</guid><description>mattpocock/skills の grill-me は、コードを書く前に AI が設計の盲点を洗い出す4文の Claude Code スキル。深さ優先の質問戦略と Codebase-First 原則で、ミスアライメントを事前に解消する。</description></item><item><title>AI が壊す「専門知識のペイウォール」: Claude で床下除湿システムを設計した事例から考える</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-expert-knowledge-paywall/</link><pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-expert-knowledge-paywall/</guid><description>Claude を使って業者見積もり150万円の床下除湿システムを37万円で自力設計した事例。AI が専門知識のペイウォールを壊し、HVAC・建設・農業などの領域で何が変わるかを考察。</description></item><item><title>AIが自分で調べ方を選ぶRAG — モデル推論能力でスケールする新手法</title><link>https://hdknr.github.io/blogs/posts/2026/03/rag-adaptive-search-strategy/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/rag-adaptive-search-strategy/</guid><description>&lt;p&gt;社内資料をRAGで検索しているのに「欲しい情報に限って見つけてくれない」「関係ない文書ばかり読んで的外れな回答をする」という経験はないでしょうか。AIDB が紹介する新しいRAG手法は、&lt;strong&gt;検索方法そのものをモデル自身に判断させる&lt;/strong&gt;というアプローチで、この問題に正面から取り組んでいます。&lt;/p&gt;
+&lt;h2 id="従来ragの限界一本調子の検索"&gt;従来RAGの限界：一本調子の検索&lt;/h2&gt;
+&lt;p&gt;従来のRAGはシンプルです。あらかじめ決まった方法（主にベクトル類似度検索）で文書チャンクを引っ張ってきて、まとめてLLMに渡す。検索がハズれたら、その時点でもう正解にはたどり着けません。&lt;/p&gt;
+&lt;p&gt;どんなに優れたモデルを使っても、読む資料がズレていれば回答の質は上がりません。問題は「LLMの能力」ではなく「検索戦略の固定化」にあります。&lt;/p&gt;
+&lt;h2 id="3つの検索戦略を状況に応じて使い分ける"&gt;3つの検索戦略を状況に応じて使い分ける&lt;/h2&gt;
+&lt;p&gt;この新手法では、モデルが以下の3つの検索戦略から最適なものを選択し、必要に応じて組み合わせます。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;検索戦略&lt;/th&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;th&gt;向いているケース&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;キーワード検索&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;特定の語句・コードをピンポイントで探す&lt;/td&gt;
+&lt;td&gt;固有名詞、型番、コマンドなどを調べるとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;意味検索（セマンティック検索）&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;意味的に近い文書を探す&lt;/td&gt;
+&lt;td&gt;概念的な質問、言い換えが多い文書を扱うとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;チャンク全文読み&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;対象範囲を丸ごと読み込む&lt;/td&gt;
+&lt;td&gt;文脈が重要な長文、前後関係が必要なとき&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;重要なのは、&lt;strong&gt;どの順番で、どの検索を使うか&lt;/strong&gt;をモデル自身が推論して決定する点です。固定のパイプラインではなく、質問の性質や文書の構造に合わせて動的に戦略を切り替えます。&lt;/p&gt;
+&lt;h2 id="なぜこれが機能するのか"&gt;なぜこれが機能するのか&lt;/h2&gt;
+&lt;h3 id="読み込むテキスト量は同等以下"&gt;読み込むテキスト量は同等以下&lt;/h3&gt;
+&lt;p&gt;従来のRAGと比較して、読み込むテキストの量は同等かそれ以下です。にもかかわらず、回答精度は大きく向上します。これはトークン数の節約にもつながります。&lt;/p&gt;
+&lt;h3 id="モデル進化と共にスケールする構造"&gt;モデル進化と共にスケールする構造&lt;/h3&gt;
+&lt;p&gt;この手法の特筆すべき点は&lt;strong&gt;モデルの推論能力と性能が比例する&lt;/strong&gt;ことです。モデルの推論能力が高いほど、「どの検索を、どの順番で使うか」という判断精度が上がり、RAG全体の性能が向上します。&lt;/p&gt;
+&lt;p&gt;つまり、将来より優れたモデルが登場すれば、RAGのフレームワーク自体を改修しなくても自然に性能が底上げされます。&lt;/p&gt;
+&lt;h2 id="実装への示唆"&gt;実装への示唆&lt;/h2&gt;
+&lt;p&gt;この手法を自社のRAGシステムに取り入れる場合、以下の点が設計のポイントになります。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 検索ツールの整備&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;モデルが選択できるよう、複数の検索エンドポイントを用意する必要があります。BM25（キーワード）、ベクトルDB（意味）、ドキュメント取得（全文）の3種を揃えるのが基本構成です。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. ツール呼び出し（Function Calling）の活用&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;OpenAI / Anthropic / Google などの主要LLMはFunction Callingをサポートしています。検索戦略の選択をFunction Callingで実装することで、モデルが自律的に検索を制御できます。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;14
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;15
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;16
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;17
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tools &lt;span style="color:#f92672"&gt;=&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;keyword_search&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;固有名詞・型番・コマンドなど特定のキーワードで文書を検索する&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;query&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;semantic_search&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;意味・概念の近さで関連文書を検索する&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;query&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;read_document&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;description&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;指定した文書チャンクを全文読み込む&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;parameters&amp;#34;&lt;/span&gt;: {&lt;span style="color:#e6db74"&gt;&amp;#34;document_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;string&amp;#34;&lt;/span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;3. 推論能力の高いモデルを選ぶ&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Manus（マナス）の全29機能を完全解説——AIエージェントが「仕事を丸投げできる」時代へ</title><link>https://hdknr.github.io/blogs/posts/2026/03/manus-ai-agent-29-features/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/manus-ai-agent-29-features/</guid><description>&lt;p&gt;ChatGPTに指示を出して、結果を確認して、また指示を出して——このループに疲れていないだろうか。「こっちが細かく指示しなくても、AIが全部やってくれたらいいのに」という願いは、すでに実現している。その名前が &lt;strong&gt;Manus（マナス）&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;p&gt;この記事では、Manusの全29機能を5つのカテゴリに分けて解説する。料金プランや競合との比較、業種別の活用法まで網羅する。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="manusとは何か"&gt;Manusとは何か&lt;/h2&gt;
+&lt;h3 id="aiチャットボットとaiエージェントの違い"&gt;「AIチャットボット」と「AIエージェント」の違い&lt;/h3&gt;
+&lt;p&gt;まず最も重要な概念の整理から始める。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;種別&lt;/th&gt;
+&lt;th&gt;代表例&lt;/th&gt;
+&lt;th&gt;動作&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;AIチャットボット&lt;/td&gt;
+&lt;td&gt;ChatGPT / Claude / Gemini&lt;/td&gt;
+&lt;td&gt;質問→回答の1往復&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;AIエージェント&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;Manus&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;タスクを丸投げ → 自動で完結&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;チャットボットは「辞書」、エージェントは「秘書」だ。Manusに「東京のAIスタートアップを30社調べて、スプレッドシートにまとめて」と指示すれば、AIが自動でブラウザを開き、検索し、情報を整理し、ファイルを作って完成品を届けてくれる。その間、別の仕事をしていてOKだ。&lt;/p&gt;
+&lt;h3 id="無料で試せる"&gt;無料で試せる&lt;/h3&gt;
+&lt;p&gt;最初は招待制だったが、現在は誰でも登録できる。無料プランでも毎日300クレジット分のタスクを実行可能（月1,500上限あり）。&lt;/p&gt;
+&lt;h3 id="実力は"&gt;実力は？&lt;/h3&gt;
+&lt;p&gt;GAIAベンチマーク（実際のタスクをどれだけ正確にこなせるかを測るテスト）において、ManusはOpenAIのDeep Researchに匹敵する高スコアを記録したと複数のメディアが報じている。「実務能力で世界トップクラス」という評価は多くのメディアで一致している。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="第1章manusの全29機能"&gt;第1章：Manusの全29機能&lt;/h2&gt;
+&lt;p&gt;Manusには5つのカテゴリ、計29の機能がある。&lt;/p&gt;
+&lt;h3 id="コア機能日常的に使う基本機能"&gt;コア機能（日常的に使う基本機能）&lt;/h3&gt;
+&lt;h4 id="-自律タスク実行autonomous-task-execution"&gt;① 自律タスク実行（Autonomous Task Execution）&lt;/h4&gt;
+&lt;p&gt;Manusの心臓部。指示を出すだけで、AIが計画から納品まで全自動でやる。&lt;/p&gt;
+&lt;p&gt;タスクを入力すると、Manusはまず計画を立てる。「何を調べるか」「どのツールを使うか」「どの順番でやるか」を自分で判断し、ブラウザで検索したりコードを書いて実行したりしながら完了させる。全作業はクラウド上のサンドボックスで行われるため、PCには影響しない。画面を閉じても作業は続き、完了したら通知が届く。&lt;/p&gt;
+&lt;p&gt;実行例：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;「この契約書PDFの要点を抽出して、リスク項目をハイライトして」&lt;/li&gt;
+&lt;li&gt;「A社の過去3年の決算資料を分析して、成長率と利益率の推移をグラフにして」&lt;/li&gt;
+&lt;li&gt;「今月の営業チームの活動データをまとめて、週次ミーティング用の資料を作って」&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="-wide-researchワイドリサーチ"&gt;② Wide Research（ワイドリサーチ）&lt;/h4&gt;
+&lt;p&gt;100体以上のAIを同時に走らせて、大規模リサーチを一気にやる。&lt;/p&gt;
+&lt;p&gt;通常のAIは1つのタスクを1つのエージェントが処理するが、Wide Researchはタスクを細かく分解して100体以上のAIエージェントを同時並行で走らせる。1社調べるのも100社調べるのも、かかる時間はほぼ同じだ。&lt;/p&gt;
+&lt;p&gt;OpenAI Deep Researchとの違い：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;特徴&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Deep Research&lt;/td&gt;
+&lt;td&gt;1つのテーマを深く掘り下げる（深さ重視）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Wide Research&lt;/td&gt;
+&lt;td&gt;多数のテーマを同時に広く調べる（広さ重視）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;注意点：クレジット消費が大きいため、まず10〜20社でテストしてからスケールアップするのが鉄則。最大250件まで対応。&lt;/p&gt;
+&lt;h4 id="-browser-operatorブラウザオペレーター"&gt;③ Browser Operator（ブラウザオペレーター）&lt;/h4&gt;
+&lt;p&gt;ChromeまたはEdgeに拡張機能をインストールすると、Manusがブラウザを直接操作できるようになる。最大のポイントは、既存のログイン情報がそのまま使えること。つまり、ログインが必要な社内ツール、CRM、管理画面も操作可能だ。&lt;/p&gt;
+&lt;p&gt;主な活用例：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;CTO 50人の名前・会社名・プロフィールURLを収集&lt;/li&gt;
+&lt;li&gt;ECサイトで特定商品の価格を毎日モニタリング&lt;/li&gt;
+&lt;li&gt;Wantedlyで求人情報を一括収集&lt;/li&gt;
+&lt;li&gt;競合5社のX（Twitter）アカウント分析&lt;/li&gt;
+&lt;li&gt;Googleフォームへのデータ一括入力&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;セキュリティ面：毎回の操作で許可が必要で、全操作ログが記録される。パスワードは保存されない。&lt;/p&gt;</description></item><item><title>OpenClawでX運用したら10日でフォロワー1800人増えた話</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-x-follower-growth/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-x-follower-growth/</guid><description>&lt;p&gt;AI ツール「OpenClaw」を使った X（旧 Twitter）運用で、10日間でフォロワーを 1800人増やした実践的な方法をまとめた記事を紹介する。&lt;/p&gt;
+&lt;p&gt;元記事: &lt;a href="https://x.com/ichiaimarketer/status/2033497581394055232"&gt;@ichiaimarketer（いち＠OpenClawガチ勢）&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="フォロワーが伸びない原因を3要素で整理する"&gt;フォロワーが伸びない原因を「3要素」で整理する&lt;/h2&gt;
+&lt;p&gt;フォロワーが伸びない多くの人は次の悩みを抱えている。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;毎日投稿しているのにインプレッションが伸びない&lt;/li&gt;
+&lt;li&gt;ネタ切れで手が止まる&lt;/li&gt;
+&lt;li&gt;たまたまバズっても、なぜ伸びたかわからず再現できない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらの原因は、以下の「3要素」のどれかが欠けていることにある。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;フォロワーが伸びる条件 = 投稿数 × バズる投稿の型 × 情報密度
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;要素&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;投稿数&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;量が必要。ただし量だけでは伸びない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;バズる投稿の型&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;スクロール中に目を止められる見やすさ・構成&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;情報密度&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;最新情報か、自分だけの1次情報（体験・実績・独自解釈）が含まれているか&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この3つが揃ったときだけ、フォロワーは増える。&lt;/p&gt;
+&lt;p&gt;また、&lt;strong&gt;現在のフォロワー数によって「いちばん効く要素」が変わる&lt;/strong&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Aグループ（フォロワー200人以下・投稿が少ない人）&lt;/strong&gt;: まず投稿数を増やすことが最優先&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Bグループ（フォロワー200人以上・30投稿以上ある人）&lt;/strong&gt;: 型と情報密度の最適化がカギ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="なぜ-openclaw-で-x-が伸びるのか"&gt;なぜ OpenClaw で X が伸びるのか&lt;/h2&gt;
+&lt;p&gt;OpenClaw は、この3要素すべてにレバレッジをかけられる点が他のAIツール（ChatGPT・Claude等）と異なる。&lt;/p&gt;
+&lt;h3 id="-投稿数aiがあなたの文体型を覚えたまま量産"&gt;① 投稿数：AIが「あなたの文体・型」を覚えたまま量産&lt;/h3&gt;
+&lt;p&gt;ChatGPT や Claude でも投稿案は出せる。OpenClaw の違いは&lt;strong&gt;永続メモリ&lt;/strong&gt;にある。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;あなたの文体、バズる型を覚えたまま量を出せる&lt;/li&gt;
+&lt;li&gt;毎回ゼロから説明し直す必要がない&lt;/li&gt;
+&lt;li&gt;2回目以降は「前回の型で」と頼むだけ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="-情報密度最新情報を自動収集1次情報をいつでも引き出せる"&gt;② 情報密度：最新情報を自動収集＋1次情報をいつでも引き出せる&lt;/h3&gt;
+&lt;p&gt;情報密度は2種類に分けて考える。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;最新情報&lt;/strong&gt;（トレンド・ニュース）: OpenClaw のタスク機能で自動収集&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1次情報&lt;/strong&gt;（体験・実績・独自解釈）: OpenClaw のメモリに日々の気づきを蓄積し、いつでも活用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;1次情報こそが差別化の核。浅い情報が溢れる中で、フォロワーをファンにするのはここ。&lt;/p&gt;
+&lt;h3 id="-バズる投稿の型一度分析すれば永続的に型を量産"&gt;③ バズる投稿の型：一度分析すれば永続的に型を量産&lt;/h3&gt;
+&lt;p&gt;伸びる型はアカウントによって異なる。分析結果を OpenClaw のメモリに保存しておくと、「今日の1本」「今週の20本」を型に沿って量産できる。他のAIでは分析結果を毎回入力し直す手間があるが、OpenClaw なら不要。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="具体的な方法分析--1ポストの流れをつかむ"&gt;具体的な方法①：「分析 → 1ポスト」の流れをつかむ&lt;/h2&gt;
+&lt;p&gt;まず「分析→1ポスト」の基礎フローを習得することが土台になる。&lt;/p&gt;</description></item><item><title>非エンジニアでも1分で始められる Claude Code — CLAUDE.md 3行から始める仕事委任術</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-setup-for-non-engineers/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-setup-for-non-engineers/</guid><description>&lt;p&gt;Claude Code は「コード」という名前のせいでエンジニア向けツールだと思われがちですが、実は日本語で仕事を渡すツールです。インストール1分、コード0行——非エンジニアこそ今すぐ使い始めるべき理由と、効果を最大化する CLAUDE.md の作り方を解説します。&lt;/p&gt;
+&lt;!-- 本記事は [@wad0427](https://x.com/wad0427) 氏の X 記事 (2026-03-17) を元に構成しています --&gt;
+&lt;h2 id="claude-code-はプログラミングツールではない"&gt;Claude Code はプログラミングツールではない&lt;/h2&gt;
+&lt;p&gt;X を見ると、デザイナーがコード1行も書かずにニュース収集→記事→サムネ→SNS投稿まで全部自動化していたり、会計士が Excel 作成・PowerPoint 操作・Gmail 連携まで全部 AI に回していたりします。&lt;/p&gt;
+&lt;p&gt;エンジニアではない人たちがガンガン使っている。それなのに「難しそう」で止まっている人は、素手で戦っているようなものです。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ChatGPT は「聞く」ツール。Claude Code は「やらせる」ツール。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude の強みはライティング・分析・思考・ファイル操作です。ここは今の AI の中でも頭一つ抜けています。「仕事を渡す」用途に限れば、現時点で最も実用的なツールのひとつです。&lt;/p&gt;
+&lt;p&gt;怖い人はまずブラウザ版の Claude Chat（claude.ai）だけでも十分です。文体カスタマイズ、会話記憶、Excel/PowerPoint の直接作成、Gmail 連携——ブラウザだけでかなりのことができます。そこから始めて、「もっとやらせたい」と思ったら Claude Code に進む、この順番でいいと思います。&lt;/p&gt;
+&lt;h2 id="セットアップ--1分で終わる"&gt;セットアップ — 1分で終わる&lt;/h2&gt;
+&lt;p&gt;やることは3ステップだけです。&lt;/p&gt;
+&lt;h3 id="ステップ1-インストール"&gt;ステップ1: インストール&lt;/h3&gt;
+&lt;p&gt;ターミナル（Mac）または PowerShell（Windows）を開いて、以下のコマンドを1行貼り付けます。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mac:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -fsSL https://claude.ai/install.sh | bash
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Windows:&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;irm https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//claude.ai/install.ps1 | iex
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;約1分で完了します。&lt;/p&gt;</description></item><item><title>OpenClaw界隈でまず追うべき発信者 Alex Finn とは</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-alex-finn/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-alex-finn/</guid><description>&lt;p&gt;OpenClaw の情報発信者が急増するなか、「誰を追えばいいかわからない」という声も多い。本記事では、いち＠OpenClawガチ勢（&lt;a href="https://x.com/ichiaimarketer"&gt;@ichiaimarketer&lt;/a&gt;）が「まず見るべきたった1人」として紹介する &lt;strong&gt;Alex Finn（@AlexFinn）&lt;/strong&gt; について、その実績・主張・コンテンツをまとめる。&lt;/p&gt;
+&lt;h2 id="この人誰-alex-finn-のプロフィール"&gt;この人、誰？ Alex Finn のプロフィール&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Alex Finn&lt;/strong&gt;（X: &lt;a href="https://x.com/AlexFinn"&gt;@AlexFinn&lt;/a&gt;）&lt;/p&gt;
+&lt;p&gt;本人のプロフィール:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I love vibe coding. Founder/CEO of Creator Buddy, the only AI trained on all of your X posts. Built a 300k ARR app by myself.
+&lt;a href="https://creatorbuddy.io"&gt;https://creatorbuddy.io&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;要するに、&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Vibe Coding&lt;/strong&gt; でプロダクトを作っている人&lt;/li&gt;
+&lt;li&gt;Creator Buddy の創業者・CEO。ARR 30万ドルをひとりで達成&lt;/li&gt;
+&lt;li&gt;その人が OpenClaw にフルベットしている&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="経歴と一発のきっかけ"&gt;経歴と「一発」のきっかけ&lt;/h3&gt;
+&lt;p&gt;元 MongoDB のチームリード。AI を軸にした発信を続け、3年で X フォロワー26万超まで伸ばした。&lt;/p&gt;
+&lt;p&gt;転機は2023年。イーロン・マスクが X のアルゴリズムをオープンソース化したとき、Alex は14時間かけて約40万行のコードを読み、アルゴリズムの仕組みを解説するスレッドを投稿。Elon Musk 本人や Mark Cuban にリツイートされ、一気に認知が広がった。&lt;/p&gt;
+&lt;p&gt;今では X フォロワー43万人以上、YouTube も約14万登録で、vibe coding や Claude、OpenClaw の実践ネタを発信している。&lt;/p&gt;</description></item></channel></rss>

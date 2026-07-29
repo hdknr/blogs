@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>デッドロック on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E3%83%87%E3%83%83%E3%83%89%E3%83%AD%E3%83%83%E3%82%AF/</link><description>Recent content in デッドロック on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 20 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E3%83%87%E3%83%83%E3%83%89%E3%83%AD%E3%83%83%E3%82%AF/index.xml" rel="self" type="application/rss+xml"/><item><title>急成長でぶつかったMySQLの罠とその向き合い方 - 7つの実践的な教訓</title><link>https://hdknr.github.io/blogs/posts/2026/03/mysql-pitfalls-rapid-growth/</link><pubDate>Fri, 20 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/mysql-pitfalls-rapid-growth/</guid><description>&lt;p&gt;Timee のプラットフォームエンジニアリングチームの徳富博氏による発表「&lt;a href="https://speakerdeck.com/hirosi1900day/ji-cheng-chang-debutukatutamysqlnomin-tosonoxiang-kihe-ifang"&gt;急成長でぶつかったMySQLの罠とその向き合い方&lt;/a&gt;」から、Aurora MySQL 運用で遭遇した 7 つの重要な課題とその対策をまとめます。&lt;/p&gt;
+&lt;p&gt;サービスの急成長に伴い、小規模では問題にならなかった MySQL の挙動が本番環境で深刻な障害を引き起こすことがあります。この発表では、実際の運用経験に基づいた具体的な対策が共有されています。&lt;/p&gt;
+&lt;h2 id="1-ddl-実行の落とし穴"&gt;1. DDL 実行の落とし穴&lt;/h2&gt;
+&lt;p&gt;DDL（Data Definition Language: テーブル定義の変更操作）には「Online DDL」という仕組みがありますが、DDL 実行中もテーブルへのアクセスがブロックされないわけではありません。実際にはメタデータロック（MDL）が必ず発生します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Aurora のレプリカでは DDL 実行時にコネクションが切断されるため、リトライロジックが必須&lt;/li&gt;
+&lt;li&gt;外部キー制約を追加する際は &lt;code&gt;foreign_key_checks = 0&lt;/code&gt; を設定すると、COPY アルゴリズムではなく INPLACE アルゴリズム（テーブルの再構築を伴わない方式）が使われ、影響を最小化できる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="2-mdl-ベースのデッドロック"&gt;2. MDL ベースのデッドロック&lt;/h2&gt;
+&lt;p&gt;MDL デッドロックは &lt;code&gt;SHOW ENGINE INNODB STATUS&lt;/code&gt; に表示されないため、標準的な監視では検知できません。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;外部キーが存在すると、DROP/ALTER 操作時に親テーブルに対して広範な MDL が取得される&lt;/li&gt;
+&lt;li&gt;対策: DDL 操作の前に外部キー制約を削除する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="3-レプリカがライターに影響を与える問題"&gt;3. レプリカがライターに影響を与える問題&lt;/h2&gt;
+&lt;p&gt;Aurora ではレプリカとライターがストレージボリュームを共有しています。レプリカ上の長時間クエリが undo ログのクリーンアップを妨げ、ライターのパフォーマンスに影響します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;MySQL のデフォルトの分離レベルは &lt;code&gt;REPEATABLE READ&lt;/code&gt; だが、分析用クエリには &lt;code&gt;READ COMMITTED&lt;/code&gt; を使用することで、リードビューの保持期間を短縮し undo ログの蓄積を抑えられる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="4-同時リクエストによるデッドロック"&gt;4. 同時リクエストによるデッドロック&lt;/h2&gt;
+&lt;p&gt;高トラフィック環境では、確率的に発生する競合が確実に障害を引き起こすようになります。&lt;/p&gt;
+&lt;h3 id="ギャップロックパターン"&gt;ギャップロックパターン&lt;/h3&gt;
+&lt;p&gt;ギャップロック（インデックスレコード間の隙間に対するロック）同士は競合しませんが、複数のトランザクションが同時に INSERT を実行すると循環待ちが発生します。&lt;/p&gt;</description></item></channel></rss>

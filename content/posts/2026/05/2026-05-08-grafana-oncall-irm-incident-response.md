@@ -437,7 +437,7 @@ scheduler = BackgroundScheduler(jobstores={
 
 - **[Alerta](https://github.com/alerta/alerta)** — アラート集約 + ack / 手動シェルブ機能
 - **[OneUptime](https://oneuptime.com/)** — オンコール + インシデント + ステータスページの OSS
-- **[Cabot](https://github.com/cabotapp/cabot)** — シンプルな OSS 監視 + 通知（やや古い）
+- **[Cabot](https://github.com/arachnys/cabot)** — シンプルな OSS 監視 + 通知（やや古い）
 
 これらは「自作」と「フル SaaS」の中間に位置します。
 

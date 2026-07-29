@@ -8,7 +8,7 @@ categories: ["AI/LLM"]
 tags: ["claude-code", "claude", "anthropic", "agent", "mcp"]
 ---
 
-[前回の記事](/posts/2026/03/notebooklm-20-experts/)では、NotebookLM を使って「20人の専門家チーム」を構築する方法を紹介しました。この記事では、同じ考え方を Claude Code や Cowork で実現する方法を解説します。
+[前回の記事](/blogs/posts/2026/03/notebooklm-20-experts/)では、NotebookLM を使って「20人の専門家チーム」を構築する方法を紹介しました。この記事では、同じ考え方を Claude Code や Cowork で実現する方法を解説します。
 
 ## NotebookLM と Claude Code の発想の違い
 
@@ -110,7 +110,7 @@ Anthropic のエンジニアリングチームは、16のエージェントを�
 
 ### Claude Cowork（デスクトップ版）
 
-Claude Code がターミナルベースの開発者向けツールであるのに対し、[Cowork](https://claude.com/product/cowork) はデスクトップ UI のナレッジワーカー向けツールです。ローカルファイルやアプリケーションに接続し、マルチステップのタスクを実行できます。Cowork の基本的な使い方は[こちらの記事](/posts/2026/03/claude-cowork-starter-pack/)も参考になります。
+Claude Code がターミナルベースの開発者向けツールであるのに対し、[Cowork](https://claude.com/product/cowork) はデスクトップ UI のナレッジワーカー向けツールです。ローカルファイルやアプリケーションに接続し、マルチステップのタスクを実行できます。Cowork の基本的な使い方は[こちらの記事](/blogs/posts/2026/03/claude-cowork-starter-pack/)も参考になります。
 
 ## 方法3: MCP サーバーでナレッジを接続
 
@@ -140,7 +140,7 @@ NotebookLM の強みは「入れた資料だけを根拠に回答する」点で
 - **データベース MCP**: 業務データに基づいた回答
 - **カスタム MCP**: 自社のナレッジベースを検索可能にする
 
-エージェント定義で `tools: [mcp__knowledge__search]` のように接続先を指定すれば、そのエージェントは特定のナレッジソースだけを参照して回答します。MCP の実践例として、[freee MCP × Claude Code の連携記事](/posts/2026/03/freee-mcp-claude-code/)も参考になります。
+エージェント定義で `tools: [mcp__knowledge__search]` のように接続先を指定すれば、そのエージェントは特定のナレッジソースだけを参照して回答します。MCP の実践例として、[freee MCP × Claude Code の連携記事](/blogs/posts/2026/03/freee-mcp-claude-code/)も参考になります。
 
 ## 実践例: Hugo ブログに Claude Code 専門家チームを構築する
 
@@ -297,4 +297,4 @@ SEO アドバイザーは以下のような分析レポートを返しました�
 
 NotebookLM の「テーマごとにノートブックを分けて専門家を作る」というアイデアは、Claude Code ではカスタムエージェント（`.claude/agents/`）として実装できます。さらに Cowork / Agent Teams で並行実行、MCP でナレッジ接続と、より強力な専門家チームを構築できます。
 
-まずは1つのエージェント定義ファイルを作るところから始めてみてください。[AI チーフ・オブ・スタッフの構築記事](/posts/2026/03/claude-code-chief-of-staff/)も、実践の参考になります。
+まずは1つのエージェント定義ファイルを作るところから始めてみてください。[AI チーフ・オブ・スタッフの構築記事](/blogs/posts/2026/03/claude-code-chief-of-staff/)も、実践の参考になります。

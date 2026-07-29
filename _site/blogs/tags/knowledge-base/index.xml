@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Knowledge-Base on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/knowledge-base/</link><description>Recent content in Knowledge-Base on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 11 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/knowledge-base/index.xml" rel="self" type="application/rss+xml"/><item><title>Karpathy の LLM Wiki — 公開48時間で5000スターを集めた「LLMが維持するパーソナル知識ベース」パターン</title><link>https://hdknr.github.io/blogs/posts/2026/05/karpathy-llm-wiki/</link><pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/karpathy-llm-wiki/</guid><description>&lt;p&gt;Andrej Karpathy が2026年4月に公開した GitHub gist「LLM Wiki」が、公開から48時間以内に5000スターを超えた。コード一行も含まない、純粋にアイデアだけを記述したドキュメントがここまで反響を呼んだ理由はシンプルだ。「RAGの次」を具体的かつ実践的に示していたからである。&lt;/p&gt;
+&lt;h2 id="ragとの決定的な違い"&gt;RAGとの決定的な違い&lt;/h2&gt;
+&lt;p&gt;多くの人がLLMとドキュメントを組み合わせるとき、最初に試みるのが &lt;strong&gt;RAG（Retrieval-Augmented Generation）&lt;/strong&gt; だ。ChatGPTのファイルアップロード、NotebookLM、LangChainで構築するベクトルDB検索 — これらはすべて「質問が来たときにドキュメントから関連部分を取ってきて回答する」という設計思想に基づいている。&lt;/p&gt;
+&lt;p&gt;この方式には根本的な問題がある。&lt;strong&gt;知識が蓄積されない&lt;/strong&gt;。5つのドキュメントを横断する微妙な問いに対しても、LLMは毎回ゼロから関連箇所を探し出し、推論し直す。「矛盾」も「文脈」も「先週気づいた発見」も、次の質問では消えてしまう。&lt;/p&gt;
+&lt;p&gt;LLM Wiki が提案するのは根本的に異なるアプローチだ。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LLM が incrementally に永続的な wiki を構築・維持する。新しいソースを追加するたびに、LLM はそれを読み込んで既存 wiki に統合し、エンティティページを更新し、矛盾を記録し、進化する合成の全体を強化する。知識は毎回再導出されるのではなく、一度コンパイルされてから最新に保たれる。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;この「コンパイルされた知識ベース」こそが LLM Wiki の本質である。&lt;/p&gt;
+&lt;h2 id="3層アーキテクチャ"&gt;3層アーキテクチャ&lt;/h2&gt;
+&lt;p&gt;LLM Wiki は3つの層で構成される。&lt;/p&gt;
+&lt;h3 id="1-raw-sources生ソース"&gt;1. Raw Sources（生ソース）&lt;/h3&gt;
+&lt;p&gt;記事、論文、画像、データファイルなど自分がキュレートしたソースドキュメントの置き場。&lt;strong&gt;不変（immutable）&lt;/strong&gt; — LLMはここから読むだけで決して書き換えない。これが「真実の源泉」となる。&lt;/p&gt;
+&lt;h3 id="2-the-wikiwiki本体"&gt;2. The Wiki（wiki本体）&lt;/h3&gt;
+&lt;p&gt;LLM が生成・維持するマークダウンファイルの集合。概要、エンティティページ、概念ページ、比較、合成。この層は &lt;strong&gt;LLM が完全に所有&lt;/strong&gt; する。あなたは読む側で、LLM が書く側だ。&lt;/p&gt;
+&lt;h3 id="3-the-schemaスキーマ"&gt;3. The Schema（スキーマ）&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;CLAUDE.md&lt;/code&gt;（Claude Code用）や &lt;code&gt;AGENTS.md&lt;/code&gt;（Codex用）など、LLMに wiki の構造・規約・ワークフローを伝えるドキュメント。これが LLM を「汎用チャットボット」から「規律あるwikiメンテナ」に変える鍵だ。このファイルはあなたと LLM が協力しながら進化させていく。&lt;/p&gt;
+&lt;h2 id="3つの操作"&gt;3つの操作&lt;/h2&gt;
+&lt;h3 id="ingest取り込み"&gt;Ingest（取り込み）&lt;/h3&gt;
+&lt;p&gt;新しいソースを生コレクションに追加して、LLMに処理を依頼する。LLMはソースを読み込み、重要な情報を抽出し、wikiに統合する。一つのソースが10〜15のwikiページを更新することもある。一度に大量のソースをバッチ処理することも可能だが、Karpathy 自身は「一つずつ取り込み、要約を確認しながら進める」スタイルを好むと述べている。&lt;/p&gt;
+&lt;h3 id="queryクエリ"&gt;Query（クエリ）&lt;/h3&gt;
+&lt;p&gt;wikiに対して質問する。LLMは関連ページを検索・読み込み、引用付きで回答を合成する。回答の形式は問いによって変わる — マークダウンページ、比較表、Marpスライド、matplotlibグラフなど。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;重要な洞察&lt;/strong&gt;: 良い回答はwikiに新しいページとして追記できる。「あの比較をお願いした結果」「見つけた新しい接続」— これらをチャット履歴に埋もれさせるのではなく、wikiに蓄積させることで探求が複利的に積み重なる。&lt;/p&gt;</description></item></channel></rss>

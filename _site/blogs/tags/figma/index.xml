@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Figma on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/figma/</link><description>Recent content in Figma on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 23 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/figma/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Codeをメインのデザインツールに：Tailwind CSSデザイナーSteve Schogerの1時間解説動画</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-design-tool-steve-schoger/</link><pubDate>Mon, 23 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-design-tool-steve-schoger/</guid><description>&lt;p&gt;Tailwind CSSチームのデザイナー Steve Schoger が、「Claude Codeをメインのデザインツールにした」という1時間の解説動画を公開した。Figmaを使わず、Claude Codeだけで金融アプリのランディングページをゼロから構築する過程を全公開している。&lt;/p&gt;
+&lt;h2 id="steve-schoger-とは"&gt;Steve Schoger とは&lt;/h2&gt;
+&lt;p&gt;Steve Schoger は Tailwind Labs のデザイナーで、Adam Wathan と共に「&lt;a href="https://refactoringui.com/"&gt;Refactoring UI&lt;/a&gt;」の著者としても知られている。開発者向けにデザインスキルを体系的に教える活動で広く認知されており、X（Twitter）でのデザインTipsや YouTube でのUI改善動画でも人気が高い。&lt;/p&gt;
+&lt;h2 id="動画の内容"&gt;動画の内容&lt;/h2&gt;
+&lt;p&gt;動画では、約50回の対話を通じて初期出力をプロ級の品質に仕上げていく過程が公開されている。&lt;/p&gt;
+&lt;p&gt;注目すべきは、Schoger 本人が「コマンドラインはディレクトリ移動と Claude 起動しかできない」と語っている点だ。プログラミングの深い知識がなくても、Claude Code との対話だけでプロ品質のLPを作り上げている。&lt;/p&gt;
+&lt;h3 id="ワークフロー"&gt;ワークフロー&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;左画面&lt;/strong&gt;: ブラウザ（localhost 表示）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;右画面&lt;/strong&gt;: Claude Code のターミナル&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これだけのシンプルな構成で、Figma は一切使っていない。&lt;/p&gt;
+&lt;h3 id="技術スタック"&gt;技術スタック&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Vite&lt;/strong&gt; — ビルドツール&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tailwind CSS&lt;/strong&gt; — ユーティリティファーストCSS&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;React&lt;/strong&gt; — UIライブラリ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="デザイナーがcliに移行する時代"&gt;デザイナーがCLIに移行する時代&lt;/h2&gt;
+&lt;p&gt;「デザイナーがCLIに移行する」というのは、一見ありえない話に思える。しかし、この動画を見ると、AIコーディングツールがデザインワークフローを根本的に変えつつあることが実感できる。&lt;/p&gt;
+&lt;p&gt;従来のデザインワークフローでは、Figma などのビジュアルツールでモックアップを作成し、それをエンジニアが実装するという流れが一般的だった。しかし Claude Code を使えば、デザイナーが自然言語で指示を出すだけで、直接コードとして実装されたUIを確認・修正できる。&lt;/p&gt;
+&lt;h2 id="uish--デザインスキルをaiに組み込むツール"&gt;ui.sh — デザインスキルをAIに組み込むツール&lt;/h2&gt;
+&lt;p&gt;Schoger と Adam Wathan は &lt;a href="https://ui.sh"&gt;ui.sh&lt;/a&gt; というツールも開発している。これは Claude Code や Cursor などのAIコーディングエージェントに、プロレベルのデザイン基準を適用させるスキルツールキットだ。ターミナルを「デザインエンジニア」に変えるというコンセプトで、AIが生成するUIの品質を大幅に向上させることを目指している。&lt;/p&gt;</description></item><item><title>デザイナーのためのAI活用術5選 — 制作スピードを劇的に上げる実践テクニック</title><link>https://hdknr.github.io/blogs/posts/2026/03/ai-design-workflow/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/ai-design-workflow/</guid><description>Claude Code × Figma 連携、AI モックアップ、AI 素材生成など、デザイナーの制作スピードを劇的に上げる AI 活用術5選を解説。</description></item><item><title>Figma プラグイン Image Translator：画像からテキストを抽出して多言語翻訳</title><link>https://hdknr.github.io/blogs/posts/2026/03/figma-image-translator-plugin/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/figma-image-translator-plugin/</guid><description>&lt;p&gt;海外サービスの UI を調査するとき、スクリーンショット内のテキストを手作業で翻訳するのは地味に手間がかかる。TSUMIKI INC. の鈴木慎吾氏（&lt;a href="https://x.com/shingo2000"&gt;@shingo2000&lt;/a&gt;）が公開した Figma プラグイン &lt;strong&gt;Image Translator&lt;/strong&gt; は、この作業を自動化してくれる。&lt;/p&gt;
+&lt;h2 id="image-translator-とは"&gt;Image Translator とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.figma.com/community/plugin/1539071623933265305/image-translator"&gt;Image Translator&lt;/a&gt; は、Figma 上で選択した画像からテキストを自動抽出（OCR）し、指定した言語に翻訳する Figma プラグインだ。&lt;/p&gt;
+&lt;p&gt;主な特徴：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;画像からのテキスト自動抽出&lt;/strong&gt; — スクリーンショットや UI キャプチャからテキストを認識&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多言語翻訳&lt;/strong&gt; — 英語、日本語、中国語、スペイン語、韓国語、ポルトガル語などに対応&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2つの表示モード&lt;/strong&gt; — Figma のアノテーション機能で表示するモードと、テキストレイヤーとして配置するモードを選択可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="使い方"&gt;使い方&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Figma で翻訳したい画像を選択する&lt;/li&gt;
+&lt;li&gt;プラグインメニューから Image Translator を起動する&lt;/li&gt;
+&lt;li&gt;翻訳先の言語を選択する&lt;/li&gt;
+&lt;li&gt;抽出・翻訳されたテキストがアノテーションまたはテキストレイヤーとして表示される&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="活用シーン"&gt;活用シーン&lt;/h2&gt;
+&lt;h3 id="海外サービスのデザイン調査"&gt;海外サービスのデザイン調査&lt;/h3&gt;
+&lt;p&gt;競合分析や UI リサーチで海外アプリのスクリーンショットを収集した際、画面内のテキストを素早く日本語で確認できる。翻訳結果がアノテーションとして画像に紐づくため、チームメンバーとの共有にも便利だ。&lt;/p&gt;
+&lt;h3 id="多言語対応の確認"&gt;多言語対応の確認&lt;/h3&gt;
+&lt;p&gt;自社サービスの多言語版スクリーンショットを取り込み、各言語のテキストが正しく表示されているか確認する用途にも使える。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;Image Translator は、デザイン調査における画像内テキストの翻訳という地味だが頻出する作業を自動化してくれるプラグインだ。海外サービスの UI を日常的に調査しているデザイナーにとって、ワークフローの効率化に役立つだろう。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Figma Community&lt;/strong&gt;: &lt;a href="https://www.figma.com/community/plugin/1539071623933265305/image-translator"&gt;Image Translator&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;作者&lt;/strong&gt;: &lt;a href="https://x.com/shingo2000"&gt;鈴木慎吾 / TSUMIKI INC.&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Figma Make を使いこなす実践テクニック</title><link>https://hdknr.github.io/blogs/posts/2026/03/figma-make-tips/</link><pubDate>Mon, 09 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/figma-make-tips/</guid><description>&lt;p&gt;Figma が提供する AI デザイン機能「Figma Make」を実務で活用するための実践的なコツをまとめる。1000 回以上のプロンプト作成を通じて見つかった知見や、効率的なワークフローを紹介する。&lt;/p&gt;
+&lt;h2 id="figma-make-とは"&gt;Figma Make とは&lt;/h2&gt;
+&lt;p&gt;Figma Make は、Figma に統合された AI 搭載のデザイン生成ツール。テキストプロンプトからUIデザインを自動生成でき、AutoLayout 付きの構造化されたデザインを高速に作成できる。&lt;/p&gt;
+&lt;h2 id="実践テクニック"&gt;実践テクニック&lt;/h2&gt;
+&lt;h3 id="1-context-設計を明確にする"&gt;1. Context 設計を明確にする&lt;/h3&gt;
+&lt;p&gt;AI に指示を出す前に、以下を明確にしておくことが重要:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ユーザーペルソナ&lt;/strong&gt;: 対象ユーザーの年齢層、IT リテラシーなど&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;実行アクション&lt;/strong&gt;: 何をデザインするのか具体的に&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;制約条件&lt;/strong&gt;: ブランドカラー、フォント指定、アニメーション仕様など&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;例: 「40代のITリテラシーが低いユーザー向けの、
+シンプルで直感的なダッシュボード画面を作成してください。
+フォントはNoto Sans JP、メインカラーは#2563EB」
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="2-大枠--ピンポイントの2段階アプローチ"&gt;2. 「大枠 → ピンポイント」の2段階アプローチ&lt;/h3&gt;
+&lt;p&gt;一度に完璧を目指すのではなく、2段階で進める:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第1段階（大枠）&lt;/strong&gt;: 初期プロンプトで全体構造を作る&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;対象画面の詳細説明&lt;/li&gt;
+&lt;li&gt;必要な機能リスト&lt;/li&gt;
+&lt;li&gt;デザインテイスト（既知のサービス名で参照すると有効）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;第2段階（ピンポイント）&lt;/strong&gt;: ファイル名やクラス名を指定して細部を修正&lt;/p&gt;
+&lt;h3 id="3-デザインシステムを活用する"&gt;3. デザインシステムを活用する&lt;/h3&gt;
+&lt;p&gt;既存のテンプレートやサンプルをインポートして効率化する:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;既存のデザインをキャンバスに置いて「これっぽく作って」と指示&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Guidelines.md&lt;/code&gt; にデザインシステムとコーディングルールを記載&lt;/li&gt;
+&lt;li&gt;「〇〇画面の△△表と同様の UI で」と既存 UI を参照指示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="4-figma-design-との往復ワークフロー"&gt;4. Figma Design との往復ワークフロー&lt;/h3&gt;
+&lt;p&gt;Figma Make 単体で完結させるのではなく、通常の Figma Design と組み合わせる:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Figma Make&lt;/strong&gt; でデザインを生成&lt;/li&gt;
+&lt;li&gt;コピーして &lt;strong&gt;Figma Design&lt;/strong&gt; にペースト&lt;/li&gt;
+&lt;li&gt;Design で手動修正して期待通りに調整&lt;/li&gt;
+&lt;li&gt;修正版を再度 &lt;strong&gt;Figma Make&lt;/strong&gt; に取り込んで再実行&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;このサイクルを回すことで、レイヤー構造が整理され、より高品質なコード生成が実現する。&lt;/p&gt;</description></item><item><title>Claude-Native Designer — デザイナーが「作る人」になるFigma MCP × Claude Codeワークフロー</title><link>https://hdknr.github.io/blogs/posts/2026/03/1f81385148befa3ee0e980408c174676/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1f81385148befa3ee0e980408c174676/</guid><description>&lt;h1 id="claude-native-designer--デザイナーが作る人になる-figma-mcp--claude-code-ワークフロー"&gt;Claude-Native Designer — デザイナーが「作る人」になる Figma MCP × Claude Code ワークフロー&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/felixleezd/status/2029236285005860903"&gt;@felixleezd（Felix Lee）氏のポスト&lt;/a&gt;が注目を集めています。ADPList の共同創業者であり、1,500 人以上のデザイナーに Vibe Coding を教えてきた Felix Lee 氏が、4 ヶ月の実践から導いた「Claude-Native Designer」のワークフローを公開しました。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you want to ship products you designed, stop using Figma only. Do it on Claude Code instead.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Autonomous AI = memory + planning + tools + safety + collaboration. It&amp;rsquo;s a system, not a prompt.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;「デザインの未来はコードを学ぶことではない。&lt;strong&gt;ビルドすることを学ぶこと&lt;/strong&gt;だ」— この記事の核心は、デザイナーが抱えてきた「アイデアはあるが実装できない」という壁が、Claude Code によって構造的に消滅したという主張です。&lt;/p&gt;
+&lt;h2 id="デザイナーの天井--7-年間の経験が語る構造的問題"&gt;デザイナーの天井 — 7 年間の経験が語る構造的問題&lt;/h2&gt;
+&lt;p&gt;Felix Lee 氏は Gotrade（YC S19）と ADPList で 7 年間デザインに携わってきました。その間、デザイナーが直面する共通の天井を目撃しています。&lt;/p&gt;</description></item><item><title>「Figmaは100%不要」宣言の真意 --- Claude Codeが溶かすデザインとコードの境界</title><link>https://hdknr.github.io/blogs/posts/2026/03/4a6596b99ae8da9028f432e6c8d0b7f5/</link><pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/4a6596b99ae8da9028f432e6c8d0b7f5/</guid><description>&lt;h1 id="figma-は-100-不要宣言の真意--claude-code-が溶かすデザインとコードの境界"&gt;「Figma は 100% 不要」宣言の真意 &amp;mdash; Claude Code が溶かすデザインとコードの境界&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/kawai_design/status/2029115059251888431"&gt;@kawai_design 氏が X で公開した記事&lt;/a&gt;が議論を呼んでいます。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Claude Code を使えば使うほど、Figma を開く理由が消えていく。これは私だけの感覚ではありません。今、世界中のデザイナーが同じ疑問を抱えています。私の結論は明確です。Figma は 100% 不要。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;同時期に &lt;a href="https://uxdesign.cc/figmas-not-a-design-tool-it-s-a-rube-goldberg-machine-for-avoiding-code-2a24f11add5d"&gt;UX Collective に掲載された Michael Buckley 氏の記事&lt;/a&gt;「Figma はデザインツールではない。コードを避けるためのピタゴラスイッチだ」も世界のデザイナーを震撼させました。本記事では、この「Figma 不要論」の構造と、Figma 自身の対応、そして AI 時代のデザインワークフローの変化を技術的に整理します。&lt;/p&gt;
+&lt;h2 id="ピタゴラスイッチ批判--何が問題なのか"&gt;「ピタゴラスイッチ」批判 &amp;mdash; 何が問題なのか&lt;/h2&gt;
+&lt;h3 id="ux-collective-の記事が突いた急所"&gt;UX Collective の記事が突いた急所&lt;/h3&gt;
+&lt;p&gt;Michael Buckley 氏の記事は、Figma でのデザイン作業を**ルーブ・ゴールドバーグ・マシン（ピタゴラスイッチ）**に例えました。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Figma でボタンを作る作業:
+1. Auto Layout を設定する
+2. パディングを調整する
+3. ホバーステートを作る
+4. インタラクションを設定する
+5. プロトタイプモードで動作確認する
+6. 開発者に引き渡す
+7. 開発者がコードで再実装する
+開発者が同じボタンを作る作業:
+&amp;lt;button className=&amp;#34;btn-primary&amp;#34;&amp;gt;送信&amp;lt;/button&amp;gt;
+→ 5 分で完了。ホバー、アクセシビリティも含めて
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;「パンケーキを返すためにピタゴラスイッチを作るようなもの」&amp;mdash; この比喩が刺さったのは、多くのデザイナーが無意識にこの非効率を受け入れていたからです。&lt;/p&gt;
+&lt;h3 id="本質的な問題-デザインとコードの翻訳"&gt;本質的な問題: デザインとコードの「翻訳」&lt;/h3&gt;
+&lt;p&gt;Figma の存在意義は&lt;strong&gt;デザインとコードの間の翻訳レイヤー&lt;/strong&gt;にあります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;従来のワークフロー:
+デザイナーの意図
+→ Figma でビジュアル化（翻訳 1）
+→ デザインスペック作成（翻訳 2）
+→ 開発者がコードに変換（翻訳 3）
+→ 実装結果をデザイナーがレビュー（逆翻訳）
+翻訳のたびに情報が劣化する:
+- ピクセルのズレ
+- インタラクションの解釈違い
+- レスポンシブ挙動の不一致
+- アクセシビリティの抜け漏れ
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;AI がデザインの意図を理解し、直接コードを生成するようになれば、この翻訳プロセス自体が不要になります。@kawai_design 氏の「翻訳の元データである Figma ファイルも要りません」という指摘は、ここに根ざしています。&lt;/p&gt;</description></item><item><title># Anthropic 社内チームの Claude Code 活用 — マーケから法務まで、全部門が「自分で自動化」する時代</title><link>https://hdknr.github.io/blogs/posts/2026/02/87849fbebf1c8203df69aec7619b12c0/</link><pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/87849fbebf1c8203df69aec7619b12c0/</guid><description>&lt;h1 id="anthropic-社内チームの-claude-code-活用--マーケから法務まで全部門が自分で自動化する時代"&gt;Anthropic 社内チームの Claude Code 活用 — マーケから法務まで、全部門が「自分で自動化」する時代&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Anthropic 公式記事: &lt;a href="https://claude.com/blog/how-anthropic-teams-use-claude-code"&gt;How Anthropic teams use Claude Code&lt;/a&gt;
+再現記事: &lt;a href="https://izanami.dev/post/33bc0c0f-4210-4f5e-90e5-4ee8efe9ac66"&gt;Claude Code で広告バナー200本を15分で作る手順&lt;/a&gt;
+紹介ポスト: &lt;a href="https://x.com/commte/status/2025405334005973271"&gt;commte&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;Anthropic が「自社のチームが Claude Code をどう使っているか」を公式ブログで公開した。注目すべきは、エンジニアリングチームだけでなく、&lt;strong&gt;マーケティング、法務、データサイエンス、デザイン&lt;/strong&gt;といった非技術部門が、コードを1行も書かずに高度な自動化を実現している点。&lt;/p&gt;
+&lt;p&gt;特にマーケティングチームの事例は、ツイートでも「えぐい広告手法」として話題になり、実際に再現して15分で広告バナー200本を生成した記事も登場した。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="マーケティングチーム--たった1人で10倍の成果"&gt;マーケティングチーム — たった1人で10倍の成果&lt;/h2&gt;
+&lt;h3 id="チーム構成"&gt;チーム構成&lt;/h3&gt;
+&lt;p&gt;驚くべきことに、Anthropic のグロースマーケティングチームは&lt;strong&gt;エンジニアがゼロの1人チーム&lt;/strong&gt;。担当の Austin Rau 氏は、元々ターミナルの開き方すら知らなかったという。&lt;/p&gt;
+&lt;p&gt;それが、非技術者向けガイドを見てから1週間で、Figma プラグインと広告コピー生成ワークフローの両方を構築した。&lt;/p&gt;
+&lt;h3 id="4つの自動化事例"&gt;4つの自動化事例&lt;/h3&gt;
+&lt;h4 id="1-google-ads-の広告コピー生成2時間--15分"&gt;1. Google Ads の広告コピー生成（2時間 → 15分）&lt;/h4&gt;
+&lt;p&gt;数百件の既存広告 CSV を Claude Code に読み込ませ、パフォーマンスの低い広告を自動特定。改善案を&lt;strong&gt;サブエージェント方式&lt;/strong&gt;で生成する。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;サブエージェント設計のポイント:&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;エージェント&lt;/th&gt;
+&lt;th&gt;専門&lt;/th&gt;
+&lt;th&gt;制約&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;headline-writer&lt;/td&gt;
+&lt;td&gt;見出し生成&lt;/td&gt;
+&lt;td&gt;30文字以内&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;description-writer&lt;/td&gt;
+&lt;td&gt;説明文生成&lt;/td&gt;
+&lt;td&gt;90文字以内&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;1つのプロンプトで全部やらせるのではなく、&lt;strong&gt;タスクごとに専門エージェントを分ける&lt;/strong&gt;ことで、文字数制約を守りつつ品質を維持する。&lt;/p&gt;
+&lt;h4 id="2-figma-プラグインでバナー一括生成数時間--05秒"&gt;2. Figma プラグインでバナー一括生成（数時間 → 0.5秒）&lt;/h4&gt;
+&lt;p&gt;Claude Code で自作した Figma プラグインが、テンプレートのテキストノードを CSV データで自動差し替え。最大100パターンのバナーを一括生成する。&lt;/p&gt;</description></item><item><title>業務フローの設計にPowerPointではなくBPMNを使うべき理由 — Claude Code時代の詳細設計</title><link>https://hdknr.github.io/blogs/posts/2026/02/379ef1d0f7e4f25c111d78ccd122bd28/</link><pubDate>Mon, 16 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/379ef1d0f7e4f25c111d78ccd122bd28/</guid><description>&lt;h1 id="業務フローの設計にpowerpointではなくbpmnを使うべき理由--claude-code時代の詳細設計"&gt;業務フローの設計にPowerPointではなくBPMNを使うべき理由 — Claude Code時代の詳細設計&lt;/h1&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;業務システムの設計でSwim Lane（スイムレーン）形式の業務フローを書くとき、多くの現場ではPowerPointやFigmaが使われています。見た目は整えやすく、関係者への説明資料としてはよくできています。&lt;/p&gt;
+&lt;p&gt;しかし、この「人間が読むための図」を設計の源泉にしてしまうと、あと工程で大きなコストが発生します。特に、Claude CodeのようなAIエージェントを開発に活用する場合、&lt;strong&gt;設計成果物のフォーマット選択が開発効率を決定的に左右します&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;本記事では、実際にPowerPointのスライドからBPMN 2.0に変換した経験をもとに、BPMNを採用する利点を解説します。&lt;/p&gt;
+&lt;h2 id="powerpointの業務フローが抱える問題"&gt;PowerPointの業務フローが抱える問題&lt;/h2&gt;
+&lt;p&gt;PowerPointのスライドに描かれた業務フローは、本質的に「画像」です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;PowerPoint (.pptx)
+├── 図形の座標とスタイル情報
+├── テキストボックスの文字列
+└── グループ化とレイヤー
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;これは人間が見るには十分ですが、次のような問題があります。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;構造情報がない&lt;/strong&gt;: 「この矢印がどのタスクからどのタスクへ向かっているか」をプログラムが読み取れない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;アクターの定義が曖昧&lt;/strong&gt;: レーンの境界が図形の配置で表現されているだけで、意味的な紐付けがない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;分岐条件が自然言語&lt;/strong&gt;: ゲートウェイの条件が図中のテキストに埋め込まれ、機械的に検証できない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;フロー間の接続が不明確&lt;/strong&gt;: 複数スライドにまたがるフローの接続点（「次のフローへ」）が視覚的な慣習に依存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="bpmn-20とは"&gt;BPMN 2.0とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;BPMN（Business Process Model and Notation）&lt;/strong&gt; は、業務プロセスを図式化するための国際標準記法です。OMG（Object Management Group）が策定し、ISO 19510として国際標準化されています。現行バージョンはBPMN 2.0.2です。&lt;/p&gt;
+&lt;p&gt;BPMNの最大の特徴は、&lt;strong&gt;人間が理解できるフロー図&lt;/strong&gt;と&lt;strong&gt;機械が処理できるXML&lt;/strong&gt;が一つのファイルに同居している点です。プールとレーン（Swim Lane）でアクターを表現し、タスク・ゲートウェイ・イベントでプロセスの流れを記述します。&lt;/p&gt;
+&lt;h2 id="bpmn-20がもたらす構造化"&gt;BPMN 2.0がもたらす構造化&lt;/h2&gt;
+&lt;p&gt;BPMN 2.0はXML形式で、&lt;strong&gt;見た目と意味の両方&lt;/strong&gt;を持つフォーマットです。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;13
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;bpmn:process&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;id=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Process_1&amp;#34;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;isExecutable=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;false&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;bpmn:laneSet&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;id=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;LaneSet_1&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;bpmn:lane&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;id=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Lane_reception&amp;#34;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;name=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;太平受付担当&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;bpmn:flowNodeRef&amp;gt;&lt;/span&gt;r1&lt;span style="color:#f92672"&gt;&amp;lt;/bpmn:flowNodeRef&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;bpmn:flowNodeRef&amp;gt;&lt;/span&gt;r2&lt;span style="color:#f92672"&gt;&amp;lt;/bpmn:flowNodeRef&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/bpmn:lane&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;bpmn:lane&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;id=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;Lane_system&amp;#34;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;name=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;システム&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/bpmn:laneSet&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;bpmn:task&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;id=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;r1&amp;#34;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;name=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;修理内容の特定&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;bpmn:exclusiveGateway&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;id=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;d2&amp;#34;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;name=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;保証範囲?&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;bpmn:sequenceFlow&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;sourceRef=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;r1&amp;#34;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;targetRef=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;d2&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/bpmn:process&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この構造から、以下がプログラム的に読み取れます。&lt;/p&gt;</description></item><item><title>Locofy</title><link>https://hdknr.github.io/blogs/posts/2024/09/cf5f0d0ab2a05cbfd74d574dc0000bce/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/cf5f0d0ab2a05cbfd74d574dc0000bce/</guid><description>&lt;h1 id="locofy"&gt;Locofy&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.monster-dive.com/blog/web_creative/20240301_002180.php"&gt;Figmaで作ったデザインをLocofyで自動生成してみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Figma</title><link>https://hdknr.github.io/blogs/posts/2024/08/2d707f41530e2535dcec1a734c65bbf8/</link><pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/08/2d707f41530e2535dcec1a734c65bbf8/</guid><description>&lt;h1 id="オートレイアウト"&gt;オートレイアウト&lt;/h1&gt;
+&lt;p&gt;FigmaのREST APIで取得したJSONデータから、FrameがAuto Layoutかどうかを判断するには、以下のフィールドをチェックします：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;layoutMode&lt;/code&gt;&lt;/strong&gt;: このフィールドが存在し、値が &lt;code&gt;&amp;quot;HORIZONTAL&amp;quot;&lt;/code&gt; または &lt;code&gt;&amp;quot;VERTICAL&amp;quot;&lt;/code&gt; であれば、そのFrameはAuto Layoutが適用されています。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例えば、以下のようなJSON構造です：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;123&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Frame 1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;FRAME&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;layoutMode&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;HORIZONTAL&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;この例では、&lt;code&gt;layoutMode&lt;/code&gt;が &lt;code&gt;&amp;quot;HORIZONTAL&amp;quot;&lt;/code&gt; なので、このFrameはAuto Layoutが適用されています。&lt;/p&gt;
+&lt;p&gt;ソース: Copilot との会話、 2024/9/19
+(1) Figma オートレイアウトの使い方とうまくできないときの &amp;hellip; - Designup. &lt;a href="https://designup.jp/figma-auto-layout.html"&gt;https://designup.jp/figma-auto-layout.html&lt;/a&gt;.
+(2) 【Figma】オートレイアウトの使い方完全ガイド（Auto Layout &amp;hellip;. &lt;a href="https://tagnote.net/figma/auto-layout/"&gt;https://tagnote.net/figma/auto-layout/&lt;/a&gt;.
+(3) 【Figma】フレームの使い方マスター編 〜グループとの違いや &amp;hellip;. &lt;a href="https://implist.dev/entries/figma-frame-and-auto-layout-group"&gt;https://implist.dev/entries/figma-frame-and-auto-layout-group&lt;/a&gt;.
+(4) Working with Auto Layout in Figma - a Self-Guided Tutorial. &lt;a href="https://www.figma.com/community/file/1207414800398401244/working-with-auto-layout-in-figma-a-self-guided-tutorial"&gt;https://www.figma.com/community/file/1207414800398401244/working-with-auto-layout-in-figma-a-self-guided-tutorial&lt;/a&gt;.
+(5) FrameNode | Plugin API - Figma. &lt;a href="https://www.figma.com/plugin-docs/api/FrameNode/"&gt;https://www.figma.com/plugin-docs/api/FrameNode/&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>Gastby関連</title><link>https://hdknr.github.io/blogs/posts/2024/08/4093ecdafc8d25bb0bc7964f7c5dd5d7/</link><pubDate>Mon, 19 Aug 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/08/4093ecdafc8d25bb0bc7964f7c5dd5d7/</guid><description>&lt;h1 id="gatsby-関連"&gt;Gatsby 関連&lt;/h1&gt;
+&lt;h2 id="figram"&gt;Figram&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.locofy.ai/convert/figma-to-gatsby"&gt;Locofy&lt;/a&gt; (Convert Figma to Gatsby: Get pixel perfect, high-quality code with Lightning)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/satoshi256kbyte/items/af6f8abed3c059d95da9"&gt;[初心者向け]はじめての Next.js - Figma×Locofy でソースコードを生成して自分のプロジェクトに適用する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Figma to NOCODE:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=9j-0EpyHJd0&amp;amp;t=28s"&gt;Webflow, Frame&lt;/a&gt; (Figram プラグイン)&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

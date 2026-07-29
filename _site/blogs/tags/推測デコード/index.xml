@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>推測デコード on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E6%8E%A8%E6%B8%AC%E3%83%87%E3%82%B3%E3%83%BC%E3%83%89/</link><description>Recent content in 推測デコード on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 23 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E6%8E%A8%E6%B8%AC%E3%83%87%E3%82%B3%E3%83%BC%E3%83%89/index.xml" rel="self" type="application/rss+xml"/><item><title>DFlash</title><link>https://hdknr.github.io/blogs/wiki/tools/dflash/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/dflash/</guid><description>Apple Silicon 向け MLX フレームワークで動作するブロック拡散型投機的デコード実装。ローカル LLM を最大 4.1 倍高速化</description></item><item><title>MacのローカルLLMが4.1倍速に！Apple Silicon向け新技術「DFlash」</title><link>https://hdknr.github.io/blogs/posts/2026/04/dflash-mlx-apple-silicon-llm/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/dflash-mlx-apple-silicon-llm/</guid><description>&lt;p&gt;Apple Silicon（M4/M5 Max など）搭載の Mac で、ローカル LLM を最大 4.1 倍高速化する新技術「DFlash」のオープンソース実装が公開されました。精度を落とさずに推論速度だけを大幅に向上できる点が注目されています。&lt;/p&gt;
+&lt;h2 id="dflash-とは"&gt;DFlash とは&lt;/h2&gt;
+&lt;p&gt;DFlash（Block Diffusion for Flash Speculative Decoding）は、投機的デコード（Speculative Decoding）を発展させた推論加速技術です。論文「Block Diffusion for Flash Speculative Decoding」で提案された手法を、Apple の MLX フレームワーク向けに実装したものが &lt;a href="https://github.com/Aryagm/dflash-mlx"&gt;dflash-mlx&lt;/a&gt; として公開されています。&lt;/p&gt;
+&lt;h2 id="仕組み"&gt;仕組み&lt;/h2&gt;
+&lt;h3 id="推測デコードspeculative-decoding"&gt;推測デコード（Speculative Decoding）&lt;/h3&gt;
+&lt;p&gt;通常の推測デコードでは、小さな「ドラフトモデル」が次のトークンを予測し、大きな「ターゲットモデル」がそれを検証します。ドラフトの予測が正しければそのまま採用するため、検証パスを有効活用してスループットを上げます。&lt;/p&gt;
+&lt;h3 id="ブロック拡散block-diffusion"&gt;ブロック拡散（Block Diffusion）&lt;/h3&gt;
+&lt;p&gt;DFlash では、ドラフトモデルが &lt;strong&gt;1 トークンずつではなく 16 トークンをまとめて並列生成&lt;/strong&gt;します。ターゲットモデルは 1 回のフォワードパスでこれらをまとめて検証するため、大幅なスループット向上が実現します。&lt;/p&gt;
+&lt;h3 id="apple-silicon--mlx-への最適化"&gt;Apple Silicon / MLX への最適化&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Apple 独自の &lt;strong&gt;MLX フレームワーク&lt;/strong&gt;をフル活用&lt;/li&gt;
+&lt;li&gt;ロールバック処理は「イノベーションテープ」を記録・再生する &lt;strong&gt;Metal カーネル&lt;/strong&gt; で実装し、長い生成でもオーバーヘッドを最小化&lt;/li&gt;
+&lt;li&gt;精度を落とさない &lt;strong&gt;exact speculative decoding&lt;/strong&gt;（ロスレス）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ベンチマーク"&gt;ベンチマーク&lt;/h2&gt;
+&lt;p&gt;Qwen3.5-9B モデルで &lt;strong&gt;4.1 倍&lt;/strong&gt;のスループット向上が確認されています。27B の大規模モデルでもクラウド API に匹敵する速度で動作するとされています。&lt;/p&gt;
+&lt;h2 id="インストールと使い方"&gt;インストールと使い方&lt;/h2&gt;
+&lt;h3 id="インストール"&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/aryagm/dflash-mlx.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd dflash-mlx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv sync
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="cli-で実行"&gt;CLI で実行&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv run dflash-mlx --max-new-tokens &lt;span style="color:#ae81ff"&gt;128&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="python-から利用"&gt;Python から利用&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; dflash_mlx &lt;span style="color:#f92672"&gt;import&lt;/span&gt; DFlashGenerator
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;runner &lt;span style="color:#f92672"&gt;=&lt;/span&gt; DFlashGenerator()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;result &lt;span style="color:#f92672"&gt;=&lt;/span&gt; runner&lt;span style="color:#f92672"&gt;.&lt;/span&gt;generate(&lt;span style="color:#e6db74"&gt;&amp;#34;Write a quicksort in Python.&amp;#34;&lt;/span&gt;, max_new_tokens&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;128&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="対話型チャット"&gt;対話型チャット&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uv run dflash-mlx-chat
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="対応モデル"&gt;対応モデル&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ターゲットモデル&lt;/th&gt;
+&lt;th&gt;ドラフトモデル&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;mlx-community/Qwen3-4B-bf16&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;z-lab/Qwen3-4B-DFlash-b16&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;mlx-community/Qwen3.5-4B-MLX-bf16&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;z-lab/Qwen3.5-4B-DFlash&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="活用シナリオ"&gt;活用シナリオ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;機密情報の要約&lt;/strong&gt;: クラウドに送らずローカルで高速処理&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コーディング支援&lt;/strong&gt;: 大規模モデルを使いながらリアルタイムに近いレスポンス&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コスト削減&lt;/strong&gt;: API 利用料ゼロで高品質な推論&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;DFlash は Apple Silicon の性能を最大限に引き出す投機的デコード技術です。MLX の最適化と組み合わせることで、プライバシーを守りながらクラウド並みの速度でローカル LLM を活用できるようになります。M4/M5 Mac ユーザーにとって試す価値の高いツールです。&lt;/p&gt;</description></item></channel></rss>

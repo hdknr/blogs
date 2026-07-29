@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-05-18
+lastmod: 2026-07-28
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -39,6 +39,11 @@ related_posts:
   - "/posts/2026/05/anthropic-claude-code-html-over-markdown/"
   - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
   - "/posts/2026/05/claude-btc-trading-montecarlo/"
+  - "/posts/2026/07/claude-code-loop-design-guide/"
+  - "/posts/2026/07/graph-engineering-14-step-roadmap/"
+  - "/posts/2026/07/codex-build-orchestrator-coder-split/"
+  - "/posts/2026/07/ai-agent-rate-limit-circuit-breaker/"
+  - "/posts/2026/07/claude-code-restaurant-automation/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "Hooks", "MCP"]
 ---
 
@@ -85,6 +90,22 @@ Karpathy は Claude Code を LLM Wiki の実行環境として使用。「左画
 
 システムプロンプトに `原始人みたいに喋れ。中身は全部残せ。無駄だけ消せ。` を追加するだけで日本語応答のトークンを最大 80% 削減できる（英語版 Caveman テクニックの日本語版）。CLAUDE.md に追記するだけで適用できる。
 
+## ループ設計（Getting started with loops）
+
+Claude Code チームは公式ガイドで、エージェントのループを「停止条件が満たされるまで作業サイクルを繰り返すこと」と定義し、`/goal`（完了条件）・`/loop`（ローカル定期実行）・`/schedule`（クラウド常駐）・dynamic workflows（並列 worktree での複数解探索と judge レビュー）といったプリミティブを提供する。委譲の度合いで Turn-based / Goal-based / Time-based / Proactive の4種類に整理される。
+
+詳細: [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/)
+
+## 動的ワークフロー（Dynamic Workflows）
+
+サブエージェントのフリートをグラフとして走らせる仕組み。Claude が素の JavaScript でオーケストレーションスクリプトを書き、それがサブエージェント群を起動する。**調整レイヤ自体はコードなのでモデルのトークンを消費しない**（ただし実行全体のトークンは会話より増える）。
+
+API 面は 3 つ。`agent()` がノード 1 個（`schema` に JSON Schema を渡すとツール呼び出し層で検証され、不一致ならリトライされる）、`parallel()` がバリア付きの fan out（例外を投げた thunk は `null` に解決されるので `.filter(Boolean)` が封じ込めになる）、`pipeline()` がバリアなしで要素ごとに全段を独立に流す形。並行数は最大 16（CPU コア数依存）、1 実行あたりのエージェント総数は 1,000 が上限。`isolation: 'worktree'` でノードを隔離でき、`model` オプションでノード単位にモデルを段階化できる。
+
+入口はプロンプトに `workflow` の語を入れる／保存済みワークフローを実行する（`/deep-research` は同梱の実在グラフ）／`/effort ultracode` でセッション全体をワークフロー計画モードにする、の 3 つ。うまくいったものは `.claude/workflows/` に保存するとスラッシュコマンドとして再利用できる。
+
+詳細: [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/)
+
 ## Context Rot 管理
 
 Claude Code のコンテキストウィンドウは 100 万トークン。長いセッションでは Context Rot（コンテキスト劣化）が発生する。5 つのセッション管理選択肢（Continue / Rewind / /clear / /compact / Subagent）を使い分けることで性能を維持できる。
@@ -96,6 +117,18 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 `~/.claude/settings.json` や `<proj>/.claude/settings.local.json` に MCP filesystem サーバを登録することで、個人 Obsidian Vault を AI Agent の文脈として常時参照させられる。読み取り用 (`vault-readonly`) と書き込み用 (`vault-inbox`) を別サーバとして分離するのが基本パターン。`PostToolUse` / `Stop` フックや GitHub Actions self-hosted runner と組み合わせると、PR マージや日次のタイミングで自動的に書き戻しを発火させ、Vault が時間とともに自己強化されるループを実装できる。
 
 詳細: [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) / [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) / [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/)
+
+## 動的ワークフロー（Dynamic Workflows）
+
+サブエージェントを直列に並べるのではなく、グラフとして組むための仕組み。Claude が素の JavaScript でオーケストレーション用スクリプトを書き、`agent()` / `parallel()` / `pipeline()` / `schema` を組み合わせてサブエージェントのフリートを動かす。**調整レイヤ自体はコードなのでモデルのトークンを消費しない**（ただし実行全体のトークンは会話でやるより増える）。
+
+詳細: [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/)
+
+## 非エンジニア業務での活用
+
+コードを書かない業務自動化でも使える。ローカルの CSV・PDF を直接読み、計算し、ファイルとして書き出せる点が「ブラウザで会話する AI」との決定的な差になる。個人経営の飲食店で原価計算（3時間→12分）・レジ締め（毎晩40分→ゼロ）・シフト作成（2時間→15分）を自動化した事例がある。
+
+繰り返す作業は `.claude/skills/<名前>/SKILL.md` として保存すると、次回から `/<名前>` で呼び出せる。**個人・プロジェクトのスキルではコマンド名はディレクトリ名から決まり**、フロントマターの `name` は一覧表示用のラベルとして働く。
 
 ## 関連ページ
 
@@ -111,7 +144,22 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/) — ライフサイクルイベントへのフック仕組み
 - [Trellis](/blogs/wiki/tools/trellis/) — `.trellis/` にプロジェクトの文脈を永続化する AI コーディングフレームワーク
 - [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) — Vault との循環設計パターン
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 動的ワークフローでグラフを組む
+- [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — Claude Code が担うレイヤーの位置づけ
+- [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — Skills による分業実装
+- [Claude Cowork](/blogs/wiki/tools/claude-cowork/) — 同じ Agent Skills 形式を扱うデスクトップ製品
+- [サーキットブレーカーと指数バックオフ](/blogs/wiki/concepts/circuit-breaker/) — CLI 大量呼び出し時のレート制限対策
 - [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) — 5 段階の実装手順
+- [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — 4種類のループとプリミティブ
+- [ECC (Everything Claude Code)](/blogs/wiki/tools/ecc/) — エージェント・スキル・フックの総合エコシステム
+- [claude-seo](/blogs/wiki/tools/claude-seo/) — SEO 分析スキル
+- [Claude Design](/blogs/wiki/tools/claude-design/) — デザイン生成ツール（Claude Code でブランド連携）
+- [Claude Tag](/blogs/wiki/tools/claude-tag/) — Slack 上のプロアクティブなエージェント
+- [CodeGraph](/blogs/wiki/tools/codegraph/) — コード知識グラフで探索のツール呼び出しを削減
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 動的ワークフローでグラフを組む設計論
+- [外部境界の耐障害性とサーキットブレーカー](/blogs/wiki/concepts/circuit-breaker/) — `claude --print` のレートリミット対策
+- [Claude Cowork と Record a skill](/blogs/wiki/tools/claude-cowork/) — 作業録画から Skill を生成するデスクトップ製品
+- [Ponytail](/blogs/wiki/tools/ponytail/) — 過剰実装を抑える YAGNI プラグイン
 
 ## ソース記事
 
@@ -125,3 +173,7 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude を「原始人」口調にするとトークンが 80% 減る話](/blogs/posts/2026/04/claude-caveman-token-reduction/) — 2026-04-17
 - [Claude Code のコンテキスト管理術 — Context Rot を防ぐ 5 つの選択肢](/blogs/posts/2026/04/claude-code-context-rot-session-management/) — 2026-04-17
 - [Video Use — Claude Code で動画編集を完全自動化するオープンソーススキル](/blogs/posts/2026/04/video-use-claude-code-video-editing/) — 2026-04-17
+- [個人経営の飲食店 × Claude Code：原価計算・レジ締め・シフト・廃棄ロスを丸ごと自動化する](/blogs/posts/2026/07/claude-code-restaurant-automation/) — 2026-07-06
+- [「計画するAI」と「書くAI」を分ける開発手法 — codex-build に学ぶ承認ゲート設計](/blogs/posts/2026/07/codex-build-orchestrator-coder-split/) — 2026-07-23
+- [Claude Code の動的ワークフローで組むグラフエンジニアリング 14 ステップ](/blogs/posts/2026/07/graph-engineering-14-step-roadmap/) — 2026-07-27
+- [AI エージェントのレートリミット対策 — 指数バックオフとサーキットブレーカー](/blogs/posts/2026/07/ai-agent-rate-limit-circuit-breaker/) — 2026-07-28

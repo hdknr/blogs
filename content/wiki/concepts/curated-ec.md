@@ -61,6 +61,8 @@ int mart design 株式会社が提供するデジタルディスプレイお買�
 - [MONOCO](/blogs/wiki/tools/monoco/) — 「使い惚れ」基準のキュレーション型ECサービス詳細
 - [オープンロジ](/blogs/wiki/tools/openlogi/) — EC物流フルフィルメント
 - [giftee](/blogs/wiki/tools/giftee/) — デジタルギフトによるEC購買体験の変革
+- [EC 一元管理（OMS/WMS）](/blogs/wiki/concepts/ec-order-management/) — 受注・在庫・出荷を自動化する国内サービスの分類
+- [ソーシャルコマース](/blogs/wiki/concepts/social-commerce/) — SNS 系 EC 連動チャネルの整理
 
 ## ソース記事
 

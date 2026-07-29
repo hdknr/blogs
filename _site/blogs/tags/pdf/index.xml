@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Pdf on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/pdf/</link><description>Recent content in Pdf on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Wed, 18 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/pdf/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenDataLoader PDF — CPUだけで毎秒100ページ、PDFをMarkdownに超高速変換するOSSツール</title><link>https://hdknr.github.io/blogs/posts/2026/03/opendataloader-pdf-to-markdown/</link><pubDate>Wed, 18 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/opendataloader-pdf-to-markdown/</guid><description>&lt;p&gt;GPUなしで毎秒100ページ以上のPDF→Markdown変換を実現するオープンソースツール「OpenDataLoader PDF」が話題になっている。Apache 2.0ライセンスで完全無料、CPUのみで動作するため、高価なGPUハードウェアは不要だ。&lt;/p&gt;
+&lt;h2 id="opendataloader-pdf-とは"&gt;OpenDataLoader PDF とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/opendataloader-project/opendataloader-pdf"&gt;OpenDataLoader PDF&lt;/a&gt; は、PDFドキュメントをAI活用に適した構造化データ（Markdown、JSON、HTML等）に変換するオープンソースのパーサーだ。Java で実装されており、Python・Node.js・Java から利用できる。&lt;/p&gt;
+&lt;p&gt;主な特徴:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;超高速処理&lt;/strong&gt;: ローカルモードで 0.05秒/ページ（CPUのみ）、8コア以上のマシンでマルチプロセスバッチ処理すると毎秒100ページ以上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GPU不要&lt;/strong&gt;: CPUだけで高速に動作するため、導入コストが低い&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;高精度&lt;/strong&gt;: ベンチマークで総合精度0.90を達成し、読み順・テーブル・見出し抽出で1位&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Apache 2.0ライセンス&lt;/strong&gt;: 商用利用可能な完全オープンソース&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストール"&gt;インストール&lt;/h2&gt;
+&lt;p&gt;Python パッケージは Java CLI のラッパーのため、&lt;strong&gt;Java 11以上&lt;/strong&gt;と&lt;strong&gt;Python 3.10以上&lt;/strong&gt;が必要だ。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Python&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install -U opendataloader-pdf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Node.js&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install @opendataloader/pdf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Java の場合は Maven で &lt;code&gt;opendataloader-pdf-core&lt;/code&gt; を依存関係に追加する。&lt;/p&gt;
+&lt;h2 id="基本的な使い方"&gt;基本的な使い方&lt;/h2&gt;
+&lt;h3 id="python-でのシンプルな変換"&gt;Python でのシンプルな変換&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; opendataloader_pdf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;opendataloader_pdf&lt;span style="color:#f92672"&gt;.&lt;/span&gt;convert(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; input_path&lt;span style="color:#f92672"&gt;=&lt;/span&gt;[&lt;span style="color:#e6db74"&gt;&amp;#34;file1.pdf&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;file2.pdf&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;folder/&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; output_dir&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;output/&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; format&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;markdown,json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;フォルダを指定すれば一括変換も可能だ。出力形式は Markdown、JSON、HTML、プレーンテキスト、注釈付きPDFから選べる。&lt;/p&gt;</description></item></channel></rss>

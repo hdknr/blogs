@@ -2,6 +2,7 @@
 title: "Claude Platform on AWS が GA — Amazon Bedrock との違いと day-one でフル機能を使える理由"
 date: 2026-05-13
 lastmod: 2026-05-13
+slug: "claude-platform-on-aws-ga"
 draft: false
 description: "Anthropic が 2026 年 5 月 11 日に GA した Claude Platform on AWS を Amazon Bedrock と比較。day-one で使える Managed Agents・Skills・MCP connector、既存 AWS コミットメントの消化など、AWS 顧客が選び分けるための判断材料をまとめる。"
 summary: "Claude Platform on AWS の GA を Amazon Bedrock との比較で整理。ネイティブ API フル機能と AWS IAM・請求の両立がもたらす意味を解説。"
@@ -36,7 +37,7 @@ Claude Platform on AWS は、**ネイティブ Claude API と完全に同じ機�
 | 請求 | AWS 単一請求書（既存コミットメント消化可） | AWS 単一請求書 |
 | 向いている用途 | 最新機能を最速で使いたい場合 | AWS 内でのデータ処理が必須の場合 |
 
-つまり、**「データ処理を AWS 内に閉じ込める要件があるか」** が選び分けの軸になる。要件がなければ Claude Platform on AWS のほうが機能面で有利、要件があれば引き続き Bedrock という整理だ。関連: [Claude Managed Agents の公式ローンチ](/blogs/posts/2026/04/2026-04-10-claude-managed-agents/) も Bedrock ではなくこのプラットフォームの中核機能として整理されている。
+つまり、**「データ処理を AWS 内に閉じ込める要件があるか」** が選び分けの軸になる。要件がなければ Claude Platform on AWS のほうが機能面で有利、要件があれば引き続き Bedrock という整理だ。関連: [Claude Managed Agents の公式ローンチ](/blogs/posts/2026/04/claude-managed-agents/) も Bedrock ではなくこのプラットフォームの中核機能として整理されている。
 
 ## day-one アクセスで使える Claude ネイティブ API 機能一覧
 
@@ -100,7 +101,7 @@ Anthropic は導入前に押さえておくべき点も明示している。
    - **YES** → どちらも AWS 請求にまとまるので可。割引の適用範囲は営業確認
    - **NO** → 通常請求でどちらも可
 
-特に [Claude Managed Agents](/blogs/posts/2026/04/2026-04-10-claude-managed-agents/) や Skills、MCP connector、Code execution など、Claude Platform の魅力的なベータ機能を試したいエンジニアリングチームには、Claude Platform on AWS が現実的な唯一解になる。
+特に [Claude Managed Agents](/blogs/posts/2026/04/claude-managed-agents/) や Skills、MCP connector、Code execution など、Claude Platform の魅力的なベータ機能を試したいエンジニアリングチームには、Claude Platform on AWS が現実的な唯一解になる。
 
 ## 開発者にとっての意味
 

@@ -39,6 +39,7 @@ AI エージェントによる開発速度向上が**長期的に**生産性に�
 - [Vibe Coding](/blogs/wiki/concepts/vibe-coding/) — AI 主導コーディングのスタイル
 - [Self-Improving Agents](/blogs/wiki/concepts/self-improving-agents/) — エージェントの自己改善
 - [Harness Engineering](/blogs/wiki/concepts/harness-engineering/) — エージェント実行環境
+- [Brownfield リファクタリング](/blogs/wiki/concepts/brownfield-refactoring/) — 既存コードの保守コストを下げる作り替え方
 
 ## ソース記事
 

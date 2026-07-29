@@ -1,0 +1,94 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="brownfield-workflow" name="Brownfield Refactoring Workflow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="brownfield リファクタリングの 6 ステップ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#16211b;" vertex="1" parent="1">
+          <mxGeometry x="340" y="20" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Phase bands -->
+        <mxCell id="phase1" value="安全網を張るフェーズ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e5f2ea;strokeColor=#82b366;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=6 6;fontColor=#157049;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="540" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="phase2" value="動かすフェーズ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e2eef7;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=6 6;fontColor=#2373a8;" vertex="1" parent="1">
+          <mxGeometry x="600" y="80" width="540" height="200" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 1: 計測 -->
+        <mxCell id="s1" value="① 計測&#10;&#10;ホットスポット特定&#10;（変更頻度 × 複雑度）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="160" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="t1" value="CodeScene / coverage / type-coverage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7faf7;strokeColor=#b7d0b6;fontSize=10;fontColor=#45524b;" vertex="1" parent="1">
+          <mxGeometry x="60" y="222" width="160" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 2: 凍結 -->
+        <mxCell id="s2" value="② 凍結&#10;&#10;特性テストで&#10;現状挙動を固定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b9dfb4;strokeColor=#5a9e52;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="240" y="120" width="160" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="t2" value="pytest-django + snapshot / RTL + Playwright" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7faf7;strokeColor=#b7d0b6;fontSize=10;fontColor=#45524b;" vertex="1" parent="1">
+          <mxGeometry x="240" y="222" width="160" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 3: 継ぎ目 -->
+        <mxCell id="s3" value="③ 継ぎ目&#10;&#10;テスト可能な&#10;接合点を作る" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="120" width="140" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="t3" value="サービス層抽出 / hook 分離・副作用隔離" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f7faf7;strokeColor=#b7d0b6;fontSize=10;fontColor=#45524b;" vertex="1" parent="1">
+          <mxGeometry x="420" y="222" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 4: 変換 -->
+        <mxCell id="s4" value="④ 変換&#10;&#10;振る舞い不変の&#10;小さな変更を積む" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="620" y="120" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="t4" value="libcst / django-upgrade / ts-morph / ast-grep" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f8fc;strokeColor=#a9c3e0;fontSize=10;fontColor=#45524b;" vertex="1" parent="1">
+          <mxGeometry x="620" y="222" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 5: 段階置換 -->
+        <mxCell id="s5" value="⑤ 段階置換&#10;&#10;新旧を並行稼働し&#10;機能単位で差替え" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="120" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="t5" value="Strangler Fig / feature flags（waffle 等）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f8fc;strokeColor=#a9c3e0;fontSize=10;fontColor=#45524b;" vertex="1" parent="1">
+          <mxGeometry x="790" y="222" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 6: 削除 -->
+        <mxCell id="s6" value="⑥ 削除&#10;&#10;旧経路と&#10;デッドコード除去" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="960" y="120" width="140" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="t6" value="vulture（Python） / knip（TS）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f8fc;strokeColor=#a9c3e0;fontSize=10;fontColor=#45524b;" vertex="1" parent="1">
+          <mxGeometry x="960" y="222" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows between steps -->
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#5a9e52;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="s1" target="s2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#5a9e52;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="s2" target="s3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#888888;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="s3" target="s4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="s4" target="s5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="s5" target="s6"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Loop back arrow -->
+        <mxCell id="loop" value="ホットスポットを潰し切るまで反復" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#a4661a;strokeWidth=2;endArrow=classic;dashed=1;fontColor=#a4661a;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="s6" target="s1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="350"/>
+              <mxPoint x="140" y="350"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Caption -->
+        <mxCell id="caption" value="※ ②凍結（安全網）より前に大きく動かさない。⑥削除は必ず最後。" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#6c786f;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="300" y="400" width="580" height="24" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

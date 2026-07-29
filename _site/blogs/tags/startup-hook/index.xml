@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Startup Hook on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/startup-hook/</link><description>Recent content in Startup Hook on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Mon, 30 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/startup-hook/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Codeベストプラクティス疲れに終止符 — claude-code-best-practiceリポジトリ一本で運用する方法</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-best-practice-repo/</link><pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-best-practice-repo/</guid><description>&lt;p&gt;Claude Codeのベストプラクティスが毎日TLに流れてくる。追いかけるのに疲れた人向けに、&lt;strong&gt;1つのリポジトリだけをフォローして運用する方法&lt;/strong&gt;を紹介する。&lt;/p&gt;
+&lt;h2 id="ベストプラクティス疲れという問題"&gt;ベストプラクティス疲れという問題&lt;/h2&gt;
+&lt;p&gt;Claude Codeの普及に伴い、SNS上には日々さまざまなベストプラクティスやTipsが投稿されている。しかし、情報が断片的で、どれを採用すべきか判断するだけでも消耗する。&lt;/p&gt;
+&lt;p&gt;結論として、&lt;strong&gt;ベストプラクティスを追うことに時間を費やすより、具体的な仕組みの実装に時間を割いた方が生産的&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;h2 id="claude-code-best-practiceリポジトリとは"&gt;claude-code-best-practiceリポジトリとは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/shanraisshan/claude-code-best-practice"&gt;shanraisshan/claude-code-best-practice&lt;/a&gt; は、Claude Codeの設計や運用に関するベストプラクティスを体系的にまとめたリポジトリだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub Star数: 約24,800（2026年3月時点）&lt;/li&gt;
+&lt;li&gt;海外コミュニティで広く参照されている&lt;/li&gt;
+&lt;li&gt;設計思想から具体的な設定まで、日々更新されている&lt;/li&gt;
+&lt;li&gt;日本のSNSでバズるClaude Code Tipsも、元ネタはこのリポジトリ周辺であることが多い&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="導入手順"&gt;導入手順&lt;/h2&gt;
+&lt;p&gt;やることは2ステップだけ。&lt;/p&gt;
+&lt;h3 id="step-1-リポジトリをクローン"&gt;Step 1: リポジトリをクローン&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/shanraisshan/claude-code-best-practice.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="step-2-claude-codeにプロジェクト固有のベストプラクティスを提案させる"&gt;Step 2: Claude Codeにプロジェクト固有のベストプラクティスを提案させる&lt;/h3&gt;
+&lt;p&gt;自分のプロジェクトディレクトリでClaude Codeを起動し、以下のように依頼する:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;このリポジトリ（claude-code-best-practice）を参考に、
+うちのプロジェクトに合ったベストプラクティスを提案して
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Claude Codeがプロジェクトの構成を読み取り、適切なCLAUDE.mdの設定やSkills、エージェント構成を提案してくれる。&lt;/p&gt;
+&lt;h2 id="startup-hookで常に最新化する"&gt;startup hookで常に最新化する&lt;/h2&gt;
+&lt;p&gt;クローンしたリポジトリは時間とともに古くなる。Claude Codeの &lt;code&gt;SessionStart&lt;/code&gt; hook（セッション開始時に自動実行される仕組み）に &lt;code&gt;git pull&lt;/code&gt; を設定しておけば、起動のたびに自動で最新化される。&lt;/p&gt;
+&lt;p&gt;Claude Codeのユーザー設定ファイル（&lt;code&gt;~/.claude/settings.json&lt;/code&gt;）に以下を追加する:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;hooks&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;SessionStart&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;command&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;command&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;cd /path/to/claude-code-best-practice &amp;amp;&amp;amp; git pull --quiet&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;timeout&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;10000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;/path/to/&lt;/code&gt; の部分は、Step 1でクローンした実際のパスに置き換えること。&lt;/p&gt;</description></item></channel></rss>

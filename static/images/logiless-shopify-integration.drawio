@@ -1,0 +1,78 @@
+<mxfile host="app.diagrams.net" modified="2026-07-02T00:00:00.000Z" agent="Claude" version="24.0.0">
+  <diagram name="LOGILESS Shopify Integration" id="logiless-shopify-integration">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="LOGILESS × Shopify API 連携の全体像" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="540" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Shopify side -->
+        <mxCell id="shopify-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#82b366;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="240" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="shopify-label" value="Shopify（EC フロント）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#4a7a3a;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s-order" value="注文（受注）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="100" y="150" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s-inv" value="在庫数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="100" y="290" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s-fulfill" value="配送状況&#10;（配送会社・追跡番号）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="100" y="420" width="160" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- LOGILESS side -->
+        <mxCell id="logiless-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eefb;strokeColor=#6c8ebf;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="600" y="90" width="240" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="logiless-label" value="LOGILESS（OMS + WMS 一体型）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;fontColor=#3b5998;" vertex="1" parent="1">
+          <mxGeometry x="600" y="100" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="l-oms" value="OMS：受注取込・引当&#10;（有効在庫を自動計算）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="640" y="150" width="160" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="l-stock" value="在庫マスタ&#10;（倉庫の実在庫）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="640" y="285" width="160" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="l-wms" value="WMS：出荷処理&#10;（ピッキング・梱包・発送）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="640" y="420" width="160" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: order intake -->
+        <mxCell id="a-order" style="endArrow=classic;html=1;strokeColor=#4a7a3a;strokeWidth=2;fontSize=11;fontStyle=1;" edge="1" parent="1" source="s-order" target="l-oms">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-order-lbl" value="① 受注情報を自動取込" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#4a7a3a;" vertex="1" parent="1">
+          <mxGeometry x="360" y="150" width="180" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: inventory sync (bidirectional) -->
+        <mxCell id="a-inv" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;dashed=1;" edge="1" parent="1" source="s-inv" target="l-stock">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-inv-lbl" value="② 在庫数を双方向連動&#10;（約10分ごと）" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#7a5a9a;" vertex="1" parent="1">
+          <mxGeometry x="360" y="288" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows: fulfillment notification -->
+        <mxCell id="a-fulfill" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1" source="l-wms" target="s-fulfill">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a-fulfill-lbl" value="③ 出荷通知を自動送信" style="text;html=1;strokeColor=none;fillColor=#ffffff;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="360" y="430" width="180" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- Note -->
+        <mxCell id="note" value="※ 商品マスタコードが異なる場合は「商品対応表」の作成が必須" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#7a6a2a;" vertex="1" parent="1">
+          <mxGeometry x="240" y="540" width="420" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

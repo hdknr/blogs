@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>CLI on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/cli/</link><description>Recent content in CLI on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Fri, 17 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/cli/index.xml" rel="self" type="application/rss+xml"/><item><title>RTK（Rust Token Killer）でClaude Codeのトークン使用量を60〜90%削減する</title><link>https://hdknr.github.io/blogs/posts/2026/04/rtk-rust-token-killer-claude-code/</link><pubDate>Tue, 07 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/rtk-rust-token-killer-claude-code/</guid><description>&lt;p&gt;Claude Code を使い続けると、トークン消費が思いのほか速く、使用制限に達してしまうことがある。その主な原因のひとつが、ターミナルコマンドの出力だ。&lt;code&gt;git status&lt;/code&gt; や &lt;code&gt;npm install&lt;/code&gt; が吐き出すプログレスバー・警告・ログといったノイズが、そのままコンテキストに流れ込んでいる。&lt;/p&gt;
+&lt;p&gt;この問題を解決するツールが &lt;strong&gt;RTK（Rust Token Killer）&lt;/strong&gt; だ。&lt;/p&gt;
+&lt;h2 id="rtk-とは"&gt;RTK とは&lt;/h2&gt;
+&lt;p&gt;RTK は Claude Code とターミナルの間に挟む「CLI プロキシ」ツール。Rust 製の単一バイナリで、依存関係ゼロのオープンソースプロジェクトだ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub: &lt;a href="https://github.com/rtk-ai/rtk"&gt;rtk-ai/rtk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;公式サイト: &lt;a href="https://www.rtk-ai.app/"&gt;https://www.rtk-ai.app/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;コマンドを透過的にラップして出力をフィルタリングし、LLM のコンテキストに送る情報量を大幅に削減する。実測で &lt;strong&gt;60〜90% のトークン削減&lt;/strong&gt;、1,000 万トークン以上の削減（89% 削減）を達成した事例も報告されている。&lt;/p&gt;
+&lt;h2 id="4-つの最適化戦略"&gt;4 つの最適化戦略&lt;/h2&gt;
+&lt;p&gt;RTK は以下の戦略でターミナル出力を圧縮する:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;戦略&lt;/th&gt;
+&lt;th&gt;内容&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;スマートフィルタリング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ANSI エスケープコード、スピナー、プログレスバーを除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;グルーピング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;関連する出力をまとめて集約&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;重複除去&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;繰り返しパターンを排除&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;トランケーション&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;エラーは保持しつつ、冗長な成功出力を切り詰め&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;オーバーヘッドは 1 コマンドあたり 10ms 未満で、100 以上の開発コマンドに対応している。&lt;/p&gt;
+&lt;h2 id="セットアップ"&gt;セットアップ&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;rtk init -g
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;-g&lt;/code&gt; フラグでグローバルインストール。Claude Code / GitHub Copilot との統合も自動で設定される。&lt;/p&gt;
+&lt;p&gt;インストール後、RTK はコマンドを透過的に書き換える。たとえば &lt;code&gt;git status&lt;/code&gt; は内部で &lt;code&gt;rtk git status&lt;/code&gt; として実行され、Claude には圧縮済みの出力が渡される。ユーザーが意識する必要はない。&lt;/p&gt;</description></item><item><title>Claude Code 新機能「Auto Mode」完全解説</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-auto-mode/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-auto-mode/</guid><description>&lt;p&gt;これまでClaude Codeを使っていて「許可ボタン押すのめんどくさすぎ問題」にイラッとしてた人、朗報です。Claude Codeに新機能「Auto Mode」が追加されました。&lt;/p&gt;
+&lt;p&gt;「全部自動でやってくれるやつでしょ？」と思った人、半分正解で半分不正解。&lt;/p&gt;
+&lt;p&gt;Auto Modeは「Claude自身がAI判断で、この操作は許可していいかどうかを決める」モードなので、全部無条件に自動承認するわけじゃないんです。ここ、めちゃくちゃ大事。&lt;/p&gt;
+&lt;h2 id="そもそもなぜauto-modeが必要だったのか"&gt;そもそもなぜAuto Modeが必要だったのか&lt;/h2&gt;
+&lt;p&gt;Claude Codeはファイルの編集やコマンドの実行のたびに「これやっていい？」と確認してきますよね。&lt;/p&gt;
+&lt;p&gt;1回2回ならいいけど、長時間のコーディングだと10回20回と確認が出る。正直めんどくさい。&lt;/p&gt;
+&lt;p&gt;これまでClaude Codeで「確認をスキップしたい人」には2つの選択肢しかありませんでした。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Auto-Accept Mode&lt;/strong&gt; → ファイル編集だけ自動。コマンド系は毎回確認が出る&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dangerously Skip Permissions&lt;/strong&gt; → 全部ノーチェック。かーなーり危険なやつ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり「ちょうどいい中間」がなかったんです。ファイル編集だけ自動じゃ足りないけど、全部ノーチェックは怖い。この隙間を埋めるのが Auto Mode。&lt;/p&gt;
+&lt;h2 id="auto-modeの仕組み"&gt;Auto Modeの仕組み&lt;/h2&gt;
+&lt;p&gt;Auto Modeでは、Claude自身が操作ごとに「これは安全か？」をAIが判断します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;プロジェクト内のファイル読み書き&lt;/strong&gt; → 安全と判断して自動承認&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;外部ネットワークへのアクセスやシステムに影響するコマンド&lt;/strong&gt; → 危険と判断して確認を出す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり人間が毎回「Yes / No」を押す代わりに、Claudeが代わりに判断してくれる仕組み。&lt;/p&gt;
+&lt;h3 id="注意点"&gt;注意点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;AI判断にトークンを使うので、コストが少し増える&lt;/li&gt;
+&lt;li&gt;判断が完璧とは限らない。Anthropic公式も「隔離環境での使用を推奨」としている&lt;/li&gt;
+&lt;li&gt;あくまでリサーチプレビュー（研究段階のお試し版）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="auto-modeの始め方"&gt;Auto Modeの始め方&lt;/h2&gt;
+&lt;p&gt;ターミナルでClaude Codeを使っている場合は、以下のどちらかで起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude --enable-auto-mode
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# または&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude --permission-mode auto
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;どちらでもOKです。&lt;/p&gt;
+&lt;h3 id="vs-codeで使う場合の注意"&gt;VS Codeで使う場合の注意&lt;/h3&gt;
+&lt;p&gt;VS Codeの拡張機能でClaude Codeを使っている場合は、Auto Modeは使えないようです（2026年3月時点）。&lt;/p&gt;</description></item><item><title>takt — AIコーディングエージェントのワークフローをYAMLで定義するCLIツール</title><link>https://hdknr.github.io/blogs/posts/2026/03/takt-ai-agent-workflow/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/takt-ai-agent-workflow/</guid><description>&lt;p&gt;&lt;a href="https://github.com/nrslib/takt"&gt;takt&lt;/a&gt; は、Claude Code や Codex などの AI コーディングエージェントのワークフローを YAML で定義できる CLI ツールです。エージェントに単にコードを書かせるだけでなく、レビューループや人間の介入ポイントを宣言的に管理することで、品質の高いアウトプットを継続的に得られるよう設計されています。&lt;/p&gt;
+&lt;h2 id="takt-とは"&gt;takt とは&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;TAKT&lt;/strong&gt; は &lt;strong&gt;T&lt;/strong&gt;AKT &lt;strong&gt;A&lt;/strong&gt;gent &lt;strong&gt;K&lt;/strong&gt;oordination &lt;strong&gt;T&lt;/strong&gt;opology の略で、ドイツ語の「拍子・指揮棒」を由来とする名前です。オーケストラの指揮者のように複数の AI エージェントを統率するというコンセプトが込められています。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href="https://github.com/nrslib/takt"&gt;https://github.com/nrslib/takt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;言語&lt;/strong&gt;: TypeScript&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;スター数&lt;/strong&gt;: 952（2026年4月時点）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ライセンス&lt;/strong&gt;: MIT&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;対応エージェント: Claude Code、Codex、OpenCode、Cursor、GitHub Copilot CLI&lt;/p&gt;
+&lt;h2 id="なぜ-takt-が必要か"&gt;なぜ takt が必要か&lt;/h2&gt;
+&lt;p&gt;AI コーディングエージェントを使う上で重要なのは、ワークフローの設計です。エージェントに「コードを書いて」と指示するだけでは、品質にばらつきが生じます。takt は以下の課題を解決します:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;レビューループの自動化&lt;/strong&gt;: 実装 → レビュー → 修正 のサイクルを自動で回す&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;再現性の確保&lt;/strong&gt;: 実行パスを YAML で宣言するため、チーム間で同じ品質プロセスを共有できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;マルチエージェント対応&lt;/strong&gt;: 異なるペルソナ・権限・レビュー基準を持つ複数エージェントをオーケストレーション&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;完全なトレーサビリティ&lt;/strong&gt;: 全ステップを NDJSON でログに記録&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="インストールと基本的な使い方"&gt;インストールと基本的な使い方&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install -g takt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="設定ファイル"&gt;設定ファイル&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;~/.takt/config.yaml&lt;/code&gt; を作成してプロバイダーを指定します:&lt;/p&gt;</description></item></channel></rss>

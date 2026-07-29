@@ -2,10 +2,11 @@
 title: "J-Quants API"
 description: "JPX（日本取引所グループ）公式の日本株データ API。上場銘柄一覧・株価四本値・財務情報・信用残などを提供する個人〜法人向けマーケットデータサービス"
 date: 2026-05-20
-lastmod: 2026-05-20
+lastmod: 2026-07-28
 aliases: ["JQuants", "J-Quants", "JPX API"]
 related_posts:
   - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
+  - "/posts/2026/07/fable-stock-factor-analysis-jquants/"
 tags: ["J-Quants", "JPX", "日本株", "API", "市場データ"]
 ---
 
@@ -36,12 +37,26 @@ Monte Carlo + Claude 系の自動売買アーキテクチャでは「データ�
 - データ正確性: 配当落ち調整・分割調整など、JPX 公式の整合された数値が手に入る
 - 銘柄カバレッジ: 日本市場全銘柄を網羅的に扱える
 
+## データ品質の落とし穴
+
+ファクター分析のようにデータの質で結果が変わる用途では、API を使っても前処理側に難所が残る。実際に報告されている課題は次の 4 つ。
+
+- **財務データの時系列が揃っていない** — 財務データと株価データをマージすると実態と乖離するケースがある
+- **XBRL 由来の数値ミス** — 開示書類そのものに数値の誤りが含まれることがある
+- **株式分割の調整値が怪しいことがある** — 調整値がずれると過去リターンの計算が狂う
+- **自力で抽出したデータの品質が低い** — 受注情報やセグメント情報など API に無い情報を独自にスクレイピングした分は、公式データより品質が落ちる
+
+> 教訓: **ファクター分析ツールの難所は、計算式でもバックテストのロジックでもなく、その手前のデータ整備にある。** バリューやモメンタムの計算は定義が確立していて AI でも安定して書けるが、「時系列の整合」「分割調整」「欠損補完」はドメイン知識と地道な検証を要する。AI に丸投げできる部分（設計・実装）と、人間が責任を持つべき部分（データの正しさ）を切り分ける視点が必要。
+
 ## 関連ページ
 
 - [モンテカルロ法による売買判定](/blogs/wiki/concepts/monte-carlo-trading/) — 本 API のユースケース
 - [kabu ステーション API](/blogs/wiki/tools/kabu-station-api/) — 発注層
 - [株式投資の売買スタイル](/blogs/wiki/concepts/stock-trading-styles/) — 取引スタイル
+- [セクターローテーション](/blogs/wiki/concepts/sector-rotation/) — RS比・出来高データの用途
+- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 多因子アルファモデルをグラフで組む設計
 
 ## ソース記事
 
 - [日経225マイクロ先物 × Monte Carlo 自動売買判定 — Claude + 1万通りシミュレーションで勝率55%超のときだけ発注する実装](/blogs/posts/2026/05/nikkei225-micro-monte-carlo-claude/) — 2026-05-20
+- [AIに設計から任せて株式ファクター分析ツールを作る──Claude Fable 5 × J-Quants API のプロンプト実例](/blogs/posts/2026/07/fable-stock-factor-analysis-jquants/) — 2026-07-17

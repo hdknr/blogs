@@ -1,0 +1,82 @@
+# lychee configuration — used by the weekly EXTERNAL-link sweep in
+# .github/workflows/linkcheck.yml
+#
+# The external job builds the site, mirrors it under the /blogs/ base path and
+# serves it on http://127.0.0.1:8099/. This config then:
+#   - resolves internal links to that local server (base_url + remap) so
+#     root-relative assets like /blogs/assets/…css do NOT error, and
+#   - EXCLUDES the local server, so only genuine EXTERNAL links are checked.
+#
+# Many hosts return 403/429/5xx to non-browser clients (bot protection, rate
+# limits) even though the page is reachable in a browser. To keep the weekly
+# report actionable we accept those soft-block/transient codes and report only
+# hard-dead links. The PR-time internal check does NOT use this file.
+
+# Resolve internal links against the local mirror server.
+base_url = "http://127.0.0.1:8099/"
+remap = ["https://hdknr.github.io/ http://127.0.0.1:8099/"]
+
+# Accept soft-block / partial-content / transient codes as reachable so the
+# report is dominated by real dead links (404/410), not bot walls.
+# 202 (Accepted), 401 (auth wall), 405 (method not allowed), 406 (not
+# acceptable) and 415 (unsupported media type) are returned by some hosts to
+# non-browser clients even though the page renders fine in a browser; treat
+# them as reachable too. 410 (Gone) is deliberately NOT accepted — it signals
+# a genuinely removed page.
+accept = ["200", "202", "206", "401", "403", "405", "406", "415", "429", "500", "503"]
+
+max_retries = 2
+retry_wait_time = 3
+timeout = 20
+max_concurrency = 8
+
+exclude = [
+  # Internal: served locally; only external links should be checked here.
+  "^http://127\\.0\\.0\\.1:8099/",
+  # Hosts that reliably block crawlers (verified reachable in a browser).
+  "^https?://(www\\.)?bloomberg\\.com/",
+  "^https?://(www\\.)?axios\\.com/",
+  "^https?://tabelog\\.com/",
+  "^https?://(developer|trailhead)\\.salesforce\\.com/",
+  "^https?://dev\\.mysql\\.com/",
+  "^https?://www\\.npmjs\\.com/",
+  "^https?://www\\.sciencedirect\\.com/",
+  "^https?://journals\\.sagepub\\.com/",
+  "^https?://dl\\.acm\\.org/",
+  "^https?://pubs\\.acs\\.org/",
+  "^https?://www\\.researchgate\\.net/",
+  "^https?://papers\\.ssrn\\.com/",
+  "^https?://www\\.mdpi\\.com/",
+  "^https?://www\\.gartner\\.com/",
+  "^https?://www\\.meti\\.go\\.jp/",
+  "^https?://support\\.google\\.com/",
+  "^https?://(news\\.)?stanford\\.edu/",
+  "^https?://www\\.bcg\\.com/",
+  "^https?://market\\.us/",
+  "^https?://(finance|news)\\.yahoo\\.co\\.jp/",
+  "^https?://zhuanlan\\.zhihu\\.com/",
+  "^https?://(developers|access)\\.redhat\\.com/",
+  "^https?://app\\.getzep\\.com/",
+  # Hosts whose servers mishandle lychee's HTTP/2 client ("HTTP/2 protocol
+  # error") but load fine in a browser. Verified reachable manually.
+  "^https?://(www\\.)?washingtonpost\\.com/",
+  "^https?://(www\\.)?mckinsey\\.com/",
+  "^https?://(www\\.)?businesswire\\.com/",
+  "^https?://(www\\.)?tricentis\\.com/",
+  "^https?://(www\\.)?printables\\.com/",
+  "^https?://(www\\.)?webflow\\.com/",
+  "^https?://(www\\.)?adobe\\.com/",
+  "^https?://(www\\.)?polymarket\\.com/",
+  "^https?://(www\\.)?coveo\\.com/",
+  "^https?://(www\\.)?ainvest\\.com/",
+  # Hosts with expired / self-signed / untrusted certs (reachable in browser).
+  "^https?://pycaret\\.org/",
+  "^https?://agent-tars\\.com/",
+  "^https?://(www\\.)?zeals\\.co\\.jp/",
+  "^https?://(www\\.)?skyarch\\.net/",
+  "^https?://10000\\.co\\.jp/",
+  "^https?://pgjones\\.dev/",
+  "^https?://(www\\.)?agentsworkshop\\.ai/",
+  # X/Twitter: returns 404 to bots for valid tweets (SPA).
+  "^https?://(x|twitter)\\.com/",
+]

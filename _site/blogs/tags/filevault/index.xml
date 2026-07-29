@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>FileVault on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/filevault/</link><description>Recent content in FileVault on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 21 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/filevault/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude Code でMacをセキュリティ監査する — Pieter Levels流、一言頼むだけで未設定項目を洗い出す方法</title><link>https://hdknr.github.io/blogs/posts/2026/05/pieter-levels-claude-code-security-audit-mac/</link><pubDate>Thu, 21 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/pieter-levels-claude-code-security-audit-mac/</guid><description>&lt;p&gt;Pieter Levels（@levelsio）は Claude Code を使って自分の MacBook Pro をセキュリティ監査した。すると、設定していなかった項目が次々と見つかったという。その方法はシンプルで、Claude Code に「このコンピューターをセキュリティ監査して」と頼むだけだ。&lt;/p&gt;
+&lt;h2 id="pieter-levels-のツイート"&gt;Pieter Levels のツイート&lt;/h2&gt;
+&lt;p&gt;Pieter Levels は PhotoAI（月間収益 $100K）や RemoteOK（同 $44K）など複数のプロダクトを一人で運営するインディー開発者で、VPS サーバーの管理にも Claude Code を活用している。&lt;/p&gt;
+&lt;p&gt;彼のツイートの要点は以下のとおり：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A nice way to stay safe is to ask Claude Code to audit your devices&lt;/p&gt;
+&lt;p&gt;I do same on my VPS servers, so today I tried it on my MacBook Pro and it&amp;rsquo;s pretty good at it too&lt;/p&gt;
+&lt;p&gt;It founds lots of stuff that was not secured, I actually forgot to enable FileVault when I got this new MBP in&lt;/p&gt;</description></item></channel></rss>

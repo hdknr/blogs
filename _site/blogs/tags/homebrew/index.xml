@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Homebrew on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/homebrew/</link><description>Recent content in Homebrew on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 07 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/homebrew/index.xml" rel="self" type="application/rss+xml"/><item><title>macOS キャッシュ掃除チートシート — 開発マシンの数百 GB を取り戻す</title><link>https://hdknr.github.io/blogs/posts/2026/05/macos-cache-cleanup/</link><pubDate>Thu, 07 May 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/05/macos-cache-cleanup/</guid><description>macOS 開発マシンに溜まる uv・npm・Docker・JetBrains・Ollama などのキャッシュを安全に削除するコマンド集。月 1 回の定期掃除スクリプト付き。</description></item><item><title>ngrok</title><link>https://hdknr.github.io/blogs/posts/2024/03/71595cc14e6c06d15fdf96ead079543e/</link><pubDate>Thu, 21 Mar 2024 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2024/03/71595cc14e6c06d15fdf96ead079543e/</guid><description>&lt;h1 id="ngrok"&gt;ngrok&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install ngrok
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;シェルコンプリージョン:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; command -v ngrok &amp;amp;&amp;gt;/dev/null; &lt;span style="color:#66d9ef"&gt;then&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; eval &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;ngrok completion&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;fi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;ngrok config add-authtoken 1p09hGDXtLcDay6Jz3usWSG1z7L_2upHYxJggN7FbEKcRPP7U&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/opt/homebrew/bin/ngrok config add-authtoken ***********************************
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Authtoken saved to configuration file: /Users/hdknr/.ngrok2/ngrok.yml
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Default version saved to configuration file: /Users/hdknr/.ngrok2/ngrok.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>cairocffi</title><link>https://hdknr.github.io/blogs/posts/2021/08/ee655d9fd11b3415ce518231713f26bc/</link><pubDate>Fri, 27 Aug 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/08/ee655d9fd11b3415ce518231713f26bc/</guid><description>&lt;h2 id="結局"&gt;結局&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;x86_64 でhomebrew 作り直し&lt;/li&gt;
+&lt;li&gt;anyenv, python を入れ直し&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://qiita.com/ktgw0316/items/b5358a471ae9ee84f771"&gt;https://qiita.com/ktgw0316/items/b5358a471ae9ee84f771&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;arch -arch x86_64 zsh&lt;/code&gt; で x86_64 環境で作業する&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;% uname -m
+x86_64
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="問題"&gt;問題&lt;/h3&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt; % pip install cairocffi lCollecting cairocffi Downloading cairocffi-1.2.0.tar.gz (70 kB) ( |████████████████████████████████| 70 kB 5.4 MB/s
+ERROR: Command errored out with exit status 1:
+command: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/bin/python3.9 -c &amp;#39;import io, os, sys, setuptools, tokenize; sys.argv[0] = &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-instal
+l-uxwwpx3n/cairocffi_949ddafebb174433b898b1d60614bf77/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;; __file__=&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_949ddafebb174433b898b1d60614bf77/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;;f
+= getattr(tokenize, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;open&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, open)(__file__) if os.path.exists(__file__) else io.StringIO(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;from setuptools import setup; setup()&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);code = f.read().replace(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\r\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);f.close();exec(compi
+le(code, __file__, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;exec&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;))&amp;#39; egg_info --egg-base /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-pip-egg-info-952byczr
+cwd: /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_949ddafebb174433b898b1d60614bf77/
+Complete output (31 lines):
+WARNING: The wheel package is not available.
+Traceback (most recent call last):
+File &amp;#34;&amp;lt;string&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+File &amp;#34;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_949ddafebb174433b898b1d60614bf77/setup.py&amp;#34;, line 10, in &amp;lt;module&amp;gt;
+setup(
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/__init__.py&amp;#34;, line 153, in setup
+return distutils.core.setup(**attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/core.py&amp;#34;, line 108, in setup
+_setup_distribution = dist = klass(attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 434, in __init__
+_Distribution.__init__(self, {
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/dist.py&amp;#34;, line 292, in __init__
+self.finalize_options()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 743, in finalize_options
+ep(self)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 750, in _finalize_setup_keywords
+ep.load()(self, ep.name, value)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 219, in cffi_modules
+add_cffi_module(dist, cffi_module)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 49, in add_cffi_module
+execfile(build_file_name, mod_vars)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 25, in execfile
+exec(code, glob, glob)
+File &amp;#34;cairocffi/ffi_build.py&amp;#34;, line 26, in &amp;lt;module&amp;gt;
+ffi = FFI()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/api.py&amp;#34;, line 48, in __init__
+import _cffi_backend as backend
+ImportError: dlopen(/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so, 2): Symbol not found: _ffi_prep_closure 9 Referenced from: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+Expected in: flat namespace
+in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+----------------------------------------
+WARNING: Discarding https://files.pythonhosted.org/packages/84/ca/0bffed5116d21251469df200448667e90acaa5131edea869b44a3fbc73d0/cairocffi-1.2.0.tar.gz#sha256=9a979b500c64c8179fec286f337e8fe644eca2f2cd05860ce0b62d25f22ea14
+0 (from https://pypi.org/simple/cairocffi/) (requires-python:&amp;gt;=3.6). Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt; Downloading cairocffi-1.1.0.tar.gz (68 kB)
+|████████████████████████████████| 68 kB 41.2 MB/s
+ERROR: Command errored out with exit status 1:
+command: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/bin/python3.9 -c &amp;#39;import io, os, sys, setuptools, tokenize; sys.argv[0] = &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-instal
+l-uxwwpx3n/cairocffi_0871e9b26c6442869a897d8d8df7ca3f/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;; __file__=&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_0871e9b26c6442869a897d8d8df7ca3f/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;;f
+= getattr(tokenize, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;open&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, open)(__file__) if os.path.exists(__file__) else io.StringIO(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;from setuptools import setup; setup()&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);code = f.read().replace(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\r\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);f.close();exec(compi
+le(code, __file__, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;exec&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;))&amp;#39; egg_info --egg-base /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-pip-egg-info-2h4amr27
+cwd: /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_0871e9b26c6442869a897d8d8df7ca3f/
+Complete output (31 lines):
+WARNING: The wheel package is not available.
+Traceback (most recent call last):
+File &amp;#34;&amp;lt;string&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+File &amp;#34;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_0871e9b26c6442869a897d8d8df7ca3f/setup.py&amp;#34;, line 10, in &amp;lt;module&amp;gt;
+setup(
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/__init__.py&amp;#34;, line 153, in setup
+return distutils.core.setup(**attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/core.py&amp;#34;, line 108, in setup
+_setup_distribution = dist = klass(attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 434, in __init__
+_Distribution.__init__(self, {
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/dist.py&amp;#34;, line 292, in __init__
+self.finalize_options()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 743, in finalize_options
+ep(self)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 750, in _finalize_setup_keywords
+ep.load()(self, ep.name, value)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 219, in cffi_modules
+add_cffi_module(dist, cffi_module)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 49, in add_cffi_module
+execfile(build_file_name, mod_vars)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 25, in execfile
+exec(code, glob, glob)
+File &amp;#34;cairocffi/ffi_build.py&amp;#34;, line 26, in &amp;lt;module&amp;gt;
+ffi = FFI()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/api.py&amp;#34;, line 48, in __init__
+import _cffi_backend as backend
+ImportError: dlopen(/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so, 2): Symbol not found: _ffi_prep_closure
+Referenced from: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+Expected in: flat namespace
+in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+----------------------------------------
+WARNING: Discarding https://files.pythonhosted.org/packages/f7/99/b3a2c6393563ccbe081ffcceb359ec27a6227792c5169604c1bd8128031a/cairocffi-1.1.0.tar.gz#sha256=f1c0c5878f74ac9ccb5d48b2601fcc75390c881ce476e79f4cfedd288b1b05d
+b (from https://pypi.org/simple/cairocffi/) (requires-python:&amp;gt;= 3.5). Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt; Downloading cairocffi-1.0.2.tar.gz (68 kB) [24/677]
+|████████████████████████████████| 68 kB 46.3 MB/s
+ERROR: Command errored out with exit status 1:
+command: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/bin/python3.9 -c &amp;#39;import io, os, sys, setuptools, tokenize; sys.argv[0] = &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-instal
+l-uxwwpx3n/cairocffi_6df35727083e4413bfaa3e41ad38bc09/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;; __file__=&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_6df35727083e4413bfaa3e41ad38bc09/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;;f
+= getattr(tokenize, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;open&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, open)(__file__) if os.path.exists(__file__) else io.StringIO(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;from setuptools import setup; setup()&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);code = f.read().replace(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\r\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);f.close();exec(compi
+le(code, __file__, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;exec&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;))&amp;#39; egg_info --egg-base /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-pip-egg-info-wdq78cuo
+cwd: /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_6df35727083e4413bfaa3e41ad38bc09/
+Complete output (31 lines):
+WARNING: The wheel package is not available.
+Traceback (most recent call last):
+File &amp;#34;&amp;lt;string&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+File &amp;#34;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_6df35727083e4413bfaa3e41ad38bc09/setup.py&amp;#34;, line 10, in &amp;lt;module&amp;gt;
+setup(
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/__init__.py&amp;#34;, line 153, in setup
+return distutils.core.setup(**attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/core.py&amp;#34;, line 108, in setup
+_setup_distribution = dist = klass(attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 434, in __init__
+_Distribution.__init__(self, {
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/dist.py&amp;#34;, line 292, in __init__
+self.finalize_options()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 743, in finalize_options
+ep(self)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 750, in _finalize_setup_keywords
+ep.load()(self, ep.name, value)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 219, in cffi_modules
+add_cffi_module(dist, cffi_module)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 49, in add_cffi_module
+execfile(build_file_name, mod_vars)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 25, in execfile
+exec(code, glob, glob)
+File &amp;#34;cairocffi/ffi_build.py&amp;#34;, line 26, in &amp;lt;module&amp;gt;
+ffi = FFI()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/api.py&amp;#34;, line 48, in __init__
+import _cffi_backend as backend
+ImportError: dlopen(/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so, 2): Symbol not found: _ffi_prep_closure
+Referenced from: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+Expected in: flat namespace
+in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+----------------------------------------
+WARNING: Discarding https://files.pythonhosted.org/packages/0f/0f/7e21b5ddd31b610e46a879c0d21e222dd0fef428c1fc86bbd2bd57fed8a7/cairocffi-1.0.2.tar.gz#sha256=01ac51ae12c4324ca5809ce270f9dd1b67f5166fe63bd3e497e9ea3ca91946f
+f (from https://pypi.org/simple/cairocffi/) (requires-python:&amp;gt;= 3.5). Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt; Downloading cairocffi-1.0.1.tar.gz (68 kB)
+|████████████████████████████████| 68 kB 48.1 MB/s
+ERROR: Command errored out with exit status 1:
+command: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/bin/python3.9 -c &amp;#39;import io, os, sys, setuptools, tokenize; sys.argv[0] = &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-instal
+l-uxwwpx3n/cairocffi_60641da3bfa74b2abbdcfd8f77811245/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;; __file__=&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_60641da3bfa74b2abbdcfd8f77811245/setup.py&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;;f
+= getattr(tokenize, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;open&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, open)(__file__) if os.path.exists(__file__) else io.StringIO(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;from setuptools import setup; setup()&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);code = f.read().replace(&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\r\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;\n&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;);f.close();exec(compi
+le(code, __file__, &amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;exec&amp;#39;&amp;#34;&amp;#39;&amp;#34;&amp;#39;))&amp;#39; egg_info --egg-base /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-pip-egg-info-d6t_qnin
+cwd: /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_60641da3bfa74b2abbdcfd8f77811245/
+Complete output (31 lines):
+WARNING: The wheel package is not available.
+Traceback (most recent call last):
+File &amp;#34;&amp;lt;string&amp;gt;&amp;#34;, line 1, in &amp;lt;module&amp;gt;
+File &amp;#34;/private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/pip-install-uxwwpx3n/cairocffi_60641da3bfa74b2abbdcfd8f77811245/setup.py&amp;#34;, line 10, in &amp;lt;module&amp;gt;
+setup(
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/__init__.py&amp;#34;, line 153, in setup
+return distutils.core.setup(**attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/core.py&amp;#34;, line 108, in setup
+_setup_distribution = dist = klass(attrs)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 434, in __init__
+_Distribution.__init__(self, {
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/lib/python3.9/distutils/dist.py&amp;#34;, line 292, in __init__
+self.finalize_options()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 743, in finalize_options
+ep(self)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/setuptools/dist.py&amp;#34;, line 750, in _finalize_setup_keywords
+ep.load()(self, ep.name, value)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 219, in cffi_modules
+add_cffi_module(dist, cffi_module)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 49, in add_cffi_module
+execfile(build_file_name, mod_vars)
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/setuptools_ext.py&amp;#34;, line 25, in execfile
+exec(code, glob, glob)
+File &amp;#34;cairocffi/ffi_build.py&amp;#34;, line 26, in &amp;lt;module&amp;gt;
+ffi = FFI()
+File &amp;#34;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/cffi/api.py&amp;#34;, line 48, in __init__
+import _cffi_backend as backend
+ImportError: dlopen(/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so, 2): Symbol not found: _ffi_prep_closure
+Referenced from: /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+Expected in: flat namespace
+in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages/_cffi_backend.cpython-39-darwin.so
+----------------------------------------
+WARNING: Discarding https://files.pythonhosted.org/packages/3e/f1/0d1dad825f6ec75d3d79d5673e7b836e7a23bf57fde0028fb8bf252d4259/cairocffi-1.0.1.tar.gz#sha256=9ca49d9bb0a52bd6a8263de137b4818e0889f3cd8d933165fb122669924ae3b
+9 (from https://pypi.org/simple/cairocffi/) (requires-python:&amp;gt;= 3.5). Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output.
+Downloading cairocffi-1.0.0-py3-none-any.whl (88 kB)
+|████████████████████████████████| 88 kB 52.9 MB/s
+Requirement already satisfied: cffi&amp;gt;=1.1.0 in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages (from cairocffi) (1.14.5)
+Requirement already satisfied: pycparser in /Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/envs/coresys/lib/python3.9/site-packages (from cffi&amp;gt;=1.1.0-&amp;gt;cairocffi) (2.20)
+Installing collected packages: cairocffi
+Successfully installed cairocffi-1.0.0
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>pyenv install 3.9.6</title><link>https://hdknr.github.io/blogs/posts/2021/08/76ef9037fc24218bf2a667e4e58017fe/</link><pubDate>Fri, 27 Aug 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/08/76ef9037fc24218bf2a667e4e58017fe/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;% pyenv install 3.9.6
+python-build: use openssl@1.1 from homebrew
+python-build: use readline from homebrew
+Downloading Python-3.9.6.tar.xz...
+-&amp;gt; https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tar.xz
+Installing Python-3.9.6...
+python-build: use readline from homebrew
+python-build: use zlib from xcode sdk
+WARNING: The Python readline extension was not compiled. Missing the GNU readline lib?
+ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?
+Please consult to the Wiki page to fix the problem.
+https://github.com/pyenv/pyenv/wiki/Common-build-problems
+BUILD FAILED (OS X 11.5.2 using python-build 2.0.5-2-gb2eb2d28)
+Inspect or clean up the working tree at /var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/python-build.20210827141959.69396
+Results logged to /var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/python-build.20210827141959.69396.log
+Last 10 log lines:
+./python.exe -E -m ensurepip \
+$ensurepip --root=/ ; \
+fi
+Looking in links: /var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/tmp24q45onf
+Processing /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/tmp24q45onf/setuptools-56.0.0-py3-none-any.whl
+Processing /private/var/folders/m0/27vm0kbd5ys1_rs1l54zmwq00000gq/T/tmp24q45onf/pip-21.1.3-py3-none-any.whl
+Installing collected packages: setuptools, pip
+WARNING: The scripts pip3 and pip3.9 are installed in &amp;#39;/Users/hdknr/.anyenv/envs/pyenv/versions/3.9.6/bin&amp;#39; which is not on PATH.
+Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Successfully installed pip-21.1.3 setuptools-56.0.0
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Homebrew Applie Silicon</title><link>https://hdknr.github.io/blogs/posts/2021/08/4d5857cdd59ed2e26dc82059bb596dde/</link><pubDate>Thu, 26 Aug 2021 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2021/08/4d5857cdd59ed2e26dc82059bb596dde/</guid><description>&lt;pre tabindex="0"&gt;&lt;code&gt;% /bin/bash -c &amp;#34;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&amp;#34;
+==&amp;gt; Checking for `sudo` access (which may request your password).
+==&amp;gt; This script will install:
+/opt/homebrew/bin/brew
+/opt/homebrew/share/doc/homebrew
+/opt/homebrew/share/man/man1/brew.1
+/opt/homebrew/share/zsh/site-functions/_brew
+/opt/homebrew/etc/bash_completion.d/brew
+/opt/homebrew
+==&amp;gt; The following new directories will be created:
+/opt/homebrew/bin
+/opt/homebrew/etc
+/opt/homebrew/include
+/opt/homebrew/lib
+/opt/homebrew/sbin
+/opt/homebrew/share
+/opt/homebrew/var
+/opt/homebrew/opt
+/opt/homebrew/share/zsh
+/opt/homebrew/share/zsh/site-functions
+/opt/homebrew/var/homebrew
+/opt/homebrew/var/homebrew/linked
+/opt/homebrew/Cellar
+/opt/homebrew/Caskroom
+/opt/homebrew/Frameworks
+Press RETURN to continue or any other key to abort
+==&amp;gt; /usr/bin/sudo /bin/mkdir -p /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/sbin /opt/homebrew/share /opt/homebrew/var /opt/homebrew/opt /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions /opt/homebrew/var/homebrew /opt/homebrew/var/homebrew/linked /opt/homebrew/Cellar /opt/homebrew/Caskroom /opt/homebrew/Frameworks
+==&amp;gt; /usr/bin/sudo /bin/chmod u=rwx,g=rwx /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/sbin /opt/homebrew/share /opt/homebrew/var /opt/homebrew/opt /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions /opt/homebrew/var/homebrew /opt/homebrew/var/homebrew/linked /opt/homebrew/Cellar /opt/homebrew/Caskroom /opt/homebrew/Frameworks
+==&amp;gt; /usr/bin/sudo /bin/chmod g-w,o-w /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions
+==&amp;gt; /usr/bin/sudo /usr/sbin/chown hdknr /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/sbin /opt/homebrew/share /opt/homebrew/var /opt/homebrew/opt /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions /opt/homebrew/var/homebrew /opt/homebrew/var/homebrew/linked /opt/homebrew/Cellar /opt/homebrew/Caskroom /opt/homebrew/Frameworks
+==&amp;gt; /usr/bin/sudo /usr/bin/chgrp admin /opt/homebrew/bin /opt/homebrew/etc /opt/homebrew/include /opt/homebrew/lib /opt/homebrew/sbin /opt/homebrew/share /opt/homebrew/var /opt/homebrew/opt /opt/homebrew/share/zsh /opt/homebrew/share/zsh/site-functions /opt/homebrew/var/homebrew /opt/homebrew/var/homebrew/linked /opt/homebrew/Cellar /opt/homebrew/Caskroom /opt/homebrew/Frameworks
+==&amp;gt; /usr/bin/sudo /usr/sbin/chown -R hdknr:admin /opt/homebrew
+==&amp;gt; Downloading and installing Homebrew...
+remote: Enumerating objects: 189971, done.
+remote: Counting objects: 100% (44/44), done.
+remote: Compressing objects: 100% (44/44), done.
+remote: Total 189971 (delta 0), reused 44 (delta 0), pack-reused 189927
+Receiving objects: 100% (189971/189971), 51.67 MiB | 5.76 MiB/s, done.
+Resolving deltas: 100% (140767/140767), done.
+From https://github.com/Homebrew/brew
+* [new branch] automerge-linux -&amp;gt; origin/automerge-linux
+* [new branch] dependabot/bundler/Library/Homebrew/mechanize-2.8.2 -&amp;gt; origin/dependabot/bundler/Library/Homebrew/mechanize-2.8.2
+* [new branch] dependabot/bundler/Library/Homebrew/mini_portile2-2.6.1 -&amp;gt; origin/dependabot/bundler/Library/Homebrew/mini_portile2-2.6.1
+* [new branch] dependabot/bundler/Library/Homebrew/nokogiri-1.12.3 -&amp;gt; origin/dependabot/bundler/Library/Homebrew/nokogiri-1.12.3
+* [new branch] master -&amp;gt; origin/master
+* [new tag] 0.1 -&amp;gt; 0.1
+* [new tag] 0.2 -&amp;gt; 0.2
+* [new tag] 0.3 -&amp;gt; 0.3
+* [new tag] 0.4 -&amp;gt; 0.4
+* [new tag] 0.5 -&amp;gt; 0.5
+* [new tag] 0.6 -&amp;gt; 0.6
+* [new tag] 0.7 -&amp;gt; 0.7
+* [new tag] 0.7.1 -&amp;gt; 0.7.1
+* [new tag] 0.8 -&amp;gt; 0.8
+* [new tag] 0.8.1 -&amp;gt; 0.8.1
+* [new tag] 0.9 -&amp;gt; 0.9
+* [new tag] 0.9.1 -&amp;gt; 0.9.1
+* [new tag] 0.9.2 -&amp;gt; 0.9.2
+* [new tag] 0.9.3 -&amp;gt; 0.9.3
+* [new tag] 0.9.4 -&amp;gt; 0.9.4
+* [new tag] 0.9.5 -&amp;gt; 0.9.5
+* [new tag] 0.9.8 -&amp;gt; 0.9.8
+* [new tag] 0.9.9 -&amp;gt; 0.9.9
+* [new tag] 1.0.0 -&amp;gt; 1.0.0
+* [new tag] 1.0.1 -&amp;gt; 1.0.1
+* [new tag] 1.0.2 -&amp;gt; 1.0.2
+* [new tag] 1.0.3 -&amp;gt; 1.0.3
+* [new tag] 1.0.4 -&amp;gt; 1.0.4
+* [new tag] 1.0.5 -&amp;gt; 1.0.5
+* [new tag] 1.0.6 -&amp;gt; 1.0.6
+* [new tag] 1.0.7 -&amp;gt; 1.0.7
+* [new tag] 1.0.8 -&amp;gt; 1.0.8
+* [new tag] 1.0.9 -&amp;gt; 1.0.9
+* [new tag] 1.1.0 -&amp;gt; 1.1.0
+* [new tag] 1.1.1 -&amp;gt; 1.1.1
+* [new tag] 1.1.10 -&amp;gt; 1.1.10
+* [new tag] 1.1.11 -&amp;gt; 1.1.11
+* [new tag] 1.1.12 -&amp;gt; 1.1.12
+* [new tag] 1.1.13 -&amp;gt; 1.1.13
+* [new tag] 1.1.2 -&amp;gt; 1.1.2
+* [new tag] 1.1.3 -&amp;gt; 1.1.3
+* [new tag] 1.1.4 -&amp;gt; 1.1.4
+* [new tag] 1.1.5 -&amp;gt; 1.1.5
+* [new tag] 1.1.6 -&amp;gt; 1.1.6
+* [new tag] 1.1.7 -&amp;gt; 1.1.7
+* [new tag] 1.1.8 -&amp;gt; 1.1.8
+* [new tag] 1.1.9 -&amp;gt; 1.1.9
+* [new tag] 1.2.0 -&amp;gt; 1.2.0
+* [new tag] 1.2.1 -&amp;gt; 1.2.1
+* [new tag] 1.2.2 -&amp;gt; 1.2.2
+* [new tag] 1.2.3 -&amp;gt; 1.2.3
+* [new tag] 1.2.4 -&amp;gt; 1.2.4
+* [new tag] 1.2.5 -&amp;gt; 1.2.5
+* [new tag] 1.2.6 -&amp;gt; 1.2.6
+* [new tag] 1.3.0 -&amp;gt; 1.3.0
+* [new tag] 1.3.1 -&amp;gt; 1.3.1
+* [new tag] 1.3.2 -&amp;gt; 1.3.2
+* [new tag] 1.3.3 -&amp;gt; 1.3.3
+* [new tag] 1.3.4 -&amp;gt; 1.3.4
+* [new tag] 1.3.5 -&amp;gt; 1.3.5
+* [new tag] 1.3.6 -&amp;gt; 1.3.6
+* [new tag] 1.3.7 -&amp;gt; 1.3.7
+* [new tag] 1.3.8 -&amp;gt; 1.3.8
+* [new tag] 1.3.9 -&amp;gt; 1.3.9
+* [new tag] 1.4.0 -&amp;gt; 1.4.0
+* [new tag] 1.4.1 -&amp;gt; 1.4.1
+* [new tag] 1.4.2 -&amp;gt; 1.4.2
+* [new tag] 1.4.3 -&amp;gt; 1.4.3
+* [new tag] 1.5.0 -&amp;gt; 1.5.0
+* [new tag] 1.5.1 -&amp;gt; 1.5.1
+* [new tag] 1.5.10 -&amp;gt; 1.5.10
+* [new tag] 1.5.11 -&amp;gt; 1.5.11
+* [new tag] 1.5.12 -&amp;gt; 1.5.12
+* [new tag] 1.5.13 -&amp;gt; 1.5.13
+* [new tag] 1.5.14 -&amp;gt; 1.5.14
+* [new tag] 1.5.2 -&amp;gt; 1.5.2
+* [new tag] 1.5.3 -&amp;gt; 1.5.3
+* [new tag] 1.5.4 -&amp;gt; 1.5.4
+* [new tag] 1.5.5 -&amp;gt; 1.5.5
+* [new tag] 1.5.6 -&amp;gt; 1.5.6
+* [new tag] 1.5.7 -&amp;gt; 1.5.7
+* [new tag] 1.5.8 -&amp;gt; 1.5.8
+* [new tag] 1.5.9 -&amp;gt; 1.5.9
+* [new tag] 1.6.0 -&amp;gt; 1.6.0
+* [new tag] 1.6.1 -&amp;gt; 1.6.1
+* [new tag] 1.6.10 -&amp;gt; 1.6.10
+* [new tag] 1.6.11 -&amp;gt; 1.6.11
+* [new tag] 1.6.12 -&amp;gt; 1.6.12
+* [new tag] 1.6.13 -&amp;gt; 1.6.13
+* [new tag] 1.6.14 -&amp;gt; 1.6.14
+* [new tag] 1.6.15 -&amp;gt; 1.6.15
+* [new tag] 1.6.16 -&amp;gt; 1.6.16
+* [new tag] 1.6.17 -&amp;gt; 1.6.17
+* [new tag] 1.6.2 -&amp;gt; 1.6.2
+* [new tag] 1.6.3 -&amp;gt; 1.6.3
+* [new tag] 1.6.4 -&amp;gt; 1.6.4
+* [new tag] 1.6.5 -&amp;gt; 1.6.5
+* [new tag] 1.6.6 -&amp;gt; 1.6.6
+* [new tag] 1.6.7 -&amp;gt; 1.6.7
+* [new tag] 1.6.8 -&amp;gt; 1.6.8
+* [new tag] 1.6.9 -&amp;gt; 1.6.9
+* [new tag] 1.7.0 -&amp;gt; 1.7.0
+* [new tag] 1.7.1 -&amp;gt; 1.7.1
+* [new tag] 1.7.2 -&amp;gt; 1.7.2
+* [new tag] 1.7.3 -&amp;gt; 1.7.3
+* [new tag] 1.7.4 -&amp;gt; 1.7.4
+* [new tag] 1.7.5 -&amp;gt; 1.7.5
+* [new tag] 1.7.6 -&amp;gt; 1.7.6
+* [new tag] 1.7.7 -&amp;gt; 1.7.7
+* [new tag] 1.8.0 -&amp;gt; 1.8.0
+* [new tag] 1.8.1 -&amp;gt; 1.8.1
+* [new tag] 1.8.2 -&amp;gt; 1.8.2
+* [new tag] 1.8.3 -&amp;gt; 1.8.3
+* [new tag] 1.8.4 -&amp;gt; 1.8.4
+* [new tag] 1.8.5 -&amp;gt; 1.8.5
+* [new tag] 1.8.6 -&amp;gt; 1.8.6
+* [new tag] 1.9.0 -&amp;gt; 1.9.0
+* [new tag] 1.9.1 -&amp;gt; 1.9.1
+* [new tag] 1.9.2 -&amp;gt; 1.9.2
+* [new tag] 1.9.3 -&amp;gt; 1.9.3
+* [new tag] 2.0.0 -&amp;gt; 2.0.0
+* [new tag] 2.0.1 -&amp;gt; 2.0.1
+* [new tag] 2.0.2 -&amp;gt; 2.0.2
+* [new tag] 2.0.3 -&amp;gt; 2.0.3
+* [new tag] 2.0.4 -&amp;gt; 2.0.4
+* [new tag] 2.0.5 -&amp;gt; 2.0.5
+* [new tag] 2.0.6 -&amp;gt; 2.0.6
+* [new tag] 2.1.0 -&amp;gt; 2.1.0
+* [new tag] 2.1.1 -&amp;gt; 2.1.1
+* [new tag] 2.1.10 -&amp;gt; 2.1.10
+* [new tag] 2.1.11 -&amp;gt; 2.1.11
+* [new tag] 2.1.12 -&amp;gt; 2.1.12
+* [new tag] 2.1.13 -&amp;gt; 2.1.13
+* [new tag] 2.1.14 -&amp;gt; 2.1.14
+* [new tag] 2.1.15 -&amp;gt; 2.1.15
+* [new tag] 2.1.16 -&amp;gt; 2.1.16
+* [new tag] 2.1.2 -&amp;gt; 2.1.2
+* [new tag] 2.1.3 -&amp;gt; 2.1.3
+* [new tag] 2.1.4 -&amp;gt; 2.1.4
+* [new tag] 2.1.5 -&amp;gt; 2.1.5
+* [new tag] 2.1.6 -&amp;gt; 2.1.6
+* [new tag] 2.1.7 -&amp;gt; 2.1.7
+* [new tag] 2.1.8 -&amp;gt; 2.1.8
+* [new tag] 2.1.9 -&amp;gt; 2.1.9
+* [new tag] 2.2.0 -&amp;gt; 2.2.0
+* [new tag] 2.2.1 -&amp;gt; 2.2.1
+* [new tag] 2.2.10 -&amp;gt; 2.2.10
+* [new tag] 2.2.11 -&amp;gt; 2.2.11
+* [new tag] 2.2.12 -&amp;gt; 2.2.12
+* [new tag] 2.2.13 -&amp;gt; 2.2.13
+* [new tag] 2.2.14 -&amp;gt; 2.2.14
+* [new tag] 2.2.15 -&amp;gt; 2.2.15
+* [new tag] 2.2.16 -&amp;gt; 2.2.16
+* [new tag] 2.2.17 -&amp;gt; 2.2.17
+* [new tag] 2.2.2 -&amp;gt; 2.2.2
+* [new tag] 2.2.3 -&amp;gt; 2.2.3
+* [new tag] 2.2.4 -&amp;gt; 2.2.4
+* [new tag] 2.2.5 -&amp;gt; 2.2.5
+* [new tag] 2.2.6 -&amp;gt; 2.2.6
+* [new tag] 2.2.7 -&amp;gt; 2.2.7
+* [new tag] 2.2.8 -&amp;gt; 2.2.8
+* [new tag] 2.2.9 -&amp;gt; 2.2.9
+* [new tag] 2.3.0 -&amp;gt; 2.3.0
+* [new tag] 2.4.0 -&amp;gt; 2.4.0
+* [new tag] 2.4.1 -&amp;gt; 2.4.1
+* [new tag] 2.4.10 -&amp;gt; 2.4.10
+* [new tag] 2.4.11 -&amp;gt; 2.4.11
+* [new tag] 2.4.12 -&amp;gt; 2.4.12
+* [new tag] 2.4.13 -&amp;gt; 2.4.13
+* [new tag] 2.4.14 -&amp;gt; 2.4.14
+* [new tag] 2.4.15 -&amp;gt; 2.4.15
+* [new tag] 2.4.16 -&amp;gt; 2.4.16
+* [new tag] 2.4.2 -&amp;gt; 2.4.2
+* [new tag] 2.4.3 -&amp;gt; 2.4.3
+* [new tag] 2.4.4 -&amp;gt; 2.4.4
+* [new tag] 2.4.5 -&amp;gt; 2.4.5
+* [new tag] 2.4.6 -&amp;gt; 2.4.6
+* [new tag] 2.4.7 -&amp;gt; 2.4.7
+* [new tag] 2.4.8 -&amp;gt; 2.4.8
+* [new tag] 2.4.9 -&amp;gt; 2.4.9
+* [new tag] 2.5.0 -&amp;gt; 2.5.0
+* [new tag] 2.5.1 -&amp;gt; 2.5.1
+* [new tag] 2.5.10 -&amp;gt; 2.5.10
+* [new tag] 2.5.11 -&amp;gt; 2.5.11
+* [new tag] 2.5.12 -&amp;gt; 2.5.12
+* [new tag] 2.5.2 -&amp;gt; 2.5.2
+* [new tag] 2.5.3 -&amp;gt; 2.5.3
+* [new tag] 2.5.4 -&amp;gt; 2.5.4
+* [new tag] 2.5.5 -&amp;gt; 2.5.5
+* [new tag] 2.5.6 -&amp;gt; 2.5.6
+* [new tag] 2.5.7 -&amp;gt; 2.5.7
+* [new tag] 2.5.8 -&amp;gt; 2.5.8
+* [new tag] 2.5.9 -&amp;gt; 2.5.9
+* [new tag] 2.6.0 -&amp;gt; 2.6.0
+* [new tag] 2.6.1 -&amp;gt; 2.6.1
+* [new tag] 2.6.2 -&amp;gt; 2.6.2
+* [new tag] 2.7.0 -&amp;gt; 2.7.0
+* [new tag] 2.7.1 -&amp;gt; 2.7.1
+* [new tag] 2.7.2 -&amp;gt; 2.7.2
+* [new tag] 2.7.3 -&amp;gt; 2.7.3
+* [new tag] 2.7.4 -&amp;gt; 2.7.4
+* [new tag] 2.7.5 -&amp;gt; 2.7.5
+* [new tag] 2.7.6 -&amp;gt; 2.7.6
+* [new tag] 2.7.7 -&amp;gt; 2.7.7
+* [new tag] 3.0.0 -&amp;gt; 3.0.0
+* [new tag] 3.0.1 -&amp;gt; 3.0.1
+* [new tag] 3.0.10 -&amp;gt; 3.0.10
+* [new tag] 3.0.11 -&amp;gt; 3.0.11
+* [new tag] 3.0.2 -&amp;gt; 3.0.2
+* [new tag] 3.0.3 -&amp;gt; 3.0.3
+* [new tag] 3.0.4 -&amp;gt; 3.0.4
+* [new tag] 3.0.5 -&amp;gt; 3.0.5
+* [new tag] 3.0.6 -&amp;gt; 3.0.6
+* [new tag] 3.0.7 -&amp;gt; 3.0.7
+* [new tag] 3.0.8 -&amp;gt; 3.0.8
+* [new tag] 3.0.9 -&amp;gt; 3.0.9
+* [new tag] 3.1.0 -&amp;gt; 3.1.0
+* [new tag] 3.1.1 -&amp;gt; 3.1.1
+* [new tag] 3.1.10 -&amp;gt; 3.1.10
+* [new tag] 3.1.11 -&amp;gt; 3.1.11
+* [new tag] 3.1.12 -&amp;gt; 3.1.12
+* [new tag] 3.1.2 -&amp;gt; 3.1.2
+* [new tag] 3.1.3 -&amp;gt; 3.1.3
+* [new tag] 3.1.4 -&amp;gt; 3.1.4
+* [new tag] 3.1.5 -&amp;gt; 3.1.5
+* [new tag] 3.1.6 -&amp;gt; 3.1.6
+* [new tag] 3.1.7 -&amp;gt; 3.1.7
+* [new tag] 3.1.8 -&amp;gt; 3.1.8
+* [new tag] 3.1.9 -&amp;gt; 3.1.9
+* [new tag] 3.2.0 -&amp;gt; 3.2.0
+* [new tag] 3.2.1 -&amp;gt; 3.2.1
+* [new tag] 3.2.2 -&amp;gt; 3.2.2
+* [new tag] 3.2.3 -&amp;gt; 3.2.3
+* [new tag] 3.2.4 -&amp;gt; 3.2.4
+* [new tag] 3.2.5 -&amp;gt; 3.2.5
+* [new tag] 3.2.6 -&amp;gt; 3.2.6
+* [new tag] 3.2.7 -&amp;gt; 3.2.7
+* [new tag] 3.2.8 -&amp;gt; 3.2.8
+* [new tag] 3.2.9 -&amp;gt; 3.2.9
+HEAD is now at 858f3fbaa Merge pull request #11921 from Homebrew/dependabot/bundler/Library/Homebrew/sorbet-0.5.9070
+==&amp;gt; Tapping homebrew/core
+remote: Enumerating objects: 1030054, done.
+remote: Counting objects: 100% (138/138), done.
+remote: Compressing objects: 100% (67/67), done.
+remote: Total 1030054 (delta 77), reused 132 (delta 71), pack-reused 1029916
+Receiving objects: 100% (1030054/1030054), 386.75 MiB | 19.32 MiB/s, done.
+Resolving deltas: 100% (705903/705903), done.
+From https://github.com/Homebrew/homebrew-core
+* [new branch] master -&amp;gt; origin/master
+HEAD is now at ad32cdaac0 ezstream: update 1.0.2 bottle.
+Warning: /opt/homebrew/bin is not in your PATH.
+Instructions on how to configure your shell for Homebrew
+can be found in the &amp;#39;Next steps&amp;#39; section below.
+==&amp;gt; Installation successful!
+==&amp;gt; Homebrew has enabled anonymous aggregate formulae and cask analytics.
+Read the analytics documentation (and how to opt-out) here:
+https://docs.brew.sh/Analytics
+No analytics data has been sent yet (or will be during this `install` run).
+==&amp;gt; Homebrew is run entirely by unpaid volunteers. Please consider donating:
+https://github.com/Homebrew/brew#donations
+==&amp;gt; Next steps:
+- Run these two commands in your terminal to add Homebrew to your PATH:
+echo &amp;#39;eval &amp;#34;$(/opt/homebrew/bin/brew shellenv)&amp;#34;&amp;#39; &amp;gt;&amp;gt; /Users/hdknr/.zprofile
+eval &amp;#34;$(/opt/homebrew/bin/brew shellenv)&amp;#34;
+- Run `brew help` to get started
+- Further documentation:
+https://docs.brew.sh
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Homebrew</title><link>https://hdknr.github.io/blogs/posts/2015/07/89dea9127fed7d93d67d/</link><pubDate>Fri, 31 Jul 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/07/89dea9127fed7d93d67d/</guid><description>&lt;h2 id="muliti-admin"&gt;Muliti-Admin&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.rubycoloredglasses.com/2014/06/sharing-administrative-rights-with-homebrew/"&gt;Sharing Administrative Rights with Homebrew&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dseditgroup -o edit -a hide -t user admin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo chmod -R g+w /usr/local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo chmod -R g+w /Library/Caches/Homebrew
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>PNGファイルの連結</title><link>https://hdknr.github.io/blogs/posts/2015/03/6dc08ad7738383e2d1b5/</link><pubDate>Sun, 01 Mar 2015 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2015/03/6dc08ad7738383e2d1b5/</guid><description>&lt;h2 id="imagemagick-install"&gt;imagemagick install&lt;/h2&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;$ brew install ImageMagick
+==&amp;gt; Downloading https://homebrew.bintray.com/bottles/imagemagick-6.9.0-3.yosemite.bottle.tar.gz
+######################################################################## 100.0%
+==&amp;gt; Pouring imagemagick-6.9.0-3.yosemite.bottle.tar.gz
+Error: The `brew link` step did not complete successfully
+The formula built, but is not symlinked into /usr/local
+Could not symlink bin/convert
+Target /usr/local/bin/convert
+already exists. You may want to remove it:
+rm &amp;#39;/usr/local/bin/convert&amp;#39;
+To force the link and overwrite all conflicting files:
+brew link --overwrite imagemagick
+To list all files that would be deleted:
+brew link --overwrite --dry-run imagemagick
+Possible conflicting files are:
+/usr/local/bin/convert
+/usr/local/share/man/man1/convert.1
+==&amp;gt; Summary
+🍺 /usr/local/Cellar/imagemagick/6.9.0-3: 1440 files, 22M
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;$ rm &amp;#39;/usr/local/bin/convert&amp;#39;
+override rwxr-xr-x root/wheel for /usr/local/bin/convert? yes
+$ ls /usr/local/bin/convert
+ls: /usr/local/bin/convert: No such file or directory
+$ brew link --overwrite imagemagick
+Linking /usr/local/Cellar/imagemagick/6.9.0-3... 71 symlinks created
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>

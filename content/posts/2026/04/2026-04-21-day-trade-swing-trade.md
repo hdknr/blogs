@@ -213,7 +213,7 @@ tags: ["株式投資", "デイトレード", "スイングトレード", "スキ
 - [損切りルール「あとから変更」はNG 利益確定、目標株価の決め方は - 日本経済新聞](https://www.nikkei.com/article/DGXZQOUB238OE0T20C25A5000000/)
 - [How Long is a Swing Trade Supposed to Last? - VectorVest](https://www.vectorvest.com/blog/swing-trading/how-long-is-a-swing-trade/)
 - [What Is the Best Stop Or Exit for Swing Trading? - QuantifiedStrategies](https://www.quantifiedstrategies.com/what-is-the-best-stop-or-exit-for-swing-trading/)
-- [Momentum Swing Trading Strategy: 2026 Trend Guide - AlphaEx Capital](https://www.alphaexcapital.com/stocks/stock-investing-strategies/short-term-stock-trading-strategies/momentum-swing-trading-strategy)
+- Momentum Swing Trading Strategy: 2026 Trend Guide - AlphaEx Capital
 - [Trend Trading Strategy for High Momentum Stocks (with ATR-based entries and exits) - Trade That Swing](https://tradethatswing.com/trend-trading-strategy-for-high-momentum-stocks-atr-based/)
 - [How to Use ATR for Volatility-Based Stop-Losses - LuxAlgo](https://www.luxalgo.com/blog/how-to-use-atr-for-volatility-based-stop-losses/)
 - [株のスイングトレードで勝つ手法10選｜初心者向けのコツをプロが解説](https://crexgroup.com/ja/sec/stock-investment/stock-swing-trade-methods/)

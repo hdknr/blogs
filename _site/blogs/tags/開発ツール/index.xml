@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>開発ツール on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB/</link><description>Recent content in 開発ツール on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 23 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E9%96%8B%E7%99%BA%E3%83%84%E3%83%BC%E3%83%AB/index.xml" rel="self" type="application/rss+xml"/><item><title>APM（Agent Package Manager）</title><link>https://hdknr.github.io/blogs/wiki/tools/apm/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/apm/</guid><description>AI エージェントの設定（スキル・プロンプト・MCP サーバーなど）を apm.yml で宣言的に管理・共有する Microsoft 製 OSS ツール</description></item><item><title>Graphite</title><link>https://hdknr.github.io/blogs/wiki/tools/graphite/</link><pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/wiki/tools/graphite/</guid><description>スタックドPR・マージキュー・AI コードレビューで AI ファースト開発を加速する GitHub PR ワークフロー拡張プラットフォーム</description></item><item><title>APM（Agent Package Manager）— AI エージェント設定を npm のように管理するツール</title><link>https://hdknr.github.io/blogs/posts/2026/04/apm-agent-package-manager/</link><pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/apm-agent-package-manager/</guid><description>&lt;p&gt;フロントエンドエキスパートの mizchi さんが「チームでの skills 共有に apm いいじゃん。採用」と &lt;a href="https://x.com/mizchi/status/2044667087290032202"&gt;X にポスト&lt;/a&gt;して話題になった &lt;a href="https://github.com/microsoft/apm"&gt;APM（Agent Package Manager）&lt;/a&gt;。Microsoft がオープンソースで開発しているこのツールは、AI エージェントの設定を &lt;code&gt;package.json&lt;/code&gt; のように宣言的に管理・共有できます。&lt;/p&gt;
+&lt;h2 id="apm-とは"&gt;APM とは&lt;/h2&gt;
+&lt;p&gt;APM は &lt;strong&gt;AI エージェント向けの依存関係マネージャー&lt;/strong&gt;です。&lt;code&gt;npm&lt;/code&gt; や &lt;code&gt;pip&lt;/code&gt; がライブラリ依存を管理するように、APM はエージェントが必要とするコンテキスト（スキル、プロンプト、プラグイン、MCP サーバーなど）を &lt;code&gt;apm.yml&lt;/code&gt; に宣言して管理します。&lt;/p&gt;
+&lt;p&gt;対応エージェント:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;GitHub Copilot&lt;/li&gt;
+&lt;li&gt;Claude Code&lt;/li&gt;
+&lt;li&gt;Cursor&lt;/li&gt;
+&lt;li&gt;OpenCode&lt;/li&gt;
+&lt;li&gt;Codex CLI&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="解決する問題"&gt;解決する問題&lt;/h3&gt;
+&lt;p&gt;AI コーディングエージェントを使うには、標準設定・プロンプト・スキル・プラグインといったコンテキストが必要ですが、現状は開発者が各自で手動セットアップしています。移植性がなく、再現性もありません。&lt;/p&gt;
+&lt;p&gt;APM を使えば、プロジェクトに &lt;code&gt;apm.yml&lt;/code&gt; を 1 つ置くだけで、リポジトリをクローンした全員が同じエージェント環境を即座に再現できます。&lt;/p&gt;
+&lt;h2 id="基本的な使い方"&gt;基本的な使い方&lt;/h2&gt;
+&lt;h3 id="インストール"&gt;インストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# macOS / Linux&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -sSL https://aka.ms/apm-unix | sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Homebrew&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install microsoft/apm/apm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# pip&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pip install apm-cli
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="apmyml-の設定例"&gt;apm.yml の設定例&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;your-project&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1.0.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;dependencies&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;apm&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# 任意のリポジトリからスキルを取得&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;anthropics/skills/skills/frontend-design&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# プラグイン&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;github/awesome-copilot/plugins/context-engineering&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# エージェントプリミティブ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;github/awesome-copilot/agents/api-architect.agent.md&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# バージョン指定した APM パッケージ&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;microsoft/apm-sample-package#v1.0.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="セットアップ"&gt;セットアップ&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone &amp;lt;org/repo&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd &amp;lt;repo&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apm install &lt;span style="color:#75715e"&gt;# エージェント設定が一括セットアップされる&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="マーケットプレイスからのインストール"&gt;マーケットプレイスからのインストール&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apm marketplace add github/awesome-copilot
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apm install azure-cloud-development@awesome-copilot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="主な機能"&gt;主な機能&lt;/h2&gt;
+&lt;h3 id="1-つのマニフェストで全対応"&gt;1 つのマニフェストで全対応&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;apm.yml&lt;/code&gt; で以下をすべて管理できます:&lt;/p&gt;</description></item><item><title>Claude Code、1日でアプデ3連発 — Routines・新 Desktop・ストリーム安定性</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-code-routines-desktop-update/</link><pubDate>Wed, 15 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-code-routines-desktop-update/</guid><description>&lt;p&gt;2026年4月14日、Anthropic が Claude Code に&lt;strong&gt;3つの大型アップデートを同日リリース&lt;/strong&gt;した。それぞれ独立したアップデートながら、組み合わさることで「AI を常時活用するインフラ」としての完成度が大きく高まっている。&lt;/p&gt;
+&lt;h2 id="アップデート1-routines--mac-オフラインでも自動実行"&gt;アップデート1: Routines — Mac オフラインでも自動実行&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Routines&lt;/strong&gt; は、Claude Code エージェントをクラウド上でスケジュール実行できる機能だ。&lt;/p&gt;
+&lt;p&gt;これまで Claude Code をバックグラウンドで自動実行するには、PC を常時起動し続けるか、別途サーバーを用意する必要があった。Routines はその制約を取り払う。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;cron / API / GitHub イベント&lt;/strong&gt;など複数のトリガー方式に対応&lt;/li&gt;
+&lt;li&gt;Anthropic のクラウド上で実行されるため、&lt;strong&gt;Mac がオフラインでも動作する&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;リポジトリや外部サービスとの接続設定のみで即稼働&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;毎朝定時にレポートを生成する、PR が作られたら自動でコードレビューを走らせる——そうしたワークフローが、自前サーバーなしで実現できる。&lt;/p&gt;
+&lt;h2 id="アップデート2-新-desktop--複数セッションの並列管理"&gt;アップデート2: 新 Desktop — 複数セッションの並列管理&lt;/h2&gt;
+&lt;p&gt;Claude Code の Desktop アプリが刷新された。最大の変更点は&lt;strong&gt;複数セッションの同時管理&lt;/strong&gt;だ。&lt;/p&gt;
+&lt;p&gt;従来の Claude Code は基本的に「1つのターミナルで1つのタスク」という使い方が中心だった。新 Desktop ではウィンドウやセッションを切り替えながら、複数の作業を並列で進められるようになった。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;複数のリポジトリや Issue を同時に扱う際のコンテキスト切り替えが容易&lt;/li&gt;
+&lt;li&gt;セッションの状態を保持したまま別タスクに移行可能&lt;/li&gt;
+&lt;li&gt;大規模プロジェクトや複数プロジェクトを掛け持ちするエンジニアに特に有効&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="アップデート3-ストリーム5分タイムアウトの安定性強化"&gt;アップデート3: ストリーム5分タイムアウトの安定性強化&lt;/h2&gt;
+&lt;p&gt;長時間のタスク実行中に接続が切れる問題が、このアップデートで改善された。&lt;/p&gt;
+&lt;p&gt;Claude Code は複雑なコード生成・解析・エージェント処理を行う際、処理時間が数分を超えることがある。従来のストリーム接続はタイムアウトが発生しやすく、長尺タスクの信頼性が課題だった。&lt;/p&gt;
+&lt;p&gt;今回の改善により、&lt;strong&gt;5分を超える処理でも安定してストリームを維持&lt;/strong&gt;できるようになった。Routines による長時間バックグラウンド処理との組み合わせで、より重厚なタスクを任せられる基盤が整った。&lt;/p&gt;
+&lt;h2 id="3つのアップデートが示す方向性"&gt;3つのアップデートが示す方向性&lt;/h2&gt;
+&lt;p&gt;これら3つの変更を並べると、Anthropic の意図が見えてくる。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;アップデート&lt;/th&gt;
+&lt;th&gt;解決する課題&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Routines&lt;/td&gt;
+&lt;td&gt;「人間が起動する」制約の除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;新 Desktop&lt;/td&gt;
+&lt;td&gt;「1タスクずつ」制約の除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ストリーム安定性&lt;/td&gt;
+&lt;td&gt;「短時間タスクのみ」制約の除去&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;それぞれが「Claude Code を使う上でのボトルネック」を1つずつ潰している。偶然の同日リリースではなく、&lt;strong&gt;統合されたロードマップの一部&lt;/strong&gt;として設計されたアップデートだと考えると納得感がある。&lt;/p&gt;</description></item><item><title>Claude Code 新機能「Auto Mode」完全解説</title><link>https://hdknr.github.io/blogs/posts/2026/03/claude-code-auto-mode/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/claude-code-auto-mode/</guid><description>&lt;p&gt;これまでClaude Codeを使っていて「許可ボタン押すのめんどくさすぎ問題」にイラッとしてた人、朗報です。Claude Codeに新機能「Auto Mode」が追加されました。&lt;/p&gt;
+&lt;p&gt;「全部自動でやってくれるやつでしょ？」と思った人、半分正解で半分不正解。&lt;/p&gt;
+&lt;p&gt;Auto Modeは「Claude自身がAI判断で、この操作は許可していいかどうかを決める」モードなので、全部無条件に自動承認するわけじゃないんです。ここ、めちゃくちゃ大事。&lt;/p&gt;
+&lt;h2 id="そもそもなぜauto-modeが必要だったのか"&gt;そもそもなぜAuto Modeが必要だったのか&lt;/h2&gt;
+&lt;p&gt;Claude Codeはファイルの編集やコマンドの実行のたびに「これやっていい？」と確認してきますよね。&lt;/p&gt;
+&lt;p&gt;1回2回ならいいけど、長時間のコーディングだと10回20回と確認が出る。正直めんどくさい。&lt;/p&gt;
+&lt;p&gt;これまでClaude Codeで「確認をスキップしたい人」には2つの選択肢しかありませんでした。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Auto-Accept Mode&lt;/strong&gt; → ファイル編集だけ自動。コマンド系は毎回確認が出る&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dangerously Skip Permissions&lt;/strong&gt; → 全部ノーチェック。かーなーり危険なやつ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり「ちょうどいい中間」がなかったんです。ファイル編集だけ自動じゃ足りないけど、全部ノーチェックは怖い。この隙間を埋めるのが Auto Mode。&lt;/p&gt;
+&lt;h2 id="auto-modeの仕組み"&gt;Auto Modeの仕組み&lt;/h2&gt;
+&lt;p&gt;Auto Modeでは、Claude自身が操作ごとに「これは安全か？」をAIが判断します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;プロジェクト内のファイル読み書き&lt;/strong&gt; → 安全と判断して自動承認&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;外部ネットワークへのアクセスやシステムに影響するコマンド&lt;/strong&gt; → 危険と判断して確認を出す&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;つまり人間が毎回「Yes / No」を押す代わりに、Claudeが代わりに判断してくれる仕組み。&lt;/p&gt;
+&lt;h3 id="注意点"&gt;注意点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;AI判断にトークンを使うので、コストが少し増える&lt;/li&gt;
+&lt;li&gt;判断が完璧とは限らない。Anthropic公式も「隔離環境での使用を推奨」としている&lt;/li&gt;
+&lt;li&gt;あくまでリサーチプレビュー（研究段階のお試し版）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="auto-modeの始め方"&gt;Auto Modeの始め方&lt;/h2&gt;
+&lt;p&gt;ターミナルでClaude Codeを使っている場合は、以下のどちらかで起動します。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude --enable-auto-mode
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# または&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;claude --permission-mode auto
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;どちらでもOKです。&lt;/p&gt;
+&lt;h3 id="vs-codeで使う場合の注意"&gt;VS Codeで使う場合の注意&lt;/h3&gt;
+&lt;p&gt;VS Codeの拡張機能でClaude Codeを使っている場合は、Auto Modeは使えないようです（2026年3月時点）。&lt;/p&gt;</description></item></channel></rss>

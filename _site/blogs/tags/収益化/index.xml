@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>収益化 on hdknr blog</title><link>https://hdknr.github.io/blogs/tags/%E5%8F%8E%E7%9B%8A%E5%8C%96/</link><description>Recent content in 収益化 on hdknr blog</description><generator>Hugo -- 0.161.1</generator><language>ja</language><lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://hdknr.github.io/blogs/tags/%E5%8F%8E%E7%9B%8A%E5%8C%96/index.xml" rel="self" type="application/rss+xml"/><item><title>Claude + YouTube Shorts で顔出しなし・編集なしの自動収益化 — バイラル動画を量産する実践プロンプト術</title><link>https://hdknr.github.io/blogs/posts/2026/04/claude-youtube-shorts-automation/</link><pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/04/claude-youtube-shorts-automation/</guid><description>&lt;p&gt;千寻（@Crypto_QianXun）さんが2026年4月のポストで紹介した「Claude + YouTube Shorts = 自動収益化」という手法が注目を集めている。&lt;strong&gt;カメラなし・編集なし・顔出しなし&lt;/strong&gt; でバイラルショート動画を量産するアプローチだ。&lt;/p&gt;
+&lt;p&gt;この記事では、そのコンセプトをもとに、Claude を使った YouTube Shorts コンテンツ自動生成のフローと実践的なプロンプト例・Python コードを解説する。&lt;/p&gt;
+&lt;h2 id="youtube-shorts-アルゴリズムが評価する要素--顔出しなしでも収益化できる理由"&gt;YouTube Shorts アルゴリズムが評価する要素 — 顔出しなしでも収益化できる理由&lt;/h2&gt;
+&lt;p&gt;YouTube Shorts のアルゴリズムは &lt;strong&gt;視聴継続率・エンゲージメント&lt;/strong&gt; をコンテンツ品質の代理指標として評価する。次の3点が鍵になる。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;フック（冒頭3秒）&lt;/strong&gt; で視聴者を引き込めるか&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;情報密度&lt;/strong&gt; が高く最後まで見られるか&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;感情を動かす&lt;/strong&gt; テキスト・ナレーションがあるか&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;これらは人間が画面に映らなくても Claude が生成したスクリプトで十分に実現できる。AI 音声と AI 生成画像/映像を組み合わせれば、顔出し不要のチャンネルが成立する。&lt;/p&gt;
+&lt;h2 id="claude-を使ったコンテンツ生成フロー"&gt;Claude を使ったコンテンツ生成フロー&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://hdknr.github.io/blogs/images/youtube-shorts-automation-pipeline.png" alt="Claude スクリプト生成から AI 音声合成・映像生成・自動編集を経て YouTube Shorts にアップロードする5段階の自動化パイプライン"&gt;&lt;/p&gt;
+&lt;p&gt;Claude が担うのは最初のスクリプト生成だが、これがコンテンツ全体の品質を左右する最重要ステップだ。&lt;/p&gt;
+&lt;h2 id="claude-でバイラル-shorts-スクリプトを生成するプロンプトの型"&gt;Claude でバイラル Shorts スクリプトを生成するプロンプトの型&lt;/h2&gt;
+&lt;h3 id="1-フック特化型プロンプト"&gt;1. フック特化型プロンプト&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 1
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 2
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 3
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 4
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 5
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 6
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 7
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 8
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt; 9
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;10
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;あなたは YouTube Shorts のバイラル専門家です。
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;トピック：[テーマ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;以下の構成で60秒のスクリプトを書いてください：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 冒頭3秒：視聴者が思わず止まる衝撃的な問いかけ or 事実
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 本編45秒：テンポよく箇条書きで展開
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- ラスト12秒：CTA（コメント誘導 or 保存促進）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;制約：
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 一文は短く（15文字以内）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 数字を多用する（例：「94%の人が知らない」）
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;- 感情語を入れる（驚き・不安・希望）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="2-ジャンルバイラル要素の組み合わせ型"&gt;2. ジャンル×バイラル要素の組み合わせ型&lt;/h3&gt;
+&lt;p&gt;バイラルになりやすいジャンルとその鉄板フレーズを Claude にコンテキストとして渡してスクリプトを生成させる：&lt;/p&gt;</description></item><item><title>OpenClaw で YouTube 運用を全自動化? 「月1000万円」の主張を技術的に検証する</title><link>https://hdknr.github.io/blogs/posts/2026/03/openclaw-youtube-automation/</link><pubDate>Fri, 27 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/openclaw-youtube-automation/</guid><description>&lt;p&gt;「1ヶ月後のYouTubeはOpenClawが全て運用し『月1000万円』収益を上げるアカウントが大量発生する」——こんな投稿が X（旧 Twitter）で話題になっています。本当にそこまでできるのか、OpenClaw の技術的な能力と YouTube 運用の現実を照らし合わせて検証します。&lt;/p&gt;
+&lt;h2 id="元の主張の要約"&gt;元の主張の要約&lt;/h2&gt;
+&lt;p&gt;X ユーザー &lt;a href="https://x.com/gagarot200"&gt;@gagarot200&lt;/a&gt; の投稿では、以下のような主張がなされています:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;海外では既に 2000 万円を稼いでいるケースがある&lt;/li&gt;
+&lt;li&gt;勝負のポイントは編集技術ではなく「企画設計」「視聴維持率」「CTR改善」「投稿導線の最適化」&lt;/li&gt;
+&lt;li&gt;OpenClaw で競合分析→台本生成→素材選定→動画編集→サムネイル量産→投稿→数値分析を一気通貫で回せる&lt;/li&gt;
+&lt;li&gt;個人でもチーム運用レベルの全自動化が可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="openclaw-とは"&gt;OpenClaw とは&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/openclaw/openclaw"&gt;OpenClaw&lt;/a&gt; は、GitHub で 34 万スター以上を獲得しているオープンソースの AI エージェントフレームワークです。ローカルマシン上で動作し、ブラウザ操作・ファイル読み書き・シェルコマンド実行・cron ジョブなどを自律的に実行できます。WhatsApp、Telegram、Slack、Discord など多数のメッセージングプラットフォームに対応しています。&lt;/p&gt;
+&lt;h2 id="技術的にできることとできないこと"&gt;技術的に「できること」と「できないこと」&lt;/h2&gt;
+&lt;h3 id="openclaw-で実現可能な部分"&gt;OpenClaw で実現可能な部分&lt;/h3&gt;
+&lt;p&gt;OpenClaw の Skills（プラグイン）機能とブラウザ自動化を組み合わせると、以下のタスクは技術的に実現可能です:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;タスク&lt;/th&gt;
+&lt;th&gt;実現方法&lt;/th&gt;
+&lt;th&gt;実用度&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;競合チャンネル分析&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;YouTube Data API + ブラウザスクレイピング&lt;/td&gt;
+&lt;td&gt;◎&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;台本生成&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;LLM による構成生成&lt;/td&gt;
+&lt;td&gt;◎&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;サムネイル量産&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;画像生成 AI + テンプレート自動適用&lt;/td&gt;
+&lt;td&gt;○&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;投稿スケジューリング&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;YouTube Data API / ブラウザ自動化&lt;/td&gt;
+&lt;td&gt;○&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;数値分析・レポート&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;YouTube Analytics API からのデータ取得・分析&lt;/td&gt;
+&lt;td&gt;◎&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;CTR / 視聴維持率の改善提案&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;分析データを LLM にフィードバック&lt;/td&gt;
+&lt;td&gt;○&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="現状では難しい部分"&gt;現状では難しい部分&lt;/h3&gt;
+&lt;p&gt;一方で、以下の部分には大きなハードルがあります:&lt;/p&gt;</description></item><item><title>月商100〜300万の作り方は2パターンしかない — 「1本で100万」vs「20万×5本」</title><link>https://hdknr.github.io/blogs/posts/2026/03/monthly-revenue-two-patterns/</link><pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate><guid>https://hdknr.github.io/blogs/posts/2026/03/monthly-revenue-two-patterns/</guid><description>&lt;p&gt;株式会社SWIFT代表の井口亮平氏（&lt;a href="https://x.com/Ryohei_Iguchi"&gt;@Ryohei_Iguchi&lt;/a&gt;）がX（旧Twitter）で公開した記事が、月商100〜300万円を目指すフリーランスや小規模事業者にとって示唆に富む内容だったので紹介する。&lt;/p&gt;
+&lt;h2 id="2つのパターン"&gt;2つのパターン&lt;/h2&gt;
+&lt;p&gt;月商100〜300万円を作る方法は、突き詰めると &lt;strong&gt;2パターン&lt;/strong&gt; しかないという。&lt;/p&gt;
+&lt;h3 id="パターン1-100万を1本取る"&gt;パターン1: 100万を1本取る&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;高単価案件を1本受注する戦略&lt;/li&gt;
+&lt;li&gt;例: コンサルティング、システム開発、ハイエンドなクリエイティブ制作&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メリット&lt;/strong&gt;: クライアント管理がシンプル、1案件に集中できる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;デメリット&lt;/strong&gt;: 案件が途切れたときのリスクが大きい、営業コストが高い&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="パターン2-20万を5本積む"&gt;パターン2: 20万を5本積む&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;中単価の案件を複数積み上げる戦略&lt;/li&gt;
+&lt;li&gt;例: 月額制のSNS運用代行、サブスク型サービス、定期的な制作案件&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;メリット&lt;/strong&gt;: 収益が安定しやすい、1案件がなくなっても致命傷にならない&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;デメリット&lt;/strong&gt;: マルチタスクの管理能力が必要、スケーリングに限界がある&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="どちらを選ぶべきか"&gt;どちらを選ぶべきか&lt;/h2&gt;
+&lt;p&gt;どちらが正解というわけではなく、自分のスキルセットや事業の性質に合ったパターンを選ぶことが重要だ。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;専門性が高い人&lt;/strong&gt; → パターン1（高単価×少数）が向いている&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;オペレーションが得意な人&lt;/strong&gt; → パターン2（中単価×複数）で安定収益を作りやすい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;実際には、パターン2で安定した基盤を作りつつ、パターン1の高単価案件を狙うハイブリッド型が現実的なアプローチになることも多い。&lt;/p&gt;
+&lt;h2 id="エンジニアフリーランスへの示唆"&gt;エンジニア・フリーランスへの示唆&lt;/h2&gt;
+&lt;p&gt;エンジニアやIT系フリーランスの場合:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;パターン1&lt;/strong&gt;: 技術顧問、アーキテクト案件、受託開発&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;パターン2&lt;/strong&gt;: 保守運用契約、技術メンター、複数社への業務委託&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;月商300万円を超えるには、いずれのパターンでも「自分が動く」だけでは限界が来る。仕組み化やチーム化を見据えた設計が、次のステージへの鍵になる。&lt;/p&gt;
+&lt;h2 id="参考"&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://x.com/ryohei_iguchi/status/2032028181134524450"&gt;元ツイート（X記事）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://corp-swift.co.jp/"&gt;株式会社SWIFT&lt;/a&gt; — X運用のプロフェッショナル集団&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
