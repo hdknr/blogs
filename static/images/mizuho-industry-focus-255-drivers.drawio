@@ -1,0 +1,126 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="mizuho-mif255-drivers" name="Mizuho Industry Focus 255 Drivers">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="主要産業の需給動向と短期見通し（2026年7月）— 押し上げ／押し下げ要因と15業種の景況感" style="text;html=1;fontSize=16;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="110" y="16" width="900" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Drivers: up ===== -->
+        <mxCell id="up-group" value="押し上げ要因" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf0ef;strokeColor=#b85450;fontStyle=1;fontSize=12;fontColor=#b85450;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="330" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="up-1" value="AI・データセンター投資の拡大" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="102" width="290" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="up-2" value="防衛分野を含む航空・宇宙向け受注" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="148" width="290" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="up-3" value="都心オフィスの新規供給が限定的" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="194" width="290" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Drivers: down ===== -->
+        <mxCell id="down-group" value="押し下げ要因" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef3fb;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;fontColor=#3d5a86;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="290" width="330" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="down-1" value="中東情勢の緊迫化（原料調達難・インフレ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="322" width="290" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="down-2" value="中国の生産能力拡大／各国の保護主義" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="368" width="290" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="down-3" value="人手不足・資材価格高騰・金利上昇" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="414" width="290" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Outcome: improve ===== -->
+        <mxCell id="imp-group" value="改善（↑）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf0ef;strokeColor=#b85450;fontStyle=1;fontSize=13;fontColor=#b85450;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="70" width="650" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="imp-1" value="半導体製造装置" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="102" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="imp-2" value="エレクトロニクス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="102" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="imp-3" value="工作機械" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="102" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="imp-4" value="不動産（オフィス）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="148" width="190" height="36" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Outcome: flat ===== -->
+        <mxCell id="flat-group" value="横ばい（→）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;fontColor=#555555;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="215" width="650" height="175" as="geometry"/>
+        </mxCell>
+        <mxCell id="flat-1" value="非鉄金属（銅）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="247" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="flat-2" value="建設機械" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="247" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="flat-3" value="自動車" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="247" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="flat-4" value="建設" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="291" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="flat-5" value="電力" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="291" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="flat-6" value="都市ガス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="291" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="flat-7" value="物流" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="335" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="flat-8" value="小売" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="335" width="190" height="36" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Outcome: worsen ===== -->
+        <mxCell id="wor-group" value="悪化（↓）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef3fb;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;fontColor=#3d5a86;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="440" y="405" width="650" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="wor-1" value="石油化学" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="437" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="wor-2" value="石油" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="437" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="wor-3" value="鉄鋼" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="437" width="190" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="wor-4" value="不動産（住宅）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="460" y="483" width="190" height="36" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Arrows ===== -->
+        <mxCell id="arr-up-imp" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=2.5;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="up-group" target="imp-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-up-flat" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.8;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="up-group" target="flat-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-down-wor" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2.5;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="down-group" target="wor-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-down-flat" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.2;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="down-group" target="flat-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Note -->
+        <mxCell id="note" value="（注）矢印は2027年にかけての需要（受注）・生産の動向・水準、市況などをもとにした総合判断。〈出所〉みずほ銀行産業調査部「Mizuho Industry Focus Vol.255」（2026年7月27日）をもとに作成" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
+          <mxGeometry x="30" y="555" width="1060" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
