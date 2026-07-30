@@ -116,6 +116,36 @@ aws compute-optimizer get-enrollment-status
 `memberAccountsEnrolled` が `true` なら、メンバーアカウントも含めてオプトイン済み。
 アカウントごとの詳細を見たいときは `get-enrollment-statuses-for-organization` を使います。
 
+**`numberOfMemberAccountsOptedIn` が `0` でも異常とは限りません。**
+このフィールドと `memberAccountsEnrolled` はどちらも
+**「自アカウントが組織の管理アカウントである場合」にのみ意味を持つ**値です。
+組織にメンバーアカウントが 1 つも無い構成（管理アカウント単独）なら、
+`memberAccountsEnrolled: true` と `numberOfMemberAccountsOptedIn: 0` は同時に成立します。
+矛盾ではなく、「メンバーも含める設定だが、含めるべきメンバーがいない」状態です。
+
+```json
+{
+    "status": "Active",
+    "memberAccountsEnrolled": true,
+    "numberOfMemberAccountsOptedIn": 0,
+    "lastUpdatedTimestamp": "2026-07-30T10:15:44+09:00"
+}
+```
+
+`0` を見て不安になったら、まず組織の実際のアカウント数を確認してください。
+
+```bash
+aws organizations list-accounts --query 'length(Accounts)'
+```
+
+これが `1` なら管理アカウント単独なので `0` が正しい値です。
+`2` 以上なのに `0` のままなら、オプトイン直後の伝播待ち
+（オプトインしたアカウントがコンソールに現れるまで最大 24 時間）か、
+信頼されたアクセスの有効化に失敗している可能性があります。
+後者なら該当アカウントのオプトインステータスが `Failed` になり、
+`Failed to enable trusted access` などの理由が付くので、
+`get-enrollment-statuses-for-organization` で個別に確認します。
+
 `--include-member-accounts` を使う場合、**AWS Organizations 側で「すべての機能」が有効化されている**必要があります。
 コンソリデーテッドビリング（一括請求）のみの構成では一括オプトインができません。
 一括オプトインを実行すると、Organizations 側で Compute Optimizer の信頼されたアクセスも有効になります。
@@ -428,25 +458,49 @@ Compute Optimizer 由来の削減余地を分母・分子に使うため、依�
 コスト効率性 = 1 -（潜在的削減額 / 最適化可能な支出の合計）× 100%
 ```
 
-原因は 2 つあります。
+まず現状を確認します。
 
-1. **Compute Optimizer にオプトインしていない** — 前掲の依存関係②が抜けています。
-   まず現状を確認してください。
+```bash
+aws compute-optimizer get-enrollment-status
+```
+
+`status` が `Inactive` なら、依存関係②が抜けています。オプトインしてください
+（コンソールなら Compute Optimizer → 「Get started」→「Opt in」）。
+
+```bash
+aws compute-optimizer update-enrollment-status --status Active
+```
+
+**`status` が `Active` なのにメッセージが出る場合**は、次の 3 つを順に疑います。
+
+1. **オプトインしたばかり（最も多い）** — この記事の手順どおりに進めた直後は、
+   まさにこの状態です。`lastUpdatedTimestamp` を見てください。
+   推奨の生成には**最大 24 時間**かかり、
+   コスト最適化ハブ側の取り込みにも別途**最大 24 時間**かかります。
+   推奨が 0 件のうちはコスト効率性を計算できないので、
+   メッセージが出るのが正常な状態です。実際に 0 件かどうかは次で確認できます。
 
    ```bash
-   aws compute-optimizer get-enrollment-status
+   aws compute-optimizer get-recommendation-summaries
    ```
 
-   `status` が `Inactive` なら、オプトインします
-   （コンソールなら Compute Optimizer → 「Get started」→「Opt in」）。
+   全リソースタイプの件数が 0 なら、まだ分析が終わっていないだけです。
+
+2. **そもそも対象リソースが無い / メトリクスが足りない** — 24 時間経っても 0 件なら、
+   記事前半の要件（EC2 なら 30 時間以上のメトリクス）を満たすリソースが
+   存在しない可能性があります。**停止中のインスタンスは対象外**である点に注意してください。
+   停止中は CloudWatch にデータが報告されないため、30 時間の要件を満たせません。
+   稼働中リソースの有無を確認します。
 
    ```bash
-   aws compute-optimizer update-enrollment-status --status Active
+   aws ec2 describe-instances \
+     --filters Name=instance-state-name,Values=running \
+     --query 'length(Reservations[].Instances[])'
    ```
 
-2. **オプトイン済みでも、使用量のばらつきが大きい** — 公式 FAQ に
+3. **使用量のばらつきが大きい** — 公式 FAQ に
    「high variance in your AWS usage」の場合は生成されないと明記されており、
-   **使用量が安定すれば自動的に生成**されます。この場合は待つのが正解で、
+   **使用量が安定すれば自動的に生成**されます。この場合も待つのが正解で、
    設定をいじる必要はありません。
 
 なお**新規に使い始めた直後は履歴グラフも出ません**。
