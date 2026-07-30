@@ -4,7 +4,7 @@ date: 2026-07-30
 lastmod: 2026-07-30
 slug: "aws-compute-optimizer"
 draft: false
-description: "AWS Compute Optimizer で EC2・RDS・Lambda を右サイジングする方法。オプトイン手順、Finding の読み方、メモリ推奨に CloudWatch Agent が必須という落とし穴、無料の 32 日ルックバックと有料機能の境界まで。"
+description: "AWS Compute Optimizer で EC2・RDS・Lambda を右サイジングする方法。オプトイン手順、Finding の読み方、メモリ推奨に CloudWatch Agent が必須という落とし穴、無料の 32 日ルックバックと有料機能の境界、boto3 で取得して分析するときのページネーターと maxResults の罠まで。"
 source_url: "https://github.com/hdknr/blogs/issues/593#issuecomment-5124881656"
 categories: ["クラウド/インフラ"]
 tags: ["aws", "compute-optimizer", "ec2", "CloudWatch", "コスト最適化"]
@@ -26,6 +26,7 @@ CloudWatch に溜まったメトリクスを AWS 側の分析エンジンにか�
 - `Finding` / `Finding reasons` / `Performance risk` / `Platform differences` の読み分け
 - メモリの推奨が出てこない理由と、その対処
 - 無料で使える範囲（32 日ルックバックまで）と有料機能の境界
+- boto3 で推奨を取得して分析に回すときの落とし穴
 
 ## AWS Compute Optimizer とは — 何をするサービスか
 
@@ -374,6 +375,156 @@ CLI に渡す値は**ハイフンなしの `Overprovisioned`** です
 推奨タイプの予測値が重ね描きされ、**推奨タイプでも性能しきい値の内側に収まるか**を目で確認できます。
 `medium` 以上のパフォーマンスリスクを検証するときは、まずここを見ます。
 
+## boto3 で取得して Claude Code に分析させる
+
+CLI と `jq` で組み合わせを探るのは、リソースが数百を超えると厳しくなります。
+そこで **boto3 で JSON に落として、Claude Code に読ませる**のが実用的です。
+「削減額上位 20 件を挙げて、パフォーマンスリスクが `medium` 以上のものは除外して」
+のような問いをそのまま投げられるようになります。
+
+ただし boto3 の `compute-optimizer` クライアントには、
+API リファレンスを読まないと踏む落とし穴がいくつかあります。
+
+| 落とし穴 | 内容 |
+| --- | --- |
+| **ページネーターが無い** | boto3 にページネーターがあるのは `DescribeRecommendationExportJobs` / `GetEnrollmentStatusesForOrganization` / `GetLambdaFunctionRecommendations` / `GetRecommendationPreferences` / `GetRecommendationSummaries` の **5 つだけ**。EC2・RDS・アイドルには無いので `nextToken` を自分で回す |
+| **`maxResults` の上限がリソースで違う** | EC2・ASG・EBS・Lambda・RDS は **1000** だが、**アイドル推奨だけ 100**。共通化して 1000 を投げると `InvalidParameterValueException` になる |
+| **`accountIds` は 1 リクエスト 1 アカウントのみ** | 公式に「You can only specify one account ID per request」と明記。組織横断で集めるにはメンバーアカウントごとに呼ぶ必要がある |
+| **レスポンスキーが不揃い** | `instanceRecommendations` / `volumeRecommendations` / `rdsDBRecommendations` / `idleRecommendations` と命名規則が揃っていない。さらに **Lambda だけ `errors` フィールドが無い** |
+| **`errors` が結果と同居する** | 非対応インスタンスファミリーなどは例外ではなく、同じレスポンスの `errors` 配列に入る。捨てると「なぜこのリソースが出てこないのか」が追えなくなる |
+| **数値が `Decimal`** | `json.dumps` がそのままでは `TypeError` で落ちる。`default=` を渡す |
+
+これらを踏まえた取得スクリプトです。
+
+```python
+#!/usr/bin/env python3
+"""Compute Optimizer の推奨を全ページ取得して JSON に落とす。"""
+
+import argparse
+import decimal
+import json
+import pathlib
+
+import boto3
+
+# (出力名, メソッド名, レスポンスキー, maxResults 上限)
+TARGETS = [
+    ("ec2", "get_ec2_instance_recommendations", "instanceRecommendations", 1000),
+    ("asg", "get_auto_scaling_group_recommendations", "autoScalingGroupRecommendations", 1000),
+    ("ebs", "get_ebs_volume_recommendations", "volumeRecommendations", 1000),
+    ("lambda", "get_lambda_function_recommendations", "lambdaFunctionRecommendations", 1000),
+    ("rds", "get_rds_database_recommendations", "rdsDBRecommendations", 1000),
+    ("idle", "get_idle_recommendations", "idleRecommendations", 100),  # ← 100 が上限
+]
+
+
+def paginate(method, result_key, page_size, **kwargs):
+    """nextToken を手で回す（ページネーターが無いため）。"""
+    items, errors, token = [], [], None
+    while True:
+        if token:
+            kwargs["nextToken"] = token
+        resp = method(maxResults=page_size, **kwargs)
+        items.extend(resp.get(result_key, []))
+        errors.extend(resp.get("errors", []))  # Lambda には無いので get で
+        token = resp.get("nextToken")
+        if not token:
+            return items, errors
+
+
+def encode(obj):
+    if isinstance(obj, decimal.Decimal):
+        return float(obj)
+    raise TypeError(f"not JSON serializable: {type(obj)}")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--region", default="ap-northeast-1")
+    ap.add_argument("--profile")
+    ap.add_argument("--account-id", help="1 リクエスト 1 アカウントのみ指定可")
+    ap.add_argument("--out", default="./co")
+    args = ap.parse_args()
+
+    co = boto3.Session(
+        profile_name=args.profile, region_name=args.region
+    ).client("compute-optimizer")
+
+    common = {"accountIds": [args.account_id]} if args.account_id else {}
+    outdir = pathlib.Path(args.out)
+    outdir.mkdir(parents=True, exist_ok=True)
+
+    for name, method_name, key, page_size in TARGETS:
+        try:
+            items, errors = paginate(
+                getattr(co, method_name), key, page_size, **common
+            )
+        except co.exceptions.OptInRequiredException:
+            print(f"{name}: オプトインされていません")
+            continue
+        except Exception as e:  # 未対応リージョン等は他を止めずに続行
+            print(f"{name}: 取得失敗 {type(e).__name__}: {e}")
+            continue
+
+        (outdir / f"{name}.json").write_text(
+            json.dumps({"items": items, "errors": errors},
+                       default=encode, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        print(f"{name}: {len(items)} 件 (errors: {len(errors)})")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```bash
+pip install boto3
+python fetch_compute_optimizer.py --region ap-northeast-1 --out ./co
+```
+
+あとは Claude Code に `./co/` を読ませて分析させます。
+
+```text
+./co/ec2.json と ./co/idle.json を読んで、次を出してください。
+
+1. 推定月間削減額の上位 20 リソース（削減額・現在のタイプ・推奨タイプ・
+   パフォーマンスリスク・移行の労力を表で）
+2. そのうち Finding reasons にメモリ関連が一切出てこないものに印を付ける
+   （CloudWatch Agent 未導入の疑いがあり、判断材料が足りない）
+3. Platform differences にアーキテクチャ差異があるものを別掲
+   （Graviton 移行が必要で、削減額どおりには進まない）
+4. errors 配列の中身を集計して、分析対象から漏れた理由の内訳
+```
+
+**ポイントは 2 と 4** です。
+削減額の降順に並べるだけなら Excel でもできますが、
+「メモリの判断材料が無いまま Over-provisioned と言われているリソース」と
+「そもそも分析対象から漏れたリソース」を仕分ける作業は、
+JSON の構造を横断して見る必要があるため LLM に投げるのが向いています。
+
+組織横断で集めたい場合は、`get_enrollment_statuses_for_organization`
+（こちらはページネーターがあります）でメンバーアカウント一覧を取り、
+`--account-id` を変えてループさせます。
+
+### S3 エクスポートを使う場合
+
+`export_*` 系は S3 に CSV（メタデータは JSON）を出力します。
+定期実行して BI に流すならこちらですが、**バケットポリシーの準備が必要**です。
+サービスプリンシパル `compute-optimizer.amazonaws.com` に対して
+以下 **3 つのステートメントすべて**が必要で、1 つでも欠けるとジョブが失敗します。
+
+- `s3:GetBucketAcl`（バケットの ACL 取得）
+- `s3:GetBucketPolicyStatus`（バケットが公開されていないかの確認）
+- `s3:PutObject`（エクスポートファイルの書き込み）
+
+`s3:PutObject` のリソースパスは
+`arn:aws:s3:::<bucket>/compute-optimizer/<アカウントID>/*` の形で、
+`compute-optimizer/<アカウントID>/` の部分は Compute Optimizer 側が自動で付けます。
+ポリシー内のバケット名・プレフィックス・アカウント番号が
+エクスポートリクエストの指定と一致しない場合も失敗します。
+バケットは**公開設定不可**、かつ Requester Pays 不可です。
+
 ## 実務チェックリスト
 
 公式ドキュメントには書いてあるが読み飛ばしやすい点を、確認順にまとめます。
@@ -388,6 +539,7 @@ CLI に渡す値は**ハイフンなしの `Overprovisioned`** です
 8. **Optimized でも新世代への移行提案が出ます。** 「Optimized なら何もしなくていい」ではありません。世代を上げれば同性能で安くなることは多いです。
 9. **推奨は 1 日 1 回更新です。** 変更直後にコンソールを見ても反応しません。
 10. **対象外のサービスがあります。** S3 や DynamoDB のキャパシティ設計そのもの（右サイジング）は対象外で、DynamoDB はアイドル判定のみです。全コストを Compute Optimizer だけで見ようとしないことです。
+11. **boto3 で集める場合は `nextToken` を自分で回します。** EC2・RDS・アイドルにページネーターはありません。アイドル推奨の `maxResults` 上限が 100 である点、`accountIds` が 1 リクエスト 1 アカウントである点も忘れずに。
 
 ## まとめ
 
@@ -419,6 +571,8 @@ CPU 5% 未満・ネットワーク 5 MB/日 未満で 14 日間動いていた E
 - [Enhanced infrastructure metrics — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/enhanced-infrastructure-metrics.html)
 - [Rightsizing recommendation preferences — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/rightsizing-preferences.html)
 - [Opting in to AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/account-opt-in.html)
+- [boto3 ComputeOptimizer クライアントリファレンス](https://docs.aws.amazon.com/boto3/latest/reference/services/compute-optimizer.html)
+- [Specifying an existing S3 bucket for your recommendations export](https://docs.aws.amazon.com/compute-optimizer/latest/ug/create-s3-bucket-policy-for-compute-optimizer.html)
 - [AWS Compute Optimizer now supports idle recommendations for six additional resource types](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-compute-optimizer-six-new-idle/)
 - [AWS Compute Optimizer now supports 32-day lookback for EBS volume and ECS service rightsizing recommendations](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-compute-optimizer-ebs-ecs-32-day-lookback/)
 - [AWS Compute Optimizer を使った最適化分析 — NHN テコラス Tech Blog](https://techblog.nhn-techorus.com/archives/22517)
