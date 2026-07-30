@@ -1,0 +1,425 @@
+---
+title: "AWS Compute Optimizer の使い方 — EC2 の右サイジングを無料で始める手順と落とし穴"
+date: 2026-07-30
+lastmod: 2026-07-30
+slug: "aws-compute-optimizer"
+draft: false
+description: "AWS Compute Optimizer で EC2・RDS・Lambda を右サイジングする方法。オプトイン手順、Finding の読み方、メモリ推奨に CloudWatch Agent が必須という落とし穴、無料の 32 日ルックバックと有料機能の境界まで。"
+source_url: "https://github.com/hdknr/blogs/issues/593#issuecomment-5124881656"
+categories: ["クラウド/インフラ"]
+tags: ["aws", "compute-optimizer", "ec2", "CloudWatch", "コスト最適化"]
+---
+
+「この EC2、本当に m5.2xlarge が必要なんだろうか」——
+AWS を運用していると必ず一度は突き当たる問いです。
+CPU 使用率を CloudWatch で眺めて、なんとなく `.xlarge` に落として、
+繁忙期に泣く。あるいは怖いのでずっと過剰なままにして、毎月払い続ける。
+
+**AWS Compute Optimizer** は、この「勘と度胸のサイジング」を機械的に潰すためのサービスです。
+CloudWatch に溜まったメトリクスを AWS 側の分析エンジンにかけ、
+リソースごとに「過剰なのか、足りていないのか、ちょうどいいのか」を分類して、
+推奨インスタンスタイプと削減見込み額まで出してくれます。しかも**基本機能は追加料金なし**。
+
+この記事で扱うのは次の 4 点です。
+
+- 推奨が出るための前提条件（メトリクス量・Cost Explorer・Performance Insights）
+- `Finding` / `Finding reasons` / `Performance risk` / `Platform differences` の読み分け
+- メモリの推奨が出てこない理由と、その対処
+- 無料で使える範囲（32 日ルックバックまで）と有料機能の境界
+
+## AWS Compute Optimizer とは — 何をするサービスか
+
+ざっくり言うと「使用率メトリクスを溜めて、機械学習で分析して、右サイジング案を出す」だけのサービスです。
+ただし入力と出力の間にいくつか前提条件が挟まっていて、そこを知らないと
+「有効化したのに何も出てこない」「メモリの推奨が一切出ない」といった状態になります。
+
+全体の流れは次のとおりです。
+
+![AWS Compute Optimizer のデータフロー図。CloudWatch メトリクスを入力に機械学習で分析し、右サイジング推奨とアイドルリソース推奨を出力する流れ](/blogs/images/aws-compute-optimizer-dataflow.png)
+
+図のとおり、分析対象は EC2 インスタンス、EC2 Auto Scaling グループ、EBS ボリューム、
+Lambda 関数、ECS サービス（Fargate）、Aurora / RDS、Microsoft SQL Server ライセンスです。
+メモリと GPU の使用率だけは統合 CloudWatch Agent が別途必要で、
+ルックバック期間は 14 日・32 日・93 日から選べます。
+削減額の算出に使う料金情報は Cost Explorer と Cost Optimization Hub から供給されます。
+
+重要なのは、**Compute Optimizer 自身は新しくメトリクスを取らない**という点です。
+既存の CloudWatch メトリクスを読むだけなので、
+CloudWatch が見ていない指標（代表例がメモリ）については何も判断できません。
+ここが後述する最大の落とし穴になります。
+
+## 対応リソースと、推奨が出るための条件
+
+対応リソースごとに必要なメトリクス量が違います。公式の
+[Resource requirements](https://docs.aws.amazon.com/compute-optimizer/latest/ug/requirements.html)
+をまとめると次のようになります。
+
+| リソース | 必要な条件 |
+| --- | --- |
+| EC2 インスタンス / EC2 Auto Scaling グループ | 過去 14 日間で **30 時間以上**の CloudWatch メトリクス（拡張インフラメトリクス＝後述の有料オプション有効時は、過去 93 日間で 30 時間以上） |
+| EBS ボリューム | 実行中インスタンスに **30 時間以上連続でアタッチ**されていること（デタッチすると推奨は消える） |
+| Lambda 関数 | 設定メモリが **1,792 MB 以下**、かつ過去 14 日間で **50 回以上**の呼び出し。CloudWatch メトリクスは不要 |
+| ECS サービス（Fargate） | 過去 14 日間で **24 時間以上**のメトリクス。ステップスケーリングポリシーが未アタッチ、CPU とメモリにターゲット追跡ポリシーが未アタッチ、実行状態が `SteadyState` または `MoreWork` |
+| Aurora / RDS DB インスタンス | 過去 14 日間で 30 時間以上のメトリクス。**過剰プロビジョニングの検出には RDS Performance Insights の有効化が必要** |
+| 商用ソフトウェアライセンス | **Microsoft SQL Server on EC2 のみ**。30 時間以上*連続*したメトリクスと、CloudWatch Application Insights の有効化が必要 |
+
+いくつか実務的に効く点を補足します。
+
+- **RDS / Aurora は MySQL と PostgreSQL 系のみ**です。RDS for MySQL、RDS for PostgreSQL、Aurora MySQL 互換、Aurora PostgreSQL 互換が対象で、Oracle や SQL Server の RDS は対象外です。
+- **Lambda は「メモリサイズが 1,792 MB 以下」という上限**があります。これを超える関数は `Finding` が `Unavailable`（理由コード `Inconclusive`）になり、コンソールにも出てきません。呼び出し 50 回未満の場合は理由コード `Insufficient data` です。
+- **ECS on Fargate はターゲット追跡ポリシーの有無で出力が変わります**。CPU にだけターゲット追跡が付いていればメモリの推奨のみ、メモリにだけ付いていれば CPU の推奨のみが出ます。
+- **EBS ボリュームのデタッチで履歴が失われる**点は要注意。デタッチしている間 CloudWatch にデータが報告されないため、推奨も参照できなくなります。
+
+また、**Cost Explorer の有効化は必須**です。
+Compute Optimizer は Cost Explorer の請求データを使って削減額と料金情報を埋めるので、
+これを有効にしていないと削減額のカラムが機能しません。
+
+## AWS Compute Optimizer をオプトイン（有効化）する — CLI での手順
+
+作業の全体像は 3 ステップです。
+
+1. オプトインする（この節）
+2. ルックバック期間を無料の 32 日に設定する（後述の「料金」節）
+3. 対象 EC2 に統合 CloudWatch Agent を入れる（後述の「落とし穴」節）
+
+サービスはデフォルトで無効なので、まずオプトインします。
+コンソールなら Compute Optimizer の画面で「Get started」→「Opt in」を押すだけですが、
+CLI のほうが Organizations 一括処理を含めて確実です。
+
+```bash
+# 単一アカウントをオプトイン
+aws compute-optimizer update-enrollment-status --status Active
+
+# Organizations の管理アカウントから、全メンバーアカウントを一括オプトイン
+aws compute-optimizer update-enrollment-status --status Active --include-member-accounts
+
+# 状態を確認
+aws compute-optimizer get-enrollment-status
+```
+
+`get-enrollment-status` の出力はこのような形です。
+
+```json
+{
+    "status": "Active",
+    "statusReason": "",
+    "memberAccountsEnrolled": true,
+    "numberOfMemberAccountsOptedIn": 24,
+    "lastUpdatedTimestamp": "2026-07-30T09:41:12+09:00"
+}
+```
+
+`status` は `Active` / `Inactive` / `Pending` / `Failed` の 4 値です。
+メンバーアカウントの登録に時間がかかっている間は `Pending` になり、理由が `statusReason` に入ります。
+`memberAccountsEnrolled` が `true` なら、メンバーアカウントも含めてオプトイン済み。
+アカウントごとの詳細を見たいときは `get-enrollment-statuses-for-organization` を使います。
+
+`--include-member-accounts` を使う場合、**AWS Organizations 側で「すべての機能」が有効化されている**必要があります。
+コンソリデーテッドビリング（一括請求）のみの構成では一括オプトインができません。
+一括オプトインを実行すると、Organizations 側で Compute Optimizer の信頼されたアクセスも有効になります。
+
+オプトイン後に注意したいのが**タイムラグ**です。
+
+- オプトインしたアカウントがコンソールに現れるまで最大 24 時間
+- 推奨が生成されるまで**最大 24 時間**（メトリクスが十分溜まっている場合）
+- メトリクスが 30 時間分溜まっていなければ、そもそもそれを待つ時間が必要
+
+つまり「有効化したのに何も出ない」の大半は、**単に待ちが足りていない**だけです。
+新規に立てた EC2 なら、最短でも 30 時間 + 分析時間が必要だと理解しておきましょう。
+
+なお、オプトイン時にサービスリンクロールが自動で作られます。IAM 側での事前準備は不要です。
+
+## Finding の読み方 — 3 分類では足りない
+
+コンソールで最初に目に入るのが **Finding** カラムです。EC2 インスタンスの場合、次の 3 分類です。
+
+| Finding | 意味 |
+| --- | --- |
+| **Under-provisioned** | CPU・メモリ・ネットワークなど、少なくとも 1 つのスペックがワークロードの性能要件を満たしていない。アプリのパフォーマンス低下につながる |
+| **Over-provisioned** | 少なくとも 1 つのスペックを下げても性能要件を満たせる状態で、かつ不足しているスペックがない。不要なインフラコストにつながる |
+| **Optimized** | すべてのスペックが性能要件を満たし、かつ過剰でもない。ただし Optimized でも**新世代インスタンスタイプが推奨されることがある** |
+
+ここで止まってしまう人が多いのですが、**判断に本当に必要なのは隣のカラム**です。
+
+### Finding reasons — どのスペックが問題なのか
+
+`Finding reasons` は「何が過剰／不足なのか」を具体的に示します。
+分析される軸はかなり細かく、次の 9 つそれぞれについて
+`over-provisioned` / `under-provisioned` が付きます。
+
+CPU、メモリ、GPU、EBS スループット、EBS IOPS、ネットワーク帯域、
+ネットワーク PPS（パケット毎秒）、ディスク IOPS、ディスクスループット。
+
+つまり「Over-provisioned だからサイズを下げよう」ではなく、
+**「EBS IOPS が過剰なのか、CPU が過剰なのか」で打ち手が変わる**わけです。
+EBS IOPS やスループットが過剰なだけなら、インスタンスタイプを変えるのではなく
+[EBS Elastic Volumes](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modify-volume.html)
+でボリューム側の設定を下げるのが正解になるケースもあります。
+
+### Performance risk — 5 段階のリスク評価
+
+`Performance risk` は、現在および推奨インスタンスタイプがワークロード要件を満たさない可能性を表します。
+`very low` / `low` / `medium` / `high` / `very high` の 5 段階で、
+API・CLI・SDK では `0`（very low）から `4`（very high）の数値です。
+
+このスコアは 8 つの軸ごとに個別に計算されます。
+対象は CPU、メモリ、EBS スループット、EBS IOPS、ディスクスループット、
+ディスク IOPS、ネットワークスループット、ネットワーク PPS で、
+`Finding reasons` の 9 軸から GPU を除いたものです。
+そのうち**最も高い値**がリソース全体のスコアになります。
+`very low` は「常に十分な性能を提供すると予測される」という意味なので、
+ここが `medium` 以上の推奨は、そのまま適用せず自分で検証すべき対象だと考えてください。
+
+### Migration effort と Platform differences — 適用コストの見積り
+
+推奨が Graviton（Arm）系だった場合、移行の手間が跳ね上がります。`Migration effort` はその目安です。
+
+- **Very low** — 推奨タイプが現在と同じ CPU アーキテクチャ
+- **Low** — ワークロードが Amazon EMR と推定され、Graviton タイプが推奨されている
+- **Medium** — ワークロードタイプが推定できないが、Graviton タイプが推奨されている
+- **High** — CPU アーキテクチャが異なり、かつ推奨アーキテクチャで動く互換バージョンが知られていない
+
+この推定に使われるのが `Inferred workload types` で、インスタンス名・タグ・設定から
+Amazon EMR、Apache Cassandra、Apache Hadoop、Memcached、NGINX、PostgreSQL、Redis、Kafka、SQL Server を推定します。
+
+さらに `Platform differences` では、アーキテクチャ、ハイパーバイザー（Xen → Nitro など）、
+インスタンスストアの有無、ネットワークインターフェイス（ENA ドライバ）、
+ストレージインターフェイス（NVMe ドライバ）、仮想化タイプ（PV → HVM）の差異が示されます。
+「インスタンスストアが使えなくなる」「NVMe ドライバの導入が必要」といった差分は、
+**削減額だけ見ていると見落とします**。
+
+## 最大の落とし穴：メモリは CloudWatch Agent がないと見えない
+
+ここが実務上いちばん重要な点です。
+
+**Compute Optimizer のメモリ使用率分析は、統合 CloudWatch Agent を入れているリソースに対してのみ行われます。**
+
+EC2 の標準メトリクスにメモリ使用率は含まれていません。
+したがって Agent を入れていないインスタンスでは、
+Compute Optimizer は CPU とネットワークとディスク I/O だけを見て判断します。
+
+これが何を招くか。
+**「CPU は暇だがメモリはひっ迫している」インスタンスが Over-provisioned と判定される**のです。
+推奨に従ってサイズを落とすと、メモリ不足で OOM を踏みます。
+
+GPU も同様で、`GPUUtilization` と `GPUMemoryUtilization` は
+統合 CloudWatch Agent を入れているリソースでのみ分析されます。
+
+対策はシンプルです。
+
+1. 最適化対象にする EC2 には[統合 CloudWatch Agent](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html) を入れる
+2. 入れていないインスタンスの推奨は「CPU 観点のみの意見」として割り引いて読む
+
+`Finding reasons` に memory 系の理由が一切出てこないインスタンスは、
+Agent が入っていない可能性が高いというシグナルにもなります。
+
+## アイドルリソース推奨 — 対象は 12 種類に拡大（2026 年 6 月）
+
+右サイジングとは別の軸として、**アイドルリソース推奨**があります。
+「サイズを下げる」ではなく「そもそも停止・削除できる」リソースを洗い出す機能です。
+
+### 対応リソース（12 種類）
+
+2024 年 11 月に登場し、
+[2026 年 6 月 8 日に 6 種類のリソースタイプが追加](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-compute-optimizer-six-new-idle/)されました。
+現在の対応リソースは以下のとおりです。
+
+- **コンピュート**: EC2 インスタンス、EC2 Auto Scaling グループ、ECS サービス（Fargate）
+- **ストレージ・ネットワーク**: EBS ボリューム、NAT Gateway
+- **データベース・キャッシュ**: Aurora / RDS、DynamoDB、ElastiCache、MemoryDB、DocumentDB
+- **その他**: WorkSpaces、SageMaker エンドポイント
+
+### アイドル判定の基準
+
+判定基準が明示されているのが実用的です。主なものを挙げます。
+
+| リソース | アイドル判定の基準 |
+| --- | --- |
+| EC2 インスタンス | 14 日間で CPU 使用率のピークが **5% 未満**、かつネットワーク I/O が **1 日 5 MB 未満** |
+| EC2 Auto Scaling グループ | 14 日間でピーク CPU 5% 超・ネットワーク 5 MB/日 超のインスタンスが 1 台もない |
+| ECS サービス（Fargate） | CPU とメモリのピーク使用率が **1% 未満** |
+| RDS for MySQL / PostgreSQL | リードレプリカでなく、DB 接続がゼロで CPU・読み書きも低水準 |
+| NAT Gateway | `available` 状態でルートテーブルに未関連付け、アクティブ接続ゼロ、送受信パケットもゼロ |
+| DynamoDB | **プロビジョンドテーブルのみ**。テーブルと全 GSI で消費 RCU / WCU がゼロ |
+| ElastiCache | **Redis と Valkey エンジンのみ**。新規接続ゼロ、エンジン CPU 1% 未満、キャッシュヒット／ミス／get／set がゼロ。ノード単位で評価し、全ノードがアイドルのときのみクラスタがアイドル |
+| MemoryDB | 新規接続ゼロ、エンジン CPU 1% 未満、キースペースのヒット／ミスがゼロ |
+| DocumentDB | プロビジョンド・サーバーレス両対応（Elastic クラスタは除外）。DB 接続がゼロ |
+| WorkSpaces | **Always On のみ**（Auto Stop / Standby は除外）。**63 日間**ユーザー接続なし |
+| SageMaker エンドポイント | 14 日間で呼び出しがゼロ |
+
+### ルックバック期間の例外
+
+ルックバック期間の例外が地味に大事です。
+
+- **EBS ボリュームと NAT Gateway のアタッチ状態は 32 日間のルックバックで判定**されます。EBS の推奨ルックバック期間を 14 日に変更しても、「アタッチされていないか」の判定は 32 日間のままです。
+- **WorkSpaces のユーザー接続活動は 63 日間**で判定されます。長期休暇を挟んでも誤判定しないための設計でしょう。
+- **ElastiCache はオプトインから推奨が出るまで最大 48 時間**かかります（他は 24 時間）。
+
+### 推奨は「削除」だけではない
+
+推奨アクションも具体的です。アイドルな Aurora MySQL / PostgreSQL には
+「DB インスタンスクラスを `db.serverless` に変更する」、
+RDS MySQL / PostgreSQL には「最大 7 日間停止できる」、
+DynamoDB プロビジョンドテーブルには「オンデマンドモードへの切り替え」といった提案が付きます。
+**削除だけでなく「安いモードへの切り替え」も選択肢として出してくる**のが便利なところです。
+
+## AWS Compute Optimizer の料金 — 無料枠と拡張インフラメトリクス（有料）の境界
+
+ここを誤解している記事が多いので明確にします。
+
+**Compute Optimizer 自体に追加料金はありません。**
+支払うのは分析対象の AWS リソース代と、CloudWatch の監視料金だけです。
+
+有料なのは**拡張インフラメトリクス（Enhanced infrastructure metrics）**という単一の機能です。
+
+| ルックバック期間 | 料金 | 備考 |
+| --- | --- | --- |
+| **14 日** | 無料 | デフォルト |
+| **32 日** | 無料 | 月末処理のような月次パターンを拾える |
+| **93 日** | **有料** | 拡張インフラメトリクスの有効化が必要 |
+
+拡張インフラメトリクスの単価は **1 リソースあたり 1 時間 $0.0003360215**。
+常時稼働のリソースなら**月額およそ $0.25/リソース**です。
+対象は EC2 インスタンス、EC2 Auto Scaling グループに属するインスタンス、
+そして RDS DB インスタンスです。
+
+**注目すべきは 32 日が無料であること**です。
+デフォルトの 14 日だと、月末バッチや月次締め処理のピークをまたげない可能性があります。
+32 日にしておけば必ず月次サイクルを 1 周含められるので、
+**まず 32 日に設定しておくのは、コストゼロでできる精度改善**です。
+32 日ルックバックは EC2 インスタンス、EC2 Auto Scaling グループ、RDS データベース、
+EBS ボリューム、ECS サービスの 5 種類でサポートされます。
+
+93 日（有料）が本当に効くのは、四半期単位の季節変動があるワークロードです。
+逆に言えば、負荷が平坦なワークロードに 93 日を払う意味は薄いので、
+**組織全体に一律で有効化せず、季節性のあるリソースに絞る**のが筋のいい使い方です。
+設定はリソースレベル・アカウントレベル・組織レベルで可能で、
+**リソースレベルがアカウントレベルを、アカウントレベルが組織レベルを上書きします**
+（Auto Scaling グループに属する EC2 は、グループ側の設定が個別インスタンスの設定を上書き）。
+
+有効化後、実際に反映されるのは次の推奨更新時（最大 24 時間後）です。
+それまでは `Active-pending` のようなステータスが付き、
+推奨一覧の `Effective enhanced infrastructure metrics` カラムで反映状況を確認できます。
+
+## 削減額を正しく出す — Cost Optimization Hub との連携
+
+削減額のカラムには 2 種類あります。
+
+- **Estimated monthly savings (On-Demand)** — オンデマンド料金前提の削減額
+- **Estimated monthly savings (after discounts)** — Savings Plans / リザーブドインスタンスの割引を織り込んだ削減額
+
+後者を出すには**節約見積モード（savings estimation mode）**を有効にする必要があります。
+無効のままだとオンデマンド前提の数字しか出ません。
+
+さらに、Cost Optimization Hub を有効化していると、推奨の生成に
+**Cost Optimization Hub のデータ**が使われます。ここには自社固有の割引が含まれます。
+有効化していない場合は Cost Explorer のデータとオンデマンド料金情報が使われます。
+
+これは実務上かなり重要です。
+Savings Plans や RI を大量に持っている組織では、
+**オンデマンド前提の削減額は「実際には削減されない額」を含んでいます**。
+コミットメントで既に安く買っているインスタンスをダウンサイズしても、
+コミット分は払い続けるので額面どおりには減りません。
+経営に数字を出す前に、必ず Cost Optimization Hub を有効化して割引反映済みの数字にしましょう。
+
+なお削減額の計算方法は「現在のインスタンスの稼働時間数 × 現在と推奨タイプのレート差」で、
+ダッシュボードに出る数字は**アカウント内の全 Over-provisioned インスタンスの合計**です。
+
+## AWS CLI で運用に組み込む（`export-*` で S3 出力）
+
+コンソールを人が見に行く運用は続きません。CLI でエクスポートして定期レビューに乗せます。
+
+主なサブコマンドは以下です。
+
+```bash
+# 全リソースタイプの推奨サマリを取得（まず全体像を見る）
+aws compute-optimizer get-recommendation-summaries
+
+# EC2 インスタンスの推奨を取得
+aws compute-optimizer get-ec2-instance-recommendations
+
+# 過剰プロビジョニングのものだけに絞る
+aws compute-optimizer get-ec2-instance-recommendations \
+  --filters name=Finding,values=Overprovisioned
+
+# アイドルリソース推奨を取得
+aws compute-optimizer get-idle-recommendations
+
+# RDS / Aurora の推奨を取得
+aws compute-optimizer get-rds-database-recommendations
+```
+
+フィルタ値の表記に注意してください。
+コンソールの表示名は `Over-provisioned` とハイフン入りですが、
+CLI に渡す値は**ハイフンなしの `Overprovisioned`** です
+（同様に `Underprovisioned`、`Optimized`）。
+`Finding reasons` で絞るなら `--filters name=FindingReasonCodes,values=MemoryUnderprovisioned`
+のように、こちらもハイフンなしのキャメルケースで指定します。
+
+リソースタイプごとに `get-*` と `export-*` が対になっています。
+
+- `get-` 系: `get-ec2-instance-recommendations`、`get-auto-scaling-group-recommendations`、`get-ebs-volume-recommendations`、`get-lambda-function-recommendations`、`get-ecs-service-recommendations`、`get-rds-database-recommendations`、`get-license-recommendations`、`get-idle-recommendations`、`get-recommendation-summaries`
+- `export-` 系: 上記に対応する `export-*`（S3 への CSV / JSON 出力）
+- 推奨設定: `put-recommendation-preferences`、`get-recommendation-preferences`、`get-effective-recommendation-preferences`、`delete-recommendation-preferences`
+- 登録状態: `update-enrollment-status`、`get-enrollment-status`、`get-enrollment-statuses-for-organization`
+- 投影メトリクス: `get-ec2-recommendation-projected-metrics`、`get-ecs-service-recommendation-projected-metrics`、`get-rds-database-recommendation-projected-metrics`
+
+**`export-*` 系が実務の主役**です。コンソールのダッシュボード一覧は CSV で直接ダウンロードできませんが、
+`export-*` なら S3 に出力できます。
+これを月次で回して BI に流し込めば、「アカウント横断で削減余地の大きい上位 20 リソース」を
+機械的に作れます。
+
+`get-*-recommendation-projected-metrics` は、推奨タイプに変更した場合の
+使用率を予測したグラフデータです。コンソールでは現在のメトリクスに
+推奨タイプの予測値が重ね描きされ、**推奨タイプでも性能しきい値の内側に収まるか**を目で確認できます。
+`medium` 以上のパフォーマンスリスクを検証するときは、まずここを見ます。
+
+## 実務チェックリスト
+
+公式ドキュメントには書いてあるが読み飛ばしやすい点を、確認順にまとめます。
+
+1. **メモリ推奨には統合 CloudWatch Agent が必須です。** これを入れずに Over-provisioned を信じると OOM を踏みます。最重要項目です。
+2. **RDS の過剰プロビジョニング検出には Performance Insights が必要です。** 有効化していないと「下げられる」判定が出ません。
+3. **Cost Explorer は必須、Cost Optimization Hub は実質必須です。** 前者がないと削減額が出ず、後者がないと数字が割引前で過大になります。
+4. **32 日ルックバックは無料です。** 月次パターンを拾えるので、まず設定しておきます。93 日（有料）は季節性のあるリソースに絞ります。
+5. **繁忙期を含む期間で判断します。** 14 日間が閑散期に当たっていれば、当然「過剰」と出ます。年次イベントを持つシステムには 93 日でも足りないことがあります。
+6. **パフォーマンスリスクが `medium` 以上の推奨は、そのまま適用しません。** 投影メトリクスで検証します。
+7. **Platform differences を必ず読みます。** インスタンスストアの喪失、NVMe / ENA ドライバの要否、Arm への再コンパイル。削減額だけ見て適用すると起動しません。
+8. **Optimized でも新世代への移行提案が出ます。** 「Optimized なら何もしなくていい」ではありません。世代を上げれば同性能で安くなることは多いです。
+9. **推奨は 1 日 1 回更新です。** 変更直後にコンソールを見ても反応しません。
+10. **対象外のサービスがあります。** S3 や DynamoDB のキャパシティ設計そのもの（右サイジング）は対象外で、DynamoDB はアイドル判定のみです。全コストを Compute Optimizer だけで見ようとしないことです。
+
+## まとめ
+
+Compute Optimizer は「無料で始められて、そのまま信じると事故る」タイプのサービスです。
+オプトイン自体は 1 コマンドで済みますが、
+**出てきた `Finding` をそのまま適用する運用は危険**です。
+前掲のチェックリストを踏まえたうえで、着手順序についてひとつ提案があります。
+
+**アイドルリソース推奨から始めるのが、投資対効果としては圧倒的に有利です。**
+右サイジングは「どこまで下げて大丈夫か」という判断を人間が負う必要があり、
+メモリの可視化、パフォーマンスリスクの検証、Platform differences の確認と、
+前提を揃えるコストがそれなりにかかります。
+
+一方アイドルリソース推奨は、判断に迷う要素がほとんどありません。
+CPU 5% 未満・ネットワーク 5 MB/日 未満で 14 日間動いていた EC2、
+ルートテーブルに紐づいていない NAT Gateway、
+63 日間誰もログインしていない Always On の WorkSpaces。
+これらは「使われていない」ことがほぼ確定しており、そのまま削減候補として扱えます。
+2026 年 6 月に ElastiCache や DocumentDB、SageMaker エンドポイントまで対象が広がったことで、
+ここだけでも拾える額はかなり増えました。
+アイドルリソースを片付けてから、腰を据えて右サイジングに取りかかる。これが現実的な順序です。
+
+## 参考リンク
+
+- [AWS Compute Optimizer（公式）](https://aws.amazon.com/jp/compute-optimizer/)
+- [Resource requirements — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/requirements.html)
+- [Viewing EC2 instance recommendations — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-ec2-recommendations.html)
+- [Viewing idle resource recommendations — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/view-idle-recommendations.html)
+- [Enhanced infrastructure metrics — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/enhanced-infrastructure-metrics.html)
+- [Rightsizing recommendation preferences — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/rightsizing-preferences.html)
+- [Opting in to AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/account-opt-in.html)
+- [AWS Compute Optimizer now supports idle recommendations for six additional resource types](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-compute-optimizer-six-new-idle/)
+- [AWS Compute Optimizer now supports 32-day lookback for EBS volume and ECS service rightsizing recommendations](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-compute-optimizer-ebs-ecs-32-day-lookback/)
+- [AWS Compute Optimizer を使った最適化分析 — NHN テコラス Tech Blog](https://techblog.nhn-techorus.com/archives/22517)
+- [AWS Compute Optimizer で EC2 Instance を最適化する — サーバーワークスエンジニアブログ](https://blog.serverworks.co.jp/tech/2020/03/17/checking-compute-optimizer/)
