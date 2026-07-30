@@ -42,7 +42,8 @@ CloudWatch に溜まったメトリクスを AWS 側の分析エンジンにか�
 Lambda 関数、ECS サービス（Fargate）、Aurora / RDS、Microsoft SQL Server ライセンスです。
 メモリと GPU の使用率だけは統合 CloudWatch Agent が別途必要で、
 ルックバック期間は 14 日・32 日・93 日から選べます。
-削減額の算出に使う料金情報は Cost Explorer と Cost Optimization Hub から供給されます。
+削減額の算出に使う料金情報は Cost Explorer と
+Cost Optimization Hub（日本語コンソールでは「コスト最適化ハブ」）から供給されます。
 
 重要なのは、**Compute Optimizer 自身は新しくメトリクスを取らない**という点です。
 既存の CloudWatch メトリクスを読むだけなので、
@@ -302,25 +303,25 @@ EBS ボリューム、ECS サービスの 5 種類でサポートされます。
 それまでは `Active-pending` のようなステータスが付き、
 推奨一覧の `Effective enhanced infrastructure metrics` カラムで反映状況を確認できます。
 
-## 削減額を正しく出す — Cost Optimization Hub との連携
+## 削減額を正しく出す — Cost Optimization Hub（コスト最適化ハブ）との連携
 
 削減額のカラムには 2 種類あります。
 
 - **Estimated monthly savings (On-Demand)** — オンデマンド料金前提の削減額
 - **Estimated monthly savings (after discounts)** — Savings Plans / リザーブドインスタンスの割引を織り込んだ削減額
 
-後者を出すのが**節約見積モード（savings estimation mode）**です。
+後者を出すのが**節約額見積もりモード（savings estimation mode）**です。
 ここで誤解しやすいのですが、**明示設定しなくても既定で有効になるケースがあります**。
 既定の挙動はアカウント種別と Cost Optimization Hub の登録状況で決まります。
 
-| アカウント種別 | 既定の節約見積モード |
+| アカウント種別 | 既定の節約額見積もりモード |
 | --- | --- |
 | 管理アカウント / 委任管理者 | **`AfterDiscounts`**（割引反映済み） |
 | スタンドアロンアカウント | **`AfterDiscounts`**（割引反映済み） |
-| メンバーアカウント（管理アカウントが Cost Optimization Hub にオプトイン済み） | **`AfterDiscounts`**（割引反映済み） |
+| メンバーアカウント（管理アカウントがコスト最適化ハブにオプトイン済み） | **`AfterDiscounts`**（割引反映済み） |
 | メンバーアカウント（管理アカウントが未オプトイン） | `BeforeDiscounts`（オンデマンドのみ） |
 
-つまり**管理アカウントが Cost Optimization Hub を有効にするかどうかが、
+つまり**管理アカウントがコスト最適化ハブを有効にするかどうかが、
 組織全体の既定値を決めるスイッチ**になっています。
 管理アカウントがオプトアウトすると、明示設定のないメンバーアカウントは
 `BeforeDiscounts` に戻ります。
@@ -341,30 +342,52 @@ Savings Plans や RI を大量に持っている組織では、
 なお削減額の計算方法は「現在のインスタンスの稼働時間数 × 現在と推奨タイプのレート差」で、
 ダッシュボードに出る数字は**アカウント内の全 Over-provisioned インスタンスの合計**です。
 
+### 設定の依存関係
+
+3 つの設定には順序があります。**Compute Optimizer のオプトインが先**です。
+
+```text
+① Cost Explorer 有効化（請求データの供給元。API 不可、コンソールのみ）
+        ↓
+② Compute Optimizer オプトイン（前述の update-enrollment-status）
+        ↓
+③ コスト最適化ハブ 有効化（Compute Optimizer の推奨を取り込む）
+        ↓
+④ 節約額見積もりモード（既定で有効なケースあり。必要時のみ調整）
+```
+
+②を飛ばして③を有効化すると、後述のエラーメッセージが出ます。
+
 ### 操作手順 ①：Cost Explorer を有効化する（前提）
 
-Compute Optimizer と Cost Optimization Hub の両方が Cost Explorer を前提にしているので、
+Compute Optimizer とコスト最適化ハブの両方が Cost Explorer を前提にしているので、
 まずここから始めます。**API では有効化できません**（コンソールから初回アクセスするのが唯一の方法）。
 
-1. **Billing and Cost Management** コンソールを開く（`https://console.aws.amazon.com/costmanagement/`）
+1. **Billing and Cost Management（請求とコスト管理）** コンソールを開く（`https://console.aws.amazon.com/costmanagement/`）
 2. ナビゲーションペインで **Cost Explorer** を選択
-3. 「**Welcome to Cost Explorer**」画面で「**Launch Cost Explorer**」をクリック
+3. 「**Cost Explorer へようこそ**（Welcome to Cost Explorer）」ページで「**Cost Explorer の起動**（Launch Cost Explorer）」を選択
 
 当月分のデータが見えるまで約 24 時間、残りはさらに数日かかります。
 なお有効化の副作用として **Cost Anomaly Detection が自動設定される**点に注意してください
 （AWS サービスモニターと日次サマリー通知が作られます。不要なら後からオプトアウト可能）。
 
-### 操作手順 ②：Cost Optimization Hub を有効化する
+### 操作手順 ②：Cost Optimization Hub（コスト最適化ハブ）を有効化する
 
-Cost Optimization Hub は **Cost Explorer の中ではなく、Billing and Cost Management の
+コスト最適化ハブは **Cost Explorer の中ではなく、Billing and Cost Management の
 ナビゲーションペインに独立した項目**として並んでいます。ここが最初に迷うポイントです。
 
-1. **Billing and Cost Management** コンソールを開く（`https://console.aws.amazon.com/costmanagement/`）
+1. **Billing and Cost Management（請求とコスト管理）** コンソールを開く（`https://console.aws.amazon.com/costmanagement/`）
 2. ナビゲーションペインで「**Cost Optimization Hub**」を選択
 3. 組織／メンバーアカウントの範囲を選ぶ
    - **Enable Cost Optimization Hub for this account and all member accounts** — このアカウントと全メンバーアカウントの推奨を取り込む
    - **Enable Cost Optimization Hub for this account only** — このアカウントのみ
-4. 「**Enable**」をクリック
+4. 「**有効化**（Enable）」を選択
+
+> **表記が揺れている点に注意。** 日本語コンソールでは、ナビゲーションペインの項目名と
+> 有効化時の選択肢は「**Cost Optimization Hub**」と英語のままですが、
+> 後述のオプトアウト画面のチェックボックスは「**コスト最適化ハブを有効にする**」と
+> 日本語になっています。コンソール内を検索するときは
+> 「コスト最適化」「Cost Optimization」の両方を試すのが確実です。
 
 **組織全体を選ぶなら管理アカウントで実施してください。**
 前掲の表のとおり、これがメンバーアカウントの既定値を `AfterDiscounts` にするスイッチです。
@@ -379,24 +402,67 @@ Organizations の「すべての機能」有効化が前提で、
 
 推奨事項の取り込み完了まで**最大 24 時間**かかります。
 また、無効化する場合は経路が変わり、
-**Cost Management Preferences → Preferences → Cost Optimization Hub タブ**から
-チェックを外して「Save preferences」です。
+ナビゲーションペインの**「コスト管理の設定」→「詳細設定」→「Cost Optimization Hub」タブ**から
+「**コスト最適化ハブを有効にする**」のチェックを外して「**設定を保存**」です。
 **管理アカウントから全メンバーアカウントを一括オプトアウトすることはできず**、
 メンバーアカウントごとに実施する必要があります。
 
 > 推奨事項は**米国東部（バージニア北部）リージョンに保存**されます。
 > データの保存場所に制約がある場合は事前に確認してください。
 
-### 操作手順 ③：節約見積モードをリージョン単位で調整する
+#### 「Ensure that you are enrolled into Compute Optimizer」と出たら
+
+有効化直後にこのメッセージが出ることがあります。
+
+```text
+Ensure that you are enrolled into Compute Optimizer to view the cost efficiency.
+Request ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**これはコスト最適化ハブの有効化が失敗したという意味ではありません。**
+「**コスト効率性（cost efficiency）メトリクスが計算できない**」という表示です。
+コスト効率性はページ上部に出る指標で、計算式は次のとおり
+Compute Optimizer 由来の削減余地を分母・分子に使うため、依存しています。
+
+```text
+コスト効率性 = 1 -（潜在的削減額 / 最適化可能な支出の合計）× 100%
+```
+
+原因は 2 つあります。
+
+1. **Compute Optimizer にオプトインしていない** — 前掲の依存関係②が抜けています。
+   まず現状を確認してください。
+
+   ```bash
+   aws compute-optimizer get-enrollment-status
+   ```
+
+   `status` が `Inactive` なら、オプトインします
+   （コンソールなら Compute Optimizer → 「Get started」→「Opt in」）。
+
+   ```bash
+   aws compute-optimizer update-enrollment-status --status Active
+   ```
+
+2. **オプトイン済みでも、使用量のばらつきが大きい** — 公式 FAQ に
+   「high variance in your AWS usage」の場合は生成されないと明記されており、
+   **使用量が安定すれば自動的に生成**されます。この場合は待つのが正解で、
+   設定をいじる必要はありません。
+
+なお**新規に使い始めた直後は履歴グラフも出ません**。
+これも異常ではなく、データの蓄積待ちです。
+①②を済ませていても、推奨事項の取り込みには最大 24 時間かかる点も併せて思い出してください。
+
+### 操作手順 ③：節約額見積もりモードをリージョン単位で調整する
 
 既定値のままで良いケースが多いですが、
 メンバーアカウントに対して明示設定したい場合はこちらです。
 設定先は Billing ではなく **Compute Optimizer 側のコンソール**です。
 
 1. **Compute Optimizer** コンソールを開く（`https://console.aws.amazon.com/compute-optimizer/`）
-2. ナビゲーションペインで「**General**」を選択
-3. 「**Savings estimation mode**」タブ →「**Edit**」
-4. 有効にしたい**リージョンを選択**して「**Save**」（解除は選択を外す）
+2. ナビゲーションペインで「**全般**（General）」を選択
+3. 「**節約額見積もりモード**（Savings estimation mode）」タブ →「**編集**（Edit）」
+4. 有効にしたい**リージョンを選択**して「**保存**（Save）」（解除は選択を外す）
 
 **設定はリージョン単位**である点に注意してください。
 反映（割引反映済みの推奨が出るまで）に最大 24 時間かかります。
@@ -405,7 +471,7 @@ Organizations の「すべての機能」有効化が前提で、
 CLI でも設定できます。`--resource-type` は**必須**です。
 
 ```bash
-# 節約見積モードを割引反映済みに（アカウント単位）
+# 節約額見積もりモードを割引反映済みに（アカウント単位）
 aws compute-optimizer put-recommendation-preferences \
   --resource-type Ec2Instance \
   --savings-estimation-mode AfterDiscounts
@@ -636,7 +702,8 @@ JSON の構造を横断して見る必要があるため LLM に投げるのが�
 
 1. **メモリ推奨には統合 CloudWatch Agent が必須です。** これを入れずに Over-provisioned を信じると OOM を踏みます。最重要項目です。
 2. **RDS の過剰プロビジョニング検出には Performance Insights が必要です。** 有効化していないと「下げられる」判定が出ません。
-3. **Cost Explorer は必須、Cost Optimization Hub は実質必須です。** 前者がないと削減額が出ず、後者がないと数字が割引前で過大になります。**管理アカウントで Cost Optimization Hub を有効にすると、メンバーアカウントの節約見積モードの既定値が `AfterDiscounts` になります**（Billing and Cost Management → Cost Optimization Hub）。
+3. **Cost Explorer は必須、Cost Optimization Hub（コスト最適化ハブ）は実質必須です。** 前者がないと削減額が出ず、後者がないと数字が割引前で過大になります。**管理アカウントでコスト最適化ハブを有効にすると、メンバーアカウントの節約額見積もりモードの既定値が `AfterDiscounts` になります**（請求とコスト管理 → Cost Optimization Hub）。
+12. **設定の順序に依存関係があります。** Cost Explorer → Compute Optimizer オプトイン → コスト最適化ハブの順です。Compute Optimizer 未オプトインのままハブを有効化すると「Ensure that you are enrolled into Compute Optimizer」と表示されます（ハブの有効化自体は失敗していません）。
 4. **32 日ルックバックは無料です。** 月次パターンを拾えるので、まず設定しておきます。93 日（有料）は季節性のあるリソースに絞ります。
 5. **繁忙期を含む期間で判断します。** 14 日間が閑散期に当たっていれば、当然「過剰」と出ます。年次イベントを持つシステムには 93 日でも足りないことがあります。
 6. **パフォーマンスリスクが `medium` 以上の推奨は、そのまま適用しません。** 投影メトリクスで検証します。

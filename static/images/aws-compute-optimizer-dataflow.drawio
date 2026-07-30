@@ -54,8 +54,8 @@
         </mxCell>
 
         <!-- Pricing sources -->
-        <mxCell id="pricing" value="Cost Explorer（有効化が必須）／Cost Optimization Hub（推奨）&#xa;現在と推奨構成の料金差・推定月間削減額を算出。Cost Optimization Hub を有効にすると&#xa;Savings Plans / リザーブドインスタンスの割引を織り込んだ削減額になる（節約見積モード）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#444444;dashed=1;dashPattern=6 4;" vertex="1" parent="1">
-          <mxGeometry x="320" y="400" width="520" height="80" as="geometry"/>
+        <mxCell id="pricing" value="Cost Explorer（有効化が必須）／Cost Optimization Hub＝コスト最適化ハブ（推奨）&#xa;現在と推奨構成の料金差・推定月間削減額を算出。コスト最適化ハブを有効にすると&#xa;Savings Plans / RI の割引を織り込んだ削減額になる（節約額見積もりモード）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#444444;dashed=1;dashPattern=6 4;" vertex="1" parent="1">
+          <mxGeometry x="310" y="398" width="560" height="84" as="geometry"/>
         </mxCell>
 
         <!-- Opt-in note -->
