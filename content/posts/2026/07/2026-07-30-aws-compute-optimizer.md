@@ -309,10 +309,25 @@ EBS ボリューム、ECS サービスの 5 種類でサポートされます。
 - **Estimated monthly savings (On-Demand)** — オンデマンド料金前提の削減額
 - **Estimated monthly savings (after discounts)** — Savings Plans / リザーブドインスタンスの割引を織り込んだ削減額
 
-後者を出すには**節約見積モード（savings estimation mode）**を有効にする必要があります。
-無効のままだとオンデマンド前提の数字しか出ません。
+後者を出すのが**節約見積モード（savings estimation mode）**です。
+ここで誤解しやすいのですが、**明示設定しなくても既定で有効になるケースがあります**。
+既定の挙動はアカウント種別と Cost Optimization Hub の登録状況で決まります。
 
-さらに、Cost Optimization Hub を有効化していると、推奨の生成に
+| アカウント種別 | 既定の節約見積モード |
+| --- | --- |
+| 管理アカウント / 委任管理者 | **`AfterDiscounts`**（割引反映済み） |
+| スタンドアロンアカウント | **`AfterDiscounts`**（割引反映済み） |
+| メンバーアカウント（管理アカウントが Cost Optimization Hub にオプトイン済み） | **`AfterDiscounts`**（割引反映済み） |
+| メンバーアカウント（管理アカウントが未オプトイン） | `BeforeDiscounts`（オンデマンドのみ） |
+
+つまり**管理アカウントが Cost Optimization Hub を有効にするかどうかが、
+組織全体の既定値を決めるスイッチ**になっています。
+管理アカウントがオプトアウトすると、明示設定のないメンバーアカウントは
+`BeforeDiscounts` に戻ります。
+なお Cost Explorer で「Linked account discounts」を無効にしている場合も
+`BeforeDiscounts` になります。
+
+Cost Optimization Hub を有効化していると、推奨の生成に
 **Cost Optimization Hub のデータ**が使われます。ここには自社固有の割引が含まれます。
 有効化していない場合は Cost Explorer のデータとオンデマンド料金情報が使われます。
 
@@ -325,6 +340,96 @@ Savings Plans や RI を大量に持っている組織では、
 
 なお削減額の計算方法は「現在のインスタンスの稼働時間数 × 現在と推奨タイプのレート差」で、
 ダッシュボードに出る数字は**アカウント内の全 Over-provisioned インスタンスの合計**です。
+
+### 操作手順 ①：Cost Explorer を有効化する（前提）
+
+Compute Optimizer と Cost Optimization Hub の両方が Cost Explorer を前提にしているので、
+まずここから始めます。**API では有効化できません**（コンソールから初回アクセスするのが唯一の方法）。
+
+1. **Billing and Cost Management** コンソールを開く（`https://console.aws.amazon.com/costmanagement/`）
+2. ナビゲーションペインで **Cost Explorer** を選択
+3. 「**Welcome to Cost Explorer**」画面で「**Launch Cost Explorer**」をクリック
+
+当月分のデータが見えるまで約 24 時間、残りはさらに数日かかります。
+なお有効化の副作用として **Cost Anomaly Detection が自動設定される**点に注意してください
+（AWS サービスモニターと日次サマリー通知が作られます。不要なら後からオプトアウト可能）。
+
+### 操作手順 ②：Cost Optimization Hub を有効化する
+
+Cost Optimization Hub は **Cost Explorer の中ではなく、Billing and Cost Management の
+ナビゲーションペインに独立した項目**として並んでいます。ここが最初に迷うポイントです。
+
+1. **Billing and Cost Management** コンソールを開く（`https://console.aws.amazon.com/costmanagement/`）
+2. ナビゲーションペインで「**Cost Optimization Hub**」を選択
+3. 組織／メンバーアカウントの範囲を選ぶ
+   - **Enable Cost Optimization Hub for this account and all member accounts** — このアカウントと全メンバーアカウントの推奨を取り込む
+   - **Enable Cost Optimization Hub for this account only** — このアカウントのみ
+4. 「**Enable**」をクリック
+
+**組織全体を選ぶなら管理アカウントで実施してください。**
+前掲の表のとおり、これがメンバーアカウントの既定値を `AfterDiscounts` にするスイッチです。
+Organizations の「すべての機能」有効化が前提で、
+実行すると Cost Optimization Hub の信頼されたアクセスも有効になります。
+
+必要な IAM 権限は次の 3 つ（組織全体の場合は `organizations:EnableAWSServiceAccess` を追加）。
+
+- `iam:CreateServiceLinkedRole` — `AWSServiceRoleForCostOptimizationHub` の作成
+- `iam:PutRolePolicy`
+- `cost-optimization-hub:UpdateEnrollmentStatus`
+
+推奨事項の取り込み完了まで**最大 24 時間**かかります。
+また、無効化する場合は経路が変わり、
+**Cost Management Preferences → Preferences → Cost Optimization Hub タブ**から
+チェックを外して「Save preferences」です。
+**管理アカウントから全メンバーアカウントを一括オプトアウトすることはできず**、
+メンバーアカウントごとに実施する必要があります。
+
+> 推奨事項は**米国東部（バージニア北部）リージョンに保存**されます。
+> データの保存場所に制約がある場合は事前に確認してください。
+
+### 操作手順 ③：節約見積モードをリージョン単位で調整する
+
+既定値のままで良いケースが多いですが、
+メンバーアカウントに対して明示設定したい場合はこちらです。
+設定先は Billing ではなく **Compute Optimizer 側のコンソール**です。
+
+1. **Compute Optimizer** コンソールを開く（`https://console.aws.amazon.com/compute-optimizer/`）
+2. ナビゲーションペインで「**General**」を選択
+3. 「**Savings estimation mode**」タブ →「**Edit**」
+4. 有効にしたい**リージョンを選択**して「**Save**」（解除は選択を外す）
+
+**設定はリージョン単位**である点に注意してください。
+反映（割引反映済みの推奨が出るまで）に最大 24 時間かかります。
+なお有効化できるのは**組織の管理アカウントまたは委任管理者のみ**です。
+
+CLI でも設定できます。`--resource-type` は**必須**です。
+
+```bash
+# 節約見積モードを割引反映済みに（アカウント単位）
+aws compute-optimizer put-recommendation-preferences \
+  --resource-type Ec2Instance \
+  --savings-estimation-mode AfterDiscounts
+
+# 併せて、記事前半で推奨した「無料の 32 日ルックバック」もここで設定できる
+aws compute-optimizer put-recommendation-preferences \
+  --resource-type Ec2Instance \
+  --look-back-period DAYS_32
+
+# 現在の設定を確認
+aws compute-optimizer get-effective-recommendation-preferences \
+  --resource-arn arn:aws:ec2:ap-northeast-1:123456789012:instance/i-0123456789abcdef0
+```
+
+`--resource-type` の有効値は
+`Ec2Instance` / `AutoScalingGroup` / `EbsVolume` / `EcsService` / `RdsDBInstance` / `AuroraDBClusterStorage`、
+`--look-back-period` は `DAYS_14` / `DAYS_32` / `DAYS_93`（93 日は拡張インフラメトリクスが必要）です。
+`Ec2Instance` はスタンドアロンインスタンスと Auto Scaling グループ内のインスタンスの両方を含み、
+`AutoScalingGroup` はグループ内のインスタンスのみを対象とします。
+
+なお **Auto Scaling グループのルックバック期間はリソースレベルでしか設定できません**
+（`--scope name=ResourceArn,value=<ASG の ARN>` を指定）。
+組織レベル・アカウントレベルでは設定できないので、
+一括で 32 日にしたつもりが ASG だけ 14 日のまま、という状態になりがちです。
 
 ## AWS CLI で運用に組み込む（`export-*` で S3 出力）
 
@@ -531,7 +636,7 @@ JSON の構造を横断して見る必要があるため LLM に投げるのが�
 
 1. **メモリ推奨には統合 CloudWatch Agent が必須です。** これを入れずに Over-provisioned を信じると OOM を踏みます。最重要項目です。
 2. **RDS の過剰プロビジョニング検出には Performance Insights が必要です。** 有効化していないと「下げられる」判定が出ません。
-3. **Cost Explorer は必須、Cost Optimization Hub は実質必須です。** 前者がないと削減額が出ず、後者がないと数字が割引前で過大になります。
+3. **Cost Explorer は必須、Cost Optimization Hub は実質必須です。** 前者がないと削減額が出ず、後者がないと数字が割引前で過大になります。**管理アカウントで Cost Optimization Hub を有効にすると、メンバーアカウントの節約見積モードの既定値が `AfterDiscounts` になります**（Billing and Cost Management → Cost Optimization Hub）。
 4. **32 日ルックバックは無料です。** 月次パターンを拾えるので、まず設定しておきます。93 日（有料）は季節性のあるリソースに絞ります。
 5. **繁忙期を含む期間で判断します。** 14 日間が閑散期に当たっていれば、当然「過剰」と出ます。年次イベントを持つシステムには 93 日でも足りないことがあります。
 6. **パフォーマンスリスクが `medium` 以上の推奨は、そのまま適用しません。** 投影メトリクスで検証します。
@@ -571,6 +676,11 @@ CPU 5% 未満・ネットワーク 5 MB/日 未満で 14 日間動いていた E
 - [Enhanced infrastructure metrics — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/enhanced-infrastructure-metrics.html)
 - [Rightsizing recommendation preferences — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/rightsizing-preferences.html)
 - [Opting in to AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/account-opt-in.html)
+- [Getting started with Cost Optimization Hub — AWS Cost Management](https://docs.aws.amazon.com/cost-management/latest/userguide/coh-getting-started.html)
+- [Savings estimation mode — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/savings-estimation-mode.html)
+- [Activating savings estimation mode — AWS Compute Optimizer](https://docs.aws.amazon.com/compute-optimizer/latest/ug/activate-savings-estimation-mode.html)
+- [Enabling Cost Explorer — AWS Cost Management](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-enable.html)
+- [PutRecommendationPreferences — API リファレンス](https://docs.aws.amazon.com/compute-optimizer/latest/APIReference/API_PutRecommendationPreferences.html)
 - [boto3 ComputeOptimizer クライアントリファレンス](https://docs.aws.amazon.com/boto3/latest/reference/services/compute-optimizer.html)
 - [Specifying an existing S3 bucket for your recommendations export](https://docs.aws.amazon.com/compute-optimizer/latest/ug/create-s3-bucket-policy-for-compute-optimizer.html)
 - [AWS Compute Optimizer now supports idle recommendations for six additional resource types](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-compute-optimizer-six-new-idle/)
