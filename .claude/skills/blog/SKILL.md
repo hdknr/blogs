@@ -284,16 +284,17 @@ After drafting the post, open a PR following this procedure.
    git -C "$WORKTREE_DIR" commit -m "Add blog post: <post-title-in-Japanese>"
    git -C "$WORKTREE_DIR" push -u origin "$BRANCH_NAME"
    ```
-7. Create the PR (explicitly pin the branch with `--head` and avoid `cd`):
+7. Create the PR **as a draft** (explicitly pin the branch with `--head` and avoid `cd`):
    Write the PR body to a file inside the worktree, then pass it via `--body-file`. The worktree is outside `.claude/`, so the Write tool can write to it directly.
    ```bash
    # Use the Write tool to write the PR body to $WORKTREE_DIR/pr_body.md
-   gh pr create --repo hdknr/blogs --head "$BRANCH_NAME" --title "Add blog: <post-title-in-Japanese>" --body-file "$WORKTREE_DIR/pr_body.md"
+   gh pr create --repo hdknr/blogs --draft --head "$BRANCH_NAME" --title "Add blog: <post-title-in-Japanese>" --body-file "$WORKTREE_DIR/pr_body.md"
    ```
+   **`--draft` is mandatory.** `linkcheck.yml` triggers on `pull_request: [ready_for_review, reopened]`, not on every push. Creating the PR as a draft means the Link check runs **once**, when `/ship` marks it ready — instead of once per intermediate push during review and follow-up edits.
    **Note: do not use `cd "$WORKTREE_DIR" && gh pr create`.** Commands that start with `cd` do not match the `Bash(gh:*)` allowlist pattern and trigger a prompt every time. As long as you pass `--head`, you do not need to be inside the worktree.
    **Note: do not use the `--body "$(cat <<'EOF'...)"` style.** Lines starting with `#` inside the HEREDOC trip a security check ("quoted newline followed by #-prefixed line") and trigger a prompt every time.
 8. Note the PR URL (used when linking back to the source).
-9. **Remove the worktree once the PR is merged.** When the user confirms the merge, run `git worktree remove --force "$WORKTREE_DIR"` (the `--force` is needed because of untracked files like `pr_body.md`).
+9. **Hand off to `/ship` — do not merge or clean up here.** Tell the user the PR is a draft and that `/ship <PR-number>` will take it through ready → CI → merge → worktree removal → Wiki ingest check. Follow-up edits requested by the user are pushed to the same draft branch; because the PR is still a draft, those pushes do not fire CI.
 
 ## Link back to source + 🚀-reaction mark
 
@@ -348,19 +349,21 @@ gh api /repos/{owner}/{repo}/issues/{issue_number}/comments \
 
 > The announcement comment body is written in Japanese — it is user-facing.
 
-## Post-merge follow-up
+## Handing off to `/ship`
 
-1. Send the PR URL to the user.
-2. After merge, auto-remove the worktree (force-remove because of untracked files like `pr_body.md`):
-   ```bash
-   git worktree remove --force "$WORKTREE_DIR"
-   ```
-3. **Wiki auto-ingest check**: after merge, decide whether to run `/wiki-ingest`:
-   1. **Skip-condition check first**: if the caller (e.g. the prompt itself) has explicitly told you to skip Wiki auto-ingest — for example by including text like "Wiki auto-ingest check は実行しないでください" or "/wiki-ingest はスキップ" — do not execute this step at all. This applies whenever `/blog` is invoked from `scripts/blog-batch.sh` or any other automation, because running `/wiki-ingest` inside the same blog branch causes wiki commits to be bundled into every blog PR and creates merge conflicts when multiple blog PRs run in parallel.
-   2. Read the last ingest date from `.claude/wiki-last-ingest.txt` (default `1970-01-01` if missing).
-   3. Count posts in `content/posts/` whose frontmatter `date` is on or after that date.
-   4. **≥ 20 posts**: auto-run `/wiki-ingest all`, then update `.claude/wiki-last-ingest.txt` to today.
-   5. **< 20 posts**: just report "Wiki update in N more posts" (do not run ingest).
+`/blog` ends at "draft PR created, source marked with 🚀". It does **not** mark the PR
+ready, wait for CI, merge, remove the worktree, or run the Wiki ingest check — all of that
+lives in `/ship` (`.claude/skills/ship/SKILL.md`).
+
+1. Send the PR URL to the user and state that it is a **draft**.
+2. Tell them `/ship <PR-number>` runs ready → Link check → merge → worktree removal →
+   Wiki ingest check as one sequence.
+3. If the user asks for follow-up edits, push them to the same branch. The PR is still a
+   draft, so those pushes do not fire CI — which is the entire point of the split.
+
+> Why the split: `linkcheck.yml` triggers on `pull_request: [ready_for_review, reopened]`.
+> Keeping the PR in draft during drafting and review means the Link check runs once, at
+> ship time, instead of once per push.
 
    ```bash
    # Read the last ingest date

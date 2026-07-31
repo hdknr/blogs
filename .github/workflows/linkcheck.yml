@@ -1,13 +1,30 @@
 name: Link check
 
 on:
+  # PRs are created as DRAFT by the /blog skill and marked ready only when the
+  # post is final, so the internal check runs ONCE per PR — at the moment the PR
+  # becomes mergeable. `synchronize` is deliberately absent: without it, the
+  # intermediate pushes during drafting/review no longer each trigger a full run.
+  #
+  # Consequences to be aware of:
+  #   - A PR opened directly as ready (not draft) fires no run. Toggle it with
+  #     `gh pr ready --undo` then `gh pr ready`, or use workflow_dispatch.
+  #   - Pushing more commits to an ALREADY-ready PR does not re-run the check,
+  #     so its status reflects the commit at ready time. Re-toggle as above.
   pull_request:
+    types: [ready_for_review, reopened]
   push:
     branches: ["main"]
   schedule:
     # Weekly external-link sweep: Monday 00:00 UTC (09:00 JST)
     - cron: "0 0 * * 1"
   workflow_dispatch:
+
+# Safety net for the re-toggle cases above: never let a superseded run keep
+# burning minutes once a newer one starts for the same ref.
+concurrency:
+  group: linkcheck-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

@@ -21,6 +21,7 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - `scripts/categorize.py` — automatic category/tag assignment
 - `hugo.toml` — Hugo config
 - `.claude/skills/blog/` — `/blog` skill
+- `.claude/skills/ship/` — `/ship` skill (draft PR → ready → CI → merge → cleanup)
 - `.claude/agents/` — custom specialist agents
 - `.claude/temp/` — scratch dir (gitignored, use instead of `/tmp`)
 - `.worktrees/` — git worktree dir (gitignored, lives outside `.claude/` so it is not flagged as a sensitive file)
@@ -89,6 +90,21 @@ See "コミット・ブランチ・PR 作成" in `.claude/skills/blog/SKILL.md` 
 - Commit message: `Add blog post: <post-title-in-Japanese>`
 - PR title: `Add blog: <post-title-in-Japanese>`
 - When the source is a GitHub URL, append a link back to the source after the PR is created.
+- **Open PRs as drafts** (`gh pr create --draft`). Merges use merge commits (`gh pr merge --merge`), not squash.
+
+## Draft → ready → CI → merge (`/ship`)
+
+`linkcheck.yml` triggers on `pull_request: [ready_for_review, reopened]` — **not** on every
+push. So the internal link check runs once per PR, when the PR becomes mergeable.
+
+- `/blog` creates a **draft** PR and stops there. Follow-up edits are pushed to the same
+  draft branch and fire no CI.
+- `/ship <PR-number>` does ready → wait for Link check → merge (only if green) → remove the
+  worktree → Wiki ingest check.
+- A PR that is already ready needs `gh pr ready --undo` then `gh pr ready` to fire CI for
+  the current head; `/ship` handles this. A green check from an earlier commit does not
+  cover the current head.
+- See `.claude/skills/ship/SKILL.md`.
 
 ## Blog-post status tracking (🚀 reaction convention)
 
