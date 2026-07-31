@@ -66,9 +66,14 @@ gh pr ready $PR --repo hdknr/blogs
 
 ### 3. Wait for the Link check
 
-Run as a **background** Bash call. The `length > 0` guard is essential: immediately after
-`gh pr ready`, GitHub has not registered the run yet and an unguarded "nothing is pending"
-test would pass instantly.
+Run as a **background** Bash call. Two properties of this loop are load-bearing:
+
+- The `length > 0` guard: immediately after `gh pr ready`, GitHub has not registered the run
+  yet, and an unguarded "nothing is pending" test would pass instantly.
+- The comparison is **positive** (`= "done"`), never negative (`!= "OPEN"`-style). A
+  transient `gh` failure produces an empty string, which must mean *keep waiting*. A
+  negated test treats that empty string as "condition met" and exits with a false positive
+  — silently skipping the CI gate. Always write poll conditions so that "no answer" loops.
 
 ```bash
 until [ "$(gh pr checks $PR --repo hdknr/blogs --json bucket --jq 'if length > 0 and (all(.[]; .bucket != "pending")) then "done" else "wait" end' 2>/dev/null)" = "done" ]; do sleep 20; done
