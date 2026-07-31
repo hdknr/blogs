@@ -65,7 +65,7 @@ export ANTHROPIC_API_KEY="dummy"
 ./rust/target/release/claw
 ```
 
-具体的な使い方やオプションについては、リポジトリの [USAGE.md](https://github.com/codetwentyfive/claw-code-local/blob/main/USAGE.md) を参照してください。
+具体的な使い方やオプションについては、リポジトリの [README](https://github.com/codetwentyfive/claw-code-local#readme) を参照してください。
 
 ## おすすめのローカルモデル
 
