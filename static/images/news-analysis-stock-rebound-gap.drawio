@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="事実のインパクトと市場反応のギャップ">
+    <mxGraphModel dx="900" dy="700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="700" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="事実のインパクト × 市場の反応で見る反転上昇の期待値" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="20" width="500" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="ylabel" value="市場の反応（二次ソース・PTS）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;horizontal=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="30" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ytop" value="過剰&#10;（狼狽売り）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="90" y="140" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ybot" value="冷静&#10;（想定内）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="90" y="360" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="q_a" value="◎ 反転上昇の最有力候補&#10;悪材料出尽くし＋高β で&#10;短期リターンを狙える" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="120" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="q_b" value="△ 自律反発どまり&#10;戻り売りに押されやすく&#10;戻りは限定的" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="120" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="q_c" value="− 妙味なし&#10;歪みがないので&#10;エントリー根拠が薄い" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="260" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="q_d" value="× 下落継続&#10;織り込みが進んでおらず&#10;業績下方修正が続く可能性" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="260" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="xlabel" value="事実（一次ソース）の悪材料インパクト" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="440" width="460" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xleft" value="限定的・一過性&#10;（減損の一括計上など）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="180" y="395" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xright" value="構造的・継続的&#10;（需要そのものの消失）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="420" y="395" width="220" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
