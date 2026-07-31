@@ -72,11 +72,9 @@ exclude = [
   "^https?://(www\\.)?polymarket\\.com/",
   "^https?://(www\\.)?coveo\\.com/",
   "^https?://(www\\.)?ainvest\\.com/",
-  "^https?://(www\\.)?command\\.jp/",
-  # Hosts that drop the connection mid-response for non-browser clients
-  # (verified 200 with a browser User-Agent).
-  "^https?://(www\\.)?about-life\\.coffee/",
   # Hosts with expired / self-signed / untrusted certs (reachable in browser).
+  # semrush.jp serves 200 but omits the intermediate cert, so clients that do
+  # not chase the AIA extension (lychee) reject it while browsers accept it.
   "^https?://(www\\.)?semrush\\.jp/",
   "^https?://pycaret\\.org/",
   "^https?://agent-tars\\.com/",
