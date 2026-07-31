@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="ニュース分析から反転上昇を捉えるフロー">
+    <mxGraphModel dx="900" dy="700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="700" pageHeight="640" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="下落から反転上昇を捉える 4 ステップ" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="20" width="440" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="box1" value="STEP 1 ニュースの精査&#10;一次ソース（適時開示・決算短信）で&#10;悪材料が一過性か構造的かを切り分け" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="80" width="340" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="arr12" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;" edge="1" source="box1" target="box2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="box2" value="STEP 2 サプライズ度の測定&#10;市場コンセンサスとの乖離を評価&#10;「悪いが予想よりマシ」かを判定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="200" width="340" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="arr23" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;" edge="1" source="box2" target="box3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="box3" value="STEP 3 出尽くしの兆候確認&#10;出来高急増・下ヒゲ・PTS の過剰反応と&#10;その戻りで売り一巡を確認" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="320" width="340" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="arr34" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;" edge="1" source="box3" target="box4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="box4" value="STEP 4 β値による銘柄・戦略選定&#10;地合いと β を踏まえて&#10;反転時の上昇パワーを見積もる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="440" width="340" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="arr45" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;" edge="1" source="box4" target="box5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="box5" value="エントリー判断（時期・サイズ）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="560" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" value="ここで&#10;判断を誤ると&#10;以降が無意味" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="530" y="80" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="note2" value="ギャップ（歪み）&#10;を見つける工程" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="530" y="200" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="note3" value="タイミングを&#10;決める工程" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="530" y="320" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="note4" value="リターン幅を&#10;見積もる工程" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="530" y="440" width="120" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
