@@ -1,0 +1,94 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="ve-construction-stages" name="VE in Construction Project Stages">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="建設プロジェクトの段階と VE の適用 — 設計VE / 入札時VE / 契約後VE" style="text;html=1;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="160" y="18" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Stage row label -->
+        <mxCell id="lbl-stage" value="事業の段階" style="text;html=1;fontSize=12;fontStyle=1;align=right;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="20" y="90" width="120" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Stages -->
+        <mxCell id="st1" value="企画・計画" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1e1e1;strokeColor=#999999;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="90" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="st2" value="設計" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="90" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="st3" value="入札・契約" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="90" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="st4" value="施工" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="90" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="st5" value="維持管理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1e1e1;strokeColor=#999999;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="830" y="90" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow-time" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#999999;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1000" y="115" as="sourcePoint"/>
+            <mxPoint x="1070" y="115" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- VE type row label -->
+        <mxCell id="lbl-ve" value="国土交通省の&#xa;VE 方式" style="text;html=1;fontSize=12;fontStyle=1;align=right;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="20" y="170" width="120" height="120" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ve1" value="設計VE&#xa;&#xa;発注者が設計段階で&#xa;複数案を検討し、&#xa;仕様そのものを見直す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="325" y="170" width="160" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="ve2" value="入札時VE&#xa;&#xa;競争参加者が施工方法の&#xa;技術提案を出し、&#xa;その前提で価格競争する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="495" y="170" width="160" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="ve3" value="契約後VE&#xa;&#xa;受注者が契約後に提案。&#xa;採用されれば設計図書と&#xa;契約金額を変更する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="665" y="170" width="160" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- Who proposes -->
+        <mxCell id="lbl-who" value="提案する側" style="text;html=1;fontSize=12;fontStyle=1;align=right;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="20" y="305" width="120" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="who1" value="発注者（＋設計者）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef3fb;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="325" y="305" width="160" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="who2" value="入札参加者" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdf6e0;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="495" y="305" width="160" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="who3" value="受注者" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf4e8;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="665" y="305" width="160" height="34" as="geometry"/>
+        </mxCell>
+
+        <!-- Incentive note for 契約後VE -->
+        <mxCell id="inc" value="採用時のインセンティブ：&#xa;縮減見込額の 10分の5 を「VE管理費」として&#xa;契約金額から減額しない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;dashed=1;fontSize=11;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="620" y="355" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="inc-edge" style="endArrow=none;html=1;strokeColor=#82b366;dashed=1;" edge="1" parent="1" source="ve3" target="inc">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Leverage curve -->
+        <mxCell id="lbl-lev" value="コストへの&#xa;影響度" style="text;html=1;fontSize=12;fontStyle=1;align=right;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="20" y="450" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="lev-big" value="大" style="triangle;whiteSpace=wrap;html=1;direction=east;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;verticalAlign=middle;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="150" y="450" width="840" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="lev-small" value="小" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="450" width="60" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="lev-note" value="上流ほど「機能そのもの」を変えられるため改善余地が大きい。&#xa;下流に行くほど手戻りコストが増え、変えられる範囲は施工方法に狭まる。" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="150" y="525" width="850" height="50" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

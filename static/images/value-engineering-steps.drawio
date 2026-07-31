@@ -1,0 +1,96 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="ve-steps" name="VE Implementation Steps">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="VE の実施手順 — 3つの基本ステップ × 10の詳細ステップ × VE質問" style="text;html=1;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="160" y="18" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Column headers -->
+        <mxCell id="h1" value="3つの基本ステップ" style="text;html=1;fontSize=12;fontStyle=1;align=center;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="68" width="150" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="10の詳細ステップ" style="text;html=1;fontSize=12;fontStyle=1;align=center;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="210" y="68" width="390" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="h3" value="VE質問（この問いを立て続ける）" style="text;html=1;fontSize=12;fontStyle=1;align=center;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="620" y="68" width="440" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- Basic step 1: 機能定義 -->
+        <mxCell id="b1" value="① 機能定義&#xa;（分解）&#xa;&#xa;顧客が求める&#xa;機能を洗い出す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="150" height="160" as="geometry"/>
+        </mxCell>
+        <!-- Basic step 2: 機能評価 -->
+        <mxCell id="b2" value="② 機能評価&#xa;（分析）&#xa;&#xa;機能ごとの&#xa;コストと価値を測る" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="265" width="150" height="160" as="geometry"/>
+        </mxCell>
+        <!-- Basic step 3: 代替案作成 -->
+        <mxCell id="b3" value="③ 代替案作成&#xa;（創造）&#xa;&#xa;同じ働きをする&#xa;別の手段を作り、&#xa;磨き、選ぶ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="430" width="150" height="215" as="geometry"/>
+        </mxCell>
+
+        <!-- Detailed steps -->
+        <mxCell id="s1" value="1. VE対象の情報収集" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef3fb;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="100" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="2. 機能の定義（「〜を〜する」で書く）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef3fb;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="155" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="3. 機能の整理（機能系統図を作る）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef3fb;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="210" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="4. 機能別コスト分析" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf6e0;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="265" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5" value="5. 機能の評価（機能評価値＝最小コストを置く）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf6e0;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="320" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6" value="6. 対象分野の選定（価値の程度・コスト低減余地）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf6e0;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="375" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s7" value="7. アイデア発想（発散：ブレーンストーミング）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf4e8;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="430" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s8" value="8. 概略評価（技術的・コスト的に成立するか）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf4e8;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="485" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s9" value="9. 具体化（利点・欠点分析→欠点克服→洗練化）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf4e8;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="540" width="390" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s10" value="10. 詳細評価（収束：実施の優先順位を決める）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf4e8;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="210" y="595" width="390" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- VE questions -->
+        <mxCell id="q1" value="それは何か" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontSize=12;fontStyle=2;align=left;spacingLeft=12;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="620" y="100" width="440" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="q23" value="その働きは何か" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontSize=12;fontStyle=2;align=left;spacingLeft=12;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="620" y="155" width="440" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="q4" value="そのコストはいくらか" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontSize=12;fontStyle=2;align=left;spacingLeft=12;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="620" y="265" width="440" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="q56" value="その価値はどうか" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontSize=12;fontStyle=2;align=left;spacingLeft=12;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="620" y="320" width="440" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="q7" value="ほかに同じ働きをするものはないか" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontSize=12;fontStyle=2;align=left;spacingLeft=12;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="620" y="430" width="440" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="q810" value="そのコストはいくらか&#xa;／ それは必要な機能を確実に果たすか" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b3b3b3;fontSize=12;fontStyle=2;align=left;spacingLeft=12;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="620" y="485" width="440" height="160" as="geometry"/>
+        </mxCell>
+
+        <!-- Footer note -->
+        <mxCell id="note" value="価値 ＝ 機能 ÷ コスト　／　機能は下げない（下げたらそれは CD＝コストダウン）" style="text;html=1;fontSize=12;fontStyle=1;align=center;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="210" y="655" width="850" height="24" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
