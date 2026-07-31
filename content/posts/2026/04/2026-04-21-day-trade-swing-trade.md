@@ -209,7 +209,7 @@ tags: ["株式投資", "デイトレード", "スイングトレード", "スキ
 - [信用取引のスイングトレードとは | SMBC日興証券](https://www.smbcnikko.co.jp/products/stock/margin/knowledge/011.html)
 - [【図解】スイングトレードとは？指標や時間軸についても解説 | 三菱UFJ eスマート証券](https://kabu.com/kabuyomu/money/547.html)
 - [スイングトレード成功のコツ｜保有期間と利確ラインの設定法を徹底解説](https://www.kabu-adviser.com/swing-trade-exit-strategy/)
-- [株式投資で決算またぎの対策【スイングトレード】](https://tomokazublog.com/kabusikitousi-kessanmatagi/)
+- 株式投資で決算またぎの対策【スイングトレード】
 - [損切りルール「あとから変更」はNG 利益確定、目標株価の決め方は - 日本経済新聞](https://www.nikkei.com/article/DGXZQOUB238OE0T20C25A5000000/)
 - [How Long is a Swing Trade Supposed to Last? - VectorVest](https://www.vectorvest.com/blog/swing-trading/how-long-is-a-swing-trade/)
 - [What Is the Best Stop Or Exit for Swing Trading? - QuantifiedStrategies](https://www.quantifiedstrategies.com/what-is-the-best-stop-or-exit-for-swing-trading/)

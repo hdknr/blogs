@@ -27,7 +27,10 @@ accept = ["200", "202", "206", "401", "403", "405", "406", "415", "429", "500", 
 
 max_retries = 2
 retry_wait_time = 3
-timeout = 20
+# 20s produced a steady trickle of TIMEOUT reports for hosts that answer fine
+# in ~20-25s under load (pola.rs, securityonline.info, cmr.berkeley.edu,
+# open-notebook.ai, …). 30s clears those without hiding real deaths.
+timeout = 30
 max_concurrency = 8
 
 exclude = [
@@ -69,7 +72,12 @@ exclude = [
   "^https?://(www\\.)?polymarket\\.com/",
   "^https?://(www\\.)?coveo\\.com/",
   "^https?://(www\\.)?ainvest\\.com/",
+  "^https?://(www\\.)?command\\.jp/",
+  # Hosts that drop the connection mid-response for non-browser clients
+  # (verified 200 with a browser User-Agent).
+  "^https?://(www\\.)?about-life\\.coffee/",
   # Hosts with expired / self-signed / untrusted certs (reachable in browser).
+  "^https?://(www\\.)?semrush\\.jp/",
   "^https?://pycaret\\.org/",
   "^https?://agent-tars\\.com/",
   "^https?://(www\\.)?zeals\\.co\\.jp/",

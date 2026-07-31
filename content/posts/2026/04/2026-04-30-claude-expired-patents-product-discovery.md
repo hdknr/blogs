@@ -226,7 +226,7 @@ between 40 and 120 micrometers..."
 
 | ツール | 用途 | 入手先 |
 |--------|------|--------|
-| USPTO Bulk Data | 特許データ取得 | [bulkdata.uspto.gov](https://bulkdata.uspto.gov) |
+| USPTO Bulk Data | 特許データ取得 | [bulkdata.uspto.gov](https://data.uspto.gov) |
 | markitdown | 文書を Markdown 変換 | [microsoft/markitdown](https://github.com/microsoft/markitdown) |
 | files-to-prompt | バッチ化 | [simonw/files-to-prompt](https://github.com/simonw/files-to-prompt) |
 | Claude（Skills 経由） | スコアリング | [Claude Code Skills](https://docs.anthropic.com/ja/docs/claude-code/overview) |
