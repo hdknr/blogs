@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="DTWによる類似局面抽出とスイッチング戦略">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="10" value="DTWで過去の類似局面を探し、SOX指数とNASDAQ100を切り替える" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="820" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="① 現在の局面を切り出す&#10;半導体出荷額（前年同月比）の直近48ヶ月&#10;※ 発表ラグを考慮し、投資時点で入手可能な値のみ使う" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="180" y="80" width="540" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="② 過去のサンプル群を作る&#10;起点を1ヶ月ずつずらして48ヶ月窓を大量に切り出す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="180" y="190" width="540" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="③ DTW距離で類似度を測る&#10;位相のズレを吸収して波形の似た系列を高く評価&#10;距離が小さい上位10％を「類似局面」として採用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="180" y="290" width="540" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="④ 期待超過リターンを推計&#10;類似局面の「翌月のSOX指数 − NASDAQ100」超過リターンを平均" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="180" y="400" width="540" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#6c8ebf;" edge="1" source="20" target="21" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#6c8ebf;" edge="1" source="21" target="22" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#82b366;" edge="1" source="22" target="23" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="40" value="超過リターン &gt; 0&#10;→ SOX指数（半導体）に投資" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#3d6b30;" vertex="1" parent="1">
+          <mxGeometry x="180" y="530" width="250" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="41" value="超過リターン ≦ 0&#10;→ NASDAQ100に退避" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;fontColor=#8f3b36;" vertex="1" parent="1">
+          <mxGeometry x="470" y="530" width="250" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#82b366;exitX=0.3;exitY=1;exitDx=0;exitDy=0;" edge="1" source="23" target="40" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#b85450;exitX=0.7;exitY=1;exitDx=0;exitDy=0;" edge="1" source="23" target="41" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="50" value="毎月末に判定を繰り返す" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="740" y="290" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="出所：ニッセイアセットマネジメント「クオンツトピックス No.28」（2025年2月20日号）の手法を筆者が整理" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=2;fontColor=#888888;" vertex="1" parent="1">
+          <mxGeometry x="40" y="630" width="820" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
