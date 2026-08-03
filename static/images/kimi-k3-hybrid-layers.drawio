@@ -1,0 +1,118 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="kimi-k3-hybrid-layers" name="Kimi K3 Hybrid Layer Stack">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="Kimi K3 の層構成 — 圧縮して持つ層と、文脈を探し直す層を混ぜる" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="全 93 層 = KDA 69 層 + Gated MLA 24 層（公式リポジトリの構成値）" style="text;html=1;fontSize=12;fontStyle=2;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
+          <mxGeometry x="250" y="50" width="600" height="22" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer stack group -->
+        <mxCell id="stack-group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#999999;verticalAlign=top;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="330" height="440" as="geometry"/>
+        </mxCell>
+        <mxCell id="stack-label" value="層の並び（模式図）" style="text;html=1;fontSize=12;fontStyle=1;align=center;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="290" height="22" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="l-out" value="出力" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="140" y="130" width="170" height="26" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="l1" value="KDA（固定サイズの記憶を更新）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="140" y="166" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="l2" value="KDA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="140" y="192" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="l3" value="KDA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="140" y="218" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="l4" value="Gated MLA（元の文脈を探し直す）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="244" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="l5" value="KDA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="140" y="270" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="l6" value="KDA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="140" y="296" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="l7" value="KDA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="140" y="322" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="l8" value="Gated MLA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="348" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="ldots" value="&#x22ee;" style="text;html=1;fontSize=18;align=center;verticalAlign=middle;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="140" y="374" width="170" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="l9" value="KDA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="140" y="400" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="l10" value="Gated MLA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="426" width="170" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="l-in" value="入力（最大 1,048,576 トークン）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="140" y="462" width="170" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="up-arrow" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="115" y="462" as="sourcePoint"/>
+            <mxPoint x="115" y="156" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="up-label" value="93 層" style="text;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;fontColor=#666666;rotation=-90;" vertex="1" parent="1">
+          <mxGeometry x="70" y="295" width="60" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Right: roles -->
+        <mxCell id="kda-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf2fd;strokeColor=#6c8ebf;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="440" y="110" width="600" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="kda-title" value="KDA 69 層 &#x2014; 圧縮して保持する" style="text;html=1;fontSize=14;fontStyle=1;align=left;verticalAlign=middle;fontColor=#4472C4;" vertex="1" parent="1">
+          <mxGeometry x="460" y="120" width="400" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="kda-body" value="&#x2022; 文脈長に依存しない固定サイズの状態を、差分更新と成分ごとの減衰で書き換える&#xa;&#x2022; KV キャッシュを持たないため、長文でもメモリと転送量が増えない&#xa;&#x2022; ただし、すべてを完璧に保存することはできない" style="text;html=1;fontSize=11;align=left;verticalAlign=top;fontColor=#333333;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="460" y="150" width="560" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="kda-cost" value="コスト：軽い　／　精度：完璧ではない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="228" width="300" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="mla-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdeeee;strokeColor=#b85450;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="440" y="300" width="600" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="mla-title" value="Gated MLA 24 層 &#x2014; 元の文脈から探し直す" style="text;html=1;fontSize=14;fontStyle=1;align=left;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="460" y="310" width="400" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="mla-body" value="&#x2022; 定期的に、必要な箇所を元の文脈から精密に参照し直す読み返し用の層&#xa;&#x2022; 圧縮した記憶では取り出せない事実を回収する役割&#xa;&#x2022; KV キャッシュを持つが、層数を絞ることで総量を抑える" style="text;html=1;fontSize=11;align=left;verticalAlign=top;fontColor=#333333;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="460" y="340" width="560" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="mla-cost" value="コスト：重い　／　精度：精密に参照できる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="418" width="300" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arr-kda" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;dashed=1;" edge="1" parent="1" source="l3" target="kda-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arr-mla" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;strokeWidth=2;dashed=1;" edge="1" parent="1" source="l8" target="mla-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Bottom takeaway -->
+        <mxCell id="takeaway" value="一つの記憶方式に賭けない。軽い圧縮記憶を主役にしつつ、精密な読み返しを一定割合で残す設計" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="550" width="980" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
