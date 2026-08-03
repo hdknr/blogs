@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="バリュー・グロース × シクリカル・ディフェンシブ マトリクス">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="10" value="シクリカルバリュー株&#xa;（景気敏感 × 割安）&#xa;&#xa;海運・鉄鋼・非鉄・化学・自動車&#xa;景気回復の初動で買われる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="90" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="シクリカルグロース株&#xa;（景気敏感 × 成長）&#xa;&#xa;半導体・電子部品・設備投資関連&#xa;サイクルの山では割高化しやすい" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="380" y="90" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="ディフェンシブバリュー株&#xa;（景気不感 × 割安）&#xa;&#xa;電力・ガス・通信&#xa;高配当のインカム狙いが中心" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="120" y="270" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="クオリティグロース株&#xa;（景気不感 × 成長）&#xa;&#xa;大手製薬・生活必需品・SaaS&#xa;高ROE・強いモートで安定成長" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="380" y="270" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#333333;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="260" as="sourcePoint" />
+            <mxPoint x="650" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="21" value="" style="endArrow=classic;startArrow=classic;html=1;strokeWidth=2;strokeColor=#333333;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="450" as="sourcePoint" />
+            <mxPoint x="370" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="30" value="割安（低PER・低PBR）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="110" y="460" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="成長期待（高PER）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="440" y="460" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="景気敏感" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="645" y="150" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="景気不感" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="645" y="320" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="40" value="縦軸：景気サイクルとの連動性　／　横軸：バリュエーション" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="120" y="30" width="500" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
