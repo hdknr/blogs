@@ -1,0 +1,124 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="rds-switchover-timeline" name="Switchover Timeline">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="切替の瞬間（prod-main・秒単位）— RDS 内部の1秒とアプリから見た約24秒" style="text;html=1;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="15" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane labels -->
+        <mxCell id="laneRDS" value="RDS 内部" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="90" width="100" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="lanePoll" value="1秒ポーラー&#10;(HTTP)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="240" width="100" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="laneApp" value="アプリログ&#10;(DB エラー)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="350" width="100" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Time axis -->
+        <mxCell id="axis" style="endArrow=block;html=1;rounded=0;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="490" as="sourcePoint"/>
+            <mxPoint x="1140" y="490" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="axislabel" value="時刻 (JST)" style="text;html=1;fontSize=11;fontStyle=1;align=right;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="466" width="100" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- tick marks -->
+        <mxCell id="t17" value="12:07:17" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="130" y="495" width="70" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="t20" value="12:07:20" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="215" y="495" width="70" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="t23" value="12:07:23" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="325" y="495" width="70" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="t28" value="12:07:28" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="480" y="495" width="70" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="t37" value="12:07:37" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="740" y="495" width="70" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="t46" value="12:07:46" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="915" y="495" width="70" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="t52" value="12:07:52" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1035" y="495" width="70" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- RDS lane events -->
+        <mxCell id="rds1" value="スイッチオーバー開始&#10;新規書き込み停止&#10;接続を全切断" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="90" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rds2" value="green が読み書き受付開始&#10;&quot;write downtime lasted&#10;approximately 1 seconds&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="90" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rds3" value="リネーム完了&#10;green → 本番名&#10;blue → -old1 (read-only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="160" width="160" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="rds4" value="SWITCHOVER_COMPLETED&#10;（アプリより15秒遅い完了報告）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="945" y="90" width="185" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- write downtime 1s bracket -->
+        <mxCell id="wd" value="RDS 起因の書き込み停止 = 約1秒" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="215" y="225" width="180" height="22" as="geometry"/>
+        </mxCell>
+
+        <!-- Poller lane -->
+        <mxCell id="pollok1" value="200" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="230" y="265" width="50" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="polldown" value="timeout × 3（完全停止 15秒）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="265" width="450" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="pollok2" value="200 ← ポーラーは「復旧」と判定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="265" width="200" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- App lane -->
+        <mxCell id="app1" value="2013 Lost connection&#10;2006 Server has gone away" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="285" y="360" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="app2" value="1290 read-only ×6 件&#10;部分障害 9秒（26リクエスト中6件が 500）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="360" width="245" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="app3" value="以降 DB エラーゼロ&#10;← 本当の復旧" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="360" width="130" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- DNS propagation callout -->
+        <mxCell id="dns" value="12:07:33 に開始したリクエストは、リネーム完了後なのに旧インスタンスへ名前解決される → DNS 伝播の遅れ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontStyle=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="415" width="440" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="dnsedge" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeColor=#d6b656;strokeWidth=2;endArrow=block;dashed=1;" edge="1" parent="1" source="dns" target="app2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Summary bar -->
+        <mxCell id="sumbox" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="150" y="545" width="990" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="sum1" value="完全停止 15秒" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="285" y="565" width="450" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="sum2" value="部分障害 9秒" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="565" width="245" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="sum3" value="アプリから見た停止 = 完全停止 15秒 + 部分障害 9秒 = 約24秒。差の大半は DNS 伝播と再接続。" style="text;html=1;fontSize=12;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="175" y="605" width="940" height="30" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
