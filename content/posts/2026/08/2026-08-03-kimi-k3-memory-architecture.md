@@ -180,9 +180,33 @@ K3 と K2.7 Code を比べると、入力で約 3.2 倍、出力で約 3.8 倍�
 
 Mac Studio でも、ゲーミング PC でも、小規模なマルチ GPU タワーでも動きません。K3 の「ローカル」は、自前のデータセンター GPU クラスタを指す場合にのみ成立します。個人が使うなら API か Kimi のサブスクリプション経由になります。
 
-規模がひとつ下がると話は変わります。[antirez が DeepSeek-V4 Flash を Mac Studio で動かした記録](/blogs/posts/2026/05/antirez-ds4-deepseek-v4-flash/)は、巨大 MoE でも構成次第では手元で動く例です。1,680 GB との距離感を掴む対比になります。自分の環境で何が動くかを先に確かめたい場合は [CanIRun.ai](/blogs/posts/2026/04/canirun-ai-local-model-checker/) のようなチェッカーが使えます。
+規模がひとつ下がると話は変わります。[antirez が DeepSeek-V4 Flash を Mac Studio で動かした記録](/blogs/posts/2026/05/antirez-ds4-deepseek-v4-flash/)は、巨大 MoE でも構成次第では手元で動く例です。1,680 GB との距離感を掴む対比になります。
 
 > オープンウェイトであることと、手元で動かせることは別問題です。[DeepSeek-V4](/blogs/posts/2026/04/deepseek-v4-open-source/)（1.6 兆）のときにも同じ構図がありました。K3 は 2.8 兆でさらに一段上がっており、重みが公開されていても規模が上がるほど「実際に動かせる主体」は絞られていきます。
+
+### では、いま手元で動く最良のモデルは何か
+
+「K3 は無理」で話を終えると、ローカル実行そのものが絶望的に見えてしまいます。実際はそうではありません。2026 年 8 月時点で、ハードウェアの段階ごとに現実的な選択肢があります。
+
+| ハードウェア | モデル | 必要メモリ | 位置づけ |
+| --- | --- | --- | --- |
+| 256 GB 統合メモリ Mac<br>／24 GB GPU + 256 GB RAM | **GLM-5.2**<br>753B 総 / 40B 活性 | 約 239 GB<br>(dynamic 2-bit) | オープンウェイト最上位クラス。1M トークン文脈 |
+| 24 GB GPU 1 枚<br>(RTX 4090 / 3090) | **Qwen3.6-27B**<br>dense 27B | 約 17 GB (Q4) | SWE-bench Verified **77.2**。262K トークン文脈 |
+| 24 GB GPU 1 枚<br>（画像入力を重視） | **Gemma 4 31B** | 17〜20 GB (4-bit) | 256K 文脈 / 140 言語超 / 画像入力 |
+
+<small>※ GLM-5.2 のメモリ量は Unsloth の dynamic 量子化 GGUF の実測値。同 8-bit では 810 GB を要します。</small>
+
+**ここが本記事の主題と直結します。** オープンウェイトの知能指標で首位に立つ GLM-5.2 は、[Z.ai](https://huggingface.co/zai-org/GLM-5.2) が 2026 年 6 月 13 日に MIT ライセンスで公開した 753B / 活性 40B の MoE です。総パラメータは K3 の 2.8 兆の約 4 分の 1 ですが、**dynamic 2-bit なら約 239 GB** に収まり、256 GB の統合メモリ Mac 1 台で動きます。K3 の 1,680 GB とは約 7 倍の差です。
+
+そして GLM-5.2 が長文脈をどう処理しているかというと、**IndexShare** — 軽量なスパース Attention インデクサを 4 層ごとに再利用する仕組み — で 1M トークン文脈のトークンあたり FLOPs を 2.9 倍削減しています。K3 が「KDA + Gated MLA のハイブリッド」で答えた問いに、GLM-5.2 は「インデクサの共有」で答えたわけです。**どちらも記憶と参照の設計の話**で、そこがそのまま「手元で動くか」を決めています。
+
+24 GB の GPU 1 枚という、より現実的な線ではどうか。[Qwen3.6-27B](https://huggingface.co/Qwen/Qwen3.6-27B) は dense 27B で Q4 なら 17 GB 程度に収まり、SWE-bench Verified で **77.2** を出します。[前世代の Qwen3.5-27B](/blogs/posts/2026/03/qwen35-27b/) の後継で、文脈は 262,144 トークン（拡張時 約 101 万）、Apache 2.0、画像・動画入力にも対応します。コーディング用途に限れば、これがいま最も費用対効果の高い選択肢です。
+
+さらに小さい構成なら、12GB VRAM で動く [Gemma 4 12B Coder](/blogs/posts/2026/06/gemma-4-12b-coder-fable5-local/) や、[Unsloth による極限量子化](/blogs/posts/2026/04/unsloth-gemma4-quantization/)で 16〜18 GB に収める手があります。128 GB クラスの統合メモリ機を狙うなら [AMD Ryzen AI Max+ 395](/blogs/posts/2026/06/amd-ryzen-ai-max-395-local-ai-subscription-killer/) のような選択肢もあります。自分の環境で何が動くかは [CanIRun.ai](/blogs/posts/2026/04/canirun-ai-local-model-checker/) で先に確認できます。
+
+> **結論**: 「ローカルで動く最良のモデル」は、**最大のモデルではありません。** 記憶と参照の設計が自分のメモリ容量に収まっているモデルです。K3 が動かないのは 2.8 兆という数字のせいですが、GLM-5.2 が動くのも 753B という数字のおかげではなく、その設計のおかげです。
+>
+> なおこの領域は数か月で入れ替わります。本節は 2026 年 8 月時点のスナップショットとして読んでください。
 
 ## 新しいモデルを見るときの 3 つの観点
 
@@ -194,6 +218,8 @@ Mac Studio でも、ゲーミング PC でも、小規模なマルチ GPU タワ
 
 Kimi K3 の答えは、1 に対して「主に固定サイズの状態（KDA 69 層）」、2 に対して「成分ごとに細かく調整する」、3 に対して「Gated MLA 24 層を残す」でした。パラメータ数 2.8 兆という数字は、この設計を成り立たせるための器であって、それ自体が答えではありません。
 
+同じ 3 つを GLM-5.2 に当てると、「スパース Attention インデクサを 4 層ごとに共有する（IndexShare）」という別の答えが出てきます。そして**この設計の違いが、そのまま手元で動くかどうかを決めていました。** 3 つの観点は、モデルの賢さを読むためだけのものではなく、自分の環境で動くかを読むための観点でもあります。
+
 そして運用側の答えは、単価構造から出てきます。**安いモデルで回して、難所だけ高いモデルに渡す。** モデルの性能表ではなく、呼び出し回数とキャッシュヒット率で決まる話です。
 
 ## まとめ（数値の整理）
@@ -203,6 +229,7 @@ Kimi K3 の答えは、1 に対して「主に固定サイズの状態（KDA 69 
 - **単価**: 入力 $3.00 / 出力 $15.00 / キャッシュヒット $0.30。K2.7 Code の 3〜4 倍で、20 万トークン超の割増はなし
 - **コストが膨らむ理由**: thinking を無効化できず、`reasoning_effort` の既定値が `max`。自律ループでは単価差が呼び出し回数で増幅される
 - **ローカル実行**: 最小約 1,680 GB VRAM。896 エキスパート全体をメモリに載せる必要があり、個人環境では成立しない
+- **代わりに動くもの（2026年8月時点）**: GLM-5.2（753B / 活性 40B）が dynamic 2-bit の約 239 GB で 256 GB Mac に収まる。24 GB GPU 1 枚なら Qwen3.6-27B（Q4 約 17 GB / SWE-bench Verified 77.2）。**最良のローカルモデルは最大のモデルではなく、記憶設計が手元のメモリに収まるモデル**
 
 ## 参考リンク
 
@@ -211,3 +238,7 @@ Kimi K3 の答えは、1 に対して「主に固定サイズの状態（KDA 69 
 - [MoonshotAI/Kimi-Linear — 公式リポジトリ](https://github.com/MoonshotAI/Kimi-Linear)
 - [Thinking Models — Kimi API Platform（`reasoning_effort` の仕様）](https://platform.kimi.ai/docs/guide/use-kimi-k2-thinking-model)
 - [code-yeongyu/oh-my-openagent — エージェントハーネス](https://github.com/code-yeongyu/oh-my-openagent)
+- [zai-org/GLM-5.2 — Hugging Face（ローカル実行可能な最上位オープンウェイト）](https://huggingface.co/zai-org/GLM-5.2)
+- [Qwen/Qwen3.6-27B — Hugging Face（24GB GPU 1 枚で動く dense 27B）](https://huggingface.co/Qwen/Qwen3.6-27B)
+- [GLM-5.2 をローカルで動かす — Unsloth ドキュメント（量子化別の必要メモリ表）](https://unsloth.ai/docs/models/glm-5.2)
+- [Gemma 4 をローカルで動かす — Unsloth ドキュメント](https://unsloth.ai/docs/models/gemma-4)
