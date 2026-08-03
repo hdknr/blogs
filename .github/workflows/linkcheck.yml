@@ -91,12 +91,17 @@ jobs:
           sudo mv "$(find /tmp/lychee-bin -type f -name lychee | head -1)" /usr/local/bin/lychee
           lychee --version
 
+      # The remap is scoped to /blogs/ on purpose. hdknr.github.io also hosts
+      # SIBLING GitHub Pages projects (claude-code-setup, …) that are NOT in the
+      # local mirror, so a host-wide remap rewrote those live URLs to the local
+      # server and reported a spurious 404. Scoped this way, sibling-project
+      # links fall outside --include and are swept by the weekly external job.
       - name: Check internal links
         run: |
           lychee \
             --no-progress \
             --base-url http://127.0.0.1:8099/ \
-            --remap "https://hdknr.github.io/ http://127.0.0.1:8099/" \
+            --remap "https://hdknr.github.io/blogs/ http://127.0.0.1:8099/blogs/" \
             --include "^http://127\.0\.0\.1:8099/" \
             --max-concurrency 16 \
             './_site/blogs/**/*.html'
