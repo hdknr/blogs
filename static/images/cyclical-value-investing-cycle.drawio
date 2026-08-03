@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="景気サイクルとシクリカルバリュー株の仕込み・売り">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="10" value="景気サイクルの4フェーズと、シクリカルバリュー株の仕込み・売りの位置" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="20" width="880" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="仕込みゾーン（後退期〜不況期）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;dashed=1;fontSize=13;fontStyle=1;fontColor=#3d6b30;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="440" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="売りゾーン（回復期後半〜好況期）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;dashed=1;fontSize=13;fontStyle=1;fontColor=#a35b00;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="520" y="80" width="420" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="30" value="後退期（ピーク→減速）&#10;&#10;強い業種：ディフェンシブ&#10;（食品・医薬品・公共）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="130" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="不況期（どん底）&#10;&#10;シクリカル株が総崩れ&#10;→ バリュー化が進む" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="130" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="回復期（底→上昇）&#10;&#10;強い業種：建設・半導体&#10;鉄鋼・海運" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="550" y="130" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="好況期（天井）&#10;&#10;強い業種：自動車・航空&#10;旅行・エネルギー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="750" y="130" width="170" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#6c8ebf;" edge="1" source="30" target="31" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#82b366;" edge="1" source="31" target="32" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=3;strokeColor=#d79b00;" edge="1" source="32" target="33" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="50" value="買う：2年連続赤字・無配&#10;PBR1倍割れ・PSR0.5倍以下" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;fontColor=#3b5c8f;" vertex="1" parent="1">
+          <mxGeometry x="300" y="290" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="売る：逆算した目標PERに到達&#10;（感情ではなく事前に決めた数字）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=12;fontColor=#a35b00;" vertex="1" parent="1">
+          <mxGeometry x="700" y="290" width="210" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="52" value="" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#6c8ebf;dashed=1;" edge="1" source="50" target="31" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="53" value="" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#d79b00;dashed=1;" edge="1" source="51" target="33" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="60" value="回復は「数量 → 価格 → 売上高」の順に効いてくる。決算の数字に表れる前に先読みできる。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;fontColor=#5c3d6b;" vertex="1" parent="1">
+          <mxGeometry x="60" y="450" width="880" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="61" value="※ 一巡に数年、海運では底打ちまで約12年かかった例もある" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="60" y="510" width="880" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
