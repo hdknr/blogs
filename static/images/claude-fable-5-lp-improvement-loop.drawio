@@ -1,0 +1,130 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="lp-improvement-loop" name="LP Improvement Loop">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1160" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="LP 改善ループ — 生成の外側にある「合格条件」と「学習の持ち帰り」" style="text;html=1;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Inputs group -->
+        <mxCell id="input-group" value="① 入力（人間が決める）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="220" height="230" as="geometry"/>
+        </mxCell>
+        <mxCell id="in-brief" value="ブリーフ&#10;（誰に / 何を / 成功の定義）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="120" width="170" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="in-comp" value="競合 LP の構成データ&#10;（セクション順 / 訴求軸）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="175" width="170" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="in-tokens" value="デザイントークン&#10;（配色 / 書体 / 余白）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="230" width="170" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Generate -->
+        <mxCell id="gen" value="② 構成設計&#10;高 effort・1 回だけ&#10;（Fable 5 / Opus 5）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="120" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Build -->
+        <mxCell id="build" value="③ 実装・修正&#10;低コストで何周も回す&#10;（Sonnet 5）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="270" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Machine gate -->
+        <mxCell id="gate-machine" value="④ 機械が判定するゲート" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="600" y="245" width="240" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="g1" value="LCP / CLS / INP のしきい値" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="280" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="g2" value="コントラスト比 4.5:1 以上" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="318" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="g3" value="360px 幅で横スクロールなし" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="356" width="200" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="g4" value="リンク切れ 0 / 構造化データ検証" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="394" width="200" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Human gate -->
+        <mxCell id="gate-human" value="⑤ 人間が判定するゲート" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="900" y="245" width="220" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="h1" value="訴求は事実に反していないか" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="918" y="280" width="184" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="景表法・薬機法などの表記" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="918" y="318" width="184" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="h3" value="ブランドとして出してよいか" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="918" y="356" width="184" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="h4" value="画像・フォントの権利" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="918" y="394" width="184" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Publish / measure -->
+        <mxCell id="measure" value="⑥ 公開して計測&#10;CVR / スクロール到達率 / CTA クリック率" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="530" width="300" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Feedback into skill -->
+        <mxCell id="skill" value="⑦ 学習を Skill に書き戻す&#10;SKILL.md / デザイントークン / 却下パターン集&#10;→ 次の LP は「前回の結論」から始まる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="640" width="360" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Note -->
+        <mxCell id="note" value="※ ここが抜けると「毎回ゼロから 15 分」で止まり、&#10;　 品質は運任せのまま蓄積しない" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="560" y="655" width="330" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="input-group" target="gen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="gen" target="build">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="build" target="gate-machine">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="不合格なら自動で差し戻し" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=block;dashed=1;fontSize=10;fontColor=#996600;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="gate-machine" target="build">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="720" y="215"/>
+              <mxPoint x="560" y="215"/>
+              <mxPoint x="560" y="290"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" value="合格" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="gate-machine" target="gate-human">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="承認" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gate-human" target="measure">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="565"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="measure" target="skill">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="次回の入力を更新" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=block;fontSize=10;fontColor=#3d6b30;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="skill" target="input-group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="685"/>
+              <mxPoint x="150" y="310"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
