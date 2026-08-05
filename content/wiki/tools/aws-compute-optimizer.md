@@ -33,7 +33,15 @@ Finding（Over-provisioned / Optimized / Under-provisioned）だけを見て判�
 
 ## アイドルリソース推奨
 
-2026年6月に対象が12種類へ拡大した。判定基準はリソース種別ごとに異なり、ルックバック期間にも例外がある。推奨は「削除」だけではなく、停止やダウンサイズを含む。
+2026年6月に対象が12種類へ拡大した（ElastiCache・DocumentDB・SageMaker エンドポイントなどが加わった）。判定基準はリソース種別ごとに異なり、ルックバック期間にも例外がある。推奨は「削除」だけではなく、停止やダウンサイズを含む。
+
+**着手順序としては、右サイジングより先にアイドルリソース推奨から入るほうが投資対効果で圧倒的に有利。** 右サイジングは「どこまで下げて大丈夫か」の判断を人間が負い、メモリの可視化・パフォーマンスリスクの検証・Platform differences の確認と前提を揃えるコストがかかる。
+
+一方アイドルリソースは判断に迷う要素がほとんどない。CPU 5% 未満・ネットワーク 5 MB/日 未満で 14 日間動いていた EC2、ルートテーブルに紐づいていない NAT Gateway、63 日間ログインのない Always On の WorkSpaces などは「使われていない」ことがほぼ確定しており、そのまま削減候補として扱える。
+
+## 削減額を正しく出す — Cost Optimization Hub
+
+推奨あたりの削減見込み額を実際の請求と整合させるには **Cost Optimization Hub（コスト最適化ハブ）** との連携が必要。前提として Cost Explorer の有効化が要り、節約額見積もりモードはリージョン単位で調整する。設定に依存関係があるため、有効化の順序を間違えると金額が出てこない。
 
 ## API から扱うときの注意
 
@@ -43,6 +51,7 @@ Finding（Over-provisioned / Optimized / Under-provisioned）だけを見て判�
 
 - [Grafana](/blogs/wiki/tools/grafana/) — メトリクスの可視化
 - [Terraform で IaC](/blogs/wiki/guides/terraform-iac/) — 推奨を反映する側
+- [RDS Blue/Green デプロイでのバージョン移行](/blogs/wiki/guides/rds-blue-green-migration/) — インスタンスクラス変更を伴う移行の実例
 
 ## ソース記事
 

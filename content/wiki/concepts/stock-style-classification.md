@@ -57,6 +57,8 @@ tags: ["株式投資", "グロース株", "バリュー株", "シクリカル株
 - [損益分岐勝率](/blogs/wiki/concepts/breakeven-winrate/) — 売買ルールの期待値評価
 - [セクターローテーション](/blogs/wiki/concepts/sector-rotation/) — 資金移動の局面判断
 - [悪材料出尽くし（アク抜け）](/blogs/wiki/concepts/news-priced-in/) — 反転の見抜き方
+- [分類別の先行指標](/blogs/wiki/concepts/stock-leading-indicators/) — 分類が決まった後に何を見るか
+- [シクリカルバリュー投資](/blogs/wiki/concepts/cyclical-value-investing/) — シクリカル × バリューの交差点にある手法
 - [J-Quants API](/blogs/wiki/tools/j-quants-api/) — 分類・指標データの取得元
 
 ## ソース記事

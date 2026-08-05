@@ -1,7 +1,10 @@
 ---
 title: "eMAXIS Slim S&P500を担保に証券担保ローン活用 — 「増やしながら使う」を実現する投資戦略"
 date: 2026-08-04
-lastmod: 2026-08-04
+lastmod: 2026-08-05
+slug: "nomura-securities-loan-emaxis-sp500-invesco"
+aliases:
+  - "/posts/2026/08/emaxis-slim-sp500を担保に証券担保ローン活用-増やしながら使うを実現する投資戦略/"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349363593"
 categories: ["ビジネス/キャリア"]
