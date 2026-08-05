@@ -1,0 +1,91 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="アクティビスト兆候検知パイプライン">
+    <mxGraphModel dx="1100" dy="800" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="ニュース見出しからアクティビストの兆候を検知するパイプライン" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="16" width="600" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr1" value="段階" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="56" width="230" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr2" value="実装" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="290" y="56" width="230" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="hdr3" value="実測でわかった落とし穴" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="540" y="56" width="320" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="① 収集&#10;（機械・無料）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="88" width="230" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="s1i" value="Google News RSS&#10;× アクティビスト名辞書&#10;（OR 連結・when:14d）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="88" width="230" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="s1n" value="ファンド名 10 件の OR で 100 件返る。&#10;上限に当たるので辞書は分割して投げる" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="88" width="320" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="② 同名衝突の除去&#10;（機械）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="190" width="230" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="s2i" value="ファンド名 AND 金融語&#10;（株／保有／提案／議決権&#10;／買い増し …）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="190" width="230" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="s2n" value="「ダルトン」でラグビー選手、「エリオット」で&#10;野球選手のタオルが混入。カタカナ姓の&#10;ファンド名は単独では使えない" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="190" width="320" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="③ 事後記事の除去&#10;（機械・最重要）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="292" width="230" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="s3i" value="定型句と配信元で落とす&#10;「変更報告書 No.N」&#10;「保有割合が◯％に上昇」&#10;「大量保有報告書 提出者：」" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="292" width="230" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="s3n" value="ヒットの大半は株探・kabushiki.jp・&#10;日経会社情報 DIGITAL が EDINET から&#10;自動生成した記事＝すでに義務開示済み。&#10;兆候検知の観点では全部ノイズ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="292" width="320" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="④ 兆候判定&#10;EDINET を反転利用&#10;（機械・無料）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="404" width="230" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="s4i" value="docTypeCode 350／360 に&#10;当該ペアが「無い」ことを確認&#10;＋ 観測記事の語彙で加点&#10;（関係者によると／方針／書簡）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="404" width="230" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="s4n" value="EDINET を「主シグナル」に置くと事後しか&#10;取れない。開示が無いことを条件にすると&#10;5% 未満の買い集め候補だけが残る" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="404" width="320" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="⑤ 裏付けとアラート&#10;（機械・無料）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="516" width="230" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="s5i" value="出来高 z-score と&#10;立会外（ToSTNeT）で加点&#10;→ 閾値超えを通知" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="516" width="230" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="s5n" value="見出しだけでは％も要求内容もわからない。&#10;アラートは「読むべき銘柄の提示」に留める" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="516" width="320" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="⑥ 読解と構造化&#10;（人間）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="608" width="230" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="s6i" value="日経で本文を都度読む&#10;（楽天証券版テレコン 0 円&#10;／電子版 4,277 円）&#10;→ YAML に手入力" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="290" y="608" width="230" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="s6n" value="日経本文は機械に入れない（利用規定）。&#10;人間が読んだ判断だけをデータ化する" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="608" width="320" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="a12" style="endArrow=classic;html=1;rounded=0;strokeColor=#6c8ebf;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a23" style="endArrow=classic;html=1;rounded=0;strokeColor=#6c8ebf;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a34" style="endArrow=classic;html=1;rounded=0;strokeColor=#6c8ebf;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a45" style="endArrow=classic;html=1;rounded=0;strokeColor=#d6b656;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a56" style="endArrow=classic;html=1;rounded=0;strokeColor=#9673a6;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="s5" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
