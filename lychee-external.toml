@@ -30,11 +30,26 @@ remap = ["https://hdknr.github.io/blogs/ http://127.0.0.1:8099/blogs/"]
 # a genuinely removed page.
 accept = ["200", "202", "206", "401", "403", "405", "406", "415", "429", "500", "503"]
 
+# NOTE: do NOT set `user_agent` to a browser string here. It was tried and
+# reverted: a browser UA does fix the UA-gated host excluded below (laboro.ai),
+# but lychee has no per-host UA, and the same string makes facebook.com answer
+# 400 and ai.google.dev bounce into an endless sign-in redirect — 8 links across
+# 7 posts that pass today. Net negative.
+#
+# A browser UA is also actively misleading during triage: about-life.coffee
+# answers 200 to a browser UA, but the body is a ParkLogic domain-parking stub
+# (<title>Redirecting...</title>), not the shop site. A 200 is not proof of
+# life — check the response body, not just the status code.
+
 max_retries = 2
 retry_wait_time = 3
 # 20s produced a steady trickle of TIMEOUT reports for hosts that answer fine
-# in ~20-25s under load (pola.rs, securityonline.info, cmr.berkeley.edu,
-# open-notebook.ai, …). 30s clears those without hiding real deaths.
+# in ~20-25s under load (pola.rs, cmr.berkeley.edu, mamezou-tech, …); 30s cleared
+# those. It did NOT help the hosts that stall the runner outright — #607 showed
+# securityonline.info and open-notebook.ai timing out again for the third sweep
+# in a row, so those two moved to the exclude list instead. Raising this further
+# only makes the job slower; a host that answers in 1s from anywhere else is not
+# going to answer in 31s from a GitHub Actions IP.
 timeout = 30
 max_concurrency = 8
 
@@ -65,6 +80,10 @@ exclude = [
   "^https?://zhuanlan\\.zhihu\\.com/",
   "^https?://(developers|access)\\.redhat\\.com/",
   "^https?://app\\.getzep\\.com/",
+  # laboro.ai answers a hard 404 to lychee's User-Agent but 200 to a browser
+  # one (verified: same URL, only the UA differs). Reported dead in three
+  # consecutive sweeps (#561, #574, #607) while the page was live the whole time.
+  "^https?://laboro\\.ai/",
   # Hosts whose servers mishandle lychee's HTTP/2 client ("HTTP/2 protocol
   # error") but load fine in a browser. Verified reachable manually.
   "^https?://(www\\.)?washingtonpost\\.com/",
@@ -90,4 +109,17 @@ exclude = [
   "^https?://(www\\.)?agentsworkshop\\.ai/",
   # X/Twitter: returns 404 to bots for valid tweets (SPA).
   "^https?://(x|twitter)\\.com/",
+  # Hosts that answer in 1-2s from an ordinary network (and pass a local lychee
+  # run with this same config) but stall until the timeout when the request comes
+  # from a GitHub Actions runner — datacenter-IP throttling at the CDN edge. Only
+  # hosts reported by three consecutive sweeps are listed; a first-time TIMEOUT is
+  # left in the report so a genuine death is not silently swallowed.
+  "^https?://securityonline\\.info/",         # #561, #574, #607
+  "^https?://(www\\.)?open-notebook\\.ai/",   # #561, #574, #607
+  # Google Cloud console: a signed-in-only app, not a document. Every deep link
+  # bounces through the sign-in flow, which for an anonymous client is an
+  # endless 302 loop back to itself — lychee gives up after max-redirects and
+  # reports 302. This can never pass and says nothing about the page, so the
+  # accept-list cannot help; exclude the host.
+  "^https?://console\\.cloud\\.google\\.com/",
 ]
