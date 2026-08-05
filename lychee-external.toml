@@ -31,10 +31,15 @@ remap = ["https://hdknr.github.io/blogs/ http://127.0.0.1:8099/blogs/"]
 accept = ["200", "202", "206", "401", "403", "405", "406", "415", "429", "500", "503"]
 
 # NOTE: do NOT set `user_agent` to a browser string here. It was tried and
-# reverted: a browser UA does fix the two UA-gated hosts excluded below
-# (laboro.ai, about-life.coffee), but lychee has no per-host UA, and the same
-# string makes facebook.com answer 400 and ai.google.dev bounce into an endless
-# sign-in redirect — 8 links across 7 posts that pass today. Net negative.
+# reverted: a browser UA does fix the UA-gated host excluded below (laboro.ai),
+# but lychee has no per-host UA, and the same string makes facebook.com answer
+# 400 and ai.google.dev bounce into an endless sign-in redirect — 8 links across
+# 7 posts that pass today. Net negative.
+#
+# A browser UA is also actively misleading during triage: about-life.coffee
+# answers 200 to a browser UA, but the body is a ParkLogic domain-parking stub
+# (<title>Redirecting...</title>), not the shop site. A 200 is not proof of
+# life — check the response body, not just the status code.
 
 max_retries = 2
 retry_wait_time = 3
@@ -91,10 +96,6 @@ exclude = [
   "^https?://(www\\.)?polymarket\\.com/",
   "^https?://(www\\.)?coveo\\.com/",
   "^https?://(www\\.)?ainvest\\.com/",
-  # about-life.coffee (openresty) closes the connection mid-response for
-  # lychee's default client but serves 200 to curl and to lychee with a browser
-  # UA. Reported in #561, #574 and #607; the shop site is live.
-  "^https?://(www\\.)?about-life\\.coffee/",
   # Hosts with expired / self-signed / untrusted certs (reachable in browser).
   # semrush.jp serves 200 but omits the intermediate cert, so clients that do
   # not chase the AIA extension (lychee) reject it while browsers accept it.
