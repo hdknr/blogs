@@ -1,0 +1,110 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="hubspot-custom-signals-flow" name="HubSpot Custom Signals Flow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="カスタムシグナル: 自然言語の定義から CRM 自動化までの流れ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="150" y="10" width="700" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 1 -->
+        <mxCell id="s1-icon" value="&#x270f;&#xfe0f; 定義" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#4472C4;" vertex="1" parent="1">
+          <mxGeometry x="85" y="62" width="110" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1" value="&#x2460; 自然言語で書く&#xa;&#xa;Buyer Intent アプリの&#xa;Signals &gt; My Signals で&#xa;「AI 活用の検討を始めた&#xa;製造業」のように 1〜2 文で&#xa;記述する。boolean 検索式や&#xa;プロンプト設計は不要" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="35" y="92" width="210" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 2 -->
+        <mxCell id="s2-icon" value="&#x1f916; 監視" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#8064A2;" vertex="1" parent="1">
+          <mxGeometry x="325" y="62" width="110" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="&#x2461; AI が調べ続ける&#xa;&#xa;HubSpot の AI が Web や&#xa;データソースを継続的に&#xa;モニタリングし、トラッキング&#xa;対象の企業が定義に&#xa;合致したかを判定する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="275" y="92" width="210" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 3 -->
+        <mxCell id="s3-icon" value="&#x1f50d; 検証" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#b8860b;" vertex="1" parent="1">
+          <mxGeometry x="565" y="62" width="110" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="&#x2462; プレビューで確かめる&#xa;&#xa;有効化する前にマッチした&#xa;企業一覧が出る。引用元&#xa;(source reference) を開いて&#xa;根拠を確認し、広すぎ・&#xa;狭すぎなら定義文を直す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="515" y="92" width="210" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 4 -->
+        <mxCell id="s4-icon" value="&#x26a1; 発火" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#5a8a4a;" vertex="1" parent="1">
+          <mxGeometry x="805" y="62" width="110" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="&#x2463; 有効化する&#xa;&#xa;Activate するとシグナルが&#xa;稼働し、検知のたびに&#xa;企業レコードのタイムラインに&#xa;シグナルイベントが&#xa;記録される" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="755" y="92" width="210" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows between steps -->
+        <mxCell id="a12" value="定義文" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;" edge="1" parent="1" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a23" value="候補企業" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=2;fontSize=10;" edge="1" parent="1" source="s2" target="s3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a34" value="OK" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;fontSize=10;" edge="1" parent="1" source="s3" target="s4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Refine loop -->
+        <mxCell id="a-refine" value="定義文を書き直す (プレビュー段階なので無害)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;strokeWidth=1.5;dashed=1;fontSize=10;fontColor=#b85450;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s3" target="s1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="52"/>
+              <mxPoint x="140" y="52"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Downstream header -->
+        <mxCell id="down-head" value="&#x2464; シグナルイベントを CRM の 4 つの面で使う" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#0e8088;" vertex="1" parent="1">
+          <mxGeometry x="300" y="262" width="400" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="a-down" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=block;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="s4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="274" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Downstream boxes -->
+        <mxCell id="d1" value="セグメント&#xa;&#xa;Company Signals イベントを&#xa;絞り込み条件に使う。&#xa;「従業員 200 名以上の製造業」&#xa;に「直近 30 日にシグナル&#xa;が出た」を重ねられる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="35" y="298" width="210" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="ワークフロー&#xa;&#xa;Company signal events を&#xa;登録トリガーにする。&#xa;担当者へのタスク作成、&#xa;社内通知、プロパティー更新、&#xa;シークエンス登録を自動化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="275" y="298" width="210" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="リードスコアリング&#xa;&#xa;企業レベルのスコアに&#xa;外部の出来事を加点できる。&#xa;ページ閲覧やフォーム送信と&#xa;いった自社ポータル内の&#xa;行動だけに頼らなくなる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="515" y="298" width="210" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="d4" value="レポート&#xa;&#xa;どのシグナルが商談や&#xa;受注につながり、どれが&#xa;ノイズだったかを測る。&#xa;この結果を見て定義文を&#xa;育てていく" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;fontSize=11;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="755" y="298" width="210" height="130" as="geometry"/>
+        </mxCell>
+
+        <!-- Feedback loop from report -->
+        <mxCell id="a-feedback" value="効いたシグナルだけ残す" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0e8088;strokeWidth=1.5;dashed=1;fontSize=10;fontColor=#0e8088;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="d4" target="d1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="446"/>
+              <mxPoint x="15" y="446"/>
+              <mxPoint x="15" y="363"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Cost note -->
+        <mxCell id="note" value="お金がかかるのはシグナルの本数ではなく「監視対象の企業数」: 企業のインテントシグナル監視は月次のリカーリング課金、純新規の企業を CRM に追加するのは一回課金 (いずれも HubSpot Credits)。CRM レコードやセグメントに企業を追加するには Starter 以上のサブスクリプションが必要" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=2;verticalAlign=middle;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="115" y="470" width="770" height="60" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
