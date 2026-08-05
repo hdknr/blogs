@@ -1,0 +1,75 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Business Profile API 分割マップ">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="820" pageHeight="580" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="100" value="Google ビジネスプロフィール API は用途ごとに分割されている" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="15" width="760" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="101" value="いずれも OAuth スコープは https://www.googleapis.com/auth/business.manage の1本" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="30" y="42" width="760" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="200" value="現行の分割 API（パスはいずれも /v1）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6c8ebf;dashed=1;verticalAlign=top;fontSize=12;fontStyle=1;fontColor=#3b5b8c;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="30" y="80" width="480" height="380" as="geometry" />
+        </mxCell>
+
+        <mxCell id="210" value="&lt;b&gt;Account Management&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;mybusinessaccountmanagement&lt;/span&gt;&lt;br&gt;アカウント／管理者／招待" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="45" y="112" width="220" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="211" value="&lt;b&gt;Business Information&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;mybusinessbusinessinformation&lt;/span&gt;&lt;br&gt;店舗情報・営業時間・属性・カテゴリ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="275" y="112" width="220" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="212" value="&lt;b&gt;Performance&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;businessprofileperformance&lt;/span&gt;&lt;br&gt;表示回数・電話・経路・検索キーワード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="45" y="196" width="220" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="213" value="&lt;b&gt;Verifications&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;mybusinessverifications&lt;/span&gt;&lt;br&gt;オーナー確認・VoM 状態" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="275" y="196" width="220" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="214" value="&lt;b&gt;Q&amp;amp;A&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;mybusinessqanda&lt;/span&gt;&lt;br&gt;質問と回答" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="45" y="280" width="220" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="215" value="&lt;b&gt;Place Actions&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;mybusinessplaceactions&lt;/span&gt;&lt;br&gt;予約・注文などの導線リンク" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="275" y="280" width="220" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="216" value="&lt;b&gt;Notifications&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;Pub/Sub 通知設定&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="45" y="358" width="220" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="217" value="&lt;b&gt;Lodging&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;宿泊施設向けの属性&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="275" y="358" width="220" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="218" value="※ Performance API だけホスト名の接頭辞が businessprofile 系" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#3f6f2f;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="45" y="422" width="450" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="300" value="レガシー（Google My Business API v4.9）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#b85450;dashed=1;verticalAlign=top;fontSize=12;fontStyle=1;fontColor=#b85450;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="535" y="80" width="255" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="310" value="&lt;span style=&quot;font-size:10px;color:#666&quot;&gt;mybusiness.googleapis.com/v4&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="548" y="106" width="230" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="311" value="&lt;b&gt;口コミ（reviews）&lt;/b&gt;&lt;br&gt;取得・返信・返信削除" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="548" y="130" width="228" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="312" value="&lt;b&gt;投稿（localPosts）&lt;/b&gt;&lt;br&gt;イベント・特典の告知" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="548" y="196" width="228" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="313" value="&lt;b&gt;メディア（media）&lt;/b&gt;&lt;br&gt;写真・動画のアップロード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="548" y="262" width="228" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="314" value="&lt;b&gt;メニュー・サービス&lt;/b&gt;&lt;br&gt;foodMenus / serviceList" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="548" y="328" width="228" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="315" value="集客に直結する機能ほど&lt;br&gt;&lt;b&gt;v4 に残っている&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="548" y="392" width="228" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="400" value="Cloud コンソールで有効化が必要なのは 8 つ（v4 の Google My Business API を含む）。&lt;br&gt;アクセス承認前はクォータが 0 QPM のままで、承認されると 300 QPM になる。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="30" y="480" width="760" height="56" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

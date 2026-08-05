@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Business Profile API アクセス申請フロー">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="700" pageHeight="750" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="100" value="コードを書く前に通過しなければならない審査フロー" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="15" width="640" height="28" as="geometry" />
+        </mxCell>
+
+        <mxCell id="200" value="&lt;b&gt;1. 申請条件を満たす&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px&quot;&gt;・検証済みかつ 60 日以上アクティブな GBP を管理している&lt;br&gt;・その事業を表すウェブサイトがある&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="65" width="460" height="72" as="geometry" />
+        </mxCell>
+
+        <mxCell id="201" value="&lt;b&gt;2. Google Cloud でプロジェクトを作る&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px&quot;&gt;ダッシュボードの Project number を控える（申請フォームで使う）&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="165" width="460" height="64" as="geometry" />
+        </mxCell>
+
+        <mxCell id="202" value="&lt;b&gt;3. GBP API contact form から申請&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px&quot;&gt;「Application for Basic API Access」を選択。&lt;br&gt;GBP のオーナー／管理者として登録済みのメールアドレスで送る&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="257" width="460" height="72" as="geometry" />
+        </mxCell>
+
+        <mxCell id="203" value="&lt;b&gt;4. 承認されたかはクォータで判別できる&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;align=left;spacingLeft=12;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="120" y="357" width="460" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="204" value="0 QPM&lt;br&gt;&lt;span style=&quot;font-size:11px&quot;&gt;未承認&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="140" y="391" width="200" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="205" value="300 QPM&lt;br&gt;&lt;span style=&quot;font-size:11px&quot;&gt;承認済み&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#3f6f2f;" vertex="1" parent="1">
+          <mxGeometry x="360" y="391" width="200" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="206" value="&lt;b&gt;5. 8 つの API を有効化する&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px&quot;&gt;Google My Business (v4) ／ Account Management ／ Business Information ／&lt;br&gt;Verifications ／ Q&amp;amp;A ／ Place Actions ／ Notifications ／ Lodging&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="481" width="460" height="76" as="geometry" />
+        </mxCell>
+
+        <mxCell id="207" value="&lt;b&gt;6. OAuth 2.0 クライアント ID を作って疎通確認&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px&quot;&gt;scope: .../auth/business.manage&lt;br&gt;GET https://mybusinessaccountmanagement.googleapis.com/v1/accounts → 200 OK&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="585" width="460" height="76" as="geometry" />
+        </mxCell>
+
+        <mxCell id="300" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="137" as="sourcePoint" />
+            <mxPoint x="350" y="163" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="301" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="229" as="sourcePoint" />
+            <mxPoint x="350" y="255" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="302" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="329" as="sourcePoint" />
+            <mxPoint x="350" y="355" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="303" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="453" as="sourcePoint" />
+            <mxPoint x="350" y="479" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="304" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="557" as="sourcePoint" />
+            <mxPoint x="350" y="583" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="400" value="サンドボックス環境は存在しない。&lt;br&gt;書き込み系の試行は本番データに当たるため、対応しているメソッドでは validateOnly を使う。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6e6;strokeColor=#b85450;fontSize=11;align=center;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="110" y="678" width="480" height="56" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
