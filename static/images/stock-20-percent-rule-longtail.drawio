@@ -1,0 +1,107 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="20％ルールがロングテールを切断する">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="720" pageHeight="470" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="100" value="株式リターンの分布はロングテール。±20％ルールは両端を切り落とす" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="15" width="680" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="110" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=none;opacity=35;" vertex="1" parent="1">
+          <mxGeometry x="300" y="90" width="300" height="250" as="geometry" />
+        </mxCell>
+
+        <mxCell id="201" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9d9d9;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="120" y="310" width="58" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="202" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9d9d9;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="180" y="270" width="58" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="203" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d9d9d9;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="240" y="250" width="58" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="204" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="300" y="180" width="58" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="205" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="360" y="240" width="58" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="206" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="420" y="280" width="58" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="207" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="480" y="300" width="58" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="208" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="540" y="320" width="58" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="300" value="" style="endArrow=none;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="340" as="sourcePoint" />
+            <mxPoint x="630" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="310" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="80" as="sourcePoint" />
+            <mxPoint x="180" y="355" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="311" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="80" as="sourcePoint" />
+            <mxPoint x="300" y="355" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="320" value="−20％で損切り" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="58" width="140" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="321" value="+20％で利確" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="58" width="140" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="330" value="この帯を丸ごと放棄している&lt;br&gt;（最大の銘柄は2年で +199％）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="110" width="250" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="340" value="−40%" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="90" y="344" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="341" value="−20%" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="150" y="358" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="342" value="0%" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="210" y="344" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="343" value="+20%" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="270" y="358" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="344" value="+60%" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="390" y="344" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="345" value="+120%" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="480" y="344" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="346" value="+200%" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="570" y="344" width="60" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="350" value="2年後リターン" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="580" y="375" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="351" value="銘柄数" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#333333;direction=north;horizontal=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="190" width="20" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="400" value="TOPIX Core30（2023/10/2〜2025/9/30）では、30銘柄中 23銘柄が +20％で利確、5銘柄が −20％で損切り、最後まで残ったのは 2銘柄だけ。&lt;br&gt;単純平均 +33.6％ に対し、±20％ルール運用は +12.0％ にとどまった（SBI証券の試算。配当・税・再投資は考慮せず）。" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="30" y="400" width="660" height="55" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
