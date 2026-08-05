@@ -2,13 +2,14 @@
 title: "ループエンジニアリング"
 description: "エージェントを叩く役を人間から機械へ移す設計手法。6つの構成部品、作る前の4条件テスト、撤退ラインと3つの罠を整理する"
 date: 2026-07-29
-lastmod: 2026-07-29
+lastmod: 2026-08-05
 aliases: ["Loop Engineering", "ループ設計", "オープンループ", "クローズドループ", "フリートループ", "理解負債", "認知的降伏"]
 related_posts:
   - "/posts/2026/06/loop-engineering-2026-ai-skills/"
   - "/posts/2026/06/loop-engineering-ai-agents-2026/"
   - "/posts/2026/06/loop-engineering-14-step-roadmap/"
   - "/posts/2026/07/claude-code-loop-design-guide/"
+  - "/posts/2026/08/claude-fable-5-lp-improvement-loop/"
 tags: ["ループエンジニアリング", "AIエージェント", "自動化", "Claude Code", "設計パターン"]
 ---
 
@@ -126,3 +127,4 @@ tags: ["ループエンジニアリング", "AIエージェント", "自動化",
 - [プロンプトからループへ](/blogs/posts/2026/06/loop-engineering-ai-agents-2026/) — 2026-06-24（Boris Cherny / Peter Steinberger の発言を軸にした概観）
 - [ループエンジニアリング14ステップ — 4条件テストと失敗パターン](/blogs/posts/2026/06/loop-engineering-14-step-roadmap/) — 2026-06-24（判断基準・撤退ライン・セキュリティ）
 - [Claude Code チーム公式ガイド「ループ設計」を読み解く](/blogs/posts/2026/07/claude-code-loop-design-guide/) — 2026-07-01
+- [「Claude Fable 5 で LP を15分生成」を分解する — 改善ループを合格条件に落とす設計](/blogs/posts/2026/08/claude-fable-5-lp-improvement-loop/) — 2026-08-03（機械ゲート／人間ゲートの分離と SKILL.md への書き戻し）

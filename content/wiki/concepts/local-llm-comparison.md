@@ -2,13 +2,15 @@
 title: "ローカルLLM比較（2026年春）"
 description: "2026年春時点のローカル実行可能LLMの比較。Gemma 4、Qwen3.5、BitNetの特性とユースケース別の選び方"
 date: 2026-04-15
-lastmod: 2026-04-27
+lastmod: 2026-08-05
 aliases: ["ローカルLLM", "local-llm", "オープンソースLLM比較"]
 related_posts:
   - "/posts/2026/04/gemma4-vs-qwen35-local-llm/"
   - "/posts/2026/04/microsoft-bitnet-open-source-1bit-llm/"
   - "/posts/2026/04/gemma4-api-economy-disruption/"
   - "/posts/2026/04/claude-rate-limit-mac-mini-local-model/"
+  - "/posts/2026/08/local-model-delegation-dev-loop/"
+  - "/posts/2026/08/kimi-k3-memory-architecture/"
 tags: ["ローカルLLM", "Gemma", "Qwen", "BitNet", "オープンソースLLM", "Apple Silicon"]
 ---
 
@@ -72,6 +74,7 @@ Gemma 4 の Apache 2.0 ライセンスと E2B モデルのスマートフォン�
 - [Qwen](/blogs/wiki/tools/qwen/) — Alibaba のオープンソース LLM 詳細
 - [BitNet](/blogs/wiki/tools/bitnet/) — Microsoft の 1-bit LLM 詳細
 - [Ollama](/blogs/wiki/tools/ollama/) — ローカル LLM 実行環境
+- [Kimi K3](/blogs/wiki/tools/kimi-k3/) — 記憶設計から見る大規模モデル
 
 ## ソース記事
 
@@ -79,3 +82,5 @@ Gemma 4 の Apache 2.0 ライセンスと E2B モデルのスマートフォン�
 - [Microsoft BitNet 完全オープンソース化：GPUなしで1000億パラメータLLMをCPUで動かす時代へ](/blogs/posts/2026/04/microsoft-bitnet-open-source-1bit-llm/) — 2026-04-07
 - [Gemma 4 が API 経済を破壊する](/blogs/posts/2026/04/gemma4-api-economy-disruption/) — 2026-04-07
 - [Claude のレート制限対策に Mac Mini とローカルモデルを活用する](/blogs/posts/2026/04/claude-rate-limit-mac-mini-local-model/) — 2026-04-15
+- [ローカルモデルに何を任せるか — Claude Code の開発ループに小さいモデルを混ぜる設計](/blogs/posts/2026/08/local-model-delegation-dev-loop/) — 2026-08-03（委譲は「高ボリューム・低判断」に限る）
+- [Kimi K3 は2.8兆パラメータより「忘れ方」が新しい](/blogs/posts/2026/08/kimi-k3-memory-architecture/) — 2026-08-03
