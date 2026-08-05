@@ -2,7 +2,7 @@
 title: "株式投資の売買スタイル"
 description: "スキャルピング・デイトレード・スイングトレード・中長期投資の4スタイルを保有期間・リスク・メリット・デメリットで整理した概念ページ"
 date: 2026-04-27
-lastmod: 2026-04-27
+lastmod: 2026-08-05
 aliases: ["デイトレード", "スイングトレード", "スキャルピング", "短期売買"]
 related_posts:
   - "/posts/2026/04/day-trade-swing-trade/"
@@ -87,6 +87,8 @@ tags: ["株式投資", "デイトレード", "スイングトレード", "スキ
 
 - [財務分析](/blogs/wiki/concepts/financial-analysis/) — 中長期投資の企業分析に関連する概念
 - [セクターローテーション](/blogs/wiki/concepts/sector-rotation/) — 相場の主役セクターの循環と、その検知手法
+- [損益分岐勝率](/blogs/wiki/concepts/breakeven-winrate/) — 売買ルールの期待値評価
+- [株式の銘柄分類](/blogs/wiki/concepts/stock-style-classification/) — 何を買うかの軸
 
 ## ソース記事
 

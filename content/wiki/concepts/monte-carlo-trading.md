@@ -2,7 +2,7 @@
 title: "モンテカルロ法による売買判定"
 description: "1万通りの将来シナリオをシミュレーションして勝率と期待値の閾値を超えたときだけ発注する、Claude × Monte Carlo の自動売買アーキテクチャ"
 date: 2026-05-20
-lastmod: 2026-05-20
+lastmod: 2026-08-05
 aliases: ["モンテカルロトレーディング", "Monte Carlo trading", "GBM 売買", "1万通りシナリオ"]
 related_posts:
   - "/posts/2026/05/claude-btc-trading-montecarlo/"
@@ -61,6 +61,7 @@ GBM は log-normal を仮定するため、現実市場のジャンプ（決算�
 - [J-Quants API](/blogs/wiki/tools/j-quants-api/) — 日本株市場データ
 - [kabu ステーション API](/blogs/wiki/tools/kabu-station-api/) — 自動発注
 - [株式投資の売買スタイル](/blogs/wiki/concepts/stock-trading-styles/) — 取引スタイル整理
+- [損益分岐勝率](/blogs/wiki/concepts/breakeven-winrate/) — 勝率と利確・損切り幅の関係
 
 ## ソース記事
 

@@ -2,7 +2,7 @@
 title: "財務分析の基礎指標"
 description: "四季報の財務欄から安全な投資先を見極める主要指標。ROE・ROA・自己資本比率・有利子負債などを体系的に整理"
 date: 2026-04-15
-lastmod: 2026-04-15
+lastmod: 2026-08-05
 aliases: ["財務指標", "四季報財務欄", "投資指標"]
 related_posts:
   - "/posts/2026/04/shikiho-financial-7points/"
@@ -53,6 +53,9 @@ tags: ["財務分析", "四季報", "投資", "ROE", "自己資本比率"]
 - [バフェット・コード](/blogs/wiki/tools/buffett-code/) — EDINET データを活用した財務分析ツール
 - [EDINET XBRL Python ガイド](/blogs/wiki/guides/edinet-xbrl-python/) — 財務データの取得・加工
 - [セクターローテーション](/blogs/wiki/concepts/sector-rotation/) — グロース⇄バリューの資金循環と検知
+- [株式の銘柄分類](/blogs/wiki/concepts/stock-style-classification/) — 分類別に見るべき指標
+- [悪材料出尽くし（アク抜け）](/blogs/wiki/concepts/news-priced-in/) — ニュースによる下落の読み方
+- [SSBJ基準](/blogs/wiki/concepts/ssbj/) — サステナビリティ開示の枠組み
 
 ## ソース記事
 

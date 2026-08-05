@@ -2,11 +2,12 @@
 title: "セクターローテーション"
 description: "相場の主役セクターが循環的に入れ替わる現象。資金の移動を相対力・出来高・信用残・マクロ指標で検知する考え方を整理"
 date: 2026-07-17
-lastmod: 2026-07-17
+lastmod: 2026-08-05
 aliases: ["セクター循環", "資金ローテーション", "相対力", "RS比"]
 related_posts:
   - "/posts/2026/07/memory-stock-crash-bank-rotation/"
   - "/posts/2026/07/sector-rotation-detection-price-volume/"
+  - "/posts/2026/07/mizuho-industry-focus-255/"
 tags: ["セクターローテーション", "相対力", "出来高", "株式投資", "銀行株"]
 ---
 
@@ -53,8 +54,10 @@ tags: ["セクターローテーション", "相対力", "出来高", "株式投
 - [株式投資の売買スタイル](/blogs/wiki/concepts/stock-trading-styles/) — トレンド判断・テクニカル指標の実践
 - [財務分析の基礎指標](/blogs/wiki/concepts/financial-analysis/) — バリュー株を見極める企業分析
 - [J-Quants API](/blogs/wiki/tools/j-quants-api/) — RS比・出来高データの取得元
+- [株式の銘柄分類](/blogs/wiki/concepts/stock-style-classification/) — シクリカル／ディフェンシブの軸
 
 ## ソース記事
 
 - [メモリ株バブルはなぜ終わったのか──キオクシア急落と『銀行株』への資金シフト](/blogs/posts/2026/07/memory-stock-crash-bank-rotation/) — 2026-07-17
 - [セクターローテーションは株価・出来高で予測できるか──メモリ株→銀行株の事例で学ぶ検知指標](/blogs/posts/2026/07/sector-rotation-detection-price-volume/) — 2026-07-17
+- [15業種で改善は4つだけ — みずほ産業調査「主要産業の需給動向と短期見通し」2026年7月版](/blogs/posts/2026/07/mizuho-industry-focus-255/) — 2026-07-28（改善3業種の押し上げ要因はいずれも AI・データセンター投資）

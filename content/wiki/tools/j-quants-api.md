@@ -2,11 +2,13 @@
 title: "J-Quants API"
 description: "JPX（日本取引所グループ）公式の日本株データ API。上場銘柄一覧・株価四本値・財務情報・信用残などを提供する個人〜法人向けマーケットデータサービス"
 date: 2026-05-20
-lastmod: 2026-07-28
+lastmod: 2026-08-05
 aliases: ["JQuants", "J-Quants", "JPX API"]
 related_posts:
   - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
   - "/posts/2026/07/fable-stock-factor-analysis-jquants/"
+  - "/posts/2026/07/claude-code-stock-news-automation/"
+  - "/posts/2026/08/stock-turnaround-signals/"
 tags: ["J-Quants", "JPX", "日本株", "API", "市場データ"]
 ---
 
@@ -55,8 +57,11 @@ Monte Carlo + Claude 系の自動売買アーキテクチャでは「データ�
 - [株式投資の売買スタイル](/blogs/wiki/concepts/stock-trading-styles/) — 取引スタイル
 - [セクターローテーション](/blogs/wiki/concepts/sector-rotation/) — RS比・出来高データの用途
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 多因子アルファモデルをグラフで組む設計
+- [株式の銘柄分類](/blogs/wiki/concepts/stock-style-classification/) — 分類別の先行指標の取得元
 
 ## ソース記事
 
 - [日経225マイクロ先物 × Monte Carlo 自動売買判定 — Claude + 1万通りシミュレーションで勝率55%超のときだけ発注する実装](/blogs/posts/2026/05/nikkei225-micro-monte-carlo-claude/) — 2026-05-20
 - [AIに設計から任せて株式ファクター分析ツールを作る──Claude Fable 5 × J-Quants API のプロンプト実例](/blogs/posts/2026/07/fable-stock-factor-analysis-jquants/) — 2026-07-17
+- [Claude Code で株式ニュース分析を自動化する — EDINET・J-Quants・RSS の 3 層構成](/blogs/posts/2026/07/claude-code-stock-news-automation/) — 2026-07-31（無料プランの12週遅延に注意）
+- [株価が上昇に転じる兆候 — 銘柄分類別に見る先行指標](/blogs/posts/2026/08/stock-turnaround-signals/) — 2026-08-03
