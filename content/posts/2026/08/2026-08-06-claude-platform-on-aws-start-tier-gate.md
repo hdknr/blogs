@@ -75,13 +75,28 @@ Build と Scale の間が 200 倍開いているが、これは誤植ではな�
 
 なお、自分でさらに低い上限を設定することは可能で、Claude Platform on AWS ではこれを Limits ページではなく **Settings > Billing** で行う。これはソフトリミットで、設定した上限に対する使用量の集計反映には約 2 時間の遅延がある。
 
-### 6 月の記事から変わった点
+### 注意: 支出上限について 2 つの公式ドキュメントが食い違っている
 
-このブログでは 6 月に [Claude Platform on AWS には Spend Limit がない — AWS Budgets と Rate Limit で課金暴走を防ぐ](/blogs/posts/2026/06/claude-platform-on-aws-no-spend-limit/) を書いた。当時の公式ドキュメントは機能非対応リストに「Spend limits: Not available. Rely on AWS billing controls instead.」と明記しており、記事はそれを引用している。
+ここまで書いた支出上限の話には、確認しておくべき前提がある。**AWS 側のユーザーガイドと Anthropic 側のドキュメントで、記述が食い違っている。**
 
-**この点は現在のドキュメントでは変わっている。** 今日時点の Claude Platform on AWS のドキュメントを確認すると、機能非対応リストから spend limits の項目は消えており、代わりに「Spend limits」という独立した節が追加されて、Settings > Billing から組織およびワークスペース単位の月間支出上限を設定できると説明されている。tier の呼称も当時の「Tier 1」から「Start」に変わった。
+| ドキュメント | 支出上限 | tier の呼称 |
+| --- | --- | --- |
+| AWS ユーザーガイド（`docs.aws.amazon.com`） | `Spend limits: Not available. Rely on AWS billing controls instead.` | Tier 1 |
+| Anthropic ドキュメント（`platform.claude.com`） | Start / Build / Scale に月間支出上限あり。Settings > Billing で設定可 | Start |
 
-したがって 6 月の記事の結論のうち「金額上限をかける機能が存在しない」という部分は現在は成り立たない。一方で「Rate Limit を低く保つことが事故時の被害上限になる」「上限引き上げは事故時の最大被害額を引き上げる行為でもある」という論点は、Start tier 固定が続いている今もそのまま有効である。AWS Budgets によるアラートの組み方も引き続き有用だ。
+この記事が前掲の表で示した「Start tier = 月 500 USD」は Anthropic 側の記述である。AWS 側のユーザーガイドは、今日時点でも機能非対応リストに spend limits を挙げたままだ。
+
+どちらを取るべきかについては、AWS 側の「Rate limits and quotas」ページ自身が答えを書いている。
+
+> The Anthropic page is the source of truth and is updated when limits change.
+>
+> （Anthropic のページが source of truth であり、上限が変わったときに更新される。）
+>
+> （Rate limits and quotas — Claude Platform on AWS User Guide より、筆者訳）
+
+つまり上限に関しては Anthropic 側の記述が優先され、AWS 側のユーザーガイドが追随していない状態と読むのが妥当だ。ただし実運用では、どちらの記述が自分の組織に適用されているかを Claude Console の Limits / Billing ページで現物確認するのが確実である。
+
+このブログでは 6 月に [Claude Platform on AWS には Spend Limit がない — AWS Budgets と Rate Limit で課金暴走を防ぐ](/blogs/posts/2026/06/claude-platform-on-aws-no-spend-limit/) を書いており、そちらは AWS 側の記述を引用している。当該記事にも追記を入れた。なお 6 月の記事の「Rate Limit を低く保つことが事故時の被害上限になる」「上限引き上げは事故時の最大被害額を引き上げる行為でもある」という論点は、Start tier 固定と自動昇格なしが続いている今もそのまま有効である。
 
 ### 引き上げ依頼に何を書くか
 
@@ -218,7 +233,7 @@ tier の話と同じく「AWS 経由だから」の制約として把握して�
 - Claude Platform on AWS の組織は **Start tier に固定**され、自動昇格せず、Claude Console のセルフサービス引き上げ導線も提供されない。だから結果として担当者経由になる。新規アカウントだからロックされているわけではない。
 - Bedrock 側は AWS Service Quotas の世界だ。既定は 200 万入力 TPM で、400 万までは Anthropic の追加承認なしに引き上げを要求できる。RPM の調整は AWS Support が窓口になる。
 - 「新規はアビューズ対策で絞られる」仕組みは Anthropic の Evaluation tier として実在するが、こちらは自動で解消する。同じ症状に見えて対処法が逆なので、区別しておく価値がある。
-- Start tier の月 500 USD の支出上限は、レート制限より先に当たりやすい。本番投入前に Limits ページで確認し、必要ならプロンプトキャッシュで実効スループットを稼ぐか、tier 引き上げを依頼する。
+- Start tier の月 500 USD の支出上限は、レート制限より先に当たりやすい。本番投入前に Limits ページで確認し、必要ならプロンプトキャッシュで実効スループットを稼ぐか、tier 引き上げを依頼する。ただし支出上限については AWS 側のユーザーガイドと Anthropic 側の記述が食い違っているため、Claude Console で現物を確認すること。
 - 既存の private offer があるなら Sign up より先に販売担当に連絡する。割引は遡及適用されない。
 
 「規約に明記されているか」を探しに行くと空振りするが、「どちらのサービスの、どのページに書かれているか」を切り分けると、今回の件はほぼ全部が公開ドキュメントの範囲で説明できた。上限の話で詰まったときは、まず自分がどちらの経路にいるのかを確認するのが早い。
@@ -228,6 +243,8 @@ tier の話と同じく「AWS 経由だから」の制約として把握して�
 - [Claude Platform on AWS is now generally available — AWS What's New](https://aws.amazon.com/about-aws/whats-new/2026/05/claude-platform-aws/)
 - [Claude Platform on AWS — Claude Platform Docs](https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws)
 - [Set up your account — Claude Platform on AWS User Guide](https://docs.aws.amazon.com/claude-platform/latest/userguide/setup.html)
+- [Feature support — Claude Platform on AWS User Guide](https://docs.aws.amazon.com/claude-platform/latest/userguide/feature-support.html)
+- [Rate limits and quotas — Claude Platform on AWS User Guide](https://docs.aws.amazon.com/claude-platform/latest/userguide/rate-limits.html)
 - [Claude in Amazon Bedrock (Opus 4.7 and later) — Claude Platform Docs](https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock)
 - [Rate limits — Claude Platform Docs](https://platform.claude.com/docs/en/api/rate-limits)
 - [GetUseCaseForModelAccess — Amazon Bedrock API Reference](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_GetUseCaseForModelAccess.html)

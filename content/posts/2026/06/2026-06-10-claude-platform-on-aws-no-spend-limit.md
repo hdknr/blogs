@@ -1,7 +1,7 @@
 ---
 title: "Claude Platform on AWS には Spend Limit がない — AWS Budgets と Rate Limit で課金暴走を防ぐ"
 date: 2026-06-10
-lastmod: 2026-06-10
+lastmod: 2026-08-06
 slug: "claude-platform-on-aws-no-spend-limit"
 draft: false
 description: "Claude Platform on AWS には金額上限（Spend Limit）がない。理由と、AWS Budgets のアラート・Rate Limit のキャップ・Amazon Bedrock の自動遮断という現実的な課金ガードレールの組み方を整理する。"
@@ -18,6 +18,22 @@ Anthropic の公式ドキュメント（Claude Platform on AWS の Feature suppo
 > （利用金額制限：利用不可。代わりに AWS の請求コントロールを利用してください。）
 
 本記事では、なぜ金額制限ができないのか、そして「課金の暴走」をどう防ぐのかを、AWS 側のガードレールの実装まで含めて整理します。
+
+---
+
+> **⚠️ 2026-08-06 追記: 2 つの公式ドキュメントの記述が食い違っています**
+>
+> 本記事が引用している上記の一文は、**AWS 側のユーザーガイド（`docs.aws.amazon.com`）には現在も維持されています。** 一方で **Anthropic 側のドキュメント（`platform.claude.com`）は現在、逆の内容を説明しています。** Claude Platform on AWS でも Settings > Billing から組織およびワークスペース単位の月間支出上限を設定でき、Start tier には月 500 USD の支出上限があるとしています。
+>
+> tier の呼称も食い違っており、AWS 側は「Tier 1」、Anthropic 側は「Start」です。
+>
+> どちらを信じるべきかについては、AWS 側の「Rate limits and quotas」ページ自身が `The Anthropic page is the source of truth and is updated when limits change.`（Anthropic のページが source of truth であり、上限が変わったときに更新される）と明記しています。したがって**上限に関しては Anthropic 側の記述が優先されると読むのが妥当**で、AWS 側のユーザーガイドが追随していない状態だと考えられます。実際に運用する際は Claude Console の Limits / Billing ページで現物を確認してください。
+>
+> 一方で本記事の**「Rate Limit を低く保つことが事故時の被害上限になる」「上限引き上げは事故時の最大被害額を引き上げる行為でもある」という論点、および AWS Budgets によるアラートの組み方は、現在もそのまま有効です。** 自動でのティア昇格が行われない点も変わっていません。
+>
+> 経緯と現在の上限管理の全体像は [Claude Platform on AWS の上限は Start tier 固定 — 引き上げが担当者経由になる理由](/blogs/posts/2026/08/claude-platform-on-aws-start-tier-gate/) にまとめました。
+
+---
 
 ## なぜ金額で制限できないのか
 
@@ -93,6 +109,8 @@ AWS Budgets には **Budget Actions** という機能があり、しきい値超
 - 「超過したら確実に止める」を実現したいなら、**Amazon Bedrock + Budget Actions（IAM/SCP 自動適用）または Lambda による権限剥奪**で物理停止を組む。
 
 まずは AWS Budgets で数千円〜1 万円単位の細かい通知を仕込んでおく——これが、現状の Claude Platform on AWS で最初に打つべき一手です。
+
+> **2026-08-06 追記:** 上の 1 点目（Spend Limit が存在しない）と 3 点目の tier 名については、冒頭の追記のとおり Anthropic 側のドキュメントが現在は異なる内容を説明しています。AWS Budgets とレート制限を使った自衛策そのものは引き続き有効です。
 
 ---
 
