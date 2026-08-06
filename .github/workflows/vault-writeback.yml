@@ -1,60 +1,188 @@
 # GitHub Actions: PR マージ通知（cloud, 漏れ拾い用）。
 #
 # cloud-hosted runner からは Vault に触れないため、ここでは
-# 「マージ済み PR を検出して通知する」だけに留める。
-# 通知の届け先は SLACK_WEBHOOK / 自前 Webhook などに jq -n でペイロードを組み立てて送る。
+# 「マージ済み PR を検出して、後でローカルから拾えるキューに積む」だけに留める。
+#
+# 通知 route は Issue #423 で B′ を採用:
+#   マージ済み PR ごとに hdknr/knowl へ `writeback-pending` Issue を起票し、
+#   ローカルの `/knowl-summary` がそれを inbox/summaries/ に流し込んで close する。
+#   → 外部 SaaS 不要・GitHub 通知が飛ぶので「気づかない」リスクが消え、
+#     流れて消える通知ではなく残るキューになる。
+#
+# 必要な secret:
+#   KNOWL_ISSUE_TOKEN — hdknr/knowl に対する Issues: Read and write 権限を持つ
+#                       fine-grained PAT。GITHUB_TOKEN は他リポジトリに書けないため必須。
+#                       未設定なら起票 step は skip される（workflow は success）。
+#   NOTIFY_WEBHOOK    — 任意。設定すると payload を素の JSON で POST もする（route A 相当）。
+#
+# workflow_dispatch は漏れ補填と動作確認用。PR 番号を渡すと API から情報を取り直して
+# キューに積む（dedupe があるので何度実行しても二重起票しない）。
 #
 # 配置先: 各プロジェクトの .github/workflows/vault-writeback.yml
 #
 # Phase 5 で self-hosted runner を用意すれば、ここから claude -p で Vault に書き戻せる。
+# ただし blogs は public リポジトリのため self-hosted は採らない（任意コード実行リスク）。
 
 name: vault-writeback (notify)
 
 on:
   pull_request:
     types: [closed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 手動でキューに積むマージ済み PR の番号
+        required: true
 
 permissions:
   contents: read
   pull-requests: read
 
+# dedupe の「探す → 作る」の間に別 run が割り込むと二重起票しうるので直列化する。
+# 通知用途なので待たされて困らない。cancel はしない（1 run = 1 PR で取りこぼせない）。
+concurrency:
+  group: vault-writeback-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   notify:
-    if: github.event.pull_request.merged == true
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
+    # secret の有無だけを job レベルの env に落とす（値そのものは各 step に閉じる）。
+    # step レベルの env を同じ step の if から参照する形は評価タイミングが分かりにくく、
+    # 「secret 未設定」と「式が false」の区別が付かなくなるため job レベルで判定する。
+    env:
+      HAS_KNOWL_TOKEN: ${{ secrets.KNOWL_ISSUE_TOKEN != '' }}
+      HAS_WEBHOOK: ${{ secrets.NOTIFY_WEBHOOK != '' }}
+      PR_NUM: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+
     steps:
-      - name: Compose payload safely
+      - name: Resolve PR and compose payload safely
         id: payload
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_BODY:  ${{ github.event.pull_request.body }}
-          PR_URL:   ${{ github.event.pull_request.html_url }}
-          PR_NUM:   ${{ github.event.pull_request.number }}
-          REPO:     ${{ github.repository }}
+          GH_TOKEN:  ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPO:      ${{ github.repository }}
+          PR_TITLE:  ${{ github.event.pull_request.title }}
+          PR_BODY:   ${{ github.event.pull_request.body }}
+          PR_URL:    ${{ github.event.pull_request.html_url }}
           MERGED_AT: ${{ github.event.pull_request.merged_at }}
         run: |
-          # jq -n でペイロード組み立て（PR 本文に " や \ が混ざっても壊れない）
-          jq -n \
-            --arg repo "$REPO" \
-            --arg num "$PR_NUM" \
-            --arg title "$PR_TITLE" \
-            --arg body "$PR_BODY" \
-            --arg url "$PR_URL" \
-            --arg merged_at "$MERGED_AT" \
-            '{
+          # workflow_dispatch の入力は人間が手で打つので、数値であることを先に検査する
+          case "$PR_NUM" in
+            ''|*[!0-9]*) echo "::error::invalid PR number: '$PR_NUM'"; exit 1 ;;
+          esac
+
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            # 手動実行時は event payload に PR 情報が無いので API から取り直す
+            gh pr view "$PR_NUM" --repo "$REPO" \
+              --json number,title,body,url,mergedAt > pr.json
+            if [ "$(jq -r '.mergedAt // "null"' pr.json)" = "null" ]; then
+              echo "::error::PR #$PR_NUM is not merged — nothing to queue"
+              exit 1
+            fi
+            jq --arg repo "$REPO" '{
               event: "pr_merged",
               repo: $repo,
-              pr: ($num | tonumber),
-              title: $title,
-              body: $body,
-              url: $url,
-              merged_at: $merged_at
-            }' > payload.json
+              pr: .number,
+              title: .title,
+              body: .body,
+              url: .url,
+              merged_at: .mergedAt
+            }' pr.json > payload.json
+          else
+            # jq -n でペイロード組み立て（PR 本文に " や \ が混ざっても壊れない）
+            jq -n \
+              --arg repo "$REPO" \
+              --arg num "$PR_NUM" \
+              --arg title "$PR_TITLE" \
+              --arg body "$PR_BODY" \
+              --arg url "$PR_URL" \
+              --arg merged_at "$MERGED_AT" \
+              '{
+                event: "pr_merged",
+                repo: $repo,
+                pr: ($num | tonumber),
+                title: $title,
+                body: $body,
+                url: $url,
+                merged_at: $merged_at
+              }' > payload.json
+          fi
+
           echo "Composed payload:"
           jq -c . payload.json
 
+      - name: Queue writeback issue in knowl
+        id: queue
+        if: env.HAS_KNOWL_TOKEN == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.KNOWL_ISSUE_TOKEN }}
+          TARGET_REPO: hdknr/knowl
+        run: |
+          # MARKER は repository 名と PR 番号のみで構成する（どちらも PR 作成者が細工できない値）。
+          # 末尾の区切り文字まで含めるのが要点。番号だけで前方一致させると
+          # "#7" が "#71 — ..." に誤ヒットし、#7 の issue が永久に起票されない
+          # （通常マージは番号が増える順なので当たらないが、workflow_dispatch で
+          #   古い PR を漏れ補填したときに刺さる）。
+          # dedupe キーと issue タイトルの接頭辞を同一の変数にして、ずれる余地を無くす。
+          MARKER="writeback: ${GITHUB_REPOSITORY}#${PR_NUM} —"
+          export MARKER
+
+          # label を冪等に用意（既存なら create は失敗するので握り潰す）
+          gh label create writeback-pending \
+            --repo "$TARGET_REPO" \
+            --color FBCA04 \
+            --description "PR merged; needs /knowl-summary into inbox/summaries/" \
+            || echo "label already exists"
+
+          # dedupe: 同じ MARKER の issue が既にあれば起票しない。
+          # search API は index 反映が遅れて取りこぼすので list API で厳密に突き合わせる。
+          # --limit は dedupe の探索地平。これを超えて古い PR を漏れ補填すると
+          # 既存 issue を見つけられず二重起票しうるので、キューの実績件数に合わせて上げる。
+          existing=$(gh issue list \
+            --repo "$TARGET_REPO" \
+            --state all \
+            --label writeback-pending \
+            --limit 1000 \
+            --json number,title \
+            --jq '.[] | select(.title | startswith(env.MARKER)) | .number' | head -1)
+
+          if [ -n "$existing" ]; then
+            echo "already queued: $TARGET_REPO#$existing"
+            echo "issue_url=https://github.com/$TARGET_REPO/issues/$existing" >> "$GITHUB_OUTPUT"
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # 本文は payload.json から jq -r で組み立てる。
+          # heredoc や echo で PR 本文をシェルに通すと $(...) が実行されるため通さない。
+          jq -r '
+            "- source: " + .url + "\n" +
+            "- repo: " + .repo + "\n" +
+            "- merged_at: " + .merged_at + "\n" +
+            "\nローカルで `/knowl-summary` を実行して inbox/summaries/ に書き戻したら close してください。\n" +
+            "\n---\n\n" +
+            (if (.body // "") == "" then "(no PR body)" else .body end)
+          ' payload.json > issue_body.md
+
+          # title の接頭辞は dedupe キーと同一の $MARKER をそのまま使う
+          title="$MARKER $(jq -r '.title' payload.json)"
+
+          url=$(gh issue create \
+            --repo "$TARGET_REPO" \
+            --title "$title" \
+            --body-file issue_body.md \
+            --label writeback-pending)
+          echo "queued: $url"
+          echo "issue_url=$url" >> "$GITHUB_OUTPUT"
+          echo "created=true" >> "$GITHUB_OUTPUT"
+
       - name: Send notification
-        if: env.NOTIFY_WEBHOOK != ''
+        if: env.HAS_WEBHOOK == 'true'
         env:
           NOTIFY_WEBHOOK: ${{ secrets.NOTIFY_WEBHOOK }}
         run: |
@@ -65,6 +193,29 @@ jobs:
             "$NOTIFY_WEBHOOK"
 
       - name: Summary
+        # 前段が落ちても状況を残す（落ちたときこそ Summary が要る）
+        if: ${{ !cancelled() }}
+        env:
+          QUEUED_URL: ${{ steps.queue.outputs.issue_url }}
+          QUEUE_CREATED: ${{ steps.queue.outputs.created }}
+          QUEUE_OUTCOME: ${{ steps.queue.outcome }}
         run: |
-          echo "PR #${{ github.event.pull_request.number }} merged at ${{ github.event.pull_request.merged_at }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "Next: trigger \`/knowl-summary\` in Claude Code locally." >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "PR #${PR_NUM} of ${GITHUB_REPOSITORY} — vault writeback"
+            echo ""
+            if [ "$QUEUE_OUTCOME" = "failure" ]; then
+              echo ":x: knowl への起票に失敗しました。上の \`Queue writeback issue in knowl\` step のログを確認してください。"
+              echo "復旧: secret を直したうえで \`workflow_dispatch\` に PR 番号 ${PR_NUM} を渡して再実行（dedupe があるので二重起票しません）。"
+            elif [ "$HAS_KNOWL_TOKEN" != "true" ]; then
+              echo ":warning: \`KNOWL_ISSUE_TOKEN\` secret 未設定のため knowl への起票を skip しました。"
+            elif [ "$QUEUE_OUTCOME" = "skipped" ]; then
+              # token はあるのに queue が skip = その前の step が落ちて到達しなかった
+              echo ":x: 前段の step が失敗したため起票まで到達しませんでした。上のログを確認してください。"
+            elif [ "$QUEUE_CREATED" = "true" ]; then
+              echo "Queued in knowl: $QUEUED_URL"
+            else
+              echo "既に knowl にキュー済みでした: $QUEUED_URL"
+            fi
+            echo ""
+            echo "Next: trigger \`/knowl-summary\` in Claude Code locally."
+          } >> "$GITHUB_STEP_SUMMARY"
