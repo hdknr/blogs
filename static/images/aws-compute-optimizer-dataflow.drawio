@@ -46,7 +46,7 @@
         </mxCell>
 
         <!-- Outputs -->
-        <mxCell id="out1" value="右サイジング推奨&#xa;&#xa;Finding：Over-provisioned /&#xa;Under-provisioned / Optimized&#xa;Finding reasons（CPU・メモリ・&#xa;ネットワーク・EBS など）&#xa;パフォーマンスリスク（5 段階）&#xa;移行の労力・プラットフォーム差異" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;align=left;spacingLeft=14;verticalAlign=middle;fontColor=#7a2622;" vertex="1" parent="1">
+        <mxCell id="out1" value="サイズ適正化推奨&#xa;&#xa;Finding：Over-provisioned /&#xa;Under-provisioned / Optimized&#xa;Finding reasons（CPU・メモリ・&#xa;ネットワーク・EBS など）&#xa;パフォーマンスリスク（5 段階）&#xa;移行の労力・プラットフォーム差異" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;align=left;spacingLeft=14;verticalAlign=middle;fontColor=#7a2622;" vertex="1" parent="1">
           <mxGeometry x="880" y="124" width="260" height="150" as="geometry"/>
         </mxCell>
         <mxCell id="out2" value="アイドルリソース推奨&#xa;&#xa;停止・削除の候補を提示。EC2 / ASG /&#xa;EBS / ECS / Aurora・RDS / NAT Gateway /&#xa;DynamoDB / ElastiCache / MemoryDB /&#xa;DocumentDB / WorkSpaces /&#xa;SageMaker エンドポイント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=14;verticalAlign=middle;fontColor=#7f6000;" vertex="1" parent="1">
