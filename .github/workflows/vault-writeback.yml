@@ -208,6 +208,9 @@ jobs:
               echo "復旧: secret を直したうえで \`workflow_dispatch\` に PR 番号 ${PR_NUM} を渡して再実行（dedupe があるので二重起票しません）。"
             elif [ "$HAS_KNOWL_TOKEN" != "true" ]; then
               echo ":warning: \`KNOWL_ISSUE_TOKEN\` secret 未設定のため knowl への起票を skip しました。"
+            elif [ "$QUEUE_OUTCOME" = "skipped" ]; then
+              # token はあるのに queue が skip = その前の step が落ちて到達しなかった
+              echo ":x: 前段の step が失敗したため起票まで到達しませんでした。上のログを確認してください。"
             elif [ "$QUEUE_CREATED" = "true" ]; then
               echo "Queued in knowl: $QUEUED_URL"
             else
