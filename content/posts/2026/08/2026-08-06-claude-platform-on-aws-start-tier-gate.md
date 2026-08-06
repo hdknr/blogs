@@ -1,20 +1,27 @@
 ---
-title: "Claude Platform on AWS の上限は Start tier 固定 — 引き上げが担当者経由になる理由"
+title: "開設したAWSアカウントで Claude Platform on AWS が使えない — サポートでは進まない理由"
 date: 2026-08-06
 lastmod: 2026-08-06
 slug: "claude-platform-on-aws-start-tier-gate"
 draft: false
-description: "Claude Platform on AWS のレート制限と月 500 USD の支出上限は Anthropic 管理の Start tier に固定され、自動昇格も Console からのセルフサービス引き上げもない。Amazon Bedrock の Service Quotas との管轄の違いと、引き上げ依頼に必要な情報を整理する。"
+description: "新規 AWS アカウントで Claude Platform on AWS が使えないのは、サインアップが AWS Marketplace の購読を経由するため。SCP・Private Marketplace・リセラー契約による阻害はいずれも AWS Support の権限外で、担当営業しか動かせない。使えた後の Start tier 固定の話と併せて整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/593#issuecomment-5200842187"
 categories: ["AI/LLM", "クラウド/インフラ"]
 tags: ["Claude", "Claude Platform on AWS", "Amazon Bedrock", "AWS", "レート制限"]
 ---
 
-新しく開設した AWS アカウントで Claude を使おうとして、「上限が上がらない」「結局『担当営業に連絡してほしい』と案内された」という状況に出くわすことがある。
+新しく開設した AWS アカウントで Claude Platform on AWS を使おうとしたら、使えなかった。**AWS サポートと何度もやり取りしたが進展せず、最終的に別途契約している AWS アカウントのローカルセールス担当と連絡がついて、ミーティングで依頼したことでようやく動いた。**
 
-このとき最初に立てがちな仮説は「新規アカウントは不正利用（アビューズ）対策で手動ロックされていて、セールス経由でしか解放できないのだろう」というものだ。筆者も当初そう整理していた。しかし公式ドキュメントを読み直すと、症状としての結論（担当者経由になる）は当たっているが、**原因の説明はほぼ入れ替えが必要**だった。
+このとき最初に立てた仮説は「新規アカウントは不正利用（アビューズ）対策で手動ロックされていて、セールス経由でしか解放できないのだろう」というものだった。だが公式ドキュメントを「アカウント年齢によるロック」の観点で探しても、そんな記述はどこにも見つからない。
 
-原因は「新規アカウントだからロックされている」ことではなく、Claude Platform on AWS と Amazon Bedrock が別サービスで、上限を管理している主体も引き上げの窓口も違うことにある。しかもその窓口は AWS ではなく Anthropic 側だ。この記事はその整理である。
+結論から言うと、**探す場所が違っていた。** そして症状も 2 つに分けて考える必要があった。
+
+| 症状 | 原因 |
+| --- | --- |
+| **そもそも使えない**（サインアップが通らない） | AWS Marketplace で購読可能なオファーが存在しない（調達の問題） |
+| **使えるが上限が上がらない** | Anthropic の tier 設計（Start tier 固定・自動昇格なし） |
+
+この 2 つは原因も連絡先も違う。混同すると、サポートに何往復問い合わせても進まないという状況になる。この記事では両方を切り分けて整理する。
 
 ## AWS 経由で Claude を使う 2 つの経路 — Bedrock と Claude Platform on AWS
 
@@ -47,7 +54,65 @@ tags: ["Claude", "Claude Platform on AWS", "Amazon Bedrock", "AWS", "レート�
 2. **tier の自動昇格がない。** 利用実績にもとづく tier の昇格は「ファーストパーティの Claude API の組織」に適用される仕組みで、AWS Marketplace 経由で課金される組織には適用されない。
 3. **Claude Console のセルフサービス導線が存在しない。** 通常なら Claude Console の Limits ページから「Request rate limit increase」を実行できるが、Claude Platform on AWS ではこのフローが使えず、Limits ページは代わりに Anthropic の account representative（以下、担当者）に連絡するよう案内する。
 
-つまり「担当者経由になる」のはアビューズ判定の結果ではなく、セルフサービスの引き上げ導線がそもそも用意されていないという設計上の帰結である。新規アカウントであってもなくても同じ扱いになる。
+つまり「担当者経由になる」のはアビューズ判定の結果ではなく、セルフサービスの引き上げ導線がそもそも用意されていないという設計上の帰結である。
+
+ただしこれは「**使えてはいるが上限が上げられない**」場合の説明である。「アカウントを開設したのに、そもそも使えない」という症状はこれとは別で、原因も窓口も違う。次節で扱う。
+
+## なぜ開設したアカウントで「そもそも使えない」ことがあるのか
+
+ここが本題である。**サポートに何度問い合わせても進まず、AWS のローカルセールス担当と連絡がついてミーティングで依頼したら進んだ** — 筆者が実際に踏んだ経路がこれだった。
+
+この「サポートは動かせないがセールスは動かせる」というパターン自体が原因を絞り込む手がかりになる。公式ドキュメントを「アカウント年齢によるロック」の観点で探すと何も見つからないが、**探す場所が違っていた。** ゲートはアカウントの新しさではなく、**そのアカウントの請求・契約形態において、購読可能な AWS Marketplace のオファーが存在するか**にある。
+
+Claude Platform on AWS のサインアップは AWS Marketplace のサブスクリプションを経由する。AWS コンソールで Sign up を押すと、AWS が裏で Marketplace の購読処理を行う。**つまり Marketplace で購読できないアカウントは、この時点で先に進めない。** サービスの技術的な可否ではなく、調達（procurement）の問題である。
+
+Marketplace の購読を止める要因は、ドキュメント上いずれも「AWS サポートでは解決できない」ものだ。
+
+### 1. SCP による `aws-marketplace:Subscribe` の明示的拒否
+
+AWS Organizations 配下のメンバーアカウントでは、SCP（サービスコントロールポリシー）で Marketplace の購読を拒否できる。この場合、次のようなエラーになる。
+
+```text
+User is not authorized to perform: aws-marketplace:Subscribe on resource: *
+with an explicit deny in a service control policy
+```
+
+**SCP を変更できるのは組織の管理アカウントだけである。** これは顧客自身が所有するポリシーなので、AWS サポートに依頼しても動かせない。自社の組織管理者に依頼する話になる。
+
+### 2. Private Marketplace による catalog 制限
+
+組織が Private Marketplace を有効にしている場合、承認済み catalog に載っていない製品は購読できない。Claude Platform を catalog に追加するには、管理アカウントまたは委任された管理者による操作が必要になる。これもサポートの管轄外だ。
+
+### 3. リセラー・Channel Partner 経由の契約と private offer
+
+これが「ローカルセールス担当で進んだ」経路の説明になる。
+
+AWS Marketplace には **resale authorization** という仕組みがある。ドキュメントによると、ISV（この場合 Anthropic）が Channel Partner に再販を認可する際、**対象となる買い手のアカウントをカンマ区切りで列挙し、リセラーの 12 桁の AWS アカウント番号を指定**して認可を作る。そのうえで Channel Partner が買い手向けの private offer を発行する。
+
+つまり**特定の買い手アカウントに対して購読可能なオファーが存在しなければ、そのアカウントは購読できない。** そしてこれを作れるのは ISV とパートナー／担当営業だけで、構造的に AWS サポートには実行できない操作である。
+
+Claude Platform on AWS のドキュメントもこの前提で書かれている。
+
+- 「組織が Anthropic の private offer を持っている場合、コンソールがそれを検索し、AWS Marketplace で承諾するよう促す」
+- 「既存の Amazon Bedrock private offer がある場合は、Sign up する前に Anthropic か AWS の **account executive**（サポートではない）に連絡すること」
+
+サインアップのフローそのものが private offer を前提に組まれている。リセラー経由や Enterprise Agreement で契約しているアカウントでは、公開オファーをそのまま購読する経路が使えず、担当営業が動くまで詰まったままになる。
+
+### 結局どこに連絡すべきか
+
+症状ごとに窓口が違う。ここを間違えると、筆者のように何往復も無駄にする。
+
+| 症状 | 原因の所在 | 連絡先 |
+| --- | --- | --- |
+| Sign up が SCP エラーで失敗する | 自社の AWS Organizations | 自社の組織管理者 |
+| 製品が Marketplace に出てこない | 自社の Private Marketplace | 自社の Private Marketplace 管理者 |
+| 購読できるオファーが存在しない | 契約・調達形態 | **AWS / Anthropic の担当営業（account executive）** |
+| 使えるが tier を上げられない | Anthropic の tier 設計 | **Anthropic の account representative** |
+| Service Quotas の値が異常（Bedrock） | AWS のクォータ | AWS Support |
+
+**AWS Support に持っていって解決するのは最下段だけである。** 上 4 つはいずれもサポートの権限外なので、粘っても進まない。これが「サポートとは何度もやり取りしたが進展せず」の正体だと考えられる。
+
+> 注記: 上記のうち Marketplace の 3 つの阻害要因と resale authorization の仕組みは公式ドキュメントで確認できる事実である。一方「新規に開設した AWS アカウントでは Claude Platform on AWS が使えない」という形の記述は、AWS・Anthropic のドキュメントには見つからなかった。アカウントの新しさが直接の原因ではなく、**既存の組織や契約の下に新しく作られたアカウントがその制約を引き継ぐ**ため、結果として「作りたてだと使えない」という体験になっているのだと考えるのが整合的である。
 
 ## Start tier の枠と月間支出上限
 
@@ -229,6 +294,9 @@ tier の話と同じく「AWS 経由だから」の制約として把握して�
 
 ## まとめ
 
+- 「そもそも使えない」と「上限が上がらない」は別の症状で、原因も連絡先も違う。前者は AWS Marketplace で購読可能なオファーが存在しないという**調達の問題**、後者は Anthropic の tier 設計の問題。
+- サインアップは Marketplace の購読を経由するため、SCP による `aws-marketplace:Subscribe` の拒否、Private Marketplace の catalog 制限、リセラー経由契約で購読可能なオファーがない、のいずれかで止まる。**この 3 つはどれも AWS Support の権限外**なので、サポートに粘っても進まない。3 番目は担当営業（account executive）しか動かせない。
+- アカウントの新しさ自体がゲートである、という記述は公式ドキュメントには存在しない。既存の組織・契約の下に作られた新しいアカウントがその制約を引き継ぐため、結果として「作りたてだと使えない」という体験になる。
 - Claude Platform on AWS（2026 年 5 月 11 日 GA）と Claude in Amazon Bedrock は別サービスで、上限を管理する主体が違う。前者は Anthropic、後者は AWS。
 - Claude Platform on AWS の組織は **Start tier に固定**され、自動昇格せず、Claude Console のセルフサービス引き上げ導線も提供されない。だから結果として担当者経由になる。新規アカウントだからロックされているわけではない。
 - Bedrock 側は AWS Service Quotas の世界だ。既定は 200 万入力 TPM で、400 万までは Anthropic の追加承認なしに引き上げを要求できる。RPM の調整は AWS Support が窓口になる。
@@ -248,3 +316,5 @@ tier の話と同じく「AWS 経由だから」の制約として把握して�
 - [Claude in Amazon Bedrock (Opus 4.7 and later) — Claude Platform Docs](https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock)
 - [Rate limits — Claude Platform Docs](https://platform.claude.com/docs/en/api/rate-limits)
 - [GetUseCaseForModelAccess — Amazon Bedrock API Reference](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_GetUseCaseForModelAccess.html)
+- [Managing AWS Marketplace resale authorizations — AWS Partner Central](https://docs.aws.amazon.com/partner-central/latest/crm/crm-resale-authorizations.html)
+- [AWS Marketplace で製品を購入する — 購入者ガイド](https://docs.aws.amazon.com/ja_jp/marketplace/latest/buyerguide/buyer-subscribing-to-products.html)
