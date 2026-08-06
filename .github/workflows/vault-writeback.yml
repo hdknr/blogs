@@ -38,6 +38,12 @@ permissions:
   contents: read
   pull-requests: read
 
+# dedupe の「探す → 作る」の間に別 run が割り込むと二重起票しうるので直列化する。
+# 通知用途なので待たされて困らない。cancel はしない（1 run = 1 PR で取りこぼせない）。
+concurrency:
+  group: vault-writeback-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   notify:
     if: >-
@@ -117,8 +123,13 @@ jobs:
           GH_TOKEN: ${{ secrets.KNOWL_ISSUE_TOKEN }}
           TARGET_REPO: hdknr/knowl
         run: |
-          # MARKER は repository 名と PR 番号のみで構成する（どちらも PR 作成者が細工できない値）
-          MARKER="writeback: ${GITHUB_REPOSITORY}#${PR_NUM}"
+          # MARKER は repository 名と PR 番号のみで構成する（どちらも PR 作成者が細工できない値）。
+          # 末尾の区切り文字まで含めるのが要点。番号だけで前方一致させると
+          # "#7" が "#71 — ..." に誤ヒットし、#7 の issue が永久に起票されない
+          # （通常マージは番号が増える順なので当たらないが、workflow_dispatch で
+          #   古い PR を漏れ補填したときに刺さる）。
+          # dedupe キーと issue タイトルの接頭辞を同一の変数にして、ずれる余地を無くす。
+          MARKER="writeback: ${GITHUB_REPOSITORY}#${PR_NUM} —"
           export MARKER
 
           # label を冪等に用意（既存なら create は失敗するので握り潰す）
@@ -130,11 +141,13 @@ jobs:
 
           # dedupe: 同じ MARKER の issue が既にあれば起票しない。
           # search API は index 反映が遅れて取りこぼすので list API で厳密に突き合わせる。
+          # --limit は dedupe の探索地平。これを超えて古い PR を漏れ補填すると
+          # 既存 issue を見つけられず二重起票しうるので、キューの実績件数に合わせて上げる。
           existing=$(gh issue list \
             --repo "$TARGET_REPO" \
             --state all \
             --label writeback-pending \
-            --limit 200 \
+            --limit 1000 \
             --json number,title \
             --jq '.[] | select(.title | startswith(env.MARKER)) | .number' | head -1)
 
@@ -156,8 +169,8 @@ jobs:
             (if (.body // "") == "" then "(no PR body)" else .body end)
           ' payload.json > issue_body.md
 
-          # title も payload.json 由来にして、event と dispatch で同じ経路にする
-          title="$MARKER — $(jq -r '.title' payload.json)"
+          # title の接頭辞は dedupe キーと同一の $MARKER をそのまま使う
+          title="$MARKER $(jq -r '.title' payload.json)"
 
           url=$(gh issue create \
             --repo "$TARGET_REPO" \
@@ -180,14 +193,20 @@ jobs:
             "$NOTIFY_WEBHOOK"
 
       - name: Summary
+        # 前段が落ちても状況を残す（落ちたときこそ Summary が要る）
+        if: ${{ !cancelled() }}
         env:
           QUEUED_URL: ${{ steps.queue.outputs.issue_url }}
           QUEUE_CREATED: ${{ steps.queue.outputs.created }}
+          QUEUE_OUTCOME: ${{ steps.queue.outcome }}
         run: |
           {
             echo "PR #${PR_NUM} of ${GITHUB_REPOSITORY} — vault writeback"
             echo ""
-            if [ "$HAS_KNOWL_TOKEN" != "true" ]; then
+            if [ "$QUEUE_OUTCOME" = "failure" ]; then
+              echo ":x: knowl への起票に失敗しました。上の \`Queue writeback issue in knowl\` step のログを確認してください。"
+              echo "復旧: secret を直したうえで \`workflow_dispatch\` に PR 番号 ${PR_NUM} を渡して再実行（dedupe があるので二重起票しません）。"
+            elif [ "$HAS_KNOWL_TOKEN" != "true" ]; then
               echo ":warning: \`KNOWL_ISSUE_TOKEN\` secret 未設定のため knowl への起票を skip しました。"
             elif [ "$QUEUE_CREATED" = "true" ]; then
               echo "Queued in knowl: $QUEUED_URL"
