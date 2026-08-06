@@ -14,11 +14,13 @@ tags: ["Claude", "Claude Platform on AWS", "Amazon Bedrock", "AWS", "レート�
 
 このとき最初に立てた仮説は「新規アカウントは不正利用（アビューズ）対策で手動ロックされていて、セールス経由でしか解放できないのだろう」というものだった。だが公式ドキュメントを「アカウント年齢によるロック」の観点で探しても、そんな記述はどこにも見つからない。
 
-結論から言うと、**探す場所が違っていた。** そして症状も 2 つに分けて考える必要があった。
+さらにこの仮説では説明できない事実がある。**同じ時期に、長期運用している別の AWS アカウント（別契約）では問題なくオンボードできた。** 一律のロックがかかっているなら、こうはならない。
+
+結論から言うと、**探す場所が違っていた。** ゲートは「アカウントの新しさ」ではなく「**そのアカウント ID 向けに購読可能な AWS Marketplace のオファーが存在するか**」だった。そして症状も 2 つに分けて考える必要があった。
 
 | 症状 | 原因 |
 | --- | --- |
-| **そもそも使えない**（サインアップが通らない） | AWS Marketplace で購読可能なオファーが存在しない（調達の問題） |
+| **そもそも使えない**（サインアップが通らない） | そのアカウント ID 向けの購読可能なオファーが存在しない（調達の問題） |
 | **使えるが上限が上がらない** | Anthropic の tier 設計（Start tier 固定・自動昇格なし） |
 
 この 2 つは原因も連絡先も違う。混同すると、サポートに何往復問い合わせても進まないという状況になる。この記事では両方を切り分けて整理する。
@@ -62,41 +64,60 @@ tags: ["Claude", "Claude Platform on AWS", "Amazon Bedrock", "AWS", "レート�
 
 ここが本題である。**サポートに何度問い合わせても進まず、AWS のローカルセールス担当と連絡がついてミーティングで依頼したら進んだ** — 筆者が実際に踏んだ経路がこれだった。
 
-この「サポートは動かせないがセールスは動かせる」というパターン自体が原因を絞り込む手がかりになる。公式ドキュメントを「アカウント年齢によるロック」の観点で探すと何も見つからないが、**探す場所が違っていた。** ゲートはアカウントの新しさではなく、**そのアカウントの請求・契約形態において、購読可能な AWS Marketplace のオファーが存在するか**にある。
+決定的な手がかりは、**同じ人間が管理している別の AWS アカウント（長期運用・別契約）では、同じ時期に問題なくオンボードできた**という事実だった。もし「新規アカウントはアビューズ対策で一律ロックされる」なら、それは説明できる。だが実際に開通したときに行った操作は、**AWS Marketplace の private offer を承諾すること**だった。ここから逆算すると答えが出る。
+
+### サインアップは Marketplace の購読を経由する
 
 Claude Platform on AWS のサインアップは AWS Marketplace のサブスクリプションを経由する。AWS コンソールで Sign up を押すと、AWS が裏で Marketplace の購読処理を行う。**つまり Marketplace で購読できないアカウントは、この時点で先に進めない。** サービスの技術的な可否ではなく、調達（procurement）の問題である。
 
-Marketplace の購読を止める要因は、ドキュメント上いずれも「AWS サポートでは解決できない」ものだ。
+### 購読可能なオファーはアカウント ID 単位で決まる
 
-### 1. SCP による `aws-marketplace:Subscribe` の明示的拒否
+ここが核心である。AWS Marketplace の **resale authorization** のドキュメントを読むと、必須フィールドにこうある。
 
-AWS Organizations 配下のメンバーアカウントでは、SCP（サービスコントロールポリシー）で Marketplace の購読を拒否できる。この場合、次のようなエラーになる。
+> **Buyer Accounts** — A comma-separated list of target buyer accounts for offer.
+>
+> （オファーの対象となる買い手アカウントのカンマ区切りリスト）
+>
+> （Managing AWS Marketplace resale authorizations — AWS Partner Central より）
 
-```text
-User is not authorized to perform: aws-marketplace:Subscribe on resource: *
-with an explicit deny in a service control policy
-```
+ISV（この場合 Anthropic）が Channel Partner に再販を認可する際、**対象の買い手アカウントを個別に列挙し、リセラーの 12 桁の AWS アカウント番号を指定**する。そのうえで Channel Partner が買い手向けの private offer を発行する。
 
-**SCP を変更できるのは組織の管理アカウントだけである。** これは顧客自身が所有するポリシーなので、AWS サポートに依頼しても動かせない。自社の組織管理者に依頼する話になる。
+つまり private offer や再販認可は**組織単位ではなく、特定のアカウント ID にスコープされる。** 新しく作ったアカウントは当然そのリストに載っていないので、購読できるオファーが存在しない状態になる。
 
-### 2. Private Marketplace による catalog 制限
+これで冒頭の非対称性が説明できる。
 
-組織が Private Marketplace を有効にしている場合、承認済み catalog に載っていない製品は購読できない。Claude Platform を catalog に追加するには、管理アカウントまたは委任された管理者による操作が必要になる。これもサポートの管轄外だ。
+| | 長期運用アカウント（別契約） | 新規アカウント |
+| --- | --- | --- |
+| 購読可能なオファー | 既に存在した | **存在しない** |
+| サインアップ | 通る | 止まる |
+| 必要な操作 | なし | private offer の発行と承諾 |
 
-### 3. リセラー・Channel Partner 経由の契約と private offer
+**「アカウントが新しいから」ではなく「そのアカウント ID 向けのオファーがまだ無いから」である。** 新規アカウントは必然的にオファー未整備なので、結果として「作りたてだと使えない」という症状に見える。相関はするが、因果はアカウント年齢ではない。
 
-これが「ローカルセールス担当で進んだ」経路の説明になる。
+### なぜ AWS サポートでは進まないのか
 
-AWS Marketplace には **resale authorization** という仕組みがある。ドキュメントによると、ISV（この場合 Anthropic）が Channel Partner に再販を認可する際、**対象となる買い手のアカウントをカンマ区切りで列挙し、リセラーの 12 桁の AWS アカウント番号を指定**して認可を作る。そのうえで Channel Partner が買い手向けの private offer を発行する。
+private offer と resale authorization を作れるのは、**ISV（Anthropic）と Channel Partner／担当営業だけ**である。AWS サポートには構造的に実行できない操作なので、ここに問い合わせ続けても進展しない。何往復しても動かなかったのはこれが理由だと考えられる。
 
-つまり**特定の買い手アカウントに対して購読可能なオファーが存在しなければ、そのアカウントは購読できない。** そしてこれを作れるのは ISV とパートナー／担当営業だけで、構造的に AWS サポートには実行できない操作である。
-
-Claude Platform on AWS のドキュメントもこの前提で書かれている。
+Claude Platform on AWS のドキュメントも、この前提で書かれている。
 
 - 「組織が Anthropic の private offer を持っている場合、コンソールがそれを検索し、AWS Marketplace で承諾するよう促す」
 - 「既存の Amazon Bedrock private offer がある場合は、Sign up する前に Anthropic か AWS の **account executive**（サポートではない）に連絡すること」
 
-サインアップのフローそのものが private offer を前提に組まれている。リセラー経由や Enterprise Agreement で契約しているアカウントでは、公開オファーをそのまま購読する経路が使えず、担当営業が動くまで詰まったままになる。
+サインアップのフロー自体が private offer を前提に組まれている。**そして案内されている連絡先は一貫して account executive で、サポートではない。**
+
+### 併せて確認すべき別の阻害要因
+
+今回の原因ではなかったが、Marketplace の購読を止める要因は他にもある。症状が似ているので切り分けの対象にはなる。
+
+- **SCP による `aws-marketplace:Subscribe` の明示的拒否** — AWS Organizations 配下のメンバーアカウントで発生する。エラーメッセージは明示的なので判別しやすい。変更できるのは組織の管理アカウントだけで、これも AWS サポートの管轄外（顧客自身が所有するポリシーだから）
+
+  ```text
+  User is not authorized to perform: aws-marketplace:Subscribe on resource: *
+  with an explicit deny in a service control policy
+  ```
+
+- **Private Marketplace による catalog 制限** — 組織が Private Marketplace を有効にしている場合、承認済み catalog に載っていない製品は購読できない。追加には管理アカウントまたは委任された管理者の操作が必要
+- **支払い方法が Marketplace 非対応** — 既定の支払い方法がクレジットカードである必要がある。SEPA 銀行口座は非対応で、AISPL（インド）ではカードでの Marketplace 利用が制限される
 
 ### 結局どこに連絡すべきか
 
@@ -104,15 +125,16 @@ Claude Platform on AWS のドキュメントもこの前提で書かれている
 
 | 症状 | 原因の所在 | 連絡先 |
 | --- | --- | --- |
+| **購読できるオファーが存在しない**（今回のケース） | 契約・調達形態（アカウント ID 単位） | **AWS / Anthropic の担当営業（account executive）** |
 | Sign up が SCP エラーで失敗する | 自社の AWS Organizations | 自社の組織管理者 |
 | 製品が Marketplace に出てこない | 自社の Private Marketplace | 自社の Private Marketplace 管理者 |
-| 購読できるオファーが存在しない | 契約・調達形態 | **AWS / Anthropic の担当営業（account executive）** |
+| 支払い方法が Marketplace 非対応 | 自社の請求設定 | 自社で変更（AWS Billing） |
 | 使えるが tier を上げられない | Anthropic の tier 設計 | **Anthropic の account representative** |
 | Service Quotas の値が異常（Bedrock） | AWS のクォータ | AWS Support |
 
 **AWS Support に持っていって解決するのは最下段だけである。** 上 4 つはいずれもサポートの権限外なので、粘っても進まない。これが「サポートとは何度もやり取りしたが進展せず」の正体だと考えられる。
 
-> 注記: 上記のうち Marketplace の 3 つの阻害要因と resale authorization の仕組みは公式ドキュメントで確認できる事実である。一方「新規に開設した AWS アカウントでは Claude Platform on AWS が使えない」という形の記述は、AWS・Anthropic のドキュメントには見つからなかった。アカウントの新しさが直接の原因ではなく、**既存の組織や契約の下に新しく作られたアカウントがその制約を引き継ぐ**ため、結果として「作りたてだと使えない」という体験になっているのだと考えるのが整合的である。
+> 注記: 事実と推論の切り分けを明示しておく。**事実**は、(1) サインアップが Marketplace の購読を経由すること、(2) resale authorization が買い手アカウントを個別に列挙する仕組みであること、(3) ドキュメントの案内先が一貫して account executive であること、(4) 筆者のケースでは private offer の承諾によって開通し、別契約の長期運用アカウントでは何もせず通ったこと — ここまでは公式ドキュメントと実際の経過で確認できる。**推論**は、この 4 点から「新規アカウントで詰まる原因はオファーの不在である」と結論している部分である。「新規に開設した AWS アカウントでは使えない」という形の記述自体は、AWS・Anthropic のドキュメントには存在しない。
 
 ## Start tier の枠と月間支出上限
 
@@ -295,8 +317,10 @@ tier の話と同じく「AWS 経由だから」の制約として把握して�
 ## まとめ
 
 - 「そもそも使えない」と「上限が上がらない」は別の症状で、原因も連絡先も違う。前者は AWS Marketplace で購読可能なオファーが存在しないという**調達の問題**、後者は Anthropic の tier 設計の問題。
-- サインアップは Marketplace の購読を経由するため、SCP による `aws-marketplace:Subscribe` の拒否、Private Marketplace の catalog 制限、リセラー経由契約で購読可能なオファーがない、のいずれかで止まる。**この 3 つはどれも AWS Support の権限外**なので、サポートに粘っても進まない。3 番目は担当営業（account executive）しか動かせない。
-- アカウントの新しさ自体がゲートである、という記述は公式ドキュメントには存在しない。既存の組織・契約の下に作られた新しいアカウントがその制約を引き継ぐため、結果として「作りたてだと使えない」という体験になる。
+- サインアップは Marketplace の購読を経由するため、**そのアカウント ID 向けに購読可能なオファーが無いと止まる。** private offer / resale authorization は組織単位ではなく買い手アカウントを個別に列挙する仕組みなので、新しく作ったアカウントは必然的にオファー未整備になる。
+- **オファーを作れるのは ISV と担当営業だけで、AWS Support には構造的に実行できない。** だからサポートに粘っても進まない。ドキュメントの案内先も一貫して account executive であってサポートではない。
+- 「アカウントが新しいから使えない」ではなく「そのアカウント ID 向けのオファーがまだ無いから使えない」。相関はするが因果は違う。別契約の長期運用アカウントが問題なく通ったことがその証拠になる。
+- 併せて切り分けるべき阻害要因として、SCP による `aws-marketplace:Subscribe` の拒否、Private Marketplace の catalog 制限、Marketplace 非対応の支払い方法がある。前 2 つは自社の組織管理側の話で、これも AWS Support の管轄外。
 - Claude Platform on AWS（2026 年 5 月 11 日 GA）と Claude in Amazon Bedrock は別サービスで、上限を管理する主体が違う。前者は Anthropic、後者は AWS。
 - Claude Platform on AWS の組織は **Start tier に固定**され、自動昇格せず、Claude Console のセルフサービス引き上げ導線も提供されない。だから結果として担当者経由になる。新規アカウントだからロックされているわけではない。
 - Bedrock 側は AWS Service Quotas の世界だ。既定は 200 万入力 TPM で、400 万までは Anthropic の追加承認なしに引き上げを要求できる。RPM の調整は AWS Support が窓口になる。
