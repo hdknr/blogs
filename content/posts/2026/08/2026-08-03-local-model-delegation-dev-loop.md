@@ -1,7 +1,7 @@
 ---
 title: "ローカルモデルに何を任せるか — Claude Code の開発ループに小さいモデルを混ぜる設計"
 date: 2026-08-03
-lastmod: 2026-08-03
+lastmod: 2026-08-09
 slug: "local-model-delegation-dev-loop"
 draft: false
 source_url: "https://gist.github.com/hdknr/a567561326bb44c2562814256fd25c67"
@@ -239,3 +239,5 @@ git diff   # ← 上位モデルが読むのはここだけ
 - **判定・敵対的レビュー・pass/fail は手放さない。**
   委譲してよいのは証拠の圧縮であって、証拠からの結論ではない。
 - **速度改善は期待しない。** 得られるのはコストとデータの局所性。
+
+> **補足**: ここで書いた「subagent 単位の振り分けはできない」は **Claude Code の機構**の話です。Codex には `[model_providers]` と `[agents]` があり、サブエージェントに別プロバイダのモデルを割り当てる余地があります。その差と、両者を併用する場合の設計は [「Codex 裏技」を検証](/blogs/posts/2026/08/codex-router-cost-cut-verify/) にまとめました。ただし委譲の判断軸——**証拠の圧縮は渡してよく、証拠からの結論は渡さない**——は、どちらの製品でも変わりません。
