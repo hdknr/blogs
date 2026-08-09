@@ -14,7 +14,7 @@ tags: ["Plane", "Jira", "セルフホスト", "Docker", "OSS", "AGPL"]
 
 ただ、この手の「OSS 版は無償」という比較表は、**セルフホストする側が実際に踏む地雷を書いていない**ことが多い。そこで採用検討の前段として、一次情報に当たった。リポジトリの `docker-compose.yml`、公式ドキュメント、そして Issue トラッカーの3つだ。結果、事前に知っておくべき落とし穴が3つ見つかった。
 
-- 「PostgreSQL + Redis」では済まない。RabbitMQ が別立てで要り、Redis の実体は Valkey（コンテナ計13個）
+- 「PostgreSQL + Redis」では済まない。既定構成では RabbitMQ が別立てで載り、Redis の実体は Valkey（コンテナ計13個）
 - インストールコマンドの選択が、そのままライセンスと席数上限の選択になっている
 - Jira からの移行ツールは、AGPL 版では使えない
 
@@ -49,9 +49,25 @@ tags: ["Plane", "Jira", "セルフホスト", "Docker", "OSS", "AGPL"]
 
 ただしこれは、実害の大きい罠ではない。Valkey 7.2 は Redis 7.2 のフォークでワイヤ互換であり、Django 側の依存も `redis` / `django-redis` という通常の Redis クライアントだ。接続先は `REDIS_URL` で `redis://` スキームのまま外部指定でき、公式ドキュメントもマネージド Redis への接続を明示的にサポートしている。**「同梱イメージが Valkey である」という事実を認識しておけば十分**で、マネージド Redis への差し替え計画が破綻するわけではない。ソフトウェアの採用可否を社内で審査する場合に、審査対象が Redis ではなく Valkey になる、という程度の話だ。
 
-### Celery のブローカーに RabbitMQ が別立てで要る
+### Celery のブローカーに RabbitMQ が別立てで載っている
 
-こちらは見積もりに直接効く。Celery 用に独立したメッセージキューが立っており、`CELERY_BROKER_URL` も `amqp://` を指している。「Redis があれば Celery は動く」という一般論で構成を推測すると、この1コンポーネントぶんの運用が見積もりから丸ごと抜ける。永続化、監視、バージョン追従のすべてが対象だ。
+こちらは見積もりに直接効く。Celery 用に独立したメッセージキューが立っており、既定の `CELERY_BROKER_URL` も `amqp://` を指している。「Redis があれば Celery は動く」という一般論で構成を推測すると、この1コンポーネントぶんの運用（永続化、監視、バージョン追従）が見積もりから丸ごと抜ける。
+
+ただし**アーキテクチャ上の必須要件ではない**点は補足しておきたい。設定を読むと、ブローカー URL の決定はこうなっている。
+
+```python
+# apps/api/plane/settings/common.py
+AMQP_URL = os.environ.get("AMQP_URL")
+
+if AMQP_URL:
+    CELERY_BROKER_URL = AMQP_URL
+else:
+    CELERY_BROKER_URL = f"amqp://{RABBITMQ_USER}:..."
+```
+
+`AMQP_URL` は変数名に反して値を素通しするだけなので、`redis://` を渡せば Celery は Redis ブローカーで動く。`redis` パッケージは既に依存に含まれており、`pika` のような AMQP を直接叩くコードもない。worker / beat の entrypoint もブローカーの起動を待たない。
+
+とはいえ、公式の compose・swarm・AIO いずれも RabbitMQ 同梱前提で、Redis ブローカー構成のドキュメントは存在しない。非サポート経路に乗ることになるうえ、Celery の Redis ブローカーは visibility timeout ベースの再配送となり、worker 障害時の重複実行の挙動が AMQP とは異なる。**「RabbitMQ を1台増やす」か「非サポート構成を自己責任で維持する」かの二択**、というのが実際のところだ。
 
 スペック要件は CPU 2コア・RAM 4GB（本番は 8GB 推奨）。これは公式 Docker Compose ページの Commercial Edition 節に書かれた数字だが、同ページの Community Edition 節も「最低 t3.medium 相当」＝2 vCPU / 4GiB と実質同じ水準を要求している。13コンテナのマイクロサービス構成を1ホストに詰めることを考えれば妥当な数字で、「小さな VPS の余ったリソースで動かす」類のアプリではない。本番運用なら、データ層の4つはマネージドサービスへ外出しするのが現実的だ。
 
@@ -147,7 +163,7 @@ Plane の売り文句のひとつが「Jira / Linear / Asana からの公式移�
 
 ### インフラ体制
 
-- [ ] PostgreSQL / Valkey / RabbitMQ / オブジェクトストレージの4種を運用できるか（Redis だけではない）
+- [ ] PostgreSQL / Redis 系 / RabbitMQ / オブジェクトストレージの4種を運用できるか（PostgreSQL はハードコードで回避不可、RabbitMQ は `AMQP_URL` で Redis に寄せれば回避可能だが非サポート）
 - [ ] 本番で 8GB 以上のメモリを割ける、またはデータ層をマネージドへ外出しできるか
 - [ ] 常時稼働12コンテナ（`migrator` はワンショット）のバージョン追従と監視を継続的に回せるか
 
@@ -172,7 +188,7 @@ Plane の売り文句のひとつが「Jira / Linear / Asana からの公式移�
 
 Plane 自体は、55,000 超のスター・活発な開発・AGPL という条件を満たした、真っ当な選択肢だ。今回見つかった3点はいずれも「Plane が悪い」という話ではなく、**紹介記事の比較表の粒度では落ちてしまう情報**である。
 
-- 依存ミドルウェアは公称より1段重い（Celery 用に RabbitMQ が別立て、計13サービス）
+- 依存ミドルウェアは公称より1段重い（既定構成では Celery 用に RabbitMQ が別立て、計13サービス）
 - 「無償のセルフホスト版」が2製品あり、インストールコマンドで分岐する。しかも席数の公式説明が食い違っており、Issue も未決着
 - OSS 版の目玉に見える Jira 移行ツールは、実は OSS 版に入っていない
 
