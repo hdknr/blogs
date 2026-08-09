@@ -66,7 +66,7 @@ Plan モードで、そのまま実装できるレベルの計画書を出させ
 claude --permission-mode plan
 ```
 
-関門を1つ増やすたび、実装のやり直しが1回減る。それだけの話だ。
+関門を1つ増やすたび、実装のやり直しが1回減る。それだけの話だ。この「やり直しが減る」効果はトークン消費にも直結する。[CLAUDE.md に1行追加するだけで Claude Code のコストが 1/3 に — plan モード強制テクニック](/blogs/posts/2026/04/claude-code-plan-mode-cost-reduction/) で、plan モードを常用させたときのコスト差を扱っている。
 
 ## 2. CLAUDE.md は人間が書かない
 
@@ -135,6 +135,8 @@ exit 0
 
 「書いたのに守らなかった」と嘆く前に、それが提案レイヤーに置かれていないかを確認したほうが早い。
 
+ここでは `PreToolUse` の exit 2 しか触れていないが、hooks の種類とカスタムコマンド・サブエージェントとの役割分担は [Claude Code を「自分専用の開発チーム」に変える3つの機能 — フック・カスタムコマンド・サブエージェント](/blogs/posts/2026/03/claude-code-hooks-commands-subagents/) にまとめてある。
+
 ## 4. skill は増やさない — 判断基準は「1日2回以上」
 
 skill を入れまくると、コンテキストが膨らんで判断が鈍る。よくある失敗だ。
@@ -159,7 +161,9 @@ skill 化は、無闇な追加ではなく**反復の削除**に使う。
 この変更について私を問い詰めて。私が合格するまで PR を作らないで。
 ```
 
-こうすると、設計のエッジケースやテスト戦略が逆に質問として返ってくる。出力が微妙だったときは、こう言う。
+こうすると、設計のエッジケースやテスト戦略が逆に質問として返ってくる。この「詰めさせる」やり方をスキルとして固めたのが grill-me で、[grill-me — コードを1行も書く前にAIに徹底的に詰められる、最も人気の Claude Code スキル](/blogs/posts/2026/05/claude-code-grill-me/) で扱っている。
+
+出力が微妙だったときは、こう言う。
 
 ```text
 今わかっていることを全部踏まえて、これは捨てて、エレガントな実装をやり直して。
@@ -182,7 +186,9 @@ ykdojo は自身の tips で、AI のコンテキストを牛乳に例えてい�
 - セッション終わりに `HANDOFF.md` を書かせる
 - 次回はそれだけ読んで続きから始める
 
-そのうえで、コンテキストを使い切る前に早めに `/clear` する。残量を見逃さないために `/statusline` を設定しておくとよい。サードパーティの [ccstatusline](https://github.com/sirmalloc/ccstatusline) を使えば、残量やモデル名を常時ステータス行に出せる。
+この `HANDOFF.md` をスキル化し、さらに複数の Codex へ並列投入するところまで発展させた例が [/handoff スキルが海外でバズった理由 — Claude Code で計画して複数 Codex に並列投入する新ワークフロー](/blogs/posts/2026/06/claude-code-handoff-codex-parallel/) にある。セッションをまたいで文脈を持ち越す設計そのものは [Claude Code の「毎回ゼロスタート」問題 — CLAUDE.md・メモリ・行動ルールでセッション間の文脈を継続させる](/blogs/posts/2026/05/claude-code-session-context-persistence/) で整理した。
+
+そのうえで、コンテキストを使い切る前に早めに `/clear` する。長い会話で精度が落ちていく現象と、その対処の選択肢は [Claude Code のコンテキスト管理術 — Context Rot を防ぐ5つの選択肢](/blogs/posts/2026/04/claude-code-context-rot-session-management/) にまとめてある。残量を見逃さないために `/statusline` を設定しておくとよい。サードパーティの [ccstatusline](https://github.com/sirmalloc/ccstatusline) を使えば、残量やモデル名を常時ステータス行に出せる。
 
 ```bash
 npx ccstatusline@latest
@@ -230,6 +236,8 @@ Thariq の整理はこうだ。これらの制約は、かつて最悪ケース�
 
 ただし、削りすぎには条件がある。**能力の高いモデルに合わせて削ると、より小さいモデルでは指示不足になる**。複数モデルを併用しているなら、最も低いモデルに合わせて残す判断が要る。
 
+「削る」を実際にやるとどうなるかは [CLAUDE.md の設定を99%消したら逆にうまくいった話：AI への指示は「哲学」だけ残せ](/blogs/posts/2026/03/claude-md-less-is-more/) で試している。本記事は、そこで経験的に得られた結論に Anthropic 自身の一次情報が追いついた、という位置づけになる。
+
 設定の上達とは、行を足すことではなく、**行を疑うこと**である。
 
 ## 8. 音声入力は「表面の tips」でしかない
@@ -275,6 +283,8 @@ Anthropic 社内でも、法務チームが「適切な弁護士につなぐ」�
 7. **会話を早めに捨てる** —— `HANDOFF.md` へ退避してから `/clear` する
 
 足すより引く。**削った後に残った数行こそが、現場で実際に使えるルールである。**
+
+このループ・CLAUDE.md・Skills という組み合わせは、Anthropic 社内の設計思想としても語られている。[Claude Code の社内設計を読み解く：ループ・CLAUDE.md・Skills・Dreaming](/blogs/posts/2026/06/claude-code-loop-skills-dreaming/) と併せて読むと、個人の運用と設計側の意図がつながる。
 
 ## まとめ
 

@@ -1,7 +1,7 @@
 ---
 title: "CLAUDE.md の設定を99%消したら逆にうまくいった話：AI への指示は「哲学」だけ残せ"
 date: 2026-03-11
-lastmod: 2026-03-18
+lastmod: 2026-08-09
 slug: "claude-md-less-is-more"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4042712659"
@@ -199,3 +199,5 @@ exit 0
 AI への指示は「足し算」ではなく「引き算」で考えるべきだ。300行のルールを書くより、プロジェクトの哲学を数行で伝える方が、Claude Code ははるかに良い仕事をする。「99%消した。残したのは、哲学だけ。」——この直感は、LLM の特性を踏まえた合理的なアプローチだといえる。
 
 そして、整理を「意志の力」に頼らず **hook で自動検出する仕組み** を入れておけば、肥大化を未然に防げる。Claude Code が自発的にやってくれないなら、自分で仕組みを作ればいい。
+
+なお、この「引き算」という直感は後に Anthropic 自身の一次情報で裏付けられた。同社は最新モデル向けに Claude Code のシステムプロンプトの約8割を削除しており、その経緯と、削った先に何を残すべきかは [Boris Cherny に学ぶ Claude Code の使い方 — 設定を足すより「訂正の回数」を増やす](/blogs/posts/2026/08/claude-code-correction-os/) で扱っている。

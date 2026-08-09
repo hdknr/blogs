@@ -1,7 +1,7 @@
 ---
 title: "Claude Code の社内設計を読み解く：ループ・CLAUDE.md・Skills・Dreaming"
 date: 2026-06-26
-lastmod: 2026-06-26
+lastmod: 2026-08-09
 slug: "claude-code-loop-skills-dreaming"
 draft: false
 description: "Anthropicのエンジニアが語ったClaude Code社内活用法——ループ設計、CLAUDE.mdとSkillsの使い分け、Dreaming機能を裏取りする。"
@@ -68,3 +68,5 @@ Anthropic 社内での Claude Code 活用法として語られた「ループ ×
 - **Dreaming**：セッションの合間にエージェントが自己改善する、Anthropicが実際に発表した機能
 
 これらは個人開発者のワークフローにも応用できる考え方だ。ただし派生的に付いた具体的な統計（「90%」）のような数字は、出典を辿って裏取りする姿勢を忘れないようにしたい。
+
+同じ「ループ × CLAUDE.md × Skills」を、設計側ではなく **開発者本人の日々の運用** から眺めたのが [Boris Cherny に学ぶ Claude Code の使い方 — 設定を足すより「訂正の回数」を増やす](/blogs/posts/2026/08/claude-code-correction-os/) だ。計画の突き返し、訂正の CLAUDE.md への書き戻し、hooks への昇格という具体的な手順に落ちている。
