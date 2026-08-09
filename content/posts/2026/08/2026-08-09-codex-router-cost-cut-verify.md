@@ -29,7 +29,7 @@ tags: ["Codex", "codex-router", "DeepSeek", "サブエージェント", "コス�
 | 対象 | 確認できた事実 |
 | --- | --- |
 | [duolahypercho/codex-router](https://github.com/duolahypercho/codex-router) | MIT ライセンス。2026年7月19日作成、スター 1,069 / fork 90（2026年8月9日時点） |
-| DeepSeek V4-Flash | API は2026年7月31日に公開ベータ。入力 $0.14 / 出力 $0.28（100万トークンあたり） |
+| DeepSeek V4-Flash | API は2026年7月31日に公開ベータ。入力 $0.14 / 出力 $0.28（100万トークンあたり）。モデル自体は [DeepSeek-V4 Preview](/blogs/posts/2026/04/deepseek-v4-open-source/) と [antirez の "ds4"](/blogs/posts/2026/05/antirez-ds4-deepseek-v4-flash/) で扱った |
 | Codex のカスタムモデルプロバイダ | 公式機能。`~/.codex/config.toml` の `[model_providers.<id>]` |
 | Codex のサブエージェント別モデル指定 | 公式機能。`[agents]` と `~/.codex/agents/*.toml` |
 
@@ -43,7 +43,7 @@ tags: ["Codex", "codex-router", "DeepSeek", "サブエージェント", "コス�
 
 サブエージェントごとのモデル指定は、かつて OpenAI/codex の [Issue #11701](https://github.com/openai/codex/issues/11701) として要望されていた機能だ。この Issue は **2026年2月19日に completed でクローズ**されており、現在は公式ドキュメントに載っている。
 
-以下は追加インストールなしで書ける設定である。
+Codex のサブエージェント（Swarm）そのものの解説は [OpenAI Codex の SubAgent（Swarm）が変える AI コーディングの未来](/blogs/posts/2026/03/codex-subagent-swarm/) に譲る。ここでは**「別モデルを割り当てる」のに必要な最小の設定だけ**を示す。いずれも追加インストールなしで書ける。
 
 > 設定構文は Codex 公式ドキュメント（Advanced Configuration / Subagents）の記載に基づくもので、**筆者が実際に DeepSeek を繋いで動作確認したものではない**。また `[agents]` が使えるかは Codex のバージョンに依存する。自分の環境で確認してほしい。
 
@@ -105,6 +105,8 @@ model_reasoning_effort = "low"
 - **画像ブリッジ** — テキスト専用モデルにスクリーンショットを貼ったときの処理。有効化済みの視覚対応モデルに画像を読ませ、その結果をテキストとして差し込む
 - **トレイ UI** — macOS / Windows / Linux 向けの常駐パネルで、使用量やクォータを表示する
 
+同種の「LLM ルーターでコストを下げる」アプローチは以前にも扱っている（[ClawRouter](/blogs/posts/2026/03/clawrouter-openclaw-cost/)、[OpenRouter によるモデル一元管理](/blogs/posts/2026/03/openrouter-ai-model-management/)）。対象ツールは違うが、判断の枠組みは共通だ。
+
 構成はこうだ。Codex の `openai_base_url` を `127.0.0.1:4102` に向け、そこから LiteLLM（`:4100`）が Responses API を各社のプロトコルへ変換する。Codex 側のエージェントループ、ツール、権限、MCP サーバー、会話状態はそのまま Codex が持ち、ルーターはモデル推論とプロトコル変換だけを担う。
 
 ## codex-router 導入で受け入れるもの
@@ -163,6 +165,8 @@ X 投稿が「Claude 解約」を見出しにしているので、Claude 側の�
 
 **効かない場面**：安いモデルの精度が足りずにやり直しが増えれば、往復回数が増えて総額は減らない。1回の実行あたりの単価ではなく、**タスク1件を完了させるまでの総額**で比べる必要がある。
 
+そもそも安いモデルに逃げる前に、**投げているトークン量そのものを減らせないか**を先に潰すほうが効くことも多い。[plan モード強制によるコスト削減](/blogs/posts/2026/04/claude-code-plan-mode-cost-reduction/) はその方向の話だ。
+
 そして「高額サブスク不要」という部分。**これは誤解を招く。** 外部モデルを使うには各プロバイダと個別に契約し、API キーを取得する必要がある。従量課金はそのまま発生する。README にも、プロバイダによっては特定の有料プランが必須だと明記されている箇所がある。たとえば Command Code の Provider API は Provider プラン以上が必要で、Go プランではログインできても API アクセスが拒否される。**サブスクが消えるのではなく、支払先が変わるだけだ。**
 
 ## 「Claude 解約者が続出」は検証できない
@@ -183,6 +187,8 @@ X 投稿が「Claude 解約」を見出しにしているので、Claude 側の�
 
 つまり **Codex にあって Claude Code にないのは、モデルルーティングの粒度と自由度**である。ここは事実として差がある。
 
+この制約を Claude Code 側から見た検討は [ローカルモデルに何を任せるか — Claude Code の開発ループに小さいモデルを混ぜる設計](/blogs/posts/2026/08/local-model-delegation-dev-loop/) に書いた。そちらの結論は「subagent 単位の振り分けはできないので、ツール化が本命」だが、**これは Claude Code の機構の話**であって、本記事の Codex の話と矛盾するものではない。製品によって打てる手が違う、というだけだ。
+
 ### ただし「だから併用が有利」は直結しない
 
 ここで議論が2つ混ざりやすい。
@@ -201,6 +207,8 @@ X 投稿が「Claude 解約」を見出しにしているので、Claude 側の�
 併用は harness が2つになるということでもある。権限モデルが2つ、コンテキストの置き場が2つ、設定ファイルが2セット。受け渡しは基本的にファイル経由になる。
 
 この境界を埋めるための道具は既にある。Matt Pocock 氏が公開している [mattpocock/skills](https://github.com/mattpocock/skills) の `/handoff` スキル（`skills/productivity/handoff/`）は、Claude Code のセッション文脈を「別のエージェントが引き継げる構造化 Markdown」に圧縮することに特化している。目標・現状・未決定事項などを書き出し、既存の PRD やコミットの内容は繰り返さずパスや URL で参照するだけに留める設計だ。
+
+このスキルを使って「Claude Code で計画し、複数の Codex に並列投入する」ワークフローは [/handoff スキルが海外でバズった理由](/blogs/posts/2026/06/claude-code-handoff-codex-parallel/) で扱った。分業に承認ゲートを挟む設計は [「計画するAI」と「書くAI」を分ける開発手法](/blogs/posts/2026/07/codex-build-orchestrator-coder-split/) が詳しい。
 
 裏を返せば、**こういう道具が必要になること自体が併用のコスト**である。同一 harness 内なら共有されている文脈を、わざわざファイルに落として詰め直す工程が挟まる。ここは併用の便益から差し引いておきたい。
 
@@ -244,3 +252,7 @@ X 投稿が「Claude 解約」を見出しにしているので、Claude 側の�
 やりたいことが「サブエージェントを安いモデルで回す」なら、**まず設定ファイルを2つ書くところから始めればいい**。それで足りなかったときに、初めてルーターを検討する順番になる。
 
 そして「Claude を解約するか否か」という二択も、たぶん問いの立て方が違う。決めるべきは**どこに独立した第二意見が欲しくて、どこは安い処理能力があれば足りるのか**であって、ツールの本数ではない。
+
+---
+
+同じようにバイラル投稿を一次情報で検証した記事に、[「AI時代にテックリードは死ぬ」を検証](/blogs/posts/2026/08/architect-techlead-dead-verify/) と [「Claudeだけで6500万ドル」バイラル投稿の真相](/blogs/posts/2026/05/claude-ebook-automation-viral-claim/) がある。

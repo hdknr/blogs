@@ -1,7 +1,7 @@
 ---
 title: "OpenAI Codex の SubAgent（Swarm）が変える AI コーディングの未来"
 date: 2026-03-11
-lastmod: 2026-03-11
+lastmod: 2026-08-09
 slug: "codex-subagent-swarm"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4041979554"
@@ -86,3 +86,5 @@ GPT-5.4 はまだ正式発表されていませんが、コードコミットや
 Codex の SubAgent 機能は、AI コーディングアシスタントを「単体のエージェント」から「エージェントの群れ」へと進化させるものです。2026年3月16日に一般提供が開始され、カスタムエージェントの定義や並列実行の上限設定など、柔軟な構成が可能になっています。
 
 Claude Code にも Agent ツールによるサブエージェント機能がありますが、Codex の SubAgent は TOML による宣言的な定義やネスト深度の制御など、独自のアプローチを取っています。AI コーディングツールの競争が、マルチエージェント領域でさらに加速していく流れが見えてきます。
+
+> **追記（2026年8月）**: サブエージェントごとに別のモデルを割り当てる設定は、その後 `[agents]` と `~/.codex/agents/*.toml` として公式に入りました。格安モデルを割り当ててコストを下げる構成と、その際に検討することは [「Codex 裏技」を検証 — サブエージェントのモデル指定は codex-router なしでできる](/blogs/posts/2026/08/codex-router-cost-cut-verify/) にまとめています。
