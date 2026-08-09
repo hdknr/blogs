@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="codex-router-architecture" name="Codex Router Architecture">
+    <mxGraphModel dx="1300" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Codex に外部モデルを繋ぐ 2 つの経路" style="text;html=1;fontSize=19;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="370" y="20" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Path A: native -->
+        <mxCell id="pa" value="経路 A：Codex 純正の設定だけで完結する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#82b366;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="75" width="1160" height="310" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pa1" value="~/.codex/config.toml&#xa;&#xa;[model_providers.deepseek]&#xa;base_url / env_key を書く" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="230" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa2" value="[agents]&#xa;&#xa;default_subagent_model で&#xa;サブエージェントのモデルを指定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="340" y="135" width="230" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa3" value="~/.codex/agents/*.toml&#xa;&#xa;カスタムエージェントごとに&#xa;model を上書き" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="610" y="135" width="230" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="pa4" value="外部プロバイダ&#xa;&#xa;DeepSeek など&#xa;（API キーは各社と直接契約）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="880" y="135" width="230" height="105" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="paa" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="pa1" target="pa2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="pab" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="pa2" target="pa3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="pac" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="pa3" target="pa4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pan" value="追加インストールなし。設定ファイルを書くだけ。公式ドキュメントに記載のある機能" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;fontStyle=1;fontColor=#2d7a2d;verticalAlign=middle;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="285" width="1040" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Path B: router -->
+        <mxCell id="pb" value="経路 B：codex-router を挟む（サードパーティ製）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="415" width="1160" height="310" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pb1" value="Codex&#xa;&#xa;openai_base_url を&#xa;127.0.0.1:4102 に向ける" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="70" y="475" width="230" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="pb2" value="codex-router&#xa;:4102&#xa;&#xa;呼び出し元を認証しモデル一覧を統合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="340" y="475" width="230" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="pb3" value="LiteLLM&#xa;:4100&#xa;&#xa;Responses API を各社の&#xa;プロトコルへ変換" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="610" y="475" width="230" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="pb4" value="外部プロバイダ&#xa;&#xa;DeepSeek / Kimi / Grok /&#xa;Anthropic など（各社と直接契約）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="880" y="475" width="230" height="105" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pba" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="pb1" target="pb2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="pbb" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="pb2" target="pb3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="pbc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;" edge="1" parent="1" source="pb3" target="pb4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pbn" value="モデル一覧の統合・認証情報の分離・トレイ UI が付く。ただし OpenAI 非公式で、curl | sh インストールと常駐サービスを受け入れることになる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=12;fontStyle=1;fontColor=#b85450;verticalAlign=middle;align=center;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="595" width="1040" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="どちらの経路でも「高額サブスク不要」にはならない。各プロバイダとの契約と従量課金がそのまま発生する" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="170" y="750" width="900" height="30" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
