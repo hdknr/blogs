@@ -36,6 +36,24 @@ env:
 
 jobs:
   # ---------------------------------------------------------------------------
+  # Unit tests for the re-verification filter the weekly sweep depends on.
+  # The filter decides which reported links become an issue, so a parsing bug
+  # there silently drops dead links: the first version matched `[A-Z]+` tags
+  # only and was blind to every `[404]`/`[410]`, the exact class this job exists
+  # to catch. Cheap to run, so it guards every PR.
+  # ---------------------------------------------------------------------------
+  reverify-tests:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test the re-verification filter
+        run: python3 scripts/test_linkcheck_reverify.py
+
+  # ---------------------------------------------------------------------------
   # Internal-link check (blocking). Runs on PRs and pushes.
   # Builds the site, mirrors it under the /blogs/ base path, serves it locally,
   # and checks that every INTERNAL link/image resolves. External links are

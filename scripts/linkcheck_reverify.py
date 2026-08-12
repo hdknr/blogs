@@ -26,7 +26,12 @@ from pathlib import Path
 
 # Entry lines look like:
 #   [TIMEOUT] http://example.com/a (at 73:1700) | Request timed out
-ENTRY = re.compile(r"^\[([A-Z]+)\]\s+(\S+)\s+\(at\s+[^)]+\)\s*\|\s*(.*)$")
+#   [404] http://example.com/b (at 12:340) | Rejected status code: 404 Not Found
+# The tag is either a word or a bare status code, so it must accept digits: an
+# [A-Z]-only pattern silently drops every 404/410, which is exactly the class of
+# genuinely dead link this job exists to catch. #632 happened to contain only
+# TIMEOUT/ERROR, but #607 the week before carried four 404s and four 302s.
+ENTRY = re.compile(r"^\[([A-Z0-9]+)\]\s+(\S+)\s+\(at\s+[^)]+\)\s*\|\s*(.*)$")
 # Input-file headers look like:
 #   [_site/blogs/posts/2015/02/xxxx/index.html]:
 SOURCE = re.compile(r"^\[(.+)\]:$")
