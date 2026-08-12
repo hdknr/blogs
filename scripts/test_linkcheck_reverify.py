@@ -4,13 +4,18 @@
 Run with `python3 scripts/test_linkcheck_reverify.py`. No test runner needed --
 this ships alongside a CI workflow, so it stays dependency-free.
 
-The case that matters most is a genuinely dead link (lychee tags those with a
-bare status code, `[404]`, not a word) sharing a report with a link that merely
-stalled. The first version of the parser matched `[A-Z]+` only, so every 404
-was invisible: the dead link never reached the second pass, the stall cleared,
-and the workflow opened no issue at all.
+Two cases carry most of the weight:
+
+- A genuinely dead link is tagged with a bare status code, `[404]`, not a word.
+  An `[A-Z]+` pattern misses those, and because a stall in the same report still
+  parsed, the filter used to report "nothing confirmed" and open no issue at
+  all -- silently losing the exact links this job exists to find.
+- A congested runner stalls on a hundred live links at once. Those must be
+  suppressed, but any 404 or expired certificate in the same report must still
+  be reported: a busy runner cannot invent a server's answer.
 """
 
+import json
 import subprocess
 import sys
 import tempfile
@@ -18,7 +23,7 @@ from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parent / "linkcheck_reverify.py"
 
-FIRST_PASS = """Issues found in 2 inputs. Find details below.
+HEALTHY = """Issues found in 2 inputs. Find details below.
 
 [_site/blogs/posts/2020/01/alpha/index.html]:
 [404] https://example.com/removed-page (at 12:340) | Rejected status code: 404 Not Found
@@ -31,8 +36,8 @@ FIRST_PASS = """Issues found in 2 inputs. Find details below.
 \U0001f50d 100 Total (in 5m 0s 0ms) \U0001f517 50 Unique ✅ 46 OK \U0001f6ab 3 Errors ⏳ 1 Timeouts
 """
 
-# The second pass only still-fails for the genuinely dead ones; the stall cleared.
-SECOND_PASS = """Issues found in 1 input. Find details below.
+# The dead links still fail on re-check; the stall cleared.
+HEALTHY_RETRY = """Issues found in 1 input. Find details below.
 
 [retry-urls.txt]:
 [404] https://example.com/removed-page (at 1:1) | Rejected status code: 404 Not Found
@@ -42,7 +47,34 @@ SECOND_PASS = """Issues found in 1 input. Find details below.
 \U0001f50d 4 Total (in 30s) \U0001f517 4 Unique ✅ 1 OK \U0001f6ab 3 Errors
 """
 
-ALL_CLEARED = """\U0001f50d 4 Total (in 30s) \U0001f517 4 Unique ✅ 4 OK \U0001f6ab 0 Errors
+ALL_CLEARED = "\U0001f50d 4 Total (in 30s) \U0001f517 4 Unique ✅ 4 OK \U0001f6ab 0 Errors\n"
+
+
+def degraded_report(stalls=40):
+    """A report dominated by stalls, with one real death mixed in."""
+    lines = ["Issues found in 1 input. Find details below.", ""]
+    lines.append("[_site/blogs/posts/2020/01/alpha/index.html]:")
+    for i in range(stalls):
+        lines.append(
+            f"[TIMEOUT] https://stalled-{i}.example.com/page (at {i}:1) | Request timed out"
+        )
+    # lychee reuses an earlier verdict for a URL it already saw. This one echoes
+    # a stall, so it is a stall too -- not a hard failure.
+    lines.append(
+        "[ERROR] https://stalled-0.example.com/page (at 900:1) | Error (cached)"
+    )
+    lines.append("[ERROR] https://example.com/bad-cert (at 901:1) | SSL certificate expired")
+    lines.append("")
+    lines.append("\U0001f50d 100 Total (in 20m 0s 0ms) \U0001f517 50 Unique ✅ 9 OK")
+    return "\n".join(lines) + "\n"
+
+
+DEGRADED_RETRY = """Issues found in 1 input. Find details below.
+
+[retry-urls.txt]:
+[ERROR] https://example.com/bad-cert (at 1:1) | SSL certificate expired
+
+\U0001f50d 1 Total (in 2s) \U0001f517 1 Unique ✅ 0 OK \U0001f6ab 1 Errors
 """
 
 failures = []
@@ -60,38 +92,36 @@ def run(*args):
     proc = subprocess.run(
         [sys.executable, str(SCRIPT), *args], capture_output=True, text=True
     )
-    return proc.returncode, proc.stdout
+    return proc.returncode, proc.stdout + proc.stderr
 
 
 def main() -> int:
     with tempfile.TemporaryDirectory() as tmp:
         d = Path(tmp)
-        first = d / "report.md"
-        first.write_text(FIRST_PASS, encoding="utf-8")
 
-        print("extract picks up status-code tags as well as word tags")
-        urls = d / "urls.txt"
-        code, _ = run("extract", str(first), str(urls))
+        healthy = d / "healthy.md"
+        healthy.write_text(HEALTHY, encoding="utf-8")
+        retry = d / "retry.md"
+        retry.write_text(HEALTHY_RETRY, encoding="utf-8")
+
+        print("plan re-checks everything when the run looks healthy")
+        urls, state = d / "urls.txt", d / "state.json"
+        code, _ = run("plan", str(healthy), str(urls), str(state))
         check("exit code", code, 0)
-        extracted = urls.read_text(encoding="utf-8").split()
-        check("url count", len(extracted), 4)
-        check(
-            "the 404 is extracted",
-            "https://example.com/removed-page" in extracted,
-            True,
-        )
-        check("the 410 is extracted", "https://example.com/gone-page" in extracted, True)
+        listed = urls.read_text(encoding="utf-8").split()
+        check("url count", len(listed), 4)
+        check("the 404 is re-checked", "https://example.com/removed-page" in listed, True)
+        check("the 410 is re-checked", "https://example.com/gone-page" in listed, True)
+        check("not flagged degraded", json.loads(state.read_text())["degraded"], False)
 
-        print("filter keeps links that failed twice and drops the stall")
-        second = d / "retry.md"
-        second.write_text(SECOND_PASS, encoding="utf-8")
+        print("report keeps what failed twice and drops the stall")
         out = d / "confirmed.md"
-        code, stdout = run("filter", str(first), str(second), str(out))
+        code, stdout = run("report", str(healthy), str(retry), str(state), str(out))
         check("exit code signals 'open an issue'", code, 1)
-        check("counts", "3 confirmed, 1 cleared as transient" in stdout, True)
+        check("counts", "opening an issue about 3 of 4 entries" in stdout, True)
         body = out.read_text(encoding="utf-8")
-        check("the 404 survives", "https://example.com/removed-page" in body, True)
-        check("the 410 survives", "https://example.com/gone-page" in body, True)
+        check("the 404 survives", "removed-page" in body, True)
+        check("the 410 survives", "gone-page" in body, True)
         check("the stall is dropped", "slow-host" not in body, True)
         check(
             "source posts are preserved",
@@ -99,38 +129,64 @@ def main() -> int:
             True,
         )
 
-        print("filter opens nothing when the second pass clears everything")
+        print("report opens nothing when the second pass clears everything")
         cleared = d / "cleared.md"
         cleared.write_text(ALL_CLEARED, encoding="utf-8")
         out2 = d / "confirmed2.md"
-        code, _ = run("filter", str(first), str(cleared), str(out2))
+        code, _ = run("report", str(healthy), str(cleared), str(state), str(out2))
         check("exit code signals 'no issue'", code, 0)
         check("report is empty", out2.read_text(encoding="utf-8"), "")
 
-        print("filter falls back to the raw report when it cannot be parsed")
+        print("a congested run suppresses stalls but keeps the real death")
+        deg = d / "degraded.md"
+        deg.write_text(degraded_report(), encoding="utf-8")
+        durls, dstate = d / "durls.txt", d / "dstate.json"
+        code, stdout = run("plan", str(deg), str(durls), str(dstate))
+        check("exit code", code, 0)
+        check("flagged degraded", json.loads(dstate.read_text())["degraded"], True)
+        dlisted = durls.read_text(encoding="utf-8").split()
+        check("only the hard failure is re-checked", dlisted, ["https://example.com/bad-cert"])
+        check(
+            "the cached echo counts as a stall",
+            json.loads(dstate.read_text())["stalls"],
+            41,
+        )
+
+        dretry = d / "dretry.md"
+        dretry.write_text(DEGRADED_RETRY, encoding="utf-8")
+        out3 = d / "confirmed3.md"
+        code, stdout = run("report", str(deg), str(dretry), str(dstate), str(out3))
+        check("exit code signals 'open an issue'", code, 1)
+        check("stalls suppressed", "41 suppressed" in stdout, True)
+        body3 = out3.read_text(encoding="utf-8")
+        check("the real death is reported", "bad-cert" in body3, True)
+        check("no stall leaks into the issue", "stalled-" not in body3, True)
+        check("the suppression is explained", "stalled on 41 link(s)" in body3, True)
+
+        print("report falls back to the raw report when it cannot be parsed")
         junk = d / "junk.md"
         junk.write_text("lychee exploded before checking anything\n", encoding="utf-8")
-        out3 = d / "confirmed3.md"
-        code, _ = run("filter", str(junk), str(second), str(out3))
-        check("exit code signals 'open an issue'", code, 1)
-        check("raw report passed through", "exploded" in out3.read_text(encoding="utf-8"), True)
-
-        print("filter falls back when the second pass never ran")
         out4 = d / "confirmed4.md"
-        code, _ = run("filter", str(first), str(d / "missing.md"), str(out4))
+        code, _ = run("report", str(junk), str(retry), str(state), str(out4))
+        check("exit code signals 'open an issue'", code, 1)
+        check("raw report passed through", "exploded" in out4.read_text(encoding="utf-8"), True)
+
+        print("report falls back when the second pass never ran")
+        out5 = d / "confirmed5.md"
+        code, _ = run("report", str(healthy), str(d / "missing.md"), str(state), str(out5))
         check("exit code signals 'open an issue'", code, 1)
         check(
             "raw report passed through",
-            "removed-page" in out4.read_text(encoding="utf-8"),
+            "removed-page" in out5.read_text(encoding="utf-8"),
             True,
         )
 
         # An entry before the first `[path]:` header has no source. Sorting a
         # None against the other sources used to raise TypeError, which the
-        # workflow could only see as "the filter exited 1" -- the same signal as
-        # a real report, so it would have tried to open an issue from a file
-        # that was never written.
-        print("filter handles an entry with no source header")
+        # workflow could only read as "the filter exited 1" -- the same signal
+        # as a real report, so it would try to open an issue from a file that
+        # was never written.
+        print("report handles an entry with no source header")
         headerless = d / "headerless.md"
         headerless.write_text(
             "[404] https://example.com/orphan (at 1:1) | Rejected status code: 404\n"
@@ -139,19 +195,21 @@ def main() -> int:
             "[404] https://example.com/removed-page (at 12:340) | Rejected status code: 404\n",
             encoding="utf-8",
         )
-        headerless_retry = d / "headerless-retry.md"
-        headerless_retry.write_text(
+        hurls, hstate = d / "hurls.txt", d / "hstate.json"
+        run("plan", str(headerless), str(hurls), str(hstate))
+        hretry = d / "hretry.md"
+        hretry.write_text(
             "[retry-urls.txt]:\n"
             "[404] https://example.com/orphan (at 1:1) | Rejected status code: 404\n"
             "[404] https://example.com/removed-page (at 2:1) | Rejected status code: 404\n",
             encoding="utf-8",
         )
-        out5 = d / "confirmed5.md"
-        code, _ = run("filter", str(headerless), str(headerless_retry), str(out5))
+        out6 = d / "confirmed6.md"
+        code, _ = run("report", str(headerless), str(hretry), str(hstate), str(out6))
         check("exit code signals 'open an issue'", code, 1)
-        body5 = out5.read_text(encoding="utf-8")
-        check("the attributed link survives", "removed-page" in body5, True)
-        check("the orphan is labelled", "(unattributed)" in body5, True)
+        body6 = out6.read_text(encoding="utf-8")
+        check("the attributed link survives", "removed-page" in body6, True)
+        check("the orphan is labelled", "(unattributed)" in body6, True)
 
     if failures:
         print(f"\n{len(failures)} check(s) failed")

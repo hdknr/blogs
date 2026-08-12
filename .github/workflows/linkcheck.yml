@@ -211,28 +211,39 @@ jobs:
       # the timeout, and keep just the links that fail twice. A 404 fails both
       # passes; a stall on a busy runner does not.
       #
-      # The second pass exists to tell a stall apart from a death, not to give
-      # slow hosts more chances, so it retries once with no backoff: a 404 or an
-      # expired certificate is not going to change its mind. That bounds a
-      # persistently stalling URL at 2x60s, and at 4-wide the 20m cap absorbs
-      # ~40 of them — enough to cover a week as bad as #632 (112 timeouts) once
-      # the ones that were merely slow answer immediately.
+      # Retrying alone does not clean up a congested sweep: a run on this branch
+      # stalled for 22m, and a second pass over the same URLs on the same runner
+      # confirmed 102 of 103 links that were all alive. What survives congestion
+      # is the KIND of failure — a 404 or an expired certificate is a server's
+      # answer, and a busy runner cannot invent one.
+      #
+      # So `plan` splits the report on that line. Hard failures are always
+      # re-checked and always reported. Stalls are re-checked and reported only
+      # when few enough of them to trust; past that the run is treated as
+      # degraded and they are dropped with a note in the issue. That also keeps
+      # the second pass cheap exactly when the first one was expensive: on
+      # #632's report it re-checks 3 URLs instead of 107.
+      #
+      # The second pass retries once with no backoff, which bounds a stubborn
+      # URL at 2x60s — it is there to tell a stall from a death, not to give
+      # slow hosts more chances.
       - name: Re-verify reported links
         id: reverify
         if: steps.lychee.outputs.exit_code != '0'
         continue-on-error: true
         timeout-minutes: 20
         run: |
-          python3 scripts/linkcheck_reverify.py extract \
-            ./lychee/report.md ./lychee/retry-urls.txt
+          python3 scripts/linkcheck_reverify.py plan \
+            ./lychee/report.md ./lychee/retry-urls.txt ./lychee/state.json
           set +e
           lychee --no-progress --config lychee-external.toml \
             --timeout 60 --max-concurrency 4 \
             --max-retries 1 --retry-wait-time 0 \
             --output ./lychee/retry-report.md \
             ./lychee/retry-urls.txt
-          python3 scripts/linkcheck_reverify.py filter \
-            ./lychee/report.md ./lychee/retry-report.md ./lychee/confirmed.md
+          python3 scripts/linkcheck_reverify.py report \
+            ./lychee/report.md ./lychee/retry-report.md \
+            ./lychee/state.json ./lychee/confirmed.md
           echo "confirmed=$?" >> "$GITHUB_OUTPUT"
           set -e
 
