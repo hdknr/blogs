@@ -96,6 +96,17 @@ exclude = [
   "^https?://(www\\.)?polymarket\\.com/",
   "^https?://(www\\.)?coveo\\.com/",
   "^https?://(www\\.)?ainvest\\.com/",
+  "^https?://(www\\.)?block\\.xyz/",
+  # command.jp is 3M Japan's Command brand site, fronted by Akamai. Reported in
+  # three consecutive sweeps (#574, #607, #632) and NOT the runner-IP pattern:
+  # it fails identically from an ordinary home network. Every programmatic
+  # client is cut off at the edge — lychee HTTP/2, curl HTTP/2, curl HTTP/1.1
+  # (30s hang), curl with a browser UA, and the aegis proxy (502 "stream reset
+  # by client") — while the page itself is live and current (it is the indexed
+  # canonical "壁を傷つけない粘着フック | コマンド™ 製品 | 3M 日本"). Unverifiable
+  # by any client we have, but demonstrably not dead, so the link stays in the
+  # post and the host is excluded here.
+  "^https?://(www\\.)?command\\.jp/",
   # Hosts with expired / self-signed / untrusted certs (reachable in browser).
   # semrush.jp serves 200 but omits the intermediate cert, so clients that do
   # not chase the AIA extension (lychee) reject it while browsers accept it.
