@@ -109,13 +109,16 @@ jobs:
   # ---------------------------------------------------------------------------
   # External-link sweep (non-blocking). Runs weekly (and via workflow_dispatch).
   # Checks external URLs across the built site. Known bot-blocked hosts and
-  # transient codes are tamed via lychee.toml so the report stays signal-rich.
-  # On failure it opens/updates a tracking issue instead of failing the run.
+  # transient codes are tamed via lychee-external.toml, and anything that still
+  # fails is re-checked in a calmer second pass, so the report stays signal-rich.
+  # Links that fail twice open a NEW tracking issue (create-issue-from-file does
+  # not update the previous one) instead of failing the run.
   # ---------------------------------------------------------------------------
   external:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Build (~2m) + first pass (up to ~15m on a bad day) + re-verification (20m cap).
+    timeout-minutes: 45
     steps:
       - name: Install Hugo CLI
         run: |
@@ -174,10 +177,48 @@ jobs:
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
           set -e
 
-      - name: Open issue on dead links
+      # The sweep shares a runner with everything else on it, so a congested run
+      # reports links that are perfectly alive: #632 ran 15m and reported 112
+      # timeouts, the week before ran 6m and reported 9, on a link set that had
+      # grown 4%. Re-running those exact 107 URLs through the same lychee and
+      # config from an ordinary network produced 0 timeouts.
+      #
+      # So re-check only what the first pass flagged, serially and with double
+      # the timeout, and keep just the links that fail twice. A 404 fails both
+      # passes; a stall on a busy runner does not.
+      #
+      # If the second pass cannot finish in time we have no trustworthy verdict,
+      # so `confirmed` stays unset and no issue is opened — the step is allowed
+      # to fail for that reason, and the degradation is noted in the job summary.
+      - name: Re-verify reported links
+        id: reverify
         if: steps.lychee.outputs.exit_code != '0'
+        continue-on-error: true
+        timeout-minutes: 20
+        run: |
+          python3 scripts/linkcheck_reverify.py extract \
+            ./lychee/report.md ./lychee/retry-urls.txt
+          set +e
+          lychee --no-progress --config lychee-external.toml \
+            --timeout 60 --max-concurrency 2 \
+            --output ./lychee/retry-report.md \
+            ./lychee/retry-urls.txt
+          python3 scripts/linkcheck_reverify.py filter \
+            ./lychee/report.md ./lychee/retry-report.md ./lychee/confirmed.md
+          echo "confirmed=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Note a degraded sweep
+        if: steps.lychee.outputs.exit_code != '0' && steps.reverify.outputs.confirmed == ''
+        run: |
+          echo "### Sweep degraded" >> "$GITHUB_STEP_SUMMARY"
+          echo "The first pass reported failures but the re-verification pass did"  >> "$GITHUB_STEP_SUMMARY"
+          echo "not finish, so no issue was opened. Re-run this workflow to retry." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open issue on dead links
+        if: steps.reverify.outputs.confirmed == '1'
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "Dead links detected by weekly lychee sweep"
-          content-filepath: ./lychee/report.md
+          content-filepath: ./lychee/confirmed.md
           labels: link-check, automated
