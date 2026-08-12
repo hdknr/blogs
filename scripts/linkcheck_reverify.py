@@ -100,13 +100,16 @@ def cmd_filter(report: Path, retry: Path, out: Path) -> int:
         out.write_text("", encoding="utf-8")
         return 0
 
+    # An entry can precede the first `[path]:` header, leaving source unset.
+    # Give it a name rather than letting a None sort against the strings and
+    # crash the whole step.
     by_source = {}
     for source, kind, url, reason in kept:
-        by_source.setdefault(source, []).append((kind, url, reason))
+        by_source.setdefault(source or "(unattributed)", []).append((kind, url, reason))
 
     lines = [
         f"Confirmed by two passes: {len(kept)} of {len(entries)} reported links "
-        f"failed again when re-checked serially with a longer timeout "
+        f"failed again when re-checked with a longer timeout "
         f"({cleared} cleared as transient).",
         "",
     ]

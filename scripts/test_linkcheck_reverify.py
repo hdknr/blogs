@@ -125,6 +125,34 @@ def main() -> int:
             True,
         )
 
+        # An entry before the first `[path]:` header has no source. Sorting a
+        # None against the other sources used to raise TypeError, which the
+        # workflow could only see as "the filter exited 1" -- the same signal as
+        # a real report, so it would have tried to open an issue from a file
+        # that was never written.
+        print("filter handles an entry with no source header")
+        headerless = d / "headerless.md"
+        headerless.write_text(
+            "[404] https://example.com/orphan (at 1:1) | Rejected status code: 404\n"
+            "\n"
+            "[_site/blogs/posts/2020/01/alpha/index.html]:\n"
+            "[404] https://example.com/removed-page (at 12:340) | Rejected status code: 404\n",
+            encoding="utf-8",
+        )
+        headerless_retry = d / "headerless-retry.md"
+        headerless_retry.write_text(
+            "[retry-urls.txt]:\n"
+            "[404] https://example.com/orphan (at 1:1) | Rejected status code: 404\n"
+            "[404] https://example.com/removed-page (at 2:1) | Rejected status code: 404\n",
+            encoding="utf-8",
+        )
+        out5 = d / "confirmed5.md"
+        code, _ = run("filter", str(headerless), str(headerless_retry), str(out5))
+        check("exit code signals 'open an issue'", code, 1)
+        body5 = out5.read_text(encoding="utf-8")
+        check("the attributed link survives", "removed-page" in body5, True)
+        check("the orphan is labelled", "(unattributed)" in body5, True)
+
     if failures:
         print(f"\n{len(failures)} check(s) failed")
         return 1

@@ -135,8 +135,10 @@ jobs:
   external:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    # Build (~2m) + first pass (up to ~15m on a bad day) + re-verification (20m cap).
-    timeout-minutes: 45
+    # Setup and build (~5m) + first pass (20m cap) + re-verification (20m cap).
+    # Both passes are capped at the step level so they provably sum under this,
+    # and the job is never cancelled mid-step with the issue still unopened.
+    timeout-minutes: 50
     steps:
       - name: Install Hugo CLI
         run: |
@@ -184,8 +186,12 @@ jobs:
 
       # Internal links resolve to the local server (base_url/remap in the
       # config) and are excluded, so only genuine EXTERNAL links are checked.
+      # Capped so the two passes provably fit inside the job budget below. A
+      # first pass that blows this cap fails the step and reddens the job, which
+      # is the point: a sweep that cannot finish must be visible, not silent.
       - name: Check external links
         id: lychee
+        timeout-minutes: 20
         run: |
           mkdir -p lychee
           set +e
@@ -205,9 +211,12 @@ jobs:
       # the timeout, and keep just the links that fail twice. A 404 fails both
       # passes; a stall on a busy runner does not.
       #
-      # If the second pass cannot finish in time we have no trustworthy verdict,
-      # so `confirmed` stays unset and no issue is opened — the step is allowed
-      # to fail for that reason, and the degradation is noted in the job summary.
+      # The second pass exists to tell a stall apart from a death, not to give
+      # slow hosts more chances, so it retries once with no backoff: a 404 or an
+      # expired certificate is not going to change its mind. That bounds a
+      # persistently stalling URL at 2x60s, and at 4-wide the 20m cap absorbs
+      # ~40 of them — enough to cover a week as bad as #632 (112 timeouts) once
+      # the ones that were merely slow answer immediately.
       - name: Re-verify reported links
         id: reverify
         if: steps.lychee.outputs.exit_code != '0'
@@ -218,7 +227,8 @@ jobs:
             ./lychee/report.md ./lychee/retry-urls.txt
           set +e
           lychee --no-progress --config lychee-external.toml \
-            --timeout 60 --max-concurrency 2 \
+            --timeout 60 --max-concurrency 4 \
+            --max-retries 1 --retry-wait-time 0 \
             --output ./lychee/retry-report.md \
             ./lychee/retry-urls.txt
           python3 scripts/linkcheck_reverify.py filter \
@@ -226,15 +236,40 @@ jobs:
           echo "confirmed=$?" >> "$GITHUB_OUTPUT"
           set -e
 
-      - name: Note a degraded sweep
-        if: steps.lychee.outputs.exit_code != '0' && steps.reverify.outputs.confirmed == ''
+      # `confirmed` alone cannot be trusted: the filter exits 1 both for a real
+      # report and for an unhandled crash, and the step may have been killed by
+      # its timeout before writing anything at all. So decide on the artifact.
+      #
+      # No verdict must never mean silence. Before the second pass existed, a
+      # bad week opened an issue full of noise; the failure mode to avoid is the
+      # opposite one, where the sweep quietly stops reporting and nobody
+      # notices. When the second pass gives no answer, fall back to the first
+      # pass verbatim, labelled unverified — never quieter than the old
+      # behaviour, only better when the second pass does answer.
+      - name: Decide whether to open an issue
+        id: decide
+        if: steps.lychee.outputs.exit_code != '0'
         run: |
-          echo "### Sweep degraded" >> "$GITHUB_STEP_SUMMARY"
-          echo "The first pass reported failures but the re-verification pass did"  >> "$GITHUB_STEP_SUMMARY"
-          echo "not finish, so no issue was opened. Re-run this workflow to retry." >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.reverify.outputs.confirmed }}" = "0" ]; then
+            echo "open=false" >> "$GITHUB_OUTPUT"
+            echo "Every reported link cleared on re-check." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${{ steps.reverify.outputs.confirmed }}" = "1" ] && [ -s ./lychee/confirmed.md ]; then
+            echo "open=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "### Sweep degraded" >> "$GITHUB_STEP_SUMMARY"
+            echo "Re-verification did not finish; reporting the first pass unverified." >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo "UNVERIFIED: the re-verification pass did not finish, so this list"
+              echo "may include transient stalls from a congested runner as well as"
+              echo "genuinely dead links. Re-run the workflow to get a verified list."
+              echo
+              cat ./lychee/report.md
+            } > ./lychee/confirmed.md
+            echo "open=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Open issue on dead links
-        if: steps.reverify.outputs.confirmed == '1'
+        if: steps.decide.outputs.open == 'true'
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "Dead links detected by weekly lychee sweep"
