@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Airtable の用途別に最初にぶつかる上限とプラン">
+    <mxGraphModel dx="1000" dy="700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="940" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="使い方によって「最初にぶつかる上限」は違う（2026年8月時点の公式値）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="16" width="700" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="h1" value="使い方" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="30" y="62" width="240" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="h2" value="最初に効く上限" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="340" y="62" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="h3" value="実質の下限プラン" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="690" y="62" width="220" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="u1" value="社内の小さなリスト管理&#10;数百件・編集者 3 名" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="30" y="98" width="240" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="u2" value="チームの案件・進行管理&#10;数万件・編集者 8 名" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="30" y="192" width="240" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="u3" value="MA / CRM と API 連携&#10;外部同期・自動化を多用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="30" y="286" width="240" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="w1" value="レコード 1,000 件 / base&#10;（table 単位ではなく base 単位）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="340" y="98" width="280" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="w2" value="レコード上限より先に「座席課金」&#10;Team は Commenter 以上が課金対象" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="340" y="192" width="280" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="w3" value="API 1,000 コール / 月（Free）&#10;レート制限 5 req/秒 は全プラン共通" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="340" y="286" width="280" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="p1" value="Free（無料）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="98" width="220" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" value="Team&#10;$20 / 人・月（年払い）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="192" width="220" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="p3" value="Team 以上&#10;規模次第で Business（$45）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="286" width="220" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="e1a" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="u1" target="w1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1b" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="w1" target="p1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2a" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="u2" target="w2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2b" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="w2" target="p2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3a" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="u3" target="w3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3b" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="w3" target="p3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" value="課金対象の定義はプランで違う：Team は Commenter 以上が課金／Business は Editor 以上（Commenter は無料）。閲覧専用（Read only）は全プランで無料。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;dashed=1;verticalAlign=middle;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="384" width="880" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="note2" value="上限に達してもデータは消えない。追加ができなくなるだけ（公式 FAQ）。だが「追加できない」は連携が止まるということでもある。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;dashed=1;verticalAlign=middle;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="440" width="880" height="44" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
