@@ -1,0 +1,61 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="MAの成熟度別に見たAirtableとHubSpotの初年度コスト逆転">
+    <mxGraphModel dx="1000" dy="700" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="480" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ttl" value="どの段階にいるかで、安いほうが入れ替わる（初年度合計・すべて年契約）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="14" width="700" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="st1" value="段階1：リスト管理だけ&#10;まだ配信もしていない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="30" y="62" width="270" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="st2" value="段階2：メール配信を始める&#10;リード数 1,500 未満" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="30" y="176" width="270" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="st3" value="段階3：ナーチャリングを自動化&#10;リード数 1,500 超" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="30" y="290" width="270" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="Airtable Team 20 席&#10;$4,800 ＋ ESP・iPaaS・構築工数" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="62" width="290" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="Airtable Team 20 席&#10;$4,800 ＋ ESP・iPaaS・構築工数" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="176" width="290" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="Airtable Team 20 席&#10;$4,800（ただし MA は自作のまま）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="290" width="290" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="h1" value="HubSpot Free&#10;$0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="62" width="280" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="h2" value="HubSpot Starter 3 席&#10;$720（$20 / 席・月）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="176" width="280" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="h3" value="Marketing Hub Pro（3 席込み）&#10;$9,600 ＋ 初期費用 $3,000 ＝ $12,600" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="290" width="280" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="st1" target="a1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="st2" target="a2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#666666;" edge="1" source="st3" target="a3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lblA" value="Airtable で運営した場合" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="330" y="38" width="290" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="lblH" value="HubSpot で運営した場合" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="650" y="38" width="280" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="flip" value="段階2 までは HubSpot が安い。段階3（ワークフローが要る）で Pro の壁を越えた瞬間に約 2.6 倍まで開き、逆転する。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;verticalAlign=middle;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="374" width="900" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="ただし段階3 の Airtable 側は「MA を自作したまま」で機能が同じではなく、席数も Pro 3 席 対 Airtable 20 席と揃っていない。金額だけの比較にはならない。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;dashed=1;verticalAlign=middle;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="424" width="900" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
