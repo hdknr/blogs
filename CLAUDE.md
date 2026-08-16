@@ -20,6 +20,7 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - `.claude/skills/wiki-ingest/` — `/wiki-ingest` skill
 - `scripts/categorize.py` — automatic category/tag assignment
 - `hugo.toml` — Hugo config
+- `.hugoversion` — pinned Hugo version, read by both CI workflows (see below)
 - `.claude/skills/blog/` — `/blog` skill
 - `.claude/skills/ship/` — `/ship` skill (draft PR → ready → CI → merge → cleanup)
 - `.claude/agents/` — custom specialist agents
@@ -41,7 +42,8 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - Post path: `content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md`
 - Frontmatter: `title`, `date`, `lastmod`, `draft`, `categories`, `tags` (+ `source_url`).
 - Categories follow the rules in `scripts/categorize.py`.
-- Build check: `hugo --gc`.
+- Build check: `hugo --gc`. Your local Hugo must match `.hugoversion`, otherwise a local
+  build proves nothing about CI. Check with `hugo version`; upgrade via `brew upgrade hugo`.
 - **Diagrams must be rendered as images.** Do NOT use ASCII art in fenced code blocks. Use drawio and embed PNG.
   - drawio source: `static/images/<name>.drawio`
   - export: `/Applications/draw.io.app/Contents/MacOS/draw.io --export --format png --scale 2 --output <out>.png <in>.drawio`
