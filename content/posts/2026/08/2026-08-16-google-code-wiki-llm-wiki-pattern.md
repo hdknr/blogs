@@ -1,13 +1,13 @@
 ---
 title: "Google Code Wiki を設計として読む — 「毎回読み直す」をやめた常設 Wiki 層"
-description: "Google が 2025 年 11 月に公開した Code Wiki を、機能紹介ではなく設計として読む。チャットがコードではなく生成済み Wiki を読む構造、LLM Wiki パターンとの同型性、DeepWiki との差、プライベートリポジトリ非対応という制約までを整理する。"
+description: "Google が 2025 年 11 月に公開した Code Wiki を、機能紹介ではなく設計として読む。チャットがコードではなく生成済み Wiki を読む構造、LLM Wiki パターンとの同型性、DeepWiki との差、そして mkdocs のように CI で回す OpenWiki との運用モデル比較。プライベートリポジトリ非対応という制約まで整理する。"
 date: 2026-08-16
 lastmod: 2026-08-16
 slug: "google-code-wiki-llm-wiki-pattern"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/572#issuecomment-5306590695"
 categories: ["AI/LLM"]
-tags: ["Code Wiki", "DeepWiki", "Gemini", "Google", "RAG"]
+tags: ["Code Wiki", "OpenWiki", "DeepWiki", "Gemini", "RAG"]
 ---
 
 X で「Google が開発者待望のツールを出した」という投稿が流れてきた。CodeWiki というらしい（正式名称は二語の Code Wiki）。リポジトリを貼るだけで対話的なドキュメントに変換され、図も自動生成され、コードを理解したチャットボットまで付いてくる、と。
@@ -16,10 +16,11 @@ X で「Google が開発者待望のツールを出した」という投稿が�
 
 ただし「今出た」わけではない。パブリックプレビューでの公開は **2025 年 11 月 13 日**で、本記事の執筆時点から見て 9 か月前になる。バズった投稿はその再発見にすぎない。
 
-とはいえ、9 か月前のツールが今もタイムラインで数千リポストを集めるのには、それなりに理由がある。この記事では「新しいツールの紹介」ではなく、次の 3 点を見ていく。
+とはいえ、9 か月前のツールが今もタイムラインで数千リポストを集めるのには、それなりに理由がある。この記事では「新しいツールの紹介」ではなく、次の 4 点を見ていく。
 
 - Code Wiki が採った設計上の選択（なぜ「常設 Wiki」なのか）
 - LLM Wiki パターンとの同型性と、決定的な違い
+- DeepWiki・OpenWiki との比較（ホスト型サービスと CLI という運用モデルの差）
 - 9 か月経っても解けていない制約
 
 ## Code Wiki が実際に何をするか
@@ -97,18 +98,48 @@ Code Wiki と DeepWiki は、機能セットとしてはかなり近い。自動
 
 現時点で意味のある差分は、機能の有無というより**背後のモデルと運用主体**だろう。Code Wiki は Gemini、DeepWiki は Devin 側のモデルで動く。同じリポジトリを両方で開いて、どちらの説明が自分の読みたい粒度に合うかを比べるのが、いちばん早い評価方法になる。どちらも公開リポジトリならそのまま試せる。
 
+## OpenWiki との比較 — SaaS に預けるか、コマンドとして自分で回すか
+
+Code Wiki と DeepWiki はどちらもホスト型のサービスで、リポジトリを渡して生成された Wiki を向こうのサイトで読む形をとる。これに対して、**mkdocs のように自分の CI で回すコマンド**として同じことをやる系統がある。代表例が LangChain の [OpenWiki](https://github.com/langchain-ai/openwiki)（MIT、npm 配布）だ。
+
+同じ「AI にコードの Wiki を書かせて維持させる」でも、両者は運用モデルがほぼ正反対になる。
+
+| | **Code Wiki**（Google） | **OpenWiki**（LangChain） |
+|---|---|---|
+| 提供形態 | ホスト型 Web サービス | CLI（`npm install -g openwiki`） |
+| 実行主体 | Google のインフラ | 自分のマシン / 自分の CI |
+| 起動方法 | リポジトリの URL を開くだけ | `openwiki --init` / `--update` |
+| 定期更新 | Google 側が変更を検知して再生成 | GitHub Actions / GitLab CI / Bitbucket Pipelines のスケジュール実行で docs PR を出す |
+| 生成物の置き場 | `codewiki.google` 上 | 自分のリポジトリの `openwiki/`（Markdown） |
+| プライベートリポジトリ | **不可**（CLI 拡張は待機列） | 可（ローカル／CI で動くため） |
+| コードの送信先 | Google | 選んだプロバイダ。Ollama / LM Studio ならローカル完結 |
+| モデル | Gemini 固定 | 12 プロバイダ（OpenAI / Anthropic / Gemini / Bedrock / Copilot / OpenRouter / OpenAI 互換ほか） |
+| 図 | アーキテクチャ図・クラス図・シーケンス図 | Mermaid（シーケンス / ER / 状態 / フローチャート） |
+| 閲覧 UI | Web サイト + Gemini チャット | `openwiki visualize`（ローカルのノードグラフ + Markdown リーダー） |
+| 生成方針の指定 | 不可（製品側で固定） | `openwiki/INSTRUCTIONS.md` に記述、`.openwikiignore` で読み取り除外 |
+| 出力フォーマット | 独自（Web ページ） | OKF v0.1 準拠の Markdown |
+| 費用 | プレビュー中は閲覧無料 | ソフトウェアは MIT。推論コストは自己負担 |
+
+判断軸は「手軽さ」と「主導権」のどちらを取るかに尽きる。OSS ライブラリの下調べに使うだけなら、URL を開けば読める Code Wiki のほうが圧倒的に速い。一方、自社コードを対象にする、生成方針を自分で決める、成果物をリポジトリに置いてレビュー対象にする、といった要求が一つでもあるなら、現状の選択肢は CLI 型しかない。
+
+設計として面白いのは、前節の Schema の話がここで反転することだ。Code Wiki では固定されていた Schema を、OpenWiki は `INSTRUCTIONS.md` という形でユーザーに開放している。しかも OpenWiki は生成物を、コーディングエージェントに読ませるメモリとして位置づけていて（`AGENTS.md` / `CLAUDE.md` に自分の管理ブロックを維持し、エージェントを Wiki へ誘導する）、人間が読む Web ページに寄せた Code Wiki とは向いている方向が違う。LLM Wiki パターンに近いのは、むしろ OpenWiki のほうである。
+
+もう一つ皮肉なのは、その OpenWiki が採用している出力フォーマット **OKF（Open Knowledge Format）v0.1 が Google 発の仕様**であることだ。仕様は `GoogleCloudPlatform/knowledge-catalog` で公開されている。Google 自身の Code Wiki が閉じたホスト型サービスである一方、そのオープンな知識フォーマットは他社の OSS CLI に採用されている、という構図になっている。
+
 ## 9 か月経っても解けていない制約 — プライベートリポジトリと Gemini CLI 拡張の待機列
 
 実務で使うかどうかの判断は、たいてい機能表ではなく制約側で決まる。
 
-### Web 版が扱えるのは公開リポジトリだけ
+### Code Wiki は「コマンド」ではなくホスト型サービスである
 
-Code Wiki の Web 版に自社のプライベートリポジトリを読ませることはできない。公式ブログもここを認識していて、内部リポジトリ向けにローカルで安全に実行できる Gemini CLI 拡張を用意すると書いている。
+まず押さえておきたいのは、Code Wiki が mkdocs のような「自分で回すコマンド」ではないという点だ。公式ブログの表現は "ingests public repositories and **generates, hosts, and maintains**" で、生成もホスティングも Google 側で完結する。成果物は `codewiki.google` 上に置かれ、自分のリポジトリにも GitHub Pages にも出力されない。CI に組み込むこともできない。
+
+この形態の帰結として、自社のプライベートリポジトリを読ませる手段が現状は存在しない。公式ブログもここを認識していて、内部リポジトリ向けにローカルで安全に実行できる Gemini CLI 拡張を用意すると書いている。
 
 > While the open-source ecosystem hosts massive repositories, it's often our own private repos that are the hardest to document effectively.
 > （オープンソースには巨大なリポジトリがあるが、実際に最も文書化が難しいのは自分たちのプライベートリポジトリであることが多い）
 
-まさにその通りで、著者がもう社内にいないレガシーコードこそ、この手のツールが最も効く領域だ。ただしこの拡張は**発表から 9 か月が経った現在も待機列（waitlist）のまま**で、一般提供の時期は公表されていない。Code Wiki 自体もパブリックプレビューのままである。
+まさにその通りで、著者がもう社内にいないレガシーコードこそ、この手のツールが最も効く領域だ。ただしこの拡張は**発表から 9 か月が経った現在も待機列（waitlist）のまま**である。公式の `gemini-cli-extensions` organization には 39 個の拡張が公開されているが、その中に `code-wiki` は存在しない。Code Wiki 自体もパブリックプレビューのままだ。
 
 ### 現状の使いどころ
 
@@ -126,6 +157,7 @@ X でバズっていた「読めないプロジェクトが数分で読めるよ
 - 質問ごとに読み直す方式と違い、理解が中間層に蓄積される。ドキュメントが腐る問題は再生成の頻度で潰している
 - これは [LLM Wiki パターン](/blogs/wiki/concepts/llm-wiki-pattern/) をコードベースに適用したものと見なせる。ただし Schema（構造の定義）は製品側に固定されている
 - DeepWiki とは機能・アクセス方法ともに近く、実質的な差はモデルと運用主体。両方で同じリポジトリを開いて比べるのが早い
+- Code Wiki は mkdocs のような「自分で回すコマンド」ではなくホスト型サービスである。CI に組み込みたい、生成方針を自分で決めたいなら OpenWiki のような CLI 型が現状の選択肢になる
 - プライベートリポジトリ対応（Gemini CLI 拡張）は 9 か月経っても待機列のままで、実務投入の最大の制約になっている
 
 ## 参考リンク
@@ -134,5 +166,7 @@ X でバズっていた「読めないプロジェクトが数分で読めるよ
 - [Code Wiki](https://codewiki.google/)
 - [DeepWiki](https://deepwiki.com/)
 - [DeepWiki: AI docs for any repo — Cognition](https://cognition.com/blog/deepwiki)
+- [langchain-ai/openwiki（GitHub）](https://github.com/langchain-ai/openwiki)
+- [Open Knowledge Format (OKF) v0.1 仕様](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
 - [Google previews Code Wiki: Can you trust AI to document your repository? — The Register](https://www.theregister.com/software/2025/11/17/google-previews-code-wiki-ai-to-document-repositories/2804407)
 - [LLM Wiki パターン（当ブログ Wiki）](/blogs/wiki/concepts/llm-wiki-pattern/)
