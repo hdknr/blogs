@@ -67,6 +67,7 @@ CATEGORY_RULES = [
         "homebrew", "brew", "packer", "vagrant",
         "editor", "terminal", "tmux", "shell",
         "obsidian", "figma", "theatre.js",
+        "airtable", "nocode", "ノーコード", "ローコード", "notion",
     ]),
     # ビジネス/キャリア
     ("ビジネス/キャリア", [
@@ -75,6 +76,8 @@ CATEGORY_RULES = [
         "スタートアップ", "起業", "ceo", "cto",
         "言語化", "勉強法", "学習", "ロードマップ",
         "デザイナー", "エンジニア",
+        "マーケティングオートメーション", "marketing automation",
+        "インバウンドマーケティング", "料金プラン",
     ]),
     # 地域/グルメ
     ("地域/グルメ", [
@@ -127,6 +130,13 @@ TAG_RULES = [
     ("wordpress", ["wordpress"]),
     ("laravel", ["laravel"]),
     ("homebrew", ["homebrew"]),
+    ("HubSpot", ["hubspot"]),
+    ("Airtable", ["airtable"]),
+    ("marketing-automation", ["マーケティングオートメーション", "marketing automation", " ma ", "インバウンドマーケティング"]),
+    ("CRM", ["crm"]),
+    ("ノーコード", ["ノーコード", "nocode", "no-code"]),
+    ("SaaS", ["saas"]),
+    ("料金プラン", ["料金プラン", "料金体系", "価格改定"]),
 ]
 
 
