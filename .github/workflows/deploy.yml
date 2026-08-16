@@ -21,17 +21,20 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      HUGO_VERSION: 0.157.0
     steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      # .hugoversion is the single source of truth, shared with linkcheck.yml and
+      # local builds. Pinning the version in each workflow separately is what let
+      # CI (0.157.0) drift away from local (0.161.1).
+      - name: Resolve Hugo version
+        run: echo "HUGO_VERSION=$(cat .hugoversion)" >> "$GITHUB_ENV"
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+          sudo dpkg -i ${{ runner.temp }}/hugo.deb
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5

@@ -1,5 +1,5 @@
 baseURL = 'https://hdknr.github.io/blogs/'
-languageCode = 'ja'
+locale = 'ja'
 defaultContentLanguage = 'ja'
 title = 'hdknr blog'
 theme = 'PaperMod'

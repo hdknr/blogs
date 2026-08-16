@@ -31,7 +31,8 @@ permissions:
   issues: write
 
 env:
-  HUGO_VERSION: 0.157.0
+  # The Hugo version is NOT pinned here — it is read from .hugoversion at runtime
+  # so CI and local builds cannot drift apart. See the "Resolve Hugo version" step.
   LYCHEE_VERSION: 0.24.2
 
 jobs:
@@ -65,16 +66,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Resolve Hugo version
+        run: echo "HUGO_VERSION=$(cat .hugoversion)" >> "$GITHUB_ENV"
+
       - name: Install Hugo CLI
         run: |
           wget -O "${{ runner.temp }}/hugo.deb" \
             "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
           sudo dpkg -i "${{ runner.temp }}/hugo.deb"
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Build site
         env:
@@ -140,16 +144,19 @@ jobs:
     # and the job is never cancelled mid-step with the issue still unopened.
     timeout-minutes: 50
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Resolve Hugo version
+        run: echo "HUGO_VERSION=$(cat .hugoversion)" >> "$GITHUB_ENV"
+
       - name: Install Hugo CLI
         run: |
           wget -O "${{ runner.temp }}/hugo.deb" \
             "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
           sudo dpkg -i "${{ runner.temp }}/hugo.deb"
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Build site
         env:
