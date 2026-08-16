@@ -96,6 +96,12 @@ def validate_post(filepath, repo_relative):
         categories = parse_list_value(raw_categories)
         if categories is None:
             violations.append(f"categories がインライン配列として読めない: {raw_categories}")
+        elif not categories:
+            # An empty list is not the same as a missing key: the key is present,
+            # so the required-field check above passes and the post ends up in no
+            # category at all. Silent, and exactly what an empty AI response looks
+            # like.
+            violations.append("categories が空。最低 1 つのカテゴリが要る")
         else:
             for category in categories:
                 if category not in VALID_CATEGORIES:
@@ -103,6 +109,16 @@ def validate_post(filepath, repo_relative):
                         f"規定外のカテゴリ `{category}`"
                         f"（許可: {', '.join(sorted(VALID_CATEGORIES))}）"
                     )
+
+    raw_tags = fm.get('tags')
+    if raw_tags is not None:
+        tags = parse_list_value(raw_tags)
+        if tags is None:
+            violations.append(f"tags がインライン配列として読めない: {raw_tags}")
+        # An empty `tags: []` is deliberately NOT a violation yet: 108 of the
+        # Gist-imported posts have one, so failing on it would make this check
+        # red on arrival and teach everyone to skip it. Tracked in #647, which
+        # owns the tag vocabulary and can tag those posts before the rule lands.
 
     if not PATH_PATTERN.search(repo_relative):
         violations.append("配置が content/posts/YYYY/MM/ 規約から外れている")

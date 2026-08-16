@@ -56,6 +56,10 @@ tags: ["claude"]
 本文。
 """
 
+EMPTY_CATEGORIES = VALID_POST.replace('["AI/LLM"]', '[]')
+
+EMPTY_TAGS = VALID_POST.replace('["claude", "test"]', '[]')
+
 NO_FRONTMATTER = "見出しだけの本文。\n"
 
 GOOD_PATH = "content/posts/2026/08/2026-08-16-test-post.md"
@@ -111,6 +115,18 @@ check('必須フィールドの欠落を検出する',
 violations = validate(BLOCK_LIST_CATEGORIES)
 check('ブロック形式の categories を黙って通さない',
       any('インライン配列' in v for v in violations))
+
+# `categories: []` keeps the key present, so the required-field check passes and
+# the post silently lands in no category. An empty AI response looks like this.
+violations = validate(EMPTY_CATEGORIES)
+check('空の categories を検出する',
+      any('categories が空' in v for v in violations))
+
+# Not a violation *yet* -- 108 Gist-imported posts have `tags: []`, so enforcing
+# it here would make the check red on arrival. #647 owns that cleanup. Asserting
+# the current behaviour keeps the exemption deliberate instead of forgotten.
+check('空の tags は今はまだ違反にしない（#647 に引き渡し）',
+      validate(EMPTY_TAGS) == [])
 
 violations = validate(NO_FRONTMATTER)
 check('frontmatter 無しを検出する',
