@@ -54,6 +54,15 @@ jobs:
       - name: Test the re-verification filter
         run: python3 scripts/test_linkcheck_reverify.py
 
+      # Same reasoning as above, for the frontmatter validator: a parsing bug
+      # there makes it pass everything, which is indistinguishable from a clean
+      # repo. Test the validator first, then run it.
+      - name: Test the frontmatter validator
+        run: python3 scripts/test_validate_frontmatter.py
+
+      - name: Validate frontmatter
+        run: python3 scripts/validate_frontmatter.py
+
   # ---------------------------------------------------------------------------
   # Internal-link check (blocking). Runs on PRs and pushes.
   # Builds the site, mirrors it under the /blogs/ base path, serves it locally,

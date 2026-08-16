@@ -19,6 +19,7 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - `content/wiki/` — wiki knowledge base (`concepts/`, `tools/`, `guides/`)
 - `.claude/skills/wiki-ingest/` — `/wiki-ingest` skill
 - `scripts/categorize.py` — automatic category/tag assignment
+- `scripts/validate_frontmatter.py` — frontmatter/placement validation, enforced in CI
 - `hugo.toml` — Hugo config
 - `.hugoversion` — pinned Hugo version, read by both CI workflows (see below)
 - `.claude/skills/blog/` — `/blog` skill
@@ -73,6 +74,11 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 AI/LLM, セキュリティ, クラウド/インフラ, Web開発, プログラミング言語, モバイル, データベース, ツール/開発環境, ビジネス/キャリア, 地域/グルメ, その他
 
 > Category names stay in Japanese — they are the literal frontmatter values consumed by `scripts/categorize.py`.
+
+**This list is enforced**, not advisory. `scripts/validate_frontmatter.py` fails CI on any
+other value, on a missing `title`/`date`/`slug`/`categories`/`tags`, and on a post outside
+`content/posts/YYYY/MM/`. Run it locally with `python3 scripts/validate_frontmatter.py`.
+Adding a category means editing `VALID_CATEGORIES` there **and** this list.
 
 ## Mandatory Bash rules (auto-mode compatible)
 

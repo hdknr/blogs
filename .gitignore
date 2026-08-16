@@ -11,3 +11,6 @@ resources/_gen/
 .claude/settings.local.json
 # macOS
 .DS_Store
+# Python (scripts/ are run directly, never packaged)
+__pycache__/
+*.pyc
