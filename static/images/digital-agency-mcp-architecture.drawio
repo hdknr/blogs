@@ -1,0 +1,104 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="digital-agency-mcp" name="Administrative Procedures MCP Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="行政手続データ分析 MCP Server のアーキテクチャ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="290" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Left: AI clients ===== -->
+        <mxCell id="clients-group" value="AI クライアント / エージェント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="80" width="230" height="270" as="geometry"/>
+        </mxCell>
+        <mxCell id="claude-desktop" value="Claude Desktop / Claude Code&#10;（MCP Apps でグラフ表示）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="115" width="190" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="chatgpt" value="ChatGPT&#10;（HTTP transport で接続）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="170" width="190" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="apcli" value="apcli（LLM 不要の CLI）&#10;同じロジックを直接実行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="225" width="190" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="browser-ai" value="ブラウザ内蔵 AI（Prompt API）&#10;apcli preview / API キー不要" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="280" width="190" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="llm-role" value="LLM が担うのは&#10;「検索・集計条件の指定」だけ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="375" width="230" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Middle: MCP server ===== -->
+        <mxCell id="server-group" value="MCP Server（Python / FastMCP）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="330" y="80" width="400" height="450" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="discovery-group" value="Discovery 層 — データの存在と構造を把握" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b3b3b3;fontSize=10;fontStyle=2;verticalAlign=top;spacingTop=5;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="350" y="115" width="360" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="list-datasets" value="list_datasets" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="365" y="150" width="160" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="inspect-dataset" value="inspect_dataset" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="535" y="150" width="160" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="data-group" value="Data 層 — 検索と集計" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b3b3b3;fontSize=10;fontStyle=2;verticalAlign=top;spacingTop=5;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="350" y="230" width="360" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="query-records" value="query_records" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="365" y="265" width="160" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="summarize-records" value="summarize_records" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="535" y="265" width="160" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="calc-engine" value="集計エンジン（group-by / metrics / computed_measures）&#10;算術処理はすべてサーバー側で完結" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="345" width="360" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="response-layer" value="レスポンス層（MCP 非依存）&#10;columns / rows の列指向形式＋ provenance・notes・quality_summary" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="350" y="415" width="360" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Right: dataset ===== -->
+        <mxCell id="dataset-group" value="datasets/ — データセット定義" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="800" y="80" width="340" height="450" as="geometry"/>
+        </mxCell>
+        <mxCell id="dataset-yaml" value="dataset.yaml — 意味定義&#10;&#10;・role: dim / measure / attr&#10;・codelist（項目の許容値）&#10;・notes（欠損の意味・概数の注意）&#10;・computed_measures（指標の計算式）&#10;&#10;国際標準 SDMX の DSD を参考にした独自の軽量形式" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="820" y="120" width="300" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="parquet" value="data.parquet — データ本体&#10;&#10;約 75,000 行 × 39 列 ≒ 3MB&#10;フッターのメタデータだけ先読みし、&#10;クエリが来た時点で初めてメモリにロード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="820" y="320" width="300" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="fetch-note" value="データ本体はリポジトリに同梱せず、apcli fetch で配布元から取得" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=10;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="820" y="460" width="300" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Bottom banner ===== -->
+        <mxCell id="key-point" value="ポイント：75,000 件の生データを LLM に読ませない。LLM は条件を指定するだけで、算術と意味解釈は MCP サーバー側で完結させる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="580" width="1110" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Edges ===== -->
+        <mxCell id="e-req" value="① ツール呼び出し（検索・集計条件）" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;fontColor=#333333;endArrow=block;" edge="1" parent="1" source="clients-group" target="server-group">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="260" y="160" as="sourcePoint"/>
+            <mxPoint x="330" y="160" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-res" value="② 集計済みの結果＋出典・品質情報" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;fontColor=#333333;endArrow=block;exitX=0;exitY=0.85;exitDx=0;exitDy=0;entryX=1;entryY=0.85;entryDx=0;entryDy=0;" edge="1" parent="1" source="server-group" target="clients-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-yaml" value="意味定義を読み込む" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;fontSize=10;fontColor=#333333;endArrow=block;exitX=0;exitY=0.4;exitDx=0;exitDy=0;" edge="1" parent="1" source="dataset-yaml" target="server-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-parquet" value="実データを集計" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;fontSize=10;fontColor=#333333;endArrow=block;startArrow=block;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="calc-engine" target="parquet">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
