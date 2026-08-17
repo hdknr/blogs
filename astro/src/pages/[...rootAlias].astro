@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import Redirect from "@/layouts/Redirect.astro";
+import { getPostUrl } from "@/utils/getPostPaths";
+
+/**
+ * Root-relative aliases — an alias written with a leading slash escapes its
+ * section and lands at the site root.
+ *
+ * There is exactly one: `content/wiki/tools/claude-seo.md` lists `"/seo audit"`,
+ * which is a slash-command name rather than a URL, so Hugo publishes a redirect
+ * page at `/seo audit/`. Reproduced because it is live today, but it is a
+ * frontmatter mistake worth cleaning up rather than preserving forever.
+ *
+ * Only the paths returned below are generated, so this catch-all does not
+ * shadow any real route.
+ */
+export async function getStaticPaths() {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+  const wiki = await getCollection("wiki");
+  const fromWiki = wiki.flatMap(entry =>
+    entry.data.aliases
+      .filter(alias => alias.startsWith("/") && !alias.includes("%"))
+      .map(alias => ({
+        params: { rootAlias: alias.replace(/^\/|\/$/g, "") },
+        props: { to: `${base}/wiki/${entry.id}/` },
+      }))
+  );
+
+  // Posts carry aliases too — exactly one does, an old Japanese-slugged URL
+  // kept alive as a redirect to the current one.
+  const posts = await getCollection("posts");
+  const fromPosts = posts.flatMap(entry =>
+    entry.data.aliases
+      .filter(alias => alias.startsWith("/") && !alias.includes("%"))
+      .map(alias => ({
+        params: { rootAlias: alias.replace(/^\/|\/$/g, "") },
+        props: { to: getPostUrl(entry) },
+      }))
+  );
+
+  return [...fromWiki, ...fromPosts];
+}
+
+const { to } = Astro.props;
+---
+
+<Redirect to={to} />

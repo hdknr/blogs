@@ -1,0 +1,60 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Redirect from "@/layouts/Redirect.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Card from "@/components/Card.astro";
+import Footer from "@/components/Footer.astro";
+import HugoPagination from "@/components/HugoPagination.astro";
+import { collectTerms, hasTerm, sortByDate, visiblePosts } from "@/utils/getTerms";
+import { hugoPaginate } from "@/utils/hugoPaginate";
+import config from "@/config";
+
+/**
+ * AstroPaper has no categories at all -- it ships tags only. This site has 11,
+ * and they carry a lot of weight: AI/LLM alone holds 574 of the 1032 posts.
+ *
+ * Note the slashes. `AI/LLM` and `クラウド/インフラ` urlize to `ai/llm` and
+ * `クラウド/インフラ`, which Hugo publishes as nested directories, so the route
+ * needs one rest parameter rather than a `[category]` segment.
+ *
+ * Unlike tags, this taxonomy is posts-only: wiki frontmatter has no
+ * `categories` field.
+ */
+export async function getStaticPaths() {
+  const posts = visiblePosts(await getCollection("posts"));
+  const terms = collectTerms(posts, "categories");
+
+  return terms.flatMap(({ term, name }) => {
+    const entries = sortByDate(posts.filter(p => hasTerm(p, "categories", term)));
+    const baseUrl = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/categories/${term}/`;
+
+    return hugoPaginate(entries, baseUrl).map(({ param, props }) => ({
+      params: { path: param ? `${term}/${param}` : term },
+      props: { ...props, name, baseUrl },
+    }));
+  });
+}
+
+const { items, current, lastPage, redirectTo, name, baseUrl } = Astro.props;
+---
+
+{
+  redirectTo ? (
+    <Redirect to={redirectTo} />
+  ) : (
+    <Layout title={`カテゴリ: ${name} | ${config.site.title}`}>
+      <Header />
+      <Breadcrumb />
+      <Main pageTitle={`カテゴリ: ${name}`} pageDesc={`"${name}" の記事`}>
+        <ul>
+          {items.map(post => <Card {...post} />)}
+        </ul>
+      </Main>
+      <HugoPagination baseUrl={baseUrl} current={current} lastPage={lastPage} />
+      <Footer noMarginTop={lastPage > 1} />
+    </Layout>
+  )
+}

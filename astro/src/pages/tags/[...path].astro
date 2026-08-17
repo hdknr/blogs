@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Redirect from "@/layouts/Redirect.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Card from "@/components/Card.astro";
+import Footer from "@/components/Footer.astro";
+import HugoPagination from "@/components/HugoPagination.astro";
+import { collectTerms, hasTerm, sortByDate, visiblePosts } from "@/utils/getTerms";
+import { hugoPaginate } from "@/utils/hugoPaginate";
+import { getWikiUrl } from "@/utils/getWikiPaths";
+import config from "@/config";
+
+/**
+ * One rest parameter covers both the term and the page suffix, because a term
+ * slug can itself contain a slash: `AI/LLM` urlizes to `ai/llm`, which Hugo
+ * publishes at /tags/ai/llm/. A `[tag]` segment could not express that.
+ */
+export async function getStaticPaths() {
+  const posts = visiblePosts(await getCollection("posts"));
+  const wiki = await getCollection("wiki");
+  const tagged = [...posts, ...wiki];
+  const terms = collectTerms(tagged, "tags");
+
+  return terms.flatMap(({ term, name }) => {
+    const entries = sortByDate(tagged.filter(e => hasTerm(e, "tags", term)));
+    const baseUrl = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/tags/${term}/`;
+
+    return hugoPaginate(entries, baseUrl).map(({ param, props }) => ({
+      params: { path: param ? `${term}/${param}` : term },
+      props: { ...props, name, baseUrl },
+    }));
+  });
+}
+
+const { items, current, lastPage, redirectTo, name, baseUrl } = Astro.props;
+---
+
+{
+  redirectTo ? (
+    <Redirect to={redirectTo} />
+  ) : (
+    <Layout title={`タグ: ${name} | ${config.site.title}`}>
+      <Header />
+      <Breadcrumb />
+      <Main pageTitle={`タグ: ${name}`} pageDesc={`"${name}" が付いた記事と Wiki ページ`}>
+        <ul>
+          {items.map(entry =>
+            entry.collection === "wiki" ? (
+              <li class="my-6">
+                <a
+                  href={getWikiUrl(entry.id)}
+                  class="text-accent inline-block text-lg font-medium decoration-dashed underline-offset-4 hover:underline"
+                >
+                  <h2>{entry.data.title}</h2>
+                </a>
+                <p>{entry.data.description}</p>
+              </li>
+            ) : (
+              <Card {...entry} />
+            )
+          )}
+        </ul>
+      </Main>
+      <HugoPagination baseUrl={baseUrl} current={current} lastPage={lastPage} />
+      <Footer noMarginTop={lastPage > 1} />
+    </Layout>
+  )
+}

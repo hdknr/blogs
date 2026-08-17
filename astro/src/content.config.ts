@@ -14,8 +14,16 @@ export const WIKI_PATH = "../content/wiki";
 // design), so it is excluded the same way validate_frontmatter.py excludes it.
 const CONTENT_GLOB = "**/[^_]*.md";
 
+// Astro's glob loader uses frontmatter `slug` as the entry id when one is
+// present. Every post here has a slug, and slugs are not unique across months:
+// `karpathy-llm-wiki` exists in both 2026/04 and 2026/05 as two different
+// articles at two different URLs. Letting the default stand silently merged
+// them into one entry, and the 2026/05 article vanished from the build --
+// content and all, not just its URL. Key on the file path instead.
+const idFromPath = ({ entry }: { entry: string }) => entry.replace(/\.md$/, "");
+
 const posts = defineCollection({
-  loader: glob({ pattern: CONTENT_GLOB, base: BLOG_PATH }),
+  loader: glob({ pattern: CONTENT_GLOB, base: BLOG_PATH, generateId: idFromPath }),
   schema: z.object({
     title: z.string(),
     // Hugo names these `date`/`lastmod`. Coerced rather than z.date() because
@@ -39,11 +47,14 @@ const posts = defineCollection({
     source_url: z.string().optional(),
     gist_id: z.string().optional(),
     gist_url: z.string().optional(),
+    // One post carries an alias, a root-relative URL that Hugo publishes as a
+    // redirect. Leaving it out of the schema dropped that URL silently.
+    aliases: z.array(z.string()).nullish().transform(v => v ?? []),
   }),
 });
 
 const wiki = defineCollection({
-  loader: glob({ pattern: CONTENT_GLOB, base: WIKI_PATH }),
+  loader: glob({ pattern: CONTENT_GLOB, base: WIKI_PATH, generateId: idFromPath }),
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),

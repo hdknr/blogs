@@ -10,25 +10,43 @@
   --font-app: var(--font-google-sans-code);
 }
 
-/* Light theme values */
+/* Light theme values
+ *
+ * Brighter than AstroPaper's stock palette, which reads a little grey
+ * (#fdfdfd on #282728 with a dark navy accent). This is a text-heavy Japanese
+ * blog: 1032 posts of long-form prose, so the page is mostly body copy and the
+ * background is most of what a reader sees.
+ *
+ * - pure white ground, so nothing dulls the page
+ * - foreground eased off pure black to #1f2933; full #000 on #fff vibrates
+ *   under dense kanji, which sit heavier than Latin text at the same size
+ * - a lighter, cleaner blue accent, still ≥4.5:1 on white for link text
+ * - borders and muted tones lifted so panels read as light, not grey
+ */
 :root,
 [data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
+  --background: #ffffff;
+  --foreground: #1f2933;
+  --accent: #0b72d0;
   --accent-foreground: #ffffff;
-  --muted: #e6e6e6;
-  --muted-foreground: #6b7280;
-  --border: #ece9e9;
+  --muted: #eef2f6;
+  --muted-foreground: #5b6b7c;
+  --border: #e3e9ef;
 }
 
-/* Dark theme values */
+/* Dark theme values
+ *
+ * Kept, because the toggle stays available and a reader who has asked their OS
+ * for dark should get it. Lifted off AstroPaper's navy toward a neutral slate
+ * so the two themes feel like one site, and the orange accent swapped for a
+ * blue that matches the light theme's.
+ */
 [data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --accent-foreground: #ffffff;
-  --muted: #343f60;
-  --muted-foreground: #afb9ca;
-  --border: #ab4b08;
+  --background: #1b2027;
+  --foreground: #e8edf2;
+  --accent: #6cb6ff;
+  --accent-foreground: #10151a;
+  --muted: #2b333d;
+  --muted-foreground: #a3b1c0;
+  --border: #333d49;
 }
