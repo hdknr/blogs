@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Footer from "@/components/Footer.astro";
+import { getWikiSection } from "@/utils/getWikiPaths";
+import config from "@/config";
+
+const wiki = await getCollection("wiki");
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const sections = [...new Set(wiki.map(e => getWikiSection(e.id)))]
+  .sort()
+  .map(section => ({
+    section,
+    count: wiki.filter(e => getWikiSection(e.id) === section).length,
+  }));
+---
+
+<Layout title={`Wiki | ${config.site.title}`}>
+  <Header activeNav="wiki" />
+  <Breadcrumb />
+  <Main pageTitle="Wiki" pageDesc="記事から抽出した再利用可能な知識">
+    <ul>
+      {
+        sections.map(({ section, count }) => (
+          <li class="my-3">
+            <a
+              href={`${base}/wiki/${section}/`}
+              class="text-accent text-lg underline-offset-4 hover:underline"
+            >
+              {section}
+            </a>
+            <span class="text-muted-foreground text-sm"> ({count})</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Main>
+  <Footer />
+</Layout>

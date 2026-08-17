@@ -1,0 +1,112 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { stripBase, stripLocale } from "@/utils/withBase";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+/**
+ * Rebuilt because AstroPaper's version linked each crumb to a single path
+ * segment rather than the path up to it, so on /wiki/tools/foo/ the "tools"
+ * crumb pointed at /tools/. lychee found 3649 broken links, and it also turned
+ * the display label `記事 (ページ page)` into a URL, spaces and all.
+ *
+ * Two shapes here need care beyond accumulating segments:
+ *
+ * - A taxonomy term can contain a slash. `AI/LLM` lives at /categories/ai/llm/,
+ *   and /categories/ai/ does not exist -- so everything after the taxonomy name
+ *   is one crumb, not several.
+ * - Pagination is `<base>/page/N/`. Those two segments are folded into the
+ *   previous crumb's label instead of becoming links of their own.
+ */
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+const pathWithoutBase = stripBase(Astro.url.pathname).replace(/\/+$/, "");
+const currentUrlPath = stripLocale(pathWithoutBase, locale);
+const segments = currentUrlPath.split("/").filter(Boolean);
+
+const decode = (value: string) => {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
+
+const navLabels: Record<string, string> = {
+  posts: t.nav.posts,
+  tags: t.nav.tags,
+  categories: "カテゴリ",
+  wiki: "Wiki",
+  archives: t.nav.archives,
+  search: t.nav.search,
+};
+
+type Crumb = { label: string; href?: string };
+
+const hrefFor = (upto: number) =>
+  getRelativeLocaleUrl(locale, segments.slice(0, upto).join("/") + "/");
+
+function build(): Crumb[] {
+  const parts = [...segments];
+
+  // Peel off `page/N` and remember it for the label.
+  let page: string | null = null;
+  if (parts.length >= 2 && parts[parts.length - 2] === "page") {
+    page = parts[parts.length - 1];
+    parts.splice(parts.length - 2, 2);
+  }
+  const suffix = page && page !== "1" ? ` (${t.pagination.page} ${page})` : "";
+
+  if (parts.length === 0) return [];
+
+  const head = parts[0];
+  const crumbs: Crumb[] = [
+    { label: navLabels[head] ?? decode(head), href: hrefFor(1) },
+  ];
+
+  if (parts.length > 1) {
+    // Everything after the section name is a single crumb: it may be a
+    // slash-bearing taxonomy term, and intermediate paths do not exist.
+    const rest = parts.slice(1).map(decode).join("/");
+    crumbs.push({ label: rest + suffix });
+  } else {
+    crumbs[0] = { label: crumbs[0].label + suffix };
+  }
+
+  return crumbs;
+}
+
+const crumbs = build();
+---
+
+<nav class="app-layout mt-8 mb-1" aria-label="breadcrumb">
+  <ul
+    class="flex flex-wrap items-center gap-x-1 font-light [&>li:not(:last-child)>a]:hover:opacity-100"
+  >
+    <li class="flex items-center gap-x-1">
+      <a href={getRelativeLocaleUrl(locale, "")} class="opacity-80">
+        {t.nav.home}
+      </a>
+      {crumbs.length > 0 && <span aria-hidden="true" class="opacity-80">&raquo;</span>}
+    </li>
+    {
+      crumbs.map((crumb, index) =>
+        index + 1 === crumbs.length || !crumb.href ? (
+          <li>
+            <span class="opacity-75" aria-current="page">
+              {crumb.label}
+            </span>
+          </li>
+        ) : (
+          <li class="flex items-center gap-x-1">
+            <a href={crumb.href} class="opacity-70">
+              {crumb.label}
+            </a>
+            <span aria-hidden="true" class="opacity-70">&raquo;</span>
+          </li>
+        )
+      )
+    }
+  </ul>
+</nav>

@@ -1,4 +1,4 @@
-name: Deploy Hugo site to Pages
+name: Deploy Astro site to Pages
 
 on:
   push:
@@ -22,49 +22,59 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # submodules stay on: the Hugo theme is still checked in, so reverting
+      # this file is enough to put the Hugo build back exactly as it was.
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      # .hugoversion is the single source of truth, shared with linkcheck.yml and
-      # local builds. Pinning the version in each workflow separately is what let
-      # CI (0.157.0) drift away from local (0.161.1).
-      - name: Resolve Hugo version
-        run: echo "HUGO_VERSION=$(cat .hugoversion)" >> "$GITHUB_ENV"
       - name: Resolve Pagefind version
         run: echo "PAGEFIND_VERSION=$(cat .pagefindversion)" >> "$GITHUB_ENV"
-      # Gate production on frontmatter validity. Hugo accepts an unknown category
-      # without complaint and builds a taxonomy page for it, so drift never turns
-      # the build red on its own. Runs before the build so bad content never ships.
+      # Gate production on frontmatter validity. Astro's Zod schema catches most
+      # of this now, but the category allow-list and the tag-collision check are
+      # rules Zod does not express, and they run in a second rather than a build.
       - name: Validate frontmatter
         run: python3 scripts/validate_frontmatter.py
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
-          sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: astro/package-lock.json
+      - name: Install dependencies
+        working-directory: astro
+        run: npm ci
       - name: Setup Pages
-        id: pages
         uses: actions/configure-pages@v5
-      - name: Build with Hugo
+      - name: Build with Astro
+        working-directory: astro
         env:
-          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
-          HUGO_ENVIRONMENT: production
           TZ: Asia/Tokyo
-        run: |
-          hugo \
-            --gc \
-            --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
-      # Pagefind indexes the BUILT html, so it has to run after Hugo and before
-      # the upload. --glob restricts it to posts and the wiki: indexing the tag
-      # and category pages as well doubled the index (13MB -> 29MB) and pushed
+        run: npx astro build
+      # Astro leaves absolute-URL images alone, so the WebP renditions that
+      # rehypePicture.mjs points at are produced here. 45.2MB of PNG becomes
+      # 3.0MB at 640w -- the saving #648 introduced, carried across.
+      - name: Generate image renditions
+        working-directory: astro
+        run: node scripts/generate-images.mjs
+      # The URL comparison only counts index.html, which is blind to images: the
+      # first cutover build looked perfect with dist/images/ empty and all 120
+      # diagrams 404ing. This checks every referenced asset is on disk.
+      - name: Check assets
+        run: python3 scripts/check_assets.py astro/dist --base /blogs
+      - name: Check internal links
+        run: python3 scripts/check_links.py astro/dist --base /blogs
+      # Pagefind indexes the BUILT html, so it runs after Astro and before the
+      # upload. --glob restricts it to posts and the wiki: indexing the tag and
+      # category pages as well doubled the index (13MB -> 29MB) and pushed
       # taxonomy pages above real articles in the results.
       - name: Build search index
-        run: npx -y pagefind@${PAGEFIND_VERSION} --site public --glob "{posts,wiki}/**/*.html"
+        working-directory: astro
+        run: npx -y pagefind@${PAGEFIND_VERSION} --site dist --glob "{posts,wiki}/**/*.html"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: ./astro/dist
 
   deploy:
     environment:

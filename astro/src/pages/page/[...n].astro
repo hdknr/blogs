@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Redirect from "@/layouts/Redirect.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Card from "@/components/Card.astro";
+import Footer from "@/components/Footer.astro";
+import HugoPagination from "@/components/HugoPagination.astro";
+import { sortByDate, visiblePosts } from "@/utils/getTerms";
+import { hugoPaginate, PAGE_SIZE } from "@/utils/hugoPaginate";
+import config from "@/config";
+
+/**
+ * The home page's pagination tail: /page/1/ .. /page/104/.
+ *
+ * Hugo paginates the home listing as well as /posts/, and `/page/1/` is a
+ * redirect to `/` like every other page/1. The base entry from hugoPaginate is
+ * dropped here because the home page itself is index.astro.
+ */
+export async function getStaticPaths() {
+  const posts = sortByDate(visiblePosts(await getCollection("posts")));
+  const baseUrl = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+
+  return hugoPaginate(posts, baseUrl, PAGE_SIZE)
+    .filter(entry => entry.param !== undefined)
+    .map(({ param, props }) => ({
+      // param is `page/N`; this route already sits under /page/, so pass N.
+      params: { n: param!.replace(/^page\//, "") },
+      props: { ...props, baseUrl },
+    }));
+}
+
+const { items, current, lastPage, redirectTo, baseUrl } = Astro.props;
+---
+
+{
+  redirectTo ? (
+    <Redirect to={redirectTo} />
+  ) : (
+    <Layout title={`${config.site.title} — ${current} / ${lastPage}`}>
+      <Header />
+      <Main pageTitle={config.site.title} pageDesc={config.site.description}>
+        <ul>
+          {items.map(post => <Card {...post} />)}
+        </ul>
+      </Main>
+      <HugoPagination baseUrl={baseUrl} current={current} lastPage={lastPage} />
+      <Footer noMarginTop={lastPage > 1} />
+    </Layout>
+  )
+}

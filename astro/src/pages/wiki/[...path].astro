@@ -1,0 +1,130 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Redirect from "@/layouts/Redirect.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Footer from "@/components/Footer.astro";
+import { getWikiSection } from "@/utils/getWikiPaths";
+import config from "@/config";
+
+/**
+ * One route for everything under /wiki/: the three section indexes, the 152
+ * pages, and the alias redirects.
+ *
+ * Aliases are the bulk of it -- 514 across 147 files. Two rules, both read off
+ * the Hugo output rather than assumed:
+ *
+ *   - a relative alias resolves under the page's own section, so
+ *     `1万通りシナリオ` on concepts/monte-carlo-trading.md becomes
+ *     /wiki/concepts/1万通りシナリオ/
+ *   - the alias string is used VERBATIM, not urlized: `Monte Carlo trading`
+ *     keeps its capitals and its spaces
+ *
+ * Aliases starting with `/` are root-relative and are handled by the root
+ * [...alias] route instead.
+ */
+export async function getStaticPaths() {
+  const wiki = await getCollection("wiki");
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  const sections = [...new Set(wiki.map(e => getWikiSection(e.id)))].sort();
+
+  const paths: Array<Record<string, unknown>> = [];
+
+  // Section indexes: /wiki/concepts/, /wiki/guides/, /wiki/tools/
+  for (const section of sections) {
+    paths.push({
+      params: { path: section },
+      props: {
+        kind: "section" as const,
+        section,
+        entries: wiki
+          .filter(e => getWikiSection(e.id) === section)
+          .sort((a, b) => a.id.localeCompare(b.id)),
+      },
+    });
+  }
+
+  for (const entry of wiki) {
+    paths.push({ params: { path: entry.id }, props: { kind: "page" as const, entry } });
+
+    const section = getWikiSection(entry.id);
+    for (const alias of entry.data.aliases) {
+      if (alias.startsWith("/")) continue;
+      // `5%ルール` and `20%ルール` are the only two aliases with a `%`, and a
+      // bare percent is invalid percent-encoding: Astro refuses the route.
+      // Hugo publishes them anyway, at URLs no browser will produce correctly.
+      // Skipped here rather than worked around -- 2 of 4527, both malformed.
+      if (alias.includes("%")) continue;
+      const aliasPath = `${section}/${alias}`;
+      // An alias that lands back on the page's own URL is a no-op; Hugo does
+      // not emit a redirect to self.
+      if (aliasPath === entry.id) continue;
+      paths.push({
+        params: { path: aliasPath },
+        props: { kind: "alias" as const, to: `${base}/wiki/${entry.id}/` },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const props = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const rendered =
+  props.kind === "page" ? await render(props.entry) : null;
+const Content = rendered?.Content;
+---
+
+{
+  props.kind === "alias" ? (
+    <Redirect to={props.to} />
+  ) : props.kind === "section" ? (
+    <Layout title={`Wiki: ${props.section} | ${config.site.title}`}>
+      <Header activeNav="wiki" />
+      <Breadcrumb />
+      <Main pageTitle={`Wiki: ${props.section}`} pageDesc={`${props.section} の一覧`}>
+        <ul>
+          {props.entries.map(e => (
+            <li class="my-3">
+              <a
+                href={`${base}/wiki/${e.id}/`}
+                class="text-accent text-lg underline-offset-4 hover:underline"
+              >
+                {e.data.title}
+              </a>
+              {e.data.description && (
+                <p class="text-muted-foreground text-sm">{e.data.description}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </Main>
+      <Footer />
+    </Layout>
+  ) : (
+    <Layout
+      title={`${props.entry.data.title} | ${config.site.title}`}
+      description={props.entry.data.description}
+    >
+      <Header activeNav="wiki" />
+      <Breadcrumb />
+      <Main pageTitle={props.entry.data.title} pageDesc={props.entry.data.description ?? ""}>
+        {/*
+          data-pagefind-body is what puts a page in the search index at all:
+          AstroPaper marks post articles with it, and once ANY page carries the
+          attribute Pagefind indexes only pages that have it. Without this the
+          152 wiki pages silently drop out of search, which they were part of
+          under Hugo.
+        */}
+        <article data-pagefind-body class="app-prose mb-8">
+          {Content && <Content />}
+        </article>
+      </Main>
+      <Footer />
+    </Layout>
+  )
+}

@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Footer from "@/components/Footer.astro";
+import { collectTerms, hasTerm, visiblePosts } from "@/utils/getTerms";
+import config from "@/config";
+
+const posts = visiblePosts(await getCollection("posts"));
+const terms = collectTerms(posts, "categories").map(t => ({
+  ...t,
+  count: posts.filter(p => hasTerm(p, "categories", t.term)).length,
+}));
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<Layout title={`カテゴリ | ${config.site.title}`}>
+  <Header activeNav="categories" />
+  <Breadcrumb />
+  <Main pageTitle="カテゴリ" pageDesc="記事のカテゴリ一覧">
+    <ul>
+      {
+        terms.map(({ term, name, count }) => (
+          <li class="my-3">
+            <a
+              href={`${base}/categories/${term}/`}
+              class="text-accent text-lg underline-offset-4 hover:underline"
+            >
+              {name}
+            </a>
+            <span class="text-muted-foreground text-sm"> ({count})</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Main>
+  <Footer />
+</Layout>
