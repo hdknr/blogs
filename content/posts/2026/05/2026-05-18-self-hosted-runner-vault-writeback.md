@@ -9,7 +9,7 @@ categories: ["AI/LLM"]
 tags: ["claude-code", "Obsidian", "GitHub Actions", "self-hosted runner", "claude -p", "writeback", "automation", "launchd", "ナレッジマネジメント", "PKM"]
 ---
 
-[Obsidian Vault 書き戻しの自動化]({{< ref "posts/2026/05/2026-05-18-claude-code-vault-writeback-automation.md" >}}) では、3 方式（Claude Code hooks / Git クライアントフック / GitHub Actions）の使い分けをまとめました。そこで「GitHub Actions は会話文脈が失われる・Vault に書けない」と書きましたが、これは **cloud-hosted runner** を前提にした話です。**self-hosted runner**（GitHub の job を手元のマシンで実行する仕組み）に切り替えると、その制約が一気に外れます。
+[Obsidian Vault 書き戻しの自動化](/blogs/posts/2026/05/claude-code-vault-writeback-automation/) では、3 方式（Claude Code hooks / Git クライアントフック / GitHub Actions）の使い分けをまとめました。そこで「GitHub Actions は会話文脈が失われる・Vault に書けない」と書きましたが、これは **cloud-hosted runner** を前提にした話です。**self-hosted runner**（GitHub の job を手元のマシンで実行する仕組み）に切り替えると、その制約が一気に外れます。
 
 本記事では、自宅 Mac を self-hosted runner にして、PR マージのイベント駆動で `claude -p` を **ローカル文脈**（Vault・Skills・CLAUDE.md・MCP サーバ）の中で動かし、Vault に直接書き戻す構成を解説します。ここでの「ローカル文脈」は **対話履歴ではなく、ファイルシステムに永続化された個人資産のセット** を指す点に注意してください。シリーズ 5 部作の最終ピースです（思想編 → 読み取り側 → 書き戻し設計 → フック自動化 → self-hosted runner）。
 
@@ -185,7 +185,7 @@ self-hosted runner は **手元のマシンで任意のコードを動かせる�
 3. **fork PR のジョブを workflow 側でも拒否**: 上記 YAML の `Reject fork PRs` ステップで `head.repo.full_name != github.repository` の場合 `exit 1`。多重防御の二段目
 4. **runner を低権限ユーザーで動かす**: root や admin で起動しない。Vault と `~/.claude/` だけにアクセスできる専用ユーザーが理想。最低限、`sudo` パスワードのキャッシュをクリアしておく
 5. **`workflow_dispatch` の手動起動は最小限**: UI から任意の人が手動キックできる経路を塞ぐ。必要な場合は `if: github.actor == 'your-username'` で発火者を絞る
-6. **`secrets` を self-hosted job に渡さない**: API キーは GitHub Secrets ではなく、ローカルの `~/.claude.json` 側で管理する。万一 workflow がリークしても秘密が外に出ない（ローカル側の秘密管理を強化するなら [SOPS で AI Agent のシークレットを管理する]({{< ref "posts/2026/05/2026-05-12-sops-ai-agent-secrets-management.md" >}}) も参照）
+6. **`secrets` を self-hosted job に渡さない**: API キーは GitHub Secrets ではなく、ローカルの `~/.claude.json` 側で管理する。万一 workflow がリークしても秘密が外に出ない（ローカル側の秘密管理を強化するなら [SOPS で AI Agent のシークレットを管理する](/blogs/posts/2026/05/sops-ai-agent-secrets-management/) も参照）
 
 ## トレードオフ
 
@@ -213,7 +213,7 @@ self-hosted runner は **手元のマシンで任意のコードを動かせる�
 4. **Self-hosted runner + GitHub Actions**: 上記でも漏れる PR を確実に拾う最後の砦 ← **本記事**
 5. **Cloud-hosted GitHub Actions** — 書き戻し用途では self-hosted で代替できるため不要。ただし「Vault に触らない CI」（lint・テスト・secret scanning など）には引き続き有効で、self-hosted と排他ではない
 
-step 4 まで揃うと、書き戻しが「気が向いたとき」ではなく「**マージしたら勝手に走るインフラ**」になります。シリーズの起点だった [GitHubで全部完結する開発者にObsidianは本当に必要か？]({{< ref "posts/2026/05/2026-05-18-github-vs-obsidian-ai-agent.md" >}}) で書いた「AI Agent がプロジェクトを跨いだ伏線回収を提案してくれる」状態が、ここで初めて実装として完成します。
+step 4 まで揃うと、書き戻しが「気が向いたとき」ではなく「**マージしたら勝手に走るインフラ**」になります。シリーズの起点だった [GitHubで全部完結する開発者にObsidianは本当に必要か？](/blogs/posts/2026/05/github-vs-obsidian-ai-agent/) で書いた「AI Agent がプロジェクトを跨いだ伏線回収を提案してくれる」状態が、ここで初めて実装として完成します。
 
 ## まとめ
 

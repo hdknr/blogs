@@ -9,7 +9,7 @@ categories: ["AI/LLM"]
 tags: ["claude-code", "Obsidian", "mcp", "Skills", "CLAUDE.md", "ADR", "Daily Notes", "writeback", "inbox-first", "permissions", "ナレッジマネジメント", "PKM"]
 ---
 
-[Obsidian Vault を Claude Code に繋ぐ実践編]({{< ref "posts/2026/05/2026-05-18-claude-code-obsidian-vault-project-config.md" >}}) では、**読み取り側**（Vault → プロジェクト）の設定パターンを整理しました。本記事はその続編で、**書き戻し（writeback）側**（プロジェクト → Vault）の設計を扱います。
+[Obsidian Vault を Claude Code に繋ぐ実践編](/blogs/posts/2026/05/claude-code-obsidian-vault-project-config/) では、**読み取り側**（Vault → プロジェクト）の設定パターンを整理しました。本記事はその続編で、**書き戻し（writeback）側**（プロジェクト → Vault）の設計を扱います。
 
 ここを設計しないと、Vault は「過去の自分が書いたノート集」のまま古びていきます。プロジェクトで詰まったこと・学んだこと・設計判断の根拠が Vault に還流して初めて、AI Agent が「3 ヶ月前のあの話、応用できないか？」を提案できるようになります。
 
@@ -28,7 +28,7 @@ tags: ["claude-code", "Obsidian", "mcp", "Skills", "CLAUDE.md", "ADR", "Daily No
 
 ## permissions と MCP の分離設計
 
-書き戻しを安全に行う最大のコツは、**読み取り用 MCP と書き込み用 MCP を別サーバとして分離する** ことです。[前作で触れた permissions 設計]({{< ref "posts/2026/05/2026-05-18-claude-code-obsidian-vault-project-config.md" >}}) を一段深めます。
+書き戻しを安全に行う最大のコツは、**読み取り用 MCP と書き込み用 MCP を別サーバとして分離する** ことです。[前作で触れた permissions 設計](/blogs/posts/2026/05/claude-code-obsidian-vault-project-config/) を一段深めます。
 
 ```bash
 # 読み取り専用ルート: Vault 全体を grep / Read できるが書き込みは禁止したい
@@ -237,4 +237,4 @@ Vault 側のファイル名にプロジェクト名を含めるのは重要な�
 - **読み取り用と書き込み用の MCP サーバを分離**: サーバ単位で「見せる範囲」を絞り、構造的に事故を防ぐ
 - **書き戻すのはリポジトリに収まらないメタ知識だけ**: コードや設計書はリポジトリ、Vault は横断知識
 
-[読み取り側の設定]({{< ref "posts/2026/05/2026-05-18-claude-code-obsidian-vault-project-config.md" >}}) と組み合わせると、「Vault から AI に文脈を渡す → プロジェクトで活用する → 得た知見を inbox に書き戻す → 週次レビューで昇格」という循環が回り始めます。シリーズの最初の問題提起である [GitHubで全部完結する開発者にObsidianは本当に必要か？]({{< ref "posts/2026/05/2026-05-18-github-vs-obsidian-ai-agent.md" >}}) に立ち返ると、Obsidian の価値は **「個人の知の網が AI Agent 越しに自己強化される」ループ** にあり、書き戻しの設計こそがそのループを閉じる役割を担っている、と言えます。
+[読み取り側の設定](/blogs/posts/2026/05/claude-code-obsidian-vault-project-config/) と組み合わせると、「Vault から AI に文脈を渡す → プロジェクトで活用する → 得た知見を inbox に書き戻す → 週次レビューで昇格」という循環が回り始めます。シリーズの最初の問題提起である [GitHubで全部完結する開発者にObsidianは本当に必要か？](/blogs/posts/2026/05/github-vs-obsidian-ai-agent/) に立ち返ると、Obsidian の価値は **「個人の知の網が AI Agent 越しに自己強化される」ループ** にあり、書き戻しの設計こそがそのループを閉じる役割を担っている、と言えます。

@@ -9,9 +9,9 @@ categories: ["セキュリティ"]
 tags: ["mcp", "oauth2", "dcr", "claude-code", "JWT", "pkce"]
 ---
 
-[個人開発アプリの認証は「絶対に」WorkOS を使え — MCP 化で知った最強の選択肢]({{< ref "/posts/2026/04/2026-04-27-workos-authkit-mcp-authentication" >}}) では、WorkOS AuthKit の Dynamic Client Registration（DCR）対応が MCP 認証の決め手になる、という話を書いた。
+[個人開発アプリの認証は「絶対に」WorkOS を使え — MCP 化で知った最強の選択肢](/blogs/posts/2026/04/workos-authkit-mcp-authentication/) では、WorkOS AuthKit の Dynamic Client Registration（DCR）対応が MCP 認証の決め手になる、という話を書いた。
 
-MCP × OAuth 2.1 の全体像は [MCP のセキュリティが OAuth 2.1 で大幅進化]({{< ref "/posts/2026/03/2026-03-22-mcp-oauth21-security" >}}) で扱った。本記事はその中で SHOULD/MAY 扱いされている DCR を仕様レベルで深掘りする補足記事だ。
+MCP × OAuth 2.1 の全体像は [MCP のセキュリティが OAuth 2.1 で大幅進化](/blogs/posts/2026/03/mcp-oauth21-security/) で扱った。本記事はその中で SHOULD/MAY 扱いされている DCR を仕様レベルで深掘りする補足記事だ。
 
 具体的には、**DCR を定義する RFC 7591 そのものの仕様と、MCP 認証で必ず連動する周辺 RFC 群（9728 / 8414 / 9068 / 8707 / 7636）の関係** を、Claude Code の自動ログインフローを追いながら整理する。
 
@@ -329,5 +329,5 @@ MCP の認証フローは、表面的には「Claude Code が勝手にログイ�
 - [RFC 7636: Proof Key for Code Exchange (PKCE)](https://datatracker.ietf.org/doc/html/rfc7636)
 - [Model Context Protocol Authorization Specification](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization)
 - [Let's fix OAuth in MCP（Aaron Parecki）](https://aaronparecki.com/2025/04/03/15/oauth-for-model-context-protocol)
-- [MCP のセキュリティが OAuth 2.1 で大幅進化]({{< ref "/posts/2026/03/2026-03-22-mcp-oauth21-security" >}})
-- [個人開発アプリの認証は「絶対に」WorkOS を使え — MCP 化で知った最強の選択肢]({{< ref "/posts/2026/04/2026-04-27-workos-authkit-mcp-authentication" >}})
+- [MCP のセキュリティが OAuth 2.1 で大幅進化](/blogs/posts/2026/03/mcp-oauth21-security/)
+- [個人開発アプリの認証は「絶対に」WorkOS を使え — MCP 化で知った最強の選択肢](/blogs/posts/2026/04/workos-authkit-mcp-authentication/)

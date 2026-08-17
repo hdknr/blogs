@@ -51,9 +51,9 @@ GitHub の Issue や Markdown も AI に読み込ませることはもちろん�
 >
 > 「3 ヶ月前に別プロジェクトで試してボツになったあの技術、いま動いてる新プロジェクトのこのバグに応用できないか？」といった、**人間ですら忘れている「プロジェクト間を跨いだ伏線回収」を AI に提案させる** 点にあります。これは GitHub のリポジトリ境界が強固な構造では実現が難しい体験です。
 
-Anthropic 公式の MCP サーバ実装例（[modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)）には `filesystem` サーバが含まれており、Obsidian の Vault ディレクトリをそのまま渡して Claude に読み込ませることができます。Cursor や VS Code 拡張系でも、ローカルディレクトリを文脈として渡すパターンは一般化しています。「LLM に渡す文脈は、ファイルシステム上に並んだ Markdown が一番扱いやすい」というのが、いま起きている流れの本質です。具体的な構成例については [Claude Code + Obsidian で「AI 第二の脳」をたった 5 分で構築する方法]({{< ref "posts/2026/04/2026-04-29-claude-code-obsidian-ai-second-brain.md" >}}) も参考になります。
+Anthropic 公式の MCP サーバ実装例（[modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)）には `filesystem` サーバが含まれており、Obsidian の Vault ディレクトリをそのまま渡して Claude に読み込ませることができます。Cursor や VS Code 拡張系でも、ローカルディレクトリを文脈として渡すパターンは一般化しています。「LLM に渡す文脈は、ファイルシステム上に並んだ Markdown が一番扱いやすい」というのが、いま起きている流れの本質です。具体的な構成例については [Claude Code + Obsidian で「AI 第二の脳」をたった 5 分で構築する方法](/blogs/posts/2026/04/claude-code-obsidian-ai-second-brain/) も参考になります。
 
-ただし「Markdown を AI に丸ごと渡せばそれで十分」というほど単純ではなく、ノードが数千を超えてくると Markdown ダンプ型 RAG の限界も見えてきます。設計上の落とし穴については [90%のAI Agentの記憶は偽物？Markdownダンプが崩壊する理由とMem0・GraphRAGによる設計]({{< ref "posts/2026/04/2026-04-27-ai-agent-fake-memory-markdown-vs-graph.md" >}}) を併せて読むと、Obsidian 一辺倒に振り切る前のバランス感覚が掴めます。
+ただし「Markdown を AI に丸ごと渡せばそれで十分」というほど単純ではなく、ノードが数千を超えてくると Markdown ダンプ型 RAG の限界も見えてきます。設計上の落とし穴については [90%のAI Agentの記憶は偽物？Markdownダンプが崩壊する理由とMem0・GraphRAGによる設計](/blogs/posts/2026/04/ai-agent-fake-memory-markdown-vs-graph/) を併せて読むと、Obsidian 一辺倒に振り切る前のバランス感覚が掴めます。
 
 ## 開発者がObsidianを併用すると効くパターン
 
@@ -83,7 +83,7 @@ Anthropic 公式の MCP サーバ実装例（[modelcontextprotocol/servers](http
 現在の GitHub で完結するスタイルは十分に洗練されています。それでも Obsidian 方式の「ありがたみ」を実験したい場合、いきなり全面移行する必要はありません。最小コストで効果を実感できる始め方は次の流れです。
 
 1. **Obsidian Vault を 1 つ作る**
-   ローカルに任意のフォルダを作り、Obsidian でその Vault を開きます。Vault は単なる Markdown ファイル置き場なので、Git で別途バージョン管理しても良いです。Obsidian 自体の特徴やプラグイン構成は [Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する]({{< ref "posts/2026/04/2026-04-17-obsidian-pkm-second-brain.md" >}}) にまとめてあります。
+   ローカルに任意のフォルダを作り、Obsidian でその Vault を開きます。Vault は単なる Markdown ファイル置き場なので、Git で別途バージョン管理しても良いです。Obsidian 自体の特徴やプラグイン構成は [Obsidian 完全ガイド — ローカルファーストで「第二の脳」を構築する](/blogs/posts/2026/04/obsidian-pkm-second-brain/) にまとめてあります。
 2. **「自分だけの技術辞書」を 10 ノートだけ書いてみる**
    「Next.js の認証」「PostgreSQL のロック」「Hugo のテーマカスタマイズ」など、複数プロジェクトで毎回調べ直している小さなトピックを 10 個書き出すだけで、ネットワーク型の効能が分かります。
 3. **AI Agent から Vault を読めるようにする**

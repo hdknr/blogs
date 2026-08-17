@@ -70,7 +70,7 @@ SORACOM のデバイス群は、役割で見ると大きく3つのレイヤに�
 
 いきなり本番機を選ぶのが難しい場合は、Wio BG770A（LTE-M/NB-IoT 対応開発ボード）や Raspberry Pi/Arduino 関連ボードで **PoC を組んでから本番デバイスへ** という流れが取れる。統合済みの構成が欲しければパッケージソリューション、知識面はレシピや学習書籍が支える。
 
-開発ボードの選定そのものに迷う場合は、[IoT 開発ボードの使い分け完全比較]({{< ref "/posts/2026/07/2026-07-19-iot-microcontroller-sbc-comparison" >}})や[ESP32 が「最強」と呼ばれる理由]({{< ref "/posts/2026/07/2026-07-19-esp32-iot-microcontroller-explained" >}})も参考になる。
+開発ボードの選定そのものに迷う場合は、[IoT 開発ボードの使い分け完全比較](/blogs/posts/2026/07/iot-microcontroller-sbc-comparison/)や[ESP32 が「最強」と呼ばれる理由](/blogs/posts/2026/07/esp32-iot-microcontroller-explained/)も参考になる。
 
 ## 業種別の組み合わせ例
 

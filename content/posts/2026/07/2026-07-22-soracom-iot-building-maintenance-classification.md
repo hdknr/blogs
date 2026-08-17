@@ -9,7 +9,7 @@ categories: ["クラウド/インフラ"]
 tags: ["IoT", "SORACOM", "予知保全", "ビルメンテナンス", "LTE-M"]
 ---
 
-これまで SORACOM の IoT ソリューションを2つの切り口で分類してきた。[IoT ストアの製品をソリューション軸で整理した記事]({{< ref "/posts/2026/07/2026-07-22-soracom-iot-store-solution-map" >}})（デバイスで何が取れるか）と、[それを建設・工事現場の需要に当てはめた記事]({{< ref "/posts/2026/07/2026-07-22-soracom-iot-construction-site-demand" >}})（建設業の課題ドライバー）だ。
+これまで SORACOM の IoT ソリューションを2つの切り口で分類してきた。[IoT ストアの製品をソリューション軸で整理した記事](/blogs/posts/2026/07/soracom-iot-store-solution-map/)（デバイスで何が取れるか）と、[それを建設・工事現場の需要に当てはめた記事](/blogs/posts/2026/07/soracom-iot-construction-site-demand/)（建設業の課題ドライバー）だ。
 
 では **建築設備メンテナンス（ビルメンテナンス／FM）** の視点で見ると、また別の分類があり得るだろうか。答えは「ある」。しかも分類の**軸そのもの**が変わる。この記事では、その第3の軸を提示する。
 
