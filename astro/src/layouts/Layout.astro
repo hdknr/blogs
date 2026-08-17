@@ -24,10 +24,15 @@ const {
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
-const rssHref = getRelativeLocaleUrl(
-  Astro.currentLocale ?? config.site.lang,
-  "rss.xml"
-);
+// The feed lives at /blogs/index.xml, the URL Hugo published and existing
+// subscribers already poll. Renaming it to AstroPaper's rss.xml would silently
+// break every one of them -- and the URL comparison could not see it, because
+// it only counts index.html files.
+//
+// Built by hand rather than with getRelativeLocaleUrl: that helper honours
+// trailingSlash: "always" and produces `index.xml/`, which 404s. lychee caught
+// 2881 of those.
+const rssHref = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}index.xml`;
 ---
 
 <!doctype html>

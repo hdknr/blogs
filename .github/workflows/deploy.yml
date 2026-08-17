@@ -62,6 +62,8 @@ jobs:
       # diagrams 404ing. This checks every referenced asset is on disk.
       - name: Check assets
         run: python3 scripts/check_assets.py astro/dist --base /blogs
+      - name: Check internal links
+        run: python3 scripts/check_links.py astro/dist --base /blogs
       # Pagefind indexes the BUILT html, so it runs after Astro and before the
       # upload. --glob restricts it to posts and the wiki: indexing the tag and
       # category pages as well doubled the index (13MB -> 29MB) and pushed

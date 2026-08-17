@@ -9,6 +9,11 @@ import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
  *
  * Page 1 links to the base URL, not to `page/1` -- that route exists only as a
  * redirect back here, so linking to it would send readers through a bounce.
+ *
+ * Out-of-range arrows render as plain text with no href. LinkButton's
+ * `disabled` prop styles the button but still emits the link, which produced
+ * `page/0` and `page/<lastPage + 1>` on every paginated page -- 115 broken
+ * links, caught by walking the built HTML rather than by the build itself.
  */
 type Props = {
   baseUrl: string;
@@ -19,6 +24,8 @@ type Props = {
 const { baseUrl, current, lastPage } = Astro.props;
 
 const urlFor = (n: number) => (n === 1 ? baseUrl : `${baseUrl}page/${n}/`);
+const hasPrev = current > 1;
+const hasNext = current < lastPage;
 ---
 
 {
@@ -28,25 +35,31 @@ const urlFor = (n: number) => (n === 1 ? baseUrl : `${baseUrl}page/${n}/`);
       role="navigation"
       aria-label="Pagination Navigation"
     >
-      <LinkButton
-        disabled={current === 1}
-        href={urlFor(current - 1)}
-        ariaLabel="前のページ"
-      >
-        <IconArrowLeft class="inline-block size-6 shrink-0" />
-        前へ
-      </LinkButton>
+      {hasPrev ? (
+        <LinkButton href={urlFor(current - 1)} ariaLabel="前のページ">
+          <IconArrowLeft class="inline-block size-6 shrink-0" />
+          前へ
+        </LinkButton>
+      ) : (
+        <span class="text-muted-foreground flex items-center">
+          <IconArrowLeft class="inline-block size-6 shrink-0" />
+          前へ
+        </span>
+      )}
 
       <span aria-current="page">{current} / {lastPage}</span>
 
-      <LinkButton
-        disabled={current === lastPage}
-        href={urlFor(current + 1)}
-        ariaLabel="次のページ"
-      >
-        次へ
-        <IconArrowRight class="inline-block size-6 shrink-0" />
-      </LinkButton>
+      {hasNext ? (
+        <LinkButton href={urlFor(current + 1)} ariaLabel="次のページ">
+          次へ
+          <IconArrowRight class="inline-block size-6 shrink-0" />
+        </LinkButton>
+      ) : (
+        <span class="text-muted-foreground flex items-center">
+          次へ
+          <IconArrowRight class="inline-block size-6 shrink-0" />
+        </span>
+      )}
     </nav>
   )
 }

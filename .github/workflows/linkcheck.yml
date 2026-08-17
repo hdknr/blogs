@@ -106,6 +106,8 @@ jobs:
 
       - name: Check assets
         run: python3 scripts/check_assets.py astro/dist --base /blogs
+      - name: Check internal links
+        run: python3 scripts/check_links.py astro/dist --base /blogs
 
       # The search page links the Pagefind bundle, which exists only after
       # Pagefind runs. Without this step the link check 404s on it, and the
@@ -200,6 +202,8 @@ jobs:
 
       - name: Check assets
         run: python3 scripts/check_assets.py astro/dist --base /blogs
+      - name: Check internal links
+        run: python3 scripts/check_links.py astro/dist --base /blogs
 
       # The search page links pagefind-ui.css/js, which exist only after Pagefind
       # runs. Without this step the link check 404s on them, and the checked tree
