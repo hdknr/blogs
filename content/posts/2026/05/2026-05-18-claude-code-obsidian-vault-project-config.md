@@ -9,7 +9,7 @@ categories: ["AI/LLM"]
 tags: ["claude-code", "Obsidian", "mcp", "CLAUDE.md", "Skills", "symlink", "permissions", "ナレッジマネジメント", "PKM"]
 ---
 
-[GitHubで全部完結する開発者にObsidianは本当に必要か？]({{< ref "posts/2026/05/2026-05-18-github-vs-obsidian-ai-agent.md" >}}) では、Obsidian を併用する場合の「思想差」と「AI Agent に渡せる文脈の質」を整理しました。本記事はその実践編です。**特定のプロジェクトで Claude Code セッションを行うときに、個人の Obsidian Vault を併用してエージェントに処理させるには、`CLAUDE.md` / Skills / Settings をどう階層管理すべきか** を具体的な設定例で示します。
+[GitHubで全部完結する開発者にObsidianは本当に必要か？](/blogs/posts/2026/05/github-vs-obsidian-ai-agent/) では、Obsidian を併用する場合の「思想差」と「AI Agent に渡せる文脈の質」を整理しました。本記事はその実践編です。**特定のプロジェクトで Claude Code セッションを行うときに、個人の Obsidian Vault を併用してエージェントに処理させるには、`CLAUDE.md` / Skills / Settings をどう階層管理すべきか** を具体的な設定例で示します。
 
 ポイントは次の3つです。
 
@@ -162,7 +162,7 @@ CLAUDE.md には `.claude/knowledge/` を参照する旨だけを書きます。
 設計判断やコードレビューの前に、対応するノートを必ず一度 `Read` してから着手すること。
 ```
 
-「**個人 Vault がない人でも動く**」ように、`存在しない場合はこのセクションのルールを無視してよい` と明示しておくのがコツです。チームメンバーが Claude Code を使う場合でも、CLAUDE.md がエラーにならず破綻しません。CLAUDE.md は短く絞るほど効くので、Vault 連携セクションが膨らみすぎたら別ファイルに切り出して `@import` する手もあります（参考: [CLAUDE.md の設定を99%消したら逆にうまくいった話：AI への指示は「哲学」だけ残せ]({{< ref "posts/2026/03/2026-03-11-claude-md-less-is-more.md" >}})）。
+「**個人 Vault がない人でも動く**」ように、`存在しない場合はこのセクションのルールを無視してよい` と明示しておくのがコツです。チームメンバーが Claude Code を使う場合でも、CLAUDE.md がエラーにならず破綻しません。CLAUDE.md は短く絞るほど効くので、Vault 連携セクションが膨らみすぎたら別ファイルに切り出して `@import` する手もあります（参考: [CLAUDE.md の設定を99%消したら逆にうまくいった話：AI への指示は「哲学」だけ残せ](/blogs/posts/2026/03/claude-md-less-is-more/)）。
 
 ## Skills の使い分け
 
@@ -179,7 +179,7 @@ Claude Code のスキル（Skills）は、グローバルとプロジェクト�
 - `decision-log`: ADR（Architecture Decision Record）をリポジトリ内 docs と Vault の両方に書き出す
 - `summary-back-to-vault`: PR のサマリを抽出し、Vault の該当 topic ノートに「過去事例」として追記する
 
-スキルのスコープ管理で詰まりやすい挙動（auto-memory との衝突など）は [Claude Code の Skills が会話ごとにずれる原因は auto-memory だった]({{< ref "posts/2026/04/2026-04-21-claude-code-auto-memory-skills.md" >}}) にまとめてあります。
+スキルのスコープ管理で詰まりやすい挙動（auto-memory との衝突など）は [Claude Code の Skills が会話ごとにずれる原因は auto-memory だった](/blogs/posts/2026/04/claude-code-auto-memory-skills/) にまとめてあります。
 
 スキルから Vault に書き込ませる場合は、**書き込み先を `~/Documents/ObsidianVault/inbox/` のような専用フォルダに固定** してください。AI が直接 Vault の正本に追記するとリンク構造が壊れます。あとから人間が `inbox/` を見て、必要なノートにリンク・移動する運用にすると安全です。
 

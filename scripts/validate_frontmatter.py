@@ -179,6 +179,33 @@ def find_tag_collisions(repo_root):
     return {k: sorted(v) for k, v in groups.items() if len(v) > 1}
 
 
+HUGO_SHORTCODE = re.compile(r'\{\{<\s*(\w+)')
+
+
+def find_hugo_shortcodes(repo_root):
+    """Return {relative_path: [shortcode names]} for leftover Hugo syntax.
+
+    The site runs on Astro, which renders `{{< ref "..." >}}` as literal text.
+    19 posts shipped that way after the migration, showing readers raw Hugo
+    syntax where a cross-link should have been.
+
+    Nothing else catches it. The pages build, no asset is missing, and a link
+    that never becomes an <a> has no href for a link checker to fetch — so the
+    internal link check stayed green throughout.
+
+    Convert with scripts/convert_hugo_shortcodes.py.
+    """
+    found = {}
+    for section in ('posts', 'wiki'):
+        pattern = os.path.join(repo_root, 'content', section, '**', '*.md')
+        for filepath in sorted(glob.glob(pattern, recursive=True)):
+            with open(filepath, encoding='utf-8') as f:
+                names = HUGO_SHORTCODE.findall(f.read())
+            if names:
+                found[os.path.relpath(filepath, repo_root)] = sorted(set(names))
+    return found
+
+
 def main():
     quiet = '--quiet' in sys.argv
 
@@ -205,15 +232,22 @@ def main():
         for violation in failures[path]:
             print(f"     - {violation}")
 
+    shortcodes = find_hugo_shortcodes(repo_root)
+    for path in sorted(shortcodes):
+        names = ', '.join(f'{{{{< {n} >}}}}' for n in shortcodes[path])
+        print(f"NG {path}")
+        print(f"     - Hugo ショートコードが残っている: {names}")
+
     collisions = find_tag_collisions(repo_root)
     for key in sorted(collisions):
         print(f"NG タグの表記ゆれ /tags/{key}/")
         print(f"     - {', '.join(repr(t) for t in collisions[key])} が同じページに落ちる")
 
-    if failures or collisions:
+    if failures or collisions or shortcodes:
         print(
             f"\n{checked} 件中 {len(failures)} 件が規約違反、"
-            f"タグの表記ゆれ {len(collisions)} 件",
+            f"タグの表記ゆれ {len(collisions)} 件、"
+            f"Hugo ショートコード残存 {len(shortcodes)} 件",
             file=sys.stderr,
         )
         return 1

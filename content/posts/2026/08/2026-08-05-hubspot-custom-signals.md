@@ -110,7 +110,7 @@ UI の操作自体は 6 ステップで終わる。
 
 後者は「追加とトラッキング有効化で二重課金しない」という意味に読める記述で、月次で発生するかどうかを否定する文脈ではない。**実際の単価と課金周期は [HubSpot Product & Services Catalog](https://legal.hubspot.com/hubspot-product-and-services-catalog) が正**なので、予算を組む前にそこと自社ポータルのクレジット残高を必ず確認したほうがいい。監視企業数 × 月次、という前提で見積もっておくのが安全側だ。
 
-Buyer Intent 自体は Marketing / Sales / Service / Data / Content Hub の Starter 以上、Revenue Hub の Professional 以上で使える。ただしワークフローとリードスコアリングに繋ぐところは Professional / Enterprise が前提になるので、**カスタムシグナルの価値を出しきるには実質 Professional 以上**という理解でいいと思う。Professional で何が開くかは[HubSpot Professional にアップグレードするメリットを 6 Hub 別に整理]({{< ref "/posts/2026/04/2026-04-28-hubspot-pro-merits" >}})にまとめてある。
+Buyer Intent 自体は Marketing / Sales / Service / Data / Content Hub の Starter 以上、Revenue Hub の Professional 以上で使える。ただしワークフローとリードスコアリングに繋ぐところは Professional / Enterprise が前提になるので、**カスタムシグナルの価値を出しきるには実質 Professional 以上**という理解でいいと思う。Professional で何が開くかは[HubSpot Professional にアップグレードするメリットを 6 Hub 別に整理](/blogs/posts/2026/04/hubspot-pro-merits/)にまとめてある。
 
 権限面では、企業をトラッキング対象にするのに **Data Enrichment** 権限、設定を触るのに **Buyer Intent** の編集権限が必要になる。
 
@@ -134,7 +134,7 @@ Buyer Intent 自体は Marketing / Sales / Service / Data / Content Hub の Star
 
 逆に言えば、**自社の買いのサインが公開情報として観測できる形をしている業種**（公示される RFP、規制当局への届出、特定職種の求人、資金調達の発表など）では、投資対効果がはっきり出やすい。ニッチな ICP を持っていて、既にスタンドアロンのインテントツールに課金しているなら、その支出を見直す材料になる。
 
-営業とマーケの境界でこういうデータ配管を組む役割については[GTMエンジニア — AI時代に生まれた「1人で3チーム分」の新職種]({{< ref "/posts/2026/03/2026-03-09-gtm-engineer" >}})でも触れている。カスタムシグナルは、まさにその職種が扱う道具の 1 つだと思う。
+営業とマーケの境界でこういうデータ配管を組む役割については[GTMエンジニア — AI時代に生まれた「1人で3チーム分」の新職種](/blogs/posts/2026/03/gtm-engineer/)でも触れている。カスタムシグナルは、まさにその職種が扱う道具の 1 つだと思う。
 
 ## 参考リンク
 
