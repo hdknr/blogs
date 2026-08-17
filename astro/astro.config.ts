@@ -18,6 +18,7 @@ import {
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
+import { rehypePicture } from "./src/plugins/rehypePicture.mjs";
 
 export default defineConfig({
   site: config.site.url,
@@ -27,6 +28,11 @@ export default defineConfig({
   base: "/blogs",
   trailingSlash: "always",
   build: { format: "directory" },
+  // Serve the repo's existing static/ as the public directory. The favicons and
+  // all 120 diagrams live there, and every post references them by absolute URL
+  // (`/blogs/images/x.png`). Without this the whole image set 404s -- which the
+  // URL comparison could not see, because it only counts index.html files.
+  publicDir: "../static",
   integrations: [
     mdx(),
     sitemap({
@@ -47,7 +53,7 @@ export default defineConfig({
         remarkToc,
         [remarkCollapse, { test: "Table of contents" }],
       ],
-      rehypePlugins: [rehypeCallouts],
+      rehypePlugins: [rehypeCallouts, rehypePicture],
     }),
     shikiConfig: {
       themes: { light: "min-light", dark: "night-owl" },

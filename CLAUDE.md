@@ -1,6 +1,10 @@
 # hdknr blog
 
-Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
+Tech blog built with **Astro + AstroPaper**, hosted on GitHub Pages.
+
+> The Hugo site it migrated from is still checked in (`hugo.toml`, `layouts/`,
+> `themes/PaperMod`). It is not built by CI any more — reverting the cutover
+> commit puts it straight back. Delete it once Astro has proved itself.
 
 ## Permission-prompt language rule
 
@@ -21,11 +25,13 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - `scripts/categorize.py` — automatic category/tag assignment
 - `scripts/validate_frontmatter.py` — frontmatter/placement validation, enforced in CI
 - `scripts/normalize_tags.py` — collapse tag spelling variants (dry run by default)
-- `layouts/_default/_markup/render-image.html` — markdown images → WebP `<picture>`
-- `hugo.toml` — Hugo config (mounts `static/images` into `assets` so the pipeline sees it)
-- `.hugoversion` — pinned Hugo version, read by both CI workflows (see below)
-- `.pagefindversion` — pinned Pagefind version, same arrangement
-- `layouts/_default/search.html` — Pagefind search UI (`content/search.md` selects it)
+- `scripts/check_assets.py` — every referenced image/CSS/JS exists in the build
+- `astro/` — the Astro site. `content/` and `static/` stay at the repo root and are
+  read in place (`publicDir: "../static"`, collections point at `../content`)
+- `astro/src/plugins/rehypePicture.mjs` — markdown images → WebP `<picture>`
+- `astro/scripts/generate-images.mjs` — produces those WebP/PNG renditions
+- `.pagefindversion` — pinned Pagefind version, read by both CI workflows
+- `hugo.toml`, `layouts/`, `themes/`, `.hugoversion` — the old Hugo site, kept for revert
 - `.claude/skills/blog/` — `/blog` skill
 - `.claude/skills/ship/` — `/ship` skill (draft PR → ready → CI → merge → cleanup)
 - `.claude/agents/` — custom specialist agents
@@ -47,18 +53,20 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - Post path: `content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md`
 - Frontmatter: `title`, `date`, `lastmod`, `draft`, `categories`, `tags` (+ `source_url`).
 - Categories follow the rules in `scripts/categorize.py`.
-- Build check: `hugo --gc`. Your local Hugo must match `.hugoversion`, otherwise a local
-  build proves nothing about CI. Check with `hugo version`; upgrade via `brew upgrade hugo`.
+- Build check: `npm ci && npx astro build` in `astro/`, then
+  `node scripts/generate-images.mjs` and `python3 ../scripts/check_assets.py dist --base /blogs`.
+  **The build alone is not enough** — it happily produces a site whose images all 404,
+  because nothing in it verifies that referenced assets exist.
 - **Diagrams must be rendered as images.** Do NOT use ASCII art in fenced code blocks. Use drawio and embed PNG.
   - drawio source: `static/images/<name>.drawio`
   - export: `/Applications/draw.io.app/Contents/MacOS/draw.io --export --format png --scale 2 --output <out>.png <in>.drawio`
   - reference in post: `![alt text in Japanese](/blogs/images/<name>.png)` (absolute path)
   - the alt text should describe the diagram in natural Japanese (SEO + accessibility)
-  - **Nothing else to do for optimisation.** The render hook in
-    `layouts/_default/_markup/render-image.html` turns that markdown into a `<picture>`
-    with WebP at 640/1024/1600 plus a resized PNG fallback, and links the original so a
-    dense diagram stays zoomable. Keep writing plain markdown image syntax — raw `<img>`
-    in a post bypasses the hook and ships the full-size PNG.
+  - **Nothing else to do for optimisation.** `astro/src/plugins/rehypePicture.mjs`
+    turns that markdown into a `<picture>` with WebP at 640/1024/1600 plus a resized PNG
+    fallback, and links the original so a dense diagram stays zoomable. Keep writing plain
+    markdown image syntax — raw `<img>` in a post bypasses the plugin and ships the
+    full-size PNG.
 
 ## External URL fetching
 
@@ -96,8 +104,8 @@ so `MCP` and `mcp` both build `/tags/mcp/` and only the display name differs —
 one wins is decided by map iteration order, so it changed between builds of identical
 content. `validate_frontmatter.py` fails CI on any two spellings that urlize alike.
 
-- `titleCaseStyle = 'none'` in `hugo.toml` — the frontmatter spelling is what readers see,
-  so Hugo must not title-case `llm` into `Llm`.
+- `astro/src/utils/slugify.ts` ports Hugo's urlize. AstroPaper's own slugify disagreed on
+  106 of the 1161 tags — `AI/LLM` became `ai-llm` instead of the two-level `ai/llm`.
 - Adding a tag to `TAG_RULES` in `categorize.py` means matching the spelling already used
   in content, or CI fails on the collision.
 - To re-normalise after a bulk import: `python3 scripts/normalize_tags.py` (dry run),
@@ -105,12 +113,15 @@ content. `validate_frontmatter.py` fails CI on any two spellings that urlize ali
 
 ## Search (Pagefind)
 
-Search runs on **Pagefind**, indexed after Hugo builds — `npx pagefind --site public
+Search runs on **Pagefind**, indexed after Astro builds — `npx pagefind --site dist
 --glob "{posts,wiki}/**/*.html"` in both workflows.
 
 - **Only posts and the wiki are indexed.** Including the tag/category pages doubled the
   index (13MB → 29MB) and pushed taxonomy pages above real articles in the results.
-- The index does not exist under `hugo server`; run the pagefind command by hand to try
+- Indexing is actually driven by **`data-pagefind-body`**: once any page carries it,
+  Pagefind indexes only pages that do. AstroPaper puts it on post articles, so the wiki
+  route has to set it too or all 152 wiki pages drop out of search silently.
+- The index does not exist under `astro dev`; run the pagefind command by hand to try
   search locally.
 - **Known limit:** Pagefind segments Japanese via `Intl.Segmenter`, which mishandles some
   long katakana compounds. `プロンプトインジェクション` returns nothing while

@@ -113,7 +113,16 @@ const Content = rendered?.Content;
       <Header activeNav="wiki" />
       <Breadcrumb />
       <Main pageTitle={props.entry.data.title} pageDesc={props.entry.data.description ?? ""}>
-        <article class="app-prose mb-8">{Content && <Content />}</article>
+        {/*
+          data-pagefind-body is what puts a page in the search index at all:
+          AstroPaper marks post articles with it, and once ANY page carries the
+          attribute Pagefind indexes only pages that have it. Without this the
+          152 wiki pages silently drop out of search, which they were part of
+          under Hugo.
+        */}
+        <article data-pagefind-body class="app-prose mb-8">
+          {Content && <Content />}
+        </article>
       </Main>
       <Footer />
     </Layout>
