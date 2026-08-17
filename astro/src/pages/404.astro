@@ -9,9 +9,18 @@ import config from "@/config";
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+
+// This page is published as 404.html, not 404/index.html, so the canonical URL
+// Layout derives from the pathname (`/blogs/404/`, because trailingSlash is
+// "always") points at a directory that does not exist. Hugo emitted
+// /blogs/404.html; match it.
+const canonicalURL = new URL("404.html", Astro.site).href;
 ---
 
-<Layout title={`${t.notFound.title} | ${config.site.title}`}>
+<Layout
+  title={`${t.notFound.title} | ${config.site.title}`}
+  canonicalURL={canonicalURL}
+>
   <Header />
 
   <main
