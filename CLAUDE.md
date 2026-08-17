@@ -21,7 +21,8 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - `scripts/categorize.py` — automatic category/tag assignment
 - `scripts/validate_frontmatter.py` — frontmatter/placement validation, enforced in CI
 - `scripts/normalize_tags.py` — collapse tag spelling variants (dry run by default)
-- `hugo.toml` — Hugo config
+- `layouts/_default/_markup/render-image.html` — markdown images → WebP `<picture>`
+- `hugo.toml` — Hugo config (mounts `static/images` into `assets` so the pipeline sees it)
 - `.hugoversion` — pinned Hugo version, read by both CI workflows (see below)
 - `.claude/skills/blog/` — `/blog` skill
 - `.claude/skills/ship/` — `/ship` skill (draft PR → ready → CI → merge → cleanup)
@@ -51,6 +52,11 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
   - export: `/Applications/draw.io.app/Contents/MacOS/draw.io --export --format png --scale 2 --output <out>.png <in>.drawio`
   - reference in post: `![alt text in Japanese](/blogs/images/<name>.png)` (absolute path)
   - the alt text should describe the diagram in natural Japanese (SEO + accessibility)
+  - **Nothing else to do for optimisation.** The render hook in
+    `layouts/_default/_markup/render-image.html` turns that markdown into a `<picture>`
+    with WebP at 640/1024/1600 plus a resized PNG fallback, and links the original so a
+    dense diagram stays zoomable. Keep writing plain markdown image syntax — raw `<img>`
+    in a post bypasses the hook and ships the full-size PNG.
 
 ## External URL fetching
 
