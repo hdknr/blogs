@@ -31,6 +31,8 @@ jobs:
       # CI (0.157.0) drift away from local (0.161.1).
       - name: Resolve Hugo version
         run: echo "HUGO_VERSION=$(cat .hugoversion)" >> "$GITHUB_ENV"
+      - name: Resolve Pagefind version
+        run: echo "PAGEFIND_VERSION=$(cat .pagefindversion)" >> "$GITHUB_ENV"
       # Gate production on frontmatter validity. Hugo accepts an unknown category
       # without complaint and builds a taxonomy page for it, so drift never turns
       # the build red on its own. Runs before the build so bad content never ships.
@@ -53,6 +55,12 @@ jobs:
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
+      # Pagefind indexes the BUILT html, so it has to run after Hugo and before
+      # the upload. --glob restricts it to posts and the wiki: indexing the tag
+      # and category pages as well doubled the index (13MB -> 29MB) and pushed
+      # taxonomy pages above real articles in the results.
+      - name: Build search index
+        run: npx -y pagefind@${PAGEFIND_VERSION} --site public --glob "{posts,wiki}/**/*.html"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

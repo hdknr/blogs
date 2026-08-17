@@ -24,6 +24,8 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - `layouts/_default/_markup/render-image.html` — markdown images → WebP `<picture>`
 - `hugo.toml` — Hugo config (mounts `static/images` into `assets` so the pipeline sees it)
 - `.hugoversion` — pinned Hugo version, read by both CI workflows (see below)
+- `.pagefindversion` — pinned Pagefind version, same arrangement
+- `layouts/_default/search.html` — Pagefind search UI (`content/search.md` selects it)
 - `.claude/skills/blog/` — `/blog` skill
 - `.claude/skills/ship/` — `/ship` skill (draft PR → ready → CI → merge → cleanup)
 - `.claude/agents/` — custom specialist agents
@@ -100,6 +102,20 @@ content. `validate_frontmatter.py` fails CI on any two spellings that urlize ali
   in content, or CI fails on the collision.
 - To re-normalise after a bulk import: `python3 scripts/normalize_tags.py` (dry run),
   then `--apply`. The canonical spelling is the most-used variant.
+
+## Search (Pagefind)
+
+Search runs on **Pagefind**, indexed after Hugo builds — `npx pagefind --site public
+--glob "{posts,wiki}/**/*.html"` in both workflows.
+
+- **Only posts and the wiki are indexed.** Including the tag/category pages doubled the
+  index (13MB → 29MB) and pushed taxonomy pages above real articles in the results.
+- The index does not exist under `hugo server`; run the pagefind command by hand to try
+  search locally.
+- **Known limit:** Pagefind segments Japanese via `Intl.Segmenter`, which mishandles some
+  long katakana compounds. `プロンプトインジェクション` returns nothing while
+  `プロンプト インジェクション` returns 175 results. The search page tells readers to
+  space-separate; don't treat a 0-result compound as a broken index.
 
 ## Mandatory Bash rules (auto-mode compatible)
 
