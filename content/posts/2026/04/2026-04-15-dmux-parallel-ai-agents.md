@@ -6,7 +6,7 @@ slug: "dmux-parallel-ai-agents"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250488257"
 categories: ["ツール/開発環境"]
-tags: ["dmux", "cmux", "Claude Code", "AI エージェント", "git worktree", "並列実行"]
+tags: ["dmux", "cmux", "claude-code", "AI エージェント", "git worktree", "並列実行"]
 ---
 
 AI エージェントを並列実行する際に起きがちなファイル競合問題を、git worktree を活用して自動解決するツール「dmux」を紹介する。

@@ -6,7 +6,7 @@ slug: "line-obsidian-codex-automation-loop"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4806756955"
 categories: ["AI/LLM"]
-tags: ["obsidian", "agent", "自動化", "ナレッジマネジメント", "line"]
+tags: ["Obsidian", "agent", "自動化", "ナレッジマネジメント", "line"]
 ---
 
 ## 概要

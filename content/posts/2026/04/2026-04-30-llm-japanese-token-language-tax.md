@@ -7,7 +7,7 @@ draft: false
 description: "6社・9言語の比較データが示すLLM日本語コストの実態。日本語は英語より平均1.48倍、Claudeでは約2倍のトークンを消費する「言語税」の仕組みと、プロバイダー選択・プロンプト設計・キャッシュ活用によるコスト削減策を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349375315"
 categories: ["AI/LLM"]
-tags: ["LLM", "トークン", "コスト最適化", "anthropic", "gemini"]
+tags: ["llm", "トークン", "コスト最適化", "anthropic", "gemini"]
 ---
 
 LLM API を日本語で使っていると、英語ユーザーと比べて知らないうちに多くのコストを支払っている。この「言語税」とも言える現象を、6社・9言語の比較データで整理した投稿が話題になった。

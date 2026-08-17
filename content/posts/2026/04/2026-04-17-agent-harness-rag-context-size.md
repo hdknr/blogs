@@ -6,7 +6,7 @@ slug: "agent-harness-rag-context-size"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4274638923"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "RAG", "GraphRAG", "Agent", "LLM", "コンテキストウィンドウ"]
+tags: ["claude-code", "RAG", "GraphRAG", "agent", "llm", "コンテキストウィンドウ"]
 ---
 
 Claude CodeやCodexのようなAgent Harnessは、RAG（Retrieval-Augmented Generation）をほとんど使わないにもかかわらず、高精度なコード生成や理解を実現している。一方、RAGに依存しすぎたAgentはハルシネーションを起こしやすいという逆説がある。なぜこのような違いが生まれるのか？Software Engineer兼Database ResearcherのTaro L. Saito（[@taroleo](https://x.com/taroleo)）氏のポストが、その本質を簡潔に説明している。

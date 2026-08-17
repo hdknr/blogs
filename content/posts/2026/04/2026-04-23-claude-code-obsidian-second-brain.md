@@ -6,7 +6,7 @@ slug: "claude-code-obsidian-second-brain"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304039550"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Obsidian", "PKM", "LLM Wiki", "第二の脳", "ナレッジ管理"]
+tags: ["claude-code", "Obsidian", "PKM", "LLM Wiki", "第二の脳", "ナレッジ管理"]
 ---
 
 海外 AI 活用シーンで **Obsidian × Claude Code** の組み合わせが爆発的な注目を集めている。6本の主要記事だけで合計 **1,240万 views**、ブックマーク数は **8万件超え**。元 OpenAI 創設メンバーの Andrej Karpathy 氏が提唱し、Obsidian CEO の Steph Ango 氏自らが AI 連携スキルを GitHub で公開。ここまで業界の中心人物が動いたツール組み合わせは、近年なかった。

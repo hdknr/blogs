@@ -6,7 +6,7 @@ lastmod: 2026-04-25
 aliases: ["exa search", "exa for claude", "exa mcp"]
 related_posts:
   - "/posts/2026/04/exa-for-claude-mcp-plugin/"
-tags: ["search", "mcp", "claude-code", "rag", "semantic-search"]
+tags: ["search", "mcp", "claude-code", "RAG", "semantic-search"]
 ---
 
 ## 概要

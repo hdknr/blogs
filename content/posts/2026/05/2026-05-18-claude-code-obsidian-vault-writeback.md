@@ -6,7 +6,7 @@ slug: "claude-code-obsidian-vault-writeback"
 draft: false
 description: "プロジェクトで得た知見を個人 Obsidian Vault に循環させるための、Claude Code 側の書き戻し（writeback）設計をまとめる。inbox-first を基本に、サマリスキル・Daily Note 追記・ADR 二重書きの3パターンを、permissions と週次レビュー運用まで含めて解説。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Obsidian", "MCP", "Skills", "CLAUDE.md", "ADR", "Daily Notes", "writeback", "inbox-first", "permissions", "ナレッジマネジメント", "PKM"]
+tags: ["claude-code", "Obsidian", "mcp", "Skills", "CLAUDE.md", "ADR", "Daily Notes", "writeback", "inbox-first", "permissions", "ナレッジマネジメント", "PKM"]
 ---
 
 [Obsidian Vault を Claude Code に繋ぐ実践編]({{< ref "posts/2026/05/2026-05-18-claude-code-obsidian-vault-project-config.md" >}}) では、**読み取り側**（Vault → プロジェクト）の設定パターンを整理しました。本記事はその続編で、**書き戻し（writeback）側**（プロジェクト → Vault）の設計を扱います。

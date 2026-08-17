@@ -7,7 +7,7 @@ draft: false
 description: "HubSpot の重複コンタクトを CRM API v3 のマージエンドポイントで統合する方法を解説。マージは取り消し不可のため、AI に重複検知させて人間が承認し API で実行する 3 ステップ設計が現実的。マージ回数上限や Koalify / Insycle などの外部ツールにも触れる。"
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4620334665"
 categories: ["Web開発"]
-tags: ["hubspot", "crm", "api", "dedup", "marketing-automation"]
+tags: ["HubSpot", "crm", "API", "dedup", "marketing-automation"]
 ---
 
 HubSpot を運用していると必ず直面するのが**重複リード（コンタクト）の問題**です。同じ人がフォーム経由とインポート経由で別レコードになっている、表記揺れで名寄せされていない——こうした重複を放置するとメール配信もスコアリングも狂います。

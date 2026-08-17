@@ -6,7 +6,7 @@ slug: "rds-mysql-84-blue-green-migration"
 draft: false
 description: "RDS の書き込み停止1秒に対して、アプリから見た停止は24秒。原因は DNS 伝播でした。本番 MySQL 8.0.41 を標準サポート終了日当日に 8.4.10 へ Blue/Green 移行した実録と、落とし穴18個を実測値付きでまとめます。"
 categories: ["クラウド/インフラ"]
-tags: ["aws", "rds", "mysql", "terraform", "blue-green-deployment"]
+tags: ["aws", "rds", "mysql", "Terraform", "blue-green-deployment"]
 ---
 
 本番 RDS（MySQL 8.0.41）を、標準サポート終了日である 2026-07-31 当日に 8.4.10 へ移行しました。

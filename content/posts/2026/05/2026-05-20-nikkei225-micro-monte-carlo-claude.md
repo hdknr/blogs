@@ -5,7 +5,7 @@ lastmod: 2026-05-20
 slug: "nikkei225-micro-monte-carlo-claude"
 draft: false
 categories: ["AI/LLM"]
-tags: ["Claude", "モンテカルロ法", "日経225", "Python", "自動売買", "J-Quants API", "ケリー基準", "GBM"]
+tags: ["claude", "モンテカルロ法", "日経225", "python", "自動売買", "J-Quants API", "ケリー基準", "GBM"]
 ---
 
 > ⚠️ **免責事項**: 本記事は技術解説であり、金融商品取引法上の**投資助言には該当しません**。シミュレーション結果は将来の利益を保証するものではなく、先物取引には**元本超過損のリスク**があります。実運用はご自身の責任で行ってください。

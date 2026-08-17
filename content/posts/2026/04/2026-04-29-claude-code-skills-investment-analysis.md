@@ -6,7 +6,7 @@ slug: "claude-code-skills-investment-analysis"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340870228"
 categories: ["AI/LLM"]
-tags: ["claude-code", "投資分析", "マルチエージェント", "Python", "GraphRAG"]
+tags: ["claude-code", "投資分析", "マルチエージェント", "python", "GraphRAG"]
 ---
 
 ChatGPT に「Claude Code で株ツールを作っている人の事例を調べてくれ」と聞いて見つかった記事シリーズが話題になっている。Zenn の [okikusan](https://zenn.dev/okikusan) さんによる **Claude Code Skills × 投資分析シリーズ** は、試行錯誤の過程が詳らかに書かれており、Claude Code を使った個人開発の実践例として非常に参考になる。

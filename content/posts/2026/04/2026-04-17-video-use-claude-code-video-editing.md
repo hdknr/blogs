@@ -6,7 +6,7 @@ slug: "video-use-claude-code-video-editing"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4265198555"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "動画編集", "browser-use", "Video Use", "オープンソース"]
+tags: ["claude-code", "動画編集", "browser-use", "Video Use", "オープンソース"]
 ---
 
 Claude Code で動画編集が完全自動化できる「**Video Use**」が公開されました。browser-use チームが開発したオープンソーススキルです。カメラに向かって話した素材を Claude に渡すだけで `final.mp4` が完成します。

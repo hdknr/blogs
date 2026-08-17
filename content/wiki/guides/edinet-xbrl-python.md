@@ -8,7 +8,7 @@ related_posts:
   - "/posts/2026/04/edinet-xbrl-python/"
   - "/posts/2026/04/buffett-code-analysis/"
   - "/posts/2026/08/activist-signal-news-detection/"
-tags: ["Python", "XBRL", "EDINET", "金融データ", "財務分析"]
+tags: ["python", "XBRL", "EDINET", "金融データ", "財務分析"]
 ---
 
 ## 概要

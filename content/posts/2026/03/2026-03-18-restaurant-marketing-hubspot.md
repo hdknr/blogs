@@ -6,7 +6,7 @@ slug: "restaurant-marketing-hubspot"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4079530590"
 categories: ["ビジネス/キャリア"]
-tags: ["HubSpot", "マーケティング", "MA", "レストラン", "集客"]
+tags: ["HubSpot", "マーケティング", "ma", "レストラン", "集客"]
 ---
 
 HubSpotを活用してディナータイムの集客を強化するのは、非常に理にかなった戦略です。レストランの場合、**「適切なタイミングで、適切な人に、美味しそうな視覚情報を届ける」**のが鉄則です。

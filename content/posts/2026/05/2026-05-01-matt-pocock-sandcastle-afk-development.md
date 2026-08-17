@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4358352789"
 description: "TypeScript の OSS ライブラリ Sandcastle を使い、AI コーディングエージェントを Docker/Vercel サンドボックスで並列実行するオーケストレーション手法を解説。夜間並列タスク・朝レビューの AFK 開発ワークフローを実現する。"
 categories: ["AI/LLM"]
-tags: ["TypeScript", "OSS", "AIエージェント", "docker", "自動化"]
+tags: ["typescript", "OSS", "AIエージェント", "docker", "自動化"]
 ---
 
 元 Vercel エンジニアで TypeScript 専門家の Matt Pocock 氏が、AI エージェントを複数並列実行するためのオーケストレーションライブラリ **Sandcastle** を OSS として公開した。このツールは「夜間に 5 タスクを並列で走らせて、朝にマージレビューだけする」という **AFK（Away From Keyboard）開発** を現実のワークフローとして成立させる。

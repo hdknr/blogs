@@ -6,7 +6,7 @@ slug: "fde-forward-deployed-engineer"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4543808879"
 categories: ["AI/LLM"]
-tags: ["AIエージェント", "FDE", "agentic-ai", "human-in-the-loop", "ビジネス/キャリア"]
+tags: ["AIエージェント", "FDE", "agentic-ai", "Human-in-the-Loop", "ビジネス/キャリア"]
 ---
 
 AIエージェントが業務システムに本格導入される時代に入り、「FDE（Forward Deployed Engineer）」というエンジニア職種が改めて注目を集めています。AIエージェントを現場の業務フローに組み込み、「成果が出るまで」を一気通貫で推進する役割です。なぜ今このモデルが再評価されているのか、その役割と重要性を整理します。

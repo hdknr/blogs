@@ -6,7 +6,7 @@ slug: "ai-brain-cell-data-center"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4079198048"
 categories: ["AI/LLM"]
-tags: ["ai", "biocomputing", "data-center", "energy"]
+tags: ["AI", "biocomputing", "data-center", "energy"]
 description: "Cortical Labs が脳細胞を使った生体データセンターを建設予定。消費電力は電卓以下で、AI のエネルギー問題に挑む生体コンピューティングの最前線を解説。"
 ---
 

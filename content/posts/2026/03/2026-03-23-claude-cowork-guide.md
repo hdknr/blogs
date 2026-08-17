@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4107400485"
 categories: ["AI/LLM"]
 description: "Claude Cowork の全機能・料金プラン・セットアップ手順・活用事例20選・セキュリティ対策を網羅解説。月額$20から始められるAI業務自動化ツールの完全ガイド。"
-tags: ["Claude", "Claude Desktop", "Anthropic", "AI自動化", "agent"]
+tags: ["claude", "claude-desktop", "anthropic", "AI自動化", "agent"]
 ---
 
 Anthropic が 2026年1月にリリースした「Claude Cowork」は、従来の AI チャットとは根本的に異なる「AI に仕事を丸投げできる仕組み」です。本記事では、Cowork の全機能・料金プラン・セットアップ手順・活用事例20選・セキュリティ対策までを網羅的にまとめます。

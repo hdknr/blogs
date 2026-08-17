@@ -4,7 +4,7 @@ description: "ALB が X-Forwarded-Proto を上書きする問題の解決ガイ�
 date: 2026-04-06
 lastmod: 2026-04-06
 related_posts: []
-tags: ["AWS", "CloudFront", "ALB", "Django", "HTTPS"]
+tags: ["aws", "CloudFront", "ALB", "django", "HTTPS"]
 ---
 
 ## 概要

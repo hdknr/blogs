@@ -6,7 +6,7 @@ slug: "fable-stock-factor-analysis-jquants"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/554#issuecomment-4999787865"
 categories: ["AI/LLM"]
-tags: ["Claude", "プロンプト", "株式投資", "J-Quants", "バックテスト"]
+tags: ["claude", "プロンプト", "株式投資", "J-Quants", "バックテスト"]
 description: "株式ファクター分析ツールを AI（Claude Fable 5）に設計から任せた実例を解説。J-Quants API のデータ品質の落とし穴、ultrathink による設計フェーズ分離のプロンプト設計まで、AI 開発一般の教訓として整理します。"
 ---
 

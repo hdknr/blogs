@@ -6,7 +6,7 @@ slug: "anthropic-mythos-mark-fisher"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230942335"
 categories: ["AI/LLM"]
-tags: ["Anthropic", "マーク・フィッシャー", "hauntology", "資本主義リアリズム", "哲学"]
+tags: ["anthropic", "マーク・フィッシャー", "hauntology", "資本主義リアリズム", "哲学"]
 ---
 
 AnthropicのAI「Mythos」が、哲学の文脈で何度もマーク・フィッシャーという思想家に言及するという話が話題になっている。

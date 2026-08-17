@@ -6,7 +6,7 @@ slug: "claude-code-skills-lessons"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078708049"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "スキル", "エージェント", "開発効率化", "Anthropic"]
+tags: ["claude-code", "スキル", "エージェント", "開発効率化", "anthropic"]
 ---
 
 Anthropic で Claude Code を開発している Thariq が、社内での大規模なスキル活用から得た知見をまとめたノートが公開された。スキルは Claude Code の最も使われる拡張ポイントの一つであり、柔軟で作りやすく配布もしやすい。しかしその柔軟性ゆえに「何が正解か」を判断しにくいという問題もある。本記事はそのノートの内容を日本語でまとめたものだ。

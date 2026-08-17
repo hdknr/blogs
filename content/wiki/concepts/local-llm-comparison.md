@@ -11,7 +11,7 @@ related_posts:
   - "/posts/2026/04/claude-rate-limit-mac-mini-local-model/"
   - "/posts/2026/08/local-model-delegation-dev-loop/"
   - "/posts/2026/08/kimi-k3-memory-architecture/"
-tags: ["ローカルLLM", "Gemma", "Qwen", "BitNet", "オープンソースLLM", "Apple Silicon"]
+tags: ["ローカルLLM", "Gemma", "qwen", "BitNet", "オープンソースLLM", "Apple Silicon"]
 ---
 
 ## 概要

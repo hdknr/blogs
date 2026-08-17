@@ -6,7 +6,7 @@ slug: "claude-code-45-tasks-automation-student"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4291437148"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "自動化", "cron", "Python", "claude-cli"]
+tags: ["claude-code", "自動化", "cron", "python", "claude-cli"]
 ---
 
 東京大学の院生（shunya_sudo）が、**45 本の cron ジョブ・36 個のカスタムエージェント・132 本の Python スクリプト** で構成した日常業務自動化システムの全記録を Zenn で公開した。M1 冬から約半年間 Claude Code を使い続けて構築したシステムで、メール処理・論文監視・ML コード開発・システム自己監視まで設計原則と実装を網羅している。

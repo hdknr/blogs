@@ -6,7 +6,7 @@ slug: "claude-code-polymarket-trading-bot"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4365901423"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Polymarket", "MCP", "トレーディング", "予測市場", "anthropic", "agent"]
+tags: ["claude-code", "Polymarket", "mcp", "トレーディング", "予測市場", "anthropic", "agent"]
 ---
 
 Anthropic のエンジニアとされる人物が Claude Code を使って Polymarket（予測市場プラットフォーム）向けの取引 bot を構築し、$200（約3万円）を $14,300（約200万円）に成長させたという事例が話題を集めている。ただし本人の公的な確認は取れておらず、複数の紹介ツイートも「伝えられるところによると」という留保を付けている点は注意が必要だ。

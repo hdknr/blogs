@@ -7,7 +7,7 @@ draft: false
 description: "Anthropicのエンジニアが語ったClaude Code社内活用法——ループ設計、CLAUDE.mdとSkillsの使い分け、Dreaming機能を裏取りする。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4806753053"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Anthropic", "CLAUDE.md", "Skills", "Dreaming"]
+tags: ["claude-code", "anthropic", "CLAUDE.md", "Skills", "Dreaming"]
 ---
 
 「Claude Code の社内設計を、Anthropicのエンジニアが全部バラした」という投稿が X（旧Twitter）で拡散された。ループ × CLAUDE.md × Skills という構造で、Anthropic 社内では自己改善するエージェントを構築しているという内容だ。

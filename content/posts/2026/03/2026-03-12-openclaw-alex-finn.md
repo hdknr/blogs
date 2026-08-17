@@ -6,7 +6,7 @@ slug: "openclaw-alex-finn"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4050690154"
 categories: ["AI/LLM"]
-tags: ["OpenClaw", "Claude", "Vibe Coding", "AIエージェント", "AI活用"]
+tags: ["openclaw", "claude", "vibe-coding", "AIエージェント", "AI活用"]
 ---
 
 OpenClaw の情報発信者が急増するなか、「誰を追えばいいかわからない」という声も多い。本記事では、いち＠OpenClawガチ勢（[@ichiaimarketer](https://x.com/ichiaimarketer)）が「まず見るべきたった1人」として紹介する **Alex Finn（@AlexFinn）** について、その実績・主張・コンテンツをまとめる。

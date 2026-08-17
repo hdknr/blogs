@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714988245"
 description: "VRAM 12GB で動く Gemma 4 12B Coder の GGUF 量子化バリアント比較、Ollama / llama.cpp での実行手順、Fable 5 蒸留の仕組みを解説する。"
 categories: ["AI/LLM"]
-tags: ["Gemma4", "GGUF", "ローカルLLM", "llama.cpp", "Ollama"]
+tags: ["Gemma4", "GGUF", "ローカルLLM", "llama.cpp", "ollama"]
 ---
 
 ## Gemma 4 12B Coder（Fable 5蒸留版）とは

@@ -6,7 +6,7 @@ lastmod: 2026-04-29
 aliases: ["microsoft vibevoice", "vibevoice-asr", "vibevoice-tts"]
 related_posts:
   - "/posts/2026/04/vibevoice-microsoft-voice-ai/"
-tags: ["microsoft", "音声認識", "音声合成", "asr", "tts", "oss"]
+tags: ["Microsoft", "音声認識", "音声合成", "asr", "tts", "OSS"]
 ---
 
 ## 概要

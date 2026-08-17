@@ -6,7 +6,7 @@ slug: "claude-code-routines-desktop-update"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250590914"
 categories: ["AI/LLM"]
-tags: ["Claude", "Anthropic", "Claude Code", "AIエージェント", "開発ツール"]
+tags: ["claude", "anthropic", "claude-code", "AIエージェント", "開発ツール"]
 ---
 
 2026年4月14日、Anthropic が Claude Code に**3つの大型アップデートを同日リリース**した。それぞれ独立したアップデートながら、組み合わさることで「AI を常時活用するインフラ」としての完成度が大きく高まっている。

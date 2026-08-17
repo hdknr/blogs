@@ -5,7 +5,7 @@ lastmod: 2026-04-19
 slug: "graphite-stacked-prs-merge-queue"
 draft: false
 categories: ["ツール/開発環境"]
-tags: ["Graphite", "GitHub", "スタックドPR", "マージキュー", "AIコードレビュー", "CI/CD", "ハーネスエンジニアリング"]
+tags: ["Graphite", "github", "スタックドPR", "マージキュー", "AIコードレビュー", "CI/CD", "ハーネスエンジニアリング"]
 ---
 
 [CreaoAI が25名で6週間のリリースサイクルを1日に短縮した事例](/blogs/posts/2026/04/ai-first-harness-engineering-creao/)では、PR 管理ツールとして **Graphite** が採用されていた。1日8回デプロイ・AI が大量に PR を量産する運用で、素の GitHub PR フローは何が詰まり、Graphite は何を解決するのか。本記事では Graphite の3本柱（スタックドPR・マージキュー・AIレビュー）を、CLI コマンドと具体的な運用シナリオで解説する。

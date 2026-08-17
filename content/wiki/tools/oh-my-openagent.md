@@ -6,7 +6,7 @@ lastmod: 2026-05-20
 aliases: ["omo", "oh-my-opencode", "openagent"]
 related_posts:
   - "/posts/2026/05/oh-my-openagent-multi-ai-agent-harness/"
-tags: ["oh-my-openagent", "agent", "Claude Code", "Codex", "Gemini CLI", "harness"]
+tags: ["oh-my-openagent", "agent", "claude-code", "Codex", "Gemini CLI", "harness"]
 ---
 
 ## 概要

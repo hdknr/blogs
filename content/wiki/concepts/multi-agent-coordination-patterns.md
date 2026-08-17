@@ -8,7 +8,7 @@ related_posts:
   - "/posts/2026/04/anthropic-multi-agent-coordination-patterns/"
   - "/posts/2026/04/claude-managed-agents-architecture/"
   - "/posts/2026/04/claude-managed-agents/"
-tags: ["マルチエージェント", "AIアーキテクチャ", "設計パターン", "Anthropic", "エージェント"]
+tags: ["マルチエージェント", "AIアーキテクチャ", "設計パターン", "anthropic", "エージェント"]
 ---
 
 ## 概要

@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324224105"
 description: "Claude Code の SEO エージェントで Google Search Console 連携・キーワード分析・競合スクレイピング・記事生成を全自動化。Semrush・Ahrefs などの月額課金ツールをゼロコストで代替する方法を解説。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "SEO", "AIエージェント", "Google Search Console", "自動化"]
+tags: ["claude-code", "SEO", "AIエージェント", "Google Search Console", "自動化"]
 ---
 
 海外で Claude Code 専用の「SEO エージェント」が話題になっている。月額 2 万円級の SEO ツールをサブスク不要・ゼロコストで完全代替できるという内容で、SNS では 70,000 インプレッション超・ブックマーク 1,300 件超を記録した。

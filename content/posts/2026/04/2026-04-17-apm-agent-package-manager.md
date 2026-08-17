@@ -6,7 +6,7 @@ slug: "apm-agent-package-manager"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4266529068"
 categories: ["AI/LLM"]
-tags: ["APM", "Claude Code", "AI エージェント", "パッケージ管理", "開発ツール"]
+tags: ["APM", "claude-code", "AI エージェント", "パッケージ管理", "開発ツール"]
 ---
 
 フロントエンドエキスパートの mizchi さんが「チームでの skills 共有に apm いいじゃん。採用」と [X にポスト](https://x.com/mizchi/status/2044667087290032202)して話題になった [APM（Agent Package Manager）](https://github.com/microsoft/apm)。Microsoft がオープンソースで開発しているこのツールは、AI エージェントの設定を `package.json` のように宣言的に管理・共有できます。

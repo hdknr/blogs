@@ -6,7 +6,7 @@ slug: "gemini-embedding-2"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4042051334"
 categories: ["AI/LLM"]
-tags: ["gemini", "rag", "llm", "python"]
+tags: ["gemini", "RAG", "llm", "python"]
 ---
 
 Google が 2026年3月に公開した **Gemini Embedding 2** は、テキスト・画像・動画・音声・ドキュメントを同一のベクトル空間に埋め込める、初のネイティブマルチモーダル埋め込みモデルだ。RAG パイプラインやマルチモーダル検索を構築する開発者にとって注目すべきモデルとなっている。

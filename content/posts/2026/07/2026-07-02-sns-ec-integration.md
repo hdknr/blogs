@@ -7,7 +7,7 @@ draft: false
 description: "Instagram・TikTok Shop・YouTube ショッピング・LINE Lineup の SNS 系 EC 連動を「送客型／完結型」で整理。日本での提供状況、費用、受注・在庫の一元管理まで解説する。"
 source_url: "https://github.com/hdknr/blogs/issues/217#issuecomment-4864455150"
 categories: ["ビジネス/キャリア"]
-tags: ["ソーシャルコマース", "EC", "TikTok Shop", "Instagram", "LINE"]
+tags: ["ソーシャルコマース", "EC", "TikTok Shop", "Instagram", "line"]
 ---
 
 「SNS で商品を売る」と一口に言っても、その中身はチャネルによってまるで違う。SNS はあくまで**入口（送客）**でしかなく決済も出荷も自社 EC 側で行うものもあれば、**アプリの中で購入まで完結**してしまうものもある。この記事では、日本で実際に使える主要な SNS 系 EC 連動チャネル ── Instagram ショッピング、TikTok Shop、YouTube ショッピング アフィリエイト、そして LINE の EC 化ツール Lineup ── を「どこで購入が完結するか」という軸で整理する。

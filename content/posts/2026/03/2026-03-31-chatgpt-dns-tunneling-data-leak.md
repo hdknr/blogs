@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4165256986"
 categories: ["セキュリティ"]
 description: "ChatGPTのData Analysis環境にDNSトンネリングによるデータ漏洩の脆弱性をCheck Pointが発見。攻撃の仕組み、漏洩リスク、OpenAIの対応、ユーザーの対策を解説。"
-tags: ["ChatGPT", "脆弱性", "DNSトンネリング", "OpenAI", "security"]
+tags: ["chatgpt", "脆弱性", "DNSトンネリング", "openai", "security"]
 ---
 
 Check Point Research が、ChatGPT のコード実行ランタイム（Python Data Analysis 環境）に隠れた外部通信チャネルが存在することを発見しました。この脆弱性を悪用すると、ユーザーの会話内容やアップロードしたファイルが外部サーバーに漏洩する可能性がありました。OpenAI は 2026年2月20日に修正を完了しています。

@@ -6,7 +6,7 @@ slug: "claude-kabushiki-jidoka-prompts"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714971391"
 categories: ["AI/LLM"]
-tags: ["Claude", "株式投資", "プロンプト", "python", "バックテスト", "テクニカル分析", "自動化"]
+tags: ["claude", "株式投資", "プロンプト", "python", "バックテスト", "テクニカル分析", "自動化"]
 ---
 
 ## はじめに

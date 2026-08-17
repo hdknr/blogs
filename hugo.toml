@@ -5,6 +5,12 @@ title = 'hdknr blog'
 theme = 'PaperMod'
 paginate = 10
 
+# Hugo title-cases auto-generated taxonomy titles by default, which turns the
+# tag `llm` into `Llm` and `claude-code` into `Claude-Code`. With the spellings
+# normalised (scripts/normalize_tags.py) the frontmatter is the single source of
+# truth for how a tag reads, so leave it alone.
+titleCaseStyle = 'none'
+
 [params]
   env = 'production'
   defaultTheme = 'auto'

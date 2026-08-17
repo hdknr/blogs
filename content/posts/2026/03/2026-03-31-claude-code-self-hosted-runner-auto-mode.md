@@ -5,7 +5,7 @@ lastmod: 2026-03-31
 slug: "claude-code-self-hosted-runner-auto-mode"
 draft: false
 categories: ["AI/LLM"]
-tags: ["claude-code", "github-actions"]
+tags: ["claude-code", "GitHub Actions"]
 source_url: "https://gist.github.com/hdknr/aa914d314b67a0ef8c1c4eabd1edb654"
 ---
 

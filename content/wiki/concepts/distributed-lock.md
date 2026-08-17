@@ -6,7 +6,7 @@ lastmod: 2026-04-06
 aliases: ["Distributed Lock"]
 related_posts:
   - "/posts/2026/03/redis-fenced-lock-python/"
-tags: ["Redis", "Django", "同時実行制御"]
+tags: ["redis", "django", "同時実行制御"]
 ---
 
 ## 概要

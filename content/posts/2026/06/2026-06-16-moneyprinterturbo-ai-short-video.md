@@ -7,7 +7,7 @@ draft: false
 description: "テーマを1行入力するだけで台本・映像・字幕・BGMを含むショート動画を自動生成するOSS MoneyPrinterTurbo の全機能と導入手順を解説。TikTok・YouTube Shorts の量産に対応。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714976862"
 categories: ["AI/LLM"]
-tags: ["MoneyPrinterTurbo", "ショート動画", "AI動画生成", "Python", "docker"]
+tags: ["MoneyPrinterTurbo", "ショート動画", "AI動画生成", "python", "docker"]
 ---
 
 テーマ（キーワード）を1つ入力するだけで、台本・映像素材・字幕・BGMまで込みのショート動画が自動生成される。そのOSSが **MoneyPrinterTurbo** だ。2024年3月の公開から約2年でGitHubスター数は **8.8万超** に達し、TikTok・YouTube Shorts向けコンテンツ制作を自動化したい個人・クリエイターの間で広く使われている。

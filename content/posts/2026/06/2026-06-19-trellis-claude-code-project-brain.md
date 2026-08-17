@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4748962079"
 description: "Claude Code はセッションをまたいで文脈を保持しない『健忘症のプログラマ』。Trellis は要件・規約・進捗を .trellis/ に沈殿させ、計画→実装→検証→書き戻しのループで AI 開発を仕組み化するフレームワークだ。導入手順まで解説する。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "trellis", "AIエージェント", "spec-driven", "コンテキストエンジニアリング"]
+tags: ["claude-code", "trellis", "AIエージェント", "spec-driven", "コンテキストエンジニアリング"]
 ---
 
 「AI コーディングは不安定だ」とこぼす前に、まず疑うべきは Claude そのものではなく、**毎回 AI を「記憶喪失のまま出社させている」自分の運用**かもしれない。X で話題になった [Amto (@XAMTO_AI) の投稿](https://x.com/xamto_ai/status/2067565738924118094) は、この問題を端的に言い表している。Claude Code を単体で使うと「賢いが健忘症のプログラマ」にすぎないが、**Trellis を組み合わせると初めて『AI 開発チーム』らしくなる**、というのだ。

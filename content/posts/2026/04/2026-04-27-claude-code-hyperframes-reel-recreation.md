@@ -7,7 +7,7 @@ draft: false
 description: "Claude Code に Instagram リールの URL を渡すだけで HyperFrames が 60 秒の縦型動画を自動生成。ショート動画制作の新しいワークフローと、AI 時代に必要な「企画力・言語化力」を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324247908"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "HyperFrames", "動画生成", "HeyGen", "AI動画", "ショート動画"]
+tags: ["claude-code", "HyperFrames", "動画生成", "HeyGen", "AI動画", "ショート動画"]
 ---
 
 バズった筋トレ系 Instagram リールの URL を Claude Code に渡し、「構成を完全再現しつつ日本人女性を生成して HyperFrames で編集して」と指示したら 60 秒の縦型動画が完成した——そんなデモが X で話題を集めています。この記事では HyperFrames の仕組みと Claude Code を使ったワークフロー、そして AI 時代に求められるスキルを整理します。

@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714970298"
 description: "AMD Ryzen AI Max+ 395 は x86 初の大容量 128GB 統合メモリ設計で Qwen3 235B などの巨大モデルをローカル実行可能にした。RTX 5080 比3倍の推論性能と Ollama による移行手順、年間 $5,280 のAIサブスク不要化の試算を解説。"
 categories: ["AI/LLM"]
-tags: ["AMD", "ローカルLLM", "Ollama", "Qwen3", "DeepSeek"]
+tags: ["AMD", "ローカルLLM", "ollama", "Qwen3", "DeepSeek"]
 ---
 
 ## はじめに

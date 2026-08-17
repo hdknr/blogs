@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363255977"
 description: "2026年Q1に120機能・1日5PRを達成したAnthropicの開発速度を支える7つの要因を解説。AIがAIを作る再帰構造、PRD廃止、全員Builder文化など、相互に強化し合うシステムの全貌をまとめる。"
 categories: ["AI/LLM"]
-tags: ["Anthropic", "Claude Code", "開発生産性", "プロトタイプ", "組織文化"]
+tags: ["anthropic", "claude-code", "開発生産性", "プロトタイプ", "組織文化"]
 ---
 
 2026年Q1、Anthropicは3ヶ月間で120以上の機能をリリースした。これは18時間に1機能というペースであり、エンジニア1人あたり1日約5PRというアウトプットが確認されている。

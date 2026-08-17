@@ -6,7 +6,7 @@ lastmod: 2026-04-16
 aliases: ["adaptive thinking", "effort level", "claude thinking depth"]
 related_posts:
   - "/posts/2026/04/claude-thinking-nerfed/"
-tags: ["claude", "claude-code", "思考深度", "Anthropic", "llm"]
+tags: ["claude", "claude-code", "思考深度", "anthropic", "llm"]
 ---
 
 ## 概要

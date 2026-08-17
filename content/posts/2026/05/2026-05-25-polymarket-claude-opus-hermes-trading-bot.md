@@ -6,7 +6,7 @@ slug: "polymarket-claude-opus-hermes-trading-bot"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4532811659"
 categories: ["AI/LLM"]
-tags: ["Polymarket", "Claude Opus", "Hermes", "AI Agent", "予測市場", "トレーディングボット"]
+tags: ["Polymarket", "Claude Opus", "Hermes", "ai-agent", "予測市場", "トレーディングボット"]
 ---
 
 ## ガレージから $794,000 へ — ほぼコードを書かずに

@@ -6,7 +6,7 @@ slug: "anthropic-ai-labor-market-white-collar"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349369997"
 categories: ["AI/LLM"]
-tags: ["AI代替", "労働市場", "Anthropic", "雇用", "キャリア"]
+tags: ["AI代替", "労働市場", "anthropic", "雇用", "キャリア"]
 ---
 
 「AIが奪うのは単純労働から」—— その通説を、Anthropic自身のデータが覆した。

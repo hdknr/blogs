@@ -6,7 +6,7 @@ slug: "1password-unified-access-ai-agent"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077558341"
 categories: ["セキュリティ"]
-tags: ["1Password", "AIエージェント", "シークレット管理", "Claude Code", "Cursor"]
+tags: ["1Password", "AIエージェント", "シークレット管理", "claude-code", "Cursor"]
 ---
 
 Claude Code や Cursor で開発していると、`.env` に書いた API キーを AI が普通にファイルシステムから読みに行く。`.gitignore` していても関係ない。この課題に対して、1Password が Anthropic・Cursor・GitHub・Vercel・Perplexity と連携し「AI エージェント時代のシークレット管理」を本気で構築し始めた。

@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4428585092"
 description: "balenaCloud は Raspberry Pi などの IoT デバイスを Docker コンテナと A/B パーティションで安全に遠隔管理できるマネージドプラットフォーム。OTA 更新、フリート管理、料金体系まで解説。"
 categories: ["クラウド/インフラ"]
-tags: ["balenaCloud", "Raspberry Pi", "IoT", "Docker", "OTA", "エッジコンピューティング"]
+tags: ["balenaCloud", "Raspberry Pi", "IoT", "docker", "OTA", "エッジコンピューティング"]
 ---
 
 Raspberry Pi を遠隔地に何台もデプロイすると、いつも頭を悩ませるのが「文鎮化」と「OS アップデート」だ。SSH で 1 台ずつ繋いで作業するのは現実的ではなく、現地に出向くのはさらに困難だ。

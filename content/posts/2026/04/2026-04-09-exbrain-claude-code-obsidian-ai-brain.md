@@ -6,7 +6,7 @@ slug: "exbrain-claude-code-obsidian-ai-brain"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4217201303"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Obsidian", "PKM", "自動化", "エージェント"]
+tags: ["claude-code", "Obsidian", "PKM", "自動化", "エージェント"]
 ---
 
 チャエン（@masahirochaen）さんが「外付けのAI脳」と名付けたシステム **Exbrain** を GitHub で公開した。Claude Code × Obsidian × 常駐エージェントを組み合わせて、記憶・日報・クリッピングを全自動化するという意欲的なプロジェクトだ。

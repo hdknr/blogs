@@ -44,7 +44,7 @@ related_posts:
   - "/posts/2026/07/codex-build-orchestrator-coder-split/"
   - "/posts/2026/07/ai-agent-rate-limit-circuit-breaker/"
   - "/posts/2026/07/claude-code-restaurant-automation/"
-tags: ["claude-code", "claude", "anthropic", "AIエージェント", "Hooks", "MCP"]
+tags: ["claude-code", "claude", "anthropic", "AIエージェント", "hooks", "mcp"]
 ---
 
 ## 概要

@@ -6,7 +6,7 @@ slug: "claude-code-loop-design-guide"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4852913154"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Anthropic", "エージェント", "自動化", "プロンプトエンジニアリング"]
+tags: ["claude-code", "anthropic", "エージェント", "自動化", "プロンプトエンジニアリング"]
 ---
 
 ## はじめに

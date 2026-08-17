@@ -6,7 +6,7 @@ slug: "claude-code-shopify-ai-toolkit"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230949842"
 categories: ["ツール/開発環境"]
-tags: ["Claude Code", "Shopify", "MCP", "AI", "EC"]
+tags: ["claude-code", "Shopify", "mcp", "AI", "EC"]
 ---
 
 Shopifyが「Shopify AI Toolkit」を公開した。Claude Code、Codex、Cursor、VS Codeなどのエージェント・IDE から直接 Shopify ストアを管理できる仕組みだ。

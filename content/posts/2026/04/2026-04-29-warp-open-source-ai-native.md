@@ -7,7 +7,7 @@ draft: false
 description: "2026年4月、Rust製AIターミナルWarpがAGPL-3.0でオープンソース化。注目はコード公開よりOzエージェント基盤の存在だ。Cal.comとの対比から読み解くAIネイティブOSS開発の新パラダイム。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340895764"
 categories: ["AI/LLM"]
-tags: ["Warp", "ターミナル", "agent", "Oz", "openai"]
+tags: ["warp", "ターミナル", "agent", "Oz", "openai"]
 ---
 
 2026年4月28日、Rust 製 AI ターミナル **Warp** がそのクライアントコードを GitHub 上でオープンソース化した。公開から1日強で GitHub スターが 31,900 件を超え、サーバーが過負荷になるほどの反響を呼んだ。

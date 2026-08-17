@@ -6,7 +6,7 @@ lastmod: 2026-07-28
 aliases: ["Claude Cowork", "Record a skill", "スキルの録画", "Agent Skills"]
 related_posts:
   - "/posts/2026/07/claude-cowork-record-a-skill/"
-tags: ["Claude", "Anthropic", "Agent Skills", "業務自動化", "Cowork"]
+tags: ["claude", "anthropic", "Agent Skills", "業務自動化", "Cowork"]
 ---
 
 ## 概要

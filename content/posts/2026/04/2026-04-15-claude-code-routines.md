@@ -6,7 +6,7 @@ slug: "claude-code-routines"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250460330"
 categories: ["AI/LLM"]
-tags: ["Claude", "Anthropic", "AIエージェント", "自動化", "Claude Code"]
+tags: ["claude", "anthropic", "AIエージェント", "自動化", "claude-code"]
 ---
 
 Anthropic が「**Claude Code Routines**」をリリースした。「時間になったら勝手に動く AI」を、誰でも 24 時間クラウド上で完結させられる仕組みだ。

@@ -6,7 +6,7 @@ slug: "pytest-chaos-engineering"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4265898247"
 categories: ["プログラミング言語"]
-tags: ["Python", "pytest", "カオスエンジニアリング", "テスト", "障害注入", "Claude Code", "AIエージェント"]
+tags: ["python", "pytest", "カオスエンジニアリング", "テスト", "障害注入", "claude-code", "AIエージェント"]
 ---
 
 「本番で障害が起きてから対処する」のではなく、「テスト段階で意図的に障害を起こして耐性を確認する」。これがカオスエンジニアリングの基本思想だ。Python の pytest には、この考え方をテストコードに組み込むためのシンプルな仕組みがある。

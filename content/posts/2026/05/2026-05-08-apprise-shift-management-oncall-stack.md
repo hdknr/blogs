@@ -5,7 +5,7 @@ lastmod: 2026-05-08
 slug: "apprise-shift-management-oncall-stack"
 draft: false
 categories: ["クラウド/インフラ"]
-tags: ["Apprise", "シフト管理", "オンコール", "PyShift", "GoAlert", "OR-Tools", "PuLP", "Python", "OSS", "オブザーバビリティ", "Microsoft Teams", "Microsoft Graph", "Outlook", "Microsoft Shifts"]
+tags: ["Apprise", "シフト管理", "オンコール", "PyShift", "GoAlert", "OR-Tools", "PuLP", "python", "OSS", "オブザーバビリティ", "Microsoft Teams", "Microsoft Graph", "Outlook", "Microsoft Shifts"]
 ---
 
 [前回の記事](/blogs/posts/2026/05/grafana-oncall-irm-incident-response/)で「Apprise + 自作 Web サービスで OnCall 相当を組む」例を示しました。この記事ではよくある誤解を整理し、**シフト管理を含めた自作 OnCall スタックの現実的な選択肢**を深掘りします。

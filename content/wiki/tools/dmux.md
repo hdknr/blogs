@@ -6,7 +6,7 @@ lastmod: 2026-04-15
 aliases: ["dmux", "AI エージェント並列実行"]
 related_posts:
   - "/posts/2026/04/dmux-parallel-ai-agents/"
-tags: ["dmux", "Claude Code", "git worktree", "AI エージェント", "並列実行"]
+tags: ["dmux", "claude-code", "git worktree", "AI エージェント", "並列実行"]
 ---
 
 ## 概要

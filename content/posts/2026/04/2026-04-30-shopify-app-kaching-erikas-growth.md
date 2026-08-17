@@ -7,7 +7,7 @@ draft: false
 description: "時給2ドルのWeb代理店勤務から個人開発でShopifyアプリを1年で10倍成長させたErikas氏の3つの戦略を解説。需要の事前検証・Win-Win価格設計・ブランド展開でSaaS事業を構築した方法論。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349352099"
 categories: ["ビジネス/キャリア"]
-tags: ["shopify", "スタートアップ", "個人開発", "saas", "EC"]
+tags: ["Shopify", "スタートアップ", "個人開発", "SaaS", "EC"]
 ---
 
 リトアニア出身の個人開発者Erikas Malisauskas氏が、時給2ドルのWeb代理店勤務からわずか1年でShopifyアプリの月次収益を**10倍**に成長させた事例が注目を集めています。

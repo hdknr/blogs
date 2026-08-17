@@ -6,7 +6,7 @@ slug: "claude-code-freelance-gachisei-anthropic-techniques"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363539764"
 categories: ["AI/LLM"]
-tags: ["claude-code", "フリーランス", "Anthropic", "高単価", "ワークフロー"]
+tags: ["claude-code", "フリーランス", "anthropic", "高単価", "ワークフロー"]
 ---
 
 2026年5月、SNSで注目を集めた一本のポストがある。会社員として働きながらAI×SNS副業で月30万円を達成したエンジニア・おさぼり（@1osabori）氏が「英語圏のClaude Codeガチ勢がクライアントから月50万〜200万取ってる手法、Anthropic公式が30分でほぼ全部喋っちゃう」と発信した。そのポストは83万インプレッションを超えた。

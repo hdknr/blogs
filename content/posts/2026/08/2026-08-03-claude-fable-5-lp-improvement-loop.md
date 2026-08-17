@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/297#issuecomment-5162931537"
 description: "「Claude Fable 5 が15分で20万円品質の LP を生成した」というバズ投稿を検証。改善ループを Lighthouse などの機械ゲートと人間ゲートに分け、結果を SKILL.md へ書き戻す設計、Fable 5 と Sonnet 5 の使い分けによるコスト試算まで。"
 categories: ["AI/LLM"]
-tags: ["Claude", "Claude Code", "Fable 5", "Skills", "ループエンジニアリング", "ランディングページ", "コスト削減"]
+tags: ["claude", "claude-code", "Fable 5", "Skills", "ループエンジニアリング", "ランディングページ", "コスト削減"]
 ---
 
 X で流れてきた投稿が、一定の反応を集めていました。11 秒の動画が添えられています。

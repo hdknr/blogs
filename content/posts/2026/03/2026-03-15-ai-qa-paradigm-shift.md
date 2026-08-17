@@ -6,7 +6,7 @@ slug: "ai-qa-paradigm-shift"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4062007521"
 categories: ["AI/LLM"]
-tags: ["ai", "tdd"]
+tags: ["AI", "tdd"]
 ---
 
 AI の進化により、ソフトウェアの品質保証（QA）が根本的な転換期を迎えている。従来の「OK/NG を明確に判定する」決定論的なテストから、「明らかに間違っているものを排除する」確率論的なアプローチへ。このパラダイムシフトが QA エンジニアの役割をどう変えるのかを考える。

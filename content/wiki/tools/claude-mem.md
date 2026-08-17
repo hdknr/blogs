@@ -5,7 +5,7 @@ date: 2026-04-13
 lastmod: 2026-04-16
 aliases: ["claude-mem persistent memory", "claude code memory"]
 related_posts:
-tags: ["Claude Code", "MCP", "メモリ", "トークン最適化", "オープンソース"]
+tags: ["claude-code", "mcp", "メモリ", "トークン最適化", "オープンソース"]
 ---
 
 ## 概要

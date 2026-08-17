@@ -7,7 +7,7 @@ draft: false
 description: "Anthropic が公開した3エージェント・ハーネス設計を解説。Planner・Generator・Evaluator の役割分担と、Playwright による実アプリテストで、Claude が6時間でフルアプリを自律構築する仕組み。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4140667658"
 categories: ["AI/LLM"]
-tags: ["Claude", "Anthropic", "マルチエージェント", "自律開発", "Playwright"]
+tags: ["claude", "anthropic", "マルチエージェント", "自律開発", "playwright"]
 ---
 
 Anthropic の研究者 Prithvi Rajasekaran 氏が、Claude を使ってフルスタックアプリケーションを自律的に構築する「3エージェント・ハーネス」アーキテクチャを公開しました。人間の介入なしに6時間でプレイ可能なゲームエディタを完成させた事例とともに、その設計思想を解説します。

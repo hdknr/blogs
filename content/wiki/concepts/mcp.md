@@ -7,7 +7,7 @@ aliases: ["MCP", "Model Context Protocol"]
 related_posts:
   - "/posts/2026/03/openclaw-claude-code-setup/"
   - "/posts/2026/03/sd-202604/"
-tags: ["MCP", "protocol", "agent", "integration"]
+tags: ["mcp", "protocol", "agent", "integration"]
 ---
 
 ## 概要

@@ -6,7 +6,7 @@ slug: "dario-amodei-ai-job-prediction-claude-design"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4715003288"
 categories: ["AI/LLM"]
-tags: ["Dario Amodei", "Anthropic", "Claude", "キャリア", "AI"]
+tags: ["Dario Amodei", "anthropic", "claude", "キャリア", "AI"]
 ---
 
 ## はじめに

@@ -6,7 +6,7 @@ slug: "ecc-instinct-system"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324217939"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "ECC", "プラグイン", "エージェント", "Anthropic"]
+tags: ["claude-code", "ecc", "プラグイン", "エージェント", "anthropic"]
 ---
 
 2026年4月時点で GitHub スター **16万超**を記録した Claude Code 向けプラグイン「Everything Claude Code（ECC）」。開発者は 2025年9月の Anthropic × Forum Ventures ハッカソンで優勝した Affaan Mustafa で、現在はコントリビューター170人以上を擁するオープンソースプロジェクトに成長しています。

@@ -6,7 +6,7 @@ slug: "openclaw-youtube-automation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4144410842"
 categories: ["AI/LLM"]
-tags: ["OpenClaw", "YouTube", "自動化", "AIエージェント", "収益化"]
+tags: ["openclaw", "YouTube", "自動化", "AIエージェント", "収益化"]
 ---
 
 「1ヶ月後のYouTubeはOpenClawが全て運用し『月1000万円』収益を上げるアカウントが大量発生する」——こんな投稿が X（旧 Twitter）で話題になっています。本当にそこまでできるのか、OpenClaw の技術的な能力と YouTube 運用の現実を照らし合わせて検証します。

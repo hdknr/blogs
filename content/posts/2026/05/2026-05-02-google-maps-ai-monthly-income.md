@@ -6,7 +6,7 @@ slug: "google-maps-ai-monthly-income"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363257776"
 categories: ["ビジネス/キャリア"]
-tags: ["AI", "Google Maps", "副業", "ChatGPT", "ローカルビジネス"]
+tags: ["AI", "Google Maps", "副業", "chatgpt", "ローカルビジネス"]
 ---
 
 ## 概要

@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785291461"
 description: "Claude を使い開発費わずか$20・1か月で完成させたAI速度違反検知システムを、19歳の中国人学生が香港政府に約55万ドルで売却したとされる事例を解説。コーディング力より課題発見力が問われるAI活用ビジネスの実態。"
 categories: ["AI/LLM"]
-tags: ["Claude", "AI活用", "anthropic", "コンピュータビジョン", "スタートアップ"]
+tags: ["claude", "AI活用", "anthropic", "コンピュータビジョン", "スタートアップ"]
 ---
 
 中国の19歳の学生が、Claudeを活用して開発費わずか$20のAI速度違反検知システムを作り上げ、香港政府に約55万ドル（2026年6月時点の為替レート約162円換算で約8,900万円）で売却した——そんな驚きの事例がX（旧Twitter）で話題を呼んでいる。

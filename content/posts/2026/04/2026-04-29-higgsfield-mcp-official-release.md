@@ -7,7 +7,7 @@ draft: false
 description: "Higgsfield MCP は Claude・Cursor などの MCP クライアントから Seedance 2.0・Sora 2・Veo 3.1 など30以上の AI 動画・画像生成モデルを1つのコネクタで呼び出せるホスト型 MCP サーバー。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340888308"
 categories: ["AI/LLM"]
-tags: ["MCP", "Higgsfield", "AI動画生成", "画像生成", "Claude"]
+tags: ["mcp", "Higgsfield", "AI動画生成", "画像生成", "claude"]
 ---
 
 AI動画・画像生成の世界に大きな変化が来た。Higgsfield が MCP（Model Context Protocol）サーバーを正式リリースし、Seedance 2.0・Kling 3.0・Veo 3.1・Sora 2 など 30 以上のトップモデルを「1 つのコネクタ」で利用できる環境が整った。

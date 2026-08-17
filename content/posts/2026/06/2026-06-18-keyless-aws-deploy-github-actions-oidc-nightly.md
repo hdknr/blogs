@@ -7,7 +7,7 @@ description: "GitHub Actions から AWS へ OIDC でキーレスデプロイし�
 draft: false
 source_url: "https://gist.github.com/hdknr/ed3bfafb743985e45f228d774d2eacc5"
 categories: ["クラウド/インフラ"]
-tags: ["AWS", "GitHub Actions", "OIDC", "Terraform", "CI/CD"]
+tags: ["aws", "GitHub Actions", "OIDC", "Terraform", "CI/CD"]
 ---
 
 サーバーレス前提の自動配信システムを題材に、「GitHub Actions から AWS へ安全にデプロイする」仕組みを、つまずきやすいポイントごとに解説します。キーレス認証（OIDC）と、稼働中システムを壊さないための「夜間デプロイ」設計が主題です。

@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/572#issuecomment-5306522101"
 description: "Claude Code の組み込みコマンドは執筆時点で70件前後あり、「基本16コマンド」という区切りは公式に存在しない。解説記事にある /add・/drop・/ls は Aider のコマンドで Claude Code には無い。局面別に並べ直した16個と、コマンドより効く常設物を整理する。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "スラッシュコマンド", "サブエージェント", "CLAUDE.md", "AIエージェント"]
+tags: ["claude-code", "スラッシュコマンド", "サブエージェント", "CLAUDE.md", "AIエージェント"]
 ---
 
 X のトレンドに「Claude Code の基本16コマンドで AI 社員化が加速」が上がっていた。関連記事をいくつか開いて、手を止めた。**数が合わない。**

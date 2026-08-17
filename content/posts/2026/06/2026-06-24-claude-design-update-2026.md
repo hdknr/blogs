@@ -6,7 +6,7 @@ slug: "claude-design-update-2026"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785310267"
 categories: ["AI/LLM"]
-tags: ["Claude", "Claude Design", "Anthropic", "UI/UX", "デザイン"]
+tags: ["claude", "Claude Design", "anthropic", "UI/UX", "デザイン"]
 ---
 
 2026年6月18日、AnthropicがClaude Designを大幅にアップデートしました。スライド・LP・アプリ試作品・アニメーションなど7種類のデザインをAIが生成するツールで、今回のアップデートでデザインシステム機能が追加されるなど機能が大きく拡張されています。

@@ -6,7 +6,7 @@ slug: "claude-tag-slack-team-member"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785288113"
 categories: ["AI/LLM"]
-tags: ["Claude", "Slack", "Claude Tag", "AIエージェント", "Anthropic"]
+tags: ["claude", "Slack", "Claude Tag", "AIエージェント", "anthropic"]
 ---
 
 ## Claude Tag とは

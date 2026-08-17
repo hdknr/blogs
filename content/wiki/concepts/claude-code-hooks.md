@@ -7,7 +7,7 @@ aliases: ["claude-code-hooks", "PostToolUse", "Stop hook", "SessionEnd hook"]
 related_posts:
   - "/posts/2026/05/claude-code-vault-writeback-automation/"
   - "/posts/2026/05/self-hosted-runner-vault-writeback/"
-tags: ["Claude Code", "Hooks", "automation", "PostToolUse"]
+tags: ["claude-code", "hooks", "automation", "PostToolUse"]
 ---
 
 ## 概要

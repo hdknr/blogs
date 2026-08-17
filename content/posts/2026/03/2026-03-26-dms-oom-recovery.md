@@ -5,7 +5,7 @@ lastmod: 2026-03-26
 slug: "dms-oom-recovery"
 draft: false
 categories: ["クラウド/インフラ"]
-tags: ["aws", "dms", "serverless", "eventbridge", "cloudwatch", "terraform", "監視"]
+tags: ["aws", "dms", "serverless", "eventbridge", "CloudWatch", "Terraform", "監視"]
 source_url: "https://gist.github.com/hdknr/43e385fbfa822e3ee1214a71564fd7a9"
 ---
 

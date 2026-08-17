@@ -6,7 +6,7 @@ slug: "mempalace-ai-memory"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4239444953"
 categories: ["AI/LLM"]
-tags: ["MemPalace", "LLM メモリ", "LongMemEval", "ChromaDB", "MCP"]
+tags: ["MemPalace", "LLM メモリ", "LongMemEval", "ChromaDB", "mcp"]
 description: "MemPalace は LLM に永続メモリを提供するオープンソースシステム。LongMemEval 96.6%のベンチマークスコアの実態、宮殿構造のアーキテクチャ、MCP 対応、コミュニティからの批判を詳しく解説。"
 ---
 

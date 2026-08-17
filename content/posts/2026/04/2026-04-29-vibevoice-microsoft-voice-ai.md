@@ -6,7 +6,7 @@ slug: "vibevoice-microsoft-voice-ai"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4341243694"
 categories: ["AI/LLM"]
-tags: ["microsoft", "vibevoice", "音声認識", "文字起こし", "音声合成", "oss", "tts", "asr"]
+tags: ["Microsoft", "vibevoice", "音声認識", "文字起こし", "音声合成", "OSS", "tts", "asr"]
 ---
 
 VibeVoice は、60 分の長尺 ASR（音声認識）と 90 分のマルチ話者 TTS（音声合成）をローカル無料で実現する Microsoft 製の OSS 音声 AI。本記事では特徴・モデル構成・TTS コード削除の経緯を解説する。

@@ -6,7 +6,7 @@ slug: "openclaw-video-generation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4197924774"
 categories: ["AI/LLM"]
-tags: ["OpenClaw", "動画生成", "AIエージェント", "マルチモーダル", "生成AI"]
+tags: ["openclaw", "動画生成", "AIエージェント", "マルチモーダル", "生成AI"]
 ---
 
 OpenClaw の創業者 Peter 氏が、次のバージョンで**動画生成機能を正式搭載**することを発表した。これにより、AI エージェントがテキストから動画生成までを一気通貫で完結できるようになる。

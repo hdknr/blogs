@@ -6,7 +6,7 @@ slug: "claude-code-source-map-leak"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4165302030"
 categories: ["セキュリティ"]
-tags: ["Claude Code", "npm", "ソースマップ", "Anthropic", "情報漏洩"]
+tags: ["claude-code", "npm", "ソースマップ", "anthropic", "情報漏洩"]
 description: "Anthropic の Claude Code npm パッケージにソースマップファイルが混入し、約51万行の TypeScript ソースコードが全公開。原因の設定ミスと、npm パッケージ公開時のソースマップ対策を解説。"
 ---
 

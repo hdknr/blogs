@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4474865852"
 description: "GitHub完結派の開発者は本当にObsidianを併用すべきか？ AI Agent時代のナレッジ管理として、リポジトリ単位の構造とVaultネットワーク型の違いを、Claude CodeやMCP経由での文脈共有まで含めて比較する。"
 categories: ["AI/LLM"]
-tags: ["Obsidian", "GitHub", "Claude Code", "MCP", "RAG", "PKM", "ナレッジマネジメント"]
+tags: ["Obsidian", "github", "claude-code", "mcp", "RAG", "PKM", "ナレッジマネジメント"]
 ---
 
 開発者にとって、GitHubは事実上の「最強のナレッジベース」になりつつあります。Issue・PR・Wiki・Markdown ドキュメント — 仕事に必要な情報のほとんどがリポジトリの中で完結しており、コードの近くにドキュメントを置く「Docs as Code」のスタイルは、エンジニアリングとして極めて洗練されています。

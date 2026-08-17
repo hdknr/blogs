@@ -6,7 +6,7 @@ slug: "google-senior-sre-interview-2026"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349338814"
 categories: ["ビジネス/キャリア"]
-tags: ["SRE", "Google", "面接対策", "NALSD", "Linux"]
+tags: ["SRE", "Google", "面接対策", "NALSD", "linux"]
 ---
 
 2026年の今、Google のシニア SRE 面接に「LeetCode をひたすら解けば受かる」という時代は終わった。本記事は韓国エンジニアコミュニティでバズったツイートとその英語スレッドをもとに、2026年版の攻略ポイントをまとめたものだ。

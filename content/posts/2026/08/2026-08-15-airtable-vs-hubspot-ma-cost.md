@@ -6,7 +6,7 @@ slug: "airtable-vs-hubspot-ma-cost"
 draft: false
 description: "MA / CRM の運営コストは HubSpot と Airtable のどちらが安いか。Marketing Hub Professional は年契約で初年度 $12,600（オンボーディング $3,000 必須）、Airtable Team 20席の $4,800 に対し約2.6倍になる。課金軸の違い、Pro に上がる損益分岐、カスタムオブジェクトが Enterprise 限定である点まで2026年8月時点の公式価格で検証した。"
 categories: ["ビジネス/キャリア"]
-tags: ["HubSpot", "Airtable", "marketing-automation", "料金プラン", "CRM"]
+tags: ["HubSpot", "Airtable", "marketing-automation", "料金プラン", "crm"]
 ---
 
 [Airtable の料金プランと上限を公式で引き直した](/blogs/posts/2026/08/airtable-plans-limits-2026/)あと、当然のように次の疑問が出てきた。

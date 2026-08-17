@@ -6,7 +6,7 @@ slug: "deepseek-v4-open-source"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4320800640"
 categories: ["AI/LLM"]
-tags: ["DeepSeek", "LLM", "オープンソース", "MoE", "ローカルLLM", "HuggingFace"]
+tags: ["DeepSeek", "llm", "オープンソース", "MoE", "ローカルLLM", "huggingface"]
 description: "DeepSeek-V4 Preview は 2026 年 4 月公開のオープンソース LLM。Pro（1.6 兆パラメータ）と Flash の 2 バリアントで 100 万トークンに対応。Codeforces で GPT-5.4 を超え、MIT ライセンスで Hugging Face から無償取得可能。MoE アーキテクチャで推論演算量を 73% 削減。"
 ---
 

@@ -6,7 +6,7 @@ slug: "bakery-takeout-reservation-gemini-gas"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324253493"
 categories: ["AI/LLM"]
-tags: ["Gemini", "GAS", "Google Sheets", "バイブコーディング", "vibe-coding", "スモールビジネス"]
+tags: ["gemini", "GAS", "Google Sheets", "バイブコーディング", "vibe-coding", "スモールビジネス"]
 ---
 
 福島県相馬市のパン屋「小麦の奴隷 相馬店」のオーナーが、コード経験ゼロから **バイブコーディング**（AI に自然言語で話しかけながらシステムを作り上げる開発スタイル）で「テイクアウト予約管理システム」を開発し、無料公開しました。Google Gemini と 500 時間かけて作り上げたこのシステムは、Google スプレッドシート + Google Apps Script（GAS）で動作し、初期費用・月額費用ともに 0 円です。

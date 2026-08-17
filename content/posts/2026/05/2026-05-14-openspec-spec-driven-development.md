@@ -6,7 +6,7 @@ slug: "openspec-spec-driven-development"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4447281857"
 categories: ["AI/LLM"]
-tags: ["OpenSpec", "仕様駆動開発", "SDD", "Claude Code", "コンテキストエンジニアリング"]
+tags: ["OpenSpec", "仕様駆動開発", "SDD", "claude-code", "コンテキストエンジニアリング"]
 ---
 
 ## はじめに

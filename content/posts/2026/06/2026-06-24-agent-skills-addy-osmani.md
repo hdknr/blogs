@@ -6,7 +6,7 @@ slug: "agent-skills-addy-osmani"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785289375"
 categories: ["AI/LLM"]
-tags: ["claude-code", "agent-skills", "AIエージェント", "tdd", "コード品質"]
+tags: ["claude-code", "Agent Skills", "AIエージェント", "tdd", "コード品質"]
 ---
 
 AIにコードを書かせると「動くけど雑」になりがちだ。テストが抜ける、セキュリティレビューが飛ぶ、コミット粒度が荒い——AIは最短経路を取るので、ベテランエンジニアが当たり前にやっている手順を省略してしまう。

@@ -6,7 +6,7 @@ slug: "claude-code-best-practice-repo"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4151383423"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "ベストプラクティス", "CLAUDE.md", "startup hook", "github"]
+tags: ["claude-code", "ベストプラクティス", "CLAUDE.md", "startup hook", "github"]
 ---
 
 Claude Codeのベストプラクティスが毎日TLに流れてくる。追いかけるのに疲れた人向けに、**1つのリポジトリだけをフォローして運用する方法**を紹介する。

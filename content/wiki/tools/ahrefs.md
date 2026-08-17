@@ -6,7 +6,7 @@ lastmod: 2026-07-15
 aliases: ["Ahrefs", "AhrefsBot", "Ahrefs Webmaster Tools"]
 related_posts:
   - "/posts/2026/07/ahrefs-semrush-seo-tools/"
-tags: ["SEO", "Ahrefs", "被リンク", "キーワード調査", "AI検索", "MCP"]
+tags: ["SEO", "Ahrefs", "被リンク", "キーワード調査", "AI検索", "mcp"]
 ---
 
 ## 概要

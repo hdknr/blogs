@@ -6,7 +6,7 @@ lastmod: 2026-04-16
 aliases: ["Danswer", "onyx"]
 related_posts:
   - "/posts/2026/04/onyx-open-source-ai-platform/"
-tags: ["RAG", "AIエージェント", "オープンソース", "セルフホスト", "Docker"]
+tags: ["RAG", "AIエージェント", "オープンソース", "セルフホスト", "docker"]
 ---
 
 ## 概要

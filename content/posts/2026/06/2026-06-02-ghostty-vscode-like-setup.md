@@ -6,7 +6,7 @@ slug: "ghostty-vscode-like-setup"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4601461859"
 categories: ["ツール/開発環境"]
-tags: ["Ghostty", "ターミナル", "TUI", "zellij", "Claude Code"]
+tags: ["Ghostty", "ターミナル", "TUI", "zellij", "claude-code"]
 ---
 
 Claude Code でコーディングする時間が増えると、ふと気づくのが「VSCode って、けっこうメモリを食うな」という事実です。プロジェクトを 5 つも同時に開けば、エディタだけでメモリがカツカツになります。

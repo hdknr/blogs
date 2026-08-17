@@ -6,7 +6,7 @@ slug: "macbook-m4-llama-cpp-offline-ai-workflow"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363255074"
 categories: ["AI/LLM"]
-tags: ["llama.cpp", "LLM", "オフライン推論", "MacBook", "自律エージェント"]
+tags: ["llama.cpp", "llm", "オフライン推論", "MacBook", "自律エージェント"]
 ---
 
 MacBook Pro M4 ローカルで Llama 3.3 70B を 11 時間動かし続け、機内でクライアント仕事をすべて片付けた開発者がいる。Wi-Fi 代 25 ドルを払わず、オフラインだけで完結させた「オフライン AI ワークフロー」の実例が話題になっている。

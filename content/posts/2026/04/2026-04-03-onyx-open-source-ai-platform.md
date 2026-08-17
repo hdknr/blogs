@@ -6,7 +6,7 @@ slug: "onyx-open-source-ai-platform"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4182307312"
 categories: ["AI/LLM"]
-tags: ["llm", "rag", "agent", "docker", "ollama"]
+tags: ["llm", "RAG", "agent", "docker", "ollama"]
 description: "Onyx（旧 Danswer）は MIT ライセンスの無料 AI プラットフォーム。RAG・AIエージェント・50以上のコネクタを備え、Docker でセルフホスト可能。インストール手順やエディション比較を解説。"
 ---
 

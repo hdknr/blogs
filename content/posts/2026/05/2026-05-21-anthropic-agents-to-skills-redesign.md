@@ -6,7 +6,7 @@ slug: "anthropic-agents-to-skills-redesign"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4513719495"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Skills", "Agents", "Anthropic", "SKILL.md", "agentskills.io", "モジュラー設計"]
+tags: ["claude-code", "Skills", "Agents", "anthropic", "SKILL.md", "agentskills.io", "モジュラー設計"]
 ---
 
 Anthropic の研究・プロダクトチーム（Barry Zhang・Mahesh Murag）が、2025年11月の AI Engineering Code Summit で衝撃的な発言をした。

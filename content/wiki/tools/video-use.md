@@ -6,7 +6,7 @@ lastmod: 2026-04-23
 aliases: ["video-use", "ビデオユース"]
 related_posts:
   - "/posts/2026/04/video-use-claude-code-video-editing/"
-tags: ["Claude Code", "動画編集", "browser-use", "オープンソース", "ElevenLabs"]
+tags: ["claude-code", "動画編集", "browser-use", "オープンソース", "ElevenLabs"]
 ---
 
 ## 概要

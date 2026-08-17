@@ -6,7 +6,7 @@ lastmod: 2026-08-05
 aliases: ["Kimi", "Kimi K3", "Moonshot AI", "KDA", "Kimi Delta Attention", "Gated MLA"]
 related_posts:
   - "/posts/2026/08/kimi-k3-memory-architecture/"
-tags: ["Kimi", "LLM", "ロングコンテキスト", "MoE", "オープンソース", "ローカルLLM"]
+tags: ["Kimi", "llm", "ロングコンテキスト", "MoE", "オープンソース", "ローカルLLM"]
 ---
 
 ## 概要

@@ -6,7 +6,7 @@ slug: "claude-code-teams-integration"
 draft: false
 description: "Claude Code から Microsoft Teams を操作する3つの方法を初心者向けに解説。Workflows Webhook（5分セットアップ）、Microsoft 365 Connector（公式・読み取り）、ms-365-mcp-server（投稿+ファイル DL）を難易度順に比較し、2026年5月の Incoming Webhook 廃止にも対応。"
 categories: ["ツール/開発環境"]
-tags: ["Claude Code", "Microsoft Teams", "MCP", "Microsoft 365", "Webhook", "ms-365-mcp-server", "Anthropic", "Adaptive Card"]
+tags: ["claude-code", "Microsoft Teams", "mcp", "Microsoft 365", "webhook", "ms-365-mcp-server", "anthropic", "Adaptive Card"]
 ---
 
 「Claude Code から Microsoft Teams にビルド結果を投稿したい」「OneDrive のファイルを Claude に読ませて要約させたい」──こうしたニーズは、AI 駆動の開発フローで日常的に発生します。本記事では、**初心者でも今日から使える 3 つの方法**を、難易度順にセットアップから操作まで解説します。

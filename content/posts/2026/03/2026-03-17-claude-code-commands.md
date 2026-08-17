@@ -6,7 +6,7 @@ slug: "claude-code-commands"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078720726"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "開発効率", "スラッシュコマンド", "AI", "ツール"]
+tags: ["claude-code", "開発効率", "スラッシュコマンド", "AI", "ツール"]
 ---
 
 Claude Code を使いこなすうえで押さえておきたいコマンド・指示パターンを10個まとめました。

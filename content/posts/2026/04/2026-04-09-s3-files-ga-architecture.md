@@ -6,7 +6,7 @@ slug: "s3-files-ga-architecture"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4217192632"
 categories: ["クラウド/インフラ"]
-tags: ["AWS", "S3", "アーキテクチャ", "クラウド", "NFS", "Django", "Terraform"]
+tags: ["aws", "S3", "アーキテクチャ", "クラウド", "NFS", "django", "Terraform"]
 ---
 
 2026年4月7日、AWSがAmazon S3 Filesを一般提供（GA）しました。S3バケットをNFS v4.1/v4.2のファイルシステムとしてマウントできる機能で、EC2・EKS・ECS・Lambdaのいずれからでも利用できます。

@@ -6,7 +6,7 @@ slug: "claude-code-stock-trading-paper-trade"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4114086121"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "自動売買", "ペーパートレード", "株式投資", "kabu Station API"]
+tags: ["claude-code", "自動売買", "ペーパートレード", "株式投資", "kabu Station API"]
 ---
 
 Claude Code を使って東証の株取引を半自動化するシリーズ。ペーパートレード開始から5日間で14件の決済が行われ、勝率0%、実現損失は-186,250円。全敗だった。しかし、これはペーパートレードだからこそ見つけられた17件のバグの記録でもある。

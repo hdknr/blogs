@@ -6,7 +6,7 @@ lastmod: 2026-07-15
 aliases: ["Dockerify Android", "dockerify-android"]
 related_posts:
   - "/posts/2026/06/dockerify-android/"
-tags: ["Docker", "Android", "エミュレーター", "CI/CD", "KVM", "scrcpy"]
+tags: ["docker", "Android", "エミュレーター", "CI/CD", "KVM", "scrcpy"]
 ---
 
 ## 概要

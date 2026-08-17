@@ -6,7 +6,7 @@ slug: "anthropic-automated-alignment-researchers"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250503446"
 categories: ["AI/LLM"]
-tags: ["Anthropic", "AI安全性", "スケーラブルオーバーサイト", "Claude", "アライメント"]
+tags: ["anthropic", "AI安全性", "スケーラブルオーバーサイト", "claude", "アライメント"]
 ---
 
 Anthropic が「Automated Alignment Researchers（AAR）」の研究成果を発表した。Claude Opus 4.6 を使って、AI アライメントの重要課題を自律的に研究させた実験で、9 体の Claude エージェントが人間の研究者を大きく上回る成果を達成した。

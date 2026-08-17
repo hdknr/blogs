@@ -6,7 +6,7 @@ slug: "harness-engineering-ai-agents"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714997720"
 categories: ["AI/LLM"]
-tags: ["Harness Engineering", "AI Agent", "LLM", "Claude Code", "エージェント設計"]
+tags: ["Harness Engineering", "ai-agent", "llm", "claude-code", "エージェント設計"]
 ---
 
 ## はじめに

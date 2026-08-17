@@ -7,7 +7,7 @@ draft: false
 description: "「計画するAI」と「書くAI」を分業し、間に承認ゲートを置く AI コーディング手法を OSS スキル codex-build を題材に解説。スコープ・テスト・フルスイートの3ゲートで巨大 diff とスコープ膨張を防ぎ、Claude Code や Codex CLI に依らず自分の CLAUDE.md にも移植できる設計原則をまとめる。"
 source_url: "https://github.com/hdknr/blogs/issues/556#issuecomment-5055247823"
 categories: ["AI/LLM"]
-tags: ["claude-code", "codex", "agent", "自律システム", "openai"]
+tags: ["claude-code", "Codex", "agent", "自律システム", "openai"]
 ---
 
 ## TL;DR

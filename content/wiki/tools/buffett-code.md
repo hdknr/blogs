@@ -6,7 +6,7 @@ lastmod: 2026-04-15
 aliases: ["buffett-code", "バフェットコード"]
 related_posts:
   - "/posts/2026/04/buffett-code-analysis/"
-tags: ["財務分析", "EDINET", "XBRL", "投資", "MCP", "Python"]
+tags: ["財務分析", "EDINET", "XBRL", "投資", "mcp", "python"]
 ---
 
 ## 概要

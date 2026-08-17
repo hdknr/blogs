@@ -20,6 +20,7 @@ Tech blog built with Hugo + PaperMod, hosted on GitHub Pages.
 - `.claude/skills/wiki-ingest/` — `/wiki-ingest` skill
 - `scripts/categorize.py` — automatic category/tag assignment
 - `scripts/validate_frontmatter.py` — frontmatter/placement validation, enforced in CI
+- `scripts/normalize_tags.py` — collapse tag spelling variants (dry run by default)
 - `hugo.toml` — Hugo config
 - `.hugoversion` — pinned Hugo version, read by both CI workflows (see below)
 - `.claude/skills/blog/` — `/blog` skill
@@ -79,6 +80,20 @@ AI/LLM, セキュリティ, クラウド/インフラ, Web開発, プログラ�
 other value, on a missing `title`/`date`/`slug`/`categories`/`tags`, and on a post outside
 `content/posts/YYYY/MM/`. Run it locally with `python3 scripts/validate_frontmatter.py`.
 Adding a category means editing `VALID_CATEGORIES` there **and** this list.
+
+## Tag vocabulary
+
+**One spelling per tag, across posts AND the wiki.** They share a single `tags` taxonomy,
+so `MCP` and `mcp` both build `/tags/mcp/` and only the display name differs — and which
+one wins is decided by map iteration order, so it changed between builds of identical
+content. `validate_frontmatter.py` fails CI on any two spellings that urlize alike.
+
+- `titleCaseStyle = 'none'` in `hugo.toml` — the frontmatter spelling is what readers see,
+  so Hugo must not title-case `llm` into `Llm`.
+- Adding a tag to `TAG_RULES` in `categorize.py` means matching the spelling already used
+  in content, or CI fails on the collision.
+- To re-normalise after a bulk import: `python3 scripts/normalize_tags.py` (dry run),
+  then `--apply`. The canonical spelling is the most-used variant.
 
 ## Mandatory Bash rules (auto-mode compatible)
 

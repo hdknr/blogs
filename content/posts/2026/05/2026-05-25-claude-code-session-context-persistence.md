@@ -6,7 +6,7 @@ slug: "claude-code-session-context-persistence"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4532431613"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "CLAUDE.md", "コンテキスト管理", "生産性", "AI開発"]
+tags: ["claude-code", "CLAUDE.md", "コンテキスト管理", "生産性", "AI開発"]
 ---
 
 ## はじめに

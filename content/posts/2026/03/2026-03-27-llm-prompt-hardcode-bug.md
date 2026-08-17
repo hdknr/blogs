@@ -6,7 +6,7 @@ slug: "llm-prompt-hardcode-bug"
 draft: false
 description: "LLMエージェントのプロンプトにリスクパラメータがハードコードされていたため、動的調整が反映されなかったバグの原因と修正。テンプレート変数化、結合テスト、CLAUDE.mdルール追加による再発防止策を解説。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "LLM", "prompt", "agent", "Python"]
+tags: ["claude-code", "llm", "prompt", "agent", "python"]
 ---
 
 ## TL;DR

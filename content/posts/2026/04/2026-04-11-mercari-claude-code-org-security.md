@@ -6,7 +6,7 @@ slug: "mercari-claude-code-org-security"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230044318"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "メルカリ", "セキュリティ", "企業導入", "MDM"]
+tags: ["claude-code", "メルカリ", "セキュリティ", "企業導入", "MDM"]
 ---
 
 メルカリが「Claude Code Meetup Japan #4」で公開した資料が注目を集めている。エンジニアだけでなく非エンジニアにもClaude Codeを全社展開するにあたって実施したセキュリティ設定と、MDMを活用した組織配布の実践的な戦略が体系的にまとめられている。

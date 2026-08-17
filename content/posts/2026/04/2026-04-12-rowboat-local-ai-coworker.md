@@ -6,7 +6,7 @@ slug: "rowboat-local-ai-coworker"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230730521"
 categories: ["AI/LLM"]
-tags: ["AI", "エージェント", "オープンソース", "MCP", "ローカルAI"]
+tags: ["AI", "エージェント", "オープンソース", "mcp", "ローカルAI"]
 ---
 
 完全オープンソースで動く AI 同僚ツール「Rowboat」が注目を集めている。音声制御、MCP ツール連携、バックグラウンドエージェントなど、有料 AI アシスタントサービスに相当する機能を、データをローカルに保ったまま利用できる点が特徴だ。

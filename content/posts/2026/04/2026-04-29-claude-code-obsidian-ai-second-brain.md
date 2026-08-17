@@ -6,7 +6,7 @@ slug: "claude-code-obsidian-ai-second-brain"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340093599"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Obsidian", "第二の脳", "Andrej Karpathy", "LLM Wiki", "RAG", "PKM", "ナレッジ管理"]
+tags: ["claude-code", "Obsidian", "第二の脳", "Andrej Karpathy", "LLM Wiki", "RAG", "PKM", "ナレッジ管理"]
 ---
 
 Andrej Karpathy（元 OpenAI・元 Tesla AI ディレクター）が提唱した「Claude Code での第二の脳の作り方」。

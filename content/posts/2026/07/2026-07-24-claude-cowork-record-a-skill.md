@@ -6,7 +6,7 @@ slug: "claude-cowork-record-a-skill"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/572#issuecomment-5066273459"
 categories: ["AI/LLM"]
-tags: ["Claude", "Anthropic", "Agent Skills", "業務自動化", "Cowork"]
+tags: ["claude", "anthropic", "Agent Skills", "業務自動化", "Cowork"]
 ---
 
 Anthropic が Claude のデスクトップアプリ「Claude Cowork」に **「Record a skill」** という機能を追加した。一見すると単なる画面録画機能に見えるが、その本質は「Claude に仕事を文章（プロンプト）で説明する時代」から「一度見せた仕事を覚えさせる時代」への転換にある。本記事では、この機能が何をするのか、どう使うのか、そしてなぜ「地味だが重要」なのかを整理する。

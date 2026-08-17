@@ -6,7 +6,7 @@ slug: "anthropic-multi-agent-coordination-patterns"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4229022963"
 categories: ["AI/LLM"]
-tags: ["マルチエージェント", "エージェント", "Claude", "Anthropic", "AIアーキテクチャ"]
+tags: ["マルチエージェント", "エージェント", "claude", "anthropic", "AIアーキテクチャ"]
 ---
 
 Anthropic が 2026 年 4 月 10 日に公開したブログ記事「[Multi-agent coordination patterns: Five approaches and when to use them](https://claude.com/blog/multi-agent-coordination-patterns)」では、複数のAIエージェントを協調させるための 5 つのパターンが紹介されています。

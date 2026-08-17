@@ -4,7 +4,7 @@ description: "大規模 Terraform プロジェクトの設計・運用：モジ�
 date: 2026-04-06
 lastmod: 2026-04-06
 related_posts:
-tags: ["Terraform", "IaC", "DevOps", "AWS"]
+tags: ["Terraform", "IaC", "DevOps", "aws"]
 ---
 
 ## 概要

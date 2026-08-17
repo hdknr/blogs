@@ -6,7 +6,7 @@ slug: "claude-youtube-shorts-automation"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349371563"
 categories: ["AI/LLM"]
-tags: ["Claude", "YouTube Shorts", "agent", "prompt", "python", "収益化"]
+tags: ["claude", "YouTube Shorts", "agent", "prompt", "python", "収益化"]
 ---
 
 千寻（@Crypto_QianXun）さんが2026年4月のポストで紹介した「Claude + YouTube Shorts = 自動収益化」という手法が注目を集めている。**カメラなし・編集なし・顔出しなし** でバイラルショート動画を量産するアプローチだ。

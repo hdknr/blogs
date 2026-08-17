@@ -7,7 +7,7 @@ draft: false
 description: "プロンプトを書くな、ループを書け。Boris Cherny（Claude Code）・Peter Steinberger（OpenAI）・Addy Osmani（Google）が同時に提唱するループエンジニアリングを体系的に解説。AIパラダイムの4世代変遷、DISCOVER-PLAN-EXECUTE-VERIFY-ITERATEの5フェーズ、シングル/フリートループ、6つのコアモジュール、検証可能なループの5ステップ方法論、3つの罠までを整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714959431"
 categories: ["AI/LLM"]
-tags: ["ループエンジニアリング", "agent", "multi-agent", "llm", "prompt", "Claude Code"]
+tags: ["ループエンジニアリング", "agent", "multi-agent", "llm", "prompt", "claude-code"]
 ---
 
 「プロンプトを書くな。ループを書け」——この言葉が、2026年のAI開発者コミュニティを揺るがしている。

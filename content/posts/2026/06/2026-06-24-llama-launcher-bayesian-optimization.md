@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785351760"
 description: "OSSツール llama-launcher の紹介。Optuna の TPE によるベイズ最適化で llama.cpp のスレッド数・バッチサイズ・KVキャッシュ型・投機的デコード設定を自動探索し、PPL検証で品質を保ちながら推論速度を改善する仕組みと使い方を解説。"
 categories: ["AI/LLM"]
-tags: ["LLM", "llama.cpp", "ローカルLLM", "ベイズ最適化", "Optuna"]
+tags: ["llm", "llama.cpp", "ローカルLLM", "ベイズ最適化", "Optuna"]
 ---
 
 ## 概要

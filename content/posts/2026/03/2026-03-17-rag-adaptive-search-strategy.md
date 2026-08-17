@@ -6,7 +6,7 @@ slug: "rag-adaptive-search-strategy"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078717496"
 categories: ["AI/LLM"]
-tags: ["RAG", "LLM", "検索", "社内文書", "AI活用"]
+tags: ["RAG", "llm", "検索", "社内文書", "AI活用"]
 ---
 
 社内資料をRAGで検索しているのに「欲しい情報に限って見つけてくれない」「関係ない文書ばかり読んで的外れな回答をする」という経験はないでしょうか。AIDB が紹介する新しいRAG手法は、**検索方法そのものをモデル自身に判断させる**というアプローチで、この問題に正面から取り組んでいます。

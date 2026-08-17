@@ -6,7 +6,7 @@ slug: "claude-code-vault-writeback-automation"
 draft: false
 description: "個人 Obsidian Vault への書き戻し（writeback）を自動化する3つの方式を比較。Claude Code の hooks（PostToolUse / Stop / SessionEnd）、Git クライアントフック（post-merge）、GitHub Actions それぞれが拾えるトリガと文脈の違いを示し、推奨は『フックは器を用意し、AI が中身を書く』分業。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Obsidian", "Claude Code Hooks", "PostToolUse", "GitHub Actions", "Git", "post-merge", "writeback", "automation", "Daily Notes", "ナレッジマネジメント", "PKM"]
+tags: ["claude-code", "Obsidian", "Claude Code Hooks", "PostToolUse", "GitHub Actions", "Git", "post-merge", "writeback", "automation", "Daily Notes", "ナレッジマネジメント", "PKM"]
 ---
 
 [Claude Code から個人 Obsidian Vault に「書き戻す」設計]({{< ref "posts/2026/05/2026-05-18-claude-code-obsidian-vault-writeback.md" >}}) では、書き戻しの設計パターンとして `summary-back-to-vault` スキル / Daily Note 追記 / ADR 二重書きの 3 つを示しました。本記事はその続編で、**書き戻しを自動化する仕組み**を扱います。

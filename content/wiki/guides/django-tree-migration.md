@@ -6,7 +6,7 @@ lastmod: 2026-04-27
 aliases: ["django-mptt", "django-tree-queries", "MPTT 移行"]
 related_posts:
   - "/posts/2026/04/django-mptt-unmaintained-tree-queries/"
-tags: ["Django", "Python", "django-mptt", "django-tree-queries", "MPTT", "Recursive CTE", "ORM"]
+tags: ["django", "python", "django-mptt", "django-tree-queries", "MPTT", "Recursive CTE", "ORM"]
 ---
 
 ## 概要

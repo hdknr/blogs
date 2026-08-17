@@ -6,7 +6,7 @@ slug: "buffett-code-analysis"
 draft: false
 categories: ["Web開発"]
 description: "EDINETのXBRLデータを基盤にした企業分析SaaS「バフェット・コード」を徹底分析。Web API、スプレッドシート連携、MCP Server、OSSライブラリなど、無料プランの範囲からPython実装例まで解説"
-tags: ["バフェット・コード", "EDINET", "Python", "財務分析", "MCP"]
+tags: ["バフェット・コード", "EDINET", "python", "財務分析", "mcp"]
 ---
 
 [前回の記事](/blogs/posts/2026/04/edinet-xbrl-python/)で EDINET の XBRL データを Python で扱う方法を紹介した。今回は、その仕組みを活用して構築されている企業分析サービス「[バフェット・コード](https://www.buffett-code.com/)」を分析し、何ができるのかを網羅的にまとめる。

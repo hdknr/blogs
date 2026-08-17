@@ -6,7 +6,7 @@ slug: "claude-obsidian-second-brain"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4504069816"
 categories: ["AI/LLM"]
-tags: ["Obsidian", "Claude Code", "LLM Wiki", "ナレッジ管理", "第2の脳", "PKM"]
+tags: ["Obsidian", "claude-code", "LLM Wiki", "ナレッジ管理", "第2の脳", "PKM"]
 ---
 
 「メモはたくさん溜まるのに、結局どこに何を書いたか分からない」

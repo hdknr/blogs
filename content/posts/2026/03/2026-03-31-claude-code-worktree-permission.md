@@ -5,7 +5,7 @@ lastmod: 2026-03-31
 slug: "claude-code-worktree-permission"
 draft: false
 categories: ["AI/LLM"]
-tags: ["Claude Code", "git worktree", "自動化", "パーミッション"]
+tags: ["claude-code", "git worktree", "自動化", "パーミッション"]
 ---
 
 Claude Code の auto モードでブログ記事作成を完全自動化しようとしたところ、`.claude/` ディレクトリ配下のファイルへの書き込みで毎回同意を求められる問題に遭遇しました。原因と対処法を記録します。

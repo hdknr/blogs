@@ -5,7 +5,7 @@ lastmod: 2026-08-05
 slug: "hubspot-meeting-notes-to-properties"
 draft: false
 categories: ["AI/LLM"]
-tags: ["HubSpot", "データエージェント", "スマートプロパティー", "営業DX", "CRM"]
+tags: ["HubSpot", "データエージェント", "スマートプロパティー", "営業DX", "crm"]
 ---
 
 HubSpot Japan の「AI を活用した営業活動の効率化」4 日連続シリーズ、その 2 日目のテーマが**商談議事録とプロパティー更新**だった。1 日目のカスタムシグナルについては[HubSpot のカスタムシグナル — 「買いのサイン」を自然言語で書くと AI が Web を見張ってくれる]({{< ref "/posts/2026/08/2026-08-05-hubspot-custom-signals" >}})に書いた。

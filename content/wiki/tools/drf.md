@@ -5,7 +5,7 @@ date: 2026-04-06
 lastmod: 2026-04-06
 aliases: ["DRF", "django-rest-framework"]
 related_posts:
-tags: ["Django", "API", "REST", "Python"]
+tags: ["django", "API", "REST", "python"]
 ---
 
 ## 概要

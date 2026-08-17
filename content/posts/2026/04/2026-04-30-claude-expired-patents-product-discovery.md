@@ -6,7 +6,7 @@ slug: "claude-expired-patents-product-discovery"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349314496"
 categories: ["AI/LLM"]
-tags: ["Claude", "特許", "ビジネス", "python", "markitdown", "自動化", "USPTO"]
+tags: ["claude", "特許", "ビジネス", "python", "markitdown", "自動化", "USPTO"]
 description: "期限切れ特許420万件をClaudeでスコアリングし、Alibabaで製造してAmazonで販売するパイプラインを個人で構築する手法を解説。製造原価$1.80、Amazon販売価格$11.99の具体的なユニットエコノミクス付き。"
 ---
 

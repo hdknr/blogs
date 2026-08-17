@@ -6,7 +6,7 @@ slug: "claude-code-7-qa-personas-test-case"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785285294"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "QA", "テスト設計", "テスト自動化", "スキル設計", "ISO25010", "MCP"]
+tags: ["claude-code", "QA", "テスト設計", "テスト自動化", "スキル設計", "ISO25010", "mcp"]
 ---
 
 Claude Codeのカスタムスキルに「7人の意地悪なQA」を仕込むことで、AIが正常系に偏るという課題を解決した実践レポート。テスト観点漏れを構造的に排除し、一人QAでも品質を安定させる方法を解説する。

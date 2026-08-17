@@ -6,7 +6,7 @@ slug: "claude-ai-agent-first-build-no-code"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714967798"
 categories: ["AI/LLM"]
-tags: ["Claude", "AIエージェント", "ノーコード", "Claude Projects", "Claude Cowork"]
+tags: ["claude", "AIエージェント", "ノーコード", "Claude Projects", "Claude Cowork"]
 ---
 
 AIエージェントの話はどこでも聞こえてくる。調査するエージェント、文章を書くエージェント、メールを管理し、スプレッドシートを更新し、レポートをまとめ、あなたが寝ている間にワークフロー全体を実行するエージェントまで登場している。

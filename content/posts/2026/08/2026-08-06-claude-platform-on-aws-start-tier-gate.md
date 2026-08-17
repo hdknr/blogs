@@ -7,7 +7,7 @@ draft: false
 description: "新規 AWS アカウントで Claude Platform on AWS が使えないのは、サインアップが AWS Marketplace の購読を経由するため。SCP・Private Marketplace・リセラー契約による阻害はいずれも AWS Support の権限外で、担当営業しか動かせない。使えた後の Start tier 固定の話と併せて整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/593#issuecomment-5200842187"
 categories: ["AI/LLM", "クラウド/インフラ"]
-tags: ["Claude", "Claude Platform on AWS", "Amazon Bedrock", "AWS", "レート制限"]
+tags: ["claude", "Claude Platform on AWS", "Amazon Bedrock", "aws", "レート制限"]
 ---
 
 新しく開設した AWS アカウントで Claude Platform on AWS を使おうとしたら、使えなかった。**AWS サポートと何度もやり取りしたが進展せず、最終的に別途契約している AWS アカウントのローカルセールス担当と連絡がついて、ミーティングで依頼したことでようやく動いた。**
