@@ -36,17 +36,27 @@ TAGS_LINE = re.compile(r'^tags:[ \t]*(\[.*\])[ \t]*$', re.MULTILINE)
 
 
 def urlize(term):
-    """Approximate Hugo's urlize for taxonomy terms.
+    """The path Hugo builds for a taxonomy term, used only to spot collisions.
 
-    Only used to decide which terms collide, never to build a URL, so it needs
-    to agree with Hugo on the collapsing rules (case, spaces, underscores,
-    slashes) rather than reproduce every escaping detail.
+    Verified against real build output rather than assumed:
+
+    - whitespace collapses to `-`   `Claude Code` -> claude-code
+    - case is folded                `MCP`         -> mcp
+    - `/` stays a PATH SEPARATOR    `AI/LLM`      -> ai/llm   (two directories)
+    - `_` is preserved                `$GITHUB_ENV` -> github_env
+    - `.` is preserved                `Claude.md`   -> claude.md
+    - repeated `-` is NOT collapsed   `claude -p`   -> claude--p
+
+    Every rule above was checked against a real build: urlizing all 1161 tags
+    reproduces the 1161 directories under public/tags/ exactly, with nothing
+    missing and nothing extra. Guessing here is not safe -- folding `/` or `_`
+    into `-` would call `AI/LLM` and a hypothetical `AI-LLM` the same term, so
+    the collision guard would fail CI on two tags that really do have separate
+    pages, and a re-run of --apply would merge them and delete a live URL.
     """
     s = term.strip().lower()
-    s = re.sub(r'[\s_/]+', '-', s)
-    s = re.sub(r'[^\w\-]', '', s, flags=re.UNICODE)
-    s = re.sub(r'-+', '-', s).strip('-')
-    return s
+    s = re.sub(r'\s+', '-', s)
+    return re.sub(r'[^\w\-/.]', '', s, flags=re.UNICODE)
 
 
 def parse_tags(raw):

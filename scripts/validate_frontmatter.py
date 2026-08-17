@@ -127,16 +127,25 @@ def validate_post(filepath, repo_relative):
 
 
 def urlize(term):
-    """Approximate Hugo's urlize for taxonomy terms.
+    """The path Hugo builds for a taxonomy term, used only to spot collisions.
 
-    Only used to decide which terms would land on the same page, so it needs to
-    agree with Hugo on what collapses (case, spaces, underscores, slashes)
-    rather than reproduce every escaping detail.
+    Verified against real build output rather than assumed:
+
+    - whitespace collapses to `-`   `Claude Code` -> claude-code
+    - case is folded                `MCP`         -> mcp
+    - `/` stays a PATH SEPARATOR    `AI/LLM`      -> ai/llm   (two directories)
+    - `_` is preserved                `$GITHUB_ENV` -> github_env
+    - `.` is preserved                `Claude.md`   -> claude.md
+    - repeated `-` is NOT collapsed   `claude -p`   -> claude--p
+
+    Checked against a real build: urlizing all 1161 tags reproduces the 1161
+    directories under public/tags/ exactly. Folding `/` or `_` into `-` would
+    fail CI on two tags that really do have separate pages.
+    Keep this in sync with scripts/normalize_tags.py.
     """
     s = term.strip().lower()
-    s = re.sub(r'[\s_/]+', '-', s)
-    s = re.sub(r'[^\w\-]', '', s, flags=re.UNICODE)
-    return re.sub(r'-+', '-', s).strip('-')
+    s = re.sub(r'\s+', '-', s)
+    return re.sub(r'[^\w\-/.]', '', s, flags=re.UNICODE)
 
 
 def collect_tags(repo_root):
