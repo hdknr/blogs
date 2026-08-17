@@ -7,7 +7,7 @@ draft: false
 description: "SurfSenseはNotebookLMの制約（ソース数・LLM選択・セルフホスト不可）を解消するOSSプラットフォーム。Docker1コマンドで導入でき、100以上のLLM・27以上の外部コネクタ・チームRAG機能を提供する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714984317"
 categories: ["AI/LLM"]
-tags: ["SurfSense", "NotebookLM", "RAG", "セルフホスト", "Docker"]
+tags: ["SurfSense", "notebooklm", "RAG", "セルフホスト", "docker"]
 ---
 
 Google NotebookLMは使い勝手の良いAIプラットフォームですが、使い込むほどにいくつかの制約が目立ってきます。そこで注目されているのが **SurfSense** です。「NotebookLMのオープンソース版が来た」としてGitHubやHacker Newsなどで話題となり、2026年6月時点でGitHubのスター数は15,000以上に達しています。

@@ -7,7 +7,7 @@ draft: false
 description: "OSS の Jira 代替として人気の Plane をセルフホストする前に確認したい3点。docker-compose.yml の実態は13サービスで Celery 用に RabbitMQ が別立て、無償版が Community/Commercial の2製品に分岐し席数の公式説明も矛盾、Jira 移行ツールは AGPL 版に含まれない。"
 source_url: "https://github.com/hdknr/blogs/issues/572#issuecomment-5229332077"
 categories: ["クラウド/インフラ"]
-tags: ["Plane", "Jira", "セルフホスト", "Docker", "OSS", "AGPL"]
+tags: ["Plane", "Jira", "セルフホスト", "docker", "OSS", "agpl"]
 ---
 
 タスク管理基盤を自前で持ちたい、という話になると必ず候補に挙がるのが [Plane](https://github.com/makeplane/plane) だ。「Jira / Linear / Monday / ClickUp のオープンソース代替」を名乗る OSS である。GitHub スターは 55,722（2026年8月9日時点）、ライセンスは AGPL-3.0、直近リリースは v1.4.1（2026年8月7日）と開発も活発だ。紹介記事を読む限り、乗り換えない理由はなさそうに見える。

@@ -6,7 +6,7 @@ lastmod: 2026-04-22
 aliases: ["open notebook lm", "notebooklm oss"]
 related_posts:
   - "/posts/2026/04/open-notebook-notebooklm-oss/"
-tags: ["oss", "notebooklm", "rag", "プライバシー", "ai-notebook"]
+tags: ["OSS", "notebooklm", "RAG", "プライバシー", "ai-notebook"]
 ---
 
 ## 概要

@@ -6,7 +6,7 @@ slug: "claude-code-silent-degradation"
 draft: false
 source_url: "https://gist.github.com/hdknr/b3fbb36d80ee881172cff7395f482290"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "テスト", "デグレード", "リファクタリング", "AI開発"]
+tags: ["claude-code", "テスト", "デグレード", "リファクタリング", "AI開発"]
 description: "Claude Code でリファクタリングすると既存機能の出力品質が静かに劣化する問題の事例と、出力仕様テストによる防止策を解説。"
 ---
 

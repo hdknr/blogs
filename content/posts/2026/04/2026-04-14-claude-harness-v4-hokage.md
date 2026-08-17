@@ -6,7 +6,7 @@ slug: "claude-harness-v4-hokage"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4265196767"
 categories: ["ツール/開発環境"]
-tags: ["Claude Code", "Claude Harness", "AI開発", "OSS", "Go"]
+tags: ["claude-code", "Claude Harness", "AI開発", "OSS", "go"]
 ---
 
 Claude Code の拡張 OSS「Claude Harness」が v4.0.0 "Hokage" をリリースした。コア全体を Go ネイティブに書き換え、フック実行速度が約 30 倍に向上。設定ファイルも `harness.toml` 1 本に集約され、大幅に扱いやすくなった。

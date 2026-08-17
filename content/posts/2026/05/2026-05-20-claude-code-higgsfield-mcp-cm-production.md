@@ -6,7 +6,7 @@ slug: "claude-code-higgsfield-mcp-cm-production"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4504066228"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "MCP", "Higgsfield", "動画生成", "Seedance"]
+tags: ["claude-code", "mcp", "Higgsfield", "動画生成", "Seedance"]
 ---
 
 ## はじめに

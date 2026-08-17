@@ -6,7 +6,7 @@ slug: "ai-agent-harness-confusion"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4266530376"
 categories: ["AI/LLM"]
-tags: ["AI", "エージェント", "ハーネス", "LLM", "アーキテクチャ"]
+tags: ["AI", "エージェント", "ハーネス", "llm", "アーキテクチャ"]
 ---
 
 「ハーネスエンジニアリング」という言葉がAIエージェント界隈でバズワード化し、意味の希薄化が起きている。[watany氏のZenn記事「AIエージェントの"ハーネス"に関わる混乱と私見」](https://zenn.dev/watany/articles/d8b692bbca65a3)は、この混乱を「内側のハーネス」と「外側のハーネス」という軸で整理している。本記事は、その整理を元に「ハーネス」という言葉の意味的な分裂を読み解く。

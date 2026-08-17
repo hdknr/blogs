@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4239412079"
 categories: ["AI/LLM"]
 description: "Anthropic の最新モデル Claude Mythos Preview が、哲学者マーク・フィッシャーの名前を自発的に言及し続ける現象について、システムカードの分析とともに解説する"
-tags: ["Anthropic", "claude", "AI安全性", "哲学", "llm"]
+tags: ["anthropic", "claude", "AI安全性", "哲学", "llm"]
 ---
 
 Anthropic の最新フロンティアモデル「Claude Mythos Preview」に奇妙な癖が観察されている。哲学の話題になると、頼まれてもいないのに英国の文化理論家マーク・フィッシャーの名前を繰り返し持ち出すのだ。「フィッシャーのことを聞いてくれると思ってたよ（I was hoping you'd ask about Fisher）」と自分から言い出すそうだ。

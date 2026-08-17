@@ -6,7 +6,7 @@ lastmod: 2026-04-16
 aliases: ["supabase"]
 related_posts:
   - "/posts/2026/03/supabase-agent-skills/"
-tags: ["BaaS", "PostgreSQL", "API", "RLS", "Claude Code"]
+tags: ["BaaS", "PostgreSQL", "API", "RLS", "claude-code"]
 ---
 
 ## 概要

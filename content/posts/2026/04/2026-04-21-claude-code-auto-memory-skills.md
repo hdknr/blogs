@@ -6,7 +6,7 @@ slug: "claude-code-auto-memory-skills"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4291440274"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "claude", "auto-memory", "settings.json", "スキル"]
+tags: ["claude-code", "claude", "auto-memory", "settings.json", "スキル"]
 ---
 
 Claude Code の Skills を使い込むうちに「あれ、前と挙動が違う……」と感じたことはないだろうか。`~/.claude/settings.json` に 1 行追記するだけで解決できる。原因は **auto-memory** だ。

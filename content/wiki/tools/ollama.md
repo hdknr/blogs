@@ -7,7 +7,7 @@ aliases: ["ollama"]
 related_posts:
   - "/posts/2026/03/claude-code-ollama-local-free/"
   - "/posts/2026/03/kali-ollama-mcp-pentesting/"
-tags: ["LLM", "ローカル実行", "オープンソース"]
+tags: ["llm", "ローカル実行", "オープンソース"]
 ---
 
 ## 概要

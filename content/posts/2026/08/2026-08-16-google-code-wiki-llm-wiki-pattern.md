@@ -7,7 +7,7 @@ slug: "google-code-wiki-llm-wiki-pattern"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/572#issuecomment-5306590695"
 categories: ["AI/LLM"]
-tags: ["Code Wiki", "OpenWiki", "DeepWiki", "Gemini", "RAG"]
+tags: ["Code Wiki", "OpenWiki", "DeepWiki", "gemini", "RAG"]
 ---
 
 X で「Google が開発者待望のツールを出した」という投稿が流れてきた。CodeWiki というらしい（正式名称は二語の Code Wiki）。リポジトリを貼るだけで対話的なドキュメントに変換され、図も自動生成され、コードを理解したチャットボットまで付いてくる、と。

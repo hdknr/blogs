@@ -6,7 +6,7 @@ lastmod: 2026-07-15
 aliases: ["CodeGraph", "コード知識グラフ", "knowledge graph"]
 related_posts:
   - "/posts/2026/06/codegraph-ai-coding-knowledge-graph/"
-tags: ["CodeGraph", "claude-code", "MCP", "知識グラフ", "OSS"]
+tags: ["CodeGraph", "claude-code", "mcp", "知識グラフ", "OSS"]
 ---
 
 ## 概要

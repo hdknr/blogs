@@ -6,7 +6,7 @@ slug: "ai-first-harness-engineering-creao"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4265193845"
 categories: ["AI/LLM"]
-tags: ["ハーネスエンジニアリング", "AIエージェント", "エンジニアリング組織", "Claude", "CI/CD"]
+tags: ["ハーネスエンジニアリング", "AIエージェント", "エンジニアリング組織", "claude", "CI/CD"]
 ---
 
 MetaのGenAIチーム（LLaMA）出身のCo-FounderであるPeter Pang（@intuitiveml）が率いるエージェントプラットフォーム企業CreaoAI（25名）が、「AIファースト」を本気で実践した結果、コードの99%をAIが書き、かつてのリリースサイクル6週間を1日に短縮した方法を解説している。

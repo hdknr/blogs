@@ -8,7 +8,7 @@ related_posts:
   - "/posts/2026/04/hubspot-hscachebuster/"
   - "/posts/2026/04/hubspot-pro-merits/"
   - "/posts/2026/07/hubspot-eu-email-tracking-consent/"
-tags: ["hubspot", "crm", "ma", "インバウンドマーケティング", "営業"]
+tags: ["HubSpot", "crm", "ma", "インバウンドマーケティング", "営業"]
 ---
 
 ## 概要

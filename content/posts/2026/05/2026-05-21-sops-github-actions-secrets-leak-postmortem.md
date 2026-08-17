@@ -7,7 +7,7 @@ draft: false
 description: "SOPS で暗号化した secrets を GitHub Actions ログに平文露出した実インシデントの post-mortem。::add-mask:: 登録ループが存在しない一時ファイルを参照していたバグの根本原因、即時対応 (run 削除 + rotate)、source-from-file パターン + workflow lint による4層防御まで詳説。"
 source_url: "https://gist.github.com/hdknr/735ddfb1794279872078ca27f8256378"
 categories: ["セキュリティ"]
-tags: ["SOPS", "GitHub Actions", "post-mortem", "add-mask", "$GITHUB_ENV"]
+tags: ["sops", "GitHub Actions", "post-mortem", "add-mask", "$GITHUB_ENV"]
 ---
 
 > **TL;DR**: SOPS で暗号化していた API トークン複数種が GitHub Actions の workflow log に平文で露出した。原因は **「masking 登録ループが存在しない一時ファイルから読まれていて空回りしていた」** という pre-existing なバグ。`gh run delete` でログ削除 + 該当 secrets を rotate して被害を抑制。再発防止のため **構造的予防 (source-from-file) + 静的検知 (lint) + ドキュメントルール + PR レビュー時 security review** の 4 層で対策。

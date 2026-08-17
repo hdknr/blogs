@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4424495619"
 description: "Claude とモンテカルロ法を組み合わせたBTC自動取引システムを解説。1万通りの相場シミュレーションで勝率の高い戦略だけを実行する統計的アプローチを、Pythonコード付きで紹介。"
 categories: ["AI/LLM"]
-tags: ["Claude", "BTC", "python", "モンテカルロ法", "自動売買"]
+tags: ["claude", "BTC", "python", "モンテカルロ法", "自動売買"]
 ---
 
 海外トレーダーが Claude と仮想売買シミュレーターを組み合わせたBTC自動取引システムが話題になっています。モンテカルロ法で1万通りの市場シナリオを試した上で、勝率の高い戦略だけを実行するという仕組みで、AIと統計的アプローチを掛け合わせた実践的な取引戦略です。

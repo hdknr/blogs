@@ -6,7 +6,7 @@ slug: "ai-expert-knowledge-paywall"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4110437991"
 categories: ["AI/LLM"]
-tags: ["Claude", "AI活用", "DIY", "専門知識", "スマートホーム"]
+tags: ["claude", "AI活用", "DIY", "専門知識", "スマートホーム"]
 description: "Claude を使って業者見積もり150万円の床下除湿システムを37万円で自力設計した事例。AI が専門知識のペイウォールを壊し、HVAC・建設・農業などの領域で何が変わるかを考察。"
 ---
 

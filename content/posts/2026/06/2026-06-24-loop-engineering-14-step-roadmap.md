@@ -7,7 +7,7 @@ draft: false
 description: "ループエンジニアリングを始める前に通すべき4条件テスト、撤退ラインとしての cost per accepted change、ラルフ・ウィグムループなどの失敗パターン、無人ループのセキュリティ税までを14ステップで整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785345829"
 categories: ["AI/LLM"]
-tags: ["ループエンジニアリング", "AIエージェント", "Claude Code", "Codex", "自動化"]
+tags: ["ループエンジニアリング", "AIエージェント", "claude-code", "Codex", "自動化"]
 ---
 
 開発者の大多数は、コーディングエージェントを今でも手動でプロンプトしている。タイプして、待って、差分を読んで、また次のプロンプトを書く。**「ループエンジニアリング」は、その繰り返し作業そのものをシステムに任せる考え方だ。**

@@ -6,7 +6,7 @@ lastmod: 2026-07-28
 aliases: ["承認ゲート", "オーケストレーター コーダー分業", "codex-build", "スコープゲート", "allowlist 強制", "Codex CLI"]
 related_posts:
   - "/posts/2026/07/codex-build-orchestrator-coder-split/"
-tags: ["claude-code", "codex", "agent", "自律システム", "openai"]
+tags: ["claude-code", "Codex", "agent", "自律システム", "openai"]
 ---
 
 ## 概要

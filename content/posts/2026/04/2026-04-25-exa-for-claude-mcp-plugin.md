@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4324637258"
 description: "Claude に本格的なニューラル検索を付与する MCP サーバー「Exa」の使い方を解説。企業情報・LinkedIn・コード検索など多様なツールを Claude Desktop と Claude Code で利用する方法を紹介。"
 categories: ["AI/LLM"]
-tags: ["Claude", "MCP", "Exa", "検索", "Claude Code", "ニューラル検索", "AI エージェント"]
+tags: ["claude", "mcp", "Exa", "検索", "claude-code", "ニューラル検索", "AI エージェント"]
 ---
 
 Claude に本格的な検索能力を付与する MCP サーバー「Exa for Claude」が注目を集めている。Web 検索・ドキュメント・企業/人物情報など多様なソースに対応し、標準の `web_search` より高速・高精度とされる。Claude Desktop や Claude Code を使う開発者向けに、導入手順と活用例をまとめる。

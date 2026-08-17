@@ -136,6 +136,20 @@ violations = validate(VALID_POST, repo_relative=BAD_PATH)
 check('YYYY/MM から外れた配置を検出する',
       any('YYYY/MM' in v for v in violations))
 
+print("urlize")
+# Every case below was read off a real build's public/tags/ directories, not
+# guessed. Two earlier guesses were wrong -- `/` and `_` were assumed to fold
+# into `-`, and repeated hyphens were assumed to collapse -- and each wrong guess
+# makes the collision guard fail CI on two tags that have genuinely separate
+# pages. Pin the rules so the next edit has to face the same evidence.
+check('空白は - になる', vf.urlize('Claude Code') == 'claude-code')
+check('大文字は畳まれる', vf.urlize('MCP') == 'mcp')
+check('/ はパス区切りとして残る', vf.urlize('AI/LLM') == 'ai/llm')
+check('_ は残る', vf.urlize('$GITHUB_ENV') == 'github_env')
+check('. は残る', vf.urlize('Claude.md') == 'claude.md')
+check('連続する - は畳まれない', vf.urlize('claude -p') == 'claude--p')
+check('/ と - は別物として扱う', vf.urlize('AI/LLM') != vf.urlize('AI-LLM'))
+
 print("VALID_CATEGORIES")
 # The list is duplicated in CLAUDE.md for humans; a mismatch there is a doc bug,
 # but a shrunk set here would silently start rejecting real posts.

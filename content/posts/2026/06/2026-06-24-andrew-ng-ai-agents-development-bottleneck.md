@@ -6,7 +6,7 @@ slug: "andrew-ng-ai-agents-development-bottleneck"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785308133"
 categories: ["AI/LLM"]
-tags: ["AIエージェント", "Andrew Ng", "Claude Code", "開発速度", "ループエンジニアリング"]
+tags: ["AIエージェント", "Andrew Ng", "claude-code", "開発速度", "ループエンジニアリング"]
 ---
 
 ## 概要

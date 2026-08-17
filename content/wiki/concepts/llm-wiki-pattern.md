@@ -6,7 +6,7 @@ lastmod: 2026-04-06
 aliases: ["LLM Wiki", "Karpathy Wiki"]
 related_posts:
   - "/posts/2026/04/karpathy-llm-wiki/"
-tags: ["LLM", "ナレッジマネジメント", "AIエージェント", "RAG"]
+tags: ["llm", "ナレッジマネジメント", "AIエージェント", "RAG"]
 ---
 
 ## 概要

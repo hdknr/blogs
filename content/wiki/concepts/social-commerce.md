@@ -6,7 +6,7 @@ lastmod: 2026-07-15
 aliases: ["ソーシャルコマース", "SNS EC", "TikTok Shop", "Instagram ショッピング", "Lineup", "ライブコマース"]
 related_posts:
   - "/posts/2026/07/sns-ec-integration/"
-tags: ["ソーシャルコマース", "EC", "TikTok Shop", "Instagram", "LINE"]
+tags: ["ソーシャルコマース", "EC", "TikTok Shop", "Instagram", "line"]
 ---
 
 ## 概要

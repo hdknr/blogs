@@ -7,7 +7,7 @@ draft: false
 description: "Subquadraticが発表したLLM「SubQ」の仕組みを解説。Subquadratic Sparse Attention（SSA）により1200万トークン・FlashAttention比52倍高速・コスト$8（従来$2,600）を実現。Claude Opus 4.7超えのベンチマーク結果と、技術レポート未公開・独立検証なしという懐疑論まで網羅。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4406231763"
 categories: ["AI/LLM"]
-tags: ["SubQ", "LLM", "スパースアテンション", "ロングコンテキスト", "Subquadratic"]
+tags: ["SubQ", "llm", "スパースアテンション", "ロングコンテキスト", "Subquadratic"]
 ---
 
 2026年5月5日、マイアミのスタートアップ **Subquadratic** が、業界に衝撃を与える新LLM「**SubQ**」を発表した。キャッチコピーは「Claude Opus超え」。1200万トークンのコンテキスト長、競合比1,000倍のコンピュート削減、1/5以下のコスト——数字だけ見れば夢のような話だ。しかし果たして実態はどうなのか、技術的な仕組みから現時点の課題まで整理する。

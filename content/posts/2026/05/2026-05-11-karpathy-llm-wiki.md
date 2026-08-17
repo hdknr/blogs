@@ -6,7 +6,7 @@ slug: "karpathy-llm-wiki"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4424538564"
 categories: ["AI/LLM"]
-tags: ["LLM", "knowledge-base", "RAG", "Obsidian", "AI-agent"]
+tags: ["llm", "knowledge-base", "RAG", "Obsidian", "ai-agent"]
 ---
 
 Andrej Karpathy が2026年4月に公開した GitHub gist「LLM Wiki」が、公開から48時間以内に5000スターを超えた。コード一行も含まない、純粋にアイデアだけを記述したドキュメントがここまで反響を呼んだ理由はシンプルだ。「RAGの次」を具体的かつ実践的に示していたからである。

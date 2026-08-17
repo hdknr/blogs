@@ -12,7 +12,7 @@ related_posts:
   - "/posts/2026/05/claude-code-vault-writeback-automation/"
   - "/posts/2026/05/self-hosted-runner-vault-writeback/"
   - "/posts/2026/06/line-obsidian-codex-automation-loop/"
-tags: ["PKM", "ナレッジ管理", "Markdown", "ツール", "Claude Code"]
+tags: ["PKM", "ナレッジ管理", "Markdown", "ツール", "claude-code"]
 ---
 
 ## 概要

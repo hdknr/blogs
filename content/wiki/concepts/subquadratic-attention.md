@@ -7,7 +7,7 @@ aliases: ["SSA", "スパースアテンション", "サブクアドラティッ�
 related_posts:
   - "/posts/2026/05/subq-llm-subquadratic-sparse-attention/"
   - "/posts/2026/08/kimi-k3-memory-architecture/"
-tags: ["アテンション", "Transformer", "LLM", "ロングコンテキスト", "スパースアテンション"]
+tags: ["アテンション", "Transformer", "llm", "ロングコンテキスト", "スパースアテンション"]
 ---
 
 ## 概要

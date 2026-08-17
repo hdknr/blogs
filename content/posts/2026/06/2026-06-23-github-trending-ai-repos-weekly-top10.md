@@ -7,7 +7,7 @@ draft: false
 description: "2026年6月第3週にGitHubで急上昇したAIリポジトリ10選。トークン削減・エージェントセキュリティ・MCP対応・OCRなど多岐にわたる注目OSS。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785277410"
 categories: ["AI/LLM"]
-tags: ["GitHub", "AI", "agent", "MCP", "OSS", "llm", "ocr"]
+tags: ["github", "AI", "agent", "mcp", "OSS", "llm", "ocr"]
 ---
 
 今週 GitHub で急上昇した AI 関連リポジトリを 10 件まとめました。エージェントフレームワーク、トークン削減、セキュリティ、OCR など、多岐にわたるプロジェクトが注目を集めています。

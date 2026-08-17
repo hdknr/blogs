@@ -6,7 +6,7 @@ slug: "slide-md-claude-design-practical-guide"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785286459"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Claude Design", "SLIDE.md", "スライド作成", "プレゼン"]
+tags: ["claude-code", "Claude Design", "SLIDE.md", "スライド作成", "プレゼン"]
 ---
 
 [SLIDE.md](https://github.com/sho-ai-magic/slide.md) は、Claude CodeのスキルとClaude Designを組み合わせてプレゼンテーションスライドを自動生成するためのデザインシステムです。Claude Designは高品質なスライドを生成できる一方、毎回デザインがバラつくという課題がありました。SLIDE.mdはこの問題を解決するために設計されたスライド専用デザインシステムで、色・フォント・余白・構図を統一定義し、一貫性のあるプレゼン資料を短時間で生成できます。

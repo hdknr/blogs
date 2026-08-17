@@ -5,7 +5,7 @@ date: 2026-04-06
 lastmod: 2026-04-06
 aliases: ["ZAP", "owasp-zap"]
 related_posts:
-tags: ["脆弱性スキャン", "Web セキュリティ", "OWASP"]
+tags: ["脆弱性スキャン", "Web セキュリティ", "owasp"]
 ---
 
 ## 概要

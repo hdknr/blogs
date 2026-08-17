@@ -6,7 +6,7 @@ slug: "claude-code-handoff-codex-parallel"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714981343"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "handoff", "Codex", "git worktree", "並列処理"]
+tags: ["claude-code", "handoff", "Codex", "git worktree", "並列処理"]
 ---
 
 複数の案件を1人で抱えているエンジニアにとって、AIコーディングエージェントへの「実装待ち」は深刻な時間ロスだ。X（旧Twitter）で海外エンジニアの投稿が1万回以上閲覧されて注目を集めた。その投稿が紹介するのが、Claude Code の `/handoff` スキルを使って計画を立て、複数の Codex エージェントに並列で投げるワークフローだ。

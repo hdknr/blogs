@@ -6,7 +6,7 @@ lastmod: 2026-04-23
 aliases: ["Scalable Oversight", "自動アライメント研究", "AAR"]
 related_posts:
   - "/posts/2026/04/anthropic-automated-alignment-researchers/"
-tags: ["Anthropic", "AI安全性", "アライメント", "スケーラブルオーバーサイト", "Claude"]
+tags: ["anthropic", "AI安全性", "アライメント", "スケーラブルオーバーサイト", "claude"]
 ---
 
 ## 概要

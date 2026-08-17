@@ -6,7 +6,7 @@ slug: "harness-engineering-beyond-rule-files"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304022715"
 categories: ["AI/LLM"]
-tags: ["harness-engineering", "AIエージェント", "CLAUDE.md", "開発プロセス", "評価"]
+tags: ["Harness Engineering", "AIエージェント", "CLAUDE.md", "開発プロセス", "評価"]
 ---
 
 2026 年 4 月、Findy が主催したオンラインイベント「**Harness Engineering 入門 〜 AI エージェントを制御するアプローチ〜**」が開催された。r.kagaya 氏の登壇「エージェントの開発環境を内製して気づいた『これもハーネス』」は参加者から「レベル高すぎた」と評されるほど反響を呼んだ。本記事では、r.kagaya 氏が公開した SpeakerDeck 資料「ハーネスエンジニアリングにどう向き合うか 〜ルールファイルを超えて開発プロセスを設計する〜」をもとに、ルールファイルを超えたハーネスエンジニアリングの考え方を整理する。

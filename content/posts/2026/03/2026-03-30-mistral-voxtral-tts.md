@@ -7,7 +7,7 @@ draft: false
 description: "Mistral AI が公開した Voxtral TTS は 4B パラメータのオープンウェイト音声合成モデル。ElevenLabs 級の品質をローカル GPU で実現。動作要件・音声クローン機能・ライセンスを解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4158762368"
 categories: ["AI/LLM"]
-tags: ["Mistral", "TTS", "音声合成", "オープンウェイト", "Voxtral"]
+tags: ["Mistral", "tts", "音声合成", "オープンウェイト", "Voxtral"]
 ---
 
 Mistral AI が 2026年3月26日にリリースした **Voxtral TTS**（Text-to-Speech）は、オープンウェイトで公開された音声合成モデルです。ElevenLabs に匹敵する品質を持ちながら、ローカル環境で動作するのが最大の特徴です。

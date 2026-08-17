@@ -8,7 +8,7 @@ related_posts:
   - "/posts/2026/04/inbound-marketing-guide/"
   - "/posts/2026/04/hubspot-pro-merits/"
   - "/posts/2026/04/hubspot-hscachebuster/"
-tags: ["マーケティング", "ma", "crm", "コンテンツマーケティング", "seo"]
+tags: ["マーケティング", "ma", "crm", "コンテンツマーケティング", "SEO"]
 ---
 
 ## 概要

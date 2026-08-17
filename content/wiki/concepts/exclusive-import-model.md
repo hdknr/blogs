@@ -6,7 +6,7 @@ lastmod: 2026-07-28
 aliases: ["独占輸入", "タイムマシン経営", "固定費ゼロ", "一人会社", "EBITDA マージン", "点線面", "シトラム", "クライナーファイグリング"]
 related_posts:
   - "/posts/2026/07/ctraum-kleiner-exclusive-import-40oku/"
-tags: ["M&A", "EC", "マーケティング", "独占輸入", "一人会社"]
+tags: ["ma", "EC", "マーケティング", "独占輸入", "一人会社"]
 ---
 
 ## 概要

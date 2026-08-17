@@ -8,7 +8,7 @@ description: "Anthropic が 2026 年 5 月 11 日に GA した Claude Platform o
 summary: "Claude Platform on AWS の GA を Amazon Bedrock との比較で整理。ネイティブ API フル機能と AWS IAM・請求の両立がもたらす意味を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4439456381"
 categories: ["AI/LLM"]
-tags: ["Claude", "AWS", "Anthropic", "Amazon Bedrock", "Managed Agents", "MCP", "Skills"]
+tags: ["claude", "aws", "anthropic", "Amazon Bedrock", "Managed Agents", "mcp", "Skills"]
 ---
 
 Anthropic は 2026 年 5 月 11 日、**Claude Platform on AWS** の一般提供（GA）を開始した。Anthropic 公式 API のフル機能を、AWS の IAM 認証・CloudTrail 監査・単一請求書で利用できる新しいアクセス経路である。すでに展開している Amazon Bedrock 経由の Claude とは別サービスとして位置付けられている。

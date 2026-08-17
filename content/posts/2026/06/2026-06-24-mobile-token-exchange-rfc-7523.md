@@ -6,7 +6,7 @@ slug: "mobile-token-exchange-rfc-7523"
 draft: false
 description: "ネイティブアプリから複数のバックエンドを叩くとき、ログインは1回・トークンはサービスごとに分けたい。その答えが署名付き JWT を提示して各サービスにトークンを発行してもらう OAuth の RFC 7523（JWT Bearer Grant）だ。IdP・RP・モバイルアプリ3者の連携を図で解説する。"
 categories: ["セキュリティ"]
-tags: ["OAuth", "JWT", "RFC7523", "PKCE", "IdP"]
+tags: ["OAuth", "JWT", "RFC7523", "pkce", "IdP"]
 ---
 
 ネイティブアプリから複数のバックエンドサービスを叩くとき、「ログインは1回だけ。でもサービスごとに別々のトークンを持たせたい」をどう実現するか。

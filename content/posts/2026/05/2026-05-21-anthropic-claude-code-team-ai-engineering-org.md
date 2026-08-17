@@ -6,7 +6,7 @@ slug: "anthropic-claude-code-team-ai-engineering-org"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4504071143"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Anthropic", "エンジニアリング組織", "AIコーディング", "マネジメント"]
+tags: ["claude-code", "anthropic", "エンジニアリング組織", "AIコーディング", "マネジメント"]
 ---
 
 Anthropic の Claude Code エンジニアリングディレクター Fiona Fung による講演（[YouTube](https://www.youtube.com/watch?v=igO8iyca2_g)）を、@iwashi86 さんがポストにまとめていた（[元ポスト](https://x.com/iwashi86/status/2057008429588193577)）。AI コーディングが当たり前になった組織で何が変わり、何が変わらないのかを整理した良質なメモだったので、本記事はそのまとめに自分の補足を加えたものである。

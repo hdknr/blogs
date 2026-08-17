@@ -5,7 +5,7 @@ lastmod: 2026-07-31
 slug: "claude-code-stock-news-automation"
 draft: false
 categories: ["AI/LLM"]
-tags: ["Claude Code", "MCP", "株式投資", "J-Quants", "ニュース分析"]
+tags: ["claude-code", "mcp", "株式投資", "J-Quants", "ニュース分析"]
 description: "株式ニュース分析を Claude Code で自動化するとき、どのデータが API で取れてどこが手作業になるかを3層に整理します。J-Quants 無料プランの12週遅延、Yahoo!ファイナンスのスクレイピング禁止、EDINET API v2 のキー渡しといった落とし穴まで。"
 ---
 

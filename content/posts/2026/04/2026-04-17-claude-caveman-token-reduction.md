@@ -7,7 +7,7 @@ draft: false
 description: "一行のシステムプロンプトで Claude のトークン消費を最大80%削減する「原始人」テクニック。英語版 Caveman との比較、日本語で効果が大きい理由、CLAUDE.md への適用方法まで解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4269198079"
 categories: ["AI/LLM"]
-tags: ["Claude", "トークン節約", "プロンプトエンジニアリング", "Claude Code", "コスト削減", "システムプロンプト"]
+tags: ["claude", "トークン節約", "プロンプトエンジニアリング", "claude-code", "コスト削減", "システムプロンプト"]
 ---
 
 Claude のトークン消費が多くて困っているなら、システムプロンプトの一行変更だけで最大 80% 削減できる手法がある。深津 貴之（[@fladdict](https://x.com/fladdict)）さんのポストをきっかけに、参照先の Zenn 記事が注目を集めた。

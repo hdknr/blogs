@@ -6,7 +6,7 @@ slug: "renoise-claude-code-seedance"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4121767768"
 categories: ["AI/LLM"]
-tags: ["claude-code", "ai-video", "seedance", "広告", "自動化"]
+tags: ["claude-code", "ai-video", "Seedance", "広告", "自動化"]
 ---
 
 Claude Code と ByteDance の Seedance 2.0 を組み合わせた動画広告制作ツール「Renoise」が登場した。1枚の商品写真から数百パターンの動画クリエイティブを自動生成できるという。

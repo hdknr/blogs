@@ -6,7 +6,7 @@ lastmod: 2026-04-23
 aliases: ["Context Rot", "コンテキスト腐敗", "コンテキスト劣化"]
 related_posts:
   - "/posts/2026/04/claude-code-context-rot-session-management/"
-tags: ["Claude Code", "コンテキスト管理", "LLM", "セッション管理", "プロンプトエンジニアリング"]
+tags: ["claude-code", "コンテキスト管理", "llm", "セッション管理", "プロンプトエンジニアリング"]
 ---
 
 ## 概要

@@ -6,7 +6,7 @@ slug: "stanford-cs336-llm-lecture"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4504081182"
 categories: ["AI/LLM"]
-tags: ["スタンフォード", "LLM", "機械学習", "ChatGPT", "Claude"]
+tags: ["スタンフォード", "llm", "機械学習", "chatgpt", "claude"]
 ---
 
 「NetflixのドラマよりもこのスタンフォードのAI講義を2時間見た方がいい——大手AI企業で働く多くの人がキャリア全体を通じて学ぶより多くのことを学べる。」

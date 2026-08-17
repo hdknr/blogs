@@ -6,7 +6,7 @@ slug: "nvidia-nemoclaw-openclaw"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077677869"
 categories: ["AI/LLM"]
-tags: ["NVIDIA", "NemoClaw", "OpenClaw", "AIエージェント", "オープンソース"]
+tags: ["NVIDIA", "NemoClaw", "openclaw", "AIエージェント", "オープンソース"]
 ---
 
 NVIDIA が OpenClaw 向けのオープンソーススタック「**NemoClaw**」を発表しました。これまでセキュリティ面での懸念が指摘されてきた OpenClaw に対し、プライバシー保護とセキュリティ制御を加えた形で、常時稼働する AI エージェントの運用を可能にするものです。

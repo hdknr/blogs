@@ -7,7 +7,7 @@ draft: false
 description: "個人開発アプリの MCP 化で避けられない認証問題を WorkOS AuthKit で解決する方法を解説。Dynamic Client Registration（RFC 7591）対応・月間 100 万 MAU 無料。Next.js App Router での実装を 4 ステップ・50 行以内で完成させる手順と、JWT audience / issuer のハマりポイントも紹介。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4326314467"
 categories: ["AI/LLM"]
-tags: ["WorkOS", "MCP", "Claude Code", "OAuth2", "JWT"]
+tags: ["WorkOS", "mcp", "claude-code", "oauth2", "JWT"]
 ---
 
 個人開発アプリを MCP 化しようとして、認証の壁に阻まれた経験はないだろうか。

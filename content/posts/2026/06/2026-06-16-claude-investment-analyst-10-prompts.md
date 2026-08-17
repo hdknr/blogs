@@ -7,7 +7,7 @@ draft: false
 description: "Claudeで株式のファンダメンタル分析を行う10個のプロンプトを解説。ビジネス理解・収益構造・モート評価・財務品質チェック・DCF・ストレステストまで、プロのアナリストの分析手順をそのまま再現する実践ガイド。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714986754"
 categories: ["AI/LLM"]
-tags: ["Claude", "株式投資", "ファンダメンタル分析", "プロンプト", "DCF"]
+tags: ["claude", "株式投資", "ファンダメンタル分析", "プロンプト", "DCF"]
 ---
 
 ## はじめに

@@ -6,7 +6,7 @@ slug: "anthropic-claude-code-html-over-markdown"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4424171460"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Anthropic", "HTML", "Markdown", "AI出力フォーマット"]
+tags: ["claude-code", "anthropic", "HTML", "Markdown", "AI出力フォーマット"]
 ---
 
 Anthropic で Claude Code を担当するエンジニア **Thariq Shihipar**（@trq212）が X に記事「Using Claude Code: The Unreasonable Effectiveness of HTML」を投稿しました。公開からわずか16時間で440万ビュー・8,200いいね・15,700ブックマークを集め、開発者コミュニティで大きな議論を巻き起こしています。

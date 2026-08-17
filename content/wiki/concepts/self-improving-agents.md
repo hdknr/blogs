@@ -7,7 +7,7 @@ aliases: ["Self-Improving Agents", "メタエージェント", "Self-Improving L
 related_posts:
   - "/posts/2026/04/autoagent-self-improving-agents/"
   - "/posts/2026/06/andrew-ng-ai-agents-development-bottleneck/"
-tags: ["agent", "LLM", "自動最適化", "自己改善ループ"]
+tags: ["agent", "llm", "自動最適化", "自己改善ループ"]
 ---
 
 ## 概要

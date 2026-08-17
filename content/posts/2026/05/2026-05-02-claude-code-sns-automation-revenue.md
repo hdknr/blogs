@@ -7,7 +7,7 @@ draft: false
 description: "Claude Code を自律エージェントとして活用し、数十の Instagram アカウントを24時間自動運用して月3万ドルを稼ぐ事例を解説。MCP 連携や自動化パイプラインの構成と、プラットフォームポリシー上の注意点もあわせて紹介します。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363253493"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "agent", "自動化", "Instagram", "MCP"]
+tags: ["claude-code", "agent", "自動化", "Instagram", "mcp"]
 ---
 
 中国在住のあるユーザーが、Claude Code を「従業員」として使い、数十の Instagram アカウントを 24 時間体制で自動管理することで月 3 万ドル超を稼いでいるという事例が SNS で注目を集めている。AI を使った収益化が「すでにゲームのルール」になりつつある現状を、この事例から読み解く。

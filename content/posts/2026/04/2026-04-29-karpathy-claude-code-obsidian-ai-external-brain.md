@@ -6,7 +6,7 @@ slug: "karpathy-claude-code-obsidian-ai-external-brain"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4340881969"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Obsidian", "Karpathy", "LLMナレッジベース", "セカンド脳"]
+tags: ["claude-code", "Obsidian", "Karpathy", "LLMナレッジベース", "セカンド脳"]
 ---
 
 OpenAI共同創業者の一人で元Tesla AI部門トップのAndrej Karpathyが、Claude Codeの使い方を1時間かけて語った動画が話題になっている（[出典](https://x.com/ClaudeCode_love/status/2049035960252608726)）。その要点と、彼が提唱する「AI外部脳」構築システムを解説する。

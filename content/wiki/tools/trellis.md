@@ -6,7 +6,7 @@ lastmod: 2026-06-24
 aliases: ["Trellis", "mindfold-ai/Trellis"]
 related_posts:
   - "/posts/2026/06/trellis-claude-code-project-brain/"
-tags: ["trellis", "Claude Code", "AIエージェント", "開発ワークフロー", "spec-driven"]
+tags: ["trellis", "claude-code", "AIエージェント", "開発ワークフロー", "spec-driven"]
 ---
 
 ## 概要

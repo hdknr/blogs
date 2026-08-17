@@ -7,7 +7,7 @@ draft: false
 source_url: "https://gist.github.com/hdknr/83ba1f9b683a871a176d9110036364ad"
 categories: ["Web開発", "データベース"]
 description: "django-mptt が unmaintained を表明した背景を CHANGELOG とソースから読み解き、後継として推奨される django-tree-queries (Recursive CTE) への移行手順・API 対応表・落とし穴までまとめる"
-tags: ["Django", "Python", "django-mptt", "django-tree-queries", "ツリー構造", "MPTT", "Recursive CTE", "ORM"]
+tags: ["django", "python", "django-mptt", "django-tree-queries", "ツリー構造", "MPTT", "Recursive CTE", "ORM"]
 ---
 
 `django-mptt` の README を開くと、いきなり以下の文言が目に飛び込んでくる。

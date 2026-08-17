@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/556#issuecomment-5229295062"
 description: "Claude Code 開発者 Boris Cherny の使い方を追うと、上達の正体は設定を足すことではなく訂正の回数だと分かる。Plan モードでの計画の突き返し、CLAUDE.md への書き戻し、hooks への昇格、/doctor による削減を1本のループとして整理する。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "CLAUDE.md", "hooks", "コンテキストエンジニアリング", "plan モード", "Anthropic", "Boris Cherny"]
+tags: ["claude-code", "CLAUDE.md", "hooks", "コンテキストエンジニアリング", "plan モード", "anthropic", "Boris Cherny"]
 ---
 
 「便利な設定を集めれば Claude Code は使いこなせる」——これは、たぶん嘘だ。

@@ -5,7 +5,7 @@ lastmod: 2026-05-08
 slug: "prometheus-loki-grafana-server-monitoring-stack"
 draft: false
 categories: ["クラウド/インフラ"]
-tags: ["Prometheus", "Loki", "Grafana", "Alloy", "オブザーバビリティ", "サーバー監視", "PromQL", "LogQL", "監視", "SRE", "AWS", "CloudWatch", "AMP", "AMG"]
+tags: ["Prometheus", "Loki", "Grafana", "Alloy", "オブザーバビリティ", "サーバー監視", "PromQL", "LogQL", "監視", "SRE", "aws", "CloudWatch", "AMP", "AMG"]
 ---
 
 サーバー監視は「死活監視 + リソース監視」の時代から、**「メトリクス + ログ + トレース」を 1 つの画面で相関分析する**オブザーバビリティの時代に移りました。クラウドネイティブ環境では、**Grafana Labs の OSS スタック**（Prometheus + Loki + Grafana + Alloy）が、コスト・自由度・運用ノウハウの蓄積において事実上の王道になっています。

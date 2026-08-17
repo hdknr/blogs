@@ -6,7 +6,7 @@ slug: "skillopt-ai-agent-skill-training"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714989878"
 categories: ["AI/LLM"]
-tags: ["AIエージェント", "プロンプト最適化", "LLM", "agent", "claude-code"]
+tags: ["AIエージェント", "プロンプト最適化", "llm", "agent", "claude-code"]
 ---
 
 Microsoft Research が発表した **SkillOpt** は、Claude Code や Codex に渡すスキルドキュメント（`best_skill.md`）を、モデルの重みを一切変えずにニューラルネット学習と同じ要領で自動最適化するフレームワークです。7モデル・6ベンチマーク・3ハーネス、計52テスト全てで最高または同率最高を達成しています。

@@ -6,7 +6,7 @@ slug: "openclaw-vs-hermes"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4230947705"
 categories: ["AI/LLM"]
-tags: ["OpenClaw", "Hermes", "AIエージェント", "エンタープライズ", "メモリ管理"]
+tags: ["openclaw", "Hermes", "AIエージェント", "エンタープライズ", "メモリ管理"]
 ---
 
 AIエージェントプラットフォームの世界で、OpenClaw から Hermes への乗り換えが予想以上の速さで進んでいるという観測が SNS 上で広まっている。

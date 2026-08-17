@@ -7,7 +7,7 @@ draft: false
 description: "HubSpot 認証方式 6 つ（Private App / OAuth 2.0 / 公式 MCP / Personal Access Key / Developer API Key / Service Key）の違いを Claude Code 文脈で整理。新規構築は Service Key（2026-02 Beta）、Claude Code から自然言語で操作するなら公式 MCP サーバーが推奨。"
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4411663173"
 categories: ["クラウド/インフラ"]
-tags: ["HubSpot", "Claude Code", "MCP", "認証", "OAuth", "Private App", "Service Key", "REST API"]
+tags: ["HubSpot", "claude-code", "mcp", "認証", "OAuth", "Private App", "Service Key", "REST API"]
 ---
 
 HubSpot は API 認証の選択肢が多く、「**結局どれを使えばいいのか**」が混乱しがちです。特に Claude Code から HubSpot を操作したい場合、現在は **6 種類の認証手段**が併存しています:

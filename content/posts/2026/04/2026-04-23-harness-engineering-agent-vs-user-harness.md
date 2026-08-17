@@ -6,7 +6,7 @@ slug: "harness-engineering-agent-vs-user-harness"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304066838"
 categories: ["AI/LLM"]
-tags: ["ハーネスエンジニアリング", "AIエージェント", "CLAUDE.md", "エージェント設計", "Claude Code"]
+tags: ["ハーネスエンジニアリング", "AIエージェント", "CLAUDE.md", "エージェント設計", "claude-code"]
 ---
 
 r.kagaya 氏（@ry0_kaga、AstarMinds CTO）が Zenn に公開した記事がある。「[ハーネスエンジニアリングとは何で、何ではないのか 〜作る側のハーネス、使う側のハーネス〜](https://zenn.dev/r_kaga/articles/329afdc151899f)」という記事だ。ハーネスエンジニアリングをめぐる言葉の混乱を整理し、エージェントハーネスとユーザーハーネスという2層の区分を提示している。

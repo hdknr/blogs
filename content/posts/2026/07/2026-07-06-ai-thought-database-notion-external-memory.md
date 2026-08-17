@@ -7,7 +7,7 @@ draft: false
 description: "「AI時代に勝つのは思想を外部記憶にした人間だけだ」という投稿を起点に、Notionで思想哲学データベースを構築する3層構造（総論・個別データベース・更新履歴）と運用フロー、Claude CodeのCLAUDE.mdとの関係を整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4888325260"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "CLAUDE.md", "Notion", "PKM", "ナレッジマネジメント"]
+tags: ["claude-code", "CLAUDE.md", "Notion", "PKM", "ナレッジマネジメント"]
 ---
 
 ## きっかけになった投稿

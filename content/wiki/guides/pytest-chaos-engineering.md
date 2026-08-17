@@ -6,7 +6,7 @@ lastmod: 2026-04-23
 aliases: ["pytest chaos", "カオスエンジニアリング Python"]
 related_posts:
   - "/posts/2026/04/pytest-chaos-engineering/"
-tags: ["Python", "pytest", "カオスエンジニアリング", "テスト", "CI/CD", "Claude Code"]
+tags: ["python", "pytest", "カオスエンジニアリング", "テスト", "CI/CD", "claude-code"]
 ---
 
 ## 概要

@@ -6,7 +6,7 @@ slug: "vibecoding-security-checklist"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4502125123"
 categories: ["セキュリティ"]
-tags: ["vibe-coding", "セキュリティ", "owasp", "Claude", "チェックリスト", "next.js"]
+tags: ["vibe-coding", "セキュリティ", "owasp", "claude", "チェックリスト", "next.js"]
 description: "AIで高速開発したアプリを本番公開する前に必ず確認すべき5つのセキュリティチェックリスト。SQLインジェクション・.env漏洩・プライバシーポリシー整備・レートリミット・APIキー隔離を、OWASP ZAP・slowapi・Next.jsのコード例とともに解説。"
 ---
 

@@ -6,7 +6,7 @@ slug: "claude-code-overnight-tasks"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078680188"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "AI エージェント", "生産性", "自動化", "Anthropic"]
+tags: ["claude-code", "AI エージェント", "生産性", "自動化", "anthropic"]
 ---
 
 Claude Code の使い方として注目を集めているのが、「就寝前タスク投げ」スタイルだ。デジライズ CEO のチャエン氏（@masahirochaen）が X（旧 Twitter）に投稿した体験談が多くの反響を呼んでいる。

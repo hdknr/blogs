@@ -7,7 +7,7 @@ draft: false
 description: "X（旧Twitter）で147万ビューを集めた「Claudeで6500万ドル稼いだ7人」バイラル投稿の真偽をコミュニティノートとともに検証。実際のeブック自動化パイプラインとClaude APIコードも解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4494567574"
 categories: ["AI/LLM"]
-tags: ["Claude", "コンテンツ自動化", "python", "prompt", "ファクトチェック"]
+tags: ["claude", "コンテンツ自動化", "python", "prompt", "ファクトチェック"]
 ---
 
 この記事では、147万ビューを集めたバイラル投稿の信憑性をコミュニティノートとともに検証し、AIコンテンツ自動化の現実的なスケールを整理する。

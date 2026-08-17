@@ -6,7 +6,7 @@ slug: "inbound-marketing-guide"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4248583317"
 categories: ["ビジネス/キャリア"]
-tags: ["inbound-marketing", "hubspot", "marketing-automation", "content-marketing", "seo"]
+tags: ["inbound-marketing", "HubSpot", "marketing-automation", "content-marketing", "SEO"]
 ---
 
 インバウンドマーケティングとは、顧客に見つけてもらう「プル型」のマーケティング手法です。Attract / Engage / Delight の 3 フェーズ、MA（マーケティングオートメーション）との連携、KPI 設計、そしてエンジニアがコードで関われる領域まで、HubSpot・JBNet・SATORI・MOLTS の解説を統合して整理しました。

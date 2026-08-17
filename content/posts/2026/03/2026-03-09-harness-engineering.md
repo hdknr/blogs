@@ -7,7 +7,7 @@ draft: false
 description: "逆瀬川氏のHarness Engineeringベストプラクティス記事を要約。Hooks 4パターン、リンター戦略、E2Eテスト、CLAUDE.md設計、MVH導入ステップを解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4022922774"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Codex", "Harness Engineering", "hooks", "agent"]
+tags: ["claude-code", "Codex", "Harness Engineering", "hooks", "agent"]
 ---
 
 Claude Code や Codex といった AI コーディングエージェントを現場に投入する開発者が増えるなか、「ハーネスエンジニアリング」という新しい実践領域が注目を集めている。逆瀬川氏（[@gyakuse](https://x.com/gyakuse)）が公開した[まとめ記事](https://nyosegawa.com/posts/harness-engineering-best-practices-2026/)（読了 54 分）から、要点を紹介する。

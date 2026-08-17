@@ -6,7 +6,7 @@ slug: "hubspot-line-items-api"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4078866649"
 categories: ["Web開発"]
-tags: ["hubspot", "api", "crm"]
+tags: ["HubSpot", "API", "crm"]
 ---
 
 HubSpot CRM の Line Items（商品項目）API について整理します。Line Items は製品（Product）が取引（Deal）や見積もり（Quote）に紐付けられたときに生成される個別のインスタンスです。

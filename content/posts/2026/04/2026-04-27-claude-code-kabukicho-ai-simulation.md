@@ -7,7 +7,7 @@ draft: false
 description: "Claude Code と1,255体のAIエージェントで歌舞伎町の夜4時間をシミュレーション。予算超過53.7%・観光客の11.5%がぼったくり被害という衝撃データが示すマルチエージェント社会シミュレーションの可能性。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4326322861"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "マルチエージェント", "社会シミュレーション", "AIエージェント", "創発"]
+tags: ["claude-code", "マルチエージェント", "社会シミュレーション", "AIエージェント", "創発"]
 ---
 
 Claude Code を使って1,255体ものAIペルソナを動かし、歌舞伎町の夜（22:00〜02:00）を丸ごとシミュレーションするという実験が話題になっています。AIエージェント研究者の「すぐる」さん（[@SuguruKun_ai](https://x.com/SuguruKun_ai)）が実施したこの試みは、マルチエージェントAIによる社会シミュレーションの新たな可能性を示しています。

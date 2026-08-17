@@ -6,7 +6,7 @@ slug: "claude-code-obsidian-vault-project-config"
 draft: false
 description: "個人 Obsidian Vault を特定プロジェクトの Claude Code セッションに併用させたいときの設定パターンを実用例で解説。global / project / local の3層と、MCP filesystem サーバ・symlink の組み合わせで、機密を漏らさず Vault のサブセットだけを AI Agent に渡す構成を示す。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Obsidian", "MCP", "CLAUDE.md", "Skills", "symlink", "permissions", "ナレッジマネジメント", "PKM"]
+tags: ["claude-code", "Obsidian", "mcp", "CLAUDE.md", "Skills", "symlink", "permissions", "ナレッジマネジメント", "PKM"]
 ---
 
 [GitHubで全部完結する開発者にObsidianは本当に必要か？]({{< ref "posts/2026/05/2026-05-18-github-vs-obsidian-ai-agent.md" >}}) では、Obsidian を併用する場合の「思想差」と「AI Agent に渡せる文脈の質」を整理しました。本記事はその実践編です。**特定のプロジェクトで Claude Code セッションを行うときに、個人の Obsidian Vault を併用してエージェントに処理させるには、`CLAUDE.md` / Skills / Settings をどう階層管理すべきか** を具体的な設定例で示します。

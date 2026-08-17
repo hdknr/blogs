@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304029563"
 description: "Google Cloud Next 2026 で発表された Workspace 公式 MCP サーバーの対応サービスと設定手順を解説。Claude Desktop や Gemini CLI から Gmail・Drive・Calendar を自然言語で操作できる。"
 categories: ["AI/LLM"]
-tags: ["MCP", "Google Workspace", "Gmail", "Claude", "Gemini CLI"]
+tags: ["mcp", "Google Workspace", "Gmail", "claude", "Gemini CLI"]
 ---
 
 Google Cloud Next 2026 で、Google Workspace の**公式 MCP サーバー**がデベロッパープレビューとして発表された。Gmail・Drive・Calendar・Chat などの Workspace データを、Claude・Gemini CLI・IDE などの AI アプリから Model Context Protocol（MCP）経由で直接操作できるようになる。

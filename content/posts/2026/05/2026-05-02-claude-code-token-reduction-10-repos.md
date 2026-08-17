@@ -7,7 +7,7 @@ draft: false
 description: "Claude Code のトークン消費を最大90%削減できる10のOSSツールを、出力フィルタリング・シンボル単位参照・プロンプト制御・MCPサーバーの4アプローチで分類・解説。導入コストの低い順にも整理。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363251305"
 categories: ["AI/LLM", "ツール/開発環境"]
-tags: ["Claude Code", "トークン最適化", "MCP", "コスト削減", "コンテキスト管理"]
+tags: ["claude-code", "トークン最適化", "mcp", "コスト削減", "コンテキスト管理"]
 ---
 
 Claude Code を使い続けると、トークン消費が積み重なってコストが気になってくる。X（旧 Twitter）ユーザーの [@xiaoying_eth](https://x.com/xiaoying_eth) が、トークン消費を最大90%削減できる10のGitHubリポジトリをまとめて紹介している。本記事では出力フィルタリング・シンボル単位参照・プロンプト制御・MCP サーバーという4アプローチで各ツールを分類し、導入しやすいものから解説する。

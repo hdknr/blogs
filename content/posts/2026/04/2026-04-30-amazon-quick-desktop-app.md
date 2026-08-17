@@ -7,7 +7,7 @@ draft: false
 description: "AWS が 2026 年 4 月に発表した Amazon Quick デスクトップアプリの概要。エンタープライズ向けセキュリティ、Claude Code との ACP 連携、Microsoft Copilot との競合関係を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349319466"
 categories: ["AI/LLM"]
-tags: ["Amazon Quick", "AWS", "Claude Code", "エンタープライズ", "デスクトップアプリ"]
+tags: ["Amazon Quick", "aws", "claude-code", "エンタープライズ", "デスクトップアプリ"]
 ---
 
 AWS が 2026 年 4 月 28 日に開催したイベント「What's Next with AWS 2026」で、**Amazon Quick** のデスクトップアプリ（Preview）が発表・リリースされた。エンタープライズ向けのセキュアな AI アシスタントとして、Claude Code を含む開発者ツールとの MCP 連携も備えている。

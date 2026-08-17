@@ -9,7 +9,7 @@ related_posts:
   - "/posts/2026/04/claude-code-context-rot-session-management/"
   - "/posts/2026/04/claude-caveman-token-reduction/"
   - "/posts/2026/04/claude-rate-limit-mac-mini-local-model/"
-tags: ["LLM", "claude-code", "コンテキスト", "トークン削減"]
+tags: ["llm", "claude-code", "コンテキスト", "トークン削減"]
 ---
 
 ## 概要

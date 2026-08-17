@@ -5,7 +5,7 @@ date: 2026-04-06
 lastmod: 2026-04-06
 aliases: ["celery"]
 related_posts:
-tags: ["Python", "Django", "タスクキュー", "Redis"]
+tags: ["python", "django", "タスクキュー", "redis"]
 ---
 
 ## 概要

@@ -6,7 +6,7 @@ slug: "claude-code-setup-for-non-engineers"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077563578"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Claude", "AI活用", "生産性向上", "CLAUDE.md"]
+tags: ["claude-code", "claude", "AI活用", "生産性向上", "CLAUDE.md"]
 ---
 
 Claude Code は「コード」という名前のせいでエンジニア向けツールだと思われがちですが、実は日本語で仕事を渡すツールです。インストール1分、コード0行——非エンジニアこそ今すぐ使い始めるべき理由と、効果を最大化する CLAUDE.md の作り方を解説します。

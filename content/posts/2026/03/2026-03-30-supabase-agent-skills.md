@@ -6,7 +6,7 @@ slug: "supabase-agent-skills"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4157861135"
 categories: ["AI/LLM"]
-tags: ["Supabase", "Claude Code", "RLS", "PostgreSQL", "パフォーマンス"]
+tags: ["Supabase", "claude-code", "RLS", "PostgreSQL", "パフォーマンス"]
 ---
 
 ## Supabase とは

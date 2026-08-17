@@ -6,7 +6,7 @@ slug: "matt-pocock-skills-for-real-engineers"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4349316259"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Matt Pocock", "スキル", "AI開発", "TypeScript"]
+tags: ["claude-code", "Matt Pocock", "スキル", "AI開発", "typescript"]
 ---
 
 TypeScript 界の著名エンジニア Matt Pocock が公開した「**Skills for Real Engineers**」が、公開 24 時間で 22,000 スター、現在は 64,000 スター超えという驚異的な勢いで注目を集めている。

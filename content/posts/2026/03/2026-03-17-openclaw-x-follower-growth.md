@@ -6,7 +6,7 @@ slug: "openclaw-x-follower-growth"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078648513"
 categories: ["AI/LLM"]
-tags: ["OpenClaw", "X運用", "SNS", "フォロワー増加", "AI活用"]
+tags: ["openclaw", "X運用", "SNS", "フォロワー増加", "AI活用"]
 ---
 
 AI ツール「OpenClaw」を使った X（旧 Twitter）運用で、10日間でフォロワーを 1800人増やした実践的な方法をまとめた記事を紹介する。

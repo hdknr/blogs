@@ -6,7 +6,7 @@ slug: "anthropic-dispatch-claude-cowork"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4085477100"
 categories: ["AI/LLM"]
-tags: ["claude", "anthropic", "agent", "cowork", "computer-use"]
+tags: ["claude", "anthropic", "agent", "Cowork", "computer-use"]
 description: "Anthropic が Claude Cowork の新機能 Dispatch を発表。スマホから PC 上の Claude にタスクを遠隔指示できる。料金プラン・成功率・OpenClaw との比較を解説。"
 ---
 

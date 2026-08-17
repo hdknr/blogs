@@ -6,7 +6,7 @@ slug: "karpathy-llm-wiki"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4189722488"
 categories: ["AI/LLM"]
-tags: ["LLM", "Karpathy", "ナレッジマネジメント", "AIエージェント", "RAG"]
+tags: ["llm", "Karpathy", "ナレッジマネジメント", "AIエージェント", "RAG"]
 description: "Andrej Karpathy が公開した LLM Wiki は、RAG の限界を超えて AI エージェントに個人ナレッジベースを継続的に構築・保守させるパターン。三層構造と3つの基本操作を解説。"
 ---
 

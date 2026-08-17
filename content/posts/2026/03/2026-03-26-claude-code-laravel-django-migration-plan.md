@@ -6,7 +6,7 @@ slug: "claude-code-laravel-django-migration-plan"
 draft: false
 description: "Laravel 6 から Django 4.2 への全自動移行プロジェクトの計画編。inspectdb 方式によるモデル生成、8フェーズの段階設計、CLAUDE.md を活用した Claude Code への設計書作成手法を解説。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Laravel", "Django", "Python", "自動化"]
+tags: ["claude-code", "laravel", "django", "python", "自動化"]
 ---
 
 業務管理システム（PHP/Laravel 6.20）を Python/Django 4.2 に移行するプロジェクトを、**Claude Code の自律実行**でほぼ全自動で完遂しました。

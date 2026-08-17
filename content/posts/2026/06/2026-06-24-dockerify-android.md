@@ -7,7 +7,7 @@ draft: false
 description: "DockerコンテナでAndroidエミュレーターを動かすOSS「Dockerify Android」のセットアップから、ADB接続・CI/CD活用・ARM変換まで解説。KVM対応Linuxがあれば docker compose up -d の1コマンドで環境が整う。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785298022"
 categories: ["クラウド/インフラ"]
-tags: ["Docker", "Android", "エミュレーター", "CI/CD", "scrcpy", "KVM", "AVD", "docker-compose"]
+tags: ["docker", "Android", "エミュレーター", "CI/CD", "scrcpy", "KVM", "AVD", "docker-compose"]
 ---
 
 Androidエミュレーターの起動には、Android Studio をインストールし AVD Manager で仮想デバイスを作成する手順が一般的です。しかしこの作業は重く、環境の再現性も低くなりがちです。**Dockerify Android** はこの問題を解決する OSS ツールで、Dockerコンテナの中で完全なAndroidエミュレーターを動かせます。この記事ではセットアップ手順から CI/CD への活用まで順を追って解説します。

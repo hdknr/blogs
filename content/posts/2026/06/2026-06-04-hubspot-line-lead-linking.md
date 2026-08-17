@@ -7,7 +7,7 @@ draft: false
 description: "LINE 友だちと HubSpot リードを LIFF で紐づける実装ガイド。LIFF SDK で取得した userId をフォームの hidden フィールドに同送し、追加サーバーなしで名寄せ。LINE Login チャネル作成・LIFF Server API 自動化・CMS モジュール実装まで解説。"
 source_url: "https://gist.github.com/hdknr/f88d85a752b3e9892d5c98a283209bec"
 categories: ["Web開発"]
-tags: ["line", "liff", "hubspot", "javascript", "crm"]
+tags: ["line", "liff", "HubSpot", "javascript", "crm"]
 ---
 
 LINE 公式アカウントで集客し、HubSpot でリード管理する——この組み合わせを使っている企業は多いはずです。しかし両者のユーザーデータは放っておくと分断されたままです。本記事では、**LINE で配布したアンケート LP の回答者（HubSpot リード）と、LINE 友だち（userId）を自動で紐づける仕組み**を、追加サーバーなし・HubSpot ネイティブ機能 + LIFF だけで構築する方法を解説します。

@@ -7,7 +7,7 @@ draft: false
 description: "Claude Platform on AWS には金額上限（Spend Limit）がない。理由と、AWS Budgets のアラート・Rate Limit のキャップ・Amazon Bedrock の自動遮断という現実的な課金ガードレールの組み方を整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4666921106"
 categories: ["クラウド/インフラ"]
-tags: ["AWS", "Claude", "コスト管理", "AWS Budgets", "レート制限"]
+tags: ["aws", "claude", "コスト管理", "AWS Budgets", "レート制限"]
 ---
 
 「Claude Code のループで暴走して、気付いたら数万〜数十万円の請求が来るのが怖い」——これは Claude Platform on AWS を使い始めた人がまず気にするポイントです。結論から言うと、**Anthropic のコントロールパネル（Claude Console）から「月額最大〇〇ドルまで」といった Spend Limit（利用金額制限）をかける機能は、Claude Platform on AWS ではサポートされていません。**

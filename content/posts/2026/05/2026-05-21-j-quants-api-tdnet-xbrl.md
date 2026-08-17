@@ -6,7 +6,7 @@ slug: "j-quants-api-tdnet-xbrl"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4504075409"
 categories: ["AI/LLM"]
-tags: ["J-Quants", "XBRL", "TDnet", "Claude Code", "金融データ", "python"]
+tags: ["J-Quants", "XBRL", "TDnet", "claude-code", "金融データ", "python"]
 ---
 
 2026年5月18日、JPX 総研は個人向けデータ配信サービス **J-Quants API** に新機能を追加した。適時開示書類（TDnet）データをアドオン形式で提供開始したのだ。当日分のリアルタイムデータに加えて、**過去5年分の XBRL 履歴データ**も定額で取得できるようになった。

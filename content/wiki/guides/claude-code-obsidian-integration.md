@@ -10,7 +10,7 @@ related_posts:
   - "/posts/2026/05/claude-code-obsidian-vault-writeback/"
   - "/posts/2026/05/claude-code-vault-writeback-automation/"
   - "/posts/2026/05/self-hosted-runner-vault-writeback/"
-tags: ["Claude Code", "Obsidian", "MCP", "Hooks", "writeback", "PKM"]
+tags: ["claude-code", "Obsidian", "mcp", "hooks", "writeback", "PKM"]
 ---
 
 ## 概要

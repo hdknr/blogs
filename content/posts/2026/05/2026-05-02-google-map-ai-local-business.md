@@ -6,7 +6,7 @@ slug: "google-map-ai-local-business"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363257776"
 categories: ["ビジネス/キャリア"]
-tags: ["ChatGPT", "Googleマップ", "ローカルビジネス", "副業", "プロンプト", "ウェブ制作"]
+tags: ["chatgpt", "Googleマップ", "ローカルビジネス", "副業", "プロンプト", "ウェブ制作"]
 ---
 
 海外で話題の「ChatGPT + Google マップ」を組み合わせたひとり社長向け収益化メソッドを全文和訳・解説する。ウェブサイト制作・レビュー管理・コールド営業の 3 本柱で、未経験からでも月38万円スタート、6 か月で月228万〜304万円を目指せる仕組みだ。

@@ -6,7 +6,7 @@ slug: "sap-erp-action-layer-ai"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078713067"
 categories: ["AI/LLM"]
-tags: ["ERP", "SAP", "AIエージェント", "アクションレイヤー", "Computer Use"]
+tags: ["ERP", "SAP", "AIエージェント", "アクションレイヤー", "computer-use"]
 ---
 
 SAP を置き換えるのは現実的ではない——だからこそ、工夫しながら SAP を使い続ける方法を考える必要があります。a16z が公開した「Why the World Still Runs on SAP」というレポートを受けて、Kurashiru CTO の Masato Otake 氏が自社での業務 AI 開発の知見を交えてまとめた考察を紹介します。

@@ -126,6 +126,59 @@ def validate_post(filepath, repo_relative):
     return violations
 
 
+def urlize(term):
+    """The path Hugo builds for a taxonomy term, used only to spot collisions.
+
+    Verified against real build output rather than assumed:
+
+    - whitespace collapses to `-`   `Claude Code` -> claude-code
+    - case is folded                `MCP`         -> mcp
+    - `/` stays a PATH SEPARATOR    `AI/LLM`      -> ai/llm   (two directories)
+    - `_` is preserved                `$GITHUB_ENV` -> github_env
+    - `.` is preserved                `Claude.md`   -> claude.md
+    - repeated `-` is NOT collapsed   `claude -p`   -> claude--p
+
+    Checked against a real build: urlizing all 1161 tags reproduces the 1161
+    directories under public/tags/ exactly. Folding `/` or `_` into `-` would
+    fail CI on two tags that really do have separate pages.
+    Keep this in sync with scripts/normalize_tags.py.
+    """
+    s = term.strip().lower()
+    s = re.sub(r'\s+', '-', s)
+    return re.sub(r'[^\w\-/.]', '', s, flags=re.UNICODE)
+
+
+def collect_tags(repo_root):
+    """Every tag spelling used across posts and the wiki, keyed by spelling."""
+    spellings = {}
+    for section in ('posts', 'wiki'):
+        pattern = os.path.join(repo_root, 'content', section, '**', '*.md')
+        for filepath in sorted(glob.glob(pattern, recursive=True)):
+            if os.path.basename(filepath) == '_index.md':
+                continue
+            fm = parse_frontmatter(filepath)
+            if not fm or 'tags' not in fm:
+                continue
+            for tag in parse_list_value(fm['tags']) or []:
+                if tag:
+                    spellings.setdefault(tag, os.path.relpath(filepath, repo_root))
+    return spellings
+
+
+def find_tag_collisions(repo_root):
+    """Return {url_key: [spellings]} for tags that share one taxonomy page.
+
+    Posts and the wiki feed one `tags` taxonomy, so `MCP` and `mcp` both build
+    /tags/mcp/ and only the display name differs -- and which one wins is decided
+    by map iteration order, so it changes between builds of identical content.
+    Keeping the spellings unique is what makes the build reproducible (#651).
+    """
+    groups = {}
+    for tag in collect_tags(repo_root):
+        groups.setdefault(urlize(tag), []).append(tag)
+    return {k: sorted(v) for k, v in groups.items() if len(v) > 1}
+
+
 def main():
     quiet = '--quiet' in sys.argv
 
@@ -152,8 +205,17 @@ def main():
         for violation in failures[path]:
             print(f"     - {violation}")
 
-    if failures:
-        print(f"\n{checked} 件中 {len(failures)} 件が規約違反", file=sys.stderr)
+    collisions = find_tag_collisions(repo_root)
+    for key in sorted(collisions):
+        print(f"NG タグの表記ゆれ /tags/{key}/")
+        print(f"     - {', '.join(repr(t) for t in collisions[key])} が同じページに落ちる")
+
+    if failures or collisions:
+        print(
+            f"\n{checked} 件中 {len(failures)} 件が規約違反、"
+            f"タグの表記ゆれ {len(collisions)} 件",
+            file=sys.stderr,
+        )
         return 1
 
     if not quiet:

@@ -10,7 +10,7 @@ related_posts:
   - "/posts/2026/06/loop-engineering-14-step-roadmap/"
   - "/posts/2026/07/claude-code-loop-design-guide/"
   - "/posts/2026/08/claude-fable-5-lp-improvement-loop/"
-tags: ["ループエンジニアリング", "AIエージェント", "自動化", "Claude Code", "設計パターン"]
+tags: ["ループエンジニアリング", "AIエージェント", "自動化", "claude-code", "設計パターン"]
 ---
 
 ## 概要

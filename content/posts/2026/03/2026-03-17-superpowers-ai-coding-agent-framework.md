@@ -6,7 +6,7 @@ slug: "superpowers-ai-coding-agent-framework"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4077626995"
 categories: ["AI/LLM"]
-tags: ["AIエージェント", "Claude Code", "superpowers", "TDD", "Git Worktree"]
+tags: ["AIエージェント", "claude-code", "superpowers", "tdd", "git worktree"]
 ---
 
 AIコーディングエージェント向けの開発フレームワーク「superpowers」（`obra/superpowers`）がGitHubで9万スターを超え、世界中のAI開発者から注目を集めている。Claude Code・Cursor・Codex・OpenCode・Gemini CLIなど主要なAIエージェントに対応した、再利用可能な「スキル」コンポーネントで構成されるワークフローだ。

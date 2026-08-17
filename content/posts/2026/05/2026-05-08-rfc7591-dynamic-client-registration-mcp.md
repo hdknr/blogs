@@ -6,7 +6,7 @@ slug: "rfc7591-dynamic-client-registration-mcp"
 draft: false
 description: "MCP クライアントが事前登録なしで認可サーバーに繋がる仕組みを RFC 7591（Dynamic Client Registration）と RFC 9728 / 8414 / 9068 / 8707 / 7636 の連動から解説。Claude Code の自動ログインフローと JWT audience 検証でハマる構造を仕様レベルで追える。"
 categories: ["セキュリティ"]
-tags: ["mcp", "oauth2", "dcr", "claude-code", "jwt", "pkce"]
+tags: ["mcp", "oauth2", "dcr", "claude-code", "JWT", "pkce"]
 ---
 
 [個人開発アプリの認証は「絶対に」WorkOS を使え — MCP 化で知った最強の選択肢]({{< ref "/posts/2026/04/2026-04-27-workos-authkit-mcp-authentication" >}}) では、WorkOS AuthKit の Dynamic Client Registration（DCR）対応が MCP 認証の決め手になる、という話を書いた。

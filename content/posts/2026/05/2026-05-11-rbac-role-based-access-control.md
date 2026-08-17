@@ -6,7 +6,7 @@ slug: "rbac-role-based-access-control"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/93#issuecomment-4417016793"
 categories: ["セキュリティ"]
-tags: ["RBAC", "アクセス制御", "Kubernetes", "AWS IAM", "ABAC"]
+tags: ["RBAC", "アクセス制御", "kubernetes", "AWS IAM", "ABAC"]
 ---
 
 **RBAC（Role-Based Access Control：ロールベースアクセス制御）とは、ユーザーに直接権限を与えず、ロールを介して権限を管理する仕組みです。** AWS の IAM、Kubernetes、GitHub、Microsoft 365 など、現代のほとんどのプラットフォームがこの考え方を基盤にしています。

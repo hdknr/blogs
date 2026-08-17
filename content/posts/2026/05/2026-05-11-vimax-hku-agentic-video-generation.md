@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4424569782"
 description: "香港大学 HKUDS が開発したオープンソース動画生成フレームワーク ViMax の全機能を解説。Idea2Video・Novel2Video・Script2Video・AutoCameo の4モードと、RAG ベースのマルチエージェントアーキテクチャを日本語で詳しく紹介します。"
 categories: ["AI/LLM"]
-tags: ["ViMax", "動画生成", "マルチエージェント", "オープンソース", "RAG", "Python", "Gemini"]
+tags: ["ViMax", "動画生成", "マルチエージェント", "オープンソース", "RAG", "python", "gemini"]
 ---
 
 香港大学データインテリジェンスラボ（HKUDS）が開発したオープンソースの動画生成フレームワーク **ViMax** が GitHub で急速にスターを伸ばしている（3,800超・MIT ライセンス）。1行のテキストアイデアを入力するだけで、脚本執筆・絵コンテ設計・キャラクター管理・最終動画レンダリングまでを自律的に実行するエンドツーエンドのマルチエージェントシステムだ。

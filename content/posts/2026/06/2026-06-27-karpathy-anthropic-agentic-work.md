@@ -7,7 +7,7 @@ draft: false
 description: "KarpathyのAnthropic入社、Claude Opus 4.8のeffort controlとDynamic Workflows、Claude Tag、Fable 5/Mythos 5の輸出規制騒動を整理し、AIが組織に常駐する「Agentic Work」の流れを解説する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4815314799"
 categories: ["AI/LLM"]
-tags: ["Karpathy", "Anthropic", "Claude Tag", "Claude Opus 4.8", "AIエージェント"]
+tags: ["Karpathy", "anthropic", "Claude Tag", "Claude Opus 4.8", "AIエージェント"]
 ---
 
 ## はじめに

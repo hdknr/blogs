@@ -7,7 +7,7 @@ draft: false
 description: "Ruflo（元 Claude Flow）は npx 一行で Claude Code を 100 以上の専門エージェントが協調するスウォームに変えるオープンソースハーネス。インストール方法からスウォーム・トポロジー・メモリ・フェデレーション機能まで解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714996948"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Ruflo", "マルチエージェント", "MCP", "claude-flow"]
+tags: ["claude-code", "Ruflo", "マルチエージェント", "mcp", "claude-flow"]
 ---
 
 ## はじめに

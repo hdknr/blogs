@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4588948936"
 description: "Claude CodeをオーケストレーターとしてAlgrow・Renoise・Higgsfield・LovartをMCP接続し、HyperFrames Skillでテロップ・カットを自動化。動画10本を量産する全構成を各ツールのMCP設定JSONと費用感とともに解説。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "MCP", "AI動画", "動画生成", "Higgsfield", "Renoise", "Lovart", "HyperFrames", "コンテンツ自動化"]
+tags: ["claude-code", "mcp", "AI動画", "動画生成", "Higgsfield", "Renoise", "Lovart", "HyperFrames", "コンテンツ自動化"]
 ---
 
 「AIが寝ている間に自動販売機がチャリンチャリン鳴る時代」——株式会社MakeAI CEOのmana氏がXで公開したこの一文が多くの反響を呼んだ。Claude Codeに4つのツールをMCPで接続し、人間の手をほとんど介さずに動画10本を量産できる構成だという。本記事ではその全体像と各ツールの役割を詳しく解説する。

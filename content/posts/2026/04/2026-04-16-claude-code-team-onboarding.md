@@ -6,7 +6,7 @@ slug: "claude-code-team-onboarding"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4266522503"
 categories: ["ツール/開発環境"]
-tags: ["Claude Code", "チームオンボーディング", "AI", "開発効率化", "MCP"]
+tags: ["claude-code", "チームオンボーディング", "AI", "開発効率化", "mcp"]
 ---
 
 Claude Code に `/team-onboarding` というコマンドが追加された。新メンバーが入るたびに口頭で説明していた「うちのチームの Claude Code の使い方」が、1コマンドで自動ドキュメント化されるようになった。

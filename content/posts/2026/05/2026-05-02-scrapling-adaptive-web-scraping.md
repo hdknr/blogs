@@ -6,7 +6,7 @@ slug: "scrapling-adaptive-web-scraping"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4363538280"
 categories: ["ツール/開発環境"]
-tags: ["Python", "スクレイピング", "Cloudflare", "MCP", "Scrapy"]
+tags: ["python", "スクレイピング", "Cloudflare", "mcp", "Scrapy"]
 ---
 
 Webスクレイピングの定番ライブラリといえば BeautifulSoup だが、それを最大784倍上回るパフォーマンスを持つ Python フレームワーク **Scrapling** が注目を集めている。GitHub スター数は約47,000（2026年5月時点）に達する。Cloudflare Turnstile 突破やサイト構造変化への自動適応など、現代のWebスクレイピング課題を一手に解決するのが特徴だ。

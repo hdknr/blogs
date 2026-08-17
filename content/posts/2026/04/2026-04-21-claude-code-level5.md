@@ -6,7 +6,7 @@ slug: "claude-code-level5"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4291430905"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "CLAUDE.md", "Hooks", "Agents", "VibeCoding", "自動化"]
+tags: ["claude-code", "CLAUDE.md", "hooks", "Agents", "VibeCoding", "自動化"]
 ---
 
 Qiita に投稿された「[Claude Code を Level 5 まで育てたら、開発が「指示と確認だけ」になった — 実ファイル構成で解説](https://qiita.com/teppei19980914/items/8da88b33ffa8cf88dfa2)」が大きな反響を呼んでいる。CLAUDE.md・Skills・Hooks・Agents を組み合わせて Claude Code を 5 段階で「育てる」ことで、人間の作業を「指示と確認だけ」に絞り込むアプローチを実ファイル構成とともに解説した記事だ。

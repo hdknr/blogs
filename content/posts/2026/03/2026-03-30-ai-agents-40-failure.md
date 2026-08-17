@@ -6,7 +6,7 @@ slug: "ai-agents-40-failure"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4152191071"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "AIエージェント", "マルチエージェント", "組織設計", "プロンプトエンジニアリング"]
+tags: ["claude-code", "AIエージェント", "マルチエージェント", "組織設計", "プロンプトエンジニアリング"]
 description: "Claude Codeでエージェント40体を1ヶ月運用して全部やめた実体験レポート。Context Rot、Compaction、指示の限界という3つの構造的問題と、壊れないAIエージェント設計の考え方を解説。"
 ---
 

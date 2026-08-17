@@ -6,7 +6,7 @@ slug: "dflash-mlx-apple-silicon-llm"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4250469862"
 categories: ["AI/LLM"]
-tags: ["Apple Silicon", "MLX", "LLM", "ローカルLLM", "推測デコード", "DFlash"]
+tags: ["Apple Silicon", "MLX", "llm", "ローカルLLM", "推測デコード", "DFlash"]
 ---
 
 Apple Silicon（M4/M5 Max など）搭載の Mac で、ローカル LLM を最大 4.1 倍高速化する新技術「DFlash」のオープンソース実装が公開されました。精度を落とさずに推論速度だけを大幅に向上できる点が注目されています。

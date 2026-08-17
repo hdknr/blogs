@@ -6,7 +6,7 @@ lastmod: 2026-04-23
 aliases: ["グラファイト", "スタックドPR", "Graphite Agent"]
 related_posts:
   - "/posts/2026/04/graphite-stacked-prs-merge-queue/"
-tags: ["開発ツール", "GitHub", "CI/CD", "AI コードレビュー", "ハーネスエンジニアリング"]
+tags: ["開発ツール", "github", "CI/CD", "AI コードレビュー", "ハーネスエンジニアリング"]
 ---
 
 ## 概要

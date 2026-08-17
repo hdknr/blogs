@@ -6,7 +6,7 @@ slug: "takt-ai-agent-workflow"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078664295"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "AI agent", "CLI", "workflow", "multi-agent"]
+tags: ["claude-code", "ai-agent", "CLI", "workflow", "multi-agent"]
 ---
 
 [takt](https://github.com/nrslib/takt) は、Claude Code や Codex などの AI コーディングエージェントのワークフローを YAML で定義できる CLI ツールです。エージェントに単にコードを書かせるだけでなく、レビューループや人間の介入ポイントを宣言的に管理することで、品質の高いアウトプットを継続的に得られるよう設計されています。

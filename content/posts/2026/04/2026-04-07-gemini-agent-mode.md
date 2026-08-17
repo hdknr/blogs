@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4201963572"
 categories: ["AI/LLM"]
 description: "Google Gemini Agentモードの機能・活用事例・料金を解説。Gmail・カレンダー・Driveを横断する自動化、スケジュール実行、OpenClawとの比較まで網羅。"
-tags: ["Gemini", "AIエージェント", "Google Workspace", "Google AI Ultra", "OpenClaw"]
+tags: ["gemini", "AIエージェント", "Google Workspace", "Google AI Ultra", "openclaw"]
 ---
 
 GoogleのGemini Agentモードが、AIエージェント界隈で大きな注目を集めている。Gmail、カレンダー、Drive、スライドといったGoogle Workspaceアプリを横断し、複雑なタスクを自動処理できる機能だ。従来のチャットAIとは一線を画すその実力を、OpenClawとの比較も交えて見ていく。

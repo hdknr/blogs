@@ -6,7 +6,7 @@ slug: "aws-ai-bpr-methodology"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304020634"
 categories: ["AI/LLM"]
-tags: ["AWS", "AI エージェント", "BPR", "組織変革", "Appreciative Inquiry", "Cooperrider", "4D サイクル", "ポジティブ・チェンジ"]
+tags: ["aws", "AI エージェント", "BPR", "組織変革", "Appreciative Inquiry", "Cooperrider", "4D サイクル", "ポジティブ・チェンジ"]
 ---
 
 AWS が公開した「AI 駆動の業務変革手法 *AI BPR*」の記事が話題になっている。単なる成功事例ではなく、**「正しいアプローチが全く機能しない」という壁に正直にぶつかった失敗報告**から始まる点が異色で、AI 導入に苦戦する多くの組織にとって示唆に富む内容だ。

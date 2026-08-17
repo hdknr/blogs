@@ -6,7 +6,7 @@ lastmod: 2026-04-14
 aliases: []
 related_posts:
   - "/posts/2026/04/mempalace-ai-memory/"
-tags: ["MemPalace", "LLMメモリ", "ChromaDB", "MCP", "オープンソース"]
+tags: ["MemPalace", "LLMメモリ", "ChromaDB", "mcp", "オープンソース"]
 ---
 
 ## 概要

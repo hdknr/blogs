@@ -6,7 +6,7 @@ lastmod: 2026-07-15
 aliases: ["claude-seo", "claude seo skill", "/seo audit"]
 related_posts:
   - "/posts/2026/06/claude-seo-skill/"
-tags: ["claude-code", "SEO", "スキル", "GEO", "E-E-A-T", "MCP"]
+tags: ["claude-code", "SEO", "スキル", "GEO", "E-E-A-T", "mcp"]
 ---
 
 ## 概要

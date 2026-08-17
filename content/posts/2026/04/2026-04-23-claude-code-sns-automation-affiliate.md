@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304031640"
 description: "Claude Code をエージェントとして活用し、SNS 複数アカウントのコンテンツ自動生成とアフィリエイト収益化を自動化する仕組みを解説。各 SNS 規約リスク・景品表示法の注意点も網羅。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "SNS自動化", "アフィリエイト", "AI収益化", "マーケティング"]
+tags: ["claude-code", "SNS自動化", "アフィリエイト", "AI収益化", "マーケティング"]
 ---
 
 Claude Code をコーディング支援以外の収益化ツールとして活用する事例が注目されている。本記事では、SNS 複数アカウントの自動運用×アフィリエイト収益化という活用パターンの仕組み・先行者優位の背景・実践上の注意点を整理する。

@@ -7,7 +7,7 @@ draft: false
 description: "Snowflake・Databricks・Google Cloud が打ち出す仮想グラフ（Virtual Graph）戦略を解説。Zero-copy・ガバナンス継続・GQL対応という特性が、AIエージェントにとってのセマンティックレイヤー＝ORMとなる理由と、物理グラフとのトレードオフを整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4588941407"
 categories: ["AI/LLM"]
-tags: ["仮想グラフ", "GraphRAG", "agent", "Snowflake", "BigQuery"]
+tags: ["仮想グラフ", "GraphRAG", "agent", "Snowflake", "bigquery"]
 ---
 
 Google の Developer Advocate である Kazunori Sato（@kazunori_279）氏が X（旧 Twitter）で紹介した Zenn 記事が注目を集めた。「仮想グラフについて、物理グラフ・KG・オントロジー・neo4j 等との関係をバズに惑わされず現場視点で書かれたすばらしすぎるまとめ」という評価とともに、氏が付け加えたコメントが示唆深い。

@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4424486460"
 description: "oh-my-openagent（omo）は Claude Code・Codex・Gemini CLI を一元管理し、タスクに応じて最適な AI エージェントへ自動ルーティングする TypeScript 製ハーネス。Team Mode による最大 8 並列実行と ulw コマンドによる自律実行を解説。"
 categories: ["AI/LLM"]
-tags: ["oh-my-openagent", "Claude Code", "agent", "openai", "gemini"]
+tags: ["oh-my-openagent", "claude-code", "agent", "openai", "gemini"]
 ---
 
 複数の AI コーディングエージェントを使い分けるのは手間がかかる。その課題を解決するのが **oh-my-openagent（omo）** だ。Claude Code・OpenAI Codex・Gemini CLI といった主要エージェントを一元管理し、タスクに応じて最適なモデルへ自動ルーティングするオープンソースのハーネスで、GitHub スター数は **5.7 万超**（2026 年 5 月時点）に達している。

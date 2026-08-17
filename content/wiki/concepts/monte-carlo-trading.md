@@ -7,7 +7,7 @@ aliases: ["モンテカルロトレーディング", "Monte Carlo trading", "GBM
 related_posts:
   - "/posts/2026/05/claude-btc-trading-montecarlo/"
   - "/posts/2026/05/nikkei225-micro-monte-carlo-claude/"
-tags: ["モンテカルロ法", "自動売買", "Claude", "GBM", "ケリー基準", "Python"]
+tags: ["モンテカルロ法", "自動売買", "claude", "GBM", "ケリー基準", "python"]
 ---
 
 ## 概要

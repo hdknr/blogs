@@ -6,7 +6,7 @@ slug: "claude-code-setup-official-plugin"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714963243"
 categories: ["AI/LLM"]
-tags: ["claude-code", "プラグイン", "MCP", "Skills", "セットアップ"]
+tags: ["claude-code", "プラグイン", "mcp", "Skills", "セットアップ"]
 ---
 
 Claude Code を使い続けていると、いつの間にか設定がぐちゃぐちゃになってくる。どの MCP を入れればいいか分からない、Skills や Hooks の使い分けに迷う、CLAUDE.md が肥大化してきた……そんな悩みを持つユーザーに向けて、Anthropic が公式プラグイン `claude-code-setup` をリリースした。

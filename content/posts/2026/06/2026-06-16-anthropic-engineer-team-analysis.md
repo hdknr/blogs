@@ -6,7 +6,7 @@ slug: "anthropic-engineer-team-analysis"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714992975"
 categories: ["AI/LLM"]
-tags: ["Anthropic", "エンジニア組織", "採用", "インフラ", "キャリア"]
+tags: ["anthropic", "エンジニア組織", "採用", "インフラ", "キャリア"]
 ---
 
 採用コンサルタントのSebastian Cuadros氏が、LinkedInで「現在の雇用主：Anthropic」と登録している5306件のプロフィールをスクレイピングし、エンジニアリング職と判定できる1680人の経歴を詳細に分析した。入社前に記述していた職歴説明7986件を精査した結果、Anthropicの人材戦略について常識を覆すいくつかの事実が浮かび上がった。

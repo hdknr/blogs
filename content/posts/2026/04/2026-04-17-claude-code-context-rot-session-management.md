@@ -6,7 +6,7 @@ slug: "claude-code-context-rot-session-management"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4266527444"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "コンテキスト管理", "Context Rot", "セッション管理", "プロンプトエンジニアリング"]
+tags: ["claude-code", "コンテキスト管理", "Context Rot", "セッション管理", "プロンプトエンジニアリング"]
 ---
 
 Anthropic テクニカルスタッフ（Claude Code 担当）の Thariq（@trq212）が公開した記事「Using Claude Code: Session Management & 1M Context」が注目を集めている。「1M トークンのコンテキストウィンドウがあれば大丈夫」という誤解を正し、**長いタスクを成功させるカギはコンテキストの能動的な管理にある**と明示した内容だ。本記事では、その内容をもとに 5 つのセッション管理手法を整理する。

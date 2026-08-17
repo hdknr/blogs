@@ -13,7 +13,7 @@ related_posts:
   - "/posts/2026/04/claude-managed-agents-architecture/"
   - "/posts/2026/04/anthropic-vs-openai-harness-strategy/"
   - "/posts/2026/04/agent-harness-memory-lock-in/"
-tags: ["agent", "LLM", "自律実行", "マネージドエージェント"]
+tags: ["agent", "llm", "自律実行", "マネージドエージェント"]
 ---
 
 ## 概要

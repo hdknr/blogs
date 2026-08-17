@@ -6,7 +6,7 @@ slug: "claude-seo-skill"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785292468"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "SEO", "スキル", "GEO", "E-E-A-T"]
+tags: ["claude-code", "SEO", "スキル", "GEO", "E-E-A-T"]
 ---
 
 `/seo audit` コマンド1つでサイト全体の並列監査が走り、AI検索最適化（GEO）まで25のサブスキルをカバーする——Claude Code向けSEOスキル「claude-seo」の全容を解説します。

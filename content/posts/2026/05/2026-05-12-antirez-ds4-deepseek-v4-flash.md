@@ -7,7 +7,7 @@ draft: false
 description: "Redis 作者 antirez が公開した DeepSeek V4 Flash 専用ローカル推論エンジン ds4（DwarfStar 4）を解説。Mac Studio M3 Ultra 512GB で 26 token/sec、KV キャッシュのディスク永続化、OpenAI / Anthropic 互換 API、Claude Code からの利用方法、2bit 非対称量子化、Exact Replay 設計まで網羅。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4429298637"
 categories: ["AI/LLM"]
-tags: ["deepseek-v4-flash", "antirez", "ローカルLLM", "apple-silicon", "claude-code", "kv-cache", "llm"]
+tags: ["deepseek-v4-flash", "antirez", "ローカルLLM", "Apple Silicon", "claude-code", "kv-cache", "llm"]
 ---
 
 ## TL;DR

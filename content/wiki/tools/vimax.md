@@ -6,7 +6,7 @@ lastmod: 2026-05-20
 aliases: ["Vimax", "Video Maximizer", "HKU ViMax"]
 related_posts:
   - "/posts/2026/05/vimax-hku-agentic-video-generation/"
-tags: ["ViMax", "動画生成", "マルチエージェント", "オープンソース", "RAG", "Python"]
+tags: ["ViMax", "動画生成", "マルチエージェント", "オープンソース", "RAG", "python"]
 ---
 
 ## 概要

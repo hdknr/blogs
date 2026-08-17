@@ -7,7 +7,7 @@ draft: false
 description: "PyPI公式パッケージ telnyx がTeamPCPのサプライチェーン攻撃で汚染。WAVステガノグラフィ手法の詳細と、Python開発者が今すぐ取るべき対策を解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4145706244"
 categories: ["セキュリティ"]
-tags: ["supply-chain", "PyPI", "マルウェア", "Python", "security"]
+tags: ["supply-chain", "PyPI", "マルウェア", "python", "security"]
 ---
 
 サプライチェーン攻撃とは、ソフトウェアの開発・配布の過程（サプライチェーン）に侵入し、正規のパッケージやツールに悪意あるコードを混入させる攻撃手法です。開発者が信頼して利用しているライブラリが攻撃の入口になるため、通常のセキュリティ対策では気づきにくいのが特徴です。

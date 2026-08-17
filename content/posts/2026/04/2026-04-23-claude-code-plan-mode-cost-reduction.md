@@ -7,7 +7,7 @@ draft: false
 description: "CLAUDE.md に plan モード強制の1行を追加するだけでトークン消費を 64%、コストを 69% 削減できる設定方法と仕組みを解説。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4303991805"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "CLAUDE.md", "コスト削減", "plan モード", "claude"]
+tags: ["claude-code", "CLAUDE.md", "コスト削減", "plan モード", "claude"]
 ---
 
 X（旧 Twitter）で話題になった Claude Code のコスト削減テクニックを紹介する。やることはシンプルで、`CLAUDE.md` にたった1行を追加するだけ。それだけでトークン消費が約 1/3 に減り、エラーもゼロになったという報告が注目を集めている。

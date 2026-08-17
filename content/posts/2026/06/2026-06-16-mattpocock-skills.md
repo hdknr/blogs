@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4714883999"
 description: "Matt Pocock が本番開発で使う Claude Code スキル15種を npx skills@latest add mattpocock/skills でインストールできる。/grill-me・/tdd・/diagnose 等のスキルで vibe coding から工学的開発へ移行する方法を解説する。"
 categories: ["AI/LLM"]
-tags: ["claude-code", "TypeScript", "tdd", "開発効率化", "prompt"]
+tags: ["claude-code", "typescript", "tdd", "開発効率化", "prompt"]
 ---
 
 ## 概要

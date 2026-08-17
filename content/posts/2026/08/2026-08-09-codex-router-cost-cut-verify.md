@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/556#issuecomment-5229826644"
 description: "「codex-router で DeepSeek を Codex のサブエージェントにすれば高額サブスク不要」という拡散投稿を検証。モデル指定は Codex 純正の設定だけででき、ルーターが足すのは一覧統合と認証分離。Claude Code との併用をどう設計するかまで整理する。"
 categories: ["AI/LLM"]
-tags: ["Codex", "codex-router", "DeepSeek", "サブエージェント", "コスト削減", "OpenAI", "Claude Code", "ファクトチェック"]
+tags: ["Codex", "codex-router", "DeepSeek", "サブエージェント", "コスト削減", "openai", "claude-code", "ファクトチェック"]
 ---
 
 `codex-router` というツールで Codex のサブエージェントを DeepSeek V4-Flash に置き換えれば開発費が激減する、という投稿が X で拡散している。

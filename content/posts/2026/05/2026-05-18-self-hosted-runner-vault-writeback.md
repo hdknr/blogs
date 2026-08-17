@@ -6,7 +6,7 @@ slug: "self-hosted-runner-vault-writeback"
 draft: false
 description: "PR マージのイベント駆動で Obsidian Vault に書き戻す処理を、self-hosted runner で手元の Mac に降ろす設計。cloud-hosted Actions の弱点（Vault に書けない・skills が使えない・会話文脈ゼロ）を一気に解消し、claude -p で Vault 直書きを実現する具体的な workflow と launchd セットアップを解説。"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "Obsidian", "GitHub Actions", "self-hosted runner", "claude -p", "writeback", "automation", "launchd", "ナレッジマネジメント", "PKM"]
+tags: ["claude-code", "Obsidian", "GitHub Actions", "self-hosted runner", "claude -p", "writeback", "automation", "launchd", "ナレッジマネジメント", "PKM"]
 ---
 
 [Obsidian Vault 書き戻しの自動化]({{< ref "posts/2026/05/2026-05-18-claude-code-vault-writeback-automation.md" >}}) では、3 方式（Claude Code hooks / Git クライアントフック / GitHub Actions）の使い分けをまとめました。そこで「GitHub Actions は会話文脈が失われる・Vault に書けない」と書きましたが、これは **cloud-hosted runner** を前提にした話です。**self-hosted runner**（GitHub の job を手元のマシンで実行する仕組み）に切り替えると、その制約が一気に外れます。

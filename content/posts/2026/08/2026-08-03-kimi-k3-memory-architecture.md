@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/556#issuecomment-5161343072"
 description: "Moonshot AI の Kimi K3（2.8兆パラメータ / 100万トークン）を記憶設計から解説。KDA 69 層 + Gated MLA 24 層のハイブリッド構成、KV キャッシュ 75% 削減の意味、トークン単価と Opus 5 比較、ローカル実行が不可能な理由まで。"
 categories: ["AI/LLM"]
-tags: ["Kimi", "LLM", "ロングコンテキスト", "MoE", "オープンソース", "ローカルLLM"]
+tags: ["Kimi", "llm", "ロングコンテキスト", "MoE", "オープンソース", "ローカルLLM"]
 ---
 
 2026 年 7 月 16 日に Moonshot AI が公開した **Kimi K3** は、総パラメータ 2.8 兆・コンテキスト 100 万トークンという「世界初のオープン 3T クラスモデル」として大きく話題になりました。

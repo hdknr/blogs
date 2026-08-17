@@ -7,7 +7,7 @@ draft: false
 description: "デジタル庁が公開した行政手続データ（約75,000件）のMCPサーバー実装を読み解く。LLMには検索・集計条件の指定だけを任せ算術はサーバー側で行う設計、dataset.yaml による意味定義、Parquet 採用、ファジーマッチの適用範囲の絞り方まで、自社データをAIにつなぐときに転用できるポイントを整理する。"
 source_url: "https://github.com/hdknr/blogs/issues/572#issuecomment-5306477838"
 categories: ["AI/LLM"]
-tags: ["MCP", "デジタル庁", "AI-ready", "Parquet", "セマンティックレイヤー"]
+tags: ["mcp", "デジタル庁", "AI-ready", "Parquet", "セマンティックレイヤー"]
 ---
 
 社内の Excel や CSV を AI に分析させようとして、こんな壁にぶつかったことはないでしょうか。

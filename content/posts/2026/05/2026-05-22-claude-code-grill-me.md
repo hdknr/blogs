@@ -7,7 +7,7 @@ draft: false
 description: "mattpocock/skills の grill-me は、コードを書く前に AI が設計の盲点を洗い出す4文の Claude Code スキル。深さ優先の質問戦略と Codebase-First 原則で、ミスアライメントを事前に解消する。"
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4514466911"
 categories: ["AI/LLM"]
-tags: ["Claude Code", "grill-me", "AI活用", "プロンプト設計", "設計レビュー"]
+tags: ["claude-code", "grill-me", "AI活用", "プロンプト設計", "設計レビュー"]
 ---
 
 ## grill-me とは何か

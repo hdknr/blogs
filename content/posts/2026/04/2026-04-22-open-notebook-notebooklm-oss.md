@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4303873480"
 description: "NotebookLM の完全ローカル実装 OSS「open-notebook」の機能・導入手順・NotebookLM との比較を解説。Ollama 対応でゼロコスト運用も可能。"
 categories: ["AI/LLM"]
-tags: ["NotebookLM", "セルフホスト", "Docker", "Ollama", "ローカルLLM"]
+tags: ["notebooklm", "セルフホスト", "docker", "ollama", "ローカルLLM"]
 ---
 
 Google の NotebookLM に触発されたオープンソース実装 **open-notebook** が海外のテック界隈で注目を集めている。データを一切外部に送信しない完全ローカル動作を売りに、Docker で約2分で立ち上げられる手軽さも人気の理由だ。

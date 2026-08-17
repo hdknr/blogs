@@ -7,7 +7,7 @@ aliases: ["Prompt Injection"]
 related_posts:
   - "/posts/2026/03/vibe-hacking/"
   - "/posts/2026/03/claude-code-security-theater/"
-tags: ["セキュリティ", "LLM", "脆弱性", "攻撃"]
+tags: ["セキュリティ", "llm", "脆弱性", "攻撃"]
 ---
 
 ## 概要

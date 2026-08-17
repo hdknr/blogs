@@ -6,7 +6,7 @@ slug: "obsidian-claude-code-personal-os"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4304026053"
 categories: ["AI/LLM"]
-tags: ["Obsidian", "Claude Code", "生産性", "AI秘書", "パーソナルOS"]
+tags: ["Obsidian", "claude-code", "生産性", "AI秘書", "パーソナルOS"]
 ---
 
 スタートアップコミュニティで知名度の高い Greg Isenberg が、Obsidian と Claude Code を組み合わせて「24時間365日稼働するパーソナル AI オペレーティングシステム」を構築する方法を公開した。閲覧数 110 万超、ブックマーク 17,000 超と大きな反響を呼んでいる。

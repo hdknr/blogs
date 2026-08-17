@@ -6,7 +6,7 @@ lastmod: 2026-08-05
 aliases: ["RDS Blue/Green", "Blue/Green デプロイ", "MySQL 8.4 移行", "RDS バージョンアップ", "標準サポート終了"]
 related_posts:
   - "/posts/2026/08/rds-mysql-84-blue-green-migration/"
-tags: ["aws", "rds", "mysql", "terraform", "blue-green-deployment"]
+tags: ["aws", "rds", "mysql", "Terraform", "blue-green-deployment"]
 ---
 
 ## 概要

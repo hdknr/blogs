@@ -7,7 +7,7 @@ draft: false
 description: "HubSpot を Starter から Professional にアップグレードするとき、Marketing / Sales / Service / Content / Data / Commerce の 6 Hub で何が変わるのか。AEO 対応、ナーチャリング、予実管理、シーケンス、類似オーディエンス配信など、Pro 化の代表的なメリットと検討時の論点を実務目線でまとめた。"
 source_url: "https://github.com/hdknr/blogs/issues/71#issuecomment-4332009670"
 categories: ["ビジネス/キャリア"]
-tags: ["hubspot", "marketing-automation", "crm", "aeo", "sales"]
+tags: ["HubSpot", "marketing-automation", "crm", "aeo", "sales"]
 ---
 
 HubSpot を Starter から Professional（以降 Pro と表記）にアップグレードするとき、各 Hub で何が変わるのかを整理したメモ。Pro 化で得られる代表的なメリットを 1 行ずつまとめると次のとおり。

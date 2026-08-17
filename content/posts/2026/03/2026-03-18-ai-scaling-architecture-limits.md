@@ -6,7 +6,7 @@ slug: "ai-scaling-architecture-limits"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4085489052"
 categories: ["AI/LLM"]
-tags: ["AGI", "LLM", "スケーリング", "継続学習", "破滅的忘却"]
+tags: ["AGI", "llm", "スケーリング", "継続学習", "破滅的忘却"]
 description: "コロンビア大学 Vishal Misra 教授が指摘するAIスケーリングの限界。AGI実現には継続学習による破滅的忘却の克服と、相関から因果推論への移行が必要だと論じる。"
 ---
 

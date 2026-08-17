@@ -6,7 +6,7 @@ lastmod: 2026-04-06
 aliases: ["duckdb"]
 related_posts:
   - "/posts/2026/03/duckdb-columnar-arrow/"
-tags: ["データベース", "OLAP", "SQL", "Python"]
+tags: ["データベース", "OLAP", "SQL", "python"]
 ---
 
 ## 概要

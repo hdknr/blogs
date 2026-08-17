@@ -8,7 +8,7 @@ related_posts:
   - "/posts/2026/04/karpathy-llm-wiki/"
   - "/posts/2026/03/rag-adaptive-search-strategy/"
   - "/posts/2026/06/agentic-rag-patterns/"
-tags: ["RAG", "LLM", "ベクトル検索", "ナレッジマネジメント", "アダプティブ検索", "Agentic RAG"]
+tags: ["RAG", "llm", "ベクトル検索", "ナレッジマネジメント", "アダプティブ検索", "Agentic RAG"]
 ---
 
 ## 概要

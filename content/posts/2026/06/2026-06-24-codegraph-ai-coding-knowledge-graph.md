@@ -6,7 +6,7 @@ slug: "codegraph-ai-coding-knowledge-graph"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785302719"
 categories: ["AI/LLM"]
-tags: ["CodeGraph", "Claude Code", "MCP", "知識グラフ", "OSS"]
+tags: ["CodeGraph", "claude-code", "mcp", "知識グラフ", "OSS"]
 ---
 
 AIコーディングツールの最大のボトルネックのひとつが、コードベースを探索するための大量のツール呼び出しだ。grep・glob・ファイル読み込みを繰り返してから、ようやく本来の作業に入る——この非効率を、**ツール呼び出し58%削減・22%高速化**という実測値で解消する OSS が **CodeGraph** だ。

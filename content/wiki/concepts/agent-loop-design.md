@@ -7,7 +7,7 @@ aliases: ["ループ設計", "agent loop", "エージェントループ", "Getti
 related_posts:
   - "/posts/2026/07/claude-code-loop-design-guide/"
   - "/posts/2026/07/ai-agent-design-engineering-layers/"
-tags: ["Claude Code", "エージェント", "自動化", "ループ設計", "プロンプトエンジニアリング"]
+tags: ["claude-code", "エージェント", "自動化", "ループ設計", "プロンプトエンジニアリング"]
 ---
 
 ## 概要

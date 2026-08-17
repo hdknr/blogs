@@ -7,7 +7,7 @@ draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4357001866"
 description: "OpenAI と Anthropic が2026年4月に相次いで公開した公式ガイドラインを比較。Claude が字義通り解釈に、GPT が自律判断に進化した結果、古いプロンプトパターンが機能しなくなった理由を解説する。"
 categories: ["AI/LLM"]
-tags: ["プロンプトエンジニアリング", "Claude", "ChatGPT", "Anthropic", "OpenAI"]
+tags: ["プロンプトエンジニアリング", "claude", "chatgpt", "anthropic", "openai"]
 ---
 
 AI を使っていて「最近 ChatGPT や Claude が急に使いにくくなった」と感じたことはないだろうか。中国の AI コミュニティで話題になった阿绒 AYi（[@AYi_AInotes](https://x.com/AYi_AInotes)）が、この感覚の正体を[鮮やかに考察している](https://x.com/AYi_AInotes/status/2049898131035193396)。本記事はその考察をもとに筆者が整理したものだ。

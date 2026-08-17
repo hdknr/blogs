@@ -6,7 +6,7 @@ lastmod: 2026-05-20
 aliases: ["Subquadratic", "SubQ LLM"]
 related_posts:
   - "/posts/2026/05/subq-llm-subquadratic-sparse-attention/"
-tags: ["SubQ", "LLM", "Subquadratic", "ロングコンテキスト", "スパースアテンション"]
+tags: ["SubQ", "llm", "Subquadratic", "ロングコンテキスト", "スパースアテンション"]
 ---
 
 ## 概要

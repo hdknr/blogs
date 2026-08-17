@@ -7,7 +7,7 @@ aliases: ["redis"]
 related_posts:
   - "/posts/2026/03/redis-fenced-lock-python/"
   - "/posts/2026/03/redis-shared-state-antipattern/"
-tags: ["Redis", "キャッシュ", "データストア", "Django"]
+tags: ["redis", "キャッシュ", "データストア", "django"]
 ---
 
 ## 概要
