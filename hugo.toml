@@ -11,6 +11,18 @@ paginate = 10
 # truth for how a tag reads, so leave it alone.
 titleCaseStyle = 'none'
 
+# Mount static/images into assets as well, so the same PNG is both published
+# verbatim at its existing /blogs/images/<name>.png URL and available to the
+# image pipeline. Moving the files to assets/ instead would optimise them but
+# 404 every raw image URL that already exists.
+[module]
+  [[module.mounts]]
+    source = 'assets'
+    target = 'assets'
+  [[module.mounts]]
+    source = 'static/images'
+    target = 'assets/images'
+
 [params]
   env = 'production'
   defaultTheme = 'auto'

@@ -1,0 +1,65 @@
+{{- /*
+  Serve markdown images as WebP with a resized fallback.
+
+  Every local image here is a drawio diagram exported at --scale 2, so the file
+  committed under static/images is a ~1MB 2x PNG and, until this hook existed,
+  that exact file was what a reader on mobile downloaded. Hugo's build stats said
+  `Processed images: 0` because static/ bypasses the image pipeline entirely.
+
+  The posts reference images as plain markdown (`![alt](/blogs/images/x.png)`),
+  all 122 of them, so intercepting the render hook fixes every one without
+  editing a single post.
+
+  Diagrams are line art and text, not photographs, so they are encoded with
+  `webp q90 lanczos` -- thin strokes and small kanji fall apart at the quality
+  levels that look fine on a photo.
+*/ -}}
+{{- $dest := .Destination -}}
+{{- $alt := .Text -}}
+{{- $img := false -}}
+{{- $ext := lower (path.Ext $dest) -}}
+
+{{- /* Only local, raster images go through the pipeline. External URLs and SVG
+       (vector, already small, and unsupported by the pipeline) fall through. */ -}}
+{{- if and (hasPrefix $dest "/") (in (slice ".png" ".jpg" ".jpeg") $ext) -}}
+  {{- $img = resources.Get (printf "images/%s" (path.Base $dest)) -}}
+{{- end -}}
+
+{{- if $img -}}
+  {{- $widths := slice 640 1024 1600 -}}
+  {{- $webp := slice -}}
+  {{- $png := slice -}}
+  {{- $fallback := $img -}}
+  {{- range $widths -}}
+    {{- /* Never upscale: a 700px-wide diagram blown up to 1600 is just a bigger
+           file with no more detail in it. */ -}}
+    {{- if le . $img.Width -}}
+      {{- $w := $img.Resize (printf "%dx webp q90 lanczos" .) -}}
+      {{- $webp = $webp | append (printf "%s %dw" $w.RelPermalink .) -}}
+      {{- $p := $img.Resize (printf "%dx png" .) -}}
+      {{- $png = $png | append (printf "%s %dw" $p.RelPermalink .) -}}
+      {{- $fallback = $p -}}
+    {{- end -}}
+  {{- end -}}
+  {{- /* Narrower than the smallest step: one rendition, and the original is
+         already the right size to hand over as the fallback. */ -}}
+  {{- if not $webp -}}
+    {{- $w := $img.Resize (printf "%dx webp q90 lanczos" $img.Width) -}}
+    {{- $webp = $webp | append (printf "%s %dw" $w.RelPermalink $img.Width) -}}
+    {{- $png = $png | append (printf "%s %dw" $img.RelPermalink $img.Width) -}}
+  {{- end -}}
+{{- /* Link to the untouched original. These are architecture diagrams several
+       thousand pixels wide; before this hook the reader downloaded the full-size
+       PNG and could pinch-zoom into the small labels. Serving a 640-1600px
+       rendition takes that away, and for a dense diagram the smallest text is
+       exactly what someone zooms in to read. The original is still published at
+       its own URL, so one link hands that back. */ -}}
+<a href="{{ $dest }}" target="_blank" rel="noopener" class="diagram-link">
+<picture>
+  <source type="image/webp" srcset="{{ delimit $webp ", " }}" sizes="(max-width: 720px) 100vw, 720px">
+  <img src="{{ $fallback.RelPermalink }}" srcset="{{ delimit $png ", " }}" sizes="(max-width: 720px) 100vw, 720px" alt="{{ $alt }}"{{ with .Title }} title="{{ . }}"{{ end }} width="{{ $fallback.Width }}" height="{{ $fallback.Height }}" loading="lazy" decoding="async">
+</picture>
+</a>
+{{- else -}}
+<img src="{{ $dest }}" alt="{{ $alt }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+{{- end -}}
