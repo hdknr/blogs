@@ -1,0 +1,64 @@
+{{- define "main" }}
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+  {{- with .Params.summary }}<div class="post-description">{{ . }}</div>{{ end }}
+</header>
+
+{{- /* Pagefind builds its own assets into /pagefind/ AFTER Hugo runs, so these
+       paths do not exist during `hugo server`. bundlePath has to be passed
+       explicitly: the UI otherwise resolves it from the script URL, which breaks
+       under the /blogs/ path prefix. */}}
+<link rel="stylesheet" href="{{ "pagefind/pagefind-ui.css" | relURL }}">
+
+<div id="search" class="pagefind-search"></div>
+
+<noscript>
+  <p>検索には JavaScript が必要です。<a href="{{ "archives/" | relURL }}">アーカイブ</a>
+     や<a href="{{ "tags/" | relURL }}">タグ</a>から辿ることもできます。</p>
+</noscript>
+
+<script src="{{ "pagefind/pagefind-ui.js" | relURL }}"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    new PagefindUI({
+      element: "#search",
+      bundlePath: {{ "pagefind/" | relURL }},
+      showSubResults: true,
+      showImages: false,
+      pageSize: 10,
+      translations: {
+        placeholder: {{ .Params.placeholder | default "キーワードを入力" }},
+        clear_search: "クリア",
+        load_more: "さらに読み込む",
+        search_label: "サイト内を検索",
+        filters_label: "絞り込み",
+        zero_results: "[SEARCH_TERM] に一致する記事は見つかりませんでした",
+        many_results: "[SEARCH_TERM] の検索結果 [COUNT] 件",
+        one_result: "[SEARCH_TERM] の検索結果 1 件",
+        alt_search: "[SEARCH_TERM] の結果はありません。[DIFFERENT_TERM] の結果を表示しています",
+        search_suggestion: "[SEARCH_TERM] に一致する記事はありません。次の検索をお試しください:",
+        searching: "[SEARCH_TERM] を検索中…"
+      }
+    });
+  });
+</script>
+
+{{- /* Long katakana compounds are the one query shape Pagefind's Japanese
+       segmentation mishandles: `プロンプトインジェクション` returns nothing while
+       `プロンプト インジェクション` returns 175 results. Tell the reader that
+       instead of leaving them with an empty page. */}}
+<p class="search-hint">
+  結果が出ないときは、<code>プロンプト インジェクション</code> のように
+  単語を空白で区切ってみてください。
+</p>
+
+<style>
+  .pagefind-search { margin: 1.5rem 0; }
+  .pagefind-search .pagefind-ui__result-title a { color: var(--primary); }
+  .search-hint {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--secondary);
+  }
+</style>
+{{- end }}

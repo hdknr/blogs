@@ -66,9 +66,17 @@ titleCaseStyle = 'none'
     name = 'アーカイブ'
     url = '/archives/'
     weight = 40
+  [[menu.main]]
+    identifier = 'search'
+    name = '検索'
+    url = '/search/'
+    weight = 50
 
 [outputs]
-  home = ['HTML', 'RSS', 'JSON']
+  # JSON is gone: it produced a 14.4MB index.json for PaperMod's fuse.js search,
+  # and this site never had a search page to consume it. Search is Pagefind now,
+  # which builds its own chunked index after Hugo runs.
+  home = ['HTML', 'RSS']
 
 [markup]
   [markup.highlight]

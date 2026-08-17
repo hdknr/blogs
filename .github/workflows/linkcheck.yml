@@ -95,6 +95,15 @@ jobs:
           TZ: Asia/Tokyo
         run: hugo --gc --minify --baseURL "https://hdknr.github.io/blogs/"
 
+      # The search page links pagefind-ui.css/js, which exist only after Pagefind
+      # runs. Without this step the link check 404s on them, and the checked tree
+      # would not match what actually deploys.
+      - name: Resolve Pagefind version
+        run: echo "PAGEFIND_VERSION=$(cat .pagefindversion)" >> "$GITHUB_ENV"
+
+      - name: Build search index
+        run: npx -y pagefind@${PAGEFIND_VERSION} --site public --glob "{posts,wiki}/**/*.html"
+
       - name: Mirror to /blogs base path
         run: |
           mkdir -p _site/blogs
@@ -172,6 +181,15 @@ jobs:
           HUGO_ENVIRONMENT: production
           TZ: Asia/Tokyo
         run: hugo --gc --minify --baseURL "https://hdknr.github.io/blogs/"
+
+      # The search page links pagefind-ui.css/js, which exist only after Pagefind
+      # runs. Without this step the link check 404s on them, and the checked tree
+      # would not match what actually deploys.
+      - name: Resolve Pagefind version
+        run: echo "PAGEFIND_VERSION=$(cat .pagefindversion)" >> "$GITHUB_ENV"
+
+      - name: Build search index
+        run: npx -y pagefind@${PAGEFIND_VERSION} --site public --glob "{posts,wiki}/**/*.html"
 
       - name: Mirror to /blogs base path
         run: |
