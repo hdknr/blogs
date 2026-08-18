@@ -97,6 +97,20 @@ other value, on a missing `title`/`date`/`slug`/`categories`/`tags`, and on a po
 `content/posts/YYYY/MM/`. Run it locally with `python3 scripts/validate_frontmatter.py`.
 Adding a category means editing `VALID_CATEGORIES` there **and** this list.
 
+## No Hugo shortcodes
+
+**Never write `{{< ref >}}`, `{{< x >}}` or any other Hugo shortcode.** Astro renders them
+as literal text, and 19 posts shipped that way after the migration — `{{< ref >}}` sits in
+a link target, so 47 cross-links were showing readers raw syntax instead of linking.
+
+Nothing else catches it: the page builds, no asset is missing, and **a link that never
+becomes an `<a>` has no href for the link checker to fetch**. `validate_frontmatter.py`
+fails CI on any `{{<` in content for exactly that reason.
+
+- Link another post with a plain Markdown link to its permalink:
+  `[title](/blogs/posts/YYYY/MM/<slug>/)` — the slug from frontmatter, not the filename.
+- `scripts/convert_hugo_shortcodes.py` converts any that slip back in.
+
 ## Tag vocabulary
 
 **One spelling per tag, across posts AND the wiki.** They share a single `tags` taxonomy,
