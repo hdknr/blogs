@@ -1,0 +1,90 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="dms-monitoring-holes" name="監視の三重の穴">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="18 日間気付かなかった監視の三重の穴" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="18" width="500" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="三つの仕組みが、三つとも別の理由で機能しなかった" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
+          <mxGeometry x="300" y="48" width="500" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Column 1 -->
+        <mxCell id="col1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="82" width="320" height="410" as="geometry"/>
+        </mxCell>
+        <mxCell id="h1" value="穴 1&#xa;EventBridge イベントパターン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b85450;strokeColor=#b85450;fontSize=13;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="65" y="102" width="270" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="設計上の期待&#xa;&#xa;DMS の停止・失敗イベントを拾って&#xa;通知と自動復旧を起動する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="172" width="270" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="a1" value="実際&#xa;&#xa;パターンは DMS Classic 向け。&#xa;task 系に REPLICATION_TASK_FAILED は&#xa;存在せず、障害時に飛ぶのは config 系の&#xa;REPLICATION_FAILED だった" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="282" width="270" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1" value="計画停止では発火し、&#xa;本当に必要な障害でだけ発火しない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="420" width="270" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="ea1" value="" style="endArrow=block;html=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1" source="e1" target="a1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="er1" value="" style="endArrow=block;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1" source="a1" target="r1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Column 2 -->
+        <mxCell id="col2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="390" y="82" width="320" height="410" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="穴 2&#xa;CloudWatch アラーム" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b85450;strokeColor=#b85450;fontSize=13;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="415" y="102" width="270" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="設計上の期待&#xa;&#xa;CDC レイテンシ・CPU 使用率の&#xa;閾値超過で発報する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="415" y="172" width="270" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" value="実際&#xa;&#xa;treat_missing_data = notBreaching。&#xa;レプリケーションが止まると&#xa;メトリクスの送出そのものが止まり、&#xa;「欠損 = 閾値未超過 = OK」と解釈される" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="415" y="282" width="270" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2" value="死ねば死ぬほど OK になる。&#xa;4 本すべて OK のまま 18 日" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="415" y="420" width="270" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="ea2" value="" style="endArrow=block;html=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1" source="e2" target="a2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="er2" value="" style="endArrow=block;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1" source="a2" target="r2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Column 3 -->
+        <mxCell id="col3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="740" y="82" width="320" height="410" as="geometry"/>
+        </mxCell>
+        <mxCell id="h3" value="穴 3&#xa;自動復旧 Lambda" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b85450;strokeColor=#b85450;fontSize=13;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="765" y="102" width="270" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="設計上の期待&#xa;&#xa;停止を検知したら&#xa;自動でレプリケーションを再開する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="765" y="172" width="270" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" value="実際&#xa;&#xa;StartReplicationType は&#xa;resume-processing 固定。&#xa;checkpoint 自体が無効になった障害では&#xa;何度リトライしても失敗する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="765" y="282" width="270" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3" value="いちばん重い障害でだけ&#xa;自動復旧が無力になる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="765" y="420" width="270" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="ea3" value="" style="endArrow=block;html=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1" source="e3" target="a3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="er3" value="" style="endArrow=block;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1" source="a3" target="r3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lesson2" value="監視は「発火する事象」ではなく「検知したい事象」で確かめる。&#xa;たまたま発火した実績があることは、監視が機能している証拠にならない。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontColor=#4a235a;align=center;" vertex="1" parent="1">
+          <mxGeometry x="40" y="516" width="1020" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
