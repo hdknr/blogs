@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="lte-session-psm-timers" name="PSM Timers vs Session Timeout">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="470" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="PSM のスリープと無通信タイマーの競合" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="310" y="20" width="500" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="PSM は再アタッチを避けるための仕組み。それでも Deleted → Created が出るのは、スリープがプラットフォーム側の無通信タイマーより長いとき" style="text;html=1;fontSize=12;fontStyle=0;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="110" y="52" width="900" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lane-ue-label" value="端末の状態" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="120" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ue-tx" value="データ送信&#10;(MO)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="120" width="90" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ue-active" value="Active Time（T3324）&#10;無線 ON・着信を受けられる" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="250" y="120" width="200" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ue-psm" value="PSM スリープ（無線 OFF）&#10;ネットワーク登録は維持されている" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="120" width="430" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ue-tau" value="周期 TAU&#10;で起床" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="880" y="120" width="90" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="t3412-line" value="" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="190" as="sourcePoint"/>
+            <mxPoint x="925" y="190" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t3412-label" value="T3412 extended（周期 TAU の間隔）＝ Active Time ＋ スリープ可能時間" style="text;html=1;fontSize=11;fontStyle=0;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#9673a6;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="380" y="176" width="420" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="idt-line" value="" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="925" y="222" as="sourcePoint"/>
+            <mxPoint x="1040" y="222" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="idt-label" value="TAU が来なければ Implicit Detach&#10;（T3412 ＋ 4 分でネットワークが登録を破棄）" style="text;html=1;fontSize=11;fontStyle=0;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="820" y="234" width="290" height="36" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lane-sess-label" value="PDN セッション&#10;（コンソール表示）" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="120" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="sess-online" value="オンライン" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="160" y="300" width="470" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="sess-offline" value="オフライン（セッションなし）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="630" y="300" width="250" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="sess-online2" value="オンライン" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="880" y="300" width="190" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="idle-line" value="" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="270" as="sourcePoint"/>
+            <mxPoint x="630" y="270" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="idle-label" value="無通信タイマー（サブスクリプションごとに異なる）" style="text;html=1;fontSize=11;fontStyle=0;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#d79b00;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="290" y="258" width="300" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ev-deleted" value="Deleted" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="366" width="100" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev-created" value="Created" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="830" y="366" width="100" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev-note" value="端末は寝ているだけなのに、ログには「切断→再接続」として残る" style="text;html=1;fontSize=11;fontStyle=2;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="580" y="400" width="440" height="24" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
