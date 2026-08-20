@@ -1,0 +1,134 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="lte-m-battery-budget" name="Battery Budget vs Detection Delay">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1160" pageHeight="640" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="「200 回程度の LTE 送信」という電池予算から逆算する" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="280" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="SmartFitPRO Basic（単 4 形乾電池 2 本 / LTE Cat.M1 / plan-D）の場合" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="280" y="50" width="600" height="22" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="h1" value="定期送信の間隔" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="180" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="電池寿命の目安&#10;（200 回 ÷ 送信回数）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="90" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="h3" value="死活監視の検知遅延&#10;（間隔 × 2 で鳴らす場合）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="90" width="220" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="h4" value="無通信タイマー（1 時間）との関係" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="90" width="440" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r1a" value="1 分" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="130" width="180" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1b" value="約 3.3 時間" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="130" width="200" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1c" value="2 分" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="130" width="220" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1d" value="オンラインを維持できる。ただし電池が半日もたない" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="130" width="440" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r2a" value="5 分" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="174" width="180" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2b" value="約 17 時間" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="240" y="174" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2c" value="10 分" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="174" width="220" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2d" value="オンラインを維持できる。電池は 1 日もたない" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="174" width="440" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r3a" value="15 分" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="214" width="180" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3b" value="約 2 日" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="240" y="214" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3c" value="30 分" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="214" width="220" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3d" value="オンラインを維持できる" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="214" width="440" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r4a" value="1 時間" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="254" width="180" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="r4b" value="約 8 日" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="240" y="254" width="200" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="r4c" value="2 時間" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="254" width="220" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="r4d" value="ちょうど境界。ここから Deleted → Created が出はじめる" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="254" width="440" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r5a" value="6 時間" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="298" width="180" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r5b" value="約 50 日" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="240" y="298" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r5c" value="12 時間" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="298" width="220" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r5d" value="毎周期 Deleted → Created が出る（正常）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="298" width="440" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r6a" value="24 時間" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="338" width="180" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r6b" value="約 200 日" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="240" y="338" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r6c" value="48 時間" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="338" width="220" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="r6d" value="毎周期 Deleted → Created が出る（正常）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="338" width="440" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="tradeoff-arrow" value="" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="30" y="140" as="sourcePoint"/>
+            <mxPoint x="30" y="370" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tradeoff-label" value="電池は延びる / 検知は遅くなる" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;horizontal=0;" vertex="1" parent="1">
+          <mxGeometry x="0" y="180" width="24" height="150" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="concl-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="404" width="1040" height="196" as="geometry"/>
+        </mxCell>
+        <mxCell id="concl-title" value="この表が意味すること" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="80" y="416" width="400" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="concl-1" value="1 分の死活監視は成立しない&#10;&#10;電池が 3.3 時間しかもたない。&#10;監視のために監視対象を殺す設定になる。&#10;1 分粒度が要るなら USB / DC 給電モデルへ。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="446" width="330" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="concl-2" value="電池運用なら Deleted → Created は必然&#10;&#10;実用的な間隔（数時間〜1 日）は、&#10;必ず無通信タイマー 1 時間より長い。&#10;つまりログに毎周期出るのは避けられず、&#10;これは異常ではない。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="425" y="446" width="330" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="concl-3" value="検知遅延は仕様として引き受ける&#10;&#10;24 時間間隔なら、故障を知るのは最短でも&#10;48 時間後。これを縮めたいなら、&#10;死活監視ではなく接点変化送信（即時）で&#10;拾える設計にする。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="770" y="446" width="330" height="140" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
