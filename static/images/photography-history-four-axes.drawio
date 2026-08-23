@@ -70,13 +70,13 @@
         <mxCell id="ax4q" value="問い&#10;「誰の費用と目的で写真が撮られるか」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1065" y="130" width="270" height="52" as="geometry"/>
         </mxCell>
-        <mxCell id="ax4e" value="例&#10;広告写真の職業化／FSA・OWI／&#10;スタンダード石油／USIA／ストックフォト／&#10;プラットフォーム／学習データ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="ax4e" value="例&#10;肖像写真館／カルト・ド・ヴィジット／&#10;広告写真の職業化／FSA・OWI／USIA／&#10;ストックフォト／学習データ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1065" y="192" width="270" height="88" as="geometry"/>
         </mxCell>
         <mxCell id="ax4w" value="記録する分野&#10;広告史・政治史・経済史&#10;（正典ではほぼ不在）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=12;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
           <mxGeometry x="1065" y="290" width="270" height="56" as="geometry"/>
         </mxCell>
-        <mxCell id="ax4n" value="発注者は作品に署名しない。&#10;残るのは予算と指示書だけ" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
+        <mxCell id="ax4n" value="最初の発注者は個人（富裕層）だった。&#10;個人の発注は今日まで途切れていない" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#555555;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="1067" y="354" width="270" height="54" as="geometry"/>
         </mxCell>
 

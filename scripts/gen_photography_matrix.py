@@ -3,8 +3,8 @@
 
 The matrix scores each turning point on the four axes used in
 content/posts/2026/08/2026-08-23-photography-history-turning-points.md.
-Hand-editing 16 rows x 4 columns of mxCell geometry is unmaintainable, so the
-scoring table lives here as data and the XML is generated from it.
+Hand-editing a 19-row x 4-column grid of mxCell geometry is unmaintainable, so
+the scoring table lives here as data and the XML is generated from it.
 
 Usage:
     python3 scripts/gen_photography_matrix.py [--out PATH]
@@ -21,8 +21,11 @@ from pathlib import Path
 
 # (year, label, [technical, institutional, circulation, commission], highlight)
 ROWS = [
-    ("1888", "コダック No.1 — スナップショットの誕生", ["大", "小", "大", "小"], False),
+    ("1839〜50s", "ダゲレオタイプの肖像 — 発注者は富裕層", ["極大", "小", "小", "大"], False),
+    ("1854〜60s", "カルト・ド・ヴィジット — 肖像の大衆化", ["中", "ほぼゼロ", "大", "極大"], True),
+    ("1888", "コダック No.1（$25）— スナップショットの誕生", ["大", "小", "大", "中"], False),
     ("1890s", "ピクトリアリズム / フォト・セセッション", ["中", "大", "小", "ほぼゼロ"], False),
+    ("1900", "ブラウニー（$1）— 個人が発注をやめる", ["中", "ほぼゼロ", "極大", "大"], False),
     ("1920s", "広告・ファッション写真の職業化", ["小", "小", "大", "極大"], True),
     ("1932", "ストレート・フォトグラフィ / f/64 グループ", ["小", "大", "小", "ほぼゼロ"], False),
     ("1935", "FSA とグラフ誌の時代", ["小", "中", "大", "極大"], True),
@@ -57,8 +60,8 @@ SCALE = {
 
 NOTE = (
     "ニューカラーは制度・美学軸でのみ大きく、流通と発注はほぼ何も動かしていない。\n"
-    "逆に 1920 年代の広告写真と 1935 年の FSA は、正典がほとんど記述しない発注軸で極大に振れる。\n"
-    "4 軸すべてが大きいのは生成 AI だけである。"
+    "逆に肖像写真の大衆化・1920 年代の広告写真・FSA は、正典がほとんど記述しない発注軸で極大に振れる。\n"
+    "④ は「誰が発注するか」の交代を測る軸なので、発注者が消える方向の変化も大きく出る（1900 ブラウニー）。"
 )
 
 PAGE_W = 1120

@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
   <diagram id="photo-turning-points-matrix" name="Photography Turning Points Matrix">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="944" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="1070" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
@@ -29,49 +29,49 @@
         <mxCell id="h5" value="④ 発注" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="930" y="86" width="150" height="36" as="geometry"/>
         </mxCell>
-        <mxCell id="y0" value="1888" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y0" value="1839〜50s" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="130" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n0" value="コダック No.1 — スナップショットの誕生" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n0" value="ダゲレオタイプの肖像 — 発注者は富裕層" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="130" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c0_0" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c0_0" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="456" y="130" width="150" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c0_1" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="614" y="130" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c0_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c0_2" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="772" y="130" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c0_3" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c0_3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="930" y="130" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y1" value="1890s" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y1" value="1854〜60s" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
           <mxGeometry x="40" y="172" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n1" value="ピクトリアリズム / フォト・セセッション" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n1" value="カルト・ド・ヴィジット — 肖像の大衆化" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="118" y="172" width="330" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c1_0" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="456" y="172" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c1_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c1_1" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="614" y="172" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c1_2" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c1_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="772" y="172" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c1_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
+        <mxCell id="c1_3" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="930" y="172" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y2" value="1920s" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
+        <mxCell id="y2" value="1888" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="214" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n2" value="広告・ファッション写真の職業化" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+        <mxCell id="n2" value="コダック No.1（$25）— スナップショットの誕生" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="214" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c2_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c2_0" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="456" y="214" width="150" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c2_1" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
@@ -80,16 +80,16 @@
         <mxCell id="c2_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="772" y="214" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c2_3" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c2_3" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="930" y="214" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y3" value="1932" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y3" value="1890s" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="256" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n3" value="ストレート・フォトグラフィ / f/64 グループ" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n3" value="ピクトリアリズム / フォト・セセッション" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="256" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c3_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c3_0" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="456" y="256" width="150" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c3_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
@@ -101,46 +101,46 @@
         <mxCell id="c3_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="930" y="256" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y4" value="1935" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
+        <mxCell id="y4" value="1900" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="298" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n4" value="FSA とグラフ誌の時代" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+        <mxCell id="n4" value="ブラウニー（$1）— 個人が発注をやめる" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="298" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c4_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c4_0" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="456" y="298" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c4_1" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
+        <mxCell id="c4_1" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="614" y="298" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c4_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c4_2" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="772" y="298" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c4_3" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c4_3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="930" y="298" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y5" value="1955" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y5" value="1920s" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
           <mxGeometry x="40" y="340" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n5" value="The Family of Man（MoMA 企画 / USIA 巡回）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n5" value="広告・ファッション写真の職業化" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="118" y="340" width="330" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c5_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="456" y="340" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c5_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c5_1" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="614" y="340" width="150" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c5_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="772" y="340" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c5_3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c5_3" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="930" y="340" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y6" value="1958" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y6" value="1932" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="382" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n6" value="ロバート・フランク『The Americans』" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n6" value="ストレート・フォトグラフィ / f/64 グループ" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="382" width="330" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c6_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
@@ -152,31 +152,31 @@
         <mxCell id="c6_2" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="772" y="382" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c6_3" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c6_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="930" y="382" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y7" value="1967" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y7" value="1935" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
           <mxGeometry x="40" y="424" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n7" value="New Documents（MoMA）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n7" value="FSA とグラフ誌の時代" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="118" y="424" width="330" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c7_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="456" y="424" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c7_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c7_1" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="614" y="424" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c7_2" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c7_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="772" y="424" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c7_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
+        <mxCell id="c7_3" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="930" y="424" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y8" value="1975" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y8" value="1955" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="466" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n8" value="ニュー・トポグラフィックス" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n8" value="The Family of Man（MoMA 企画 / USIA 巡回）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="466" width="330" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c8_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
@@ -185,16 +185,16 @@
         <mxCell id="c8_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="614" y="466" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c8_2" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c8_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="772" y="466" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c8_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
+        <mxCell id="c8_3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="930" y="466" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y9" value="1976" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
+        <mxCell id="y9" value="1958" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="508" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n9" value="ニューカラー" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+        <mxCell id="n9" value="ロバート・フランク『The Americans』" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="508" width="330" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c9_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
@@ -203,16 +203,16 @@
         <mxCell id="c9_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="614" y="508" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c9_2" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
+        <mxCell id="c9_2" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="772" y="508" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c9_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
+        <mxCell id="c9_3" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="930" y="508" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y10" value="1977" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y10" value="1967" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="550" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n10" value="ピクチャーズ・ジェネレーション" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n10" value="New Documents（MoMA）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="550" width="330" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c10_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
@@ -227,116 +227,170 @@
         <mxCell id="c10_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="930" y="550" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y11" value="1990" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y11" value="1975" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="592" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n11" value="デジタル化（Photoshop / DCS）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n11" value="ニュー・トポグラフィックス" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="592" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c11_0" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c11_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="456" y="592" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c11_1" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
+        <mxCell id="c11_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="614" y="592" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c11_2" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
+        <mxCell id="c11_2" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="772" y="592" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c11_3" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
+        <mxCell id="c11_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="930" y="592" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y12" value="1993" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y12" value="1976" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
           <mxGeometry x="40" y="634" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n12" value="インターネット流通 / ストックフォト" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n12" value="ニューカラー" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="118" y="634" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c12_0" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
+        <mxCell id="c12_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="456" y="634" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c12_1" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c12_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="614" y="634" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c12_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c12_2" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="772" y="634" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c12_3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c12_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="930" y="634" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y13" value="2007" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y13" value="1977" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="676" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n13" value="スマートフォン — カメラの常時携帯化" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n13" value="ピクチャーズ・ジェネレーション" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="676" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c13_0" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c13_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="456" y="676" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c13_1" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c13_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="614" y="676" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c13_2" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c13_2" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="772" y="676" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c13_3" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c13_3" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="930" y="676" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y14" value="2010" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+        <mxCell id="y14" value="1990" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="718" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n14" value="SNS（Instagram / Snapchat）※ アルゴリズムを含む" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+        <mxCell id="n14" value="デジタル化（Photoshop / DCS）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="718" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c14_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+        <mxCell id="c14_0" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="456" y="718" width="150" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c14_1" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="614" y="718" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c14_2" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c14_2" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="772" y="718" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c14_3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c14_3" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="930" y="718" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="y15" value="2022" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
+        <mxCell id="y15" value="1993" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="40" y="760" width="70" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="n15" value="生成 AI（DALL·E 2 / Stable Diffusion）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+        <mxCell id="n15" value="インターネット流通 / ストックフォト" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
           <mxGeometry x="118" y="760" width="330" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c15_0" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c15_0" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
           <mxGeometry x="456" y="760" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c15_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c15_1" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
           <mxGeometry x="614" y="760" width="150" height="42" as="geometry"/>
         </mxCell>
         <mxCell id="c15_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="772" y="760" width="150" height="42" as="geometry"/>
         </mxCell>
-        <mxCell id="c15_3" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="c15_3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="930" y="760" width="150" height="42" as="geometry"/>
         </mxCell>
+        <mxCell id="y16" value="2007" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="802" width="70" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="n16" value="スマートフォン — カメラの常時携帯化" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+          <mxGeometry x="118" y="802" width="330" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c16_0" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="456" y="802" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c16_1" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+          <mxGeometry x="614" y="802" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c16_2" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="772" y="802" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c16_3" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+          <mxGeometry x="930" y="802" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="y17" value="2010" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="844" width="70" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="n17" value="SNS（Instagram / Snapchat）※ アルゴリズムを含む" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=12;fillColor=#ffffff;strokeColor=#d6d6d6;" vertex="1" parent="1">
+          <mxGeometry x="118" y="844" width="330" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c17_0" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
+          <mxGeometry x="456" y="844" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c17_1" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
+          <mxGeometry x="614" y="844" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c17_2" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="772" y="844" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c17_3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="844" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="y18" value="2022" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#8a6400;" vertex="1" parent="1">
+          <mxGeometry x="40" y="886" width="70" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="n18" value="生成 AI（DALL·E 2 / Stable Diffusion）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=10;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="118" y="886" width="330" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c18_0" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="456" y="886" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c18_1" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="614" y="886" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c18_2" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="772" y="886" width="150" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="c18_3" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="886" width="150" height="42" as="geometry"/>
+        </mxCell>
         <mxCell id="lg" value="凡例" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
-          <mxGeometry x="40" y="820" width="70" height="32" as="geometry"/>
+          <mxGeometry x="40" y="946" width="70" height="32" as="geometry"/>
         </mxCell>
         <mxCell id="lg0" value="ほぼゼロ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#cccccc;fontColor=#999999;" vertex="1" parent="1">
-          <mxGeometry x="118" y="820" width="100" height="32" as="geometry"/>
+          <mxGeometry x="118" y="946" width="100" height="32" as="geometry"/>
         </mxCell>
         <mxCell id="lg1" value="小" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#eef3fb;strokeColor=#9db8dd;fontColor=#4a6f9e;" vertex="1" parent="1">
-          <mxGeometry x="228" y="820" width="100" height="32" as="geometry"/>
+          <mxGeometry x="228" y="946" width="100" height="32" as="geometry"/>
         </mxCell>
         <mxCell id="lg2" value="中" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#3d6b33;" vertex="1" parent="1">
-          <mxGeometry x="338" y="820" width="100" height="32" as="geometry"/>
+          <mxGeometry x="338" y="946" width="100" height="32" as="geometry"/>
         </mxCell>
         <mxCell id="lg3" value="大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#8a6400;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="448" y="820" width="100" height="32" as="geometry"/>
+          <mxGeometry x="448" y="946" width="100" height="32" as="geometry"/>
         </mxCell>
         <mxCell id="lg4" value="極大" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#8f3a36;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="558" y="820" width="100" height="32" as="geometry"/>
+          <mxGeometry x="558" y="946" width="100" height="32" as="geometry"/>
         </mxCell>
-        <mxCell id="note" value="ニューカラーは制度・美学軸でのみ大きく、流通と発注はほぼ何も動かしていない。&#10;逆に 1920 年代の広告写真と 1935 年の FSA は、正典がほとんど記述しない発注軸で極大に振れる。&#10;4 軸すべてが大きいのは生成 AI だけである。" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=13;fontStyle=1;fillColor=#f5f5f5;strokeColor=#999999;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
-          <mxGeometry x="40" y="868" width="1040" height="68" as="geometry"/>
+        <mxCell id="note" value="ニューカラーは制度・美学軸でのみ大きく、流通と発注はほぼ何も動かしていない。&#10;逆に肖像写真の大衆化・1920 年代の広告写真・FSA は、正典がほとんど記述しない発注軸で極大に振れる。&#10;④ は「誰が発注するか」の交代を測る軸なので、発注者が消える方向の変化も大きく出る（1900 ブラウニー）。" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=13;fontStyle=1;fillColor=#f5f5f5;strokeColor=#999999;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="994" width="1040" height="68" as="geometry"/>
         </mxCell>
 
       </root>
