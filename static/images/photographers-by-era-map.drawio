@@ -149,14 +149,17 @@
         <mxCell id="a2_1" value="ムンカーチ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1008" y="386" width="194" height="34" as="geometry"/>
         </mxCell>
-        <mxCell id="a2_2" value="ブロドヴィッチ（AD）" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="a2_2" value="カーメル・スノウ（編集）" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="806" y="428" width="194" height="34" as="geometry"/>
         </mxCell>
-        <mxCell id="a2_3" value="アーヴィング・ペン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="a2_3" value="ブロドヴィッチ（AD）" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1008" y="428" width="194" height="34" as="geometry"/>
         </mxCell>
-        <mxCell id="a2_4" value="アヴェドン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="a2_4" value="アーヴィング・ペン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="806" y="470" width="194" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2_5" value="アヴェドン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1008" y="470" width="194" height="34" as="geometry"/>
         </mxCell>
         <mxCell id="bj2" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontSize=13;dashed=1;dashPattern=6 4;fillColor=#d5e8d4;strokeColor=#82b366;opacity=45;" vertex="1" parent="1">
           <mxGeometry x="1226" y="374" width="400" height="142" as="geometry"/>
