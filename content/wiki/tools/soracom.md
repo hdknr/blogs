@@ -2,13 +2,15 @@
 title: "SORACOM"
 description: "IoT 向けのセルラー接続プラットフォームとデバイスストア。接続・収集・導入拡張の3レイヤと、位置／環境／映像／操作／設備の5つの収集ソリューションで捉える"
 date: 2026-07-28
-lastmod: 2026-07-28
+lastmod: 2026-08-23
 aliases: ["ソラコム", "SORACOM Air", "ソラカメ", "LTE-M Button", "SORACOM IoT ストア", "GPS マルチユニット"]
 related_posts:
   - "/posts/2026/07/soracom-iot-store-solution-map/"
   - "/posts/2026/07/soracom-iot-construction-site-demand/"
   - "/posts/2026/07/soracom-iot-building-maintenance-classification/"
   - "/posts/2026/07/soracom-iot-maintenance-subsidy-guide/"
+  - "/posts/2026/08/lte-session-reconnect-iot-gateway/"
+  - "/posts/2026/08/lte-m-liveness-monitoring-interval/"
 tags: ["IoT", "SORACOM", "LTE-M", "予知保全", "建設"]
 ---
 
@@ -68,6 +70,14 @@ SORACOM は IoT 向けのセルラー接続（IoT SIM / iSIM / 通信モジュ�
 2. **閉所が多い** — 屋外の広さではなく、機械室・地下ピット・屋上・PS（パイプスペース）など電波が届きにくい環境。電池駆動＋LTE-M に加え**アンテナ選定**の重みが増す
 3. **法定点検との接続** — 消防設備点検、電気主任技術者の保安管理、昇降機の定期検査などの制度対応の効率化という切り口が立つ
 
+## セッション挙動と死活監視
+
+セッション履歴の Deleted → Created の繰り返しは、ハンドオーバー（これは Modified）でも PSM でもない。`soracom sims session-events` でイベント種別を確認する。コンソールのオンライン表示は生死の証拠にならない。
+
+Lagoon 3 の no data アラートで無通信検知は作れるが、閾値はデバイスのサンプリング周期で決まる。**USB 給電なら 1 分アラートは成立し、電池運用では成立しない。**
+
+詳細: [LTE-M 機の死活監視とセッション挙動](/blogs/wiki/concepts/lte-m-liveness-monitoring/)
+
 ## 関連ページ
 
 - [予知保全と保全高度化ラダー](/blogs/wiki/concepts/predictive-maintenance/) — BM→TBM→CBM→PdM の成熟度モデル
@@ -80,3 +90,5 @@ SORACOM は IoT 向けのセルラー接続（IoT SIM / iSIM / 通信モジュ�
 - [SORACOM の IoT ソリューションは建設・工事現場で求められているか](/blogs/posts/2026/07/soracom-iot-construction-site-demand/) — 2026-07-22（需要検証）
 - [建築設備メンテナンス視点で SORACOM の IoT を分類し直す](/blogs/posts/2026/07/soracom-iot-building-maintenance-classification/) — 2026-07-22（保全ラダー）
 - [【2026年度版】設備保全IoTに使える補助金制度ガイド](/blogs/posts/2026/07/soracom-iot-maintenance-subsidy-guide/) — 2026-07-22（資金面）
+- [SORACOM のセッションが Deleted → Created を繰り返す](/blogs/posts/2026/08/lte-session-reconnect-iot-gateway/) — 2026-08-19
+- [「1 分間通信がなければアラート」は作れるか](/blogs/posts/2026/08/lte-m-liveness-monitoring-interval/) — 2026-08-20

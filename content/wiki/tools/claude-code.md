@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-07-28
+lastmod: 2026-08-23
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -44,6 +44,8 @@ related_posts:
   - "/posts/2026/07/codex-build-orchestrator-coder-split/"
   - "/posts/2026/07/ai-agent-rate-limit-circuit-breaker/"
   - "/posts/2026/07/claude-code-restaurant-automation/"
+  - "/posts/2026/08/claude-code-correction-os/"
+  - "/posts/2026/08/claude-code-16-commands-ai-employee/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "hooks", "mcp"]
 ---
 
@@ -130,6 +132,23 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 
 繰り返す作業は `.claude/skills/<名前>/SKILL.md` として保存すると、次回から `/<名前>` で呼び出せる。**個人・プロジェクトのスキルではコマンド名はディレクトリ名から決まり**、フロントマターの `name` は一覧表示用のラベルとして働く。
 
+## 上達の正体は「訂正の回数」
+
+開発者 Boris Cherny の使い方を追うと、上達は設定を足すことではなく **訂正の回数** で決まる。次の 4 つを 1 本のループとして回す。
+
+1. **Plan モードで計画を突き返す** — 実装前に方向を正す
+2. **CLAUDE.md へ書き戻す** — その場の訂正を恒久化する
+3. **hooks へ昇格させる** — 毎回言うことをハーネス側に移す
+4. **`/doctor` で削減する** — 増えた設定を点検して減らす
+
+設定を増やすことは目的ではない。訂正の回数を増やし、その結果を恒久化した副産物として設定が残る。
+
+## 「基本16コマンド」という区切りは公式に存在しない
+
+組み込みコマンドは執筆時点で **70 件前後**あり、「基本16コマンド」という公式の区切りはない。解説記事で見かける `/add`・`/drop`・`/ls` は **Aider のコマンドで Claude Code には存在しない**。
+
+コマンドより効くのは、CLAUDE.md・hooks・サブエージェントといった **常設物** のほう。
+
 ## 関連ページ
 
 - [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/) — Claude Code のコンテキスト管理戦略
@@ -177,3 +196,5 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [「計画するAI」と「書くAI」を分ける開発手法 — codex-build に学ぶ承認ゲート設計](/blogs/posts/2026/07/codex-build-orchestrator-coder-split/) — 2026-07-23
 - [Claude Code の動的ワークフローで組むグラフエンジニアリング 14 ステップ](/blogs/posts/2026/07/graph-engineering-14-step-roadmap/) — 2026-07-27
 - [AI エージェントのレートリミット対策 — 指数バックオフとサーキットブレーカー](/blogs/posts/2026/07/ai-agent-rate-limit-circuit-breaker/) — 2026-07-28
+- [Boris Cherny に学ぶ Claude Code の使い方 — 設定を足すより「訂正の回数」を増やす](/blogs/posts/2026/08/claude-code-correction-os/) — 2026-08-09
+- [「Claude Code の基本16コマンドで AI 社員化」を数え直す](/blogs/posts/2026/08/claude-code-16-commands-ai-employee/) — 2026-08-16

@@ -2,12 +2,15 @@
 title: "HubSpot"
 description: "インバウンドマーケティングを軸とした CRM・MA・営業統合プラットフォーム"
 date: 2026-04-28
-lastmod: 2026-07-28
+lastmod: 2026-08-23
 aliases: ["hubspot crm", "hubspot pro"]
 related_posts:
   - "/posts/2026/04/hubspot-hscachebuster/"
   - "/posts/2026/04/hubspot-pro-merits/"
   - "/posts/2026/07/hubspot-eu-email-tracking-consent/"
+  - "/posts/2026/08/hubspot-custom-signals/"
+  - "/posts/2026/08/hubspot-meeting-notes-to-properties/"
+  - "/posts/2026/08/airtable-vs-hubspot-ma-cost/"
 tags: ["HubSpot", "crm", "ma", "インバウンドマーケティング", "営業"]
 ---
 
@@ -49,6 +52,20 @@ EU/UK のコンタクトにマーケティングメールを送る場合、**Hub
 
 既存コンタクトの同意状態を「一旦リセットして全員に許諾メールを送る」のは最もリスクの高い操作にあたる。詳細は [EU/UK 宛メールのトラッキング同意設計](/blogs/wiki/guides/hubspot-eu-email-consent/) を参照。
 
+## カスタムシグナル（Breeze Intelligence）
+
+「買いのサイン」を自然言語で記述すると、AI が Web を監視して該当する動きを拾う機能。バイヤーインテントの検知条件をルールではなく文章で定義できる点が従来のリードスコアリングとの差。
+
+## 議事録をリードプロパティーに落とす
+
+商談議事録の AI 要約は「読める」が「効かない」。要約テキストのままではセグメントにも自動化にも使えないため、**構造化されたプロパティーへ落とす** 工程が要る。スマートプロパティー／データエージェントがその役割を担う。
+
+## Airtable とのコスト比較
+
+Marketing Hub Professional は年契約で初年度 $12,600（オンボーディング $3,000 が必須）。Airtable Team 20 席の $4,800 に対し約 2.6 倍。課金軸が違う（コンタクト数 vs 座席数）ため規模で損益分岐が動く。**カスタムオブジェクトは Enterprise 限定**。
+
+詳細: [Airtable](/blogs/wiki/tools/airtable/)
+
 ## 関連ページ
 
 - [インバウンドマーケティング](/blogs/wiki/concepts/inbound-marketing/) — HubSpot の根幹思想
@@ -60,3 +77,6 @@ EU/UK のコンタクトにマーケティングメールを送る場合、**Hub
 - [HubSpot Pro プランの実用メリット](/blogs/posts/2026/04/hubspot-pro-merits/) — 2026-04-28
 - [HubSpot CMS の hsCacheBuster](/blogs/posts/2026/04/hubspot-hscachebuster/) — 2026-04-23
 - [HubSpot で EU/UK 宛にメールを送るときの注意点 ── トラッキング同意と製品仕様の実務メモ](/blogs/posts/2026/07/hubspot-eu-email-tracking-consent/) — 2026-07-28
+- [HubSpot のカスタムシグナル — 「買いのサイン」を自然言語で書くと AI が Web を見張ってくれる](/blogs/posts/2026/08/hubspot-custom-signals/) — 2026-08-05
+- [HubSpot で商談議事録をリードプロパティーに落とす — AI 要約は「読める」が「効かない」](/blogs/posts/2026/08/hubspot-meeting-notes-to-properties/) — 2026-08-05
+- [Airtable と HubSpot、MA 運営コストはどちらが安いか](/blogs/posts/2026/08/airtable-vs-hubspot-ma-cost/) — 2026-08-15
