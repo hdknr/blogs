@@ -41,6 +41,9 @@ REQUIRED_KEYS = ["title", "date", "slug", "categories", "tags"]
 # content/posts/YYYY/MM/<anything>.md
 PATH_PATTERN = re.compile(r'content/posts/\d{4}/\d{2}/[^/]+\.md$')
 
+# Same shape, but capturing year and month so the permalink can be rebuilt.
+PATH_YM_PATTERN = re.compile(r'content/posts/(\d{4})/(\d{2})/[^/]+\.md$')
+
 FRONTMATTER_PATTERN = re.compile(r'^---\n(.*?)\n---\n', re.DOTALL)
 
 
@@ -115,15 +118,56 @@ def validate_post(filepath, repo_relative):
         tags = parse_list_value(raw_tags)
         if tags is None:
             violations.append(f"tags がインライン配列として読めない: {raw_tags}")
-        # An empty `tags: []` is deliberately NOT a violation yet: 108 of the
-        # Gist-imported posts have one, so failing on it would make this check
-        # red on arrival and teach everyone to skip it. Tracked in #647, which
-        # owns the tag vocabulary and can tag those posts before the rule lands.
+        elif not tags:
+            # Live since #653 filled the last of the 108 Gist-imported posts that
+            # used to have one. An empty list is not the same as a missing key:
+            # the key is present, so the required-field check above passes and the
+            # post silently drops out of every tag page while still looking valid.
+            violations.append("tags が空。タグページから外れるので最低 1 つ要る")
 
     if not PATH_PATTERN.search(repo_relative):
         violations.append("配置が content/posts/YYYY/MM/ 規約から外れている")
 
     return violations
+
+
+def find_permalink_collisions(repo_root):
+    """Return {permalink: [paths]} for posts that build the same URL.
+
+    The permalink is /posts/:year/:month/:slug/, taken from the directory the
+    post sits in plus its frontmatter slug -- NOT from the date field, because
+    the build derives the path from the directory. Two posts that agree on all
+    three collapse into one page.
+
+    **Neither builder reports this.** Hugo silently kept one and dropped the
+    other; Astro cannot emit the same route twice, so it also keeps one -- but
+    it keeps a *different* one, because it iterates the collection in filename
+    order. The migration flipped which of the pair was readable without any
+    error on either side, and the dropped post's tags stay registered in the
+    taxonomy, so a tag page lists an article nobody can open.
+
+    Four pairs shipped that way before this check existed (#658).
+    """
+    seen = {}
+    pattern = os.path.join(POSTS_DIR, '**', '*.md')
+    for filepath in sorted(glob.glob(pattern, recursive=True)):
+        if os.path.basename(filepath) == '_index.md':
+            continue
+        repo_relative = os.path.relpath(os.path.abspath(filepath), repo_root)
+        match = PATH_YM_PATTERN.search(repo_relative)
+        if not match:
+            continue
+        fm = parse_frontmatter(filepath)
+        if not fm:
+            continue
+        if str(fm.get('draft', '')).strip().strip('"\'').lower() == 'true':
+            continue
+        slug = (fm.get('slug') or '').strip().strip('"\'')
+        if not slug:
+            continue
+        year, month = match.group(1), match.group(2)
+        seen.setdefault(f"/posts/{year}/{month}/{slug}/", []).append(repo_relative)
+    return {url: paths for url, paths in seen.items() if len(paths) > 1}
 
 
 def urlize(term):
@@ -238,16 +282,24 @@ def main():
         print(f"NG {path}")
         print(f"     - Hugo ショートコードが残っている: {names}")
 
+    permalinks = find_permalink_collisions(repo_root)
+    for url in sorted(permalinks):
+        print(f"NG パーマリンクの重複 {url}")
+        for path in permalinks[url]:
+            print(f"     - {path}")
+        print("     - 同じ (年, 月, slug) の記事は 1 本しか公開されない。片方の slug を変えるか統合する")
+
     collisions = find_tag_collisions(repo_root)
     for key in sorted(collisions):
         print(f"NG タグの表記ゆれ /tags/{key}/")
         print(f"     - {', '.join(repr(t) for t in collisions[key])} が同じページに落ちる")
 
-    if failures or collisions or shortcodes:
+    if failures or collisions or shortcodes or permalinks:
         print(
             f"\n{checked} 件中 {len(failures)} 件が規約違反、"
             f"タグの表記ゆれ {len(collisions)} 件、"
-            f"Hugo ショートコード残存 {len(shortcodes)} 件",
+            f"Hugo ショートコード残存 {len(shortcodes)} 件、"
+            f"パーマリンク重複 {len(permalinks)} 件",
             file=sys.stderr,
         )
         return 1

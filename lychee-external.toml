@@ -28,7 +28,10 @@ remap = ["https://hdknr.github.io/blogs/ http://127.0.0.1:8099/blogs/"]
 # non-browser clients even though the page renders fine in a browser; treat
 # them as reachable too. 410 (Gone) is deliberately NOT accepted — it signals
 # a genuinely removed page.
-accept = ["200", "202", "206", "401", "403", "405", "406", "415", "429", "500", "503"]
+# 203 (Non-Authoritative Information) joined the list after #655: pubmed.ncbi.nlm.nih.gov
+# answers 203 to non-browser clients for articles that render fine in a browser. It is a
+# transforming-proxy response, not an error, and sits in the same class as 202/206.
+accept = ["200", "202", "203", "206", "401", "403", "405", "406", "415", "429", "500", "503"]
 
 # NOTE: do NOT set `user_agent` to a browser string here. It was tried and
 # reverted: a browser UA does fix the UA-gated host excluded below (laboro.ai),

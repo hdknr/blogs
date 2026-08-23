@@ -122,11 +122,13 @@ violations = validate(EMPTY_CATEGORIES)
 check('空の categories を検出する',
       any('categories が空' in v for v in violations))
 
-# Not a violation *yet* -- 108 Gist-imported posts have `tags: []`, so enforcing
-# it here would make the check red on arrival. #647 owns that cleanup. Asserting
-# the current behaviour keeps the exemption deliberate instead of forgotten.
-check('空の tags は今はまだ違反にしない（#647 に引き渡し）',
-      validate(EMPTY_TAGS) == [])
+# Enforced since #653 tagged the last of the 108 Gist-imported posts that used to
+# carry `tags: []`. Same shape as the empty-categories case above: the key is
+# present so the required-field check passes, and the post drops out of every tag
+# page while still looking valid.
+violations = validate(EMPTY_TAGS)
+check('空の tags を検出する',
+      any('tags が空' in v for v in violations))
 
 violations = validate(NO_FRONTMATTER)
 check('frontmatter 無しを検出する',
@@ -149,6 +151,62 @@ check('_ は残る', vf.urlize('$GITHUB_ENV') == 'github_env')
 check('. は残る', vf.urlize('Claude.md') == 'claude.md')
 check('連続する - は畳まれない', vf.urlize('claude -p') == 'claude--p')
 check('/ と - は別物として扱う', vf.urlize('AI/LLM') != vf.urlize('AI-LLM'))
+
+print("find_permalink_collisions")
+# The permalink is built from the DIRECTORY plus the slug, not from the date
+# field, because that is what the builder does. Four pairs shipped colliding
+# before this check existed (#658) and neither Hugo nor Astro said a word --
+# they just kept one and dropped the other, and disagreed about which.
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    month = root / 'content' / 'posts' / '2026' / '03'
+    month.mkdir(parents=True)
+
+    def post(name, slug, draft=False):
+        (month / name).write_text(
+            f'---\ntitle: "t"\ndate: 2026-03-01\ndraft: {str(draft).lower()}\n'
+            f'slug: "{slug}"\ncategories: ["AI/LLM"]\ntags: ["x"]\n---\n\n本文。\n',
+            encoding='utf-8')
+
+    post('2026-03-09-a.md', 'same-slug')
+    post('2026-03-10-b.md', 'same-slug')
+    post('2026-03-11-c.md', 'other-slug')
+
+    original = vf.POSTS_DIR
+    try:
+        vf.POSTS_DIR = str(root / 'content' / 'posts')
+        found = vf.find_permalink_collisions(str(root))
+    finally:
+        vf.POSTS_DIR = original
+
+    check('同じ (年, 月, slug) の2本を検出する',
+          list(found) == ['/posts/2026/03/same-slug/'])
+    check('衝突している両方のパスを報告する',
+          len(found.get('/posts/2026/03/same-slug/', [])) == 2)
+    check('衝突していない記事は報告しない',
+          not any('other-slug' in u for u in found))
+
+# A draft never builds a page, so it cannot collide with anything. Counting it
+# would make the check fire on a pair that does not actually exist in the output.
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    month = root / 'content' / 'posts' / '2026' / '03'
+    month.mkdir(parents=True)
+    (month / '2026-03-09-live.md').write_text(
+        '---\ntitle: "t"\ndate: 2026-03-01\ndraft: false\nslug: "dup"\n'
+        'categories: ["AI/LLM"]\ntags: ["x"]\n---\n\n本文。\n', encoding='utf-8')
+    (month / '2026-03-10-draft.md').write_text(
+        '---\ntitle: "t"\ndate: 2026-03-01\ndraft: true\nslug: "dup"\n'
+        'categories: ["AI/LLM"]\ntags: ["x"]\n---\n\n本文。\n', encoding='utf-8')
+
+    original = vf.POSTS_DIR
+    try:
+        vf.POSTS_DIR = str(root / 'content' / 'posts')
+        found = vf.find_permalink_collisions(str(root))
+    finally:
+        vf.POSTS_DIR = original
+
+    check('draft は衝突として数えない', found == {})
 
 print("VALID_CATEGORIES")
 # The list is duplicated in CLAUDE.md for humans; a mismatch there is a doc bug,
