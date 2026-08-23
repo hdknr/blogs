@@ -1,0 +1,249 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="photographers-by-era" name="Photographers by Era">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1350" pageHeight="1186" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="ttl" value="写真史の転換点と、それを担った写真家" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=19;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="400" y="16" width="550" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="sub" value="★ はニューカラーの中心人物（別記事で詳述）。日本の潮流を右列に併置した" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="380" y="46" width="590" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="hw" value="欧米" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="210" y="76" width="680" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="hj" value="日本" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="910" y="76" width="410" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="e0" value="I. 発明と定着&#10;1839〜1880年代" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="30" y="108" width="160" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw0" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="210" y="108" width="680" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bj0" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="910" y="108" width="410" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="w0_0" value="ダゲール" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="222" y="142" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w0_1" value="タルボット" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="390" y="142" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w0_2" value="ナダール" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="558" y="142" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w0_3" value="J.M.キャメロン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="726" y="142" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w0_4" value="マイブリッジ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="222" y="186" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j0_0" value="上野彦馬" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="922" y="142" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j0_1" value="下岡蓮杖" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="142" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="II. 芸術としての自立&#10;1890年代〜1930年代" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="30" y="252" width="160" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw1" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="210" y="252" width="680" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bj1" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="910" y="252" width="410" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="w1_0" value="スティーグリッツ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="222" y="286" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w1_1" value="スタイケン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="390" y="286" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w1_2" value="ポール・ストランド" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="558" y="286" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w1_3" value="E.ウェストン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="726" y="286" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w1_4" value="アンセル・アダムス" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="222" y="330" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w1_5" value="I.カニンガム" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="390" y="330" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w1_6" value="モホイ＝ナジ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="558" y="330" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w1_7" value="ザンダー" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="726" y="330" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j1_0" value="野島康三" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="922" y="286" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j1_1" value="中山岩太" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="286" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="III. 記録と報道&#10;1930年代〜1955" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="30" y="396" width="160" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw2" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#d5e8d4;strokeColor=#82b366;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="210" y="396" width="680" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bj2" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#d5e8d4;strokeColor=#82b366;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="910" y="396" width="410" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="w2_0" value="ドロシア・ラング" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="222" y="430" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w2_1" value="ウォーカー・エヴァンズ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="390" y="430" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w2_2" value="ロバート・キャパ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="558" y="430" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w2_3" value="カルティエ＝ブレッソン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="726" y="430" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w2_4" value="W.ユージン・スミス" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="222" y="474" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j2_0" value="木村伊兵衛" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="922" y="430" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j2_1" value="土門拳" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="430" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="IV. 主観への転回&#10;1958〜1970年代" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="30" y="540" width="160" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw3" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#f8cecc;strokeColor=#b85450;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="210" y="540" width="680" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="bj3" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#f8cecc;strokeColor=#b85450;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="910" y="540" width="410" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="w3_0" value="ロバート・フランク" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="222" y="574" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w3_1" value="ウィリアム・クライン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="390" y="574" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w3_2" value="ダイアン・アーバス" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="558" y="574" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w3_3" value="フリードランダー" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="726" y="574" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w3_4" value="ワイノグランド" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="222" y="618" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j3_0" value="細江英公" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="922" y="574" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j3_1" value="東松照明" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="574" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j3_2" value="森山大道" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="922" y="618" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j3_3" value="中平卓馬" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="618" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j3_4" value="荒木経惟" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="922" y="662" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="V. 即物性とカラー&#10;1963〜1981" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="30" y="728" width="160" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw4" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#ffe6cc;strokeColor=#d79b00;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="210" y="728" width="680" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bj4" value="この時期の日本の動向は本記事の範囲外" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#aaaaaa;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="910" y="728" width="410" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="w4_0" value="エド・ルシェ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="222" y="762" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w4_1" value="ベッヒャー夫妻" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="390" y="762" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w4_2" value="ロバート・アダムス" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="558" y="762" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w4_3" value="ルイス・ボルツ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="726" y="762" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w4_4" value="★ エグルストン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d79b00;fontStyle=1;fillColor=#ffe6cc;" vertex="1" parent="1">
+          <mxGeometry x="222" y="806" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w4_5" value="★ スティーブン・ショア" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d79b00;fontStyle=1;fillColor=#ffe6cc;" vertex="1" parent="1">
+          <mxGeometry x="390" y="806" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="VI. 美術としての写真&#10;1977〜1990年代" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="30" y="872" width="160" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw5" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#fff2cc;strokeColor=#d6b656;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="210" y="872" width="680" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="bj5" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#fff2cc;strokeColor=#d6b656;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="910" y="872" width="410" height="126" as="geometry"/>
+        </mxCell>
+        <mxCell id="w5_0" value="シンディ・シャーマン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="222" y="906" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w5_1" value="リチャード・プリンス" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="390" y="906" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w5_2" value="ジェフ・ウォール" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="558" y="906" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w5_3" value="ナン・ゴールディン" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="726" y="906" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w5_4" value="グルスキー" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="222" y="950" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w5_5" value="シュトゥルート" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="390" y="950" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w5_6" value="ルフ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="558" y="950" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w5_7" value="ヘーファー" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="726" y="950" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j5_0" value="杉本博司" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="922" y="906" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="VII. 脱物質化&#10;1990〜現在" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fillColor=#f5f5f5;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="30" y="1016" width="160" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw6" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#f5f5f5;strokeColor=#999999;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="210" y="1016" width="680" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="bj6" value="" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;fontSize=13;fontStyle=1;dashed=1;dashPattern=6 4;fillColor=#f5f5f5;strokeColor=#999999;opacity=45;" vertex="1" parent="1">
+          <mxGeometry x="910" y="1016" width="410" height="82" as="geometry"/>
+        </mxCell>
+        <mxCell id="w6_0" value="アレック・ソス" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="222" y="1050" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="w6_1" value="ヴォルフガング・ティルマンス" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="390" y="1050" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j6_0" value="ホンマタカシ" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="922" y="1050" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="j6_1" value="川内倫子" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=11;fillColor=#ffffff;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="1050" width="195" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="foot" value="各時代の「転換点」が何だったかは別記事の3軸マトリクスを参照。この図は、その転換点を実際に担った人物の配置図にあたる。" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=12;fillColor=#f5f5f5;strokeColor=#999999;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="1116" width="1290" height="46" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
