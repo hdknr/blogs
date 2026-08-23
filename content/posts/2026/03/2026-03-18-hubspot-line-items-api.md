@@ -297,5 +297,5 @@ POST /crm/v3/objects/line_items
 
 ## 参考リンク
 
-- [HubSpot Line Items API リファレンス（日本語）](https://developers.hubspot.jp/docs/api-reference/crm-line-items-v3/guide)
+- [HubSpot Line Items API リファレンス（日本語）](https://developers.hubspot.jp/docs/api-reference/latest/crm/objects/line-items/guide)
 - [HubSpot Line Items API Reference（英語）](https://developers.hubspot.com/docs/api-reference/crm-line-items-v3/guide)

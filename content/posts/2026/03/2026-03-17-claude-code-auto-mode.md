@@ -2,7 +2,7 @@
 title: "Claude Code 新機能「Auto Mode」完全解説"
 date: 2026-03-17
 lastmod: 2026-03-17
-slug: "claude-code-auto-mode"
+slug: "claude-code-auto-mode-guide"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4078718977"
 categories: ["AI/LLM"]

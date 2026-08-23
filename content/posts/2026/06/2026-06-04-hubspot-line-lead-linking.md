@@ -222,4 +222,4 @@ LIFF URL には追加のパスやクエリを付けられ、[2 次リダイレ�
 - [LIFF Server API リファレンス | LINE Developers](https://developers.line.biz/ja/reference/liff-server/)
 - [LINE ログインを始めよう | LINE Developers](https://developers.line.biz/ja/docs/line-login/getting-started/)
 - [友だち追加オプション（ボットリンク） | LINE Developers](https://developers.line.biz/ja/docs/line-login/link-a-bot/)
-- [HubSpot Forms API](https://developers.hubspot.com/docs/reference/api/marketing/forms)
+- [HubSpot Forms API](https://developers.hubspot.com/docs/guides/api/marketing/forms)

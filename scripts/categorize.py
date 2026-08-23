@@ -202,11 +202,23 @@ def update_post(filepath):
     fm_text = match.group(1)
     body = match.group(2)
 
-    # Skip if already categorized
-    if 'categories: [' in fm_text:
-        cat_match = re.search(r'categories: \[(.*?)\]', fm_text)
-        if cat_match and cat_match.group(1).strip():
-            return False  # Already has categories
+    # A post is only fully done when it has BOTH a category and at least one tag.
+    # Returning early on "has a category" is what left 108 posts with `tags: []`
+    # for years (#653): the category landed on the first run and the post was
+    # never looked at again, so it never got a tag and fell out of every tag
+    # page while still passing every other check.
+    has_category = False
+    cat_match = re.search(r'categories: \[(.*?)\]', fm_text)
+    if cat_match and cat_match.group(1).strip():
+        has_category = True
+
+    has_tags = False
+    tag_match = re.search(r'tags: \[(.*?)\]', fm_text)
+    if tag_match and tag_match.group(1).strip():
+        has_tags = True
+
+    if has_category and has_tags:
+        return False
 
     # Get title
     title_match = re.search(r'title:\s*"(.*?)"', fm_text)
@@ -223,6 +235,12 @@ def update_post(filepath):
 
     new_fm = re.sub(r'categories: \[\]', f'categories: {cat_str}', fm_text)
     new_fm = re.sub(r'tags: \[\]', f'tags: {tag_str}', new_fm)
+
+    if new_fm == fm_text:
+        # Nothing to fill: extract_tags() found no rule that matches this post.
+        # Report it as untouched rather than as an update, so the run summary
+        # does not claim work it did not do.
+        return False
 
     new_content = f"---\n{new_fm}\n---\n{body}"
 

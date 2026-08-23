@@ -2,7 +2,7 @@
 title: "Anthropic Mythos が哲学者マーク・フィッシャーの名前を出し続ける奇妙な現象"
 date: 2026-04-13
 lastmod: 2026-04-13
-slug: "anthropic-mythos-mark-fisher"
+slug: "anthropic-mythos-mark-fisher-hauntology"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4239412079"
 categories: ["AI/LLM"]
