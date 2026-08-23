@@ -66,10 +66,10 @@ tags: ["写真史", "ニューカラー", "カラー写真", "現代アート"]
 
 ## 関連ページ
 
-- [写真史の転換点](/blogs/wiki/concepts/photography-history/) — 3軸で見たときのニューカラーの位置づけ
+- [写真史の転換点](/blogs/wiki/concepts/photography-history/) — 4軸で見たときのニューカラーの位置づけ
 
 ## ソース記事
 
 - [ニューカラー — 1970年代アメリカでカラー写真が「芸術」になった瞬間](/blogs/posts/2026/08/new-color-photography/) — 2026-08-23
 - [写真家で読む写真史 — ダゲールから川内倫子まで、欧米と日本を時代別に](/blogs/posts/2026/08/photographers-by-era/) — 2026-08-23
-- [写真史の転換点を3軸で測り直す](/blogs/posts/2026/08/photography-history-turning-points/) — 2026-08-23
+- [写真史の転換点を4軸で測り直す](/blogs/posts/2026/08/photography-history-turning-points/) — 2026-08-23
