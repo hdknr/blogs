@@ -19,7 +19,7 @@
         <mxCell id="edit-ui" value="打つ場所：インスペクタの ◇ アイコン" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="80" y="150" width="210" height="45" as="geometry"/>
         </mxCell>
-        <mxCell id="edit-what" value="対象：変形（位置・ズーム・回転）、クロップ、合成（不透明度）、音量、エフェクトの各パラメーター" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+        <mxCell id="edit-what" value="対象：変形（位置・ズーム・回転）、クロップ、合成（不透明度）、速度、音量、エフェクトの各パラメーター" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
           <mxGeometry x="80" y="205" width="210" height="85" as="geometry"/>
         </mxCell>
         <mxCell id="edit-editor" value="編集ツール：クリップ名バー右端の 2 ボタン → キーフレームエディター／カーブエディター" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
