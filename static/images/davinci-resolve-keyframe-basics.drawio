@@ -1,0 +1,195 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="davinci-keyframe-basics" name="Keyframe Basics">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="キーフレームは「値」ではなく「値の変化」を定義する" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="20" width="500" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="2 点打てば、その間はソフトが自動補間する（＝インビトウィーン）" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="300" y="50" width="500" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Panel 1: timeline with two keyframes ===== -->
+        <mxCell id="p1-box" value="① インスペクタで 2 点打つ（例: ズーム 1.0 → 1.3）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="95" width="980" height="245" as="geometry"/>
+        </mxCell>
+
+        <!-- inspector panel mock -->
+        <mxCell id="insp-box" value="インスペクタ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="90" y="135" width="260" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="insp-row1" value="ズーム&#xa;1.000" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="105" y="165" width="190" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="insp-dia1" value="◆" style="text;html=1;fontSize=18;align=center;verticalAlign=middle;fontColor=#e07b39;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="175" width="30" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="insp-row2" value="位置 X&#xa;0.00" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="105" y="215" width="190" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="insp-dia2" value="◇" style="text;html=1;fontSize=18;align=center;verticalAlign=middle;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="300" y="225" width="30" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="insp-note" value="◇ グレー＝未設定 ／ ◆ オレンジ＝そのフレームにキーフレームあり" style="text;html=1;fontSize=10;align=left;verticalAlign=top;whiteSpace=wrap;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="90" y="300" width="300" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- arrow -->
+        <mxCell id="arr1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="205" as="sourcePoint"/>
+            <mxPoint x="420" y="205" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- timeline -->
+        <mxCell id="tl-line" value="" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="250" as="sourcePoint"/>
+            <mxPoint x="1000" y="250" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tl-label" value="時間" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="255" width="40" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="kf-a" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e07b39;strokeColor=#a85a20;" vertex="1" parent="1">
+          <mxGeometry x="490" y="238" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="kf-a-label" value="キーフレーム A&#xa;00:00:00:00 / ズーム 1.0" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#a85a20;" vertex="1" parent="1">
+          <mxGeometry x="422" y="270" width="160" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="kf-b" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e07b39;strokeColor=#a85a20;" vertex="1" parent="1">
+          <mxGeometry x="880" y="238" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="kf-b-label" value="キーフレーム B&#xa;00:00:03:00 / ズーム 1.3" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#a85a20;" vertex="1" parent="1">
+          <mxGeometry x="812" y="270" width="160" height="35" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="between-band" value="この区間は誰も打っていない＝自動補間される" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="520" y="165" width="360" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="band-arr" style="edgeStyle=none;rounded=0;html=1;strokeColor=#d6b656;strokeWidth=1;dashed=1;endArrow=none;" edge="1" parent="1" source="between-band">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="200" as="sourcePoint"/>
+            <mxPoint x="700" y="240" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===== Panel 2: interpolation curves ===== -->
+        <mxCell id="p2-box" value="② 補間のしかた（イージング）で「印象」が決まる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="60" y="345" width="980" height="310" as="geometry"/>
+        </mxCell>
+
+        <!-- Linear -->
+        <mxCell id="c1-box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="95" y="395" width="280" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1-title" value="リニア（既定）" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="95" y="400" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1-axis-y" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="440" as="sourcePoint"/>
+            <mxPoint x="130" y="545" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c1-axis-x" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="545" as="sourcePoint"/>
+            <mxPoint x="345" y="545" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c1-curve" value="" style="endArrow=none;html=1;strokeColor=#82b366;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="545" as="sourcePoint"/>
+            <mxPoint x="340" y="445" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c1-desc" value="等速。機械的で、モーショングラフィックス的な硬さが出る" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="100" y="550" width="270" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Ease In and Out -->
+        <mxCell id="c2-box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="410" y="395" width="280" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2-title" value="イーズイン＆アウト" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="410" y="400" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2-axis-y" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="445" y="440" as="sourcePoint"/>
+            <mxPoint x="445" y="545" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c2-axis-x" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="445" y="545" as="sourcePoint"/>
+            <mxPoint x="660" y="545" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c2-curve" value="" style="curved=1;endArrow=none;html=1;strokeColor=#9673a6;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="445" y="545" as="sourcePoint"/>
+            <mxPoint x="655" y="445" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="530" y="540"/>
+              <mxPoint x="575" y="450"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c2-desc" value="ゆっくり動き出し、ゆっくり止まる。人の目に「自然」に見える" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="415" y="550" width="270" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Bezier -->
+        <mxCell id="c3-box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="725" y="395" width="280" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3-title" value="ベジェハンドルで調整" style="text;html=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="725" y="400" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3-axis-y" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="440" as="sourcePoint"/>
+            <mxPoint x="760" y="545" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c3-axis-x" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="545" as="sourcePoint"/>
+            <mxPoint x="975" y="545" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c3-curve" value="" style="curved=1;endArrow=none;html=1;strokeColor=#b85450;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="545" as="sourcePoint"/>
+            <mxPoint x="970" y="445" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="860" y="535"/>
+              <mxPoint x="880" y="440"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c3-handle" value="" style="endArrow=oval;html=1;strokeColor=#b85450;strokeWidth=1;dashed=1;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="545" as="sourcePoint"/>
+            <mxPoint x="835" y="543" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c3-desc" value="イーズをかけると生えるハンドルを引き、緩急を作り込む" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="730" y="550" width="270" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p2-note" value="縦軸＝パラメーターの値（ズーム量・不透明度など）、横軸＝時間。2 点は同じでも、間の「傾きの付け方」で見え方が変わる" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#3b6ea5;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="600" width="900" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
