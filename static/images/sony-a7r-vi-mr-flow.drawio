@@ -1,0 +1,105 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="sony-a7rvi-mr-flow" name="MR Register and Recall">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="α7R VI の MR：登録は「いまの状態を丸ごと」、呼び出しは 3 経路" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="290" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="撮影モード（静止画／動画／S&amp;Q／タイムラプス）ごとに、本体へ 10 個ずつ" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="290" y="50" width="600" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Register ===== -->
+        <mxCell id="reg-box" value="① 登録（MR 撮影設定登録）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="95" width="330" height="330" as="geometry"/>
+        </mxCell>
+        <mxCell id="reg-1" value="1. いま撮れる状態にカメラを仕上げる&#xa;（露出モード・F値・SS・ISO・AF・WB…）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="70" y="135" width="290" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="reg-2" value="2. MENU →［撮影］→［撮影モード］&#xa;　 →［MR 撮影設定登録］" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="190" width="290" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="reg-3" value="3. 登録内容を確認して中央ボタン" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="70" y="245" width="290" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="reg-4" value="4. タイトルを入力 →［OK］→［確認］&#xa;（英数記号 9 文字まで。日本語は不可）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="70" y="290" width="290" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="reg-5" value="5. 登録先の番号（MR1〜MR10）を選んで決定" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="70" y="345" width="290" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="reg-note" value="編集も同じ手順。直して「同じ番号に再登録」" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#3b6ea5;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="70" y="388" width="290" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Storage ===== -->
+        <mxCell id="store-box" value="② 保存先：本体（カードではない）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="420" y="95" width="330" height="330" as="geometry"/>
+        </mxCell>
+        <mxCell id="store-still" value="静止画&#xa;MR1 〜 MR10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="440" y="140" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="store-movie" value="動画&#xa;MR1 〜 MR10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="590" y="140" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="store-sq" value="S&amp;Q&#xa;MR1 〜 MR10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="440" y="205" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="store-tl" value="タイムラプス&#xa;MR1 〜 MR10" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="590" y="205" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="store-note1" value="4 系統は完全に独立。静止画/動画/S&amp;Q 切換ダイヤルの位置で、参照される 10 枠が決まる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="440" y="272" width="290" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="store-note2" value="α7R V にあったメモリーカードへの登録（M1〜M4）は VI では廃止。&#xa;カードに持ち出したいときは［設定の保存/読込］を使う" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="440" y="332" width="290" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Recall ===== -->
+        <mxCell id="rec-box" value="③ 呼び出し" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="95" width="340" height="330" as="geometry"/>
+        </mxCell>
+        <mxCell id="rec-1" value="A. モードダイヤル「1」「2」&#xa;　 → MR1 / MR2 に直行" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="135" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="rec-2" value="B. モードダイヤル「✱（無効）」&#xa;　 → MENU →［撮影］→［撮影モード］&#xa;　 →［MR1〜MR10（登録呼び出し）］" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="195" width="300" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rec-3" value="C. カスタムキーに［撮影モード切換］&#xa;　 → 押すたびに切り替え" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="265" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="rec-note" value="MR3 以降を使うなら A だけでは足りない。&#xa;ダイヤルは 8 ポジション（AUTO/P/A/S/M/1/2/✱）で、&#xa;MR に割けるのは「1」「2」の 2 つだけ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="810" y="325" width="300" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- arrows -->
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="382" y="260" as="sourcePoint"/>
+            <mxPoint x="418" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="752" y="260" as="sourcePoint"/>
+            <mxPoint x="788" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- bottom: auto update -->
+        <mxCell id="au-box" value="［MR 自動更新］— α7R V には無かった項目（初期値は［切］）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=10;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="455" width="1080" height="185" as="geometry"/>
+        </mxCell>
+        <mxCell id="au-off" value="［切］（初期値）&#xa;&#xa;呼び出したあとに設定をいじっても、登録内容はそのまま。&#xa;次に呼び出せば、また元の設定に戻る。&#xa;「基準に戻すための MR」として使う。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;align=left;spacingLeft=10;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="495" width="490" height="115" as="geometry"/>
+        </mxCell>
+        <mxCell id="au-on" value="［入］&#xa;&#xa;呼び出し中に変えた設定が、登録内容に自動で反映される。&#xa;メニューに戻らずに MR を育てられる反面、&#xa;その場しのぎの変更まで焼き付く。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;align=left;spacingLeft=10;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="610" y="495" width="490" height="115" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
