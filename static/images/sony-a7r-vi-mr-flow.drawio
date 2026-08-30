@@ -71,8 +71,8 @@
         <mxCell id="rec-3" value="C. カスタムキーに［撮影モード切換］&#xa;　 → 押すたびに切り替え" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="810" y="265" width="300" height="50" as="geometry"/>
         </mxCell>
-        <mxCell id="rec-note" value="MR3 以降を使うなら A だけでは足りない。&#xa;ダイヤルは 8 ポジション（AUTO/P/A/S/M/1/2/✱）で、&#xa;MR に割けるのは「1」「2」の 2 つだけ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;fontColor=#7f6000;" vertex="1" parent="1">
-          <mxGeometry x="810" y="325" width="300" height="65" as="geometry"/>
+        <mxCell id="rec-note" value="ダイヤルの「1」「2」は MR1・MR2 への&#xa;近道であって、10 枠とは別の 2 枠ではない。&#xa;B の経路なら MR1・MR2 も選べる（10＋2＝12 ではない）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="810" y="325" width="300" height="70" as="geometry"/>
         </mxCell>
 
         <!-- arrows -->
