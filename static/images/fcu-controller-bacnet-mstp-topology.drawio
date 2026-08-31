@@ -1,0 +1,128 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="fcu-bacnet-mstp" name="FCU Controller BACnet MS/TP Topology">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1340" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="FCU コントローラと BACnet MS/TP のネットワーク構成" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="320" y="18" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Field layer group -->
+        <mxCell id="field-group" value="現場側（居室）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="230" height="580" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fcu1" value="ファンコイル&#xa;ユニット (FCU)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="110" width="120" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="sensor1" value="温度センサ&#xa;Pt100 / Pt1000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="176" width="120" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="panel1" value="設定器&#xa;ネオパネル 2 など" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="242" width="120" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="dio1" value="汎用 DI / DO&#xa;インターロック・加湿器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="55" y="308" width="120" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="fieldnote" value="専用シリアル 100 bps&#xa;（設定器側）&#xa;RJ-45 / LAN ケーブル配線" style="text;html=1;fontSize=10;align=left;verticalAlign=top;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="55" y="372" width="180" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- MS/TP trunk group -->
+        <mxCell id="mstp-group" value="RS-485 幹線 ― BACnet MS/TP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="290" y="70" width="380" height="580" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ctrl1" value="FCU コントローラ&#xa;形 WJ-1202&#xa;MAC 1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="150" width="150" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctrl2" value="FCU コントローラ&#xa;形 WJ-1202&#xa;MAC 2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="235" width="150" height="58" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctrl3" value="VAV コントローラ&#xa;形 WJ-1201" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="320" width="150" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctrl4" value="他社 BACnet MS/TP&#xa;デバイス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="395" width="150" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- trunk line -->
+        <mxCell id="trunk" value="" style="endArrow=none;html=1;strokeWidth=3;strokeColor=#d79b00;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="140" as="sourcePoint"/>
+            <mxPoint x="540" y="490" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="t1" value="" style="endArrow=none;html=1;strokeColor=#d79b00;strokeWidth=2;exitX=1;exitY=0.5;" edge="1" parent="1" source="ctrl1">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="540" y="179" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="t2" value="" style="endArrow=none;html=1;strokeColor=#d79b00;strokeWidth=2;exitX=1;exitY=0.5;" edge="1" parent="1" source="ctrl2">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="540" y="264" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="t3" value="" style="endArrow=none;html=1;strokeColor=#d79b00;strokeWidth=2;exitX=1;exitY=0.5;" edge="1" parent="1" source="ctrl3">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="540" y="344" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="t4" value="" style="endArrow=none;html=1;strokeColor=#d79b00;strokeWidth=2;exitX=1;exitY=0.5;" edge="1" parent="1" source="ctrl4">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="540" y="419" as="targetPoint"/></mxGeometry>
+        </mxCell>
+
+        <mxCell id="term1" value="終端抵抗&#xa;120 Ω" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="505" y="106" width="70" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="term2" value="終端抵抗&#xa;120 Ω" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="505" y="488" width="70" height="34" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="mstpnote" value="トークンパッシング（送信権を回す）&#xa;9.6 / 19.2 / 38.4 / 76.8 kbps（初期値 76.8）&#xa;1 CH あたり自社機器 50 台まで / 最長 1000 m&#xa;分岐不可 ― デイジーチェーン配線&#xa;全機器で同一ボーレート・Max_Master を揃える" style="text;html=1;fontSize=10;align=left;verticalAlign=top;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="310" y="545" width="350" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- IP layer group -->
+        <mxCell id="ip-group" value="BACnet/IP 側" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="700" y="70" width="240" height="580" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gc" value="ジェネラルコントローラ&#xa;（MS/TP ⇔ BACnet/IP ルータ）&#xa;RS-485 幹線 2 CH" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="725" y="180" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="bms" value="中央監視装置 / BAS&#xa;savic-net、Metasys など" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="725" y="300" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="gw" value="IoT ゲートウェイ&#xa;BAC0 / BACpypes&#xa;ReadProperty・COV 購読" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="725" y="400" width="190" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="ipnote" value="BACnet/IP は UDP 47808（0xBAC0）&#xa;ルータ配下のネットワーク番号を指定して&#xa;MS/TP 機器に到達する" style="text;html=1;fontSize=10;align=left;verticalAlign=top;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="720" y="490" width="215" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Cloud -->
+        <mxCell id="cloud" value="クラウド&#xa;時系列 DB・可視化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="400" width="180" height="66" as="geometry"/>
+        </mxCell>
+
+        <!-- edges across layers -->
+        <mxCell id="e-field" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="fcu1" target="ctrl1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-field2" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sensor1" target="ctrl2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-gc" value="RS-485" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#d79b00;strokeWidth=2;fontSize=10;" edge="1" parent="1" target="gc">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="540" y="215" as="sourcePoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="e-bms" value="BACnet/IP" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="gc" target="bms">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-gw" value="BACnet/IP" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="bms" target="gw">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cloud" value="MQTT / HTTPS" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="gw" target="cloud">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
