@@ -73,6 +73,33 @@ wsl --shutdown
 
 なお、これは必須条件ではない。既定の NAT 方式でも `localhostForwarding` で Windows から WSL2 へ届く場合がある。ミラーモードを使うのは、接続先の書き方を `localhost` に統一して構成を単純に保つためだ。
 
+### ミラーモードの副作用
+
+ミラーモードは NAT の上位互換ではない。**分離をやめる代わりに、分離が生んでいた便利さも失う**トレードオフなので、既存環境に後から入れるなら以下は把握しておきたい。
+
+**ポートが Windows と衝突するようになる。** これが一番効く。NAT では Windows と Linux が別ネットワークだったため、**両方が同じポート番号を使えた**。ミラーモードではそれが競合し、Windows 側で使用中のポートに Linux のアプリがバインドできなくなる。逃がし弁として、ミラーモード専用の設定が用意されている。
+
+```ini
+[experimental]
+ignoredPorts=3000,9000,9090
+```
+
+`ignoredPorts` は「Windows で使用中でも Linux がバインドしてよいポート」の指定で、公式は Docker Desktop の 53 番を例に挙げている。Linux 内部だけで完結する通信なら衝突させる必要がない、という理屈だ。
+
+**`localhostForwarding` が無視される。** NAT 時代に `localhost` 転送を担っていたこの設定は、ミラーモードでは設定ごと無視される（公式の `.wslconfig` サンプルにその旨が明記されている）。同様に `dnsProxy` も NAT 専用なので効かない。
+
+**LAN から WSL に直接届くようになる。** 公式が利点として挙げている項目だが、裏返せば露出面が増えるということでもある。NAT の頃は WSL 内のサービスが事実上隠れていた。ここは Hyper-V ファイアウォールが既定で守っている（`firewall=true` が既定）ので、インバウンドを通したい場合はむしろ明示的に開ける必要がある。
+
+```powershell
+New-NetFirewallHyperVRule -Name "MyWebServer" -DisplayName "My Web Server" -Direction Inbound -VMCreatorId '{40E0AC32-46A5-438A-A0B2-2B479E8F2E90}' -Protocol TCP -LocalPorts 80
+```
+
+**IPv6 の `::1` は使えない。** `localhost` で繋がるのは IPv4 の `127.0.0.1` だけで、IPv6 の localhost は非対応と明記されている。IPv6 自体には対応しているのに localhost だけ穴がある形なので、踏むと原因が分かりにくい。なお `127.0.0.1` 以外のホスト割り当て IP を使いたい場合は、`[experimental]` の `hostAddressLoopback=true`（既定 `false`、IPv4 のみ）が要る。
+
+**WSL 固有 IP の前提が崩れる。** ミラーモードは定義上 Windows のインターフェイスを Linux に複製するので、Linux 側から見える IP は Windows のものになる。`ip addr` や `hostname -I` から `172.x` 系の WSL 固有 IP を拾っていたスクリプトは、そのまま壊れる。
+
+今回の用途（Windows から `localhost:22` へ繋ぐだけ）では、これらの副作用はほぼ表に出ない。ただし **3 点目は次節で立てる sshd と直結する**ので、22 番を上げる以上は意識しておく価値がある。
+
 ### Ubuntu 側に OpenSSH Server を入れる
 
 ```bash
@@ -246,7 +273,7 @@ appendWindowsPath=false
 ## まとめ
 
 - Orca の SSH ターゲットは「UI だけ手元、worktree もエージェントもリモート」という分担になる。WSL2 をそこに置くと、Windows の画面のまま実行環境を Linux に寄せられる。
-- ミラーモード（Windows 11 22H2 以降）は必須ではないが、接続先を `localhost:22` に統一できるぶん構成が単純になる。
+- ミラーモード（Windows 11 22H2 以降）は必須ではないが、接続先を `localhost:22` に統一できるぶん構成が単純になる。ただし NAT の上位互換ではない。**Windows とポートが競合するようになり、`localhostForwarding` は無視され、LAN から WSL に直接届くようになる。**
 - **公式ドキュメントにしか書かれていない前提**として、Linux リモートには `build-essential` と `python3` が要る。無いと「接続は成功するのにリモートターミナルだけ動かない」という切り分けにくい壊れ方をする。
 - **`Node.js not found on remote host` は SSH の失敗ではない。** nvm が `~/.bashrc` の末尾に書き、Ubuntu の `~/.bashrc` が冒頭で非対話シェルを `return` する——この 2 つが噛み合った結果、末尾の nvm に到達しないだけだ。
 - だから「手で ssh すると動くのに GUI からは動かない」という非対称が出る。**手動の疎通確認が通ったことは、GUI クライアントからの疎通を保証しない。** 確認するなら `ssh host 'node -v'` のように、非対話シェルの形で叩くほうが実態に近い。
@@ -262,6 +289,7 @@ appendWindowsPath=false
 - [Orca Docs: SSH worktrees](https://www.onorca.dev/docs/ssh)
 - [stablyai/orca (GitHub)](https://github.com/stablyai/orca)
 - [WSL でのネットワーク アプリケーションへのアクセス (Microsoft Learn)](https://learn.microsoft.com/ja-jp/windows/wsl/networking)
+- [WSL の詳細設定の構成 (Microsoft Learn)](https://learn.microsoft.com/ja-jp/windows/wsl/wsl-config) — `ignoredPorts` / `hostAddressLoopback` / `firewall` の定義
 - [Windows および Linux ファイル システム間での作業 (Microsoft Learn)](https://learn.microsoft.com/ja-jp/windows/wsl/filesystems)
 - [nvm-sh/nvm (GitHub)](https://github.com/nvm-sh/nvm)
 - [Bash Reference Manual: Bash Startup Files](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html)
