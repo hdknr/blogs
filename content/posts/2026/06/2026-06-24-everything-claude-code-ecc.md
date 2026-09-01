@@ -1,7 +1,7 @@
 ---
 title: "ECC（Everything Claude Code）— 220K スターのClaude Code 最強エコシステムガイド"
 date: 2026-06-24
-lastmod: 2026-06-24
+lastmod: 2026-09-01
 slug: "everything-claude-code-ecc"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4785315257"
@@ -13,6 +13,9 @@ tags: ["claude-code", "ecc", "agent", "mcp", "hooks", "security", "claude"]
 Claude Code を使っているなら、ぜひ確認しておきたいリポジトリがある。**ECC（Everything Claude Code）**だ。
 
 スキル・エージェント・フック・MCP・ワークフローを網羅した、Claude Code 向けの総合コレクション。220K を超えるスターを獲得し、230 名以上のコントリビューターが参加するオープンソースプロジェクトとして急速に成長している。
+
+> **追記（2026-09-01）**: 本記事は **v2.0.0 時点**（67 エージェント・271 スキル・92 コマンド）のカタログ紹介です。最新の v2.2.0 では 68 エージェント・286 スキル・94 コマンドに増え、リポジトリ名も `affaan-m/everything-claude-code` から `affaan-m/ECC` に改称されました。
+> エージェント側の権限設計（68 体中 40 体が `Write` / `Edit` を持たない、モデルの割り当て、インジェクション防御前文）を実際に集計した続編を書いています → [サブエージェントの役割は tools で縛る — ECC の68体を数えて見えた設計と抜け穴](/blogs/posts/2026/09/ecc-everything-claude-code-agent-constraints/)
 
 ## ECC とは何か
 
@@ -216,6 +219,7 @@ ECC は Claude Code ユーザーにとって非常に価値のあるリソース
 
 ### 関連記事
 
+- [サブエージェントの役割は tools で縛る — ECC の68体を数えて見えた設計と抜け穴](/blogs/posts/2026/09/ecc-everything-claude-code-agent-constraints/) — v2.2.0 時点の権限設計を集計した続編
 - [ECC の instinct システム詳解](/blogs/posts/2026/04/ecc-instinct-system/)
 - [Claude Code のフック・カスタムコマンド・サブエージェント解説](/blogs/posts/2026/03/claude-code-hooks-commands-subagents/)
 - [Claude Code スキルクリエーター](/blogs/posts/2026/03/claude-code-skill-creator/)
