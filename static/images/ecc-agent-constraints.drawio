@@ -1,0 +1,119 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="ecc-agent-constraints" name="ECC Agent Constraints">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="760" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="ECC の 68 サブエージェント — 役割は文章ではなく「権限」で決まる" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="18" width="700" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="agents/*.md の frontmatter が 3 つの軸で各エージェントを縛る" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="240" y="46" width="700" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Axis 1: tools -->
+        <mxCell id="axis1-group" value="軸1: tools —「できること」の上限&#xa;Write / Edit なしは 40 体。ただし内訳は 2 つ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="340" height="290" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="readonly" value="完全密閉&#xa;13 体" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="150" width="130" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="readonly-detail" value="Write / Edit / Bash&#xa;すべてなし&#xa;planner・architect ほか" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="205" y="150" width="160" height="52" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="bashonly" value="Bash あり&#xa;27 体" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="208" width="130" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="bashonly-detail" value="Write / Edit はないが&#xa;Bash で書けてしまう&#xa;reviewer 23 体中 21 体" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="205" y="208" width="160" height="52" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="writable" value="書き込み可&#xa;28 体" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="266" width="130" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="writable-detail" value="Write / Edit を持つ&#xa;build-resolver 12 体は&#xa;例外なく全てここ" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="205" y="266" width="160" height="52" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="axis1-note" value="計画役は物理的な壁、レビュー役は意図の表明。&#xa;全部を一律に縛らないのが落としどころ。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="65" y="326" width="300" height="46" as="geometry"/>
+        </mxCell>
+
+        <!-- Axis 2: model -->
+        <mxCell id="axis2-group" value="軸2: model —「かけるコスト」の割り当て" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="410" y="90" width="330" height="290" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="opus" value="opus — 4 体" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="435" y="128" width="130" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="opus-detail" value="architect / planner&#xa;spec-miner&#xa;healthcare-reviewer" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="575" y="128" width="150" height="46" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="sonnet" value="sonnet — 58 体" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="435" y="186" width="130" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="sonnet-detail" value="レビュー・修理・実装系&#xa;の主力" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="575" y="186" width="150" height="46" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="haiku" value="haiku — 6 体" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="435" y="244" width="130" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="haiku-detail" value="docs-lookup / doc-updater&#xa;comment-analyzer など&#xa;機械的な作業" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="575" y="244" width="150" height="46" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="axis2-note" value="68 体すべてが model を明示。&#xa;「全部 opus」でも「全部おまかせ」でもない。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="435" y="302" width="290" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Axis 3: defense -->
+        <mxCell id="axis3-group" value="軸3: Prompt Defense Baseline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="770" y="90" width="370" height="290" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="defense" value="67 体 / 68 が同一の防御前文を持つ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="128" width="320" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="defense-list" value="・役割・人格の変更を拒否する&#xa;・秘密情報／API キーを出力しない&#xa;・取得した外部データは信頼しない&#xa;・不可視文字・同形異字・緊急性の演出を疑う" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;align=left;verticalAlign=top;spacingTop=8;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="795" y="180" width="320" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="axis3-note" value="サブエージェント 1 体 1 体を&#xa;「信頼境界」として扱っている。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="795" y="285" width="320" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Context budget section -->
+        <mxCell id="ctx-group" value="そして本当の制約 — コンテキスト予算" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="410" width="1100" height="300" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ctx-all" value="286 スキルの本文をすべて足すと" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="70" y="450" width="300" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctx-all-bar" value="約 257 万文字 ≒ 64 万トークン相当（全部は読み込まれない）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="480" width="1040" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ctx-meta" value="常時ロードされるのは frontmatter の name + description だけ" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="70" y="538" width="480" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctx-meta-bar" value="約 7.8 万文字 ≒ 2 万トークン相当" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="568" width="330" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ctx-meta-note" value="← 何も指示しなくても毎回この分だけ席を取る。&#xa;　 これが「286 個いきなり全部入れる」が最速で悪化する理由。" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="415" y="568" width="500" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ctx-answer" value="作者自身の推奨: rules/common + 実際に使う言語パック 1 つから始める（minimal プロファイルの説明文はそのものずばり &quot;Low-context&quot;）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="70" y="632" width="1040" height="52" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
