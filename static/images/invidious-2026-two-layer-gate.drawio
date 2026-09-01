@@ -1,0 +1,117 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="invidious-two-layer-gate" name="Invidious Two Layer Gate">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="660" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="ttl" value="Invidious の可用性を決める二層のゲート（2026年9月時点）" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="340" y="18" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Viewers group -->
+        <mxCell id="grp-viewer" value="閲覧者" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="80" width="200" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="v-browser" value="ブラウザ&#10;（JS 実行あり）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="115" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="v-rss" value="RSS リーダー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="178" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="v-api" value="API クライアント&#10;（FreeTube など）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="236" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Gate 1 -->
+        <mxCell id="grp-gate1" value="ゲート①　運営者が置く防御&#10;（対スクレイパー）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7f0;strokeColor=#d79b00;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="275" y="80" width="200" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="g1-anubis" value="Anubis PoW チャレンジ&#10;3 / 5 インスタンス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="295" y="128" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="g1-cf" value="Cloudflare チャレンジ&#10;1 / 5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="295" y="190" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="g1-dead" value="200 を返す 503 ページ&#10;1 / 5（実質停止）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="295" y="252" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Instance group -->
+        <mxCell id="grp-inst" value="公開インスタンス&#10;HTTPS 7 件（2023年12月は 32 件）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="520" y="80" width="230" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="i-core" value="Invidious 本体&#10;（Crystal / AGPL-3.0）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="545" y="128" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="i-comp" value="invidious-companion&#10;（必須・再生を担当）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="545" y="190" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="i-api" value="公開 REST API：0 / 7 で無効&#10;（2023年12月は 27 / 32 が有効）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="545" y="252" width="180" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Gate 2 -->
+        <mxCell id="grp-gate2" value="ゲート②　Google 側&#10;（送信元 IP の出自で判定）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf3f3;strokeColor=#b85450;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="795" y="80" width="210" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="g2-dc" value="データセンター / VPN の IP&#10;→ ブロック&#10;「Sign in to confirm you are not a bot」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="815" y="130" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="g2-res" value="家庭回線（residential）の IP&#10;→ 通る" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="815" y="228" width="170" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- YouTube -->
+        <mxCell id="yt" value="YouTube" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="170" width="170" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows -->
+        <mxCell id="a1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="grp-viewer" target="grp-gate1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="grp-gate1" target="grp-inst">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="grp-inst" target="grp-gate2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="grp-gate2" target="yt">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- RSS bypass note -->
+        <mxCell id="rss-note" value="※ /feed/ だけはゲート①を免除している運営者もいる（5 件中 2 件で Atom フィードが到達）" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#7f6000;" vertex="1" parent="1">
+          <mxGeometry x="275" y="336" width="475" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Observation callout -->
+        <mxCell id="obs" value="監視サイトの稼働率は 97〜100%。しかし素の HTTP クライアントが到達できたのは 0 / 5 件。&#10;稼働率が測っているのは「チャレンジページが 200 で返ること」であって、動画が見られることではない。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="374" width="1200" height="58" as="geometry"/>
+        </mxCell>
+
+        <!-- Self-host row -->
+        <mxCell id="grp-self" value="セルフホストの前提条件（公式ドキュメントに書かれていること）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="452" width="1200" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1" value="家庭回線の IP が前提&#10;VPS / クラウドはデータセンター IP なので弾かれる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="492" width="360" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="invidious-companion が必須&#10;「Playback won&#39;t work without Invidious companion configured」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="492" width="360" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="1 日 1 回、理想は 1 時間ごとの再起動が推奨&#10;→ 「0 円 / 月」の外に運用コストが残る" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="840" y="492" width="360" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Footer -->
+        <mxCell id="foot" value="出典：api.invidious.io/instances.json（2026年9月1日／2023年12月10日の Wayback 版）、docs.invidious.io、iv-org/invidious" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#888888;" vertex="1" parent="1">
+          <mxGeometry x="30" y="596" width="1200" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
