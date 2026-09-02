@@ -1,0 +1,128 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="video-use-silent-failures" name="Video Use Silent Failure Points">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="920" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Video Use パイプラインと「沈黙する失敗」の発生箇所" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="260" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="どの段落もエラーを出さずに完走する。出力が間違っているだけ。" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="260" y="50" width="600" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lane-pipe" value="パイプライン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="300" height="790" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane-fail" value="沈黙する失敗と修正 PR" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8f0;strokeColor=#d79b00;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="400" y="90" width="680" height="790" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="src" value="素材フォルダ&#10;(C0103.MP4 ...)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="130" width="200" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="tr" value="Transcribe&#10;ElevenLabs Scribe（単語単位）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="205" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pack" value="Pack&#10;takes_packed.md（約 12KB）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="285" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="llm" value="LLM 推論&#10;カット点を単語境界で決定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="365" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="edl" value="EDL (JSON)&#10;ranges / grade / overlays" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="445" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ext" value="セグメント単位で抽出&#10;グレード + 30ms フェード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="525" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cat" value="ロスレス連結 (-c copy)&#10;→ オーバーレイ合成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="605" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="sub" value="字幕焼き込み（最後）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="90" y="685" width="200" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="out" value="自己評価 → edit/final.mp4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="765" width="200" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="src" target="tr"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="tr" target="pack"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="pack" target="llm"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="llm" target="edl"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="edl" target="ext"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="ext" target="cat"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="cat" target="sub"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="sub" target="out"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="f134" value="&lt;b&gt;#134 音声トラックの取り違え&lt;/b&gt;&lt;br/&gt;OBS はトラック 0 にアプリ音声、1 にマイクを書く。&lt;br/&gt;-map 無しの ffmpeg 既定選択がアプリ音声を拾い、&lt;br/&gt;ナレーションを黙って捨てる。&lt;br/&gt;&lt;i&gt;→ 別物の書き起こしが完成する（エラーなし）&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="430" y="196" width="330" height="68" as="geometry"/>
+        </mxCell>
+        <mxCell id="f134fix" value="--audio-track で明示&#10;無音トラックはアップロード拒否" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="200" width="250" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="f6" value="&lt;b&gt;#6 HDR メタデータの残留&lt;/b&gt;&lt;br/&gt;iPhone は HLG、他機種は PQ が既定。-pix_fmt yuv420p は&lt;br/&gt;ビット深度だけ変え、転送特性タグを残す。SNS の再エンコードは&lt;br/&gt;8bit 値を HDR と解釈し、色が潰れる。&lt;br/&gt;&lt;i&gt;→ macOS の QuickTime だけが再生時に補正し、バグを隠す&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="430" y="470" width="330" height="72" as="geometry"/>
+        </mxCell>
+        <mxCell id="f6fix" value="HLG/PQ を Rec.709 SDR へトーンマップ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="484" width="250" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="f55" value="&lt;b&gt;#55 フレームレートの固定&lt;/b&gt;&lt;br/&gt;extract_segment が全出力を 24fps 決め打ち。30/60fps の&lt;br/&gt;スマホ・Web カメラ・画面録画を黙って間引く。&lt;br/&gt;&lt;i&gt;→ SKILL.md の「ソースに合わせる」規定と矛盾していた&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="430" y="552" width="330" height="62" as="geometry"/>
+        </mxCell>
+        <mxCell id="f55fix" value="avg_frame_rate を計測して継承&#10;--fps で 29.97 / 30000/1001 も指定可" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="558" width="250" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="f29" value="&lt;b&gt;#29 / #137 回転メタデータと縦動画&lt;/b&gt;&lt;br/&gt;縦動画を幅基準でスケールして横に潰していた（#29）。&lt;br/&gt;修正後も、横向きで記録され 90/270 度の表示回転を持つ&lt;br/&gt;スマホ素材は誤判定が残った（#137）。&lt;br/&gt;&lt;i&gt;→ ffmpeg は自動回転するが render.py は符号化寸法を見ていた&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="430" y="622" width="330" height="72" as="geometry"/>
+        </mxCell>
+        <mxCell id="f29fix" value="display-matrix 回転を ffprobe で読み&#10;実効寸法を入れ替えてから軸を選ぶ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="636" width="250" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="f5" value="&lt;b&gt;#5 字幕がプラットフォーム UI に埋まる&lt;/b&gt;&lt;br/&gt;MarginV=35 は 1080x1920 縦出力で TikTok / Reels / Shorts の&lt;br/&gt;セーフゾーン内。アップロード後に UI が字幕を覆う。&lt;br/&gt;&lt;i&gt;→ ローカル再生では完璧に見える&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="430" y="702" width="330" height="62" as="geometry"/>
+        </mxCell>
+        <mxCell id="f5fix" value="MarginV を 90 に引き上げ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="790" y="713" width="250" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="共通点: 5 件すべて「ffmpeg は正常終了し、ファイルも生成される」。&#10;壊れているのは中身だけ。だから SKILL.md は 12 項目を&#10;taste ではなく Hard Rules（correctness）として切り出している。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="430" y="120" width="610" height="62" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="evalbox" value="自己評価ループが検査できる範囲&#10;（出力側のカット境界のフィルムストリップ + 波形）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#3333cc;strokeWidth=2;dashed=1;dashPattern=8 4;fontSize=10;fontColor=#3333cc;fontStyle=1;verticalAlign=bottom;spacingBottom=4;" vertex="1" parent="1">
+          <mxGeometry x="416" y="694" width="640" height="106" as="geometry"/>
+        </mxCell>
+        <mxCell id="evalnote" value="↑ 残り 4 種類はこの外側。コンテナ属性やソース選択の誤りは、&#10;カットの継ぎ目を見ても異常に見えない。" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#3333cc;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="424" y="808" width="600" height="34" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="a134" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1" source="tr" target="f134"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1" source="ext" target="f6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1" source="ext" target="f55"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1" source="cat" target="f29"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=block;endFill=1;" edge="1" parent="1" source="sub" target="f5"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="af134" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;endArrow=block;endFill=1;" edge="1" parent="1" source="f134" target="f134fix"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="af6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;endArrow=block;endFill=1;" edge="1" parent="1" source="f6" target="f6fix"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="af55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;endArrow=block;endFill=1;" edge="1" parent="1" source="f55" target="f55fix"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="af29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;endArrow=block;endFill=1;" edge="1" parent="1" source="f29" target="f29fix"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="af5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;endArrow=block;endFill=1;" edge="1" parent="1" source="f5" target="f5fix"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
