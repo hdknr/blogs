@@ -22,7 +22,7 @@ tags: ["WSL2", "ssh", "Windows", "linux", "systemd", "タスクスケジュー�
 
 ## 先に結論
 
-- タスクスケジューラの「**ユーザーがログオンしているかどうかにかかわらず実行する**」を選ぶと、タスクは**セッション 0** で走る。ストア版 WSL はセッション 0 から起動できず、これは 2026 年 9 月時点で[未解決の Issue](https://github.com/microsoft/WSL/issues/9231) のままだ。選ぶべきは「ユーザーがログオンしているときのみ実行する」。
+- タスクスケジューラの「**ユーザーがログオンしているかどうかにかかわらず実行する**」を選ぶと、タスクは**セッション 0** で走る。ストア版 WSL はセッション 0 から起動できず、これは 2026 年 9 月時点で[未解決の Issue](https://github.com/microsoft/WSL/issues/9231) のままだ。選ぶべきは「ユーザーがログオンしているときのみ実行する」。**タスク保存時にパスワードを聞かれたら、間違ったほうを選んでいる**という見分け方がある。Entra ID 参加機では、そのパスワードはそもそも受け付けられない。
 
   > ここで言う「ストア版」は、Microsoft Store から入る現行の WSL のこと。Windows のオプション機能として最初から入っている旧来の**インボックス版**とは別物で、`wsl --version` がバージョンを返せばストア版だ。以下の話はストア版が前提になる。
 
@@ -74,6 +74,23 @@ Windows は、ログオンしたユーザーの対話セッションと、サー
 microsoft/WSL の [Issue #9231「Store WSL isn't accessible from Session 0」](https://github.com/microsoft/WSL/issues/9231)がその報告だ。2022 年 11 月に立ってから **2026 年 9 月現在も open** で、コメントは 160 件を数える。同じ症状を「スケジュールされたタスクに影響する」と報告した [Issue #9271](https://github.com/microsoft/WSL/issues/9271) は、この #9231 の重複として閉じられた。
 
 症状がたちが悪いのは、**エラーが表に出ない**ことだ。#9271 の報告によれば、WSL 側にはコマンドが実行された形跡が残らず、セッション 0 に `conhost.exe` のプロセスだけが作られる。タスクスケジューラの履歴上はタスクが「実行された」ように見えるのに、sshd は上がっていない。「設定したのに繋がらない」という一番デバッグしづらい形で失敗する。
+
+### 見分け方: パスワードを求められたら、その選択肢を選んでいる
+
+エラーが出ないと書いたが、**設定中に気づける手がかりが一つだけある。パスワードの入力を求められるかどうかだ。**
+
+「ユーザーがログオンしているかどうかにかかわらず実行する」は、タスクを保存するときに資格情報の入力ダイアログを出す。ログオンしていない状態で走らせる以上、Windows がユーザーの代わりにログオンするための資格情報を保存しておく必要があるからだ。逆に「ユーザーがログオンしているときのみ実行する」では**ダイアログは出ない**。すでにログオンしているセッションで走らせるだけなので、保存するものがない。
+
+つまり、**パスワードを聞かれた時点で、セッション 0 に向かう側の選択肢を選んでいる**ことになる。ここで「設定はしたのに繋がらない」の未来が確定する。
+
+そして、会社から配られたマシン — Microsoft Entra ID（旧 Azure AD）参加機 — では、そのパスワードがそもそも受け付けられない。組織アカウントのサインインに使っているパスワードを正しく入れても弾かれる。これは設定ミスではなく、**Entra ID のアカウントでは「ログオンしているかどうかにかかわらず実行する」を使えない**という制約だ。
+
+- Ondřej Šebela 氏の [Solution for running scheduled task with 'run whether user is logged on or not' option as an AAD user?](https://doitpshway.com/solution-for-running-scheduled-task-with-run-whether-user-is-logged-on-or-not-option-as-an-aad-user)（2022 年 11 月）が明快で、「AAD ユーザーで『ログオンしているかどうかにかかわらず実行する』を有効にしたタスクは実行できない。『パスワードを保存しない』を併用しても同じ。**AAD ユーザーでタスクを走らせる唯一の方法は『ユーザーがログオンしているときのみ実行する』を選ぶこと**」と結論している。
+- Microsoft Learn の Q&A [Scheduled Task using Entra ID Account on Entra-joined VM](https://learn.microsoft.com/en-us/answers/questions/1688759/scheduled-task-using-entra-id-account-on-entra-joi) でも、Entra ID 参加マシンのタスクに割り当てられるのはローカルアカウントだけ、という回答になっている。
+
+「パスワードを保存しない」（S4U ログオン）に切り替えれば入力を回避できるが、これは解決にならない。S4U で作られるトークンはネットワークリソースにアクセスできず、しかも**タスクの実行結果は成功と表示される**。罠 1 の「エラーが表に出ない」失敗を、もう一種類増やすだけだ。
+
+ここで粘る意味はない。仮に登録できたとしても、その先はセッション 0 で、#9231 のとおり WSL は起動しない。**認証で弾かれているうちに引き返すほうが、症状が見えているぶんまだましだ。**
 
 ### どうするか: トリガーは「ログオン時」にする
 
@@ -254,6 +271,7 @@ sudo ss -tlnp | grep sshd
 ## まとめ
 
 - タスクスケジューラの「**ユーザーがログオンしているかどうかにかかわらず実行する**」はセッション 0 で走り、ストア版 WSL はそこから起動できない。[microsoft/WSL#9231](https://github.com/microsoft/WSL/issues/9231) は 2026 年 9 月現在も open。**エラーが出ないまま sshd が上がらない**ので、一番デバッグしづらい形で失敗する。
+- 唯一の手がかりは**タスク保存時のパスワード入力ダイアログ**。あれが出たら間違ったほうを選んでいる。会社支給の Entra ID 参加機なら、そのパスワードは正しく入れても通らない — この組み合わせは Windows 側の制約として使えない。
 - WSL のアイドル停止は VM とインスタンスで別々。`vmIdleTimeout` だけでは足りず、`[general] instanceIdleTimeout=-1` が要る。**この設定は Microsoft Learn に載っていない**。
 - `sudoers` の NOPASSWD 行は `wsl -u root` の経路では使われない。
 - systemd を有効にすれば sshd の起動は Linux 側の作法で済むが、**WSL インスタンスを起こすトリガーは Windows 側に残る**。
@@ -269,3 +287,5 @@ sudo ss -tlnp | grep sshd
 - [Instance self-terminates prematurely when started with a background process in boot.command · Issue #8661](https://github.com/microsoft/WSL/issues/8661) — microsoft/WSL
 - [WSL Services (e.g., Ollama, SSHD) Are Being Suspended Despite `vmIdleTimeout=-1` · Issue #13291](https://github.com/microsoft/WSL/issues/13291) — microsoft/WSL
 - [Systemd support is now available in WSL!](https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/) — Windows Command Line Blog
+- [Solution for running scheduled task with 'run whether user is logged on or not' option as an AAD user?](https://doitpshway.com/solution-for-running-scheduled-task-with-run-whether-user-is-logged-on-or-not-option-as-an-aad-user) — Ondřej Šebela（Entra ID アカウントでは「ログオンしているかどうかにかかわらず実行する」が使えない）
+- [Scheduled Task using Entra ID Account on Entra-joined VM](https://learn.microsoft.com/en-us/answers/questions/1688759/scheduled-task-using-entra-id-account-on-entra-joi) — Microsoft Learn Q&A
