@@ -2,11 +2,12 @@
 title: "自己改善エージェント"
 description: "AI エージェントのハーネスを AI 自身が自律的に最適化するパターン"
 date: 2026-04-06
-lastmod: 2026-07-15
+lastmod: 2026-09-02
 aliases: ["Self-Improving Agents", "メタエージェント", "Self-Improving Loops", "自己改善ループ"]
 related_posts:
   - "/posts/2026/04/autoagent-self-improving-agents/"
   - "/posts/2026/06/andrew-ng-ai-agents-development-bottleneck/"
+  - "/posts/2026/09/nec-corporate-ai-workforce/"
 tags: ["agent", "llm", "自動最適化", "自己改善ループ"]
 ---
 
@@ -56,8 +57,10 @@ DeepLearning.AI 創設者 Andrew Ng は「自分のタスクの100%はもう AI 
 - [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — 「自己改善ループ」を実装する4種類のループ分類
 - [自律改善システムの設計](/blogs/wiki/concepts/autonomous-system-design/) — 自己改善を安全ゲート付きで回す設計原則
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 改善対象となるハーネスの構造
+- [AI 自律型組織](/blogs/wiki/concepts/ai-autonomous-organization/) — 自己学習する AI を人事プロセスの語彙で運用した企業事例
 
 ## ソース記事
 
 - [AutoAgent — AIがAIを育てる自己改善エージェントOSSライブラリ](/blogs/posts/2026/04/autoagent-self-improving-agents/) — 2026-04-05
 - [Andrew Ng「タスクの100%はAIエージェントが実行」─ 開発速度向上が生んだ新たなボトルネック](/blogs/posts/2026/06/andrew-ng-ai-agents-development-bottleneck/) — 2026-06-24
+- [NEC「部署が丸ごとAI」の中身 — コーポレートAI・Workforce部門の4階層と、人が手放さなかった仕事](/blogs/posts/2026/09/nec-corporate-ai-workforce/) — 2026-09-02

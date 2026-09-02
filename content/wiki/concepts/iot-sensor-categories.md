@@ -2,7 +2,7 @@
 title: "IoTセンサーの分類と選び方"
 description: "建設・設備現場のIoTセンサーを目的別5分類・物理量11カテゴリ・信号インターフェース7種の3軸で整理し、通信規格と入手先の選定につなげる"
 date: 2026-08-05
-lastmod: 2026-08-05
+lastmod: 2026-09-02
 aliases: ["IoTセンサー", "センサー選定", "Modbus RTU", "4-20mA", "LPWA", "BLE センサー", "SHT3x", "BME280"]
 related_posts:
   - "/posts/2026/07/iot-sensor-categories-and-shops/"
@@ -48,6 +48,8 @@ tags: ["IoT", "センサー", "M5Stack", "Modbus", "LPWA"]
 - [ESP32](/blogs/wiki/tools/esp32/) — 定番のセンサーノード
 - [SORACOM](/blogs/wiki/tools/soracom/) — LPWA 回線
 - [VE（バリューエンジニアリング）](/blogs/wiki/concepts/value-engineering/) — 保全投資の価値評価
+- [BACnet / BACnet MS/TP](/blogs/wiki/concepts/bacnet/) — 既設ビル設備から値を読むときの実際のプロトコル
+- [ビルオートメーションシステム（BAS）](/blogs/wiki/concepts/building-automation-system/) — 導入先の商流と寡占構造
 
 ## ソース記事
 

@@ -2,12 +2,13 @@
 title: "マルチエージェント調整パターン"
 description: "複数 AI エージェントを協調させる5つの設計パターン。Anthropic が体系化した Generator-Verifier・Orchestrator-Subagent・Agent Teams・Message Bus・Shared State"
 date: 2026-04-11
-lastmod: 2026-07-28
+lastmod: 2026-09-02
 aliases: ["マルチエージェントパターン", "multi-agent-coordination"]
 related_posts:
   - "/posts/2026/04/anthropic-multi-agent-coordination-patterns/"
   - "/posts/2026/04/claude-managed-agents-architecture/"
   - "/posts/2026/04/claude-managed-agents/"
+  - "/posts/2026/09/nec-corporate-ai-workforce/"
 tags: ["マルチエージェント", "AIアーキテクチャ", "設計パターン", "anthropic", "エージェント"]
 ---
 
@@ -78,8 +79,10 @@ Anthropic が 2026年4月に公開した、複数 AI エージェントを協調
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 協調構造を宣言的に設計するスワームの次段階
 - [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — 協調パターンが位置づく全体地図
 - [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — 2役に絞った最小の協調構成
+- [AI 自律型組織](/blogs/wiki/concepts/ai-autonomous-organization/) — 4階層の企業組織として実装された協調構造
 
 ## ソース記事
 
 - [Anthropic が解説するマルチエージェント調整パターン 5 選](/blogs/posts/2026/04/anthropic-multi-agent-coordination-patterns/) — 2026-04-11
 - [Claude Managed Agents のアーキテクチャ: Brain / Session / Hands の分離設計](/blogs/posts/2026/04/claude-managed-agents-architecture/) — 2026-04-10
+- [NEC「部署が丸ごとAI」の中身 — コーポレートAI・Workforce部門の4階層と、人が手放さなかった仕事](/blogs/posts/2026/09/nec-corporate-ai-workforce/) — 2026-09-02
