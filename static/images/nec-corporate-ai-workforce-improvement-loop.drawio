@@ -1,0 +1,88 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="nec-ai-workforce-loop" name="NEC AI Workforce Improvement Loop">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="週次サーベイから始まる改善ループ — AI が自分で直すものと、人に依頼するもの" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="140" y="20" width="840" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 1: AI employees -->
+        <mxCell id="s1" value="&lt;b&gt;AI社員（全員）&lt;/b&gt;&#xa;週次サーベイで業務上の課題と&#xa;改善提案を申告" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="60" y="240" width="200" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 2: AI manager -->
+        <mxCell id="s2" value="&lt;b&gt;AIマネージャー&lt;/b&gt;&#xa;サーベイスコアとフリーコメントを&#xa;とりまとめる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="330" y="240" width="200" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Step 3: AI board -->
+        <mxCell id="s3" value="&lt;b&gt;AIボード（CxO機能）&lt;/b&gt;&#xa;週次で審議・決議し、&#xa;対応先を切り分ける" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="600" y="240" width="200" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Branch A: self-heal -->
+        <mxCell id="branch-a" value="&lt;b&gt;AI組織内で対応できるもの&lt;/b&gt;&#xa;人の手を介さず自ら改善&#xa;（動作の見直し、オンボーディングに&#xa;必要な知識・ルールの獲得など）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f4e6;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="860" y="120" width="230" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Branch B: request to human -->
+        <mxCell id="branch-b" value="&lt;b&gt;人の対応が必要なもの&lt;/b&gt;&#xa;データ／権限／ナレッジ／&#xa;コンテキストの整備を&#xa;人へのリクエストとして提示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="860" y="350" width="230" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Human -->
+        <mxCell id="human" value="&lt;b&gt;人&lt;/b&gt;&#xa;AI が働きやすい環境を整備する&#xa;（役割がここへシフトする）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf6ec;strokeColor=#d79b00;fontSize=12;align=center;verticalAlign=middle;fontColor=#8a6100;" vertex="1" parent="1">
+          <mxGeometry x="330" y="480" width="470" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Note -->
+        <mxCell id="note" value="ここが従来の働き方に無かった向き。&#xa;AI から人へ&#xa;「改善要求」が上がってくる。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;fontColor=#b85450;fontStyle=2;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="70" y="110" width="230" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;strokeWidth=2;" edge="1" parent="1" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="s2" target="s3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3a" value="自律解決" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s3" target="branch-a">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3b" value="リクエスト" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=2;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s3" target="branch-b">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-a-back" value="改善を反映" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="branch-a" target="s1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="975" y="80"/>
+              <mxPoint x="25" y="80"/>
+              <mxPoint x="25" y="285"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-b-human" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=2;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="branch-b" target="human">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="975" y="520"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-human-back" value="データ・権限・ナレッジを渡す" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=2;dashed=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="human" target="s1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="520"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

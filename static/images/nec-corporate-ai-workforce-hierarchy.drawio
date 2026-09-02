@@ -1,0 +1,102 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="nec-ai-workforce-hierarchy" name="NEC Corporate AI Workforce Hierarchy">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1160" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="コーポレートAI・Workforce部門 — AI の4階層と、人が残した境界線" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- AI domain group -->
+        <mxCell id="ai-group" value="AI が担う領域（業務遂行・自己進化）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f7fa;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;fontColor=#3b5b8c;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=6 6;" vertex="1" parent="1">
+          <mxGeometry x="60" y="80" width="640" height="600" as="geometry"/>
+        </mxCell>
+
+        <!-- Tier 1 -->
+        <mxCell id="tier1" value="&lt;b&gt;① AI部門長&lt;/b&gt;&#xa;組織全体の稼働状況を把握・管理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="125" width="290" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="tier1-detail" value="「AI統合マネジメントコックピット」&#xa;日次稼働状況／リードタイム／AIコスト／&#xa;品質／リスクアラートをデジタルツイン上で可視化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8bfdd;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="410" y="125" width="250" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Tier 2 -->
+        <mxCell id="tier2" value="&lt;b&gt;② AIボード（CxO機能）&lt;/b&gt;&#xa;AI組織の状況を経営視点から評価" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="235" width="290" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="tier2-detail" value="週次の AI役員会&#xa;STEP1 意思表明 → STEP2 相互検討 →&#xa;STEP3 決議（合意形成と SKILL 修正）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a9cfa4;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="410" y="235" width="250" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Tier 3 -->
+        <mxCell id="tier3" value="&lt;b&gt;③ AIマネージャー&lt;/b&gt;&#xa;業務を品質・コスト等の観点から横断管理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="345" width="290" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="tier3-detail" value="成果物の品質確認／週次サーベイ／&#xa;AIトークン使用量のコスト管理／&#xa;業務ニーズに応じた AI社員の都度生成と役割任命" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dbc98a;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="410" y="345" width="250" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Tier 4 -->
+        <mxCell id="tier4" value="&lt;b&gt;④ AI社員&lt;/b&gt;&#xa;各タスクを遂行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="100" y="455" width="290" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="tier4-detail" value="例：AI社員「勘定 実（かんじょう みのる）」&#xa;経営データを分析し経営分析レポートを作成、&#xa;人の経営層が使う「経営コックピット」に組み込む" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e0aaa8;fontSize=10;align=left;spacingLeft=8;verticalAlign=middle;fontColor=#444444;" vertex="1" parent="1">
+          <mxGeometry x="410" y="455" width="250" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Onboarding -->
+        <mxCell id="onboarding" value="&lt;b&gt;オンボーディング&lt;/b&gt;（生成時に組み込む判断基準）&#xa;NEC「Code of Values」／NECグループのパーパス／行動規範・社内規定&#xa;＋ 各AIは不足スキルを自ら学習して継続的にアップデート" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=center;verticalAlign=middle;fontColor=#5c3b6e;" vertex="1" parent="1">
+          <mxGeometry x="100" y="570" width="560" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Human side -->
+        <mxCell id="human-group" value="人が担う領域" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf6ec;strokeColor=#d79b00;fontStyle=1;fontSize=13;fontColor=#8a6100;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="760" y="80" width="340" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="human-1" value="&lt;b&gt;最終的な評価・意思決定&lt;/b&gt;&#xa;AI が提示した分析結果や示唆をもとに&#xa;人の経営層が決める" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="790" y="130" width="280" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="human-2" value="&lt;b&gt;品質・ガバナンスの統制&lt;/b&gt;&#xa;活動の透明性とアウトプット品質を含む&#xa;最終的な監督・評価" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="790" y="230" width="280" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="human-3" value="&lt;b&gt;業務移管の範囲を決める&lt;/b&gt;&#xa;どの業務をこの部門へ集約・移管するか&#xa;（エージェントの分散乱立を抑制）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="790" y="330" width="280" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="human-4" value="&lt;b&gt;AI が働ける環境の整備&lt;/b&gt;&#xa;データ・権限・ナレッジ・コンテキスト&#xa;（AI 側からリクエストとして上がってくる）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=10;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="790" y="430" width="280" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="human-note" value="人員削減ではなく「増力」。&#xa;AI を人の代替ではなく能力の拡張として使い、&#xa;空いた時間を人はより高度な業務へ再配分する。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=10;align=left;spacingLeft=10;verticalAlign=middle;fontColor=#8a6100;fontStyle=2;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="790" y="545" width="280" height="75" as="geometry"/>
+        </mxCell>
+
+        <!-- Vertical arrows inside AI domain -->
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="tier1" target="tier2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="tier2" target="tier3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e34" value="生成・役割任命" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="tier3" target="tier4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4ob" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;strokeWidth=1.5;dashed=1;" edge="1" parent="1" source="tier4" target="onboarding">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- AI head reports to human -->
+        <mxCell id="e-report" value="必要に応じて報告" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=2.5;fontSize=11;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="tier1-detail" target="human-1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Human governance back into AI domain -->
+        <mxCell id="e-govern" value="統制" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=2.5;dashed=1;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="human-2" target="tier2-detail">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
