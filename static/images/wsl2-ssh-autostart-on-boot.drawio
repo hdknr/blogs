@@ -1,0 +1,91 @@
+<mxfile host="Electron" modified="2026-09-02T00:00:00.000Z" agent="draw.io" version="21.0.0">
+  <diagram name="WSL2 SSH Autostart" id="wsl2-ssh-autostart-on-boot">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 起点 -->
+        <mxCell id="10" value="Windows の起動 / ログオン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="597" y="40" width="460" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 分岐の矢印 -->
+        <mxCell id="11" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="10" target="20" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="12" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="10" target="60" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 左: 動く経路 -->
+        <mxCell id="20" value="タスクスケジューラ（動く設定）&#xa;トリガー: ログオン時&#xa;実行: ユーザーがログオンしているときのみ実行する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="160" width="480" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="21" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="20" target="30" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="30" value="ユーザーセッションで wsl.exe を実行&#xa;wsl -u root -- service ssh start" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="290" width="480" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="31" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="30" target="40" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="40" value="WSL2 インスタンスが起動し sshd が常駐する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="410" width="480" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="41" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="40" target="50" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="50" value="罠 2: 追跡対象のプロセスが無くなると&#xa;約 15 秒でインスタンスが STOPPED になる&#xa;（instanceIdleTimeout の既定値 15000 ミリ秒）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="520" width="480" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="51" value="対策" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=11;" edge="1" source="50" target="55" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="55" value="%UserProfile%\.wslconfig に&#xa;[general] instanceIdleTimeout=-1&#xa;[wsl2] vmIdleTimeout=-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="660" width="480" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="56" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="55" target="90" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 右: 詰まる経路 -->
+        <mxCell id="60" value="タスクスケジューラ（詰まる設定）&#xa;トリガー: スタートアップ時&#xa;実行: ユーザーがログオンしているかどうかにかかわらず実行する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="954" y="160" width="480" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="61" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="60" target="70" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="70" value="タスクはセッション 0 で実行される" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="954" y="290" width="480" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="71" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="70" target="80" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="80" value="罠 1: ストア版 WSL はセッション 0 から起動できない&#xa;（microsoft/WSL Issue 9231・2026 年 9 月時点で未解決）&#xa;sshd は上がらず、接続もできない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="954" y="410" width="480" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- 到達点 -->
+        <mxCell id="90" value="SSH クライアントから WSL2 の sshd へ接続できる&#xa;（NAT なら localhostForwarding 経由 / ミラーモードなら localhost:22）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="380" y="820" width="640" height="70" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
