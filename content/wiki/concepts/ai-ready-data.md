@@ -2,10 +2,11 @@
 title: "AI-ready データ設計"
 description: "LLM に算術をさせず、検索・集計条件の指定だけを任せるデータ公開の設計パターン"
 date: 2026-08-23
-lastmod: 2026-08-23
+lastmod: 2026-09-02
 aliases: ["AI-ready", "LLM に計算させない設計", "セマンティックレイヤー"]
 related_posts:
   - "/posts/2026/08/digital-agency-mcp-ai-ready-data/"
+  - "/posts/2026/09/nec-corporate-ai-workforce/"
 tags: ["mcp", "AI-ready", "Parquet", "セマンティックレイヤー", "AIエージェント"]
 ---
 
@@ -45,7 +46,9 @@ Parquet を採用することで、集計クエリのスキャン量を抑える
 - [MCP](/blogs/wiki/concepts/mcp/) — 実装のプロトコル
 - [列指向ストレージ](/blogs/wiki/concepts/columnar-storage/) — Parquet の背景
 - [RAG](/blogs/wiki/concepts/rag/) — 対比される取り込み方式
+- [AI 自律型組織](/blogs/wiki/concepts/ai-autonomous-organization/) — AI-ready データの整備を人側の役割として制度化した事例
 
 ## ソース記事
 
 - [デジタル庁の行政手続 MCP サーバーに学ぶ「LLM に計算させない」データ設計](/blogs/posts/2026/08/digital-agency-mcp-ai-ready-data/) — 2026-08-16
+- [NEC「部署が丸ごとAI」の中身 — コーポレートAI・Workforce部門の4階層と、人が手放さなかった仕事](/blogs/posts/2026/09/nec-corporate-ai-workforce/) — 2026-09-02

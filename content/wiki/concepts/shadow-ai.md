@@ -2,11 +2,12 @@
 title: "シャドーAI"
 description: "IT 部門の承認を経ずに従業員が業務で使用する未承認の AI ツール・サービス"
 date: 2026-04-23
-lastmod: 2026-04-23
+lastmod: 2026-09-02
 aliases: ["Shadow AI", "シャドーIT AI版"]
 related_posts:
   - "/posts/2026/04/shadow-ai-risks/"
   - "/posts/2026/04/vibe-coding-security-risk/"
+  - "/posts/2026/09/nec-corporate-ai-workforce/"
 tags: ["セキュリティ", "データガバナンス", "企業リスク", "AI"]
 ---
 
@@ -38,8 +39,10 @@ tags: ["セキュリティ", "データガバナンス", "企業リスク", "AI"
 
 - [バイブコーディング](/blogs/wiki/concepts/vibe-coding/)
 - [Infisical](/blogs/wiki/tools/infisical/)
+- [AI 自律型組織](/blogs/wiki/concepts/ai-autonomous-organization/) — エージェントの分散乱立を1部署に集約して抑制した事例
 
 ## ソース記事
 
 - [シャドーAIがもたらす見えないリスク](/blogs/posts/2026/04/shadow-ai-risks/) — 2026-04-15
 - [バイブコーディングの怖い話](/blogs/posts/2026/04/vibe-coding-security-risk/) — 2026-04-15
+- [NEC「部署が丸ごとAI」の中身 — コーポレートAI・Workforce部門の4階層と、人が手放さなかった仕事](/blogs/posts/2026/09/nec-corporate-ai-workforce/) — 2026-09-02
