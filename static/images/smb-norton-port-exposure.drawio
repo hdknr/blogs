@@ -1,0 +1,111 @@
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram id="port-exposure" name="port-exposure">
+    <mxGraphModel dx="1400" dy="800" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="580" math="0" shadow="0">
+      <root>
+        <mxCell id="root0" />
+        <mxCell id="layer1" parent="root0" />
+
+        <mxCell id="title" value="分類を「パブリック→プライベート」にした瞬間、開いたのは 445 だけではなかった" style="text;html=1;align=left;verticalAlign=middle;fontSize=21;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="40" y="22" width="1180" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="セキュリティ製品のネットワーク分類は、ポート単位のスイッチではない。1 つのアプリを通すために緩めると、そのマシンで待ち受けている全部が同時に露出する。" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontColor=#1A1A1A;fontColor=#5A5A5A;" vertex="1" parent="layer1">
+          <mxGeometry x="40" y="58" width="1210" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="hName" value="このマシンが待ち受けているポート" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=13;fontStyle=1;verticalAlign=middle;align=center;fillColor=#F5F5F5;strokeColor=#8A8A8A;fontColor=#4A4A4A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="108" width="240" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="hA" value="① 分類 = パブリック&#xa;（当初）" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=13;fontStyle=1;verticalAlign=middle;align=center;fillColor=#E8EEF7;strokeColor=#4A6FA5;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="310" y="108" width="300" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="hB" value="② 分類 = プライベート&#xa;（共有を通した直後）" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=13;fontStyle=1;verticalAlign=middle;align=center;fillColor=#FDE7E7;strokeColor=#C62828;fontColor=#B71C1C;" vertex="1" parent="layer1">
+          <mxGeometry x="630" y="108" width="300" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="hC" value="③ プライベート&#xa;＋ トラフィックルールで遮断" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fontSize=13;fontStyle=1;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;" vertex="1" parent="layer1">
+          <mxGeometry x="950" y="108" width="300" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="n0" value="445 (SMB)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5D5D5;strokeWidth=1;fontSize=13;align=left;spacingLeft=12;verticalAlign=middle;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="192" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a0" value="拒否" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#FFF4E5;strokeColor=#E8A33D;fontColor=#8A5A00;" vertex="1" parent="layer1">
+          <mxGeometry x="310" y="192" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b0" value="OPEN  ← 意図どおり" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="630" y="192" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c0" value="OPEN  ← 維持" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="950" y="192" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="139 (NetBIOS)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5D5D5;strokeWidth=1;fontSize=13;align=left;spacingLeft=12;verticalAlign=middle;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="238" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="拒否" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#FFF4E5;strokeColor=#E8A33D;fontColor=#8A5A00;" vertex="1" parent="layer1">
+          <mxGeometry x="310" y="238" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" value="OPEN" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="630" y="238" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" value="OPEN" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="950" y="238" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="18080 (ローカル API)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5D5D5;strokeWidth=1;fontSize=13;align=left;spacingLeft=12;verticalAlign=middle;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="284" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="拒否 ← 結果的に保護" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="310" y="284" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" value="OPEN  ⚠ 意図せず" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#FDE7E7;strokeColor=#C62828;fontColor=#B71C1C;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="630" y="284" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="CLOSED  ← 塞いだ" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="950" y="284" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="18081 (同 検証用)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5D5D5;strokeWidth=1;fontSize=13;align=left;spacingLeft=12;verticalAlign=middle;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="330" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="拒否 ← 結果的に保護" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="310" y="330" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b3" value="OPEN  ⚠ 意図せず" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#FDE7E7;strokeColor=#C62828;fontColor=#B71C1C;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="630" y="330" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" value="CLOSED  ← 塞いだ" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#E6F4EA;strokeColor=#2E7D32;fontColor=#1B5E20;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="950" y="330" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="22 (WSL の sshd)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5D5D5;strokeWidth=1;fontSize=13;align=left;spacingLeft=12;verticalAlign=middle;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="376" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="拒否" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#EDEDED;strokeColor=#BDBDBD;fontColor=#6A6A6A;" vertex="1" parent="layer1">
+          <mxGeometry x="310" y="376" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b4" value="CLOSED" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#EDEDED;strokeColor=#BDBDBD;fontColor=#6A6A6A;" vertex="1" parent="layer1">
+          <mxGeometry x="630" y="376" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" value="CLOSED" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#EDEDED;strokeColor=#BDBDBD;fontColor=#6A6A6A;" vertex="1" parent="layer1">
+          <mxGeometry x="950" y="376" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="3389 (RDP)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D5D5D5;strokeWidth=1;fontSize=13;align=left;spacingLeft=12;verticalAlign=middle;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="422" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="拒否" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#EDEDED;strokeColor=#BDBDBD;fontColor=#6A6A6A;" vertex="1" parent="layer1">
+          <mxGeometry x="310" y="422" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="b5" value="CLOSED" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#EDEDED;strokeColor=#BDBDBD;fontColor=#6A6A6A;" vertex="1" parent="layer1">
+          <mxGeometry x="630" y="422" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="c5" value="CLOSED" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fontSize=13;verticalAlign=middle;align=center;fillColor=#EDEDED;strokeColor=#BDBDBD;fontColor=#6A6A6A;" vertex="1" parent="layer1">
+          <mxGeometry x="950" y="422" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="foot1" value="⚠ 「何を開けたか」ではなく「何が開いたか」を、LAN の別マシンから測って確認する。設定画面には書いていない。" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontColor=#1A1A1A;fontColor=#B71C1C;fontStyle=1;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="470" width="1200" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="foot2" value="② の 22 / 3389 が CLOSED なのは分類のおかげではなく、そもそも LAN から到達できる待ち受けが無かっただけ。分類に守られていたのは 18080 / 18081 のほうだった。" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontColor=#1A1A1A;fontColor=#5A5A5A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="496" width="1200" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="foot3" value="③ の遮断は Windows の New-NetFirewallRule では効かず、ノートンのトラフィックルール側に入れて初めて CLOSED になった。" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontColor=#1A1A1A;fontColor=#5A5A5A;" vertex="1" parent="layer1">
+          <mxGeometry x="50" y="522" width="1200" height="24" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
