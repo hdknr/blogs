@@ -1,0 +1,100 @@
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram id="wfp-layers" name="WFP-drop-layers">
+    <mxGraphModel dx="1400" dy="800" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="740" math="0" shadow="0">
+      <root>
+        <mxCell id="root0" />
+        <mxCell id="layer1" parent="root0" />
+
+        <mxCell id="titleTop" value="Mac → Windows の 445 番は「どの層で」死んでいたか" style="text;html=1;align=left;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="40" y="24" width="900" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="macBox" value="MacBook&#xa;10.0.0.26&#xa;&#xa;smb://10.0.0.8/共有名" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EEF7;strokeColor=#4A6FA5;strokeWidth=2;fontSize=14;fontColor=#1A1A1A;verticalAlign=middle;" vertex="1" parent="layer1">
+          <mxGeometry x="40" y="118" width="200" height="118" as="geometry" />
+        </mxCell>
+
+        <mxCell id="synArrow" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2E7D32;strokeWidth=3;endArrow=blockThin;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="layer1" source="macBox" target="nicBox">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="synLabel" value="TCP SYN → 445" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;fontColor=#2E7D32;" vertex="1" parent="layer1">
+          <mxGeometry x="243" y="122" width="112" height="22" as="geometry" />
+        </mxCell>
+
+        <mxCell id="hostBox" value="Windows 11 ホスト（10.0.0.8）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#8A8A8A;strokeWidth=2;dashed=1;verticalAlign=top;align=left;spacingLeft=14;spacingTop=10;fontSize=15;fontStyle=1;fontColor=#4A4A4A;" vertex="1" parent="layer1">
+          <mxGeometry x="360" y="80" width="600" height="600" as="geometry" />
+        </mxCell>
+
+        <mxCell id="nicBox" value="① NIC / IP 層（Wi-Fi・Ethernet）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E6F4EA;strokeColor=#2E7D32;strokeWidth=2;fontSize=14;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="400" y="132" width="520" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nicOk" value="✓ 到達している" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#2E7D32;" vertex="1" parent="layer1">
+          <mxGeometry x="985" y="138" width="200" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="nicEvidence" value="証拠: pktmon で SYN を観測" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontColor=#5A5A5A;" vertex="1" parent="layer1">
+          <mxGeometry x="985" y="162" width="300" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2E7D32;strokeWidth=3;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="layer1" source="nicBox" target="calloutBox">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="calloutBox" value="② WFP: FWPM_LAYER_INBOUND_IPPACKET_V4&#xa;（NLOK の callout が挿さっている）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF4E5;strokeColor=#E8A33D;strokeWidth=2;fontSize=14;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="400" y="242" width="520" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="calloutEvidence" value="証拠: netsh wfp show state&#xa;→ &quot;NLOK ... callout&quot;" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontColor=#5A5A5A;" vertex="1" parent="layer1">
+          <mxGeometry x="985" y="255" width="300" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#E8A33D;strokeWidth=3;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="layer1" source="calloutBox" target="aleBox">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="aleBox" value="③ WFP: ALE_AUTH_RECV_ACCEPT_V4（layerId 44）&#xa;受信の「接続受け入れ検査」" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FDE7E7;strokeColor=#C62828;strokeWidth=3;fontSize=14;fontStyle=1;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="400" y="358" width="520" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="dropMark" value="✗ ここで DROP" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#C62828;" vertex="1" parent="layer1">
+          <mxGeometry x="985" y="360" width="220" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="dropCulprit" value="犯人: ノートン 360 スマートファイアウォール&#xa;&quot;Windows Networking In Public&quot; rule&#xa;filterId 651964 / result=Deny" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontColor=#C62828;" vertex="1" parent="layer1">
+          <mxGeometry x="985" y="386" width="315" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dropNote" value="pktmon が言ったこと&#xa;ドロップ: 方向 Rx&#xa;INET: accept inspection&#xa;DropLocation 0xE0004503" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#C62828;strokeWidth=2;dashed=1;align=left;verticalAlign=middle;spacingLeft=12;fontSize=12;fontColor=#C62828;" vertex="1" parent="layer1">
+          <mxGeometry x="55" y="352" width="230" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="dropNoteArrow" style="edgeStyle=none;rounded=0;html=1;strokeColor=#C62828;strokeWidth=2;endArrow=blockThin;endFill=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="layer1" source="dropNote" target="aleBox">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#BDBDBD;strokeWidth=3;endArrow=blockThin;endFill=1;dashed=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="layer1" source="aleBox" target="wfBox">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow34Label" value="ここより下へは来ない" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#8A8A8A;" vertex="1" parent="layer1">
+          <mxGeometry x="530" y="446" width="260" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="wfBox" value="④ Windows Defender ファイアウォール&#xa;New-NetFirewallRule の許可／拒否規則" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#BDBDBD;strokeWidth=2;fontSize=14;fontColor=#8A8A8A;" vertex="1" parent="layer1">
+          <mxGeometry x="400" y="492" width="520" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="wfEvidence" value="経路にいない証拠:&#xa;LogAllowed を有効にしても&#xa;pfirewall.log が 1 行も増えない" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontColor=#8A8A8A;" vertex="1" parent="layer1">
+          <mxGeometry x="985" y="499" width="315" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#BDBDBD;strokeWidth=3;endArrow=blockThin;endFill=1;dashed=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="layer1" source="wfBox" target="smbBox">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="smbBox" value="⑤ LanmanServer  0.0.0.0:445&#xa;正常に待ち受けている（が呼ばれない）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#BDBDBD;strokeWidth=2;fontSize=14;fontColor=#8A8A8A;" vertex="1" parent="layer1">
+          <mxGeometry x="400" y="592" width="520" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="smbEvidence" value="netstat -ano | findstr &quot;:445&quot; で待ち受け確認&#xa;ホスト自身からは接続できる" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontColor=#8A8A8A;" vertex="1" parent="layer1">
+          <mxGeometry x="985" y="605" width="315" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="noteBox" value="切り分けの要点&#xa;&#xa;Windows 側の規則は足しても引いても&#xa;効かない。このホストの関門は ③ の&#xa;ノートンで、④ は許可も拒否も素通り。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#C9A227;strokeWidth=2;align=left;verticalAlign=middle;spacingLeft=14;fontSize=12;fontColor=#1A1A1A;" vertex="1" parent="layer1">
+          <mxGeometry x="40" y="520" width="290" height="138" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
