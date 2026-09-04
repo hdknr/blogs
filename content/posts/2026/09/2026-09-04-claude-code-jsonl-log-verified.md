@@ -19,6 +19,7 @@ Claude Code はセッションの全履歴を JSONL で書き出している。�
 ### この記事でわかること
 
 - 会話ログの保存先は `~/.claude/projects/` で、`~/.claude/sessions/` は別物（しかし実在する）
+- JSONL が規格化しているのは「1 行 1 JSON」という封筒だけで、行の中のスキーマは規格外
 - 全行に存在するトップレベルキーは `type` ただ 1 つ
 - `type` は 17 種類あり、45% は会話ではないメタイベント
 - `type: "user"` の 92.5% は人間ではなくツール実行結果
@@ -89,6 +90,34 @@ find ~/.claude/sessions -name 'transcript.jsonl' | wc -l
 これは当該記事の他の内容を否定するものではない。バージョンによって置き場所が変わった可能性も十分ある。要は**パスは自分の環境で確認してから使う**、というだけの話だ。
 
 ## 2. 全行にあるトップレベルキーは `type` だけ
+
+### 前置き: JSONL が規格化しているのは「封筒」だけ
+
+キーの話に入る前に、そもそも何が規格として決まっているのかを押さえておきたい。ここを誤解すると「JSONL の仕様書を読めばスキーマが分かるはず」という期待が生まれる。
+
+JSONL は**標準化団体の規格ではない**。[jsonlines.org](https://jsonlines.org/) にドキュメントがあり、要件は 3 つだけと明記されている。
+
+1. UTF-8 エンコーディング（BOM は付けない）
+2. 各行が valid な JSON value（`null` は有効な行だが、空行は無効）
+3. 行終端は `\n`（`\r\n` も、JSON パース時に前後の空白が無視されるので許容）
+
+同ページは MIME タイプについて「`application/jsonl` かもしれないが**まだ標準化されていない**。RFC を書く手伝いをしてくれるならありがたい」と書いている。つまり**仕様書の側が自ら「RFC は無い」と言っている**状態だ。各行の中身は [RFC 8259](https://datatracker.ietf.org/doc/html/rfc8259)（JSON 本体）に従うので、「行の中身は IETF 正式規格、行で区切る部分はコミュニティ規約」という二層構造になっている。
+
+紛らわしい隣接フォーマットが 2 つあるので、区別しておく。
+
+| | 位置づけ | MIME | 拡張子 | 行区切り |
+| --- | --- | --- | --- | --- |
+| **JSON Lines** | jsonlines.org のコミュニティ仕様 | `application/jsonl`（未登録） | `.jsonl` | `\n`（`\r\n` 可） |
+| **NDJSON** | [ndjson-spec](https://github.com/ndjson/ndjson-spec) v1.0.0（2013 年作成、2014-10-19 から更新なし） | `application/x-ndjson`（未登録） | `.ndjson` | `\n`（`\r\n` 可） |
+| **JSON text sequences** | [RFC 7464](https://www.rfc-editor.org/info/rfc7464/)（IETF 正式 RFC） | `application/json-seq`（**IANA 登録済み**） | — | 各レコードの**前**に RS `0x1E` |
+
+RFC 7464 だけが正式規格だが、レコードの前に Record Separator (`0x1E`) を必ず置くため**JSONL とはバイト列として非互換**だ。Claude Code のログは RS を使っていないので、これは別物と考えてよい。
+
+NDJSON は JSON Lines と実質同じもので、jsonlines.org 自身が冒頭で「newline-delimited JSON とも呼ばれる」と別名として扱っている。ただし NDJSON 側の仕様書は RFC 2119 の MUST / SHOULD 語法で書かれていて、細部が一致しない。実務で効きうる差は**空行の扱い**だ。JSON Lines は「空行は無効」と言い切るのに対し、NDJSON は「パーサは空行を黙って無視してもよい（MAY）。ただしその挙動は文書化しなければならず、ユーザーが設定可能であるべき」としている。同じファイルを両者のパーサに通して結果が変わるとしたら、まずここを疑うことになる。
+
+そして肝心なのは、**どの仕様も「封筒」しか決めていない**という点だ。1 行に JSON が 1 個入っていること以外、行の中の構造は完全にアプリケーション定義である。だから JSONL の仕様書をいくら読んでも、Claude Code の `type` に 17 種類あることも、`role: "user"` の 92.5% が `tool_result` であることも書いてあるはずがない。参照した 4 本の記述が食い違っていたのは、**参照すべき共通の権威がそもそも存在しない**ためだ。以下で数えているのは、規格の隙間にあたる部分ということになる。
+
+### 実測: 100% なのは `type` のみ
 
 フォーマット解説の中には「すべてのエントリは少なくとも `type` / `uuid` / `parentUuid` / `timestamp` / `sessionId` / `cwd` / `gitBranch` / `version` を持つ」と書いているものがある（前掲の claude-devtools）。実測はこうだった。
 
@@ -326,3 +355,10 @@ JSONL ログを触るなら、解説記事のスキーマ記述を写経する�
 - [会話ログ（JSONL）を整形するスキルを作った（zenn.dev / dazoyee）](https://zenn.dev/dazoyee/articles/3423ce926d33e4) — §5 の Codex 形式パーサの出典
 - [Claude Code セッションログを一括 MD 化（CayTech Lab）](https://caymezon.com/claude-code-session-exporter/) — §1 の保存先と §4 のフィルタ実装の出典
 - [Claude Code JSONL transcript format explained（claude-devtools）](https://claude-dev.tools/docs/jsonl-format) — §1 の正しい保存先と §2 のキー一覧の出典
+
+フォーマット自体の一次情報:
+
+- [JSON Lines](https://jsonlines.org/) — 3 要件と「MIME は未標準化」の記述
+- [ndjson-spec v1.0.0](https://github.com/ndjson/ndjson-spec) — NDJSON 側の仕様（空行の扱いの差異）
+- [RFC 8259: The JavaScript Object Notation (JSON) Data Interchange Format](https://datatracker.ietf.org/doc/html/rfc8259) — 各行の中身が従う規格
+- [RFC 7464: JavaScript Object Notation (JSON) Text Sequences](https://www.rfc-editor.org/info/rfc7464/) / [IANA `application/json-seq`](https://www.iana.org/assignments/media-types/application/json-seq) — RS 前置の別フォーマット
