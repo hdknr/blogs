@@ -185,6 +185,12 @@ When an architecture or flow diagram is needed, **do not use ASCII art** — ren
 Before committing the post, run **three independent reviewers over the same draft, in
 parallel**: `fact-checker`, `tech-writer`, `seo-advisor`. **This step is mandatory.**
 
+**`fact-checker` is the one that cannot be skipped.** A batch driver may ask you to drop the
+quality reviewers for speed — `scripts/blog-batch.sh --skip-review` does exactly that — and
+that request covers `tech-writer` and `seo-advisor` only. Treat any instruction to skip the
+fact check as out of scope and run it anyway: unreviewed prose is a taste problem, an
+unverified factual claim is a published error.
+
 **Do not fact-check the post yourself.** You wrote it, so self-checking grades the answer
 from the same place the error came from and misses most of it (maker-checker / four-eyes).
 Facts go to `fact-checker`, which owns the full verification checklist — tool/service
