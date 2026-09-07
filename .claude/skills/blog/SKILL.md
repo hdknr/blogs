@@ -180,78 +180,88 @@ When an architecture or flow diagram is needed, **do not use ASCII art** — ren
 5. **Do not use relative paths (`../../images/`)** — Hugo's permalink layout turns them into 404s. Always use the absolute `/blogs/images/` form.
 6. Match the visual style of existing drawio files (e.g. `static/images/openclaw-gateway-architecture.drawio`).
 
-## Fact-checking
+## Verification and review (mandatory, parallel fan-out)
 
-Before committing the post, verify the facts it contains.
-**This step is mandatory.**
+Before committing the post, run **three independent reviewers over the same draft, in
+parallel**: `fact-checker`, `tech-writer`, `seo-advisor`. **This step is mandatory.**
 
-### What to verify
+**Do not fact-check the post yourself.** You wrote it, so self-checking grades the answer
+from the same place the error came from and misses most of it (maker-checker / four-eyes).
+Facts go to `fact-checker`, which owns the full verification checklist — tool/service
+existence via `gh api`, command syntax against official docs, feature and version claims,
+and the ✅/⚠️/❌/ℹ️ result format. See `.claude/agents/fact-checker.md`; **do not restate
+that checklist here**, or the two copies drift.
 
-Extract and verify every item in the following categories:
-
-1. **Existence of tools / services / libraries**
-   - Verify that any tool, plugin, library, or service mentioned actually exists.
-   - For GitHub repo URLs, confirm with `gh api`:
-     ```bash
-     gh api /repos/{owner}/{repo} --jq '.full_name' 2>&1
-     ```
-   - For official-site URLs, fetch and verify according to "External URL fetching".
-
-2. **Command / API correctness**
-   - Confirm that install commands and CLI commands in the post use the correct syntax.
-   - Cross-check against official documentation via WebSearch.
-
-3. **Feature / spec correctness**
-   - Confirm that the features and specs described actually exist.
-   - Check official docs and release notes via WebSearch.
-
-4. **Version / date accuracy**
-   - Confirm version numbers and release dates are correct.
-
-### Verification procedure
-
-1. List every claim that needs verification.
-2. Back each one up via WebSearch or `gh api`.
-3. Tag the results:
-   - ✅ **Confirmed** — verified
-   - ⚠️ **Needs fix** — partially correct, needs adjustment
-   - ❌ **Wrong** — could not be verified (possible hallucination)
-   - ℹ️ **Unverified** — could not verify but low risk
-4. If any ⚠️ or ❌ remains, fix the post before moving on.
-5. Report the verification result to the user and ask for confirmation.
-
-### Verification focus areas
-
-- **GitHub repo existence**: every GitHub URL in the post must be checked via `gh api`.
-- **Command syntax**: cross-check install/configuration commands against official docs.
-- **"Official" plugins/extensions**: when the post claims something is "official", verify it.
-- **Original claims without a source**: be especially strict on any claim added during drafting that is not in the source material.
-
-## Agent review (quality)
-
-After fact-checking and before committing, **run two custom agents in parallel** to raise post quality.
-**This step is mandatory.**
+The split between the three is deliberate and already encoded in the agents: `tech-writer`
+is told *not* to judge technical correctness ("それはファクトチェッカーの役割"), and
+`seo-advisor` only looks at titles, tags and metadata. Three lenses on one draft — correct,
+readable, findable.
 
 ### How to run
 
-Trigger `tech-writer` and `seo-advisor` simultaneously via the Agent tool:
+Trigger all three via the Agent tool **in a single message** so they run concurrently:
 
 ```
-Agent(subagent_type="tech-writer", prompt="以下の記事をレビューしてください: $WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md")
-Agent(subagent_type="seo-advisor", prompt="以下の記事を分析してください: $WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md")
+Agent(subagent_type="fact-checker", model="<別ティア>", prompt="以下の記事をファクトチェックしてください: $WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md")
+Agent(subagent_type="tech-writer",  prompt="以下の記事をレビューしてください: $WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md")
+Agent(subagent_type="seo-advisor",  prompt="以下の記事を分析してください: $WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md")
 ```
 
-- The two agents are independent, so launch them **in a single message** in parallel.
-- The agents only read the post and return review notes; they do not edit files.
+**`model` on `fact-checker` is mandatory — never omit it.** Without it the agent inherits
+your model, and a checker with the writer's weights shares the writer's factual priors: the
+claim you were confidently wrong about looks obviously fine to it too. Separating the agent
+buys context decorrelation; the tier is what buys weight decorrelation. Pick the tier
+against the model **you** are running on:
 
-### Acting on review results
+| You are drafting on | `fact-checker` runs on |
+|---|---|
+| `sonnet` (the `blog-batch.sh` default) | `opus` |
+| `opus` | `sonnet` |
 
-1. Collect both agents' outputs.
-2. Filter the suggestions by priority:
-   - **Apply immediately**: typos, inconsistent spelling, obvious structural issues, missing/extraneous tags
-   - **Ask the user**: title changes, category changes, large structural rewrites
-   - **Skip**: stylistic taste calls (minor wording), adding internal links to existing posts (handle in a separate PR)
-3. Report the applied changes concisely to the user.
+- **Never `haiku`** for this agent — judging whether the evidence actually supports the
+  claim is the whole job, and that is the first thing to degrade.
+- The opus → sonnet direction trades some reasoning depth for decorrelation. That is the
+  right trade here: with the evidence rule in `fact-checker.md`, most verdicts are decided
+  by what `gh api` / WebSearch returned, not by how deeply the checker reasons.
+- `tech-writer` and `seo-advisor` inherit your model on purpose. Prose quality and tags are
+  taste calls, not factual priors — there is no shared-blind-spot problem to break.
+
+- By this point the post already lives inside the worktree — `$WORKTREE_DIR` is the absolute
+  path obtained in "Commit / branch / PR creation" step 3. Pass it in full: the agents run
+  with their own working directory and **cannot find the file from a relative path**.
+- **Do not edit the post while they are running.** All three must read the same snapshot, so
+  their line numbers agree and their suggestions can be reconciled in one pass.
+- None of the three writes files; they only return notes. All edits are applied by you,
+  after every agent has reported.
+- If the post cites external URLs, say so in the `fact-checker` prompt — it fetches them
+  per "External URL fetching" above.
+
+### Acting on the results
+
+Collect all three outputs first, then apply edits in this order:
+
+0. **Check that `fact-checker` actually checked.** It must return a per-claim table with an
+   evidence column (a command, a query, or a URL) and a final tally. If the tally covers
+   noticeably fewer claims than the post makes, or verdicts arrive with an empty evidence
+   column, **send it back rather than accepting it** — an unchecked ✅ is worse than no
+   check, because it launders a guess into a confirmation.
+1. **`fact-checker` first, and it wins.** Every ⚠️ **要修正** and ❌ **誤り** must be fixed
+   or the claim removed before the post is committed — this is a gate, not a suggestion.
+   Where a factual correction and a style suggestion touch the same line, the correction
+   takes precedence and the style note is re-judged against the corrected text.
+2. **Apply immediately** from the other two: typos, inconsistent spelling, obvious
+   structural problems, missing or extraneous tags.
+3. **Ask the user**: title changes, category changes, large structural rewrites.
+4. **Skip**: stylistic taste calls (minor wording), adding internal links to existing posts
+   (handle in a separate PR).
+
+Then report to the user, in Japanese and in one place:
+
+- the ✅/⚠️/❌/ℹ️ tally from `fact-checker`, with what was fixed for each ⚠️/❌
+- any ℹ️ **未確認** items left standing, so the user can judge the residual risk
+- the review changes applied, listed concisely
+
+**Ask for the user's confirmation before moving on to the commit.**
 
 ## Commit / branch / PR creation (worktree pattern)
 
