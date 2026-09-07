@@ -114,7 +114,7 @@ fi
 # --- ブログ化処理 ---
 SKIP_REVIEW_PROMPT=""
 if [[ "$SKIP_REVIEW" == "true" ]]; then
-  SKIP_REVIEW_PROMPT="ファクトチェックとエージェントレビュー（tech-writer, seo-advisor）は省略してください。"
+  SKIP_REVIEW_PROMPT="SKILL.md の 'Verification and review' ステップ（fact-checker, tech-writer, seo-advisor の並列起動）は省略してください。"
 fi
 
 # バッチ実行中は Wiki auto-ingest を必ずスキップする。

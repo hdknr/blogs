@@ -1,0 +1,137 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="fact-checker-topology" name="Fact-checker Verification Topology">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1220" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="maintitle" value="検証トポロジーの変更 — 自己採点から 3 レンズの扇状展開へ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="310" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="beforegroup" value="Before" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="500" height="690" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="writerA" value="執筆エージェント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="170" y="115" width="220" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="draftA" value="記事ドラフト" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="170" y="200" width="220" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="selfcheck" value="自分でファクトチェック&#xa;（記事を書いた本人が採点）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="150" y="290" width="260" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="selfnote" value="書き手と盲点を共有しているので、誤りの大半をそのまま通す" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="70" y="355" width="420" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fanA" value="幅 2 の扇状展開" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="180" y="392" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="twA" value="tech-writer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="420" width="180" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="seoA" value="seo-advisor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="420" width="180" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="orphan" value="fact-checker.md&#xa;定義ファイルは存在する。どのスキルからも呼ばれていない（呼び出し 0 件）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;fontColor=#666666;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="560" width="380" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="orphanlabel" value="孤立ノード" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#999999;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="90" y="535" width="380" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="eA1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="writerA" target="draftA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eA2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;" edge="1" parent="1" source="draftA" target="selfcheck">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eA3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="selfcheck" target="twA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eA4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="selfcheck" target="seoA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="aftergroup" value="After" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="570" y="70" width="620" height="690" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="draftB" value="記事ドラフト（スナップショット）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="115" width="240" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fanB" value="1 メッセージで 3 体を並列起動（幅 3 の扇状展開）" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="610" y="185" width="540" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fcB" value="fact-checker&#xa;別モデルティア&#xa;主張ごとに証拠必須" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="220" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="twB" value="tech-writer&#xa;構成・読みやすさ&#xa;（親モデルを継承）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="795" y="220" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="seoB" value="seo-advisor&#xa;タイトル・タグ&#xa;（親モデルを継承）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="980" y="220" width="170" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="tiernote" value="重みの非相関化" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#82b366;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="610" y="303" width="170" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="barrier" value="バリア — 3 体の報告が揃うまで記事を編集しない（全員が同一スナップショットを読む）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="610" y="345" width="540" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gate" value="ゲート 0 — 証拠カラムが空、または検証件数が主張数に足りない報告は差し戻す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="430" width="480" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fix" value="ゲート 1 — ⚠️ 要修正 / ❌ 誤り を全件修正（事実修正が文体提案に優先）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="525" width="480" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="commit" value="コミット → draft PR" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="625" width="240" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="eB1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="draftB" target="fcB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eB2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="draftB" target="twB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eB3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="draftB" target="seoB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eB4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="fcB" target="barrier">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eB5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="twB" target="barrier">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eB6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="seoB" target="barrier">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eB7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d79b00;" edge="1" parent="1" source="barrier" target="gate">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eB8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d79b00;" edge="1" parent="1" source="gate" target="fix">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eB9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="fix" target="commit">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
