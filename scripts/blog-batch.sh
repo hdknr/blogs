@@ -7,7 +7,8 @@
 # Options:
 #   --dry-run             ツイート内容を一覧表示するのみ（ブログ作成しない）
 #   --limit N             処理件数の上限（デフォルト: 全件）
-#   --skip-review         ファクトチェック・エージェントレビューを省略（高速化）
+#   --skip-review         品質レビュー（tech-writer, seo-advisor）を省略（高速化）
+#                         ファクトチェックは省略しない。fact-checker は常に実行される
 #   --model MODEL         使用モデル（デフォルト: sonnet）
 #   --interval SECS       処理間のインターバル秒数（デフォルト: 5）
 #   --overnight           夜間バッチモード（nohup 相当 + インターバル60秒 + PRサマリー出力）
@@ -22,7 +23,7 @@
 # Examples:
 #   ./scripts/blog-batch.sh 1 --dry-run                            # 未ブログ化一覧を確認
 #   ./scripts/blog-batch.sh 1 --limit 3                            # 3件だけ処理（wiki skip）
-#   ./scripts/blog-batch.sh 1 --skip-review --limit 5              # レビュー省略で5件処理
+#   ./scripts/blog-batch.sh 1 --skip-review --limit 5              # 品質レビュー省略で5件処理
 #   ./scripts/blog-batch.sh 1 --overnight                          # 全件を夜間バッチで処理
 #   ./scripts/blog-batch.sh 1 --overnight --final-wiki-ingest      # 全件 + バッチ後に wiki ingest
 #   ./scripts/blog-batch.sh 1 --overnight --interval 120           # 2分間隔で夜間バッチ
@@ -60,7 +61,7 @@ if [[ "$OVERNIGHT" == "true" ]]; then
   if [[ "$INTERVAL" -eq 5 ]]; then
     INTERVAL=60  # デフォルトを60秒に
   fi
-  SKIP_REVIEW=true  # 夜間は自動でレビュー省略
+  SKIP_REVIEW=true  # 夜間は品質レビューのみ自動省略（ファクトチェックは実行）
 fi
 
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
@@ -114,7 +115,7 @@ fi
 # --- ブログ化処理 ---
 SKIP_REVIEW_PROMPT=""
 if [[ "$SKIP_REVIEW" == "true" ]]; then
-  SKIP_REVIEW_PROMPT="SKILL.md の 'Verification and review' ステップ（fact-checker, tech-writer, seo-advisor の並列起動）は省略してください。"
+  SKIP_REVIEW_PROMPT="SKILL.md の 'Verification and review' では fact-checker のみを起動し、tech-writer と seo-advisor は省略してください。fact-checker のモデルティア指定と、結果適用手順のゲート 0・ゲート 1（証拠カラムの確認と ⚠️/❌ の全件修正）は通常どおり適用してください。ファクトチェックはこのフラグでも省略されません。"
 fi
 
 # バッチ実行中は Wiki auto-ingest を必ずスキップする。
@@ -137,7 +138,7 @@ cat > "$REPORT_FILE" <<HEADER
 - **対象件数**: ${PROCESS_COUNT} / ${TOTAL}
 - **モデル**: ${MODEL}
 - **インターバル**: ${INTERVAL}秒
-- **レビュー省略**: ${SKIP_REVIEW}
+- **品質レビュー省略**: ${SKIP_REVIEW}（ファクトチェックは常に実行）
 
 ## 処理結果
 
