@@ -1,0 +1,102 @@
+<mxfile host="app.diagrams.net" version="24.7.17" type="device"><diagram name="2. MTU と MSS" id="page-mtu">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="t2" value="なぜ「小さい通信だけ通る」のか — MTU と MSS" style="text;html=1;fontSize=22;fontStyle=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="24" width="700" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="WireGuard は内側のパケットに 60 B を足す。回線の上限を超えた分だけが落ちるので、DNS や小さい応答は通り TLS だけが止まる。" style="text;html=1;fontSize=12;fontColor=#555555;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="56" width="1000" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ovh-l" value="&lt;b&gt;オーバーヘッド 60 B の内訳&lt;/b&gt;" style="text;html=1;fontSize=13;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="100" width="300" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="o1" value="外側 IPv4&lt;br&gt;&lt;b&gt;20&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8EEF4;strokeColor=#7A9CC0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="130" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="o2" value="UDP&lt;br&gt;&lt;b&gt;8&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8EEF4;strokeColor=#7A9CC0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="140" y="130" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="o3" value="WG ヘッダ&lt;br&gt;&lt;b&gt;16&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8EEF4;strokeColor=#7A9CC0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="230" y="130" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="o4" value="認証タグ&lt;br&gt;&lt;b&gt;16&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8EEF4;strokeColor=#7A9CC0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="130" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="o5" value="= &lt;b&gt;60 B&lt;/b&gt;" style="text;html=1;fontSize=14;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="460" y="130" width="100" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="limit" value="" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#B03A2E;dashed=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="880" y="230" as="sourcePoint" />
+            <mxPoint x="880" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="limit-l" value="&lt;font color=&quot;#B03A2E&quot;&gt;&lt;b&gt;回線の上限 1454 B&lt;/b&gt;&lt;br&gt;（PPPoE 等）&lt;/font&gt;" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;labelBackgroundColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="890" y="230" width="150" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r1-l" value="&lt;b&gt;当初 MTU 1420&lt;/b&gt;" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="280" width="140" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r1-p" value="内側パケット &lt;b&gt;1420 B&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FDECEA;strokeColor=#B03A2E;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="180" y="280" width="640" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r1-o" value="60" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8EEF4;strokeColor=#7A9CC0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="820" y="280" width="80" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r1-t" value="&lt;font color=&quot;#B03A2E&quot;&gt;&lt;b&gt;合計 1480 B ✕ 上限を 26 B 超える&lt;/b&gt;&lt;br&gt;大きいパケットだけが捨てられる&lt;/font&gt;" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="910" y="280" width="240" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r2-l" value="&lt;b&gt;対処 MTU 1280&lt;/b&gt;" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="350" width="140" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r2-p" value="内側パケット &lt;b&gt;1280 B&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF5EA;strokeColor=#2E8B57;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="180" y="350" width="560" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r2-o" value="60" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8EEF4;strokeColor=#7A9CC0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="740" y="350" width="80" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r2-t" value="&lt;font color=&quot;#2E8B57&quot;&gt;&lt;b&gt;合計 1340 B ○&lt;/b&gt;&lt;br&gt;1280 は IPv6 の最小 MTU&lt;/font&gt;" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="910" y="350" width="240" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r3-l" value="&lt;b&gt;ハブの MSS クランプ&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 10px&quot;&gt;端末の MTU が&lt;br&gt;大きくても効く&lt;/font&gt;" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="420" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r3-a" value="IP 20" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F0F0F0;strokeColor=#999999;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="420" width="60" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r3-b" value="TCP 20" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F0F0F0;strokeColor=#999999;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="240" y="420" width="60" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r3-c" value="TCP ペイロード = &lt;b&gt;MSS 1240 B&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FDF3E7;strokeColor=#D9822B;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="420" width="440" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r3-o" value="60" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8EEF4;strokeColor=#7A9CC0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="740" y="420" width="80" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="r3-t" value="&lt;font color=&quot;#D9822B&quot;&gt;&lt;b&gt;合計 1340 B ○&lt;/b&gt;&lt;br&gt;1240 + 20 + 20 = 内側 1280&lt;/font&gt;" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="910" y="420" width="240" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="meas" value="&lt;b&gt;利用者の回線での実測&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-family: monospace; font-size: 10px&quot;&gt;for s in 1372 1332 1292 1252 1212; do&lt;br&gt;&amp;nbsp; printf &quot;$s: &quot;&lt;br&gt;&amp;nbsp; ping -c1 -D -s $s 1.1.1.1 &amp;amp;&gt;/dev/null &amp;amp;&amp;amp; echo OK || echo NG&lt;br&gt;done&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-family: monospace; font-size: 11px&quot;&gt;1372: &lt;font color=&quot;#B03A2E&quot;&gt;NG&lt;/font&gt;   内側 1400 → 回線上 1460 B&lt;br&gt;1332: &lt;font color=&quot;#2E8B57&quot;&gt;OK&lt;/font&gt;   内側 1360 → 回線上 1420 B&lt;br&gt;1292: &lt;font color=&quot;#2E8B57&quot;&gt;OK&lt;/font&gt;  /  1252: &lt;font color=&quot;#2E8B57&quot;&gt;OK&lt;/font&gt;  /  1212: &lt;font color=&quot;#2E8B57&quot;&gt;OK&lt;/font&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;-D は DF ビットを立てる。これがないと経路上で分割され&lt;b&gt;測定にならない&lt;/b&gt;。&lt;br&gt;-s の値 + 28（ICMP 8 + IPv4 20）が内側のパケットサイズ。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F7F9FA;strokeColor=#C8D0D6;align=left;verticalAlign=top;spacingLeft=12;spacingTop=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="520" width="560" height="200" as="geometry" />
+        </mxCell>
+
+        <mxCell id="symp" value="&lt;b&gt;症状の見え方&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#2E8B57&quot;&gt;通る&lt;/font&gt;  ハンドシェイク / keepalive&lt;br&gt;&lt;font color=&quot;#2E8B57&quot;&gt;通る&lt;/font&gt;  DNS の問い合わせ（約 100 B）&lt;br&gt;&lt;font color=&quot;#2E8B57&quot;&gt;通る&lt;/font&gt;  小さい HTTP 応答（約 350 B）&lt;br&gt;&lt;font color=&quot;#B03A2E&quot;&gt;止まる&lt;/font&gt;  TLS 証明書のやり取り（数 KB）&lt;br&gt;&lt;br&gt;&lt;b&gt;結果「繋がっているのにどこにも行けない」&lt;/b&gt;ように見え、&lt;br&gt;DNS の問題と区別がつかない。&lt;br&gt;&lt;br&gt;&lt;b&gt;切り分け&lt;/b&gt;&lt;br&gt;名前が引けている（nslookup が答える）のにページが&lt;br&gt;開けないなら MTU。引けないなら DNS。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDF0;strokeColor=#D6C68A;align=left;verticalAlign=top;spacingLeft=12;spacingTop=10;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="610" y="520" width="540" height="200" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cav" value="&lt;b&gt;クランプの限界&lt;/b&gt;  --clamp-mss-to-pmtu は使えない（送出 IF = wg0 の MTU しか見ず、利用者の回線の細さは知りようがない）。TCP しか直らず QUIC / HTTP3 には効かない。" style="text;html=1;fontSize=10;fontColor=#B03A2E;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="730" width="1120" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
