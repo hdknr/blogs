@@ -1,0 +1,109 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="rokid-app-runtime" name="Rokid AIUI App Runtime">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="AIUI アプリが動く場所と、そこに「無い」もの" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="340" y="20" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Glasses -->
+        <mxCell id="glasses-group" value="Rokid スマートAIグラス (約49g)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="260" height="560" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="display" value="ディスプレイ&#xa;光導波路 + Micro-LED&#xa;グリーン単色 / 最大1500ニト" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="120" width="210" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="camera" value="カメラ&#xa;ソニー IMX681 / 1200万画素&#xa;109° 広角 F2.25" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="192" width="210" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="mic" value="マイク / スピーカー&#xa;音声起動・読み上げ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="264" width="210" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="touch" value="タッチパッド&#xa;タップ / スワイプ / ダブルタップ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="322" width="210" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="soc" value="Qualcomm AR1 + NXP RT600&#xa;デュアルチップ構成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="380" width="210" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="batt" value="バッテリー 210mAh&#xa;外すと自動で省電力モード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="438" width="210" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="batt-note" value="長時間の常時通信は現実的でない&#xa;＝ 設計上の一番きつい制約" style="text;html=1;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;fontColor=#b85450;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="65" y="490" width="210" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- AIUI runtime -->
+        <mxCell id="runtime" value="AIUI ランタイム (QuickJS)&#xa;&#xa;・.ink 単一ファイルコンポーネント&#xa;　&amp;lt;script def&amp;gt; / &amp;lt;script setup&amp;gt;&#xa;　&amp;lt;page&amp;gt; / &amp;lt;style&amp;gt;&#xa;・WeChat ミニプログラム互換&#xa;　view / text / ink:if / ink:for&#xa;・export default で定義&#xa;　(App() / Page() は使えない)&#xa;・fetch は Internet 権限が必要" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;verticalAlign=top;align=left;spacingLeft=12;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="120" width="260" height="210" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="missing" value="実機に「無い」もの&#xa;&#xa;✕ crypto / crypto.subtle&#xa;　→ HMAC-SHA256 を自前実装&#xa;✕ btoa&#xa;　→ Base64 も手書き&#xa;✕ speechSynthesis.cancel()&#xa;　→ 読み上げの途中停止は不可&#xa;△ fetch(url, undefined) で例外&#xa;　→ 引数1個で呼ぶ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;verticalAlign=top;align=left;spacingLeft=12;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="360" width="260" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="missing-note" value="ドキュメントに載っていても実機に無い&#xa;＝ 検証は必ず実機で" style="text;html=1;fontSize=10;fontStyle=2;align=center;verticalAlign=middle;fontColor=#b85450;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="360" y="568" width="260" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Phone -->
+        <mxCell id="phone" value="スマートフォン&#xa;アプリ「Hi Rokid」&#xa;&#xa;・Bluetooth で連携&#xa;・パッケージ (.aix) の配信&#xa;・OTA アップデート&#xa;・Android 10+ / iOS 16.0+" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;verticalAlign=top;align=left;spacingLeft=12;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="690" y="110" width="230" height="160" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="craft" value="ブラウザIDE「Craft」&#xa;js.rokid.com/craft&#xa;&#xa;・ローカル / GitHub からインポート&#xa;・InkView プレビュー&#xa;・「パッケージ化」で .aix 生成&#xa;　(開発用ケーブルは不要)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;verticalAlign=top;align=left;spacingLeft=12;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="690" y="330" width="230" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Cloud -->
+        <mxCell id="cloud-group" value="クラウド API (グラスから直接 fetch)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="955" y="110" width="215" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="switchbot" value="SwitchBot API v1.1&#xa;HMAC-SHA256 署名" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="980" y="155" width="165" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="openmeteo" value="Open-Meteo&#xa;キー不要 / 約16日先まで" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="980" y="217" width="165" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="otherapi" value="任意の REST API&#xa;署名さえ自前で作れば可" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="980" y="279" width="165" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="noserver" value="中継サーバーは&#xa;立てなくてよい" style="text;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;fontColor=#d79b00;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="980" y="345" width="165" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e-run-disp" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="runtime" target="display">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-touch-run" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="touch" target="runtime">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-touch-label" value="操作はキーイベントとして届く&#xa;Enter / ArrowUp / ArrowDown / Backspace" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="60" y="540" width="220" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-mic-run" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="mic" target="runtime">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-run-cloud" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;strokeWidth=2.5;exitX=1;exitY=0.79;exitDx=0;exitDy=0;entryX=0;entryY=0.51;entryDx=0;entryDy=0;" edge="1" parent="1" source="runtime" target="cloud-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-run-cloud-label" value="fetch (Internet 権限)" style="text;html=1;fontSize=11;fontStyle=1;align=center;verticalAlign=middle;fontColor=#d79b00;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="700" y="296" width="210" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-craft-phone" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;strokeWidth=2;dashed=1;" edge="1" parent="1" source="craft" target="phone">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-phone-run" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;strokeWidth=2;dashed=1;" edge="1" parent="1" source="phone" target="runtime">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-phone-run-label" value=".aix 配信 (BLE)" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="598" y="146" width="92" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
