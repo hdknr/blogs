@@ -1,0 +1,86 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="agent-self-improvement-four-mechanisms" name="Self-Improvement Four Mechanisms">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="640" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="自己改善ループを深層学習の訓練ループに対応させる" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="18" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- column headers -->
+        <mxCell id="h0" value="仕組み" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="64" width="180" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="h1" value="深層学習" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="64" width="240" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="エージェントの自己改善（ハーネス側で設計）" style="text;html=1;fontSize=14;fontStyle=1;align=center;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="540" y="64" width="520" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- row 1: training data -->
+        <mxCell id="r1a" value="① 訓練データ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="104" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1b" value="学習データセット" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="104" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1c" value="成功・失敗の実行ログから共通する改善を抜き出し、&#xa;個別事例をスキル内の汎用手順にする（Trace2Skill）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="104" width="520" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="r1b" target="r1c">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- row 2: optimizer -->
+        <mxCell id="r2a" value="② 最適化器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="194" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2b" value="学習率・検証セット" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="194" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2c" value="1回の編集量を制限し、検証用タスクで改善を&#xa;確かめてから採用する（SkillOpt）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="194" width="520" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="r2b" target="r2c">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- row 3: search -->
+        <mxCell id="r3a" value="③ 探索戦略" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="284" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3b" value="局所最適を避ける探索" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="284" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3c" value="設計や得意分野の違う候補を複数残し、&#xa;1本のベストに集約しない（GEPA など）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="284" width="520" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="r3b" target="r3c">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- row 4: evaluation (emphasised) -->
+        <mxCell id="r4a" value="④ 評価" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=15;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="374" width="180" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="r4b" value="損失関数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="374" width="240" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="r4c" value="改善の向きを決める。評価が不正確だと反復するほど性能が落ちる。&#xa;「良い出力」の基準（正確性・網羅性・妥当性）は人間が定義する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;align=left;spacingLeft=10;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="540" y="374" width="520" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;endFill=1;" edge="1" parent="1" source="r4b" target="r4c">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- footer -->
+        <mxCell id="foot" value="更新されるのはモデルの重みではなく、スキル（SKILL.md）やワークフローのコード" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="240" y="494" width="820" height="44" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
