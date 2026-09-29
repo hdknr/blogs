@@ -1,0 +1,74 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="ssh-proxyjump-multiplex" name="ProxyJump and ControlMaster">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="440" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="ProxyJump + ControlMaster による多段 SSH" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Local -->
+        <mxCell id="local-group" value="手元の PC" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="230" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="cmds" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82b366;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="45" y="100" width="200" height="155" as="geometry"/>
+        </mxCell>
+        <mxCell id="cmd1" value="ssh app1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="55" y="110" width="180" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="cmd2" value="ssh app2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="55" y="160" width="180" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="cmd3" value="ssh 172.16.1.30" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="55" y="210" width="180" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="socket" value="ControlPath&lt;br&gt;~/.ssh/cp-%r@%h:%p&lt;br&gt;&lt;span style=&quot;font-size:10px&quot;&gt;（bastion 向けのソケット）&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="55" y="300" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-c2" value="3 つとも同じソケットを通る" style="html=1;strokeColor=#82b366;strokeWidth=2;endArrow=block;fontSize=10;labelBackgroundColor=#f5f5f5;" edge="1" parent="1" source="cmds" target="socket">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Bastion -->
+        <mxCell id="bastion" value="&lt;b&gt;bastion&lt;/b&gt;&lt;br&gt;踏み台ホスト&lt;br&gt;&lt;span style=&quot;font-size:10px&quot;&gt;パブリック IP&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="400" y="195" width="150" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-tcp" style="html=1;strokeColor=#d6b656;strokeWidth=4;endArrow=block;" edge="1" parent="1" source="socket" target="bastion">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Private -->
+        <mxCell id="vpc-group" value="プライベートネットワーク（172.16.0.0/16）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="660" y="70" width="310" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="app1" value="app1&lt;br&gt;172.16.1.10" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="740" y="115" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="app2" value="app2&lt;br&gt;172.16.1.20" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="740" y="210" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="app3" value="（名前なし）&lt;br&gt;172.16.1.30" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="740" y="305" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-a1" style="html=1;strokeColor=#6c8ebf;endArrow=block;" edge="1" parent="1" source="bastion" target="app1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-a2" style="html=1;strokeColor=#6c8ebf;endArrow=block;" edge="1" parent="1" source="bastion" target="app2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-a3" style="html=1;strokeColor=#6c8ebf;endArrow=block;" edge="1" parent="1" source="bastion" target="app3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="tcp-label" value="TCP 接続は 1 本だけ（多重化）" style="text;html=1;fontSize=11;align=center;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="345" width="290" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="note" value="Match host 172.16.* → ProxyJump bastion" style="text;html=1;fontSize=11;align=center;fontColor=#666666;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="250" y="370" width="290" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
