@@ -1,0 +1,70 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="approaches" name="AI Approaches">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="知能をコンピュータに載せる 2 つのアプローチ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Top-down -->
+        <mxCell id="td-group" value="トップダウン（記号的推論）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="450" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="td-model" value="まねるもの：人の「考え方（推論）」" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="95" width="410" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="td-expert" value="専門家（例：医師）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="155" y="130" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="td-kb" value="知識表現&lt;br&gt;「発熱があれば炎症の可能性」などのルール" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="105" y="210" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="td-reason" value="推論エンジン&lt;br&gt;ルールを組み合わせて結論（診断）を出す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="105" y="300" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="td-e1" value="知識を取り出す" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="td-expert" target="td-kb">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="td-e2" value="" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="td-kb" target="td-reason">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="td-weak" value="弱点：言葉にできない知識は取り出せない&lt;br&gt;（写真から年齢を当てる、など）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="75" y="390" width="360" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Bottom-up -->
+        <mxCell id="bu-group" value="ボトムアップ（ニューラルネットワーク）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="520" y="60" width="450" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="bu-model" value="まねるもの：脳の「構造（ニューロン）」" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="540" y="95" width="410" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="bu-data" value="大量の例（学習データ）&lt;br&gt;写真と年齢のペアなど" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="620" y="130" width="250" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="bu-net" value="ニューロンのネットワーク&lt;br&gt;各ニューロンは入力の重み付き和を計算するだけ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="210" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="bu-out" value="学習済みモデル&lt;br&gt;ルールを書かずに答えを出せる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="595" y="300" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="bu-e1" value="例を見せて訓練" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="bu-data" target="bu-net">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="bu-e2" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="bu-net" target="bu-out">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="bu-weak" value="弱点：大量のデータと計算資源が要る&lt;br&gt;なぜその答えになったかを説明しにくい" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="565" y="390" width="360" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="ほかに：多数の単純なエージェントの相互作用から知能が生まれる「創発・マルチエージェント」、進化をまねる「遺伝的アルゴリズム」（コース後半のレッスン 21・23）" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="30" y="495" width="940" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

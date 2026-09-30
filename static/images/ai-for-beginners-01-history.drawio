@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="history" name="AI History">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="AI の歴史：主役は「記号」から「ニューラルネットワーク」へ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Era bands -->
+        <mxCell id="era-sym" value="記号的推論が主流" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="140" y="60" width="560" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="era-nn" value="ニューラルネットワークが主流" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="720" y="60" width="450" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- Axis -->
+        <mxCell id="axis" value="" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="150" as="sourcePoint"/>
+            <mxPoint x="1180" y="150" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Events on the axis -->
+        <mxCell id="ev1950" value="1950&lt;br&gt;チューリングテスト提案" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="140" y="170" width="110" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev1956" value="1956&lt;br&gt;ダートマス会議" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="260" y="170" width="100" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev1970" value="1970 年代&lt;br&gt;1 回目の AI の冬" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="370" y="170" width="100" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev1980" value="1980 年代&lt;br&gt;エキスパートシステム" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="480" y="170" width="110" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev1990" value="80 年代末〜&lt;br&gt;2 回目の AI の冬" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="600" y="170" width="100" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev2012" value="2010 年頃〜&lt;br&gt;ImageNet・2012 CNN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="170" width="120" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev2015" value="2015〜2020&lt;br&gt;各分野で人間並み" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="850" y="170" width="110" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev2020" value="2018〜&lt;br&gt;BERT・GPT-3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="970" y="170" width="90" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ev2022" value="2022〜&lt;br&gt;対話型 LLM&lt;br&gt;（教材の外）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="165" width="100" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane: chess -->
+        <mxCell id="lane-chess" value="チェス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="20" y="260" width="100" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="ch1" value="探索&lt;br&gt;数手先まで読んで最善手を選ぶ&lt;br&gt;（アルファベータ枝刈り）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="140" y="270" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ch2" value="事例ベース推論&lt;br&gt;過去の対局から&lt;br&gt;似た局面を探す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="270" width="220" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ch3" value="ニューラルネットワーク＋強化学習&lt;br&gt;自分自身と大量に対局して学ぶ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="270" width="300" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ch-e1" value="" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" parent="1" source="ch1" target="ch2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="ch-e2" value="" style="endArrow=classic;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" parent="1" source="ch2" target="ch3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane: dialogue -->
+        <mxCell id="lane-talk" value="対話" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="20" y="390" width="100" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="tk1" value="ELIZA&lt;br&gt;単純な文法ルールで&lt;br&gt;入力を質問に言い換える" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="140" y="400" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="tk2" value="ハイブリッド型アシスタント&lt;br&gt;音声・意図の認識は&lt;br&gt;ニューラルネットワーク、&lt;br&gt;実行はルール・アルゴリズム" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="400" width="220" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="tk3" value="ニューラルネットワークだけで対話&lt;br&gt;教材では「将来の予想」&lt;br&gt;→ 現在の LLM チャットで実現" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="400" width="300" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="tk-e1" value="" style="endArrow=classic;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1" source="tk1" target="tk2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="tk-e2" value="" style="endArrow=classic;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1" source="tk2" target="tk3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="下の 2 段は年表に厳密に揃えたものではなく、レッスン 01 が挙げる「アプローチの移り変わり」の順序を示す" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="140" y="505" width="880" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
