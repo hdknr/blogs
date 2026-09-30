@@ -1,7 +1,7 @@
 ---
 title: "Microsoft の AI-For-Beginners 日本語版 — LLM の「手前」を積み直す教材として使う"
 date: 2026-09-29
-lastmod: 2026-09-29
+lastmod: 2026-09-30
 slug: "microsoft-ai-for-beginners"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/556#issuecomment-5883166575"
@@ -30,13 +30,15 @@ Microsoft が GitHub で公開している AI 入門カリキュラム [AI-For-B
 
 | パート | レッスン | 主な内容 |
 |---|---|---|
-| I. AI 入門 | 01 | AI の紹介と歴史 |
+| I. AI 入門 | 01 | [AI の紹介と歴史](/blogs/posts/2026/09/ai-for-beginners-01-intro-history/) |
 | II. シンボリック AI | 02 | 知識表現、エキスパートシステム、オントロジー |
 | III. ニューラルネットワーク | 03〜05 | パーセプトロン、多層パーセプトロンの自作、PyTorch / TensorFlow 入門と過学習 |
 | IV. コンピュータビジョン | 06〜12 | OpenCV、CNN、転移学習、オートエンコーダーと VAE、GAN、物体検出、セマンティックセグメンテーション |
 | V. 自然言語処理 | 13〜20 | BoW / TF-IDF、Word2Vec / GloVe、RNN、Transformer と BERT、固有表現抽出、大規模言語モデル |
 | VI. その他の AI 技術 | 21〜23 | 遺伝的アルゴリズム、深層強化学習、マルチエージェントシステム |
 | VII. AI 倫理 | 24 | AI 倫理と責任ある AI |
+
+パートごとの詳しい解説も書いています。表のリンクから読めます（現在は「I. AI 入門」の [AI の歴史と基本をやさしく解説 — Microsoft AI-For-Beginners レッスン 01](/blogs/posts/2026/09/ai-for-beginners-01-intro-history/)）。
 
 これに加えて、環境構築用のレッスン 0（コースセットアップ）と、エクストラとしてマルチモーダル（CLIP と VQGAN）のレッスン 25 があります。「24 レッスン」は本編の数で、その前後にレッスン 0 と 25 が 1 本ずつ付く構成です。
 
