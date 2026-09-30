@@ -2,7 +2,7 @@
 title: "グラフエンジニアリング"
 description: "AIエージェント運用の第4段階。仕事をノード（判断）とエッジ（データの受け渡し）のグラフとして設計し、並列・待ち・再試行・検証を構造として宣言する実践"
 date: 2026-07-28
-lastmod: 2026-09-07
+lastmod: 2026-09-30
 aliases: ["graph engineering", "プロンプト ループ スワーム グラフ", "4段階モデル", "偽エッジ", "fan out fan in", "ダイヤモンド"]
 related_posts:
   - "/posts/2026/07/graph-engineering-multi-factor-alpha/"
@@ -86,7 +86,7 @@ fan out と統合の間にある reduce ステップ（平坦化、重複排除�
 ## 信頼を作る構造
 
 - **検証ノードをエッジに置く** — 結果が下流へ降りる前に座らせ、発見を殺そうとさせる。生き延びたものだけが通る
-- **同じエージェントに自分の答案を採点させない**（maker-checker / four-eyes principle） — 自分の出力をレビューするモデルは、間違えたのと同じ場所から評価するので誤りの大半を見逃す。ただし**エージェントを分けるだけでは足りない**: 「自明だから検証不要」の逃げ道と、親モデルの継承による事前分布の共有が残る（[実装記録](/blogs/posts/2026/09/fact-checker-maker-checker/)）
+- **同じエージェントに自分の答案を採点させない**（maker-checker / four-eyes principle） — 自分の出力をレビューするモデルは、間違えたのと同じ場所から評価するので誤りの大半を見逃す。ただし**エージェントを分けるだけでは足りない**: 「自明だから検証不要」の逃げ道と、親モデルの継承による事前分布の共有が残る（[実装記録](/blogs/posts/2026/09/fact-checker-maker-checker/)、接続・規律・重みの 3 層は [maker-checker](/blogs/wiki/concepts/maker-checker/) に整理）
 - **敵対的検証** — 発見ごとに「反証せよ」と命じた独立の懐疑者を N 体起動し、過半数を生き延びたものだけ残す
 - **多様レンズ検証** — 検証者ごとに異なる角度（正しいか・安全か・再現するか）を与える。同一のチェック N 回では見つからない失敗モードを狩る
 - **審査員パネル** — N 個の試行を異なる角度から生成し、並列の審査員で採点し、勝者から統合しつつ次点の良い部分を接ぎ木する
@@ -126,6 +126,8 @@ fan out と統合の間にある reduce ステップ（平坦化、重複排除�
 - [外部境界の耐障害性とサーキットブレーカー](/blogs/wiki/concepts/circuit-breaker/) — ノード隔離とレートリミット冷却
 - [Claude Code](/blogs/wiki/tools/claude-code/) — 動的ワークフローによるグラフの実装手段
 - [AI エージェントにリファクタさせる時の完了の定義](/blogs/wiki/concepts/ai-refactor-completion-boundary/) — 自己検証の限界
+- [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 検証ノードを機能させる 3 層
+- [エージェントループ設計](/blogs/wiki/concepts/agent-loop-design/) — *loop until dry* と不動点による収束判定
 
 ## ソース記事
 

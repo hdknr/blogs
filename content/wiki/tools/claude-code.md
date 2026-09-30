@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-08-23
+lastmod: 2026-09-30
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -46,6 +46,8 @@ related_posts:
   - "/posts/2026/07/claude-code-restaurant-automation/"
   - "/posts/2026/08/claude-code-correction-os/"
   - "/posts/2026/08/claude-code-16-commands-ai-employee/"
+  - "/posts/2026/09/claude-code-jsonl-log-verified/"
+  - "/posts/2026/09/fact-checker-maker-checker/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "hooks", "mcp"]
 ---
 
@@ -76,13 +78,9 @@ Karpathy は Claude Code を LLM Wiki の実行環境として使用。「左画
 
 2026年4月、AMD のシニア AI ディレクターが約 6,852 セッション分のログ分析で発見した問題。2026年3月8日以降、Claude Code の思考の中央値が約 2,200 文字から約 600 文字（**67%減**）に低下していた。Anthropic は「アダプティブ・シンキング」による変更を認め、`/effort max` コマンドで高い思考深度を維持できると説明した。
 
-## Routines — クラウド上での自動実行
+## Routines と新 Desktop
 
-2026年4月14日リリースの **Claude Code Routines** により、PC をオフラインにしたままでもクラウド上でエージェントをスケジュール実行できるようになった。トリガー: cron / API コール / GitHub イベント。
-
-## 新 Desktop — 複数セッション並列管理
-
-同日リリースの新 Desktop では複数セッションの同時管理が可能になった。リポジトリ・Issue を並列で扱い、コンテキストを保持したまま別タスクに移行できる。
+2026年4月14日リリースの **Claude Code Routines** により、PC をオフラインにしたままでもクラウド上でエージェントをスケジュール実行できるようになった。トリガー: cron / API コール / GitHub イベント。同日リリースの新 Desktop では複数セッションの同時管理が可能になり、リポジトリ・Issue を並列で扱い、コンテキストを保持したまま別タスクに移行できる。
 
 ## /team-onboarding コマンド
 
@@ -120,11 +118,10 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 
 詳細: [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) / [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) / [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/)
 
-## 動的ワークフロー（Dynamic Workflows）
+## セッションログとサブエージェントの落とし穴
 
-サブエージェントを直列に並べるのではなく、グラフとして組むための仕組み。Claude が素の JavaScript でオーケストレーション用スクリプトを書き、`agent()` / `parallel()` / `pipeline()` / `schema` を組み合わせてサブエージェントのフリートを動かす。**調整レイヤ自体はコードなのでモデルのトークンを消費しない**（ただし実行全体のトークンは会話でやるより増える）。
-
-詳細: [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/)
+- **セッションログ（JSONL）** — 全履歴は `~/.claude/projects/<encoded-project-path>/<session-uuid>.jsonl` に追記される（`~/.claude/sessions/` は実在するが会話ログではない）。全行にあるキーは `type` だけで 17 種類あり、`type: "user"` の 9 割超はツール実行結果。他 CLI 向けのパーサは 0 件のまま正常終了する。詳細: [Claude Code の JSONL ログを読む](/blogs/wiki/guides/claude-code-jsonl-logs/)
+- **サブエージェントは定義しただけでは動かない** — `.claude/agents/` に定義があっても、どのスキルからも呼ばれていなければ存在しないのと同じ（`grep -rn "<agent-name>" .claude/` で確かめる）。既定で親と同じモデルを継承するので、検証役には `model` を明示してティアを跨がせる。詳細: [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/)
 
 ## 非エンジニア業務での活用
 
@@ -175,10 +172,9 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude Design](/blogs/wiki/tools/claude-design/) — デザイン生成ツール（Claude Code でブランド連携）
 - [Claude Tag](/blogs/wiki/tools/claude-tag/) — Slack 上のプロアクティブなエージェント
 - [CodeGraph](/blogs/wiki/tools/codegraph/) — コード知識グラフで探索のツール呼び出しを削減
-- [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 動的ワークフローでグラフを組む設計論
-- [外部境界の耐障害性とサーキットブレーカー](/blogs/wiki/concepts/circuit-breaker/) — `claude --print` のレートリミット対策
-- [Claude Cowork と Record a skill](/blogs/wiki/tools/claude-cowork/) — 作業録画から Skill を生成するデスクトップ製品
 - [Ponytail](/blogs/wiki/tools/ponytail/) — 過剰実装を抑える YAGNI プラグイン
+- [Claude Opus 5.5](/blogs/wiki/tools/claude-opus-5-5/) — CLAUDE.md から「よく考えて」を消す
+- [AI に書かせる文書の「書かないこと」指定](/blogs/wiki/concepts/ai-doc-writing-guidelines/) — Skill で文書の分量を抑える
 
 ## ソース記事
 
@@ -198,3 +194,5 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [AI エージェントのレートリミット対策 — 指数バックオフとサーキットブレーカー](/blogs/posts/2026/07/ai-agent-rate-limit-circuit-breaker/) — 2026-07-28
 - [Boris Cherny に学ぶ Claude Code の使い方 — 設定を足すより「訂正の回数」を増やす](/blogs/posts/2026/08/claude-code-correction-os/) — 2026-08-09
 - [「Claude Code の基本16コマンドで AI 社員化」を数え直す](/blogs/posts/2026/08/claude-code-16-commands-ai-employee/) — 2026-08-16
+- [Claude Code の JSONL ログを 29,043 行で検証 — 解説記事の前提が自分の環境で成り立たなかった 6 点](/blogs/posts/2026/09/claude-code-jsonl-log-verified/) — 2026-09-04
+- [Claude Code のサブエージェントは定義しただけでは動かない — ファクトチェックを繋ぎ直した 3 つの穴](/blogs/posts/2026/09/fact-checker-maker-checker/) — 2026-09-07
