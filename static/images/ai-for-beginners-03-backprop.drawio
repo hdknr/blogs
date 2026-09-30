@@ -1,0 +1,64 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="bp" name="Forward and Backward">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="470" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="学習 1 ステップ：順伝播 → 逆伝播 → 更新" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fwlabel" value="順伝播 forward：損失を計算" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="300" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="nx" value="入力 x&lt;br&gt;（ミニバッチ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="170" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="nlin" value="&lt;b&gt;Linear&lt;/b&gt;&lt;br&gt;z = xWᵀ + b" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="170" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="nsm" value="&lt;b&gt;Softmax&lt;/b&gt;&lt;br&gt;p = σ(z)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="430" y="170" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="nce" value="&lt;b&gt;CrossEntropyLoss&lt;/b&gt;&lt;br&gt;L = −log p（正解クラス）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="170" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="ny" value="正解ラベル y" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="665" y="100" width="120" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="nl" value="損失 L" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="170" width="100" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="f1" value="" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.3;" edge="1" parent="1" source="nx" target="nlin"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="f2" value="z" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.3;fontSize=11;" edge="1" parent="1" source="nlin" target="nsm"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="f3" value="p" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.3;fontSize=11;" edge="1" parent="1" source="nsm" target="nce"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="f4" value="" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.3;" edge="1" parent="1" source="nce" target="nl"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="fy" value="" style="endArrow=classic;html=1;strokeColor=#999999;strokeWidth=1;" edge="1" parent="1" source="ny" target="nce"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="b1" value="∂L/∂p" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=0;exitY=0.8;entryX=1;entryY=0.8;fontSize=11;fontColor=#b85450;" edge="1" parent="1" source="nce" target="nsm"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="b2" value="∂L/∂z" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=0;exitY=0.8;entryX=1;entryY=0.8;fontSize=11;fontColor=#b85450;" edge="1" parent="1" source="nsm" target="nlin"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="b3" value="∂L/∂x" style="endArrow=classic;html=1;strokeColor=#b85450;strokeWidth=2;exitX=0;exitY=0.8;entryX=1;entryY=0.8;fontSize=11;fontColor=#b85450;" edge="1" parent="1" source="nlin" target="nx"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="bwlabel" value="逆伝播 backward：連鎖律で勾配を後ろから順に掛けていく（各レイヤーの backward）" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="30" y="255" width="700" height="25" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="upd" value="&lt;b&gt;更新 update&lt;/b&gt;&lt;br&gt;∂L/∂W、∂L/∂b を使って&lt;br&gt;W ← W − η·∂L/∂W、b ← b − η·∂L/∂b" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="170" y="310" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="eupd" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;" edge="1" parent="1" source="nlin" target="upd"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="fwnote" value="&lt;b&gt;レッスン 04&lt;/b&gt;：各レイヤーの backward を手で書く&lt;br&gt;&lt;b&gt;レッスン 05&lt;/b&gt;：PyTorch の loss.backward() や&lt;br&gt;TensorFlow の GradientTape が自動で計算（自動微分）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="470" y="310" width="400" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="foot" value="これをミニバッチごとに繰り返す（確率的勾配降下法 SGD）。データ全体を 1 周するのが 1 エポック" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
+          <mxGeometry x="30" y="410" width="940" height="25" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
