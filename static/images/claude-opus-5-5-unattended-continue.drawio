@@ -1,0 +1,97 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="opus55-continue" name="Opus 5.5 unattended continue">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="760" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="テキストだけでターンが終わったときの判定" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="agent" value="エージェントがターンを終える&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;stop_reason: &quot;end_turn&quot;（ツール呼び出しなし）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="70" width="280" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-bg" value="裏で動いているものがある？&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;バックグラウンドコマンド・サブエージェント&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="150" width="260" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="wait" value="終わるまで待ち、出力を&lt;br&gt;次のユーザーメッセージで返す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="165" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-open" value="チェックリストに&lt;br&gt;未完了の項目がある？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="270" width="260" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="done" value="完了扱い。&lt;br&gt;中身は人が読んで動かして確かめる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="285" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-block" value="止まった理由（ブロッカー）&lt;br&gt;が書かれている？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="390" width="260" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="human" value="人に判断を返す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="405" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="q-count" value="同じタスクで自動継続を&lt;br&gt;すでに 2〜3 回送った？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="510" width="260" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="stop" value="打ち切ってレビューする&lt;br&gt;（本当に詰まっている）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="525" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cont" value="残りの項目を名指しして継続を送る&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;「〜と〜が残っています。続けて。止まっていれば原因を」&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="640" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="agent" target="q-bg">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="はい" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="q-bg" target="wait">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="いいえ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="q-bg" target="q-open">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="いいえ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="q-open" target="done">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="はい" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="q-open" target="q-block">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="はい" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="q-block" target="human">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="いいえ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="q-block" target="q-count">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="はい" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="q-count" target="stop">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="いいえ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="q-count" target="cont">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;dashed=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="cont" target="agent">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="900" y="670"/>
+              <mxPoint x="900" y="97"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#999999;dashed=1;exitX=0.5;exitY=0;entryX=1;entryY=0.25;" edge="1" parent="1" source="wait" target="agent">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="750" y="84"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
