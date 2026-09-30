@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="kr" name="Knowledge Representation">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="知識表現の 4 分類と、その両端" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Spectrum -->
+        <mxCell id="sp-left" value="アルゴリズム（プログラム）&lt;br&gt;コンピュータがそのまま使える&lt;br&gt;ただし柔軟性がない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="65" width="230" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="sp-right" value="自然言語のテキスト&lt;br&gt;表現力はいちばん高い&lt;br&gt;ただし自動推論に使えない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="740" y="65" width="230" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="sp-arrow" value="この間に、コンピュータで扱えて表現力もある形式を探す" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#333333;strokeWidth=3;fontSize=12;fontStyle=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="sp-left" target="sp-right">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Four categories -->
+        <mxCell id="c1" value="&lt;b&gt;1. ネットワーク表現&lt;/b&gt;&lt;br&gt;&lt;br&gt;概念どうしの関係をグラフにする&lt;br&gt;（セマンティックネットワーク）&lt;br&gt;&lt;br&gt;OAV トリプレットで書く&lt;br&gt;Python / invented-by /&lt;br&gt;Guido van Rossum" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="30" y="190" width="220" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2" value="&lt;b&gt;2. 階層表現&lt;/b&gt;&lt;br&gt;&lt;br&gt;カナリア → 鳥 → 翼がある&lt;br&gt;のように上位の性質を受け継ぐ&lt;br&gt;&lt;br&gt;フレーム：スロットに値・&lt;br&gt;デフォルト値・範囲を持つ&lt;br&gt;（OOP のクラス階層に近い）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="270" y="190" width="220" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3" value="&lt;b&gt;3. 手続き的表現&lt;/b&gt;&lt;br&gt;&lt;br&gt;条件がそろったら実行する&lt;br&gt;アクションとして書く&lt;br&gt;&lt;br&gt;プロダクションルール&lt;br&gt;IF 高熱 OR CRP 高値&lt;br&gt;THEN 炎症がある" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="510" y="190" width="220" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4" value="&lt;b&gt;4. 論理&lt;/b&gt;&lt;br&gt;&lt;br&gt;述語論理はそのままでは&lt;br&gt;計算できないので部分集合を使う&lt;br&gt;&lt;br&gt;ホーン節（Prolog）&lt;br&gt;記述論理（DL）&lt;br&gt;→ セマンティックウェブ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="750" y="190" width="220" height="170" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="エキスパートシステムは主に 3（ルール）を、セマンティックウェブは 1（トリプレット）と 4（記述論理）を組み合わせて使う" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="30" y="380" width="940" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

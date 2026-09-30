@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="es" name="Expert System">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="エキスパートシステムの構成と 2 つの推論方向" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Architecture (left) -->
+        <mxCell id="arch" value="構成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="400" height="500" as="geometry"/>
+        </mxCell>
+        <mxCell id="user" value="ユーザー&lt;br&gt;（質問に答える）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="140" y="100" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="engine" value="&lt;b&gt;推論エンジン&lt;/b&gt;&lt;br&gt;条件を満たすルールを探して適用&lt;br&gt;必要ならユーザーに質問する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="210" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="wm" value="&lt;b&gt;作業メモリ&lt;/b&gt;（問題メモリ）&lt;br&gt;いま解いている問題の事実&lt;br&gt;hair = y、color = red-brown …&lt;br&gt;≒ 短期記憶" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="45" y="350" width="175" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="kb" value="&lt;b&gt;知識ベース&lt;/b&gt;&lt;br&gt;専門家から取り出したルール&lt;br&gt;相談ごとに変わらない&lt;br&gt;≒ 長期記憶" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="240" y="350" width="175" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-user" value="" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="user" target="engine">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-wm" value="読み書き" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="engine" target="wm">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-kb" value="参照" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="kb" target="engine">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arch-note" value="知識（ルール）と推論（エンジン）が分かれているので、&lt;br&gt;専門家は推論の仕組みを知らなくてもルールを書ける" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="45" y="480" width="370" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Forward (right top) -->
+        <mxCell id="fw" value="順方向推論（データ駆動）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="460" y="60" width="510" height="235" as="geometry"/>
+        </mxCell>
+        <mxCell id="fw1" value="最初に分かっている事実&lt;br&gt;gives milk、sharp teeth、&lt;br&gt;claws、pattern = dark stripes …" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="475" y="100" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="fw2" value="条件を満たすルールが発火&lt;br&gt;→ mammal、carnivor を&lt;br&gt;作業メモリに追加" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="100" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="fw3" value="さらに発火して&lt;br&gt;animal = tiger&lt;br&gt;（目標に到達したら停止）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="805" y="100" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="fw-e1" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="fw1" target="fw2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="fw-e2" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="fw2" target="fw3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="fw-note" value="向いている場面：データが最初からそろっている&lt;br&gt;例：Experta（CLIPS 流、Rete アルゴリズム）" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="475" y="215" width="480" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Backward (right bottom) -->
+        <mxCell id="bw" value="逆方向推論（ゴール駆動）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="460" y="325" width="510" height="235" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw1" value="目標：animal は何か？&lt;br&gt;→ 仮説「tiger」を選ぶ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="475" y="365" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw2" value="条件 mammal、carnivor …&lt;br&gt;をサブゴールにして&lt;br&gt;再帰的に証明する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="365" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw3" value="導くルールがない事実だけ&lt;br&gt;ユーザーに質問&lt;br&gt;「hair？ y/n」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="805" y="365" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw-e1" value="" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="bw1" target="bw2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw-e2" value="" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="bw2" target="bw3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="bw-note" value="向いている場面：必要になった時点で検査・質問したい（診断など）&lt;br&gt;証明に失敗したら別の仮説（ルール）に切り替える" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="475" y="480" width="480" height="50" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
