@@ -112,7 +112,6 @@ NAT ゲートウェイは AZ 単位のリソースです。
 | CRM SaaS | 申し込み・お問い合わせの連携 | **あり** |
 | Amazon SES | メール送信 | **あり**（IAM の `aws:SourceIp`） |
 | Amazon S3 | 書類・画像の保存と表示 | **あり**（IAM の `aws:SourceIp`） |
-| EC2 API | キャッシュクリアなどの管理操作 | **あり**（IAM の `aws:SourceIp`） |
 | SMS 配信サービス | 通知 | — |
 | GitHub | デプロイ時の `git pull` | — |
 
@@ -206,7 +205,6 @@ NAT ゲートウェイが担っている 2 つの役割を別の仕組みで用�
 - CRM 連携のログインが拒否された（相手側の IP 制限）
 - S3 の画像が 500 になった（IAM の `aws:SourceIp`）
 - メールが送れなかった（IAM の `aws:SourceIp`）
-- EC2 API を使うキャッシュクリアが失敗した（IAM の `aws:SourceIp`）
 
 NAT の再構築で「出口」は戻っても、**IP アローリストに登録されていた「身元」は戻らなかった** のです。
 しかも IAM の `aws:SourceIp` 条件は構成ドキュメントに書かれておらず、
