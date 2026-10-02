@@ -2,10 +2,11 @@
 title: "アダプティブ・シンキング（Claude の思考深度制御）"
 description: "Anthropic が導入した Claude の思考量を動的に調整する仕組み。ユーザーから「サイレント・ダウングレード」と批判され、/effort max で元の深度に戻せる"
 date: 2026-04-13
-lastmod: 2026-04-16
-aliases: ["adaptive thinking", "effort level", "claude thinking depth"]
+lastmod: 2026-09-30
+aliases: ["adaptive thinking", "effort level", "claude thinking depth", "effort パラメーター"]
 related_posts:
   - "/posts/2026/04/claude-thinking-nerfed/"
+  - "/posts/2026/09/claude-opus-5-5-prompting/"
 tags: ["claude", "claude-code", "思考深度", "anthropic", "llm"]
 ---
 
@@ -56,11 +57,24 @@ export CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1
 - 一方、複雑なタスクでの **品質低下** を招くトレードオフ
 - ユーザーへの透明性の欠如が最大の問題として指摘された
 
+## その後: Opus 5.5 で思考は常にオンに
+
+Claude Opus 5.5（2026 年 9 月）では思考が**常にオン**になり、どれだけ考えるかはモデルが決め、調整手段は `effort` に一本化された。API で `thinking: {"type": "disabled"}` や `budget_tokens` を送ると 400 エラーになり、`thinking` を省略するか `{"type": "adaptive"}` を送る。
+
+- 既定の effort は `medium`（Opus 5 は `high`）。Opus 5.5 の `medium` は評価上 Opus 5 の `high` と同等以上
+- 同じ effort 名でも Opus 5.5 のほうが多く考える（`xhigh` / `max` で顕著）ので、旧モデルの設定を持ち込まず測り直す
+- 思考トークンは中身が返らなくても `max_tokens` に含まれる
+- 思考を減らしたいなら、プロンプトで「考えすぎるな」と書くより effort を下げるほうが確実。逆に「回答前によく考えて」はシステムプロンプトから消してよい
+
+「思考量をモデルが決め、人は effort で上限側を調整する」という 4 月の変更の方向は、そのまま標準の使い方になった。詳細は [Claude Opus 5.5](/blogs/wiki/tools/claude-opus-5-5/)。
+
 ## 関連ページ
 
 - [Claude の EQ（脳内トレース能力）](/blogs/wiki/concepts/claude-eq/)
 - [Claude Mythos](/blogs/wiki/concepts/claude-mythos/)
+- [Claude Opus 5.5](/blogs/wiki/tools/claude-opus-5-5/) — effort を主な調整手段にしたモデル
 
 ## ソース記事
 
 - [Claude の思考深度が67%低下？AMD AIディレクターの分析が示す「サイレント・ダウングレード」問題](/blogs/posts/2026/04/claude-thinking-nerfed/) — 2026-04-13
+- [Claude Opus 5.5 の使い方 — 「よく考えて」を消し、effort と継続指示で長いタスクを回す](/blogs/posts/2026/09/claude-opus-5-5-prompting/) — 2026-09-30

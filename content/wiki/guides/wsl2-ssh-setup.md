@@ -2,11 +2,12 @@
 title: "WSL2 への SSH 接続と sshd 自動起動"
 description: "Windows から WSL2 へ SSH する構成の実務。~/.bashrc の早期 return で node が見つからない罠、セッション 0 で動かないタスク、15 秒でインスタンスが止まる instanceIdleTimeout"
 date: 2026-09-02
-lastmod: 2026-09-02
+lastmod: 2026-09-30
 aliases: ["WSL2 SSH", "sshd 自動起動", "instanceIdleTimeout", "セッション 0", "ミラーモード", "Node.js not found on remote host"]
 related_posts:
   - "/posts/2026/09/orca-wsl2-ssh-bashrc-node-not-found/"
   - "/posts/2026/09/wsl2-ssh-autostart-on-boot/"
+  - "/posts/2026/09/smb-norton-wfp/"
 tags: ["WSL2", "ssh", "Windows", "linux", "systemd", "nvm"]
 ---
 
@@ -40,7 +41,7 @@ esac
 | `ssh user@localhost` でログイン（対話シェル） | 冒頭のガードを素通り | `node -v` が動く |
 | コマンドを直接指定した実行（非対話シェル） | 冒頭で `return` | node が見つからない |
 
-**「PowerShell から手で ssh すると動くのに、GUI クライアントからだと動かない」**という一見不可解な状況は、この構造の当然の帰結。**疎通確認が通ってもクライアント側では失敗しうる**（確認に使ったシェルの種類が違う）。
+「**PowerShell から手で ssh すると動くのに、GUI クライアントからだと動かない**」という一見不可解な状況は、この構造の当然の帰結。**疎通確認が通ってもクライアント側では失敗しうる**（確認に使ったシェルの種類が違う）。
 
 > この壊れ方はディストリビューション依存。Fedora/RHEL の既定 `.bashrc` にはこのガードが無いため最後まで読み進む。Debian/Ubuntu だけが冒頭で返る。
 
@@ -142,6 +143,8 @@ autoMemoryReclaim=gradual
 
 **ミラーモードは NAT の上位互換ではない。** Windows とポートが競合するようになり、`localhostForwarding` は設定ごと無視され、**LAN から WSL に直接届くようになる**。
 
+ミラーモードではホストと WSL がアドレスを共有するので、**自分から自分への疎通テストは LAN からの疎通テストにならない**。届くか届かないかは別の実機から測る。Windows 側にセキュリティ製品が入っていると、WFP の層で受信が黙って落ちたり、ネットワーク分類の変更で意図しないポートまで一緒に開いたりする（[Windows の受信ブロックを WFP で切り分ける](/blogs/wiki/guides/windows-inbound-block-wfp/)）。
+
 ## セキュリティ — 自動起動で前提が変わる
 
 手で `service ssh start` していた頃は「使うときだけ開くポート」だったものが、自動起動にした瞬間**起動のたびに開きっぱなしのポート**になる。ミラーモードならそれが LAN から見える。
@@ -160,8 +163,11 @@ PubkeyAuthentication yes
 
 - [GitHub Actions のセキュリティ](/blogs/wiki/guides/github-actions-security/)
 - [AI エージェントのシークレット管理](/blogs/wiki/guides/ai-agent-secret-management/)
+- [Windows の受信ブロックを WFP で切り分ける](/blogs/wiki/guides/windows-inbound-block-wfp/) — ミラーモード環境での疎通確認とセキュリティ製品
+- [ProxyJump による多段 SSH](/blogs/wiki/guides/ssh-proxyjump/) — クライアント側の ssh_config（`ControlMaster` は WSL2 の中なら使える）
 
 ## ソース記事
 
 - [Orca から WSL2 へ SSH — Node.js not found on remote host の原因は ~/.bashrc の早期 return](/blogs/posts/2026/09/orca-wsl2-ssh-bashrc-node-not-found/) — 2026-09-01
 - [WSL2 の sshd を Windows 起動時に自動起動する — セッション 0 と 15 秒タイムアウトの罠](/blogs/posts/2026/09/wsl2-ssh-autostart-on-boot/) — 2026-09-02
+- [Mac から Windows の共有に繋がらない — WFP まで降りて犯人（ノートンのスマートファイアウォール）を特定した話](/blogs/posts/2026/09/smb-norton-wfp/) — 2026-09-03（ミラーモードでの疎通確認）
