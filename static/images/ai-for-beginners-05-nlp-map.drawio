@@ -1,0 +1,66 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="nlpmap" name="NLP map">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="パート V「自然言語処理」の 8 レッスン：テキストを数値にする方法の進化" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="15" width="880" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: representation -->
+        <mxCell id="ga" value="単語をどう数値にするか" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="940" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="a13" value="&lt;b&gt;13 BoW / TF-IDF&lt;/b&gt;&lt;br&gt;単語の出現回数を数える&lt;br&gt;語順と意味は失われる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="a14" value="&lt;b&gt;14 埋め込み&lt;/b&gt;&lt;br&gt;単語を密な短いベクトルに&lt;br&gt;似た意味の単語は近くに置かれる&lt;br&gt;（Word2Vec・GloVe）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="375" y="100" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="a15" value="&lt;b&gt;15 言語モデル&lt;/b&gt;&lt;br&gt;周りの単語から中央の単語を&lt;br&gt;当てる課題で埋め込みを自分で学習&lt;br&gt;（CBoW）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="690" y="100" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="ea1" value="" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="a13" target="a14"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea2" value="" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="a14" target="a15"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Row 2: order -->
+        <mxCell id="gb" value="語順と文脈をどう扱うか" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="230" width="940" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="b16" value="&lt;b&gt;16 RNN / LSTM&lt;/b&gt;&lt;br&gt;単語を 1 つずつ順に読み、&lt;br&gt;内部状態に文脈をためる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="270" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="b17" value="&lt;b&gt;17 生成ネットワーク&lt;/b&gt;&lt;br&gt;RNN で次の文字を予測し、&lt;br&gt;それを繰り返して文章を作る" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="375" y="270" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="b18" value="&lt;b&gt;18 Transformer / BERT&lt;/b&gt;&lt;br&gt;アテンションで全単語を同時に見る&lt;br&gt;大規模に事前学習して転移学習" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="690" y="270" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="eb1" value="" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="b16" target="b17"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eb2" value="" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="b17" target="b18"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eab" value="" style="endArrow=classic;html=1;strokeColor=#999999;strokeWidth=2;dashed=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="a15" target="b16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="815" y="220"/><mxPoint x="185" y="220"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Row 3: applications -->
+        <mxCell id="gc" value="応用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="400" width="940" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="c19" value="&lt;b&gt;19 固有表現抽出（NER）&lt;/b&gt;&lt;br&gt;単語ごとに人名・地名・組織名などの&lt;br&gt;タグを付ける（BIO 形式）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="440" width="410" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="c20" value="&lt;b&gt;20 大規模言語モデル（GPT）&lt;/b&gt;&lt;br&gt;Transformer で次の単語を予測し続ける&lt;br&gt;プロンプトだけでタスクを解く" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="530" y="440" width="410" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="foot" value="13〜18 は AG News（ニュース記事の 4 クラス分類）を共通の題材にして、同じ問題を表現の方法だけ変えて解いていく" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="30" y="550" width="940" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
