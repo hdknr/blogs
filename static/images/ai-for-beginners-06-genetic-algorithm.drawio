@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="ga" name="Genetic algorithm">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="遺伝的アルゴリズム：解の集団を世代ごとに入れ替えながら良くしていく" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="15" width="880" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ga_pop" value="&lt;b&gt;① 集団（解の候補）&lt;/b&gt;&lt;br&gt;解を遺伝子として表す&lt;br&gt;例：8 クイーンなら&lt;br&gt;各行のクイーンの列 [4, 2, 8, 6, 1, 3, 5, 7]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="260" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="ga_fit" value="&lt;b&gt;② 評価&lt;/b&gt;&lt;br&gt;適応度関数で解の良し悪しを測る&lt;br&gt;例：互いに取り合うクイーンの組の数&lt;br&gt;（この教材では小さいほど良い）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="370" y="80" width="260" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="ga_sel" value="&lt;b&gt;③ 選択&lt;/b&gt;&lt;br&gt;良い解ほど親に選ばれやすくする" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="80" width="260" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="ga_xo" value="&lt;b&gt;④ 交叉&lt;/b&gt;&lt;br&gt;2 つの親の遺伝子を組み合わせて子を作る&lt;br&gt;[4, 2, 8, 6 | 1, 3, 5, 7]&lt;br&gt;[3, 6, 2, 7 | 5, 1, 8, 4]&lt;br&gt;→ [4, 2, 8, 6, 5, 1, 8, 4]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="250" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="ga_mut" value="&lt;b&gt;⑤ 突然変異&lt;/b&gt;&lt;br&gt;遺伝子の一部をランダムに変える&lt;br&gt;局所的な最適解から抜け出すため" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="370" y="250" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="ga_gnext" value="&lt;b&gt;⑥ 次の世代&lt;/b&gt;&lt;br&gt;子で集団を入れ替える&lt;br&gt;十分良い解が見つかるか、&lt;br&gt;上限の回数まで繰り返す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="ga_pop" target="ga_fit"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="ga_fit" target="ga_sel"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="ga_sel" target="ga_xo"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="ga_xo" target="ga_mut"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="ga_mut" target="ga_gnext"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="ga_gnext" target="ga_pop"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="foot" value="勾配を使わないので、微分できない問題（組み合わせ・スケジュール・詰め込みなど）にも使える。ただし答えにたどり着く保証はなく、試行ごとに結果が変わる" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="30" y="400" width="940" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
