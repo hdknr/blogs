@@ -1,0 +1,34 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="rl_d" name="Reinforcement learning">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="rl_title" value="強化学習：エージェントが環境の中で試し、報酬から方策を学ぶ（CartPole の例）" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="15" width="920" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rl_agent" value="&lt;b&gt;エージェント&lt;/b&gt;&lt;br&gt;方策ネットワーク π(a | s)&lt;br&gt;状態を入力し、各行動の確率を出力&lt;br&gt;（4 → 128 → 2）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="300" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="rl_env" value="&lt;b&gt;環境（Gymnasium の CartPole-v1）&lt;/b&gt;&lt;br&gt;台車の上の棒を倒さないように支える&lt;br&gt;1 ステップ立っているごとに報酬 +1&lt;br&gt;最大 500 ステップ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="120" width="300" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="rl_act" value="行動 a：台車を左か右に押す" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="rl_agent" target="rl_env"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rl_obs" value="状態 s（台車の位置・速度、棒の角度・角速度）と報酬 r" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;fontSize=12;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.5;entryY=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="rl_env" target="rl_agent"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="790" y="270"/><mxPoint x="210" y="270"/></Array></mxGeometry></mxCell>
+
+        <mxCell id="rl_pg" value="&lt;b&gt;方策勾配法（レッスン 22）&lt;/b&gt;&lt;br&gt;1 回のエピソードが終わったら、各ステップの&lt;br&gt;割引した累積報酬を計算し、&lt;br&gt;長く立っていられた行動の確率を上げる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="300" width="420" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="rl_ac" value="&lt;b&gt;アクター・クリティック（レッスン 22）&lt;/b&gt;&lt;br&gt;アクター：行動を選ぶ方策&lt;br&gt;クリティック：その状態の先で得られる報酬を予測&lt;br&gt;予測より良かった行動を強める" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="520" y="300" width="420" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="rl_foot" value="正解ラベルはなく、手掛かりは報酬だけ。ランダムな行動では棒は数十ステップで倒れるが、学習すると最大の約 500 ステップ立ち続ける" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="30" y="420" width="940" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
