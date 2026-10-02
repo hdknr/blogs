@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="cvmap" name="Computer Vision map">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="パート IV「コンピュータビジョン」の 7 レッスンと、それぞれの出力" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="100" y="15" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Group A: classify -->
+        <mxCell id="ga" value="画像が何かを当てる（分類）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="940" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="a06" value="&lt;b&gt;06 OpenCV&lt;/b&gt;&lt;br&gt;画像は NumPy 配列&lt;br&gt;前処理・フレーム差分・&lt;br&gt;オプティカルフロー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="a07" value="&lt;b&gt;07 CNN&lt;/b&gt;&lt;br&gt;畳み込みフィルターを学習&lt;br&gt;位置がずれても特徴を拾える&lt;br&gt;出力：クラス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="375" y="100" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="a08" value="&lt;b&gt;08 転移学習&lt;/b&gt;&lt;br&gt;ImageNet で学習済みの CNN を&lt;br&gt;特徴抽出器として使い回す&lt;br&gt;出力：クラス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="690" y="100" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="ea1" value="" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="a06" target="a07"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea2" value="" style="endArrow=classic;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="a07" target="a08"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Group B: generate -->
+        <mxCell id="gb" value="画像を作る（生成）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="230" width="460" height="230" as="geometry"/>
+        </mxCell>
+        <mxCell id="b09" value="&lt;b&gt;09 オートエンコーダー / VAE&lt;/b&gt;&lt;br&gt;エンコーダーで潜在ベクトルに圧縮し、&lt;br&gt;デコーダーで元の画像に戻す&lt;br&gt;出力：画像（ノイズ除去・超解像・生成）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="55" y="270" width="410" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="b10" value="&lt;b&gt;10 GAN / スタイル変換&lt;/b&gt;&lt;br&gt;生成器と識別器を競わせる&lt;br&gt;出力：本物らしい新しい画像" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="55" y="370" width="410" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="eb1" value="" style="endArrow=classic;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="b09" target="b10"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Group C: where -->
+        <mxCell id="gc" value="どこに何があるかを当てる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="510" y="230" width="460" height="230" as="geometry"/>
+        </mxCell>
+        <mxCell id="c11" value="&lt;b&gt;11 物体検出&lt;/b&gt;&lt;br&gt;クラスと位置（バウンディングボックス）&lt;br&gt;評価は IoU と mAP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="535" y="270" width="410" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="c12" value="&lt;b&gt;12 セマンティックセグメンテーション&lt;/b&gt;&lt;br&gt;画素ごとのクラス（マスク）&lt;br&gt;エンコーダー・デコーダー型（SegNet / U-Net）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="535" y="370" width="410" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="ec1" value="" style="endArrow=classic;html=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="c11" target="c12"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="foot" value="どのレッスンも、07 の CNN と 08 の学習済みネットワークを部品として使う。09 のエンコーダー・デコーダーの形は 12 でも使われる" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="30" y="475" width="940" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

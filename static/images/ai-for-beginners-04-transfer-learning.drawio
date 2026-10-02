@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="tl" name="Transfer learning">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="転移学習：学習済みの VGG-16 に、新しい分類層だけを付けて学習する" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="15" width="880" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="img" value="猫か犬の写真&lt;br&gt;224×224×3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="150" width="120" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="feat" value="&lt;b&gt;vgg.features（畳み込み部分）&lt;/b&gt;&lt;br&gt;&lt;br&gt;ImageNet で学習済みの重みを凍結&lt;br&gt;（requires_grad = False）&lt;br&gt;&lt;br&gt;低い層：線や模様&lt;br&gt;高い層：目・耳などの組み合わせ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="200" y="95" width="290" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="vec" value="特徴量&lt;br&gt;512×7×7&lt;br&gt;= 25,088" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="540" y="150" width="110" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="head" value="&lt;b&gt;新しい分類層&lt;/b&gt;&lt;br&gt;Linear(25088, 2)&lt;br&gt;ここだけ学習" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="145" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="out" value="猫 / 犬" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="880" y="160" width="90" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="img" target="feat"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="feat" target="vec"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="vec" target="head"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="" style="endArrow=classic;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="head" target="out"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="n1" value="&lt;b&gt;凍結して分類層だけ学習&lt;/b&gt;&lt;br&gt;学習するパラメータ：14,764,866 個中 50,178 個&lt;br&gt;1 エポックで検証データの正解率 0.978" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="310" width="420" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="n2" value="&lt;b&gt;ファインチューニング&lt;/b&gt;&lt;br&gt;凍結を解いて全体を学習率 1e-4 で学習&lt;br&gt;1 エポックで 0.968（今回の 1 回の実行では上回らなかった）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="520" y="310" width="420" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="foot" value="数値は TransferLearningPyTorch.ipynb を筆者が 2026 年 9 月に実行した結果（学習 20,000 枚・検証 4,998 枚、Apple Silicon の GPU）" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#777777;" vertex="1" parent="1">
+          <mxGeometry x="30" y="410" width="940" height="25" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
