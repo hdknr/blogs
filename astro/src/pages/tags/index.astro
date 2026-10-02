@@ -1,20 +1,27 @@
 ---
 import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
-import Tag from "@/components/Tag.astro";
-import { getUniqueTags } from "@/utils/getUniqueTags";
+import { groupTags } from "@/utils/groupTags";
+import { visiblePosts } from "@/utils/getTerms";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
-const posts = await getCollection("posts", ({ data }) => !data.draft);
-const tags = getUniqueTags(posts);
+// Same entry set as tags/[...path].astro, so wiki-only tags are listed too
+const posts = visiblePosts(await getCollection("posts"));
+const wiki = await getCollection("wiki");
+const groups = groupTags([...posts, ...wiki]);
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+
+// This page lists ~1,300 tags, so it deliberately avoids <Tag>: its
+// transition:name makes Astro emit a ~2.4KB <style> per element (3MB of the
+// old 3.8MB page), and its inline SVG icon added another 345KB.
 ---
 
 <Layout title={`${t.pages.tagsTitle} | ${config.site.title}`}>
@@ -23,10 +30,65 @@ const t = useTranslations(locale);
   <Breadcrumb />
 
   <Main pageTitle={t.pages.tagsTitle} pageDesc={t.pages.tagsDesc}>
-    <ul class="flex flex-wrap gap-6">
-      {tags.map(({ tag, tagName }) => <Tag {tag} {tagName} />)}
-    </ul>
+    <nav class="mb-8 flex flex-wrap gap-x-3 gap-y-2">
+      {
+        groups.map(({ id, label }) => (
+          <a href={`#${id}`} class="hover:text-accent font-medium">
+            {label}
+          </a>
+        ))
+      }
+    </nav>
+
+    {
+      groups.map(({ id, label, tags }) => (
+        <section id={id} class="mb-8 scroll-mt-4">
+          <h2 class="border-border mb-3 border-b pb-1 text-xl font-semibold">
+            {label}
+            <span class="ms-2 text-sm font-normal opacity-60">
+              {tags.length}
+            </span>
+          </h2>
+          <ul class="tag-list">
+            {tags.map(({ tag, tagName, count }) => (
+              <li>
+                <a href={getRelativeLocaleUrl(locale, `tags/${tag}/`)}>
+                  {tagName}
+                  <small>{count}</small>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
   </Main>
 
   <Footer />
 </Layout>
+
+<style is:global>
+  /* global so the ~1,300 links carry no per-element scope attribute */
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+  .tag-list a {
+    border-bottom: 2px dashed var(--foreground);
+    font-size: 1.125rem;
+  }
+  .tag-list a::before {
+    content: "#";
+    margin-inline-end: 0.125rem;
+    opacity: 0.8;
+  }
+  .tag-list a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .tag-list small {
+    margin-inline-start: 0.25rem;
+    opacity: 0.6;
+  }
+</style>
