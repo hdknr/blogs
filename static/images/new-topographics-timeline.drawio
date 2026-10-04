@@ -1,0 +1,91 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="new-topographics-timeline" name="New Topographics Timeline">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1220" pageHeight="640" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="ニュー・トポグラフィックス（New Topographics）年表 — 「人間に変えられた風景」が主題になるまで" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="160" y="18" width="900" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="hd-year" value="年" style="text;html=1;fontSize=12;fontStyle=1;align=center;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="50" y="62" width="100" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="hd-event" value="出来事" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="180" y="62" width="300" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="hd-note" value="意義" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="760" y="62" width="300" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="spine" value="" style="shape=flexArrow;html=1;endArrow=block;endSize=1.2;width=10;fillColor=#e6e6e6;strokeColor=#bbbbbb;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="100" as="sourcePoint"/>
+            <mxPoint x="160" y="590" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="ybefore" value="〜1960s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="102" width="90" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="ebefore" value="伝統的な風景写真&#10;（手つかずの自然・崇高な景勝地を讃える）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="98" width="560" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="nbefore" value="「美しい自然」が風景写真のモチーフ" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="760" y="98" width="410" height="42" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="y1966" value="1966" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="182" width="90" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1966" value="「コンテンポラリー・フォトグラファーズ」シリーズ&#10;「社会的風景に向って」（ジョージ・イーストマン・ハウス）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="178" width="560" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="n1966" value="社会や日常を見る眼差しの先駆け" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="760" y="178" width="410" height="42" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="y1975" value="1975" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="262" width="90" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1975" value="「New Topographics: Photographs of a Man-Altered Landscape」&#10;企画: ウィリアム・ジェンキンス／9組10名が参加" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="258" width="560" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="n1975" value="転換点：人の営みで変わった風景を中立的に記録" style="text;html=1;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;fontColor=#b85450;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="760" y="258" width="410" height="42" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="y1981" value="1981" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="342" width="90" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1981" value="イギリスのアーノルフィニ・ギャラリーで再展示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="338" width="560" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="n1981" value="英国で再展示" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="760" y="338" width="410" height="42" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="y2009" value="2009–12" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="422" width="90" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2009" value="アメリカを皮切りに欧州各国（独・仏・蘭・西など）を巡回する再展示&#10;図録『New Topographics』（Steidl, 2010）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="418" width="560" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="n2009" value="歴史的評価の確立" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="760" y="418" width="410" height="42" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="yjp" value="日本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="50" y="502" width="90" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="ejp" value="伊奈英次・小林のりお・柴田敏雄・畠山直哉らに影響" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="498" width="560" height="42" as="geometry"/>
+        </mxCell>
+        <mxCell id="njp" value="日本の風景写真にも継承" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;fontColor=#666666;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="760" y="498" width="410" height="42" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
