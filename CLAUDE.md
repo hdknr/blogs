@@ -44,6 +44,7 @@ Tech blog built with **Astro + AstroPaper**, hosted on GitHub Pages.
 - **seo-advisor** — SEO optimisation (titles, tags, internal links)
 - **tech-writer** — review of post quality (structure, readability, Japanese style)
 - **trend-researcher** — tech trend research and post-idea suggestions
+- **test-strategist** — picks and runs a discriminating test (mutation, positive control, …) for each review finding
 
 ## Writing posts
 
@@ -83,7 +84,7 @@ Tech blog built with **Astro + AstroPaper**, hosted on GitHub Pages.
 - Wiki frontmatter: `title`, `description`, `date`, `lastmod`, `aliases`, `related_posts`, `tags`.
 - Wiki pages are NOT raw copies of posts — synthesise, summarise, and merge into reusable knowledge.
 - `/wiki-lint` runs health checks (orphans, missing links, stale entries).
-- Wiki section uses a dedicated layout under `layouts/wiki/` (`single.html`, `list.html`).
+- Wiki pages are rendered by the Astro routes under `astro/src/pages/wiki/`.
 - See `.claude/skills/wiki-ingest/SKILL.md` and `.claude/skills/wiki-lint/SKILL.md`.
 
 ## Category list
