@@ -120,9 +120,9 @@ git worktree prune
 
 ### 6. Wiki auto-ingest check
 
-Skip this step entirely if the caller asked to skip Wiki auto-ingest (e.g. `/blog` invoked
-from `scripts/blog-batch.sh`). Bundling wiki commits into blog branches causes conflicts
-when several blog PRs run in parallel.
+Skip this step entirely if the caller asked to skip Wiki auto-ingest (e.g. a batch driver
+that runs `/wiki-ingest all` once at the end). Bundling wiki commits into blog branches
+causes conflicts when several blog PRs run in parallel.
 
 ```bash
 cat .claude/wiki-last-ingest.txt
