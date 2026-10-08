@@ -111,4 +111,4 @@ When processing every post:
 - **Wiki pages are written in Japanese.**
 - Do NOT copy whole post bodies verbatim — summarise and integrate into reusable knowledge.
 - Keep a single wiki page from growing too long (rule of thumb: ≤ 200 lines).
-- Verify the Hugo build with `hugo --gc`.
+- Verify the build with the build check in CLAUDE.md ("Writing posts" → Build check).

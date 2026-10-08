@@ -1,6 +1,6 @@
 ---
 name: blog
-description: Create a new Hugo blog post and open a pull request
+description: Create a new blog post and open a pull request
 arguments:
   - name: topic
     description: "Post topic, title, or a GitHub issue/comment URL"
@@ -10,7 +10,7 @@ arguments:
     required: false
 ---
 
-Create a Hugo blog post from the given topic and open a PR.
+Create a blog post from the given topic and open a PR.
 
 ## URL allowlist (security)
 
@@ -93,7 +93,7 @@ Fetch the issue body and use it as the post source:
 ## Frontmatter templates
 
 **`slug:` is mandatory.** It must match the filename with the `YYYY-MM-DD-` date prefix removed.
-Without an explicit slug, Hugo derives the URL from the Japanese title, which breaks wiki and cross-post links.
+The permalink is built from date + slug (`astro/src/content.config.ts`), so wiki and cross-post links depend on it, and `validate_frontmatter.py` fails CI without it.
 
 GitHub-URL-sourced post:
 
@@ -177,7 +177,7 @@ When an architecture or flow diagram is needed, **do not use ASCII art** — ren
    ![図の内容を自然文で記述した alt テキスト](/blogs/images/<name>.png)
    ```
 4. **alt text**: describe the diagram in natural Japanese prose (improves image-search SEO + accessibility).
-5. **Do not use relative paths (`../../images/`)** — Hugo's permalink layout turns them into 404s. Always use the absolute `/blogs/images/` form.
+5. **Do not use relative paths (`../../images/`)** — `rehypePicture.mjs` only rewrites `/blogs/images/` paths, and a relative path resolves against the post's permalink and 404s. Always use the absolute `/blogs/images/` form.
 6. Match the visual style of existing drawio files (e.g. `static/images/openclaw-gateway-architecture.drawio`).
 
 ## Verification and review (mandatory, parallel fan-out)
@@ -290,10 +290,9 @@ After drafting the post, open a PR following this procedure.
    **Do not guess the absolute path from a relative one.** The Write tool happily creates files at non-existent paths, so a wrong path will silently fail with no error and force a redo.
 4. Create the post file inside the worktree:
    - Path: `$WORKTREE_DIR/content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md`
-5. Check the Hugo build inside the worktree (use `--source` instead of `cd`):
-   ```bash
-   hugo --source "$WORKTREE_DIR" --gc 2>&1 | tail -5
-   ```
+5. Run the build check from CLAUDE.md ("Writing posts" → Build check) inside the worktree.
+   `astro build` must run with `$WORKTREE_DIR/astro` as the working directory, so `cd` there
+   in its own Bash call first, then run each command separately.
 6. Commit and push inside the worktree (use `git -C` instead of `cd`):
    ```bash
    git -C "$WORKTREE_DIR" add content/posts/YYYY/MM/YYYY-MM-DD-<slug>.md
@@ -380,14 +379,3 @@ lives in `/ship` (`.claude/skills/ship/SKILL.md`).
 > Why the split: `linkcheck.yml` triggers on `pull_request: [ready_for_review, reopened]`.
 > Keeping the PR in draft during drafting and review means the Link check runs once, at
 > ship time, instead of once per push.
-
-   ```bash
-   # Read the last ingest date
-   cat .claude/wiki-last-ingest.txt
-   # → 2026-04-06
-
-   # After running ingest, use the Write tool to set
-   # .claude/wiki-last-ingest.txt to today's date.
-   ```
-
-   > **Why the skip-condition matters**: a single `/blog` run that triggers `/wiki-ingest all` will add commits to the current blog branch that modify shared wiki files like `content/wiki/concepts/harness-engineering.md` and `content/wiki/tools/claude-code.md`. When `blog-batch.sh` produces many blog branches in parallel, each carrying its own wiki commit, those branches conflict with each other and with `main`. Always let the batch driver decide when to run wiki ingest (via `--final-wiki-ingest`).

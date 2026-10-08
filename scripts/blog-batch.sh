@@ -15,10 +15,8 @@
 #   --final-wiki-ingest   全件処理完了後に /wiki-ingest all を 1 回だけ実行
 #
 # Wiki 集約処理について:
-#   /blog スキルの "Post-merge follow-up" には Wiki 自動 ingest チェックが含まれるが、
-#   バッチ実行中はこれを必ずスキップする（各ブランチに wiki コミットが混入し、
-#   並行 PR で同じ wiki ファイル更新が衝突するため）。
-#   バッチ完了後に Wiki を更新したい場合は --final-wiki-ingest を指定する。
+#   /blog は Wiki ingest を行わない（/ship の担当）。バッチ完了後に Wiki を
+#   更新したい場合は --final-wiki-ingest を指定する。
 #
 # Examples:
 #   ./scripts/blog-batch.sh 1 --dry-run                            # 未ブログ化一覧を確認
@@ -118,11 +116,6 @@ if [[ "$SKIP_REVIEW" == "true" ]]; then
   SKIP_REVIEW_PROMPT="SKILL.md の 'Verification and review' では fact-checker のみを起動し、tech-writer と seo-advisor は省略してください。fact-checker のモデルティア指定と、結果適用手順のゲート 0・ゲート 1（証拠カラムの確認と ⚠️/❌ の全件修正）は通常どおり適用してください。ファクトチェックはこのフラグでも省略されません。"
 fi
 
-# バッチ実行中は Wiki auto-ingest を必ずスキップする。
-# 各ブランチに wiki ingest コミットが混入すると、同じ wiki ファイルを
-# 複数 PR が並行更新してマージコンフリクトが発生するため。
-SKIP_WIKI_INGEST_PROMPT="重要: SKILL.md の 'Post-merge follow-up' ステップ 3（Wiki auto-ingest check）は実行しないでください。バッチ処理中なので個別 ingest は不要です。Wiki 更新はバッチ完了後にまとめて行います。"
-
 SUCCESS=0
 FAILED=0
 SKIPPED=0
@@ -167,8 +160,7 @@ for i in $(seq 0 $((PROCESS_COUNT - 1))); do
   echo "    ${BODY_PREVIEW}"
 
   # claude -p でブログ作成
-  PROMPT="/blog ${COMMENT_URL}
-${SKIP_WIKI_INGEST_PROMPT}"
+  PROMPT="/blog ${COMMENT_URL}"
   if [[ -n "$SKIP_REVIEW_PROMPT" ]]; then
     PROMPT="${PROMPT}
 ${SKIP_REVIEW_PROMPT}"
