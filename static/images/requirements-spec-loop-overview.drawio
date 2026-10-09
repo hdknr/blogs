@@ -1,0 +1,121 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="req-spec-loop" name="要求仕様書作成ループの全体像">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="開発ハーネスの手前に置く 2 つの確定ループ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="180" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="input" value="ヒアリングメモ・業務要望&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;曖昧・断片的&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="70" width="300" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="band1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#d6b656;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="880" height="230" as="geometry"/>
+        </mxCell>
+        <mxCell id="band1label" value="Validation：作るべきものは正しいか" style="text;html=1;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;fontColor=#9c7a1c;" vertex="1" parent="1">
+          <mxGeometry x="470" y="145" width="420" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="loop1" value="① 要求確定ループ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;利用者 ⇔ 開発者（構造化 → 意地悪な質問 → 利用者確認）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="175" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="art1" value="&lt;b&gt;成果物&lt;/b&gt;：判定表・日本語 Gherkin シナリオ・画面プロトタイプ&lt;br&gt;&lt;b&gt;出口&lt;/b&gt;：利用者がシナリオにサインオフ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="470" y="180" width="420" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="loop2" value="② 仕様レビューループ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Planner・Red Team・Domain Checker&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="285" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="art2" value="&lt;b&gt;成果物&lt;/b&gt;：確定仕様書（Markdown / Gherkin）&lt;br&gt;&lt;b&gt;出口&lt;/b&gt;：TBD 0 件・チェックリスト充足・テストを抽出できる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="470" y="290" width="420" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pipe" value="③ 生成パイプライン&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;構造化 → 契約 → テスト → 注入&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="410" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="art3" value="&lt;b&gt;成果物&lt;/b&gt;：spec_ir.json・openapi.yaml・types.ts・&lt;br&gt;Red のテスト群・モック／シードデータ&lt;br&gt;&lt;b&gt;関門&lt;/b&gt;：lint・型検査を機械的に通す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="470" y="410" width="420" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="band2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#82b366;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="510" width="880" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="band2label" value="Verification：作ったものは仕様どおりか" style="text;html=1;fontSize=11;fontStyle=1;align=left;verticalAlign=middle;fontColor=#4d7a3a;" vertex="1" parent="1">
+          <mxGeometry x="470" y="520" width="420" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="loop3" value="④ 開発ループ（ハーネス）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;開発者 ⇔ コーディングエージェント&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="545" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="art4" value="&lt;b&gt;ゴール&lt;/b&gt;：生成テストを全部 Green にする&lt;br&gt;&lt;b&gt;制約&lt;/b&gt;：テストは読み取り専用、触れるのは実装だけ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="470" y="550" width="420" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="done" value="完成・デプロイ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="680" width="300" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cost" value="上の段で直すほど安い：仕様の段階ならトークン代だけ、開発ループに持ち込むとコード修正・テスト実行・やり直しの往復になる" style="text;html=1;fontSize=11;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="470" y="670" width="420" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="f0" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;" edge="1" parent="1" source="input" target="loop1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1" value="サインオフ" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;" edge="1" parent="1" source="loop1" target="loop2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2" value="仕様確定" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;" edge="1" parent="1" source="loop2" target="pipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3" value="ゴールを注入" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;" edge="1" parent="1" source="pipe" target="loop3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f4" value="全テスト Green" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;" edge="1" parent="1" source="loop3" target="done">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r1" value="修正" style="endArrow=classic;html=1;rounded=1;strokeColor=#d6b656;dashed=1;fontSize=10;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="loop1" target="loop1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="65" y="228"/>
+              <mxPoint x="65" y="192"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r2" value="指摘" style="endArrow=classic;html=1;rounded=1;strokeColor=#d6b656;dashed=1;fontSize=10;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="loop2" target="loop2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="65" y="338"/>
+              <mxPoint x="65" y="302"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r3" value="Red" style="endArrow=classic;html=1;rounded=1;strokeColor=#82b366;dashed=1;fontSize=10;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="loop3" target="loop3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="65" y="598"/>
+              <mxPoint x="65" y="562"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="c1" style="endArrow=none;html=1;rounded=0;strokeColor=#cccccc;dashed=1;" edge="1" parent="1" source="loop1" target="art1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2" style="endArrow=none;html=1;rounded=0;strokeColor=#cccccc;dashed=1;" edge="1" parent="1" source="loop2" target="art2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3" style="endArrow=none;html=1;rounded=0;strokeColor=#cccccc;dashed=1;" edge="1" parent="1" source="pipe" target="art3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4" style="endArrow=none;html=1;rounded=0;strokeColor=#cccccc;dashed=1;" edge="1" parent="1" source="loop3" target="art4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
