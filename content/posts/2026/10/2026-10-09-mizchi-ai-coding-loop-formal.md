@@ -216,6 +216,8 @@ mizchi さん自身も、これをやるレビューツールを作っている�
 
 使っている仕様化スキルとして [formal-methods-reconciler](https://github.com/mizchi/skills/tree/main/formal-methods-reconciler) が公開されています。
 
+これらのプロンプトを実際に Claude Code に渡し、Z3 と TLA+ で仕様を検査した結果は、続編の [形式手法を Claude Code で回す — Z3 と TLA+ で仕様の穴を見つけ、反例をテストに落とす](/blogs/posts/2026/10/formal-methods-claude-code-spec-check/) にまとめました。
+
 ## まとめ
 
 記事は「またすぐ変わると思います」で締めくくられています。紹介されている個々のツールやプロンプトは、半年もすれば入れ替わるかもしれません。それでも、次の骨格は当面変わらないと思います。
