@@ -93,13 +93,13 @@ Claude が行った変更は Google ファイルのバージョン履歴に残�
 
 誤解されやすい点ですが、サイドバーの Claude が Google Workspace 全体を見るわけではありません。アドオンが扱うのは、開いている 1 ファイルだけです。Google 側に求める権限も、サイドバーの表示とそのファイルの読み書きに必要な範囲に限られます。
 
-Drive 内の他ファイルや Gmail・Calendar まで Claude から検索したい場合は、別途 Google Workspace のコネクターを有効にします。必要な範囲だけを Claude に見せる運用ができるわけです。
+Drive 内の他ファイルや Gmail・Calendar まで Claude から検索したい場合は、別途 Google Workspace のコネクターを有効にします。必要な範囲だけを Claude に見せる運用ができるわけです。Claude Desktop や Gemini CLI などから MCP 経由で Workspace データを扱う方法は、[Google Workspace 公式 MCP サーバー](/blogs/posts/2026/04/google-workspace-mcp-server/) の記事で紹介しています。
 
 組織で導入する場合は、Google Workspace 管理者がドメイン・グループ・組織部門の単位で利用者を指定できます。Team / Enterprise では、Claude 側の管理者がコネクター・Skills・モデルの利用範囲を管理します。
 
 ## Gemini との使い分け
 
-Gemini は Gmail・Drive・Calendar・Meet・Chat など Google のサービスに深く組み込まれており、Google の権限体系の中で情報を横断して扱うのが得意です。Gemini in Docs や Gemini in Sheets も、下書きの作成、表やグラフの作成、ピボットテーブルなどに対応しています。
+Gemini は Gmail・Drive・Calendar・Meet・Chat など Google のサービスに深く組み込まれており、Google の権限体系の中で情報を横断して扱うのが得意です。Gmail・カレンダー・Drive をまたぐ作業を 1 つのプロンプトで連続処理する [Gemini Agent モード](/blogs/posts/2026/04/gemini-agent-mode/) は、その方向を突き詰めた機能です。Gemini in Docs や Gemini in Sheets も、下書きの作成、表やグラフの作成、ピボットテーブルなどに対応しています。
 
 解説記事の整理を借りると、使い分けは次のようになります。この表は公式の比較ではなく解説記事の評価にもとづくもので、Gemini 側の機能も継続的に更新されている点に注意してください（◎ = 得意、○ = 対応、△ = 限定的）。
 

@@ -73,6 +73,8 @@ gws mcp
 
 設定後は Claude から「先週のメールを要約して」「明日の会議を確認して」などの自然言語指示で Workspace を操作できる。
 
+なお、Docs・Sheets・Slides のファイルを開いたまま Claude に直接編集させたい場合は、2026 年 10 月に公開ベータになった [Claude for Google Workspace](/blogs/posts/2026/10/claude-for-google-workspace/) のサイドバーという選択肢もある。
+
 ## 公式ドキュメント
 
 - [Configure the Google Workspace MCP servers](https://developers.google.com/workspace/guides/configure-mcp-servers)
