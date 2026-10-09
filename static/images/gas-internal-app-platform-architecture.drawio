@@ -1,0 +1,133 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="gas-internal-app-platform" name="GAS Internal App Platform">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1160" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="title" value="GAS による社内限定アプリ基盤" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="380" y="20" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Developer side -->
+        <mxCell id="dev-group" value="作る人（非エンジニアを含む社員の PC）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="330" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="claude" value="Claude Code&lt;br&gt;（自然言語で依頼）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="110" width="210" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="skills" value="社内スキル集（kube-mas）&lt;br&gt;onboarding → scaffold → deploy&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;既知の罠リスト・公開範囲の確認&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="190" width="270" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="build" value="Vite + React + TypeScript&lt;br&gt;vite-plugin-singlefile → Index.html 1 枚" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="285" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="clasp" value="clasp redeploy&lt;br&gt;（デプロイ ID 固定で URL 不変）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="365" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="claude" target="skills">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="skills" target="build">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="build" target="clasp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Google Workspace -->
+        <mxCell id="gws-group" value="自社 Google Workspace テナント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#82b366;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="420" y="70" width="420" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="webapp" value="GAS Web アプリ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;access: DOMAIN / executeAs: USER_ACCESSING or USER_DEPLOYING&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="110" width="360" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="doget" value="doGet()&lt;br&gt;HtmlService で Index.html を配信" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="200" width="170" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="server" value="サーバ関数&lt;br&gt;Session.getActiveUser()&lt;br&gt;LockService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="200" width="170" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="sheet" value="スプレッドシート（業務データ）" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=10;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="300" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="owner" value="オーナー譲渡・共有ドライブで&lt;br&gt;退職後も会社の管理下に残る" style="text;html=1;fontSize=10;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="450" y="395" width="360" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="webapp" target="doget">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="webapp" target="server">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="getValues() で一括読み込み" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;startArrow=classic;" edge="1" parent="1" source="server" target="sheet">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="デプロイ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="clasp" target="webapp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="390"/>
+              <mxPoint x="390" y="140"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Users -->
+        <mxCell id="users" value="同じドメインの社員&lt;br&gt;（ブラウザ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="110" width="220" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="outsider" value="社外・別テナントのアカウント&lt;br&gt;→ 開けない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b85450;fontSize=11;dashed=1;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="900" y="300" width="220" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="社内限定 URL" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;startArrow=classic;" edge="1" parent="1" source="users" target="webapp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="google.script.run" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;fontSize=10;dashed=1;" edge="1" parent="1" source="users" target="server">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="227"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=cross;endFill=0;" edge="1" parent="1" source="outsider" target="gws-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Distribution -->
+        <mxCell id="dist-group" value="スキルと設定の全社配布" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="510" width="1090" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="gh" value="GitHub リポジトリ&lt;br&gt;（スキル・CLAUDE.md）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="560" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="gha" value="GitHub Actions&lt;br&gt;macOS pkg / Windows パッケージ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="560" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="mdm" value="MDM 配布&lt;br&gt;Jamf（macOS）/ Intune（Windows）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="570" y="560" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="managed" value="全社員の端末に&lt;br&gt;管理者設定として配置" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="850" y="560" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="main へマージ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673a6;fontSize=10;" edge="1" parent="1" source="gh" target="gha">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673a6;" edge="1" parent="1" source="gha" target="mdm">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673a6;" edge="1" parent="1" source="mdm" target="managed">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="スキルが届く" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673a6;dashed=1;fontSize=10;" edge="1" parent="1" source="managed" target="dev-group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="970" y="490"/>
+              <mxPoint x="195" y="490"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
