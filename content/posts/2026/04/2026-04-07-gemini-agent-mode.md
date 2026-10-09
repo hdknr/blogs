@@ -37,6 +37,8 @@ Gemini Agentモードの強力さは、実務的なタスクを連鎖的に処�
 
 これらを1つのプロンプトで連続処理できる。
 
+Claude 側からも、2026年10月に公開ベータになった [Claude for Google Workspace](/blogs/posts/2026/10/claude-for-google-workspace/) で Docs・Sheets・Slides を直接編集できるようになった。Workspace を横断する Gemini と、開いたファイルを仕上げる Claude の使い分けはそちらの記事で整理している。
+
 ### ブラウザ操作
 
 - Webサイトを開いて情報を収集
