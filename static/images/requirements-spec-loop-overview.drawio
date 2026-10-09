@@ -23,18 +23,18 @@
         <mxCell id="loop1" value="① 要求確定ループ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;利用者 ⇔ 開発者（構造化 → 意地悪な質問 → 利用者確認）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="90" y="175" width="300" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="art1" value="&lt;b&gt;成果物&lt;/b&gt;：判定表・日本語 Gherkin シナリオ・画面プロトタイプ&lt;br&gt;&lt;b&gt;出口&lt;/b&gt;：利用者がシナリオにサインオフ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+        <mxCell id="art1" value="&lt;b&gt;成果物&lt;/b&gt;：Q&amp;amp;A 表・決定表・日本語 Gherkin シナリオ・画面プロトタイプ&lt;br&gt;&lt;b&gt;出口&lt;/b&gt;：Q&amp;amp;A 表の未回答 0 件、利用者がシナリオにサインオフ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
           <mxGeometry x="470" y="180" width="420" height="60" as="geometry"/>
         </mxCell>
 
         <mxCell id="loop2" value="② 仕様レビューループ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Planner・Red Team・Domain Checker&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="90" y="285" width="300" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="art2" value="&lt;b&gt;成果物&lt;/b&gt;：確定仕様書（Markdown / Gherkin）&lt;br&gt;&lt;b&gt;出口&lt;/b&gt;：TBD 0 件・チェックリスト充足・テストを抽出できる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+        <mxCell id="art2" value="&lt;b&gt;成果物&lt;/b&gt;：確定仕様書（Markdown / Gherkin）・Q&amp;amp;A 表&lt;br&gt;&lt;b&gt;出口&lt;/b&gt;：TBD・未回答 0 件、チェックリスト充足、テストを抽出できる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
           <mxGeometry x="470" y="290" width="420" height="60" as="geometry"/>
         </mxCell>
 
-        <mxCell id="pipe" value="③ 生成パイプライン&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;構造化 → 契約 → テスト → 注入&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="pipe" value="③ 仕様駆動のスキャフォールディング&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;構造化 → 契約 → テスト → 注入（骨組みを生成）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="90" y="410" width="300" height="70" as="geometry"/>
         </mxCell>
         <mxCell id="art3" value="&lt;b&gt;成果物&lt;/b&gt;：spec_ir.json・openapi.yaml・types.ts・&lt;br&gt;Red のテスト群・モック／シードデータ&lt;br&gt;&lt;b&gt;関門&lt;/b&gt;：lint・型検査を機械的に通す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
@@ -66,6 +66,9 @@
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
         <mxCell id="f1" value="サインオフ" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;" edge="1" parent="1" source="loop1" target="loop2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="back12" value="Q&amp;amp;A 表で差し戻し" style="endArrow=classic;html=1;rounded=0;strokeColor=#d6b656;dashed=1;fontSize=10;fontColor=#9c7a1c;labelBackgroundColor=#ffffff;exitX=0.85;exitY=0;exitDx=0;exitDy=0;entryX=0.85;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="loop2" target="loop1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
         <mxCell id="f2" value="仕様確定" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;" edge="1" parent="1" source="loop2" target="pipe">
