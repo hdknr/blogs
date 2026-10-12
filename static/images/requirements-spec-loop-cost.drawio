@@ -1,0 +1,72 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="cost-loop" name="実現性・コストのループ">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="580" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="要求確定・仕様レビューと並行して回す「実現性・コストのループ」" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="140" y="10" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="reqloop" value="① 要求確定ループ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;利用者 ⇔ 開発者&lt;br&gt;非機能要求（稼働時間・データ保持期間など）も聞く&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="specloop" value="② 仕様レビューループ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;エージェント同士の批判・形式手法の検査&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="210" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="qa" value="&lt;b&gt;Q&amp;amp;A 表&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;「費用への影響」の列で&lt;br&gt;機能と費用を並べる&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="420" y="135" width="150" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="costloop" value="&lt;b&gt;実現性・コストのループ&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;予算責任者 ⇔ 開発者・アーキテクト&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;div style=&quot;text-align:left;font-size:11px&quot;&gt;&lt;b&gt;開発コスト&lt;/b&gt;：途中成果物の規模 × 開発手法 × 体制&lt;br&gt;&lt;b&gt;運用コスト&lt;/b&gt;：非機能要求 → 基盤案（IaC）&lt;br&gt;→ 見積りツールで月額を出す&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="650" y="90" width="300" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="gate" value="&lt;b&gt;スキャフォールディングへ進む関門&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;仕様の確定（利用者のサインオフ）＋ 範囲・開発費・運用費・期間の合意（予算責任者のサインオフ）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="330" width="910" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pipe" value="③ 仕様駆動のスキャフォールディング" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="345" y="440" width="300" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="finops" value="リリース後：実際の運用費を見積りと比べ、非機能要求や基盤設計を見直す（FinOps、この記事の範囲外）" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="190" y="510" width="610" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_req_spec" value="サインオフ" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="reqloop" target="specloop">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_req_cost" value="途中成果物（決定表・画面一覧・非機能要求の回答）" style="endArrow=classic;html=1;rounded=1;strokeColor=#9673a6;fontSize=11;fontColor=#6a4f7a;labelBackgroundColor=#ffffff;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="reqloop" target="costloop">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="190" y="62"/>
+              <mxPoint x="800" y="62"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_cost_qa" value="費用付きの&lt;br&gt;選択肢を起票" style="endArrow=classic;html=1;rounded=0;strokeColor=#9673a6;dashed=1;fontSize=10;fontColor=#6a4f7a;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="costloop" target="qa">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_qa_req" value="利用者に&lt;br&gt;聞く" style="endArrow=classic;html=1;rounded=0;strokeColor=#d6b656;dashed=1;fontSize=10;fontColor=#9c7a1c;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="qa" target="reqloop">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_spec_gate" value="仕様確定" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="specloop">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="330" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_cost_gate" value="予算合意" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="costloop">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800" y="330" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_gate_pipe" style="endArrow=classic;html=1;rounded=0;strokeColor=#666666;" edge="1" parent="1" source="gate" target="pipe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
