@@ -1,0 +1,88 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="spec-loop-plugin" name="要求側プラグインと dev-loop の分担">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="580" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="要求側を 1 つのプラグインに、開発は dev-loop に" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="190" y="10" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="specbox" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffbf0;strokeColor=#d6b656;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="520" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="speclabel" value="要求側プラグイン（例：spec-loop）" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#9c7a1c;" vertex="1" parent="1">
+          <mxGeometry x="45" y="66" width="300" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="sk1" value="&lt;b&gt;req-loop&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;1 周 = レビュー会 1 回。利用者の回答で止まる&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#b85450;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="100" width="280" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="sk2" value="&lt;b&gt;spec-review&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Planner が書き、3 役がレビュー。抜ける条件を判定&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="160" width="280" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="sk3" value="&lt;b&gt;feasibility&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;見積り・スケジュール。予算責任者の合意で止まる&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#b85450;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="220" width="280" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="sk4" value="&lt;b&gt;proposal&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;関門の確認と提案書の生成。決裁者の承認で止まる&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#b85450;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="280" width="280" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="sk5" value="&lt;b&gt;scaffold&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;spec_ir.json → OpenAPI・型・Red テスト → Issue 化&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="340" width="280" height="46" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="agents" value="&lt;b&gt;agents/&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Red Team・Domain Checker・&lt;br&gt;Formal Checker・見積りの検証役&lt;br&gt;書き込みツールなし・別ティア&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="100" width="180" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="refs" value="&lt;b&gt;references/&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;データの決まりを 1 か所に&lt;br&gt;（ツリー・qa.csv の列・タグ名）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="205" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="scripts" value="&lt;b&gt;scripts/&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;決定論的な処理（CSV の検証・&lt;br&gt;タグの照合・図とサイトの生成）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="350" y="285" width="180" height="62" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="legend" value="赤枠のスキル：人間の判断（回答・合意・承認）を待って止まる" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="50" y="400" width="480" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="resume" value="再開点はファイルに残る（Q&amp;amp;A 表の状態・サインオフのタグ）" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="50" y="422" width="480" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="devbox" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f9f1;strokeColor=#82b366;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="680" y="60" width="270" height="210" as="geometry"/>
+        </mxCell>
+        <mxCell id="devlabel" value="dev-loop プラグイン" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#4d7a3a;" vertex="1" parent="1">
+          <mxGeometry x="695" y="66" width="240" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="devskill" value="&lt;b&gt;dev-loop&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Issue 1 件を verify が通るまで回す&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="100" width="230" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="devagent" value="&lt;b&gt;dev-loop-verifier&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;反証を探す。書き込みツールなし・別ティア&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="165" width="230" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="devnote" value="停止条件は verify（割り目などで人間に確認）" style="text;html=1;fontSize=10;align=left;verticalAlign=middle;fontColor=#4d7a3a;" vertex="1" parent="1">
+          <mxGeometry x="700" y="230" width="240" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="repo" value="&lt;b&gt;正本リポジトリ&lt;/b&gt;　docs/ の下の shared・requirements・feasibility・proposal（Q&amp;amp;A 表は shared/qa.csv）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="500" width="520" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_handoff" value="受け渡しの契約&lt;br&gt;Issue・spec_ir.json・Red テスト" style="endArrow=classic;html=1;rounded=1;strokeColor=#666666;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="sk5" target="devbox">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="815" y="363"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_back" value="仕様の穴は Q&amp;amp;A 表へ差し戻す&lt;br&gt;（新たに決める取り決め）" style="endArrow=classic;html=1;rounded=1;strokeColor=#d6b656;dashed=1;fontSize=10;fontColor=#9c7a1c;labelBackgroundColor=#ffffff;edgeStyle=orthogonalEdgeStyle;exitX=0.85;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="devbox" target="repo">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_repo" value="読み書き" style="endArrow=classic;startArrow=classic;html=1;rounded=0;strokeColor=#666666;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="specbox" target="repo">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
