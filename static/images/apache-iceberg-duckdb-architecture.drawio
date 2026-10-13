@@ -1,0 +1,108 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="iceberg-arch" name="Apache Iceberg Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="760" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Apache Iceberg の構造と計算エンジン" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Engines -->
+        <mxCell id="eng-group" value="計算エンジン（どれからでも同じテーブルを読み書き）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;align=left;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="920" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="eng-duckdb" value="DuckDB&lt;br&gt;（ノートPC・Lambda）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="95" width="190" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="eng-athena" value="Amazon Athena" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="95" width="190" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="eng-spark" value="Spark / Trino / Flink&lt;br&gt;（Glue・EMR）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="510" y="95" width="190" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="eng-dwh" value="Snowflake / Redshift など" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="730" y="95" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Catalog -->
+        <mxCell id="cat-box" value="&lt;b&gt;カタログ&lt;/b&gt;&lt;br&gt;テーブル名 → 最新メタデータファイルの位置&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Glue Data Catalog / S3 Tables / REST カタログ&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="300" y="200" width="400" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Metadata layer -->
+        <mxCell id="meta-group" value="メタデータ層（S3 上のファイル）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;align=left;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="40" y="310" width="920" height="230" as="geometry"/>
+        </mxCell>
+        <mxCell id="meta-json" value="&lt;b&gt;メタデータファイル&lt;/b&gt; (vN.metadata.json)&lt;br&gt;スキーマ・パーティション仕様・スナップショット一覧" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="270" y="345" width="460" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="meta-mlist" value="&lt;b&gt;マニフェストリスト&lt;/b&gt;&lt;br&gt;スナップショットごとに 1 つ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="370" y="415" width="260" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="meta-mf1" value="&lt;b&gt;マニフェスト&lt;/b&gt;&lt;br&gt;データファイル一覧＋列統計" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="220" y="475" width="220" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="meta-mf2" value="&lt;b&gt;マニフェスト&lt;/b&gt;&lt;br&gt;データファイル一覧＋列統計" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="560" y="475" width="220" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Data layer -->
+        <mxCell id="data-group" value="データ層（S3 上の Parquet ファイル）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;align=left;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="40" y="580" width="920" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="data-f1" value="data-001.parquet" style="shape=note;whiteSpace=wrap;html=1;size=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="250" y="620" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="data-f2" value="data-002.parquet" style="shape=note;whiteSpace=wrap;html=1;size=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="430" y="620" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="data-f3" value="data-003.parquet" style="shape=note;whiteSpace=wrap;html=1;size=12;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="610" y="620" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="data-del" value="削除ファイル&lt;br&gt;（行の削除を記録）" style="shape=note;whiteSpace=wrap;html=1;size=12;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="620" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e-duck-cat" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="eng-duckdb" target="cat-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-athena-cat" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="eng-athena" target="cat-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-spark-cat" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="eng-spark" target="cat-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-dwh-cat" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#666666;" edge="1" parent="1" source="eng-dwh" target="cat-box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cat-meta" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="cat-box" target="meta-json">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-meta-mlist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#9673a6;" edge="1" parent="1" source="meta-json" target="meta-mlist">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-mlist-mf1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#9673a6;" edge="1" parent="1" source="meta-mlist" target="meta-mf1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-mlist-mf2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#9673a6;" edge="1" parent="1" source="meta-mlist" target="meta-mf2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-mf1-d1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d79b00;" edge="1" parent="1" source="meta-mf1" target="data-f1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-mf1-d2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d79b00;" edge="1" parent="1" source="meta-mf1" target="data-f2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-mf2-d3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d79b00;" edge="1" parent="1" source="meta-mf2" target="data-f3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-mf2-del" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#b85450;" edge="1" parent="1" source="meta-mf2" target="data-del">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
