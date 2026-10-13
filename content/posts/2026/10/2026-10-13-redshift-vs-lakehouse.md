@@ -49,13 +49,13 @@ Redshift には、ノード数を決めて常時起動するプロビジョン�
 | ストレージ（RMS） | 計算例では 1 GB・月あたり $0.024 |
 | S3 上の外部データへのクエリ | 別課金ではなく、RPU 時間に含まれる |
 
-最小の 4 RPU なら、動いている間は 1 時間あたり $1.50 です。アイドル時に課金されないので、日中だけ使うような負荷なら Serverless が合います。プロビジョンド型では、混雑時に自動で処理能力を足す Concurrency Scaling の無料枠が、1 日最大 1 時間分たまります。
+計算例の単価で最小の 4 RPU を動かすと、1 時間あたり $1.50 です（料金ページにも「as low as $1.50 per hour」とあります）。アイドル時に課金されないので、日中だけ使うような負荷なら Serverless が合います。プロビジョンド型では、混雑時に自動で処理能力を足す Concurrency Scaling の無料枠が、1 日最大 1 時間分たまります。
 
 レイクハウス側の代表である Athena は、[料金ページ](https://aws.amazon.com/athena/pricing/)の計算例ではスキャンしたデータ 1 TB あたり $5 です。DuckDB は自分の PC や Lambda で動かすので、エンジンそのものの利用料はかかりません。
 
 ここから言えるのは、**料金の構造が違う**ということです。
 
-- **Redshift Serverless**：起動している時間で決まる。同じ時間内なら、たくさんクエリを投げても料金は変わらない。
+- **Redshift Serverless**：起動している時間と RPU 数で決まる。基本容量で収まる範囲なら、クエリの本数が増えても料金は変わらない。ただし負荷が高まって RPU が自動で増えると、その分も同じ単価で課金される。
 - **Athena**：スキャン量で決まる。たまにしか投げないなら安いが、大量のデータを何度も読むと膨らむ。
 - **DuckDB**：利用料はかからず、手元のマシンの能力が上限になる。
 
@@ -83,7 +83,7 @@ CREATE TABLE awsdatacatalog.my_glue_db.orders (
 USING ICEBERG
 LOCATION 's3://amzn-s3-demo-bucket/orders/';
 
--- S3 Tables のテーブルバケットには 3 部構成の名前で書く
+-- S3 Tables のテーブルバケットにある既存のテーブルには、3 部構成の名前で書く
 INSERT INTO "amzn-s3-demo-bucket@s3tablescatalog".my_namespace.orders
 VALUES (1, 'pending', 'us-east-1');
 ```
@@ -119,6 +119,6 @@ Redshift から Iceberg に書けるようになったので、「Redshift を�
 ## まとめ
 
 - Redshift は計算・テーブル管理・ストレージが一体の DWH 製品で、Iceberg や DuckLake はテーブルの形式です。比べるべきは「データをどこに、どの形式で置くか」です。
-- Redshift Serverless は起動時間（RPU 時間）で課金され、アイドル時は無料です。Athena はスキャン量、DuckDB は利用料なしと、料金の構造がそれぞれ違います。
+- Redshift Serverless は RPU 時間で課金され、アイドル時は無料です。Athena はスキャン量、DuckDB は利用料なしと、料金の構造がそれぞれ違います。
 - Redshift は Iceberg テーブルの読み書きに対応し、2026 年には ALTER TABLE や Iceberg v3 にも対応しました。ただし書き込みは 1 文 1 トランザクションで、競合時は自動で再試行されないなどの制約があります。
 - 実務では、共有データを Iceberg に置き、同時実行性能が必要な集計だけ Redshift の RMS に持つ組み合わせが現実的です。
