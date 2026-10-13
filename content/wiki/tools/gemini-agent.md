@@ -2,7 +2,7 @@
 title: "Gemini Agent"
 description: "Google の Gemini に搭載されたエージェントモード。Gmail・Calendar・Drive など Google Workspace を横断して複雑なマルチステップタスクを自動実行する"
 date: 2026-04-15
-lastmod: 2026-04-15
+lastmod: 2026-10-13
 aliases: ["Gemini Agentモード"]
 related_posts:
   - "/posts/2026/04/gemini-agent-mode/"
@@ -38,6 +38,7 @@ Google AI Ultra プランのサブスクライバー向けに提供（2026年4�
 - [AI エージェント](/blogs/wiki/concepts/ai-agent/) — エージェントの基本概念
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/) — Anthropic のマネージドエージェント基盤
 - [MCP](/blogs/wiki/concepts/mcp/) — エージェントとツール連携のプロトコル
+- [Claude for Google Workspace](/blogs/wiki/tools/claude-for-google-workspace/) — Docs・Sheets・Slides 内の Claude。Gemini との使い分け
 
 ## ソース記事
 

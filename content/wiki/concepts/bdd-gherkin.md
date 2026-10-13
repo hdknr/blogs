@@ -2,7 +2,7 @@
 title: "BDD と Gherkin 構文"
 description: "振る舞い駆動開発と Gherkin による「仕様の共通言語化」。金融システムで BDD が効く理由と、Three Amigos・ステップ定義・動く仕様書という実務の型"
 date: 2026-07-28
-lastmod: 2026-07-28
+lastmod: 2026-10-13
 aliases: ["BDD", "振る舞い駆動開発", "Gherkin", "ガーキン", "Cucumber", "SpecFlow", "Reqnroll", "Three Amigos", "動く仕様書", "Given When Then"]
 related_posts:
   - "/posts/2026/07/financial-system-bdd-gherkin/"
@@ -84,6 +84,7 @@ end
 - [pytest によるカオスエンジニアリング](/blogs/wiki/guides/pytest-chaos-engineering/) — 障害注入によるテスト
 - [自動テスト修正パイプライン](/blogs/wiki/guides/auto-test-fix-pipeline/) — テストを軸にした自律修正
 - [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/orchestrator-coder-split/) — テストをゲートとして使う設計
+- [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — 日本語 Gherkin を利用者との合意とテスト生成の元にする
 - [形式手法](/blogs/wiki/concepts/formal-methods/) — 仕様の厳密化という別アプローチ
 
 ## ソース記事

@@ -2,7 +2,7 @@
 title: "ループエンジニアリング"
 description: "エージェントを叩く役を人間から機械へ移す設計手法。6つの構成部品、作る前の4条件テスト、撤退ラインと3つの罠を整理する"
 date: 2026-07-29
-lastmod: 2026-09-30
+lastmod: 2026-10-13
 aliases: ["Loop Engineering", "ループ設計", "オープンループ", "クローズドループ", "フリートループ", "理解負債", "認知的降伏"]
 related_posts:
   - "/posts/2026/06/loop-engineering-2026-ai-skills/"
@@ -136,6 +136,7 @@ tags: ["ループエンジニアリング", "AIエージェント", "自動化",
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — ループ自体を改善する外側のループ
 - [Claude Code](/blogs/wiki/tools/claude-code/) — `/loop` `/goal` `/schedule` の提供元
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 作成者と検証者を分ける理由と 3 層
+- [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — 人間の判断を待って止まる上流のループと、開発ループとの境界
 
 ## ソース記事
 

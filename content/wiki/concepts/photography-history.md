@@ -2,7 +2,7 @@
 title: "写真史の転換点"
 description: "1839年から現在までの写真史を「技術」「制度・美学」「流通・受容」「発注」の4軸で整理した見取り図"
 date: 2026-08-23
-lastmod: 2026-08-23
+lastmod: 2026-10-13
 aliases: ["写真の歴史", "写真史", "photography history"]
 related_posts:
   - "/posts/2026/08/photography-history-turning-points/"
@@ -100,6 +100,7 @@ FSA は国家の画像生産機関でもあった。撮るべき対象を列挙�
 ## 関連ページ
 
 - [ニューカラー](/blogs/wiki/concepts/new-color-photography/) — V期の中心的な運動
+- [ニュー・トポグラフィックス](/blogs/wiki/concepts/new-topographics/) — 同時代に人工の風景を中立的に記録した潮流
 - [料理写真のライティング](/blogs/wiki/guides/food-photography-lighting/) — 実務側での光と色の設計
 
 ## ソース記事

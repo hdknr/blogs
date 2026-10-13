@@ -2,12 +2,13 @@
 title: "形式手法（Formal Methods）"
 description: "仕様や設計を数学的に厳密な形で書き、その性質を機械で検査する技術群。AI コード生成の普及で再評価され、LLM に形式化させて検査器に判定させる使い方が実用になっている"
 date: 2026-07-15
-lastmod: 2026-10-09
+lastmod: 2026-10-13
 aliases: ["形式手法", "Formal Methods", "形式検証", "verification bottleneck", "検証ボトルネック", "モデル検査", "SMT ソルバ", "Z3", "TLA+", "TLC"]
 related_posts:
   - "/posts/2026/06/formal-methods-ai-verification/"
   - "/posts/2026/10/mizchi-ai-coding-loop-formal/"
   - "/posts/2026/10/formal-methods-claude-code-spec-check/"
+  - "/posts/2026/10/requirements-spec-loop/"
 tags: ["形式手法", "ソフトウェア検証", "AI", "プログラミング言語", "品質保証"]
 ---
 
@@ -67,6 +68,10 @@ mizchi さんが挙げるプロンプト例は、「今あるコードを形式�
 - **Z3 × 料金計算**：「会員 10% 引き（切り捨て）」「3,000 円以上でクーポン 1,000 円引き」「最終金額は注文額の 60% 以上」の 3 規則。会員がクーポンを使う 3,000〜3,334 円で下限を割る実装バグに加え、1〜2 円の会員注文では切り捨てと下限が両立しない**仕様の矛盾**が見つかった
 - **TLA+ × キャッシュ無効化**：「DB 更新後にキャッシュ削除」の設計で、読み込み側が古い値を読んだあと、更新と削除が先に走り、最後に古い値が書き戻される 5 ステップの競合を TLC が検出。memcached のリース（"Scaling Memcache at Facebook"、NSDI 2013）と同じ考え方の修正で、212,675 状態を網羅して違反なしを確認した
 
+### 仕様レビューの検査役として使う
+
+[要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/)では、エージェント同士の仕様レビューに Formal Checker を置き、対象を 3 つに絞る — 決定表・計算ルールは Z3（どのルールにも当てはまらない入力＝抜け、2 つのルールが違う結果を出す入力＝矛盾）、並行・リトライ・取り消しが絡む業務フローは TLA+、権限・ロールは Alloy。画面や文言、順番どおりに進むだけのフローは対象外。反例は具体的な入力なので、利用者には式を見せず「A と B のどちらにしますか？」という選択肢付きの質問に直して Q&A 表に起票する。形式手法が確かめるのは仕様内部の整合性だけで、「利用者が本当に必要としているか」は判定できない。
+
 ### なぜ今なのか（verification bottleneck）
 
 人間がコードを書く時代、形式手法は二重コストだった。形式検証されたマイクロカーネル **seL4** は、8,700 行の C コードの検証に **25 人年**を要している。
@@ -82,6 +87,7 @@ AI エージェントがコード生成を担うと構図が逆転する。
 
 ## 関連ページ
 
+- [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — 仕様レビューループの Formal Checker として使う
 - [ミューテーションテスト](/blogs/wiki/concepts/mutation-testing/) — 「修正を外した変異版が落ちるか」で検査の検出力を確かめる考え方が共通
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 形式化する LLM と判定する検査器を分ける構図
 - [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — 反例・検査結果を数値化された停止条件としてループに組み込む
@@ -95,3 +101,4 @@ AI エージェントがコード生成を担うと構図が逆転する。
 - [AIコード生成時代に形式手法が実用段階へ——Jane Street が語る検証ボトルネック](/blogs/posts/2026/06/formal-methods-ai-verification/) — 2026-06-24
 - [mizchi さんの「俺のAIプログラミング手法」を読む](/blogs/posts/2026/10/mizchi-ai-coding-loop-formal/) — 2026-10-09
 - [形式手法を Claude Code で回す — Z3 と TLA+ で仕様の穴を見つけ、反例をテストに落とす](/blogs/posts/2026/10/formal-methods-claude-code-spec-check/) — 2026-10-09
+- [要求仕様書作成ループ — コーディングエージェントの開発ハーネスの手前に「要求確定」と「仕様レビュー」のループを置く](/blogs/posts/2026/10/requirements-spec-loop/) — 2026-10-09

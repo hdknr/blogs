@@ -2,7 +2,7 @@
 title: "シャドーAI"
 description: "IT 部門の承認を経ずに従業員が業務で使用する未承認の AI ツール・サービス"
 date: 2026-04-23
-lastmod: 2026-09-02
+lastmod: 2026-10-13
 aliases: ["Shadow AI", "シャドーIT AI版"]
 related_posts:
   - "/posts/2026/04/shadow-ai-risks/"
@@ -40,6 +40,7 @@ tags: ["セキュリティ", "データガバナンス", "企業リスク", "AI"
 - [バイブコーディング](/blogs/wiki/concepts/vibe-coding/)
 - [Infisical](/blogs/wiki/tools/infisical/)
 - [AI 自律型組織](/blogs/wiki/concepts/ai-autonomous-organization/) — エージェントの分散乱立を1部署に集約して抑制した事例
+- [Google Apps Script（GAS）](/blogs/wiki/tools/google-apps-script/) — AI で作った社内ツールの置き場所を標準化し、スキルで安全な道を舗装した事例
 
 ## ソース記事
 
