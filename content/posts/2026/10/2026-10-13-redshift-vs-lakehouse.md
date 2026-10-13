@@ -34,6 +34,8 @@ AWS で分析基盤を作るとき、まず候補に挙がるのが **Amazon Red
 
 ![DWH 一体型とレイクハウスの構成を比べた図。左の DWH 一体型では、BI やアプリケーションが Amazon Redshift にアクセスし、Redshift の中に計算（Serverless の RPU またはノード）、テーブル管理（内部のカタログ）、Redshift マネージドストレージ（RMS）がまとまっている。右のレイクハウスでは、Redshift、Athena、Spark（Glue・EMR）、DuckDB の各エンジンが AWS Glue Data Catalog または S3 Tables のカタログを経由して、Amazon S3 上の Apache Iceberg テーブルを読み書きする。Redshift もエンジンの 1 つとして並んでいる](/blogs/images/redshift-vs-lakehouse-architecture.png)
 
+Redshift のテーブルデータは、**Redshift マネージドストレージ**（Redshift Managed Storage、以下 RMS）に保存されます。RMS は計算から切り離されたストレージ層で、計算リソースとは別に容量が伸縮し、料金も別に課金されます。
+
 | 観点 | Redshift にデータを持つ（RMS） | S3 に Iceberg で持つ（レイクハウス） |
 |---|---|---|
 | データの形式 | Redshift 内部の形式 | Parquet ＋ Iceberg のメタデータ（オープン） |
