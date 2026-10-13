@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="agent-guardrails" name="AI agent data platform">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="AI エージェントのためのデータ基盤：4 つの守り" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Stack -->
+        <mxCell id="agent" value="&lt;b&gt;AI エージェント&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="160" y="70" width="400" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="gateway" value="&lt;b&gt;窓口&lt;/b&gt;&lt;br&gt;MCP サーバー ・ セマンティックレイヤー（指標の定義）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="160" y="160" width="400" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="engines" value="&lt;b&gt;計算エンジン&lt;/b&gt;&lt;br&gt;DuckDB ・ Athena ・ Redshift" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="160" y="260" width="400" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="catalog" value="&lt;b&gt;カタログ&lt;/b&gt;&lt;br&gt;Glue Data Catalog / S3 Tables / Iceberg REST カタログ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="160" y="360" width="400" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="storage" value="&lt;b&gt;S3 上の Iceberg テーブル&lt;/b&gt;&lt;br&gt;Parquet ＋ スナップショット ＋ ブランチ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="160" y="460" width="400" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Guardrails -->
+        <mxCell id="g1" value="&lt;b&gt;① 意味&lt;/b&gt;：列や指標の定義を渡し、&lt;br&gt;LLM に計算させない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="610" y="160" width="330" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="g2" value="&lt;b&gt;② 費用&lt;/b&gt;：スキャン量や RPU に上限を設ける" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="610" y="260" width="330" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="g3" value="&lt;b&gt;③ 権限&lt;/b&gt;：読めるテーブルを絞り、&lt;br&gt;既定は読み取り専用にする" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="610" y="360" width="330" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="g4" value="&lt;b&gt;④ 取り消し&lt;/b&gt;：書き込みはブランチで検証し、&lt;br&gt;失敗はスナップショットで戻す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="610" y="460" width="330" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges stack -->
+        <mxCell id="es1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="agent" target="gateway">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="es2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="gateway" target="engines">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="es3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="engines" target="catalog">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="es4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="catalog" target="storage">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges guardrails (dashed) -->
+        <mxCell id="eg1" style="rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=none;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="g1" target="gateway">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eg2" style="rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=none;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="g2" target="engines">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eg3" style="rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=none;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="g3" target="catalog">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eg4" style="rounded=0;html=1;strokeColor=#b85450;dashed=1;endArrow=none;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="g4" target="storage">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
