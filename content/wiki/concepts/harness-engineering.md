@@ -2,7 +2,7 @@
 title: "ハーネスエンジニアリング"
 description: "AI エージェントの出力品質を保証する設計パターン。検証層・制約層・フィードバック層で構成"
 date: 2026-04-06
-lastmod: 2026-07-28
+lastmod: 2026-10-13
 aliases: ["Harness Engineering"]
 related_posts:
   - "/posts/2026/03/harness-engineering/"
@@ -94,6 +94,7 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 ## 関連ページ
 
 - [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — ハーネスの上に載る制御プレーン層
+- [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — ハーネスの手前で仕様そのものの妥当性を固めるループ
 - [AIエージェント設計レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — ハーネスがどのレイヤーを担当するかの地図
 - [AI エージェント](/blogs/wiki/concepts/ai-agent/) — ハーネスで品質保証される対象
 - [エージェントメモリのロックイン](/blogs/wiki/concepts/agent-memory-lock-in/) — ハーネスとメモリの不可分性とロックインリスク
