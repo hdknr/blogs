@@ -19,7 +19,7 @@
         <mxCell id="engines" value="&lt;b&gt;計算エンジン&lt;/b&gt;&lt;br&gt;DuckDB ・ Athena ・ Redshift" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="160" y="260" width="400" height="60" as="geometry"/>
         </mxCell>
-        <mxCell id="catalog" value="&lt;b&gt;カタログ&lt;/b&gt;&lt;br&gt;Glue Data Catalog / S3 Tables / Iceberg REST カタログ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="catalog" value="&lt;b&gt;カタログ&lt;/b&gt;&lt;br&gt;Glue Data Catalog ・ S3 Tables ・ Iceberg REST カタログ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="160" y="360" width="400" height="60" as="geometry"/>
         </mxCell>
         <mxCell id="storage" value="&lt;b&gt;S3 上の Iceberg テーブル&lt;/b&gt;&lt;br&gt;Parquet ＋ スナップショット ＋ ブランチ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
