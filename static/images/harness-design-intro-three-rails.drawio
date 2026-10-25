@@ -1,38 +1,72 @@
 <mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
   <diagram id="harness-three-rails" name="Harness Three Rails">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="420" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="660" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <mxCell id="title" value="柵を走らせる3本のレール" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="300" y="15" width="400" height="30" as="geometry"/>
+        <mxCell id="title" value="仕事の流れと、そこに据え付ける3本のレール" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="15" width="600" height="30" as="geometry"/>
         </mxCell>
 
-        <mxCell id="rail-client" value="&lt;b&gt;クライアント内：エージェントの Hooks&lt;/b&gt;&lt;br&gt;&lt;br&gt;タイミング：編集・実行の瞬間&lt;br&gt;例：編集後に lint／rm を事前に止める&lt;br&gt;&lt;br&gt;強制力：弱（設定で無効化できる）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="30" y="70" width="290" height="170" as="geometry"/>
+        <!-- Flow lane -->
+        <mxCell id="lane-flow" value="土台：エージェントの仕事が流れる場所" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="30" y="55" width="400" height="25" as="geometry"/>
         </mxCell>
-        <mxCell id="rail-repo" value="&lt;b&gt;リポジトリ：Git hooks&lt;/b&gt;&lt;br&gt;&lt;br&gt;タイミング：コミット・push 時&lt;br&gt;例：Husky・lefthook で check を実行&lt;br&gt;&lt;br&gt;強制力：中（--no-verify で抜けられる）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="355" y="70" width="290" height="170" as="geometry"/>
+        <mxCell id="place-client" value="&lt;b&gt;クライアント&lt;/b&gt;&lt;br&gt;エージェントが動く場所&lt;br&gt;（Claude Code・Cursor など）&lt;br&gt;モデルがファイルを編集し、&lt;br&gt;コマンドを実行する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="85" width="270" height="110" as="geometry"/>
         </mxCell>
-        <mxCell id="rail-remote" value="&lt;b&gt;リモート：CI&lt;/b&gt;&lt;br&gt;&lt;br&gt;タイミング：PR の作成・更新時&lt;br&gt;例：同じ check をパイプラインで実行&lt;br&gt;ブランチ保護で失敗時はマージ不可&lt;br&gt;&lt;br&gt;強制力：最大（抜けられない）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="680" y="70" width="290" height="170" as="geometry"/>
+        <mxCell id="place-repo" value="&lt;b&gt;リポジトリ（Git）&lt;/b&gt;&lt;br&gt;成果物と変更履歴の置き場&lt;br&gt;間違えても巻き戻せる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="365" y="85" width="270" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="place-remote" value="&lt;b&gt;リモート（GitHub など）&lt;/b&gt;&lt;br&gt;チームの正本&lt;br&gt;PR・人のレビュー・マージ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="85" width="270" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-commit" value="commit" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="place-client" target="place-repo">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-push" value="push・PR" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;fontSize=11;" edge="1" parent="1" source="place-repo" target="place-remote">
+          <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
+        <!-- Rails lane -->
+        <mxCell id="lane-rails" value="レール：各段で柵（check）を自動で走らせる" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="180" y="215" width="305" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="rail-client" value="&lt;b&gt;エージェントの Hooks&lt;/b&gt;&lt;br&gt;&lt;br&gt;タイミング：編集・実行の瞬間&lt;br&gt;例：編集後に lint／rm を事前に止める&lt;br&gt;&lt;br&gt;強制力：弱（設定で無効化できる）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="30" y="270" width="270" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="rail-repo" value="&lt;b&gt;Git hooks&lt;/b&gt;&lt;br&gt;&lt;br&gt;タイミング：コミット・push の前&lt;br&gt;例：Husky・lefthook で check を実行&lt;br&gt;&lt;br&gt;強制力：中（--no-verify で抜けられる）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="365" y="270" width="270" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="rail-remote" value="&lt;b&gt;CI＋ブランチ保護&lt;/b&gt;&lt;br&gt;&lt;br&gt;タイミング：PR の作成・更新時&lt;br&gt;例：同じ check をパイプラインで実行&lt;br&gt;失敗したらマージできない&lt;br&gt;&lt;br&gt;強制力：最大（抜けられない）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="700" y="270" width="270" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="mount-client" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=2;dashed=1;" edge="1" parent="1" source="place-client" target="rail-client">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="mount-repo" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=2;dashed=1;" edge="1" parent="1" source="place-repo" target="rail-repo">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="mount-remote" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=2;dashed=1;" edge="1" parent="1" source="place-remote" target="rail-remote">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Gradient -->
         <mxCell id="gradient" value="" style="shape=flexArrow;endArrow=classic;html=1;fillColor=#e6e6e6;strokeColor=#999999;width=20;endSize=8;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="40" y="290" as="sourcePoint"/>
-            <mxPoint x="960" y="290" as="targetPoint"/>
+            <mxPoint x="40" y="480" as="sourcePoint"/>
+            <mxPoint x="960" y="480" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
         <mxCell id="label-near" value="近い・速い・弱い" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;fontColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="40" y="315" width="200" height="30" as="geometry"/>
+          <mxGeometry x="40" y="505" width="200" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="label-far" value="遠い・遅い・強い" style="text;html=1;fontSize=13;fontStyle=1;align=right;verticalAlign=middle;fontColor=#82b366;" vertex="1" parent="1">
-          <mxGeometry x="760" y="315" width="200" height="30" as="geometry"/>
+          <mxGeometry x="760" y="505" width="200" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="label-mid" value="内側で速く気づき、外側で確実に止める" style="text;html=1;fontSize=13;align=center;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="300" y="350" width="400" height="30" as="geometry"/>
+          <mxGeometry x="300" y="540" width="400" height="30" as="geometry"/>
         </mxCell>
       </root>
     </mxGraphModel>
