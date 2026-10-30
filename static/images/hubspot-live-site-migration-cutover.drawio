@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="cutover" name="Cutover order">
+    <mxGraphModel dx="1200" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="420" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="切り替えの日の順番 — SSL を先に、公開を先に、DNS は最後" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="150" y="20" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lblOp" value="操作" style="text;html=1;fontSize=12;fontStyle=1;align=right;verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="10" y="110" width="60" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="lblView" value="訪問者に&lt;br&gt;見えるもの" style="text;html=1;fontSize=12;fontStyle=1;align=right;verticalAlign=middle;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="10" y="235" width="60" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="op1" value="&lt;b&gt;1. SSL 証明書を&lt;br&gt;事前発行&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;_acme-challenge 等の TXT を追加&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="90" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="op2" value="&lt;b&gt;2. ページのドメインを&lt;br&gt;www. にする&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="90" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="op3" value="&lt;b&gt;3. ページを公開する&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="550" y="90" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="op4" value="&lt;b&gt;4. www の DNS を&lt;br&gt;HubSpot に向ける&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="780" y="90" width="190" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="op1" target="op2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="op2" target="op3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="op3" target="op4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="oldBand" value="&lt;b&gt;旧サイト&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;DNS はまだ旧サーバーを向いている。ここまでの作業は訪問者に見えない&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="225" width="650" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="newBand" value="&lt;b&gt;新サイト&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;TTL 分（例: 5 分）で切り替わる&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="780" y="225" width="190" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="1〜3 を終えてから 4 を行うので、停止も SSL エラーも起きない" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="320" width="700" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
