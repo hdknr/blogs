@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Definitions_Impl" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.44.0">
+  <bpmn:collaboration id="Collaboration_Impl">
+    <bpmn:participant id="Participant_Impl" name="発展：AI にコードを書かせ、テストで確かめる" processRef="Process_Impl" />
+    <bpmn:textAnnotation id="Note_Edit">
+      <bpmn:text>使い捨ての worktree の中だけで編集。&#10;使える道具を絞り、費用の上限も付ける</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Note_Edit" associationDirection="None" sourceRef="Task_Edit" targetRef="Note_Edit" />
+    <bpmn:textAnnotation id="Note_Diff">
+      <bpmn:text>テストの変更・&#10;許可外のパス・&#10;大きすぎる差分は拒否</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Note_Diff" associationDirection="None" sourceRef="Task_Diff" targetRef="Note_Diff" />
+    <bpmn:textAnnotation id="Note_Legend">
+      <bpmn:text>オレンジ：AI エージェントが動くノード（赤みの強いほうは道具を持つ実装役）。&#10;ほかは決定論的なコードと人</bpmn:text>
+    </bpmn:textAnnotation>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Impl" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Impl">
+      <bpmn:lane id="Lane_Planner" name="計画役（AI）">
+        <bpmn:flowNodeRef>Task_Plan</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Code" name="plan タスク（コード）">
+        <bpmn:flowNodeRef>Start_Issue</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Limit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Limit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Diff</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Diff</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Pass</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PR</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Implementer" name="実装役（AI）">
+        <bpmn:flowNodeRef>Task_Edit</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Worker" name="子タスク（worker）">
+        <bpmn:flowNodeRef>Task_Tests</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Human" name="人">
+        <bpmn:flowNodeRef>Task_Review</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Merge</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_Issue" name="Issue を渡す">
+      <bpmn:outgoing>G01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="GW_Limit" name="上限内か？">
+      <bpmn:incoming>G01</bpmn:incoming>
+      <bpmn:incoming>G09</bpmn:incoming>
+      <bpmn:incoming>G10</bpmn:incoming>
+      <bpmn:outgoing>G02</bpmn:outgoing>
+      <bpmn:outgoing>G03</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Limit" name="停止（上限）">
+      <bpmn:incoming>G02</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_Plan" name="直す方針を決める">
+      <bpmn:incoming>G03</bpmn:incoming>
+      <bpmn:outgoing>G04</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Edit" name="コードを編集する&#10;（使い捨て worktree）">
+      <bpmn:incoming>G04</bpmn:incoming>
+      <bpmn:outgoing>G05</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:task id="Task_Diff" name="差分を検査する">
+      <bpmn:incoming>G05</bpmn:incoming>
+      <bpmn:outgoing>G06</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="GW_Diff" name="許可範囲か？">
+      <bpmn:incoming>G06</bpmn:incoming>
+      <bpmn:outgoing>G07</bpmn:outgoing>
+      <bpmn:outgoing>G10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_Tests" name="run_tests&#10;（人が書いた既存のテスト）">
+      <bpmn:incoming>G07</bpmn:incoming>
+      <bpmn:outgoing>G08</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="GW_Pass" name="通ったか？">
+      <bpmn:incoming>G08</bpmn:incoming>
+      <bpmn:outgoing>G09</bpmn:outgoing>
+      <bpmn:outgoing>G11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_PR" name="draft PR を作る">
+      <bpmn:incoming>G11</bpmn:incoming>
+      <bpmn:outgoing>G12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:userTask id="Task_Review" name="差分とテスト結果を&#10;レビューする">
+      <bpmn:incoming>G12</bpmn:incoming>
+      <bpmn:outgoing>G13</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="End_Merge" name="マージ">
+      <bpmn:incoming>G13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="G01" sourceRef="Start_Issue" targetRef="GW_Limit" />
+    <bpmn:sequenceFlow id="G02" name="超えた" sourceRef="GW_Limit" targetRef="End_Limit" />
+    <bpmn:sequenceFlow id="G03" name="上限内" sourceRef="GW_Limit" targetRef="Task_Plan" />
+    <bpmn:sequenceFlow id="G04" name="方針と材料を渡す" sourceRef="Task_Plan" targetRef="Task_Edit" />
+    <bpmn:sequenceFlow id="G05" sourceRef="Task_Edit" targetRef="Task_Diff" />
+    <bpmn:sequenceFlow id="G06" sourceRef="Task_Diff" targetRef="GW_Diff" />
+    <bpmn:sequenceFlow id="G07" name="範囲内" sourceRef="GW_Diff" targetRef="Task_Tests" />
+    <bpmn:sequenceFlow id="G08" sourceRef="Task_Tests" targetRef="GW_Pass" />
+    <bpmn:sequenceFlow id="G09" name="失敗：テストの出力を渡して計画に戻る" sourceRef="GW_Pass" targetRef="GW_Limit" />
+    <bpmn:sequenceFlow id="G10" name="範囲外：差分を捨てる" sourceRef="GW_Diff" targetRef="GW_Limit" />
+    <bpmn:sequenceFlow id="G11" name="通った" sourceRef="GW_Pass" targetRef="Task_PR" />
+    <bpmn:sequenceFlow id="G12" sourceRef="Task_PR" targetRef="Task_Review" />
+    <bpmn:sequenceFlow id="G13" sourceRef="Task_Review" targetRef="End_Merge" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Impl">
+    <bpmndi:BPMNPlane id="BPMNPlane_Impl" bpmnElement="Collaboration_Impl">
+      <bpmndi:BPMNShape id="Participant_Impl_di" bpmnElement="Participant_Impl" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1500" height="650" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Planner_di" bpmnElement="Lane_Planner" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1470" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Code_di" bpmnElement="Lane_Code" isHorizontal="true">
+        <dc:Bounds x="190" y="200" width="1470" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Implementer_di" bpmnElement="Lane_Implementer" isHorizontal="true">
+        <dc:Bounds x="190" y="380" width="1470" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Worker_di" bpmnElement="Lane_Worker" isHorizontal="true">
+        <dc:Bounds x="190" y="500" width="1470" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Human_di" bpmnElement="Lane_Human" isHorizontal="true">
+        <dc:Bounds x="190" y="620" width="1470" height="110" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Start_Issue_di" bpmnElement="Start_Issue">
+        <dc:Bounds x="230" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="215" y="315" width="66" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Limit_di" bpmnElement="GW_Limit" isMarkerVisible="true">
+        <dc:Bounds x="310" y="265" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="252" y="246" width="58" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Limit_di" bpmnElement="End_Limit">
+        <dc:Bounds x="317" y="335" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="360" y="346" width="66" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Plan_di" bpmnElement="Task_Plan" bioc:stroke="#e65100" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#e65100">
+        <dc:Bounds x="400" y="100" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Edit_di" bpmnElement="Task_Edit" bioc:stroke="#bf360c" bioc:fill="#ffccbc" color:background-color="#ffccbc" color:border-color="#bf360c">
+        <dc:Bounds x="590" y="400" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Diff_di" bpmnElement="Task_Diff">
+        <dc:Bounds x="800" y="250" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Diff_di" bpmnElement="GW_Diff" isMarkerVisible="true">
+        <dc:Bounds x="1000" y="265" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1057" y="318" width="70" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Tests_di" bpmnElement="Task_Tests">
+        <dc:Bounds x="1080" y="525" width="170" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Pass_di" bpmnElement="GW_Pass" isMarkerVisible="true">
+        <dc:Bounds x="1290" y="265" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1232" y="318" width="58" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PR_di" bpmnElement="Task_PR">
+        <dc:Bounds x="1400" y="250" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Review_di" bpmnElement="Task_Review">
+        <dc:Bounds x="1400" y="638" width="140" height="74" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Merge_di" bpmnElement="End_Merge">
+        <dc:Bounds x="1590" y="657" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1590" y="700" width="36" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Note_Edit_di" bpmnElement="Note_Edit">
+        <dc:Bounds x="230" y="410" width="290" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Note_Diff_di" bpmnElement="Note_Diff">
+        <dc:Bounds x="860" y="395" width="135" height="65" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Note_Legend_di" bpmnElement="Note_Legend" bioc:stroke="#e65100" color:border-color="#e65100">
+        <dc:Bounds x="230" y="645" width="560" height="50" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="G01_di" bpmnElement="G01">
+        <di:waypoint x="266" y="290" /><di:waypoint x="310" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G02_di" bpmnElement="G02">
+        <di:waypoint x="335" y="315" /><di:waypoint x="335" y="335" />
+        <bpmndi:BPMNLabel><dc:Bounds x="296" y="317" width="36" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G03_di" bpmnElement="G03">
+        <di:waypoint x="360" y="290" /><di:waypoint x="380" y="290" /><di:waypoint x="380" y="140" /><di:waypoint x="400" y="140" />
+        <bpmndi:BPMNLabel><dc:Bounds x="386" y="250" width="40" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G04_di" bpmnElement="G04">
+        <di:waypoint x="570" y="140" /><di:waypoint x="675" y="140" /><di:waypoint x="675" y="400" />
+        <bpmndi:BPMNLabel><dc:Bounds x="582" y="120" width="96" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G05_di" bpmnElement="G05">
+        <di:waypoint x="760" y="440" /><di:waypoint x="830" y="440" /><di:waypoint x="830" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G06_di" bpmnElement="G06">
+        <di:waypoint x="950" y="290" /><di:waypoint x="1000" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G07_di" bpmnElement="G07">
+        <di:waypoint x="1025" y="315" /><di:waypoint x="1025" y="560" /><di:waypoint x="1080" y="560" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1032" y="470" width="40" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G08_di" bpmnElement="G08">
+        <di:waypoint x="1250" y="560" /><di:waypoint x="1315" y="560" /><di:waypoint x="1315" y="315" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G09_di" bpmnElement="G09">
+        <di:waypoint x="1315" y="265" /><di:waypoint x="1315" y="212" /><di:waypoint x="335" y="212" /><di:waypoint x="335" y="265" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1065" y="216" width="220" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G10_di" bpmnElement="G10">
+        <di:waypoint x="1025" y="265" /><di:waypoint x="1025" y="238" /><di:waypoint x="335" y="238" /><di:waypoint x="335" y="265" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1033" y="243" width="120" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G11_di" bpmnElement="G11">
+        <di:waypoint x="1340" y="290" /><di:waypoint x="1400" y="290" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1350" y="272" width="36" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G12_di" bpmnElement="G12">
+        <di:waypoint x="1470" y="330" /><di:waypoint x="1470" y="638" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="G13_di" bpmnElement="G13">
+        <di:waypoint x="1540" y="675" /><di:waypoint x="1590" y="675" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_Note_Edit_di" bpmnElement="Assoc_Note_Edit">
+        <di:waypoint x="590" y="440" /><di:waypoint x="520" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_Note_Diff_di" bpmnElement="Assoc_Note_Diff">
+        <di:waypoint x="900" y="330" /><di:waypoint x="900" y="395" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
