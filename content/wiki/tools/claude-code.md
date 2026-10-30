@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-09-30
+lastmod: 2026-10-30
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -48,6 +48,9 @@ related_posts:
   - "/posts/2026/08/claude-code-16-commands-ai-employee/"
   - "/posts/2026/09/claude-code-jsonl-log-verified/"
   - "/posts/2026/09/fact-checker-maker-checker/"
+  - "/posts/2026/10/claude-code-remote-control-iphone/"
+  - "/posts/2026/10/claude-code-routines-proactive-agent-workshop/"
+  - "/posts/2026/10/claude-p-input-tokens-bare/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "hooks", "mcp"]
 ---
 
@@ -80,7 +83,7 @@ Karpathy は Claude Code を LLM Wiki の実行環境として使用。「左画
 
 ## Routines と新 Desktop
 
-2026年4月14日リリースの **Claude Code Routines** により、PC をオフラインにしたままでもクラウド上でエージェントをスケジュール実行できるようになった。トリガー: cron / API コール / GitHub イベント。同日リリースの新 Desktop では複数セッションの同時管理が可能になり、リポジトリ・Issue を並列で扱い、コンテキストを保持したまま別タスクに移行できる。
+2026年4月14日リリースの **Claude Code Routines** により、PC をオフラインにしたままでもクラウド上でエージェントをスケジュール実行できるようになった。トリガー: cron / API コール / GitHub イベント。同日リリースの新 Desktop では複数セッションの同時管理が可能になり、リポジトリ・Issue を並列で扱い、コンテキストを保持したまま別タスクに移行できる。Routines は後に **scheduled tasks** に改名された（`/schedule` に `/routines` の別名が残る）。設計で決めるのはトリガー・コンテキスト・舵取りの 3 つで、詳細は [AI 自律型組織](/blogs/wiki/concepts/ai-autonomous-organization/) を参照。手元のセッションを外から操作するなら [Remote Control](/blogs/wiki/guides/claude-code-remote-control/)、スクリプトから呼ぶなら [claude -p](/blogs/wiki/guides/claude-p-headless/)。
 
 ## /team-onboarding コマンド
 
@@ -175,6 +178,7 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Ponytail](/blogs/wiki/tools/ponytail/) — 過剰実装を抑える YAGNI プラグイン
 - [Claude Opus 5.5](/blogs/wiki/tools/claude-opus-5-5/) — CLAUDE.md から「よく考えて」を消す
 - [AI に書かせる文書の「書かないこと」指定](/blogs/wiki/concepts/ai-doc-writing-guidelines/) — Skill で文書の分量を抑える
+- [Remote Control ガイド](/blogs/wiki/guides/claude-code-remote-control/) / [claude -p ヘッドレス実行](/blogs/wiki/guides/claude-p-headless/) — iPhone からの遠隔操作と非対話実行
 
 ## ソース記事
 

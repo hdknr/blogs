@@ -2,7 +2,7 @@
 title: "HubSpot"
 description: "インバウンドマーケティングを軸とした CRM・MA・営業統合プラットフォーム"
 date: 2026-04-28
-lastmod: 2026-08-23
+lastmod: 2026-10-30
 aliases: ["hubspot crm", "hubspot pro"]
 related_posts:
   - "/posts/2026/04/hubspot-hscachebuster/"
@@ -11,6 +11,7 @@ related_posts:
   - "/posts/2026/08/hubspot-custom-signals/"
   - "/posts/2026/08/hubspot-meeting-notes-to-properties/"
   - "/posts/2026/08/airtable-vs-hubspot-ma-cost/"
+  - "/posts/2026/10/hubspot-live-site-migration/"
 tags: ["HubSpot", "crm", "ma", "インバウンドマーケティング", "営業"]
 ---
 
@@ -43,6 +44,16 @@ Pro プランは「機能の網羅性」と「価格」のバランス点で、�
 ## 開発者向けの留意点
 
 CMS Hub のテーマ開発では **`hsCacheBuster`** などの内部キャッシュ制御パラメータが付与される。テンプレート上書きやキャッシュ無効化の挙動把握が、フロント実装のトラブルシュート上重要になる。
+
+## 稼働中サイトの CMS 移行
+
+HubSpot はページ設定のドメイン選択肢に**接続済み**（DNS が HubSpot を向いている）のドメインしか出さない。`www` を接続した瞬間に旧サイトは見えなくなるので、`www.` 自体を確認期間の作業場所にはできない。
+
+- **定石は移行専用サブドメイン**（`new.` など）で作り込み、切り替え日に `www.` へ移す。そのサブドメインには移行対象のページしか置かない。システムドメイン（`hs-sites`）や停止の許容も選択肢だが、付け替えや停止のコストがある
+- **切り替えの順番は SSL 事前発行 → ページのドメイン変更 → 公開 → DNS**。DNS を最後にすれば停止時間はゼロにできる
+- SSL の事前発行（事前プロビジョニング）は「ホスティングドメインを接続」で「**レコードを手動で更新**」を選び、バナーから行う。「自動的に接続」は DNS プロバイダーの権限で `www` まで書き換えてしまう。追加する TXT（`_acme-challenge`・`_cf-custom-hostname`）は旧サイトに影響しない。CAA レコードがあれば `pki.goog` を許可に入れる
+- 稼働中の別サイトのドメインに相乗りして作り込むと、まとめて移せず、未接続の `www.` は管理画面で選べないため、CMS Pages API の `domain` で付け替える（開発者しかできない作業になる）
+- 切り戻し先の DNS は手順書ではなく `dig` で現物を確かめる
 
 ## EU/UK 宛メールでの制約
 
@@ -80,3 +91,4 @@ Marketing Hub Professional は年契約で初年度 $12,600（オンボーディ
 - [HubSpot のカスタムシグナル — 「買いのサイン」を自然言語で書くと AI が Web を見張ってくれる](/blogs/posts/2026/08/hubspot-custom-signals/) — 2026-08-05
 - [HubSpot で商談議事録をリードプロパティーに落とす — AI 要約は「読める」が「効かない」](/blogs/posts/2026/08/hubspot-meeting-notes-to-properties/) — 2026-08-05
 - [Airtable と HubSpot、MA 運営コストはどちらが安いか](/blogs/posts/2026/08/airtable-vs-hubspot-ma-cost/) — 2026-08-15
+- [稼働中のサイトを HubSpot CMS へ止めずに移す — 定石と、やってしまった例](/blogs/posts/2026/10/hubspot-live-site-migration/) — 2026-10-29

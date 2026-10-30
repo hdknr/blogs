@@ -2,12 +2,13 @@
 title: "列指向ストレージ"
 description: "データを列ごとに格納するストレージ方式。分析クエリの I/O 効率と圧縮率を大幅向上"
 date: 2026-04-06
-lastmod: 2026-10-13
+lastmod: 2026-10-30
 aliases: ["Columnar Storage", "列指向"]
 related_posts:
   - "/posts/2026/03/duckdb-columnar-arrow/"
   - "/posts/2026/10/apache-iceberg-duckdb/"
   - "/posts/2026/10/ducklake-sql-lakehouse/"
+  - "/posts/2026/10/lakehouse-ecosystem-2026/"
 tags: ["データベース", "OLAP", "Parquet", "Arrow"]
 ---
 
@@ -26,16 +27,23 @@ Parquet は「1 つのファイルの中身をどう並べるか」を決める*
 - [Apache Iceberg](/blogs/wiki/tools/apache-iceberg/) — メタデータを S3 上のファイル階層（メタデータファイル → マニフェストリスト → マニフェスト）とカタログで持つ。マニフェストの列ごとの最小値・最大値を使い、ファイルを開かずに読み飛ばせる
 - [DuckLake](/blogs/wiki/tools/ducklake/) — 同じく Parquet をデータに使い、メタデータは SQL データベースに置く
 
-どちらもデータ本体は列指向の Parquet で、競合ではなくレイヤーが違う。
+どちらもデータ本体は列指向の Parquet で、競合ではなくレイヤーが違う。Delta Lake・Hudi・Paimon も同じく Parquet の上に乗るので、Apache XTable のようにメタデータだけを変換すればデータをコピーせずに別フォーマットとして読める。
+
+### Parquet の次を狙うフォーマット
+
+- **Vortex** — 圧縮した Apache Arrow の配列を扱う拡張可能な列指向ファイルフォーマット。LF AI & Data Foundation でインキュベーション中
+- **Lance** — ファイル・テーブル・カタログを兼ねる AI 向けフォーマット。Parquet が苦手なランダムアクセスを速くし、ベクトル検索や全文検索の索引も持てる
 
 ## 関連ページ
 
 - [DuckDB](/blogs/wiki/tools/duckdb/) — 列指向 OLAP エンジン
 - [Apache Iceberg](/blogs/wiki/tools/apache-iceberg/) — Parquet の上に乗るオープンテーブルフォーマット
 - [DuckLake](/blogs/wiki/tools/ducklake/) — メタデータを SQL データベースに置くレイクハウスフォーマット
+- [レイクハウス](/blogs/wiki/concepts/lakehouse/) — フォーマット・カタログ・エンジンを組み合わせる全体像
 
 ## ソース記事
 
 - [DuckDB と列指向ストレージ](/blogs/posts/2026/03/duckdb-columnar-arrow/) — 2026-03
 - [Apache Iceberg 入門：データレイクを「テーブル」にする仕組みと DuckDB との関係](/blogs/posts/2026/10/apache-iceberg-duckdb/) — 2026-10-12
 - [DuckLake 入門：メタデータを SQL データベースに置くレイクハウスフォーマットと Iceberg との違い](/blogs/posts/2026/10/ducklake-sql-lakehouse/) — 2026-10-13
+- [Iceberg と DuckLake の先へ：2026 年に注目したいレイクハウスの技術とプロダクト](/blogs/posts/2026/10/lakehouse-ecosystem-2026/) — 2026-10-13

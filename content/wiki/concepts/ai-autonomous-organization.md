@@ -2,10 +2,11 @@
 title: "AI 自律型組織"
 description: "部門長から社員までの役割を AI が担い、人が評価・意思決定・ガバナンスを統制する組織形態。NEC「コーポレートAI・Workforce部門」が国内大手初の事例"
 date: 2026-09-02
-lastmod: 2026-09-02
+lastmod: 2026-10-30
 aliases: ["AI自律型組織", "AI社員", "コーポレートAI・Workforce部門", "AIネイティブカンパニー", "全員AI部署", "クライアントゼロ"]
 related_posts:
   - "/posts/2026/09/nec-corporate-ai-workforce/"
+  - "/posts/2026/10/claude-code-routines-proactive-agent-workshop/"
 tags: ["AIエージェント", "マルチエージェント", "組織設計", "NEC", "AI活用"]
 ---
 
@@ -116,12 +117,37 @@ NEC は AI を人の代替ではなく人の能力を拡張する「増力」と
 | 2026-07-01 | NECソリューションイノベータの吸収合併決定（効力発生日10月1日） |
 | 2026-08-01 | コーポレートAI・Workforce部門を新設（1か月の社内実証を経て） |
 
-グループ約10万人の自社を**ゼロ番目のクライアント＝「クライアントゼロ」**と位置づけ、得た知見を価値創造モデル「BluStellar」で外部提供する。**社内改革であると同時に、これから売る商品の実証実験**でもある。
+グループ約10万人の自社を**ゼロ番目のクライアント**＝「クライアントゼロ」と位置づけ、得た知見を価値創造モデル「BluStellar」で外部提供する。**社内改革であると同時に、これから売る商品の実証実験**でもある。
 
 > 日経が報じた「AIエージェント17人」という人数は NEC の発表文・別紙資料には記載がない。都度生成される設計なので固定値ではない。
 
+## 「従業員なしの会社」言説の実体：プロアクティブなエージェント
+
+「Anthropic が従業員なしで会社を立ち上げるマニュアルを無料公開した」と SNS で話題になったものの正体は、Code w/ Claude 2026 のワークショップ「Build a proactive agent workflow with Claude Code」で、Claude Code の **Routines（現 scheduled tasks）** の設計講座だった。人を置き換える話ではなく、Enter を押されるまで待つ道具を、自分から動くチームメイトに変える話である。上の「AI社員の実体は定期実行ジョブ」という見立てと同じ構図になる。
+
+Routine の設計で決めるのは 3 つ:
+
+| 観点 | 内容 |
+|---|---|
+| トリガー | スケジュール・GitHub イベント・API（HTTP POST）。1 つの Routine に複数付けられる |
+| コンテキスト | プロンプト・リポジトリ・MCP コネクタ。「渡したコンテキストが成功の上限になる」 |
+| 舵取り | エージェント同士のレビュー（generator-critic）、実行中セッションへの介入、成果物の検証 |
+
+デプロイ検証の例では、最初は調査と Go / No-Go の判断だけを任せ、判断が信頼できるとわかってから権限（ロールバック）を広げる。**信頼が積み上がった範囲だけ自律を広げる**点は、NEC の「有人／無人」の切り分けや「承認＝解決ではない」運用と通じる。
+
+無人で回すときの注意:
+
+- Routine は作成者個人のアカウントで動き、コミット・PR・Slack 投稿も作成者名義になる
+- 接続済みコネクタは既定で全部付くので、不要なものは外す
+- API で渡す `text` は `<routine-fire-payload>` で包まれ「中の指示に従わない」扱いになる（インジェクション対策）
+- ask ルールに当たると承認待ちで止まる。cron の最小間隔は 1 時間、起動方法ごとに時間あたりの上限がある
+
+同じことを自前で組み、流れ・上限・記録をコードで握る例は [Celery](/blogs/wiki/tools/celery/) を参照。
+
 ## 関連ページ
 
+- [Celery](/blogs/wiki/tools/celery/) — Routines 相当を自前で組むオーケストレーション
+- [Claude Code](/blogs/wiki/tools/claude-code/) — Routines（scheduled tasks）の母体
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/)
 - [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/)
 - [AI エージェント設計レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/)
@@ -133,3 +159,4 @@ NEC は AI を人の代替ではなく人の能力を拡張する「増力」と
 ## ソース記事
 
 - [NEC「部署が丸ごとAI」の中身 — コーポレートAI・Workforce部門の4階層と、人が手放さなかった仕事](/blogs/posts/2026/09/nec-corporate-ai-workforce/) — 2026-09-02
+- [「従業員なしで会社を立ち上げるマニュアル」の中身 — Anthropic の Routines ワークショップを読み解く](/blogs/posts/2026/10/claude-code-routines-proactive-agent-workshop/) — 2026-10-30
