@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="celery-claude-flow" name="Celery claude -p recursive orchestration">
+    <mxGraphModel dx="1200" dy="760" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="LLM が計画を提案し、コードが検査して投入する（Celery + claude -p）" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="150" y="15" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- plan task -->
+        <mxCell id="plan-task" value="plan タスク（depth = n）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;深さ・呼び出し回数を先に確認&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="200" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- LLM -->
+        <mxCell id="llm" value="claude -p&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;道具なし・JSON Schema で出力を検証&lt;br&gt;次の子タスクを「提案」するだけ&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="90" width="220" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- gate -->
+        <mxCell id="gate" value="decide_next_steps（コード）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;許可リスト・分岐数の上限・重複の排除&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="90" width="230" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- chord group -->
+        <mxCell id="chord-group" value="chord：子タスクを並列に実行（決定論的な処理）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="560" y="230" width="350" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="child-issue" value="fetch_issue&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;gh issue view&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="585" y="280" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="child-tests" value="run_tests&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;pytest&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="745" y="280" width="140" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- callback -->
+        <mxCell id="callback" value="結果をまとめて plan（depth = n + 1）へ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;結果は「データ」として渡す&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="240" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- stop conditions -->
+        <mxCell id="stop" value="終了条件&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;done = true／深さの上限／呼び出し回数の上限／投入できる子タスクなし／リトライ切れ&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="340" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- log -->
+        <mxCell id="log" value="計画ログ（Redis）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;毎回同じ計画になる箇所 → 固定のワークフローへ移す&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="560" y="440" width="350" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;" edge="1" parent="1" source="plan-task" target="llm">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="JSON の計画" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="llm" target="gate">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="許可したものだけ投入" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="gate" target="chord-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="全部終わったら" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;" edge="1" parent="1" source="chord-group" target="callback">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="再帰" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=block;endFill=1;dashed=1;fontSize=10;" edge="1" parent="1" source="callback" target="plan-task">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673a6;strokeWidth=2;endArrow=block;endFill=1;dashed=1;" edge="1" parent="1" source="callback" target="stop">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="毎回記録" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#999999;strokeWidth=1;endArrow=block;endFill=1;dashed=1;fontSize=10;" edge="1" parent="1" source="gate" target="log">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="950" y="125"/>
+              <mxPoint x="950" y="475"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
