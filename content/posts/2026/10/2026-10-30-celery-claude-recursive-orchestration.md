@@ -1,24 +1,25 @@
 ---
 title: "Celery と claude -p で組む再帰的なエージェントオーケストレーション — LLM は計画を提案し、コードが検査して投入する"
-description: "Claude Code Routines を使わずに、Celery と Claude Code（claude -p）で自走エージェントを組む例。LLM には次の子タスクを JSON で提案させ、許可リスト・深さ・回数・重複をコードで検査してから chord で並列実行・再帰する。LLM に渡すコンテキストを狭く絞る設計と、claude -p の入力トークンを既定の約 1.3 万から --bare で約 700 まで減らした実測も載せる。"
+description: "Claude Code Routines を使わずに、Celery と Claude Code（claude -p）で自走エージェントを組む例。LLM には次の子タスクを JSON で提案させ、許可リスト・深さ・回数・重複をコードで検査してから chord で並列実行・再帰する。claude -p の入力トークンを --bare で約 1.3 万から約 700 に減らした実測と、計画役を Codex CLI に切り替える拡張も載せる。"
 date: 2026-10-30
 lastmod: 2026-10-30
 slug: "celery-claude-recursive-orchestration"
 draft: false
 categories: ["AI/LLM"]
-tags: ["claude-code", "celery", "claude -p", "AIエージェント", "オーケストレーション"]
+tags: ["claude-code", "celery", "claude -p", "Codex", "オーケストレーション"]
 ---
 
 前回の記事では、[Anthropic の Routines ワークショップ](/blogs/posts/2026/10/claude-code-routines-proactive-agent-workshop/)を読み解いた。Claude Code を cron で回すときの壁を、Anthropic のクラウドが肩代わりする仕組みだ。本記事はその続きで、同じことを**自前で組む**場合の一例を解説する。
 
 使うのは Python の非同期タスクキュー Celery と、Claude Code の非対話モード `claude -p` だ。Celery のタスクから `claude -p` を呼び、LLM が決めた次の子タスクを Celery が並列に実行する。子タスクの結果を持ってもう一度 `claude -p` に戻る、という再帰の形で処理を進める。
 
-本記事でわかるのは次の 4 点だ。
+本記事でわかるのは次の 5 点だ。
 
 - なぜ「LLM に計画を提案させ、投入はコードが行う」形にするのか
 - 実際に動かして確かめたコード一式と、その読み方
 - 再帰させるときに必ず入れる歯止めと、決定論的な処理へ寄せていく道筋
 - LLM に渡すコンテキストを狭くする理由と、`claude -p` の入力トークンを `--bare` で削る方法（実測つき）
+- 計画役を Codex CLI など別のエージェントに切り替える方法と、切り替えても歯止めがそのまま効く理由（Codex の呼び出し部分は本物の Codex では動かしていない）
 
 ## なぜ自前で組むのか：決定論的に寄せる 2 つの段階
 
@@ -401,10 +402,146 @@ claude -p "（計画のプロンプト）" --bare --settings '{"apiKeyHelper": "
 
 - **引数の検査**：今はタスク名しか検査していない。`fetch_issue` の `repo` を許可したリポジトリに限る、`run_tests` の `path` をプロジェクトの配下に限るなど、タスクごとに引数も検査する
 - **子タスクの失敗の扱い**：`chord` の header で 1 つでも失敗すると、コールバックは実行されず `ChordError` で失敗扱いになる。子タスク側で例外を結果として返すか、エラー時の処理を決めておく
-- **全体の費用上限**：`--max-budget-usd` は 1 回あたりの上限だ。計画ログの `cost_usd` を `root_id` ごとに合計して、全体の上限でも止める
-- **固定分の削減**：計画役の呼び出しに `--bare` を付けるか、Messages API の直接呼び出しに置き換える（前述）
+- **全体の費用上限**：`--max-budget-usd` は 1 回あたりの上限だ。計画ログの `cost_usd` を `root_id` ごとに合計して、全体の上限でも止める。費用を返さない計画役（後述の Codex など）では、呼び出し回数の上限で代える
+- **固定分の削減**：Claude を計画役にするなら、呼び出しに `--bare` を付けるか、Messages API の直接呼び出しに置き換える（前述）
 - **認証情報の置き場所**：`claude` と `gh` の認証情報は、worker だけが読める場所に置き、worker 自体もコンテナで隔離する。`claude` 側は、前述の Workload Identity Federation で長期の API キーを置かない構成も検討できる
 - **Celery Beat（Celery の定期実行スケジューラ）との組み合わせ**：定期実行したいなら、Beat から最初の `plan` を投げればよい。Beat は 1 プロセスだけ動かす。公式ドキュメントにも、複数のスケジューラを同時に動かすとタスクが重複すると書かれている
+
+## 計画役を Codex CLI に切り替える：`ask_codex` を足す
+
+ここまでは Claude の呼び方を変える話だった。計画役そのものを、別のエージェントに切り替えることもできる。
+
+`plan` タスクが計画役に求めているのは、次の約束だけだ。
+
+- **入力**：目的（`goal`）と、前回の子タスクの結果（`results`）
+- **出力**：`(meta, decided)` の組。`decided` は `done`・`summary`・`steps` を持つ辞書で、`steps` の各要素は `task` と `args`（辞書）を持つ
+- **失敗**：`ValueError` か `subprocess.SubprocessError` を投げる（`plan` がリトライする）
+
+この約束を守る関数なら、中で何を呼んでもかまわない。許可リスト・上限・重複の排除・計画ログは、すべてコードの側にあり、エージェントに依存しない。そのため、計画役を切り替えても、安全のための仕組みはそのまま効く。そこで、OpenAI の Codex CLI を呼ぶ `ask_codex` を足し、目的ごとに計画役を選べるようにしてみる。
+
+> **注意：`ask_codex` は、本物の Codex CLI では動かしていない。** 執筆時点の手元の環境では Codex CLI を使えなかったためだ。`codex exec` のオプション名は、公式の [CLI リファレンス](https://developers.openai.com/codex/cli/reference)で実在を確かめたが、出力の形などは実機で確認していない。使う前に、手元の `codex exec --help` でも確かめてほしい。
+>
+> 一方、計画役を切り替える仕組みは確かめてある。対象は `PLANNERS`、`planner` 引数の引き継ぎ、計画ログへの記録、出力ファイルが書かれなかったときのリトライの 4 つだ。下の `ask_codex` が想定するオプションと出力ファイルの形どおりに振る舞う偽物の `codex` を用意し、Redis と Celery の worker で動かした。
+
+追加するのは、Codex 用のスキーマ、`ask_codex`、計画役の対応表の 3 つだ（先頭の import に `tempfile` も足す）。
+
+```python
+# Codex の構造化出力は、すべてのプロパティを required にし、
+# additionalProperties を false にした「厳密な」スキーマを求めることが多い。
+# 中身が自由な args は、JSON 文字列（args_json）として受け取る。
+CODEX_PLAN_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "done": {"type": "boolean"},
+        "summary": {"type": "string"},
+        "steps": {"type": "array", "items": {
+            "type": "object",
+            "properties": {"task": {"type": "string"}, "args_json": {"type": "string"}},
+            "required": ["task", "args_json"],
+            "additionalProperties": False,
+        }},
+    },
+    "required": ["done", "summary", "steps"],
+    "additionalProperties": False,
+}
+
+
+def ask_codex(goal, results):
+    """実機では未検証。オプション名は公式の CLI リファレンスで確認したが、手元の codex exec --help でも確かめること。"""
+    with tempfile.TemporaryDirectory() as tmp:
+        schema_path = os.path.join(tmp, "schema.json")
+        out_path = os.path.join(tmp, "last_message.json")
+        with open(schema_path, "w") as f:
+            json.dump(CODEX_PLAN_SCHEMA, f)
+        subprocess.run(
+            ["codex", "exec", build_prompt(goal, results),
+             "--output-schema", schema_path,      # 最終メッセージの形を JSON Schema で指定
+             "--output-last-message", out_path,   # 最終メッセージをファイルに書き出す
+             "--sandbox", "read-only",            # 既定でも read-only だが、明示しておく
+             "--skip-git-repo-check"],            # Git リポジトリでない空のディレクトリで動かすため
+            capture_output=True, text=True, timeout=600, check=True, cwd=tmp,
+        )
+        try:
+            with open(out_path) as f:
+                raw = json.load(f)  # 壊れた JSON は JSONDecodeError（ValueError の一種）になる
+        except OSError as exc:      # 出力ファイルが書かれなかった場合も、リトライの対象にする
+            raise ValueError(f"最終メッセージを読めなかった: {exc}") from exc
+    if not isinstance(raw, dict):
+        raise ValueError("最終メッセージが JSON オブジェクトではない")
+
+    steps = []
+    for step in raw.get("steps", []):
+        try:
+            args = json.loads(step.get("args_json") or "{}")
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"args_json を読めなかった: {exc}") from exc
+        steps.append({"task": step.get("task"), "args": args})
+    meta = {"session_id": None, "total_cost_usd": None}  # Claude と同じキーにそろえる
+    return meta, {"done": raw.get("done"), "summary": raw.get("summary"), "steps": steps}
+
+
+PLANNERS = {"claude": ask_claude, "codex": ask_codex}
+```
+
+`plan` タスクは、`planner` 引数を受け取り、対応表から計画役を選ぶように変える。変わるのは、`planner` の確認、計画役の呼び出し、計画ログへの記録、再帰で `planner` を引き継ぐところの 4 か所だ。
+
+```python
+@app.task(name="plan", bind=True, max_retries=2)
+def plan(self, results=None, *, goal, depth=0, root_id=None, planner="claude"):
+    root_id = root_id or self.request.id
+    if planner not in PLANNERS:
+        return {"stopped": "unknown_planner", "planner": planner}
+    if depth >= MAX_DEPTH:
+        return {"stopped": "max_depth", "results": results}
+    if store.incr(f"orch:{root_id}:calls") > MAX_CALLS:
+        return {"stopped": "budget", "results": results}
+
+    try:
+        meta, decided = PLANNERS[planner](goal, results or [])
+    except (subprocess.SubprocessError, ValueError) as exc:
+        raise self.retry(exc=exc, countdown=30)
+
+    store.rpush(f"orch:{root_id}:log", json.dumps(
+        {"depth": depth, "planner": planner, "session_id": meta.get("session_id"),
+         "cost_usd": meta.get("total_cost_usd"), "plan": decided},
+        ensure_ascii=False))
+    if decided.get("done"):
+        return {"done": True, "summary": decided.get("summary")}
+
+    steps = decide_next_steps(
+        decided, is_new=lambda key: store.sadd(f"orch:{root_id}:seen", key) == 1)
+    if not steps:
+        return {"stopped": "no_steps", "results": results}
+
+    # 子タスクを並列に流し、全部終わったら結果を持って plan に戻る（再帰）
+    header = [signature(s["task"], kwargs=s["args"]) for s in steps]
+    chord(header)(plan.s(goal=goal, depth=depth + 1, root_id=root_id, planner=planner))
+    return {"dispatched": steps}
+```
+
+呼び出す側は、目的ごとに計画役を選ぶだけだ。
+
+```python
+plan.delay(goal="hdknr/blogs の Issue 572 を読んで、関連するテストを回す", planner="codex")
+```
+
+### 計画役を切り替えるときの設計のポイント
+
+- **出力の形は計画役の中でそろえる**：コードのコメントのとおり、OpenAI の構造化出力の厳密なモードでは、すべてのプロパティを `required` にし、`additionalProperties` を `false` にする必要がある。そのため、中身が自由な `args` をオブジェクトのまま受け取れない。そこで Codex には `args_json` という JSON 文字列で返させ、`ask_codex` の中で辞書に戻している。こうしておけば、`decide_next_steps` から先は計画役の違いを知らずに済む
+- **失敗はすべて約束どおりの例外にする**：`codex` が正常終了しても、出力ファイルが書かれていなかったり、中身が JSON のオブジェクトでなかったりすることはありうる。どれも `ValueError` に変えて投げ、`plan` のリトライに乗せる
+- **`meta` のキーをそろえる**：`session_id` や `total_cost_usd` は Claude Code の出力のフィールドだ。`ask_codex` でも同じキーを返し（値がなければ `None`）、計画ログには `planner` の名前も残す。こうすると、計画役ごとの計画や費用をログで比べられる
+- **知らない計画役は呼ぶ前に止める**：対応表にない `planner` は、呼び出し回数を数える前に `unknown_planner` で止める。そのまま辞書を引くと `KeyError` で失敗し、原因のわかりにくいエラーになるからだ
+- **防げることと防げないことを分けて考える**：作業ディレクトリは空の一時ディレクトリなので、リポジトリは手元にない。`--sandbox read-only`（`codex exec` の既定でもある）でファイルの書き換えも防ぐ。ただし、読み取りまで止まるわけではない。作業ディレクトリの外にあるファイルを読める可能性は残る。Claude の `--tools ""` に当たる「道具を一切持たせない」設定とは、強さが違う
+- **呼び出し回数の上限が費用の歯止めになる**：執筆時点の CLI リファレンスには、`--max-budget-usd` に当たる 1 回あたりの費用上限が見当たらなかった。そうしたエージェントでは、`root_id` ごとの呼び出し回数の上限が、費用を抑えるほぼ唯一の歯止めになる
+
+課金と認証も計画役ごとに別になる。Codex を ChatGPT のアカウントで使うか、OpenAI の API キーで使うかで、利用枠と課金先が変わる。執筆時点の [Codex の料金ページ](https://developers.openai.com/codex/pricing)では、Free と Go はデスクトップアプリでの利用と書かれている。CLI が明記されているのは Plus 以上だ。
+
+### 複数の計画役で比較・相互チェックする
+
+切り替えができると、次のような使い方も考えられる。
+
+- **比較**：同じ目的で、`planner` だけを変えて `plan` を 2 回投げる。計画ログを `planner` ごとに集計すれば、結果と費用を比べられる。どの判断をどのモデルに任せるかを、実データで決められる
+- **相互チェック**：Claude が出した計画を Codex に検査させるなど、生成と批評を別のモデルに分ける。これは今のコードには含まれない拡張で、1 つの `root_id` の中で計画役を使い分ける仕組みが別に要る。同じモデルどうしでは見落としの癖も同じになりやすいので、ベンダーをまたぐと批評が効く場面が増えると考えられる
 
 ## 決定論的な処理へ寄せていく道筋
 
@@ -416,6 +553,8 @@ claude -p "（計画のプロンプト）" --bare --settings '{"apiKeyHelper": "
 2. 計画ログを見て、毎回同じになる部分を固定のワークフローに切り出す
 3. 最後は、本当に判断が必要な地点だけで LLM を呼ぶ形に落ち着く
 
+計画役を切り替えられるなら、計画ログの `planner` を見て、残った判断をどのモデルに任せるかも同じ記録から決められる。
+
 手順が見えないうちから全部をコードで組もうとすると、何を決定論的にすべきかわからないままインフラだけが増える。LLM に計画させて記録を取り、その記録を根拠に固めていくのが、この構成の狙いだ。
 
 ## まとめ
@@ -424,6 +563,7 @@ claude -p "（計画のプロンプト）" --bare --settings '{"apiKeyHelper": "
 - LLM には次の子タスクを提案させるだけにし、許可リスト・上限・重複の検査と投入はコードが行う
 - 再帰は LLM ではなく `chord` のコールバックで起こし、深さ・回数・費用の歯止めを重ねる
 - LLM には判断に要る断片だけを渡す。`claude -p` は既定で 1 万トークンを超える固定分を送ることがあるので、断片だけで決まる判断には `--bare` か API の直接呼び出しを使う
+- 計画役は、入力・出力・失敗の約束さえ守れば切り替えられる。検査と歯止めはコードの側にあるので、Codex CLI に切り替えても安全の仕組みはそのまま効く（`ask_codex` は本物の Codex では動かしていない）
 - 計画ログを根拠に、毎回同じ計画になる部分から決定論的なワークフローへ置き換えていく
 
 Routines が Anthropic のクラウドで肩代わりしてくれる部分を自分で持つことになるが、そのぶん処理の流れ・上限・記録をすべて自分のコードで握れる。
@@ -436,3 +576,5 @@ Routines が Anthropic のクラウドで肩代わりしてくれる部分を自
 - [Celery: Periodic Tasks（Celery Beat）](https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html)
 - [Claude Code: Run Claude Code programmatically（headless / `claude -p`）](https://code.claude.com/docs/en/headless)
 - [Claude Code: CLI reference](https://code.claude.com/docs/en/cli-reference)
+- [Codex: CLI reference](https://developers.openai.com/codex/cli/reference)
+- [Codex: Pricing](https://developers.openai.com/codex/pricing)
