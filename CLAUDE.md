@@ -26,6 +26,7 @@ Tech blog built with **Astro + AstroPaper**, hosted on GitHub Pages.
 - `scripts/validate_frontmatter.py` — frontmatter/placement validation, enforced in CI
 - `scripts/normalize_tags.py` — collapse tag spelling variants (dry run by default)
 - `scripts/check_assets.py` — every referenced image/CSS/JS exists in the build
+- `scripts/bpmn/render.cjs` — renders a BPMN 2.0 file (Camunda Modeler format) to PNG
 - `astro/` — the Astro site. `content/` and `static/` stay at the repo root and are
   read in place (`publicDir: "../static"`, collections point at `../content`)
 - `astro/src/plugins/rehypePicture.mjs` — markdown images → WebP `<picture>`
@@ -63,6 +64,17 @@ Tech blog built with **Astro + AstroPaper**, hosted on GitHub Pages.
   - export: `/Applications/draw.io.app/Contents/MacOS/draw.io --export --format png --scale 2 --output <out>.png <in>.drawio`
   - reference in post: `![alt text in Japanese](/blogs/images/<name>.png)` (absolute path)
   - the alt text should describe the diagram in natural Japanese (SEO + accessibility)
+  - **Business flows may use BPMN instead of drawio** — swimlanes, gateways and loops
+    read better than boxes and arrows. Write BPMN 2.0 XML that Camunda Modeler opens
+    (`static/images/<name>.bpmn`, with BPMNDI coordinates), then render it:
+    `cd scripts/bpmn` → `npm ci` → `node render.cjs ../../static/images/<name>.bpmn ../../static/images/<name>.png 2`.
+    It draws with bpmn-js (Camunda Modeler's own renderer) in local Chrome (`CHROME_PATH`
+    overrides the macOS default) and exits non-zero on import warnings — a warning means
+    shapes may be missing, so fix the XML rather than shipping the PNG. Read the PNG back
+    before publishing: labels that wrap or overlap a line are the usual defect. Highlight
+    the nodes where an AI agent runs with `bioc:fill`/`bioc:stroke` (orange) so readers
+    can tell them from deterministic code. If the `.bpmn` was re-saved in Camunda Modeler,
+    edit that version rather than overwriting it.
   - **Nothing else to do for optimisation.** `astro/src/plugins/rehypePicture.mjs`
     turns that markdown into a `<picture>` with WebP at 640/1024/1600 plus a resized PNG
     fallback, and links the original so a dense diagram stays zoomable. Keep writing plain
