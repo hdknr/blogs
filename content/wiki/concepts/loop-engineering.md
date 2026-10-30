@@ -2,7 +2,7 @@
 title: "ループエンジニアリング"
 description: "エージェントを叩く役を人間から機械へ移す設計手法。6つの構成部品、作る前の4条件テスト、撤退ラインと3つの罠を整理する"
 date: 2026-07-29
-lastmod: 2026-10-13
+lastmod: 2026-10-30
 aliases: ["Loop Engineering", "ループ設計", "オープンループ", "クローズドループ", "フリートループ", "理解負債", "認知的降伏"]
 related_posts:
   - "/posts/2026/06/loop-engineering-2026-ai-skills/"
@@ -11,6 +11,7 @@ related_posts:
   - "/posts/2026/07/claude-code-loop-design-guide/"
   - "/posts/2026/08/claude-fable-5-lp-improvement-loop/"
   - "/posts/2026/09/loop-convergence-design/"
+  - "/posts/2026/10/spec-loop-two-frameworks-comparison/"
 tags: ["ループエンジニアリング", "AIエージェント", "自動化", "claude-code", "設計パターン"]
 ---
 
@@ -117,6 +118,8 @@ tags: ["ループエンジニアリング", "AIエージェント", "自動化",
 - **機械のゲート** — 数値で判定できるもの
 - **人間のゲート** — 非可逆なリスクを含むもの（訴求の妥当性、法務表現、ブランドとの整合）
 
+人間のゲートをどこまで機械に寄せるかは、**ゲートで承認する相手**で決まる。開発者 1 人が毎回承認するループ（dpolivaev/spec-loop）では、ルールを文章で書いてエージェントに従わせ、人間の承認を最後の関門にできる。承認する人が細部を読まないループ（利用者・決裁者と回す要求確定）では、照合や終了条件のうち答えが一意のものをスクリプトに判定させ、残りを別ティアの判定役に任せる必要がある。どちらも 1 回の実行は「次の人間の判断」で止まり、再開点を会話ではなく表やタグに残すと日をまたいでも続きから回せる（[仕様駆動開発](/blogs/wiki/concepts/spec-driven-development/)）。
+
 そして「回すほど賢くなる」を成立させるのは**結果を SKILL.md に書き戻したときだけ**である。書き戻しがなければ毎回ゼロから同じ工程を繰り返すだけになる。しかも蓄積すべきは勝ちパターンより**却下理由**のほうが効く。
 
 コスト面では全周を高いモデルで回す必要はない。**構成設計だけ高いモデル、反復は安いモデル**という配分が素直で、差は本数に比例して開く。
@@ -137,6 +140,7 @@ tags: ["ループエンジニアリング", "AIエージェント", "自動化",
 - [Claude Code](/blogs/wiki/tools/claude-code/) — `/loop` `/goal` `/schedule` の提供元
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 作成者と検証者を分ける理由と 3 層
 - [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — 人間の判断を待って止まる上流のループと、開発ループとの境界
+- [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) — 人間の承認ゲートで回す実装側のループ
 
 ## ソース記事
 
@@ -146,3 +150,4 @@ tags: ["ループエンジニアリング", "AIエージェント", "自動化",
 - [Claude Code チーム公式ガイド「ループ設計」を読み解く](/blogs/posts/2026/07/claude-code-loop-design-guide/) — 2026-07-01
 - [「Claude Fable 5 で LP を15分生成」を分解する — 改善ループを合格条件に落とす設計](/blogs/posts/2026/08/claude-fable-5-lp-improvement-loop/) — 2026-08-03（機械ゲート／人間ゲートの分離と SKILL.md への書き戻し）
 - [停止条件は測れても収束しない — AIエージェントのループ設計と「不動点」](/blogs/posts/2026/09/loop-convergence-design/) — 2026-09-18（合格条件の不動点）
+- [AI 仕様駆動開発の 2 つの spec-loop を比べる — 実装ループと要求確定ループ](/blogs/posts/2026/10/spec-loop-two-frameworks-comparison/) — 2026-10-25（人間のゲートとスクリプトのゲート）
