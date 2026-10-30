@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Definitions_Orch" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.44.0">
+  <bpmn:collaboration id="Collaboration_Orch">
+    <bpmn:participant id="Participant_Orch" name="Celery オーケストレーター（1 つの目的 = root_id）" processRef="Process_Orch" />
+    <bpmn:textAnnotation id="Note_Plan">
+      <bpmn:text>道具は持たない。
+スキーマで検証した
+計画を返すだけ</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="Note_Decide">
+      <bpmn:text>許可リスト外と重複を捨て、最大 5 件</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Note_Decide" associationDirection="None" sourceRef="Task_Decide" targetRef="Note_Decide" />
+    <bpmn:association id="Assoc_Note_Plan" associationDirection="None" sourceRef="Task_Plan" targetRef="Note_Plan" />
+    <bpmn:group id="Group_AI" categoryValueRef="CategoryValue_AI" />
+    <bpmn:textAnnotation id="Note_Legend">
+      <bpmn:text>オレンジのノードだけで AI エージェント（claude -p）が動く。&#10;ほかはすべて決定論的なコード</bpmn:text>
+    </bpmn:textAnnotation>
+  </bpmn:collaboration>
+  <bpmn:category id="Category_AI">
+    <bpmn:categoryValue id="CategoryValue_AI" value="AI エージェントが動くノード" />
+  </bpmn:category>
+  <bpmn:process id="Process_Orch" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Orch">
+      <bpmn:lane id="Lane_Caller" name="呼び出し側">
+        <bpmn:flowNodeRef>Start_Goal</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Plan" name="plan タスク（コード）">
+        <bpmn:flowNodeRef>Task_Check</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Limit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Limit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Done</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Done</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Decide</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GW_Any</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_None</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Redis" name="Redis" />
+      <bpmn:lane id="Lane_LLM" name="計画役 claude -p（LLM）">
+        <bpmn:flowNodeRef>Task_Plan</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Worker" name="子タスク（Celery worker）">
+        <bpmn:flowNodeRef>PG_Split</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Fetch</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Tests</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PG_Join</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="F14" sourceRef="Task_Tests" targetRef="PG_Join" />
+    <bpmn:sequenceFlow id="F13" sourceRef="Task_Fetch" targetRef="PG_Join" />
+    <bpmn:sequenceFlow id="F12" sourceRef="PG_Split" targetRef="Task_Tests" />
+    <bpmn:sequenceFlow id="F11" sourceRef="PG_Split" targetRef="Task_Fetch" />
+    <bpmn:sequenceFlow id="F10" name="あり（chord で並列に投入）" sourceRef="GW_Any" targetRef="PG_Split" />
+    <bpmn:sequenceFlow id="F09" name="なし" sourceRef="GW_Any" targetRef="End_None" />
+    <bpmn:sequenceFlow id="F08" sourceRef="Task_Decide" targetRef="GW_Any" />
+    <bpmn:sequenceFlow id="F07" name="まだ" sourceRef="GW_Done" targetRef="Task_Decide" />
+    <bpmn:sequenceFlow id="F06" name="done" sourceRef="GW_Done" targetRef="End_Done" />
+    <bpmn:sequenceFlow id="F05" sourceRef="Task_Plan" targetRef="GW_Done" />
+    <bpmn:sequenceFlow id="F04" name="上限内" sourceRef="GW_Limit" targetRef="Task_Plan" />
+    <bpmn:sequenceFlow id="F03" name="超えた" sourceRef="GW_Limit" targetRef="End_Limit" />
+    <bpmn:sequenceFlow id="F02" sourceRef="Task_Check" targetRef="GW_Limit" />
+    <bpmn:sequenceFlow id="F15" name="結果を持って plan に戻る（depth + 1）" sourceRef="PG_Join" targetRef="Task_Check" />
+    <bpmn:sequenceFlow id="F01" sourceRef="Start_Goal" targetRef="Task_Check" />
+    <bpmn:dataStoreReference id="Store_Redis" name="回数・重複・計画ログ" />
+    <bpmn:parallelGateway id="PG_Join">
+      <bpmn:incoming>F13</bpmn:incoming>
+      <bpmn:incoming>F14</bpmn:incoming>
+      <bpmn:outgoing>F15</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:serviceTask id="Task_Tests" name="run_tests&#10;（pytest）">
+      <bpmn:incoming>F12</bpmn:incoming>
+      <bpmn:outgoing>F14</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_Fetch" name="fetch_issue&#10;（gh issue view）">
+      <bpmn:incoming>F11</bpmn:incoming>
+      <bpmn:outgoing>F13</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:parallelGateway id="PG_Split">
+      <bpmn:incoming>F10</bpmn:incoming>
+      <bpmn:outgoing>F11</bpmn:outgoing>
+      <bpmn:outgoing>F12</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:endEvent id="End_None" name="停止（投入なし）">
+      <bpmn:incoming>F09</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="GW_Any" name="投入できるタスクがあるか？">
+      <bpmn:incoming>F08</bpmn:incoming>
+      <bpmn:outgoing>F09</bpmn:outgoing>
+      <bpmn:outgoing>F10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Decide" name="計画を検査する&#10;（decide_next_steps）">
+      <bpmn:incoming>F07</bpmn:incoming>
+      <bpmn:outgoing>F08</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DA_Decide">
+        <bpmn:targetRef>Store_Redis</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Done" name="完了">
+      <bpmn:incoming>F06</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="GW_Done" name="done か？">
+      <bpmn:incoming>F05</bpmn:incoming>
+      <bpmn:outgoing>F06</bpmn:outgoing>
+      <bpmn:outgoing>F07</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_Plan" name="次の子タスクを&#10;計画する（JSON）">
+      <bpmn:incoming>F04</bpmn:incoming>
+      <bpmn:outgoing>F05</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_Limit" name="停止（上限）">
+      <bpmn:incoming>F03</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="GW_Limit" name="上限内か？">
+      <bpmn:incoming>F02</bpmn:incoming>
+      <bpmn:outgoing>F03</bpmn:outgoing>
+      <bpmn:outgoing>F04</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Check" name="深さを確認し&#10;呼び出し回数を +1">
+      <bpmn:incoming>F01</bpmn:incoming>
+      <bpmn:incoming>F15</bpmn:incoming>
+      <bpmn:outgoing>F02</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DA_Check">
+        <bpmn:targetRef>Store_Redis</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:startEvent id="Start_Goal" name="目的を渡す">
+      <bpmn:outgoing>F01</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Orch">
+    <bpmndi:BPMNPlane id="BPMNPlane_Orch" bpmnElement="Collaboration_Orch">
+      <bpmndi:BPMNShape id="Participant_Orch_di" bpmnElement="Participant_Orch" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1310" height="760" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Worker_di" bpmnElement="Lane_Worker" isHorizontal="true">
+        <dc:Bounds x="190" y="640" width="1280" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Redis_di" bpmnElement="Lane_Redis" isHorizontal="true">
+        <dc:Bounds x="190" y="400" width="1280" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_LLM_di" bpmnElement="Lane_LLM" isHorizontal="true">
+        <dc:Bounds x="190" y="500" width="1280" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Plan_di" bpmnElement="Lane_Plan" isHorizontal="true">
+        <dc:Bounds x="190" y="200" width="1280" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Caller_di" bpmnElement="Lane_Caller" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1280" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Goal_di" bpmnElement="Start_Goal">
+        <dc:Bounds x="240" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="231" y="165" width="55" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Check_di" bpmnElement="Task_Check">
+        <dc:Bounds x="310" y="260" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Limit_di" bpmnElement="GW_Limit" isMarkerVisible="true">
+        <dc:Bounds x="470" y="275" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="468" y="332" width="55" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Limit_di" bpmnElement="End_Limit">
+        <dc:Bounds x="477" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="519" y="223" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Plan_di" bpmnElement="Task_Plan" bioc:stroke="#e65100" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#e65100">
+        <dc:Bounds x="560" y="530" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Done_di" bpmnElement="GW_Done" isMarkerVisible="true">
+        <dc:Bounds x="740" y="275" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="775" y="332" width="50" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Done_di" bpmnElement="End_Done">
+        <dc:Bounds x="747" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="790" y="223" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Decide_di" bpmnElement="Task_Decide">
+        <dc:Bounds x="840" y="260" width="160" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_Any_di" bpmnElement="GW_Any" isMarkerVisible="true">
+        <dc:Bounds x="1030" y="275" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1072" y="332" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_None_di" bpmnElement="End_None">
+        <dc:Bounds x="1037" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1079" y="223" width="88" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PG_Split_di" bpmnElement="PG_Split">
+        <dc:Bounds x="1030" y="710" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Fetch_di" bpmnElement="Task_Fetch">
+        <dc:Bounds x="1130" y="660" width="150" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Tests_di" bpmnElement="Task_Tests">
+        <dc:Bounds x="1130" y="750" width="150" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PG_Join_di" bpmnElement="PG_Join">
+        <dc:Bounds x="1320" y="710" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Store_Redis_di" bpmnElement="Store_Redis">
+        <dc:Bounds x="680" y="425" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="650" y="478" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F01_di" bpmnElement="F01">
+        <di:waypoint x="276" y="140" />
+        <di:waypoint x="370" y="140" />
+        <di:waypoint x="370" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F02_di" bpmnElement="F02">
+        <di:waypoint x="430" y="300" />
+        <di:waypoint x="470" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F03_di" bpmnElement="F03">
+        <di:waypoint x="495" y="275" />
+        <di:waypoint x="495" y="248" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="454" y="252" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F04_di" bpmnElement="F04">
+        <di:waypoint x="520" y="300" />
+        <di:waypoint x="630" y="300" />
+        <di:waypoint x="630" y="530" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="642" y="282" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F05_di" bpmnElement="F05">
+        <di:waypoint x="700" y="570" />
+        <di:waypoint x="765" y="570" />
+        <di:waypoint x="765" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F06_di" bpmnElement="F06">
+        <di:waypoint x="765" y="275" />
+        <di:waypoint x="765" y="248" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="731" y="252" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F07_di" bpmnElement="F07">
+        <di:waypoint x="790" y="300" />
+        <di:waypoint x="840" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="803" y="282" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F08_di" bpmnElement="F08">
+        <di:waypoint x="1000" y="300" />
+        <di:waypoint x="1030" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F09_di" bpmnElement="F09">
+        <di:waypoint x="1055" y="275" />
+        <di:waypoint x="1055" y="248" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1026" y="252" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
+        <di:waypoint x="1055" y="325" />
+        <di:waypoint x="1055" y="710" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1064" y="600" width="170" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+        <di:waypoint x="1080" y="735" />
+        <di:waypoint x="1105" y="735" />
+        <di:waypoint x="1105" y="690" />
+        <di:waypoint x="1130" y="690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
+        <di:waypoint x="1055" y="760" />
+        <di:waypoint x="1055" y="780" />
+        <di:waypoint x="1130" y="780" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
+        <di:waypoint x="1280" y="690" />
+        <di:waypoint x="1345" y="690" />
+        <di:waypoint x="1345" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
+        <di:waypoint x="1280" y="780" />
+        <di:waypoint x="1345" y="780" />
+        <di:waypoint x="1345" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
+        <di:waypoint x="1370" y="735" />
+        <di:waypoint x="1420" y="735" />
+        <di:waypoint x="1420" y="825" />
+        <di:waypoint x="370" y="825" />
+        <di:waypoint x="370" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="620" y="806" width="250" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_Note_Plan_di" bpmnElement="Assoc_Note_Plan">
+        <di:waypoint x="560" y="572" />
+        <di:waypoint x="360" y="572" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Note_Decide_di" bpmnElement="Note_Decide">
+        <dc:Bounds x="840" y="208" width="180" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DA_Check_di" bpmnElement="DA_Check">
+        <di:waypoint x="400" y="340" />
+        <di:waypoint x="400" y="450" />
+        <di:waypoint x="680" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DA_Decide_di" bpmnElement="DA_Decide">
+        <di:waypoint x="920" y="340" />
+        <di:waypoint x="920" y="450" />
+        <di:waypoint x="730" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_Note_Decide_di" bpmnElement="Assoc_Note_Decide">
+        <di:waypoint x="920" y="260" />
+        <di:waypoint x="920" y="248" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Note_Plan_di" bpmnElement="Note_Plan">
+        <dc:Bounds x="215" y="544" width="145" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Group_AI_di" bpmnElement="Group_AI" bioc:stroke="#e65100" color:border-color="#e65100">
+        <dc:Bounds x="540" y="508" width="180" height="124" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="776" y="512" width="150" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Note_Legend_di" bpmnElement="Note_Legend" bioc:stroke="#e65100" color:border-color="#e65100">
+        <dc:Bounds x="880" y="115" width="420" height="50" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
