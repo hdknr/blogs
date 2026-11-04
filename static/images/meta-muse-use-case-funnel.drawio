@@ -1,0 +1,46 @@
+<mxfile host="drawio">
+  <diagram id="funnel" name="funnel">
+    <mxGraphModel dx="1000" dy="600" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Muse の活用例を GTD で棚卸しする" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="10" width="600" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="lv1" value="&lt;b&gt;500 件以上&lt;/b&gt;&lt;br&gt;Muse にまとめさせた活用例" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="100" y="70" width="460" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lv2" value="&lt;b&gt;388 通り&lt;/b&gt;&lt;br&gt;類似したものを統合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="150" y="190" width="360" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lv3" value="&lt;b&gt;56 件&lt;/b&gt;&lt;br&gt;実用に至っていそうな信頼度高めのもの" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="160" y="310" width="340" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lv4" value="&lt;b&gt;自分の次の行動&lt;/b&gt;&lt;br&gt;手元のタスクと突き合わせて数件" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="180" y="430" width="300" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="endArrow=block;html=1;strokeWidth=2;" edge="1" parent="1" source="lv1" target="lv2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;strokeWidth=2;" edge="1" parent="1" source="lv2" target="lv3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;strokeWidth=2;" edge="1" parent="1" source="lv3" target="lv4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="g1" value="収集（Capture）" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="90" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="g2" value="見極め（Clarify）" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="210" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="g3" value="整理（Organize）" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontColor=#d79b00;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="330" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="g4" value="実行（Engage）" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="450" width="220" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
