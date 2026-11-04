@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="ua-pipeline" name="Understand Anything Pipeline">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Understand Anything：/understand のパイプライン" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="src" value="コードベース&lt;br&gt;（ソース・ドキュメント）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="230" width="150" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="det-group" value="構造の抽出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="220" y="70" width="250" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="scanner" value="project-scanner&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;ファイル・言語・FW を検出&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="245" y="110" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ts" value="Tree-sitter&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;決定的：import・定義・呼び出し・継承&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="245" y="185" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="llm-group" value="意味付け（LLM・トークン消費）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="220" y="280" width="250" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="fa" value="file-analyzer（並列）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;要約・タグ・ノードとエッジ&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="245" y="315" width="200" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="aa" value="architecture-analyzer&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;レイヤー分類&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="245" y="370" width="200" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="tb" value="tour-builder&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;ガイドツアー生成&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="245" y="425" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="gr" value="graph-reviewer&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;整合性チェック（既定はインライン）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="245" y="475" width="200" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="kg" value="ナレッジグラフ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;.ua/knowledge-graph.json&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="220" width="170" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="use-group" value="使い方" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="740" y="70" width="320" height="460" as="geometry"/>
+        </mxCell>
+        <mxCell id="u1" value="/understand-dashboard&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;対話的ダッシュボード&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="765" y="110" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="u2" value="/understand-chat&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;コードベースへの質問&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="765" y="175" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="u3" value="/understand-diff&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;変更の影響範囲&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="765" y="240" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="u4" value="/understand-onboard&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;オンボーディングガイド&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="765" y="305" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="u5" value="npx viewer（LLM 不要）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;コミット済みグラフをチームで閲覧&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="765" y="370" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="u6" value="post-commit hook&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;--auto-update で差分のみ再解析&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="765" y="435" width="270" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="src" target="det-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="scanner" target="ts">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="importMap" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;labelBackgroundColor=#ffffff;labelPosition=right;align=left;spacingLeft=4;" edge="1" parent="1" source="ts" target="fa">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="det-group" target="kg">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="llm-group" target="kg">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="kg" target="use-group">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
