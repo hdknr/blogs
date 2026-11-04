@@ -1,0 +1,13 @@
+{
+  "name": "bpmn-render",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Render BPMN 2.0 (Camunda Modeler) diagrams to PNG with bpmn-js and local Chrome",
+  "scripts": {
+    "render": "node render.cjs"
+  },
+  "dependencies": {
+    "bpmn-js": "^18.31.1",
+    "puppeteer-core": "^25.16.0"
+  }
+}
