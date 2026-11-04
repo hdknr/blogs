@@ -1,0 +1,59 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="oe-flow" name="Edge case decision">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="ttl" value="エッジケースを「直す」か「許容する」かの判断" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="20" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="found" value="エッジケースを発見&lt;br&gt;（AI が提案 / レビューで指摘）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="190" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="prob" value="発生確率は？&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;例: 年 1 回 / 1%&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="140" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="impact" value="インパクトは？&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;例: 軽微 / 致命的&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="270" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ev" value="期待値 = インパクト × 発生確率" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="165" width="220" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="keep" value="期待値が小さい&lt;br&gt;→ 許容してシンプルに保つ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;（運用回避・手作業・既知の制約として記録）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="810" y="120" width="250" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="fix" value="期待値が大きい&lt;br&gt;→ コードで対応する&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;（保守対象が増えるコストも込みで判断）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="810" y="270" width="250" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="found" target="prob">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="found" target="impact">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="prob" target="ev">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="impact" target="ev">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="小" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;fontSize=11;" edge="1" parent="1" source="ev" target="keep">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="大" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;fontSize=11;" edge="1" parent="1" source="ev" target="fix">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="trap" value="事業の相場観がないと：「年 1 回」を「毎日」、「1%」を「100%」、「軽微」を「致命的」と見積もり、すべてが「大」に振れる。&lt;br&gt;AI に安全側の実装を頼み続けると、全ての可能性が全て発生した世界 ＝ オーバーエンジニアリングの最大幅に近づきやすい。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;dashed=1;dashPattern=5 5;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="420" width="1020" height="80" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
