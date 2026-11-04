@@ -2,11 +2,14 @@
 title: "DuckLake"
 description: "DuckDB チームのレイクハウスフォーマット。データは Parquet でオブジェクトストレージに、メタデータはすべて PostgreSQL などの SQL データベースに置く"
 date: 2026-10-13
-lastmod: 2026-10-13
+lastmod: 2026-10-30
 aliases: ["ducklake", "DuckLake Manifesto", "data inlining", "レイクハウスフォーマット"]
 related_posts:
   - "/posts/2026/10/ducklake-sql-lakehouse/"
   - "/posts/2026/10/apache-iceberg-duckdb/"
+  - "/posts/2026/10/redshift-vs-lakehouse/"
+  - "/posts/2026/10/lakehouse-ecosystem-2026/"
+  - "/posts/2026/10/ai-agent-data-platform/"
 tags: ["DuckLake", "duckdb", "Apache Iceberg", "データレイク", "PostgreSQL", "Parquet", "データ基盤"]
 ---
 
@@ -68,13 +71,21 @@ PostgreSQL カタログ（`ducklake:postgres:dbname=...`）とオブジェクト
 
 判断材料は、エンジンの多様性が要るか、小さな書き込みの頻度（ストリーミングなら DuckLake 有利）、PostgreSQL を運用できるか（カタログ DB の可用性とバックアップがそのままデータ基盤の信頼性になる）。
 
+### シリーズ全体での位置づけ
+
+Delta Lake・Hudi・Paimon を含むテーブルフォーマットの比較では、DuckLake は「メタデータを SQL データベースに置く軽量な構成」という枠にあたる。Redshift や Athena と同じデータを共有するなら Iceberg が前提になり、DuckLake が最も合うのは**少人数・1 台に収まる規模で DuckDB 中心**の構成。AI エージェント向けのデータ基盤でも、最初の試行段階を DuckDB ＋ DuckLake で始め、チームで共有する段階で S3 ＋ Iceberg に移す流れが勧められている。
+
 ## 関連ページ
 
 - [Apache Iceberg](/blogs/wiki/tools/apache-iceberg/) — 比較対象のオープンテーブルフォーマット
 - [DuckDB](/blogs/wiki/tools/duckdb/) — `ducklake` 拡張を提供するエンジン
 - [列指向ストレージ](/blogs/wiki/concepts/columnar-storage/) — データ本体の Parquet
+- [レイクハウス](/blogs/wiki/concepts/lakehouse/) — フォーマット・カタログ・エンジンを組み合わせる全体像
 
 ## ソース記事
 
 - [DuckLake 入門：メタデータを SQL データベースに置くレイクハウスフォーマットと Iceberg との違い](/blogs/posts/2026/10/ducklake-sql-lakehouse/) — 2026-10-13
 - [Apache Iceberg 入門：データレイクを「テーブル」にする仕組みと DuckDB との関係](/blogs/posts/2026/10/apache-iceberg-duckdb/) — 2026-10-12
+- [Redshift か、S3 ＋ Iceberg のレイクハウスか：DWH とオープンテーブルフォーマットの選び方](/blogs/posts/2026/10/redshift-vs-lakehouse/) — 2026-10-13
+- [Iceberg と DuckLake の先へ：2026 年に注目したいレイクハウスの技術とプロダクト](/blogs/posts/2026/10/lakehouse-ecosystem-2026/) — 2026-10-13
+- [AI エージェントのためのデータ基盤：レイクハウスを土台に「意味・費用・権限・取り消し」を設計する](/blogs/posts/2026/10/ai-agent-data-platform/) — 2026-10-13

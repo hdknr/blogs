@@ -2,13 +2,15 @@
 title: "マルチエージェント調整パターン"
 description: "複数 AI エージェントを協調させる5つの設計パターン。Anthropic が体系化した Generator-Verifier・Orchestrator-Subagent・Agent Teams・Message Bus・Shared State"
 date: 2026-04-11
-lastmod: 2026-09-02
+lastmod: 2026-10-30
 aliases: ["マルチエージェントパターン", "multi-agent-coordination"]
 related_posts:
   - "/posts/2026/04/anthropic-multi-agent-coordination-patterns/"
   - "/posts/2026/04/claude-managed-agents-architecture/"
   - "/posts/2026/04/claude-managed-agents/"
   - "/posts/2026/09/nec-corporate-ai-workforce/"
+  - "/posts/2026/10/claude-code-routines-proactive-agent-workshop/"
+  - "/posts/2026/10/celery-claude-recursive-orchestration/"
 tags: ["マルチエージェント", "AIアーキテクチャ", "設計パターン", "anthropic", "エージェント"]
 ---
 
@@ -69,8 +71,14 @@ Anthropic が 2026年4月に公開した、複数 AI エージェントを協調
 
 これら 5 パターンが「誰と誰がどう話すか」の分類だとすると、そこから一歩進んで**協調構造そのものを宣言的に設計する**のが [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) である。ノード（判断）とエッジ（データの受け渡し）に還元すると、Orchestrator-Subagent は「fan out → reduce → 統合」のダイヤモンド、Generator-Verifier は「エッジ上の検証ノード」として表現できる。
 
+## 実装例
+
+- **Routines 同士の Generator-Critic** — ドキュメント PR を作る Routine とは別に、その PR 作成をトリガーにレビューコメントを付ける Routine を置き、人が見る前に一度批評を通す（Anthropic の Routines ワークショップ）。イベントで連鎖する点は Message Bus 的でもある
+- **Celery による再帰的 Orchestrator-Subagent** — 計画役の `claude -p` が次の子タスクを JSON で提案し、コードが許可リスト・上限・重複を検査してから `chord` で並列実行、結果を持って計画役に戻る。オーケストレーターの「判断」と「権限」を分け、権限はコードが握る。計画役を Claude と Codex で切り替えれば、ベンダーをまたいだ生成と批評の分離にも広げられる（[Celery](/blogs/wiki/tools/celery/)）
+
 ## 関連ページ
 
+- [Celery](/blogs/wiki/tools/celery/) — 再帰的 Orchestrator-Subagent の実装基盤
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/)
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — ノードとエッジによる協調構造の設計
 - [計画と実装を分ける承認ゲート設計](/blogs/wiki/concepts/orchestrator-coder-split/) — オーケストレーターとコーダーの分業
@@ -86,3 +94,5 @@ Anthropic が 2026年4月に公開した、複数 AI エージェントを協調
 - [Anthropic が解説するマルチエージェント調整パターン 5 選](/blogs/posts/2026/04/anthropic-multi-agent-coordination-patterns/) — 2026-04-11
 - [Claude Managed Agents のアーキテクチャ: Brain / Session / Hands の分離設計](/blogs/posts/2026/04/claude-managed-agents-architecture/) — 2026-04-10
 - [NEC「部署が丸ごとAI」の中身 — コーポレートAI・Workforce部門の4階層と、人が手放さなかった仕事](/blogs/posts/2026/09/nec-corporate-ai-workforce/) — 2026-09-02
+- [「従業員なしで会社を立ち上げるマニュアル」の中身 — Anthropic の Routines ワークショップを読み解く](/blogs/posts/2026/10/claude-code-routines-proactive-agent-workshop/) — 2026-10-30
+- [Celery と claude -p で組む再帰的なエージェントオーケストレーション](/blogs/posts/2026/10/celery-claude-recursive-orchestration/) — 2026-10-30

@@ -2,11 +2,13 @@
 title: "AI動画広告生成ツール"
 description: "AI を使って UGC スタイルや企業向けの動画広告を自動生成するツール群。Arcads・Creatify・HeyGen・Synthesia が主要プレイヤー"
 date: 2026-04-16
-lastmod: 2026-04-16
+lastmod: 2026-10-30
 aliases: ["AI UGC", "AI動画広告", "AI video generation"]
 related_posts:
   - "/posts/2026/04/ai-ugc-video-ad-tools-comparison/"
   - "/posts/2026/04/arcads-ai-ugc-ads/"
+  - "/posts/2026/10/higgsfield-claude-code-short-video/"
+  - "/posts/2026/10/short-video-scenario-reverse-generation/"
 tags: ["AI広告", "UGC", "動画生成", "マーケティング自動化"]
 ---
 
@@ -47,12 +49,25 @@ AI を活用して動画広告を自動生成するツールカテゴリ。特�
 - **Arcads**: Pro プラン（カスタム）限定
 - **Synthesia**: Enterprise 限定
 
+## 構成の設計を AI に任せる
+
+アバター型ツールとは別に、広告の**構成**（シナリオ・カット割り）を AI で作り、汎用の動画生成モデルで映像化する流れもある。
+
+- **リバース生成** — 伸びている広告やショート動画から、マルチモーダル LLM（Gemini は動画を直接読める）や VidSbo でシナリオと絵コンテを逆引きし、演出意図とテロップまで言語化する。Morphic・LTX Studio・insMind に台本を入れれば、構成はそのままに商品だけ差し替えた絵コンテを作り直せる。参考にするのは構成と演出意図までで、表現そのものは自分で作る
+- **シナリオ量産** — Claude Code に `CLAUDE.md` でカット形式とプロンプト語順を固定させ、テーマからカット割りと英文プロンプトをファイルで量産し、Higgsfield MCP で生成する
+
+手順は [ショート動画のシナリオ設計と生成](/blogs/wiki/guides/short-video-scenario-generation/) にまとめた。
+
 ## 関連ページ
 
 - [Arcads](/blogs/wiki/tools/arcads/) — UGC動画広告特化ツール
+- [Higgsfield](/blogs/wiki/tools/higgsfield/) — 30 以上の動画・画像モデルを MCP で使える生成プラットフォーム
+- [ショート動画のシナリオ設計と生成](/blogs/wiki/guides/short-video-scenario-generation/) — リバース生成とシナリオ量産の手順
 - [OpenClaw](/blogs/wiki/tools/openclaw/) — AI エージェント（Arcads API と連携実績あり）
 
 ## ソース記事
 
 - [AI UGC動画広告ツール徹底比較](/blogs/posts/2026/04/ai-ugc-video-ad-tools-comparison/) — 2026-04-02
 - [Arcads 完全ガイド](/blogs/posts/2026/04/arcads-ai-ugc-ads/) — 2026-04-02
+- [Claude Code で Higgsfield 用ショート動画シナリオを量産する](/blogs/posts/2026/10/higgsfield-claude-code-short-video/) — 2026-10-14
+- [ショート動画からシナリオと絵コンテをリバース生成する](/blogs/posts/2026/10/short-video-scenario-reverse-generation/) — 2026-10-16

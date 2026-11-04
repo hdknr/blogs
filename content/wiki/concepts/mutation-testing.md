@@ -2,11 +2,12 @@
 title: "ミューテーションテスト（mutation harness）"
 description: "コードをわざと 1 箇所壊してテストが落ちるかを確かめ、テストの検出力を測る技法。専用ツールなしの 30 行のスクリプトでも価値が出る"
 date: 2026-09-30
-lastmod: 2026-09-30
+lastmod: 2026-10-30
 aliases: ["mutation testing", "mutation harness", "ミューテーションスコア", "変異テスト", "mutant", "変異体"]
 related_posts:
   - "/posts/2026/09/mutation-harness/"
   - "/posts/2026/09/whitebox-blackbox-boundary-coverage/"
+  - "/posts/2026/10/replacing-mandatory-code-review/"
 tags: ["ミューテーションテスト", "テスト", "python", "pytest", "コード品質"]
 ---
 
@@ -80,6 +81,10 @@ TDD で「まず RED を見る」のも、実装が無い状態という 1 個�
 - 書き手と検査役を分け、モデルも変える（[maker-checker](/blogs/wiki/concepts/maker-checker/)）
 - harness 自体はリポジトリに入れない。残すのは**結果の表**だけ。置きっぱなしのスクリプトはアンカーが腐る
 
+### コードレビューの代わりに CI に置く
+
+人のレビューを減らす（必須レビューをやめる）とき、「このテストはちゃんと効いているか」はレビューでしか見ていなかったことの 1 つで、ミューテーションテストがその代替になる。LLM はテストを通すために実装ではなく**テスト側を書き換える**ことがあるので、AI がコードとテストを両方書く体制では「テストが緑」だけでは品質の担保にならない。CI の自動ゲートに Stryker（JS/TS）・mutmut（Python）・PIT（Java）を並べ、linter・型チェック・静的解析と重ねて使う（[必須コードレビューの代替](/blogs/wiki/concepts/code-review-alternatives/)）。
+
 ### ミューテーションが測っていないもの
 
 変異体は実装から機械的に作られるので、ミューテーションテストも仕様を見ていない。測っているのは「テストが実装を今の形にピン留めしているか」であって、「実装が仕様に合っているか」ではない。実装が正しいという前提の上でテストの強度を測る道具である（[テストの導出元](/blogs/wiki/concepts/whitebox-blackbox-testing/)）。
@@ -92,8 +97,10 @@ TDD で「まず RED を見る」のも、実装が無い状態という 1 個�
 - [pytest でカオスエンジニアリング](/blogs/wiki/guides/pytest-chaos-engineering/) — フォールトインジェクションの実装例
 - [サーキットブレーカーと指数バックオフ](/blogs/wiki/concepts/circuit-breaker/) — 検知関数を潰してテストが赤くなるかを見る例
 - [AI エージェントにリファクタさせる時の完了の定義](/blogs/wiki/concepts/ai-refactor-completion-boundary/) — 交絡を潰す検証
+- [必須コードレビューの代替](/blogs/wiki/concepts/code-review-alternatives/) — レビューの役割を CI に移すときの一手段
 
 ## ソース記事
 
 - [テストを信じる前に、テストを壊す — mutation harness で「緑」に意味を持たせる](/blogs/posts/2026/09/mutation-harness/) — 2026-09-16
 - [ホワイトボックスとブラックボックスの違いを実測した — 分岐カバレッジ 100% でミューテーションスコアは 0% と 100%](/blogs/posts/2026/09/whitebox-blackbox-boundary-coverage/) — 2026-09-17
+- [必須コードレビューをやめるなら、品質は何で担保するのか — レビューが担っていた 8 つの役割と AI 時代の代替手段](/blogs/posts/2026/10/replacing-mandatory-code-review/) — 2026-10-30

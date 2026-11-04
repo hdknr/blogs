@@ -2,8 +2,8 @@
 title: "ハーネスエンジニアリング"
 description: "AI エージェントの出力品質を保証する設計パターン。検証層・制約層・フィードバック層で構成"
 date: 2026-04-06
-lastmod: 2026-10-13
-aliases: ["Harness Engineering"]
+lastmod: 2026-10-30
+aliases: ["Harness Engineering", "馬具・柵・境界"]
 related_posts:
   - "/posts/2026/03/harness-engineering/"
   - "/posts/2026/03/ai-agent-qa/"
@@ -17,6 +17,8 @@ related_posts:
   - "/posts/2026/04/claude-harness-v4-hokage/"
   - "/posts/2026/04/harness-engineering-agent-vs-user-harness/"
   - "/posts/2026/04/harness-engineering-beyond-rule-files/"
+  - "/posts/2026/10/harness-design-intro-guardrails-boundary/"
+  - "/posts/2026/10/jev-system-one-model/"
 tags: ["agent", "品質保証", "CLAUDE.md", "設計パターン", "ロックイン"]
 ---
 
@@ -32,6 +34,27 @@ AI エージェント全盛時代に必須の設計手法。CLAUDE.md（入力�
 | 記録層 | 学習・実行履歴 | MEMORY.md |
 | 検証層 | 出力の事前/事後チェック | Hooks (PreToolUse/PostToolUse) |
 | ワークフロー層 | 構造化タスク定義 | Agent Skills (SKILL.md) |
+
+## 馬具・柵・境界の 3 層モデル
+
+`AGENT = MODEL + HARNESS`（モデル以外のすべてがハーネス）という広い定義に 2026 年 3〜7 月で議論がほぼ収束し、関心は「どう組むか」に移った。木下雄一朗氏の整理では、ハーネスを強さの違う 3 層に分ける。
+
+| 層 | 役割 | 性質 | 道具 |
+|---|---|---|---|
+| 馬具 | 走る前に方向を伝える | 確率的（読んで従うかはモデル次第） | AGENTS.md・Skills・サブエージェント |
+| 柵（ガードレール） | 逸脱を機械的に判定して止める・差し戻す | 決定論的 | lint・型・ビルド・テスト・Hooks・許可リスト |
+| 境界 | 到達そのものを無くす | 構造的 | サンドボックス・通信遮断・最小権限 |
+
+- **可逆な逸脱は柵で拾ってループに戻し、不可逆な逸脱は境界で試行そのものを無くす**。本番・機密・個人情報には道を作らない
+- 柵には「成果物への柵」（正しく作れたか）と「行動への柵」（実行してよいか）の 2 種類がある
+- 柵を自動で走らせる「レール」は 3 本: エージェントの Hooks（速いが無効化できる）→ Git hooks（`--no-verify` で抜けられる）→ CI＋ブランチ保護（抜け道なし）。外側ほど強い
+- ループは「検証器＝`check` の 1 コマンド」と「ゴール＝`check` がすべて通る」を渡すだけで閉じる
+- 判定が決定論的でも、テストが弱ければ間違いを毎回合格させる。LLM レビューは確率的なので柵には数えない
+- 実行時の見方では `agent = model + context + runtime`。context への依存が減り runtime に寄るほど強い。**クレデンシャルは runtime に置き、context に入れない**（中継サーバーで代理実行するクレデンシャルブローカー構成など）
+- 着手順は「境界 → ルール（最小限）→ 柵を `check` に束ねる → ループを閉じる → 繰り返しが見えたら Skills・サブエージェント → 定期的に棚卸し」。モデルの弱点を補う注意書きは次世代モデルで溶けるが、テスト・権限・固有規約は残る
+- 無人で起動する（イベント駆動・定期実行）場合は 3 層それぞれの要求が上がる。外部入力はプロンプトインジェクション経路、停止条件にターン・時間・コスト上限、成果物は PR で出してレールを通す、トリガーごとにロールを分ける
+
+LLM 系の判定器を柵に組み込む例として、[Jev](/blogs/wiki/tools/jev/) で Bash コマンドを分類する PreToolUse hook がある。確信度が低い・誘導コメントで揺らぐといった性質があるため、自動許可の最終判断はコードに置く必要がある。
 
 ## Anthropic vs OpenAI のハーネス戦略
 
@@ -106,6 +129,9 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 - [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — ハーネスが第3層として位置づく全体地図
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — ハーネスの上に積む最上位レイヤー
 - [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — ゲートを仕組みとして強制する実装例
+- [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/) — 行動への柵・最も内側のレール
+- [Jev](/blogs/wiki/tools/jev/) — hook から呼ぶ判定特化モデル
+- [プロンプトインジェクション](/blogs/wiki/concepts/prompt-injection/) — lethal trifecta と境界設計
 
 ## ソース記事
 
@@ -117,3 +143,5 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 - [「AIファースト」戦略の本当の意味 — ハーネスエンジニアリングで 25 人チームが 6 週間を 1 日に短縮した方法](/blogs/posts/2026/04/ai-first-harness-engineering-creao/) — 2026-04-17
 - [RAG なしでも高精度に動く Agent Harness の秘密](/blogs/posts/2026/04/agent-harness-rag-context-size/) — 2026-04-17
 - [Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に](/blogs/posts/2026/04/claude-harness-v4-hokage/) — 2026-04-14
+- [Jev とは何か — 文章を書かず「判断だけ」を返す System One モデル](/blogs/posts/2026/10/jev-system-one-model/) — 2026-10-13
+- [ハーネスエンジニアリング入門 — 馬具・柵・境界の3層で AI エージェントを自走させる](/blogs/posts/2026/10/harness-design-intro-guardrails-boundary/) — 2026-10-25

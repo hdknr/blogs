@@ -2,7 +2,7 @@
 title: "作る役と確かめる役の分離（maker-checker）"
 description: "成果物を作った主体に自分で採点させない原則。AI エージェントでは「エージェントを分ける」だけでは足りず、接続・規律・重み（モデル）の 3 層を塞いで初めて機能する"
 date: 2026-09-30
-lastmod: 2026-09-30
+lastmod: 2026-10-30
 aliases: ["maker-checker", "four-eyes principle", "四つの目の原則", "generator と evaluator の分離", "検証者の分離", "自己採点"]
 related_posts:
   - "/posts/2026/09/fact-checker-maker-checker/"
@@ -10,6 +10,8 @@ related_posts:
   - "/posts/2026/09/mutation-harness/"
   - "/posts/2026/09/whitebox-blackbox-boundary-coverage/"
   - "/posts/2026/09/agent-self-improvement-design/"
+  - "/posts/2026/10/spec-loop-two-frameworks-comparison/"
+  - "/posts/2026/10/replacing-mandatory-code-review/"
 tags: ["エージェント設計", "サブエージェント", "ファクトチェック", "コードレビュー", "claude-code"]
 ---
 
@@ -60,6 +62,8 @@ GMO ペパボのレビューループでは、6 体のレビュアーの指摘�
 - **テスト生成** — 実装を書いた主体と期待値を決める主体を分ける。実装だけを見て書かれたテストは、バグを正解として固定する（[テストの導出元](/blogs/wiki/concepts/whitebox-blackbox-testing/)）
 - **ミューテーション検査の委任** — 検査を専用サブエージェントに分け、使うモデルも実装側と変える（[ミューテーションテスト](/blogs/wiki/concepts/mutation-testing/)）
 - **自己改善ループ** — 評価の基準は人間が定義する。評価が不正確だと反復を重ねるほど性能が落ちる（[自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/)）
+- **仕様のレビュー** — 承認する人（利用者・決裁者）が仕様の細部を読まない場合、細部の検査は人の目に頼れない。答えが一意の関門はスクリプトに判定させ、残りを書き込みツールを持たない判定役に別ティアで判定させる。開発者 1 人が毎回承認する体制なら人間の目が最後の関門になる、という相手による違いがある（[仕様駆動開発](/blogs/wiki/concepts/spec-driven-development/)）
+- **AI コードレビュー** — 書いた AI と同じモデルにレビューさせず、規模や提供元を変える。指摘には再現テストやコマンド結果などの証拠を付けさせる。設計の一貫性と知識共有は AI レビューでは補えない（[必須コードレビューの代替](/blogs/wiki/concepts/code-review-alternatives/)）
 
 ### 「モデル共感」との緊張関係
 
@@ -72,6 +76,8 @@ GMO ペパボのレビューループでは、6 体のレビュアーの指摘�
 - [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — 計画と実装の分離
 - [スケーラブル・オーバーサイト](/blogs/wiki/concepts/scalable-oversight/) — 人間より強いモデルをどう監督するか
 - [Claude Code](/blogs/wiki/tools/claude-code/) — サブエージェントの `model` 指定
+- [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) — 人間の承認とスクリプト・別ティア判定役の使い分け
+- [必須コードレビューの代替](/blogs/wiki/concepts/code-review-alternatives/) — AI レビュアーを入れるときの注意
 
 ## ソース記事
 
@@ -80,3 +86,5 @@ GMO ペパボのレビューループでは、6 体のレビュアーの指摘�
 - [テストを信じる前に、テストを壊す — mutation harness で「緑」に意味を持たせる](/blogs/posts/2026/09/mutation-harness/) — 2026-09-16
 - [ホワイトボックスとブラックボックスの違いを実測した — 分岐カバレッジ 100% でミューテーションスコアは 0% と 100%](/blogs/posts/2026/09/whitebox-blackbox-boundary-coverage/) — 2026-09-17
 - [停止条件は測れても収束しない — AIエージェントのループ設計と「不動点」](/blogs/posts/2026/09/loop-convergence-design/) — 2026-09-18
+- [AI 仕様駆動開発の 2 つの spec-loop を比べる — 実装ループと要求確定ループ](/blogs/posts/2026/10/spec-loop-two-frameworks-comparison/) — 2026-10-25（関門を誰が判定するか）
+- [必須コードレビューをやめるなら、品質は何で担保するのか](/blogs/posts/2026/10/replacing-mandatory-code-review/) — 2026-10-30（AI レビューの注意点）

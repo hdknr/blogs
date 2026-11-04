@@ -2,11 +2,14 @@
 title: "Apache Iceberg"
 description: "S3 などのオブジェクトストレージ上のファイル群をデータベースのテーブルとして扱うオープンテーブルフォーマット。ACID・タイムトラベル・スキーマ進化を実現し、計算エンジンを用途ごとに選べるようにする"
 date: 2026-10-13
-lastmod: 2026-10-13
-aliases: ["Iceberg", "オープンテーブルフォーマット", "テーブルフォーマット", "Open Table Format", "hidden partitioning", "隠れパーティショニング"]
+lastmod: 2026-10-30
+aliases: ["Iceberg", "オープンテーブルフォーマット", "テーブルフォーマット", "Open Table Format", "hidden partitioning", "隠れパーティショニング", "Iceberg v3", "Iceberg REST カタログ", "WAP", "Write-Audit-Publish"]
 related_posts:
   - "/posts/2026/10/apache-iceberg-duckdb/"
   - "/posts/2026/10/ducklake-sql-lakehouse/"
+  - "/posts/2026/10/redshift-vs-lakehouse/"
+  - "/posts/2026/10/lakehouse-ecosystem-2026/"
+  - "/posts/2026/10/ai-agent-data-platform/"
 tags: ["Apache Iceberg", "データレイク", "Parquet", "S3", "aws", "データ基盤"]
 ---
 
@@ -62,6 +65,31 @@ DuckDB の `iceberg` 拡張で読み書きできる（詳細は [DuckDB](/blogs/
 
 重い ETL は Glue / EMR の Spark、DuckDB は手元の探索や軽い集計・小規模修正、という分担が無難。
 
+### Iceberg v3
+
+v3 では次が加わった。
+
+- **削除ベクター** — 削除行をビットマップで Puffin ファイルに保存（DuckLake の削除ベクターと同じ考え方）
+- **行の系譜（row lineage）** — 各行に ID と更新時点を持たせ、変更を追跡しやすくする
+- **Variant 型** — JSON のような半構造化データを効率よく扱う
+- **列の既定値**
+
+Redshift は 2026 年 8 月に v3 テーブルに対応し、ほかの主要サービスも追随している。v4 はメタデータの効率化などの提案が出始めた段階。
+
+### カタログの広がり
+
+Iceberg REST カタログの API が事実上の共通言語になり、AWS の Glue Data Catalog / S3 Tables のほか、Apache Polaris、Unity Catalog（OSS 版）、Apache Gravitino、Lakekeeper などが実装している。Delta Lake・Hudi・Paimon との比較や XTable / UniForm による相互変換は [レイクハウス](/blogs/wiki/concepts/lakehouse/) にまとめた。
+
+### Redshift から読み書きする
+
+Redshift は 2025 年 11 月に Iceberg への書き込みが GA、2026 年 5 月に ALTER TABLE と自動マウントされる `awsdatacatalog` 経由の書き込みに対応した。CREATE TABLE（`USING ICEBERG`）、CTAS、INSERT、UPDATE、DELETE、MERGE が使え、テーブルは Glue Data Catalog に登録されている必要がある。S3 Tables では `"<バケット>@s3tablescatalog".<名前空間>.<テーブル>` の 3 部構成名を使い、`LOCATION` は書かない。
+
+制約は、書き込みが **1 文 1 トランザクション**（同じ `BEGIN` ブロックに他の文を入れられない）、同時変更の競合はコミット失敗で**自動再試行なし**、ストアドプロシージャからは書けない、外部で作ったテーブルは v2 / v3 かつ Parquet であること、など。
+
+### ブランチと WAP
+
+ブランチはスナップショットに名前を付けた参照で、`main` とは別の場所に書き込める。テーブルで `write.wap.enabled` を有効にし、検証用ブランチに書き込み、件数や値の範囲のチェックを通ったら `fast_forward` で `main` を進める（Spark の例）。失敗すればブランチを捨て、本番に誤って入った書き込みは `rollback_to_snapshot` で戻す。AI エージェントに書き込みを任せるときの「取り消し」の守りになる（[レイクハウス](/blogs/wiki/concepts/lakehouse/)を参照）。対応状況はエンジンごとに違う。
+
 ### メタデータ設計への批判と DuckLake
 
 [DuckLake](/blogs/wiki/tools/ducklake/) の Manifesto は、Iceberg のファイルベースのメタデータについて「カタログ → メタデータ → マニフェストリスト → マニフェストと S3 への直列リクエストが続く」「小さなメタデータファイルが増え、ルートのメタデータは履歴とともに肥大する」「コミットが遅く衝突しやすい」と指摘している。小さな書き込みが続くと小さなファイルが増え、定期的なコンパクションが必要になる点も対比される。
@@ -73,8 +101,12 @@ DuckDB の `iceberg` 拡張で読み書きできる（詳細は [DuckDB](/blogs/
 - [DuckLake](/blogs/wiki/tools/ducklake/) — メタデータを SQL データベースに置く別のレイクハウスフォーマット
 - [DuckDB](/blogs/wiki/tools/duckdb/) — Iceberg を読み書きできる計算エンジンの 1 つ
 - [列指向ストレージ](/blogs/wiki/concepts/columnar-storage/) — データ本体の Parquet の土台
+- [レイクハウス](/blogs/wiki/concepts/lakehouse/) — 他のテーブルフォーマット・カタログ・DWH との使い分け
 
 ## ソース記事
 
 - [Apache Iceberg 入門：データレイクを「テーブル」にする仕組みと DuckDB との関係](/blogs/posts/2026/10/apache-iceberg-duckdb/) — 2026-10-12
 - [DuckLake 入門：メタデータを SQL データベースに置くレイクハウスフォーマットと Iceberg との違い](/blogs/posts/2026/10/ducklake-sql-lakehouse/) — 2026-10-13
+- [Redshift か、S3 ＋ Iceberg のレイクハウスか：DWH とオープンテーブルフォーマットの選び方](/blogs/posts/2026/10/redshift-vs-lakehouse/) — 2026-10-13
+- [Iceberg と DuckLake の先へ：2026 年に注目したいレイクハウスの技術とプロダクト](/blogs/posts/2026/10/lakehouse-ecosystem-2026/) — 2026-10-13
+- [AI エージェントのためのデータ基盤：レイクハウスを土台に「意味・費用・権限・取り消し」を設計する](/blogs/posts/2026/10/ai-agent-data-platform/) — 2026-10-13

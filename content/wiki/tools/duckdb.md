@@ -2,12 +2,15 @@
 title: "DuckDB"
 description: "インプロセス OLAP データベース。列指向アーキテクチャで分析クエリを高速実行し、Iceberg や DuckLake のテーブルを読み書きする計算エンジンにもなる"
 date: 2026-04-06
-lastmod: 2026-10-13
+lastmod: 2026-10-30
 aliases: ["duckdb"]
 related_posts:
   - "/posts/2026/03/duckdb-columnar-arrow/"
   - "/posts/2026/10/apache-iceberg-duckdb/"
   - "/posts/2026/10/ducklake-sql-lakehouse/"
+  - "/posts/2026/10/redshift-vs-lakehouse/"
+  - "/posts/2026/10/lakehouse-ecosystem-2026/"
+  - "/posts/2026/10/ai-agent-data-platform/"
 tags: ["データベース", "OLAP", "SQL", "python", "duckdb"]
 ---
 
@@ -33,6 +36,14 @@ tags: ["データベース", "OLAP", "SQL", "python", "duckdb"]
 
 `ATTACH 'ducklake:metadata.ducklake' AS my_ducklake;` だけでスナップショット・タイムトラベル付きのレイクハウスになる。カタログに PostgreSQL を使えば複数の DuckDB プロセスから同時に読み書きでき、素の DuckDB ファイルの「書き込みは 1 プロセスのみ」という制約を越えられる。詳細は [DuckLake](/blogs/wiki/tools/ducklake/)。
 
+### Lance を読む（`lance` 拡張）
+
+`INSTALL lance; LOAD lance;` のうえで `.lance` のパスを `FROM` に書けば、AI 向けレイクハウスフォーマット Lance のデータセットを読める。DuckDB 自身の検証では、Lance が常に Parquet より速いわけではなく処理の種類で結果が分かれる。
+
+### 料金と規模の位置
+
+Redshift Serverless（RPU 時間課金）や Athena（スキャン量課金）と違い、DuckDB はエンジンの利用料がかからず、実行するマシンの能力が上限になる。AI エージェントに社内データを分析させる基盤でも、試行段階は手元の DuckDB（＋ DuckLake）で始めるのが勧められている。
+
 ### 使い分けの目安
 
 重い ETL は Glue / EMR の Spark で Iceberg に書き、DuckDB は手元での探索・軽い集計・小規模修正に使うのが無難。DuckDB だけで完結する小さな構成なら DuckLake、組織横断で複数エンジンが同じテーブルを共有するなら Iceberg。
@@ -42,9 +53,13 @@ tags: ["データベース", "OLAP", "SQL", "python", "duckdb"]
 - [列指向ストレージ](/blogs/wiki/concepts/columnar-storage/) — DuckDB が採用するストレージ方式
 - [Apache Iceberg](/blogs/wiki/tools/apache-iceberg/) — DuckDB から読み書きできるオープンテーブルフォーマット
 - [DuckLake](/blogs/wiki/tools/ducklake/) — DuckDB チームのレイクハウスフォーマット
+- [レイクハウス](/blogs/wiki/concepts/lakehouse/) — フォーマット・カタログ・エンジンを組み合わせる全体像
 
 ## ソース記事
 
 - [DuckDB と列指向ストレージ](/blogs/posts/2026/03/duckdb-columnar-arrow/) — 2026-03
 - [Apache Iceberg 入門：データレイクを「テーブル」にする仕組みと DuckDB との関係](/blogs/posts/2026/10/apache-iceberg-duckdb/) — 2026-10-12
 - [DuckLake 入門：メタデータを SQL データベースに置くレイクハウスフォーマットと Iceberg との違い](/blogs/posts/2026/10/ducklake-sql-lakehouse/) — 2026-10-13
+- [Redshift か、S3 ＋ Iceberg のレイクハウスか：DWH とオープンテーブルフォーマットの選び方](/blogs/posts/2026/10/redshift-vs-lakehouse/) — 2026-10-13
+- [Iceberg と DuckLake の先へ：2026 年に注目したいレイクハウスの技術とプロダクト](/blogs/posts/2026/10/lakehouse-ecosystem-2026/) — 2026-10-13
+- [AI エージェントのためのデータ基盤：レイクハウスを土台に「意味・費用・権限・取り消し」を設計する](/blogs/posts/2026/10/ai-agent-data-platform/) — 2026-10-13
