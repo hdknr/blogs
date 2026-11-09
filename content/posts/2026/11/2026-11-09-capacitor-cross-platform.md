@@ -19,6 +19,10 @@ Capacitor は、Web アプリを iOS・Android のネイティブアプリとし
 
 Capacitor アプリの実体は、**ネイティブアプリの中に埋め込まれた WebView** です。ビルドした Web アプリ（HTML・JS・CSS）は、WebView に読み込んで表示します。カメラや位置情報などの端末機能は、JavaScript からネイティブ側を呼び出す「ブリッジ」を経由して使います。
 
+![Capacitor アプリの構成図。ネイティブアプリの中に WebView があり、Web アプリは既製プラグインの JS API や自作プラグインの JS 定義を呼び出す。呼び出しは Capacitor ブリッジを通ってネイティブ側の公式プラグイン・コミュニティ製 SDK・自作プラグインに届き、各プラグインが OS の API やネイティブ SDK を使う。自作プラグインはアプリ本体のネイティブコードで登録し、結果は call.resolve() でブリッジ経由で JS に Promise として返る](/blogs/images/capacitor-app-architecture.png)
+
+図のオレンジ色の部分が、自分で書くネイティブ拡張です。JavaScript 側の定義、Swift / Kotlin・Java 側のプラグイン本体、アプリ本体での登録の 3 か所がそろって初めて、JavaScript から自作の機能を呼べるようになります。
+
 UI はあくまで Web として描画されるので、Web で作った画面がほぼそのまま動きます。これが Capacitor の最大の利点であり、同時に後述する性能面の制約の出どころでもあります。
 
 ## 主な特徴
@@ -49,6 +53,24 @@ console.log(position.coords.latitude, position.coords.longitude);
 ### ネイティブ側の拡張がしやすい
 
 公式プラグインにない機能は、Swift（iOS）や Kotlin / Java（Android）でカスタムプラグインを書いて追加できます。OS の新機能やサードパーティ製のネイティブ SDK を使いたい場合は、ネイティブ側で実装し、JavaScript から呼べる形で公開します。
+
+アプリ内に自作プラグインを置く場合に書くものは、次の 3 つです（公式ドキュメントの `Echo` プラグインの例に沿っています）。
+
+1. **JavaScript 側の定義**: `@capacitor/core` の `registerPlugin<EchoPlugin>('Echo')` で、ネイティブのプラグインにつながるオブジェクトを作ります。型引数のインターフェースが、メソッドの型になります。
+2. **ネイティブ側の本体**: iOS は `CAPPlugin` と `CAPBridgedPlugin` を継承したクラスに `@objc func echo(_ call: CAPPluginCall)` を書きます。Android は `@CapacitorPlugin(name = "Echo")` を付けた `Plugin` のサブクラスに、`@PluginMethod` を付けたメソッドを書きます。どちらも、結果は `call.resolve(...)` で返します。
+3. **アプリ本体での登録**: iOS は独自の ViewController の `capacitorDidLoad()` で `bridge?.registerPluginInstance(EchoPlugin())` を呼びます。Android は `MainActivity` の `onCreate()` で `registerPlugin(EchoPlugin.class)` を呼びます（公式の例では `super.onCreate()` の前に置いています）。
+
+```typescript
+import { registerPlugin } from '@capacitor/core';
+
+export interface EchoPlugin {
+  echo(options: { value: string }): Promise<{ value: string }>;
+}
+
+const Echo = registerPlugin<EchoPlugin>('Echo');
+
+const { value } = await Echo.echo({ value: 'hi' });
+```
 
 ## Capacitor と React Native・Flutter の違い
 
