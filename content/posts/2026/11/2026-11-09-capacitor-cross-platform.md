@@ -64,7 +64,7 @@ Capacitor は「Web をそのまま持ち込む」、React Native は「JavaScri
 
 ## 基本的な開発の流れ
 
-既存の Web プロジェクトに Capacitor を追加する場合の流れです。Node.js に加えて、iOS 向けには macOS と Xcode、Android 向けには Android Studio が必要です。
+既存の Web プロジェクトに Capacitor を追加する場合の流れです。Node.js に加えて、iOS 向けには macOS と Xcode、Android 向けには Android Studio が必要です。現行の Capacitor 8 では Node.js 22 以上と Xcode 26.0 以上が求められます（詳しくは後述）。
 
 ### 1. Capacitor のインストールと初期化
 
@@ -107,7 +107,35 @@ npx cap open ios
 npx cap open android
 ```
 
-あとはそれぞれの IDE からシミュレーターや実機で実行し、ストア申請用のビルドも通常のネイティブアプリと同じ手順で行います。
+あとはそれぞれの IDE からシミュレーターや実機で実行し、ストア申請用のビルドも通常のネイティブアプリと同じ手順で行います。IDE を開かずに動作確認だけしたいときは、`npx cap run ios` や `npx cap run android` でシミュレーター・エミュレーターに直接起動できます。
+
+### 日々の開発は「ブラウザで 8 割」
+
+実際の開発では、毎回ネイティブのビルドを回すわけではありません。React + Capacitor 8 で iOS アプリを個人開発し App Store で公開した開発者は、日常の流れを次のように紹介しています（[note の体験記](https://note.com/shiny_liger4141/n/na81df95fcb9c)）。
+
+1. `npm run dev` で Vite の開発サーバーを起動し、ブラウザで UI を作り込む
+2. ネイティブ API が絡む機能だけ、`npx cap sync` で反映してから `npx cap run ios` でシミュレーターで確認する
+3. 本番ビルドは Xcode で Archive して App Store Connect に提出する
+
+ネイティブ API に触れない部分は、Vite のホットリロードとブラウザの開発者ツールだけで完結するので、「ブラウザで 8 割作り、残り 2 割をシミュレーターで確かめる」という進め方になります。
+
+## Capacitor 8 で変わったこと
+
+2026 年 11 月時点の最新安定版は 8 系（npm の `latest` は 8.6.0）です。Capacitor 8 は 2025 年 12 月に公開され、その後もマイナーリリースが続いています。次のメジャーである 9 系もベータ版が公開されています。
+
+7 系からの主な変更点は次のとおりです（[公式の移行ガイド](https://capacitorjs.com/docs/updating/8-0)より）。
+
+- **iOS の依存管理が SPM に**: `npx cap add ios` で作る新規プロジェクトは、CocoaPods ではなく Swift Package Manager（SPM）を使う構成が既定になりました。既存の CocoaPods 構成のプロジェクトはそのまま動きます。CocoaPods で新規に作りたい場合は `npx cap add ios --packagemanager CocoaPods` を使います。
+- **Android の edge-to-edge 対応**: 新しいコアプラグイン System Bars が、ステータスバーやナビゲーションバーの下まで画面を広げる最近の Android の表示に対応します。これに伴い、設定項目 `android.adjustMarginsForEdgeToEdge` は廃止され、余白は CSS 変数で扱う方式になりました。
+- **動作要件の引き上げ**: Node.js 22 以上、Xcode 26.0 以上、iOS の Deployment Target は 15.0、Android は `minSdkVersion` 24・`compileSdkVersion` / `targetSdkVersion` 36 が新しい下限です。
+
+## 実運用での注意点
+
+WebView ベースであることは、開発の速さと引き換えに、いくつかの制約も生みます。先の体験記で挙げられている注意点のうち、Capacitor アプリ全般に当てはまるものを整理します。
+
+- **バックグラウンドでは JavaScript が止まる**: iOS はバックグラウンドに回ったアプリを強く制限するので、`setInterval` などのタイマーは当てになりません。体験記では、録音の経過時間を「開始時刻を保存しておき、表示するときに差分を計算する」方式に変えて解決しています。バックグラウンドで録音を続けたい場合は、`Info.plist` の `UIBackgroundModes` に `audio` を設定する必要があります。
+- **権限の説明文は審査で見られる**: マイクや位置情報を使うアプリでは、`NSMicrophoneUsageDescription` などの説明文が App Store の審査で確認されます。体験記では WebView ベースのアプリでも問題なく審査を通ったと報告されていますが、「なぜその権限が必要か」ははっきり書く必要があります。
+- **公式以外のプラグインも選択肢になる**: 公式プラグインにない機能は、コミュニティ製のプラグインや、サービス提供元の SDK（例: アプリ内課金の RevenueCat が出している `@revenuecat/purchases-capacitor`）で補えます。体験記では録音もコミュニティ製プラグインで実装しています。ただし、記事で紹介されているパッケージ名が npm に見当たらないこともあるので、導入前に npm で実在と Capacitor 8 への対応状況を確かめておくと安全です。
 
 ## どんなプロジェクトに向いているか
 
@@ -130,3 +158,6 @@ Capacitor は、Web アプリを WebView ごとネイティブアプリに包み
 - [Capacitor 公式サイト](https://capacitorjs.com/)
 - [Capacitor ドキュメント](https://capacitorjs.com/docs)
 - [ionic-team/capacitor（GitHub）](https://github.com/ionic-team/capacitor)
+- [Updating to 8.0（Capacitor 公式の移行ガイド）](https://capacitorjs.com/docs/updating/8-0)
+- [Announcing Capacitor 8（Ionic Blog）](https://ionic.io/blog/announcing-capacitor-8)
+- [Swift なしで iOS アプリを公開する方法 ― React + Capacitor 8 で個人開発した全記録（note）](https://note.com/shiny_liger4141/n/na81df95fcb9c)
