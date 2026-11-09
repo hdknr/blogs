@@ -13,7 +13,7 @@ tags: ["Capacitor", "モバイルアプリ開発", "ios", "Android", "Flutter"]
 
 Capacitor は、Web アプリを iOS・Android のネイティブアプリとして動かすためのオープンソースのランタイムです。対象は HTML・CSS・JavaScript / TypeScript で書かれたアプリで、同じコードを Web（PWA）としても配信できます。開発元は Ionic チームです。Apache Cordova の課題を踏まえて Cordova とは別プロジェクトとして作られたもので、公式に Cordova からの移行ガイドも用意されています。
 
-この記事では、Capacitor の仕組みと特徴、React Native・Flutter との違い、基本的な開発の流れを整理します。
+この記事では、Capacitor の仕組みと特徴、React Native・Flutter との違い、基本的な開発の流れを整理します。後半では、ストア公開までに用意するもの、実運用での注意点、CI、Live Updates まで扱います。まず試してみたい場合は「基本的な開発の流れ」まで読めば始められます。
 
 ## Capacitor の仕組み
 
@@ -141,6 +141,29 @@ npx cap open android
 
 ネイティブ API に触れない部分は、Vite のホットリロードとブラウザの開発者ツールだけで完結するので、「ブラウザで 8 割作り、残り 2 割をシミュレーターで確かめる」という進め方になります。
 
+### 実機でもホットリロードする
+
+残り 2 割の確認も、毎回 `npm run build` と `npx cap sync` を繰り返す必要はありません。`npx cap run` に `--live-reload`（`-l`）を付けると、アプリの WebView が PC の開発サーバーを直接読み込みます。ソースを保存するたびに、実機やシミュレーターの画面が更新されます。
+
+```bash
+# 開発サーバーを LAN から見えるように起動する（Vite の場合）
+npm run dev -- --host
+
+# 別のターミナルで実行する。ポートの既定値は 3000 なので、Vite の 5173 を指定する
+npx cap run ios --live-reload --port 5173
+```
+
+`npx cap run` で `--host` を指定しない場合、CLI が PC の IP アドレスを自動で選びます。実機の場合は、PC と同じ Wi-Fi につないでおく必要があります。このとき CLI が書き換えるのはネイティブプロジェクト側にコピーされた設定だけで、Ctrl+C で終了すると元に戻ります。開発サーバーの URL がストア版に紛れ込む心配はありません。
+
+### WebView の中を調べる
+
+WebView の中は、ふだん使っているブラウザの開発者ツールでそのまま調べられます。
+
+- **iOS**: Mac の Safari で「開発」メニューからシミュレーターや実機を選ぶと、Web インスペクタが開きます。「開発」メニューは初期状態では表示されないので、Safari の設定の「詳細」で Web デベロッパ向けの機能を表示する設定をオンにしておきます。実機の場合は、iPhone 側でも Safari の詳細設定にある「Web インスペクタ」をオンにします。
+- **Android**: Chrome で `chrome://inspect` を開くと、接続中の端末やエミュレーターの WebView が一覧に出ます。
+
+開発ビルドでは、Capacitor が WebView のデバッグを自動で有効にします（iOS は 16.4 以降）。リリースビルドでも調べたい場合は、`capacitor.config.ts` の `webContentsDebuggingEnabled` を `true` にします。確認が終わったら元に戻しておきます。
+
 ## Capacitor 8 で変わったこと
 
 2026 年 11 月時点の最新安定版は 8 系（npm の `latest` は 8.6.0）です。Capacitor 8 は 2025 年 12 月に公開され、その後もマイナーリリースが続いています。次のメジャーである 9 系もベータ版が公開されています。
@@ -151,13 +174,130 @@ npx cap open android
 - **Android の edge-to-edge 対応**: 新しいコアプラグイン System Bars が、ステータスバーやナビゲーションバーの下まで画面を広げる最近の Android の表示に対応します。これに伴い、設定項目 `android.adjustMarginsForEdgeToEdge` は廃止され、余白は CSS 変数で扱う方式になりました。
 - **動作要件の引き上げ**: Node.js 22 以上、Xcode 26.0 以上、iOS の Deployment Target は 15.0、Android は `minSdkVersion` 24・`compileSdkVersion` / `targetSdkVersion` 36 が新しい下限です。
 
+## ストア公開までに用意するもの
+
+Capacitor でアプリを作ると、ほぼ必ず必要になる機能や手続きがあります。どれも Web アプリにはない準備が要るので、要点だけまとめます。
+
+### ディープリンク（Universal Links・App Links）
+
+`https://example.com/orders/123` のようなリンクをタップしたとき、ブラウザではなくアプリの該当画面を開く仕組みです。アプリ側は `@capacitor/app` の `appUrlOpen` イベントで URL を受け取り、ルーターで画面を切り替えます。
+
+```ts
+import { App, type URLOpenListenerEvent } from '@capacitor/app';
+
+// navigate は使っているルーターの遷移関数（React Router の navigate など）
+export function listenDeepLinks(navigate: (path: string) => void) {
+  return App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+    // 例: https://example.com/orders/123 → /orders/123
+    const { pathname, search } = new URL(event.url);
+    navigate(pathname + search);
+  });
+}
+```
+
+この関数は、アプリの起動時（ルートのコンポーネントを表示したときなど）に一度だけ呼びます。
+
+アプリ側のコードに加えて、ドメインを持っていることを OS に示す設定が要ります。
+
+- **iOS**: Web サーバーに `/.well-known/apple-app-site-association` を置き、Xcode で Associated Domains を設定する
+- **Android**: Web サーバーに `/.well-known/assetlinks.json` を置き、`AndroidManifest.xml` に intent filter を追加する
+
+### プッシュ通知
+
+`@capacitor/push-notifications` を使います。Android は Firebase Cloud Messaging（FCM）が前提で、Firebase のプロジェクトから取得した `google-services.json` を `android/app/` に置きます。iOS は Xcode で Push Notifications の capability を有効にし、`AppDelegate.swift` にデバイストークンを Capacitor に渡す処理を追加します。
+
+注意したいのは、プラグインが返すデバイストークンの種類が OS で違うことです。Android では FCM のトークン、iOS では APNs のトークンが返ります。送信側を FCM に一本化したい場合は、iOS にも Firebase の SDK を組み込んで、APNs のトークンを FCM のトークンに変換します。
+
+通知を出すには、ユーザーの許可も要ります。iOS では常に、Android でも 13 以降は実行時の許可が必要なので、`requestPermissions()` を呼んで許可を求めます。
+
+### アイコンとスプラッシュ画面
+
+アイコンとスプラッシュ画面は、OS と端末ごとに大量のサイズが必要です。`@capacitor/assets` を使うと、アイコンとスプラッシュ画面の元画像を 1 枚ずつ用意するだけで、すべてのサイズを生成できます。
+
+```bash
+npm install @capacitor/assets --save-dev
+# assets/icon-only.png（1024px 四方以上）と assets/splash.png（2732px 四方以上）を置いてから
+npx capacitor-assets generate
+```
+
+### 開発・検証・本番の切り替え
+
+検証用のアプリを本番アプリと並べて端末に入れたい場合は、バンドル ID と表示名を分けたビルドを作ります。まず iOS は Xcode でターゲットとスキームを、Android は Gradle で product flavor を作り、それぞれにバンドル ID と表示名を設定します。そのうえで、`capacitor.config.ts` から環境変数に応じてどちらをビルドするかを切り替えます。
+
+```ts
+// capacitor.config.ts
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const isQa = process.env.APP_ENV === 'qa';
+
+const config: CapacitorConfig = {
+  appId: 'com.example.myapp',
+  appName: 'MyApp',
+  webDir: 'dist',
+  ios: { scheme: isQa ? 'App QA' : 'App' },
+  android: { flavor: isQa ? 'qa' : 'prod' },
+};
+
+export default config;
+```
+
+`APP_ENV=qa npx cap run ios` のように実行すると、QA 用のスキームでビルドされます。`capacitor.config.ts` の `appId` と `appName` を切り替えても、作成済みのネイティブプロジェクトのバンドル ID や表示名は変わりません。それらはネイティブ側のターゲットと flavor で決まります。手順は公式ガイドの [Environment Specific Configurations](https://capacitorjs.com/docs/guides/environment-specific-configurations) にあります。
+
+### プライバシーの申告
+
+2024 年 5 月 1 日以降、App Store に提出するアプリには、必要に応じて Privacy Manifest（`PrivacyInfo.xcprivacy`）を含めなければなりません。アプリやプラグインが「理由の申告が必要な API」（Required Reason API）を使う場合、その理由を書いたファイルがないと提出できません。Capacitor のプラグインも対象です。たとえば `@capacitor/preferences` は `UserDefaults` を使うので、`NSPrivacyAccessedAPICategoryUserDefaults` の申告が要ります。必要な申告は、各プラグインの README に書かれています。
+
+Google Play では、Play Console でデータセーフティのフォームに回答する必要があります。プラグインやサービス提供元の SDK が集めるデータも、申告の対象です。後で触れる権限の説明文とあわせて、審査で確認される項目です。
+
 ## 実運用での注意点
 
-WebView ベースであることは、開発の速さと引き換えに、いくつかの制約も生みます。先の体験記で挙げられている注意点のうち、Capacitor アプリ全般に当てはまるものを整理します。
+WebView ベースであることは、開発の速さと引き換えに、いくつかの制約も生みます。
+
+### 体験記で挙げられている注意点
+
+先の体験記で挙げられている注意点のうち、Capacitor アプリ全般に当てはまるものを整理します。
 
 - **バックグラウンドでは JavaScript が止まる**: iOS はバックグラウンドに回ったアプリを強く制限するので、`setInterval` などのタイマーは当てになりません。体験記では、録音の経過時間を「開始時刻を保存しておき、表示するときに差分を計算する」方式に変えて解決しています。バックグラウンドで録音を続けたい場合は、`Info.plist` の `UIBackgroundModes` に `audio` を設定する必要があります。
 - **権限の説明文は審査で見られる**: マイクや位置情報を使うアプリでは、`NSMicrophoneUsageDescription` などの説明文が App Store の審査で確認されます。体験記では WebView ベースのアプリでも問題なく審査を通ったと報告されていますが、「なぜその権限が必要か」ははっきり書く必要があります。
 - **公式以外のプラグインも選択肢になる**: 公式プラグインにない機能は、コミュニティ製のプラグインや、サービス提供元の SDK（例: アプリ内課金の RevenueCat が出している `@revenuecat/purchases-capacitor`）で補えます。体験記では録音もコミュニティ製プラグインで実装しています。ただし、記事で紹介されているパッケージ名が npm に見当たらないこともあるので、導入前に npm で実在と Capacitor 8 への対応状況を確かめておくと安全です。
+
+### 「Web サイトを包んだだけ」では審査に通らない
+
+App Review Guidelines の 4.2（最低限の機能）は、アプリには「パッケージし直した Web サイト」を超える機能・コンテンツ・UI が必要だとしています。既存の Web サイトを WebView で表示するだけのアプリは、この条項でリジェクトされるおそれがあります。プッシュ通知やオフラインでの動作、端末機能との連携など、アプリにする理由を持たせておくのが安全です。
+
+Google Play も、所有者の許可なく他人の Web サイトを WebView で見せるだけのアプリを、スパムとして禁じています。
+
+### API サーバーから見たオリジンが変わる
+
+アプリの WebView のオリジンは、iOS では `capacitor://localhost`、Android では `https://localhost` です。ブラウザでは `https://app.example.com` から呼んでいた API も、アプリから呼ぶとオリジンが変わり、サーバーの CORS 設定で弾かれます。
+
+対処は 2 通りあります。1 つは、サーバー側でこの 2 つのオリジンを許可することです。もう 1 つは、Capacitor 同梱の `CapacitorHttp` を有効にすることです。`CapacitorHttp` は `fetch` と `XMLHttpRequest` をネイティブの HTTP 通信に置き換えます。ネイティブ側から送る通信には CORS がかからないので、サーバー側の設定を変えずに済みます。
+
+```ts
+// capacitor.config.ts
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'com.example.myapp',
+  appName: 'MyApp',
+  webDir: 'dist',
+  plugins: {
+    CapacitorHttp: { enabled: true },
+  },
+};
+
+export default config;
+```
+
+Cookie を使う認証なら、`document.cookie` をネイティブ側で扱う `CapacitorCookies` もあわせて検討します。
+
+### トークンを置く場所を選ぶ
+
+`localStorage` は、端末の空き容量が減ると OS に消されることがあります。消えて困る値は `@capacitor/preferences` に置きます。ただし Preferences の中身は iOS の `UserDefaults`・Android の `SharedPreferences` で、暗号化されません。認証トークンや暗号鍵は、iOS の Keychain・Android の Keystore を使うプラグインに置くか、メモリーだけで扱います。
+
+アプリのパッケージは誰でも展開して中身を読めるので、API キーなどの秘密情報をコードに埋め込まないことは、Web アプリと同じく大前提です。
+
+認証の戻り先にも注意します。`myapp://` のような独自 URL スキームは、別のアプリに同じスキームを登録されると横取りされうるので、トークンの受け渡しには使わないのが原則です。OAuth を使う場合、Capacitor の公式ガイドは PKCE を必須としています。
 
 ## GitHub Actions で CI を回す
 
@@ -304,6 +444,8 @@ Capacitor が力を発揮するのは、次のようなケースです。
 
 Capacitor は、Web アプリを WebView ごとネイティブアプリに包み、端末機能をプラグインで補うランタイムです。ネイティブプロジェクトを Git で管理するソースとして扱う設計により、Cordova の「生成物をいじれない」という弱点を解消しています。
 
+ただし、アプリにする以上、ディープリンク・プッシュ通知・プライバシーの申告といった Web にはない準備が要ります。WebView のオリジンやデータの保存先のように、Web と同じ感覚では動かない点もあります。開発の 8 割をブラウザで進められる手軽さと、この準備の手間をあわせて見積もっておくと、つまずきません。
+
 「Web の資産とチームを活かして、最小の手間でアプリを出す」ことが目的なら、まず検討する価値のある選択肢です。
 
 ## 参考
@@ -313,6 +455,10 @@ Capacitor は、Web アプリを WebView ごとネイティブアプリに包み
 - [ionic-team/capacitor（GitHub）](https://github.com/ionic-team/capacitor)
 - [Updating to 8.0（Capacitor 公式の移行ガイド）](https://capacitorjs.com/docs/updating/8-0)
 - [Announcing Capacitor 8（Ionic Blog）](https://ionic.io/blog/announcing-capacitor-8)
+- [Live Reload（Capacitor ドキュメント）](https://capacitorjs.com/docs/guides/live-reload)
+- [Security Best Practices（Capacitor ドキュメント）](https://capacitorjs.com/docs/guides/security)
+- [Deep Linking with Universal and App Links（Capacitor ドキュメント）](https://capacitorjs.com/docs/guides/deep-links)
+- [Privacy Manifest（Capacitor ドキュメント）](https://capacitorjs.com/docs/ios/privacy-manifest)
 - [Swift なしで iOS アプリを公開する方法 ― React + Capacitor 8 で個人開発した全記録（note）](https://note.com/shiny_liger4141/n/na81df95fcb9c)
 - [App Review Guidelines（Apple）](https://developer.apple.com/app-store/review/guidelines/)
 - [Apple Developer Program License Agreement](https://developer.apple.com/support/terms/apple-developer-program-license-agreement/)
