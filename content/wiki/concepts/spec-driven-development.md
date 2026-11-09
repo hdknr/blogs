@@ -1,13 +1,14 @@
 ---
 title: "仕様駆動開発（Spec Loop）"
-description: "AI コーディングエージェントに「次の小さな仕様だけを書き、レビューし、テスト付きで実装する」を繰り返させる設計先行型の進め方。dpolivaev/spec-loop と、開発の手前を受け持つ hdknr 版 spec-loop との受け持ちの違い"
+description: "AI コーディングエージェントに「次の小さな仕様だけを書き、レビューし、テスト付きで実装する」を繰り返させる設計先行型の進め方。AI に仕様の空白を埋めさせず表に出させる原則と、dpolivaev/spec-loop・hdknr 版 spec-loop の受け持ちの違い"
 date: 2026-10-30
-lastmod: 2026-10-30
+lastmod: 2026-11-09
 aliases: ["Spec Loop", "spec-loop", "dpolivaev/spec-loop", "設計先行", "Design-First", "タスクファイル", "生きたドキュメント", "Living Project Documents"]
 related_posts:
   - "/posts/2026/10/spec-loop-design-first-ai-development/"
   - "/posts/2026/10/spec-loop-two-frameworks-comparison/"
-tags: ["仕様駆動開発", "AI駆動開発", "Agent Skills", "開発手法", "claude-code"]
+  - "/posts/2026/11/vibe-coding-is-vibe-specifying/"
+tags: ["仕様駆動開発", "AI駆動開発", "Agent Skills", "開発手法", "claude-code", "要求定義"]
 ---
 
 ## 概要
@@ -15,6 +16,8 @@ tags: ["仕様駆動開発", "AI駆動開発", "Agent Skills", "開発手法", "
 AI エージェントに開発を任せるとき、仕様をどこまで先に書くかには 2 つの失敗パターンがある。意図だけ伝えて隙間をモデルに埋めさせる**バイブコーディング**（判断の経緯が残らない巨大な差分、レビューが「考古学」になる）と、それを避けて完全な仕様を先に書こうとする**ウォーターフォール**（制約は実装中に見つかるので仕様が膨らみ、変更を阻むか無視される）である。
 
 [dpolivaev/spec-loop](https://github.com/dpolivaev/spec-loop)（Freeplane の開発から生まれた MIT ライセンスのスキル集）はその中間を取り、**仕様は「次の一歩」に必要な範囲だけ書き、レビューしてからテスト付きで実装する**ことを繰り返す。同名の hdknr 版 spec-loop は開発の手前で「何を作るか」を確定させるもので、受け持つ工程が違う（[要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/)）。
+
+どちらにも共通する出発点は、**AI に仕様の空白を黙って埋めさせない**ことである。AI が埋めた仕様は誰も決めていない仕様で、生成されたコードの中にしか存在せず、壊れたと判定する基準にもならない。
 
 ## 詳細
 
@@ -30,7 +33,7 @@ AI エージェントに開発を任せるとき、仕様をどこまで先に�
 | approve | `spec-loop-prepare-execution-approval` | 承認できる状態に整え、人間が承認 |
 | execute / review | `spec-loop-implementation-flow` | コード・テスト・関連ドキュメントの更新を統制し、review へ |
 
-計画の形式は作業の大きさで選ぶ。taskless（ドキュメントだけ、または合意済みのごく小さな実装）、chat-only task（Scope・Design・Test specification の 3 セクションだけ）、**task file（既定）**、サブタスク付き・複数タスクへの分割。軽い形式を使うときは理由を説明して許可を求めるが、**形式への同意は実行の承認ではない**。分割は層ごと（scaffolding / model / UI）ではなく、単独でリリースできる縦切り（vertical slice）が基本。
+計画の形式は作業の大きさで選ぶ。taskless（ドキュメントだけ、または合意済みのごく小さな実装）、chat-only task（Scope・Design・Test specification の 3 セクションだけ）、**task file**（既定）、サブタスク付き・複数タスクへの分割。軽い形式を使うときは理由を説明して許可を求めるが、**形式への同意は実行の承認ではない**。分割は層ごと（scaffolding / model / UI）ではなく、単独でリリースできる縦切り（vertical slice）が基本。
 
 ### タスクファイル
 
@@ -66,6 +69,27 @@ hdknr 版で dpolivaev 版と重なるのは spec-loop ではなく、その後�
 
 共通する根っこは、**推測で埋めない**、**人間の判断を飛ばさない**、**小さく回す**、**テストを仕様の一部にする**（テストを書き起こせない仕様は未確定）、**決まりの住所を 1 つにする**、の 5 つ。組み合わせるなら、hdknr 版が作った Issue 1 件を dpolivaev 版のタスク 1 つの入力にできるが dev-loop と役割が重なるので、**計画の書き方（Research・変更記号・生きたドキュメント・用語の扱い）は dpolivaev 版から借り、停止条件は dev-loop のまま**が現実的。逆方向には、関門をスクリプト判定に置き換える、自己チェックを書けない別モデルに任せる、会話で解消した論点を表に残す、が取り入れられる。
 
+### 空白を埋めさせず、表に出させる
+
+Vibe Coding の根には「業務を持つ側が要求・条件・例外を定義しきれない」という AI 以前からの問題がある（[Vibe Coding](/blogs/wiki/concepts/vibe-coding/)）。従来はシステムコンサルタント（ビジネスアナリスト）が問いを立てて決められる形に整えてきたが、品質は個人の力量に依存した。仕様駆動開発では、同じことを AI と検査器で**誰がやっても同じ品質になる仕組み**にし、AI を「埋める側」ではなく「問いを立てる側」に置く。
+
+| 定義しきれない理由 | 対案 |
+|---|---|
+| 暗黙知は当たり前すぎて書かれない | 抽象的に聞かず、具体的な場面と選択肢・推奨を AI に挙げさせて選んでもらう（例：「締め日を過ぎて届いた注文は翌月扱い／受け付けない／担当者判断」）。選ばれた答えは仕様とテストに残す |
+| 例外は組み合わせで爆発する | 条件の組み合わせを決定表にし、抜けと矛盾を機械に検出させる。順序や同時実行を含む業務フローは形式検査で実行順を総当たりし反例を探す。人間は出てきた行や反例をどうするか決めるだけ |
+| 見て触らないと分からない要求がある | AI に素早くプロトタイプを作らせて触ってもらう。プロトタイプは使い終わったら捨て、分かったことを仕様に書き起こして本番はその仕様から始める |
+| 書いた本人は自分の書き漏れに気づけない | 文脈を切り離し、できればモデルも変えたレビュー役に突かせる。レビュー役には書き込み権限を持たせず指摘だけを返させる（自分で直すと、直した中身を誰も検証しなくなる） |
+
+出てきた空白は**決める権限を持つ人**が決める。業務要件（誰が何をできるか、どの条件で断るか、失敗をどう見せるか）は業務を持つ側に返し、技術の空白は開発者が決める。技術の空白を AI に決めさせる場合も開発者の決定として記録し、責任は開発者が持つ。業務要件の空白だけは AI に決めさせない。
+
+hdknr 版 spec-loop はこの 4 つを次のように組んでいる。
+
+- 暗黙知：未決定事項を Q&A 表に選択肢と推奨付きの質問として起票し、利用者の回答を待って仕様に反映する
+- 組み合わせ：判定役 Formal Checker が決定表の抜け・矛盾と業務フローの反例を検査器で探す。並行やリトライを含むフローは TLA+ のモデル検査器 TLC で検査する（[形式手法](/blogs/wiki/concepts/formal-methods/)）
+- 書き漏れ：Write・Edit を持たない判定役が、仕様を書いた側とは別のモデルのティアで穴を突く
+
+判定役の指摘は**決める人で振り分ける**。利用者に見える結果が変わるものは Q&A 表で利用者に差し戻し、開発者が決めてよい性質の欠けは開発者の決定として仕様を直す。内部の値・運用・費用だけが変わる選択は内部の表に記録し、費用は予算責任者の合意を取る。実現の手段の指摘は実装に渡し、範囲の外の場面は範囲の文書に記録する。
+
 ### 導入
 
 ```bash
@@ -78,7 +102,9 @@ npx skills add dpolivaev/spec-loop -s '*' -g   # グローバル
 ## 関連ページ
 
 - [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — hdknr 版 spec-loop。開発の手前で要求と予算を確定させる
-- [Vibe Coding](/blogs/wiki/concepts/vibe-coding/) — Spec Loop が避けようとする片側の失敗パターン
+- [Vibe Coding](/blogs/wiki/concepts/vibe-coding/) — Spec Loop が避けようとする片側の失敗パターン。誰も決めていない仕様が実装される問題
+- [形式手法](/blogs/wiki/concepts/formal-methods/) — 決定表の抜け・矛盾や業務フローの反例を検査器で探す
+- [オーバーエンジニアリング](/blogs/wiki/concepts/overengineering/) — 範囲の外の場面を仕様に足さない既定の線
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 別ティアの判定役
 - [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — 人間のゲートと機械のゲート
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 開発ループ側の実行環境
@@ -88,3 +114,4 @@ npx skills add dpolivaev/spec-loop -s '*' -g   # グローバル
 
 - [Spec Loop — 次の小さな仕様だけを書いて回す、AI エージェント向け仕様駆動開発フレームワーク](/blogs/posts/2026/10/spec-loop-design-first-ai-development/) — 2026-10-25
 - [AI 仕様駆動開発の 2 つの spec-loop を比べる — 実装ループと要求確定ループ](/blogs/posts/2026/10/spec-loop-two-frameworks-comparison/) — 2026-10-25
+- [バイブコーディングの本当の問題は、誰も決めていない仕様が実装されることだ](/blogs/posts/2026/11/vibe-coding-is-vibe-specifying/) — 2026-11-08

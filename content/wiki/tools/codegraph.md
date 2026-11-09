@@ -2,10 +2,11 @@
 title: "CodeGraph"
 description: "コードベースを事前に知識グラフとして索引化し、AIコーディングのツール呼び出しを58%削減・22%高速化するローカル実行のOSS。MCP 経由で各エージェントと連携する"
 date: 2026-07-15
-lastmod: 2026-07-15
+lastmod: 2026-11-09
 aliases: ["CodeGraph", "コード知識グラフ", "knowledge graph"]
 related_posts:
   - "/posts/2026/06/codegraph-ai-coding-knowledge-graph/"
+  - "/posts/2026/11/understand-anything-codebase-knowledge-graph/"
 tags: ["CodeGraph", "claude-code", "mcp", "知識グラフ", "OSS"]
 ---
 
@@ -41,12 +42,19 @@ codegraph init      # .codegraph/ を作りグラフを構築（以後ファイ�
 
 教訓: ベンチマークの 58%削減は静的呼び出しが素直な言語で測ったもので、signals/Celery が主戦場の Django には直接転移しない。既に同カテゴリツールを使うなら、乗り換えは同一クエリでの精度実測で判断する。
 
+### 類似ツール Understand-Anything との違い
+
+同じくコードベースを知識グラフにする **Understand-Anything** は、Tree-sitter の構造解析に LLM による要約・レイヤー・業務ドメインの意味付けを重ね、人が眺めるダッシュボードやガイドツアーを主目的にする。グラフは JSON としてコミットしてチームで共有するが、MCP サーバーや読み取りフックはなく、普段の依頼でエージェントが自動参照する仕組みはない。エージェントの通常作業を効率化したいなら、MCP でグラフを引かせる CodeGraph のほうが目的に合う。
+
 ## 関連ページ
 
 - [Claude Code](/blogs/wiki/tools/claude-code/) — CodeGraph を MCP で接続する主要エージェント
 - [MCP](/blogs/wiki/concepts/mcp/) — エージェントとの接続プロトコル
 - [Brownfield リファクタリング](/blogs/wiki/concepts/brownfield-refactoring/) — 大規模既存コードの依存把握に関わる
+- [Understand-Anything](/blogs/wiki/tools/understand-anything/) — 意味付けとダッシュボードに重心を置くコード知識グラフ
+- [Hermes Agent](/blogs/wiki/tools/hermes-agent/) — CodeGraph の対応エージェントの一つ
 
 ## ソース記事
 
 - [CodeGraph：AIコーディングのツール呼び出しを58%削減するコード知識グラフOSS](/blogs/posts/2026/06/codegraph-ai-coding-knowledge-graph/) — 2026-06-24
+- [Understand-Anything：コードベースを対話的なナレッジグラフにする Claude Code プラグイン](/blogs/posts/2026/11/understand-anything-codebase-knowledge-graph/) — 2026-11-04
