@@ -290,8 +290,6 @@ Microsoft の CodePush（App Center）も、2025 年 3 月 31 日の App Center 
 - **ロールバック**: 配ったバンドルで起動に失敗したとき、前の版に自動で戻せるか。
 - **改ざん対策**: バンドルに署名し、アプリ側で検証するか。配信経路を乗っ取られると、任意の JavaScript をアプリに流し込まれることになります。
 
-配信側を自分の AWS（S3・CloudFront・GitHub Actions）に作る方法は、別の記事「[Capacitor の Live Updates（OTA 更新）を自前の AWS で配信する](/blogs/posts/2026/11/capacitor-live-updates-aws/)」にまとめました。
-
 ## どんなプロジェクトに向いているか
 
 Capacitor が力を発揮するのは、次のようなケースです。
@@ -307,8 +305,6 @@ Capacitor が力を発揮するのは、次のようなケースです。
 Capacitor は、Web アプリを WebView ごとネイティブアプリに包み、端末機能をプラグインで補うランタイムです。ネイティブプロジェクトを Git で管理するソースとして扱う設計により、Cordova の「生成物をいじれない」という弱点を解消しています。
 
 「Web の資産とチームを活かして、最小の手間でアプリを出す」ことが目的なら、まず検討する価値のある選択肢です。
-
-続編として、Live Updates の配信側を自分の AWS に作る方法を「[Capacitor の Live Updates（OTA 更新）を自前の AWS で配信する](/blogs/posts/2026/11/capacitor-live-updates-aws/)」にまとめています。
 
 ## 参考
 
