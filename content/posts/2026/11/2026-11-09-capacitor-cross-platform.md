@@ -248,6 +248,48 @@ xcodebuild test -project ios/App/App.xcodeproj -scheme App \
 
 `name=` に指定するシミュレーターは、実行環境に入っているものでなければなりません。手元では `xcrun simctl list devices` で一覧を確かめられます。
 
+## Live Updates（OTA 更新）
+
+Capacitor アプリの中身の大半は、WebView で動く Web アセットです。そこで、**Web 層（HTML・CSS・JS）だけをサーバーから配信して差し替え、ストアの審査を通さずにバグ修正や画面の変更を届ける**ことができます。これを Live Updates（OTA 更新）と呼びます。
+
+### 差し替えられるのは WebView の層だけ
+
+冒頭の構成図でいえば、OTA で差し替えられるのは WebView の中（Web アプリと JS 側の定義）だけです。ブリッジから下のネイティブ側は差し替えられません。
+
+- **OTA で届けられる**: `npm run build` で出力される Web アセット。
+- **ストアのリリースが必要**: Swift / Kotlin・Java のコード、ネイティブ側のプラグインの追加や更新、自作プラグインの変更、`Info.plist` や `AndroidManifest.xml` の権限の変更。
+
+自作プラグインに新しいメソッドを足した場合、それを呼ぶ JS は OTA で配れても、ネイティブ側はストア版を更新するまで古いままです。OTA の設計で一番気をつけるのは、この **Web バンドルとインストール済みのネイティブ部分の組み合わせ** です。
+
+### ストアの規約との関係
+
+どちらのストアも、ダウンロードしたコードでアプリの機能を変えることを原則として禁じています。ただし、WebView で動く JavaScript は条件付きで例外になっています。
+
+- **Apple**: App Review Guidelines の 2.5.2 は、アプリの機能を追加・変更するコードのダウンロードと実行を禁じています。一方、Apple Developer Program 使用許諾契約の 3.3.1 B（Executable Code）は、ダウンロードした「解釈実行されるコード」を、次の 3 条件を満たす範囲で認めています。
+  - 宣伝している本来の目的と食い違う機能を足して、アプリの主目的を変えないこと
+  - OS の署名・サンドボックスなどのセキュリティ機能を迂回しないこと
+  - App Store で配布するアプリの場合、ほかのアプリのストアを作らないこと
+- **Google Play**: デバイスとネットワークの不正使用に関するポリシーで、Google Play 以外からの実行コード（dex、JAR、.so など）のダウンロードを禁じています。ただし、この制限は「WebView やブラウザの JavaScript のように、仮想マシンやインタプリタ上で動き、Android API に間接的にしかアクセスしないコード」には適用されない、と明記されています。
+
+実務上は、**バグ修正や小さな改善にとどめ、審査を通したものと別のアプリに変えない**という線引きになります。
+
+### 手段の選び方
+
+| 手段 | 状況 |
+| --- | --- |
+| Ionic Appflow（`@capacitor/live-updates`） | Ionic 公式の Live Updates サービス。2025 年 2 月に新規の受付を止めており、2027 年 12 月 31 日でサービスを終える。新しく採用する選択肢ではない |
+| Capgo（`@capgo/capacitor-updater`） | プラグインはオープンソースで、ホスティングされたサービスのほか自前のサーバーでも運用できる |
+| Capawesome Cloud（`@capawesome/capacitor-live-update`） | Capacitor 向けのホスティング型 Live Updates サービス |
+| Codemagic Patch | 自前のサーバーで運用するセルフホスト型の OTA 更新の仕組み。React Native 向けに始まり、Capacitor の Web 層の更新にも対応した |
+
+Microsoft の CodePush（App Center）も、2025 年 3 月 31 日の App Center の終了とともに使えなくなっています。
+
+### 導入前に決めておくこと
+
+- **互換性の管理**: 新しい Web バンドルを、どのネイティブの版に配ってよいか。ネイティブ側を変えたストア版を出したら、それ以降の版にだけ新しいバンドルを配る、といった振り分けが必要です。
+- **ロールバック**: 配ったバンドルで起動に失敗したとき、前の版に自動で戻せるか。
+- **改ざん対策**: バンドルに署名し、アプリ側で検証するか。配信経路を乗っ取られると、任意の JavaScript をアプリに流し込まれることになります。
+
 ## どんなプロジェクトに向いているか
 
 Capacitor が力を発揮するのは、次のようなケースです。
@@ -272,3 +314,7 @@ Capacitor は、Web アプリを WebView ごとネイティブアプリに包み
 - [Updating to 8.0（Capacitor 公式の移行ガイド）](https://capacitorjs.com/docs/updating/8-0)
 - [Announcing Capacitor 8（Ionic Blog）](https://ionic.io/blog/announcing-capacitor-8)
 - [Swift なしで iOS アプリを公開する方法 ― React + Capacitor 8 で個人開発した全記録（note）](https://note.com/shiny_liger4141/n/na81df95fcb9c)
+- [App Review Guidelines（Apple）](https://developer.apple.com/app-store/review/guidelines/)
+- [Apple Developer Program License Agreement](https://developer.apple.com/support/terms/apple-developer-program-license-agreement/)
+- [Device and Network Abuse（Google Play ポリシー）](https://support.google.com/googleplay/android-developer/answer/16273414)
+- [Important Announcement: The Future of Ionic's Commercial Products（Ionic Blog）](https://ionic.io/blog/important-announcement-the-future-of-ionics-commercial-products)
