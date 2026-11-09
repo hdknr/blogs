@@ -137,6 +137,95 @@ WebView ベースであることは、開発の速さと引き換えに、いく
 - **権限の説明文は審査で見られる**: マイクや位置情報を使うアプリでは、`NSMicrophoneUsageDescription` などの説明文が App Store の審査で確認されます。体験記では WebView ベースのアプリでも問題なく審査を通ったと報告されていますが、「なぜその権限が必要か」ははっきり書く必要があります。
 - **公式以外のプラグインも選択肢になる**: 公式プラグインにない機能は、コミュニティ製のプラグインや、サービス提供元の SDK（例: アプリ内課金の RevenueCat が出している `@revenuecat/purchases-capacitor`）で補えます。体験記では録音もコミュニティ製プラグインで実装しています。ただし、記事で紹介されているパッケージ名が npm に見当たらないこともあるので、導入前に npm で実在と Capacitor 8 への対応状況を確かめておくと安全です。
 
+## GitHub Actions で CI を回す
+
+Capacitor のプロジェクトは、GitHub Actions で Web のテストからネイティブのビルドまで自動化できます。ジョブは次の 3 つに分けると見通しがよくなります。
+
+| ジョブ | ランナー | やること |
+| --- | --- | --- |
+| Web | `ubuntu-latest` | `npm ci`、lint、単体テスト、`npm run build` |
+| Android | `ubuntu-latest` | `npx cap sync android` のあと、Gradle でビルドと単体テスト |
+| iOS | `macos-latest` | `npx cap sync ios` のあと、`xcodebuild` でビルド |
+
+iOS のビルドには Xcode が要るので、macOS ランナーが必須です。private リポジトリでは macOS ランナーの分単価が Linux より高いので、iOS のジョブは実行する条件を絞っておくと費用を抑えられます。
+
+### ワークフローの例
+
+Web と Android のジョブを 1 つにまとめた例です。
+
+```yaml
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm test --if-present
+      - run: npm run build
+      - run: npx cap sync android
+      - run: ./gradlew assembleDebug test
+        working-directory: android
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx cap sync ios
+      - run: >-
+          xcodebuild -project ios/App/App.xcodeproj -scheme App
+          -configuration Debug -sdk iphonesimulator
+          -destination "generic/platform=iOS Simulator"
+          CODE_SIGNING_ALLOWED=NO build
+```
+
+この例の Android と iOS のビルドコマンドは、Capacitor 8.6.0 の `npx cap add` で作った素のプロジェクトを使い、手元の Mac（Xcode 27.2、JDK 22）で通ることを確かめています。CI ランナー（Xcode 26.6、JDK 21）で実際に走らせた結果ではありません。
+
+### 押さえておく点
+
+- **ランナーが Capacitor 8 の要件を満たすか**: Capacitor 8 は Node.js 22 以上と Xcode 26.0 以上を求めます。2026 年 11 月時点の `macos-latest` は macOS 26（Arm64）のイメージで、既定の Xcode は 26.6 です。`-latest` が指す先は時期によって変わるので、固定したい場合は `macos-26` のようにバージョンを明示します。Android 側は JDK 21 を前提にしています（JDK 21 が必須になったのは Capacitor 7 からで、8 の移行ガイドでは改めて触れられていません）。
+- **iOS のプロジェクト形式で引数が変わる**: Capacitor 8 の既定である SPM 構成では、上の例のように `-project ios/App/App.xcodeproj` を指定します。CocoaPods 構成なら、`pod install` のあとで `-workspace ios/App/App.xcworkspace` を指定します。
+- **CI でのビルドは署名なしでよい**: シミュレーター向けに `CODE_SIGNING_ALLOWED=NO` でビルドすれば、証明書は要りません。TestFlight や Google Play への配信まで自動化する場合は、証明書・プロビジョニングプロファイル・keystore を GitHub Secrets に置き、fastlane などで署名と提出を行います。
+
+### 単体テストをどこで回すか
+
+| 対象 | テンプレートの状態 | 実行コマンド | 実行環境 |
+| --- | --- | --- | --- |
+| Web（Vitest、Jest など） | プロジェクト次第 | `npm test` | どの OS でも可 |
+| Android（JVM 上の単体テスト） | `app/src/test` に `ExampleUnitTest` が入っている | `./gradlew test` | Linux・macOS どちらも可。エミュレーター不要 |
+| Android（端末上のテスト） | `app/src/androidTest` に `ExampleInstrumentedTest` が入っている | `./gradlew connectedAndroidTest` | エミュレーターか実機が必要 |
+| iOS（XCTest） | **テストターゲットが入っていない** | `xcodebuild test` | macOS とシミュレーターが必要 |
+
+テストの大半はブラウザで動くロジックに対するものなので、まず Web 側の単体テストを Linux ランナーで回すのが安上がりです。Android の JVM 単体テストも、上の例のように同じ Linux ランナーで実行できます。
+
+iOS のネイティブコード（自作プラグインの Swift など）をテストしたい場合は、先に Xcode で `App` プロジェクトに Unit Testing Bundle のターゲットを追加し、スキーム `App` のテストに含めます。そのうえで、macOS 上でシミュレーターを指定して実行します。手元の Mac でも macOS ランナーでも、同じコマンドで動きます。
+
+```bash
+xcodebuild test -project ios/App/App.xcodeproj -scheme App \
+  -destination "platform=iOS Simulator,name=iPhone 17"
+```
+
+`name=` に指定するシミュレーターは、実行環境に入っているものでなければなりません。手元では `xcrun simctl list devices` で一覧を確かめられます。
+
 ## どんなプロジェクトに向いているか
 
 Capacitor が力を発揮するのは、次のようなケースです。
