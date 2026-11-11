@@ -128,8 +128,13 @@ causes conflicts when several blog PRs run in parallel.
 cat .claude/wiki-last-ingest.txt
 ```
 
-Count posts in `content/posts/` whose frontmatter `date` is on or after that date
+Count posts in `content/posts/` whose frontmatter `date` is **strictly after** that date
 (default `1970-01-01` if the file is missing).
+
+> Not "on or after". The ingest that wrote that date already covered posts dated that
+> day, so counting them again inflates the total. On 2026-11-11 the inclusive count said
+> 21 (≥ 20, run ingest), but 7 of the 8 posts dated on the last-ingest day were already in
+> the wiki, and only 14 were actually new.
 
 - **≥ 20 posts** → run `/wiki-ingest all`, then use the Write tool to set
   `.claude/wiki-last-ingest.txt` to today's date.
