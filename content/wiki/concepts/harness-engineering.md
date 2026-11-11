@@ -2,8 +2,8 @@
 title: "ハーネスエンジニアリング"
 description: "AI エージェントの出力品質を保証する設計パターン。検証層・制約層・フィードバック層で構成"
 date: 2026-04-06
-lastmod: 2026-10-30
-aliases: ["Harness Engineering", "馬具・柵・境界"]
+lastmod: 2026-11-09
+aliases: ["Harness Engineering", "馬具・柵・境界", "Harnessing"]
 related_posts:
   - "/posts/2026/03/harness-engineering/"
   - "/posts/2026/03/ai-agent-qa/"
@@ -19,6 +19,7 @@ related_posts:
   - "/posts/2026/04/harness-engineering-beyond-rule-files/"
   - "/posts/2026/10/harness-design-intro-guardrails-boundary/"
   - "/posts/2026/10/jev-system-one-model/"
+  - "/posts/2026/10/harness2-recursive-agent-harnessing/"
 tags: ["agent", "品質保証", "CLAUDE.md", "設計パターン", "ロックイン"]
 ---
 
@@ -55,6 +56,27 @@ AI エージェント全盛時代に必須の設計手法。CLAUDE.md（入力�
 - 無人で起動する（イベント駆動・定期実行）場合は 3 層それぞれの要求が上がる。外部入力はプロンプトインジェクション経路、停止条件にターン・時間・コスト上限、成果物は PR で出してレールを通す、トリガーごとにロールを分ける
 
 LLM 系の判定器を柵に組み込む例として、[Jev](/blogs/wiki/tools/jev/) で Bash コマンドを分類する PreToolUse hook がある。確信度が低い・誘導コメントで揺らぐといった性質があるため、自動許可の最終判断はコードに置く必要がある。
+
+## ハーネスを固定しない：エージェント自身による Harnessing
+
+通常、ハーネスは人間が一度設計し、エージェントはどのタスクでも同じ固定のハーネスで走る。Google Research の [Harness²](/blogs/wiki/tools/harness2/) はこの前提を崩し、ハーネスを最適化する作業（README の言う Harnessing）をタスクごとにエージェント自身にやらせる。編集対象として公開しているのは次の 8 コンポーネントで、ハーネスの範囲を具体的に切った例として読める。
+
+| 役割 | コンポーネント |
+|---|---|
+| コンテキストの構築 | system prompt、guardrails、memory、skills |
+| ツールのインターフェース | tool guidance、scripts |
+| 委譲のオーケストレーション | subagents |
+| ミドルウェア（ツールループ内の振る舞い） | plugins |
+
+Claude Code でいえば `CLAUDE.md`、Agent Skills、サブエージェント定義、hooks あたりがこれに当たる。
+
+人間がハーネスを手で直す場合にも、そこから借りられる運用がある。
+
+- 指示やスキルの文言を変えたら、同じタスクを新旧 2 通りで走らせて挙動の差を見る（正解データがなくても比較はできる）
+- ルールやメモリへの追記は、1 回の成功ではなく複数の実行で再現した差に限る
+- 実行用のハーネスと、それを改善するための仕組み（レビュー用エージェント・ルール改善のスキル）を切り離して持つ
+
+改善を AI 自身に回させる設計全般は [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) を参照。
 
 ## Anthropic vs OpenAI のハーネス戦略
 
@@ -124,6 +146,7 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 - [Claude Code](/blogs/wiki/tools/claude-code/) — ハーネスエンジニアリングの主要実装環境
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/) — Anthropic のマネージドハーネス
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — ハーネス自体を AI が改善するパターン
+- [Harness²](/blogs/wiki/tools/harness2/) — ハーネスをタスクごとにエージェント自身が磨く OSS
 - [Graphite](/blogs/wiki/tools/graphite/) — AI ファースト開発での PR 管理ツール
 - [RAG](/blogs/wiki/concepts/rag/) — ハーネスとの組み合わせ判断
 - [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — ハーネスが第3層として位置づく全体地図
@@ -145,3 +168,4 @@ CreaoAI は「AIファーストハーネスエンジニアリング」を実践�
 - [Claude Harness v4.0.0 "Hokage" — Go ネイティブ化で 30 倍速、設定が harness.toml 1 本に](/blogs/posts/2026/04/claude-harness-v4-hokage/) — 2026-04-14
 - [Jev とは何か — 文章を書かず「判断だけ」を返す System One モデル](/blogs/posts/2026/10/jev-system-one-model/) — 2026-10-13
 - [ハーネスエンジニアリング入門 — 馬具・柵・境界の3層で AI エージェントを自走させる](/blogs/posts/2026/10/harness-design-intro-guardrails-boundary/) — 2026-10-25
+- [Harness²：エージェントが自分のハーネスを磨き続ける Google Research の OSS](/blogs/posts/2026/10/harness2-recursive-agent-harnessing/) — 2026-10-30
