@@ -6,7 +6,7 @@ import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
-import Card from "@/components/Card.astro";
+import { getPostUrl } from "@/utils/getPostPaths";
 import { postFilter } from "@/utils/postFilter";
 import { getPostsByGroupCondition } from "./_utils/getPostsByGroupCondition";
 import { useTranslations } from "@/i18n";
@@ -25,6 +25,13 @@ const t = useTranslations(locale);
 const posts = await getCollection("posts");
 const filteredPosts = posts.filter(postFilter);
 const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
+// The archive lists every post, so each row is kept to a date and a title.
+// Reusing <Card> here shipped a view-transition <style> block, a calendar SVG
+// and the description for every post — 4.1 MB of HTML for ~1,100 posts.
+const dayFormatter = new Intl.DateTimeFormat(locale, {
+  day: "numeric",
+  timeZone: config.site.timezone,
+});
 ---
 
 <Layout title={`${t.pages.archivesTitle} | ${config.site.title}`}>
@@ -63,19 +70,28 @@ const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
                       {monthGroup.length}
                     </sup>
                   </div>
-                  <ul>
+                  <ul class="mb-4 sm:my-6">
                     {monthGroup
                       .sort(
                         (a, b) =>
-                          Math.floor(
-                            new Date(b.data.date).getTime() / 1000
-                          ) -
-                          Math.floor(
-                            new Date(a.data.date).getTime() / 1000
-                          )
+                          new Date(b.data.date).getTime() -
+                          new Date(a.data.date).getTime()
                       )
-                      .map(data => (
-                        <Card {...data} />
+                      .map(post => (
+                        <li class="flex gap-x-3 py-1">
+                          <time
+                            class="text-muted-foreground w-10 shrink-0 text-sm leading-7 tabular-nums"
+                            datetime={new Date(post.data.date).toISOString()}
+                          >
+                            {dayFormatter.format(new Date(post.data.date))}
+                          </time>
+                          <a
+                            href={getPostUrl(post, locale)}
+                            class="text-accent decoration-dashed underline-offset-4 hover:underline"
+                          >
+                            {post.data.title}
+                          </a>
+                        </li>
                       ))}
                   </ul>
                 </div>
