@@ -20,6 +20,8 @@ Tech blog built with **Astro + AstroPaper**, hosted on GitHub Pages.
 ## Project layout
 
 - `content/posts/YYYY/MM/` — blog posts (`YYYY-MM-DD-<slug>.md`, year/month subfolders)
+- `content/archive/posts/YYYY/MM/` — posts dated 2025 and earlier, unpublished (not built,
+  not validated). `git mv` back to `content/posts/` to republish
 - `content/wiki/` — wiki knowledge base (`concepts/`, `tools/`, `guides/`)
 - `.claude/skills/wiki-ingest/` — `/wiki-ingest` skill
 - `scripts/categorize.py` — automatic category/tag assignment
