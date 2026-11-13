@@ -81,7 +81,7 @@ Claude Code と Codex は安定版（stable）、Cursor・GitHub Copilot・Gemin
 
 | ファイル | 内容 |
 |---|---|
-| `requirements.md` | EARS 形式（「〜のとき、システムは〜しなければならない」という定型文で要件を書く記法）の要件と受け入れ基準 |
+| `requirements.md` | [EARS 形式](/blogs/posts/2026/11/ears-requirements-syntax/)（「〜のとき、システムは〜しなければならない」という定型文で要件を書く記法）の要件と受け入れ基準 |
 | `design.md` | Mermaid 図を含むアーキテクチャと File Structure Plan |
 | `tasks.md` | 境界（`_Boundary:_`）と依存（`_Depends:_`）の注記付きの実装タスク |
 

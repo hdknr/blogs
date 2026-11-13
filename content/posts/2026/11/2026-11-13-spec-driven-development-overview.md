@@ -82,6 +82,8 @@ Feature: ログイン試行の制限
 
 どちらも「条件」と「期待する結果」を分けて書かせるので、受け入れ基準やテストケースにそのまま落とし込めます。
 
+EARS の 6 つのパターンや日本語での書き方は「[EARS 記法とは？ 6 つのパターンと日本語での書き方・Kiro での使い方](/blogs/posts/2026/11/ears-requirements-syntax/)」で詳しく解説しています。
+
 ### 専用 AI IDE・フレームワーク（Kiro・GitHub Spec Kit・OpenSpec）
 
 - **[Kiro](https://kiro.dev/)**: AWS が提供する AI IDE。対話しながら要件（`requirements.md`）・設計（`design.md`）・タスク（`tasks.md`）の仕様ファイルを生成し、それに沿って実装する
