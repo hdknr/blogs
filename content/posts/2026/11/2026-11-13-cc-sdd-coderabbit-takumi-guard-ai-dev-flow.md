@@ -47,7 +47,7 @@ tags: ["claude-code", "仕様駆動開発", "AI駆動開発", "コードレビ�
 
 ## cc-sdd：仕様を「契約」としてエージェントに渡す
 
-[cc-sdd](https://github.com/gotalab/cc-sdd) は、Claude Code などの AI コーディングエージェントに仕様駆動開発（Spec-Driven Development）のワークフローを導入するツールです。AWS の AI IDE「Kiro」の仕様駆動開発に着想を得ており（README では "Kiro-inspired" と説明）、Kiro の仕様ファイルとも互換性があります。ライセンスは MIT です。
+[cc-sdd](https://github.com/gotalab/cc-sdd) は、Claude Code などの AI コーディングエージェントに仕様駆動開発（Spec-Driven Development）のワークフローを導入するツールです。AWS の AI IDE「[Kiro](/blogs/posts/2026/11/kiro-ai-ide-intro/)」の仕様駆動開発に着想を得ており（README では "Kiro-inspired" と説明）、Kiro の仕様ファイルとも互換性があります。ライセンスは MIT です。
 
 > 補足：インタビュー記事では SDD を「Software Design Document」と説明していますが、cc-sdd のリポジトリは自らを spec-driven development（仕様駆動開発）のツールとして説明しています。
 
