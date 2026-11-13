@@ -169,6 +169,7 @@ Birgitta Böckeler 氏は、SDD ツールを比較した記事（[Understanding 
 - すでに使っているエージェントを替えずに、決まった手順で SDD を試したい → Spec Kit
 - IDE ごと統合された環境で、規約やフックまでまとめて扱いたい → Kiro
 - 既存のコードへの変更を、差分の提案として軽く回したい → OpenSpec（[OpenSpec の紹介記事](/blogs/posts/2026/05/openspec-spec-driven-development/)）
+- Kiro と同じ文書構成を、Claude Code や Codex の上で使いたい → cc-sdd（[cc-sdd の紹介記事](/blogs/posts/2026/11/cc-sdd-intro/)）
 
 ## まとめ
 
