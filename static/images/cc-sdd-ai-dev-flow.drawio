@@ -1,0 +1,105 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="cc-sdd-ai-dev-flow" name="AI-driven dev flow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="ドメインエキスパートの PR を品質ゲートに通す AI 駆動開発フロー" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="190" y="15" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Domain expert -->
+        <mxCell id="ceo" value="ドメインエキスパート&lt;br&gt;（非エンジニアの社長）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Claude Code で作りたいもの&lt;br&gt;を伝える&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="120" width="160" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Spec phase group -->
+        <mxCell id="spec-group" value="仕様フェーズ（cc-sdd）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="230" y="70" width="330" height="300" as="geometry"/>
+        </mxCell>
+        <mxCell id="req" value="要件定義エージェント&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;requirements.md&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="250" y="110" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="design" value="設計エージェント&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;design.md / tasks.md&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="250" y="200" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="dreview" value="設計レビュー&lt;br&gt;エージェント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="420" y="170" width="120" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="arch" value="アーキテクト&lt;br&gt;エージェント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="420" y="240" width="120" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="planpr" value="計画の PR" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="250" y="300" width="140" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Human gate 1 -->
+        <mxCell id="cto" value="CTO が&lt;br&gt;計画をレビュー" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="275" width="130" height="95" as="geometry"/>
+        </mxCell>
+
+        <!-- Impl phase group -->
+        <mxCell id="impl-group" value="実装フェーズ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="750" y="70" width="230" height="300" as="geometry"/>
+        </mxCell>
+        <mxCell id="impl" value="実装エージェント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="110" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="ireview" value="レビュアーエージェント" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="195" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="coderabbit" value="CodeRabbit&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;PR の自動コードレビュー&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="285" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Human gate 2 -->
+        <mxCell id="release" value="人間は&lt;br&gt;リリース判断" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="160" width="140" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Orchestrator -->
+        <mxCell id="orch" value="司令塔エージェント：作業とレビューを自動でループさせる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="400" width="750" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Guard -->
+        <mxCell id="guard" value="Takumi Guard：パッケージ取得時に悪性パッケージをブロック ／ インフラへのアクセス制御を厳密化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="230" y="465" width="750" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="ceo" target="req">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="req" target="design">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="指摘" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d79b00;startArrow=classic;fontSize=10;" edge="1" parent="1" source="design" target="dreview">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d79b00;startArrow=classic;" edge="1" parent="1" source="design" target="arch">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="design" target="planpr">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;" edge="1" parent="1" source="planpr" target="cto">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="承認" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cto" target="impl">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="指摘" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d79b00;startArrow=classic;fontSize=10;" edge="1" parent="1" source="impl" target="ireview">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="指摘" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#d79b00;startArrow=classic;fontSize=10;" edge="1" parent="1" source="ireview" target="coderabbit">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#666666;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="coderabbit" target="release">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
