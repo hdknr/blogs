@@ -182,7 +182,7 @@ OpenSpec の README は、Spec Kit を「徹底しているが重い（厳格な
 
 そのうえで筆者の見立てを言えば、OpenSpec の強みは「軽量さ」と「ツールの自由度」だ。固定フェーズがなく、変更を差分で扱うので、既存プロジェクトにも導入しやすい。
 
-Kiro の機能と料金の詳細は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」、Spec Kit のコマンドと原則（constitution）は「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」を参照。
+Kiro の機能と料金の詳細は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」、Spec Kit のコマンドと原則（constitution）は「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」を参照。MCP サーバーとして動き、仕様の承認をダッシュボードで記録する「[Spec Workflow MCP](/blogs/posts/2026/11/spec-workflow-mcp-intro/)」という選択肢もある。
 
 Kiro の機能と料金の詳細は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」を参照。
 

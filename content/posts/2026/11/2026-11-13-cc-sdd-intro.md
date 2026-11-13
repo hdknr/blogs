@@ -209,7 +209,7 @@ v3.0 からは、この流れがエージェント自身のサブエージェン
 | 進め方 | discovery → 要件 → 設計 → タスク → 実装 | 要件 → 設計 → タスク → 実装 | 原則 → 仕様 → 計画 → タスク → 実装 | 提案 → 実装 → アーカイブ |
 | 特徴 | Kiro と同じ文書構成。サブエージェントによる実装とレビュー | IDE に統合された Spec・Steering・Hooks | 原則（constitution）で AI の判断を縛る | 変更を差分で扱う |
 
-Kiro の文書構成をそのまま使いたいが、IDE は替えずに Claude Code や Codex で進めたい、という場合に cc-sdd が合います。Spec Kit と OpenSpec については「[GitHub Spec Kit とは？](/blogs/posts/2026/11/github-spec-kit-intro/)」と「[OpenSpec とは？](/blogs/posts/2026/05/openspec-spec-driven-development/)」で紹介しています。
+Kiro の文書構成をそのまま使いたいが、IDE は替えずに Claude Code や Codex で進めたい、という場合に cc-sdd が合います。Spec Kit と OpenSpec については「[GitHub Spec Kit とは？](/blogs/posts/2026/11/github-spec-kit-intro/)」と「[OpenSpec とは？](/blogs/posts/2026/05/openspec-spec-driven-development/)」で紹介しています。同じく Kiro とよく似た文書構成を MCP サーバーとして提供し、ダッシュボードで承認を記録するツールに Spec Workflow MCP があります（「[Spec Workflow MCP とは？](/blogs/posts/2026/11/spec-workflow-mcp-intro/)」）。
 
 cc-sdd を軸に、レビューや依存パッケージのチェックまで組み込んだ開発フローの事例は、「[非エンジニアの社長が出した巨大 PR をどう受け止めるか — cc-sdd・CodeRabbit・Takumi Guard で組む AI 駆動開発フロー](/blogs/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/)」で紹介しています。
 
