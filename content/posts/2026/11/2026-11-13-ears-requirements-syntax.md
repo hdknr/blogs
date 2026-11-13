@@ -227,6 +227,8 @@ Feature: ログイン試行の制限
 
 要件は EARS で書いて人間がレビューし、受け入れテストは Gherkin や通常のテストコードで AI に書かせます。この分担にすると、要件からテストまでの対応を追いやすくなります。
 
+Gherkin のキーワードや Cucumber での実行方法は「[BDD・Gherkin・Cucumber の違いとは？ キーワード一覧と日本語での書き方入門](/blogs/posts/2026/11/gherkin-bdd-cucumber/)」で解説しています。
+
 ## まとめ
 
 - EARS は Rolls-Royce の Alistair Mavin 氏らが 2009 年に発表した、自然言語の要件を決まった型で書く記法
