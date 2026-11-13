@@ -61,13 +61,13 @@ tags: ["仕様駆動開発", "SDD", "AI駆動開発", "開発手法", "tdd"]
 仕様は Markdown で管理しつつ、要件の曖昧さを減らすために構造化された記法を取り入れるのが一般的です。
 
 - **EARS 記法（Easy Approach to Requirements Syntax）**: Rolls-Royce の Alistair Mavin 氏らが提案した、決まった型に要件を当てはめる記法。常時成り立つ要件・イベント駆動・状態駆動・望ましくない振る舞いなど、いくつかのパターンがある
-- **Gherkin 構文**: `Given`（前提）/ `When`（操作）/ `Then`（結果）で振る舞いを書く記法。BDD（振る舞い駆動開発）ツールの Cucumber で使われる
+- **Gherkin 構文**: `Given`（前提）/ `When`（操作）/ `Then`（結果）で振る舞いを書く記法。BDD（振る舞い駆動開発）ツールの Cucumber で使われる（詳しくは「[BDD・Gherkin・Cucumber の違いとは？ キーワード一覧と日本語での書き方入門](/blogs/posts/2026/11/gherkin-bdd-cucumber/)」）
 
-EARS のイベント駆動パターンは `WHEN <トリガー> THE SYSTEM SHALL <応答>` という型です（原典ではシステム名を入れて `the <システム名> shall` と書きますが、Kiro などでは `THE SYSTEM SHALL` の形がよく使われます）。この型で書いた要件の例です。
+EARS では、正常系のイベントへの応答を `WHEN <トリガー> THE SYSTEM SHALL <応答>`、望ましくない状況（エラーや不正な入力など）への応答を `IF <トリガー> THEN THE SYSTEM SHALL <応答>` の型で書き分けます（原典ではシステム名を入れて `the <システム名> shall` と書きますが、Kiro などでは `THE SYSTEM SHALL` の形がよく使われます）。パスワードの連続失敗は望ましくない状況なので、IF / THEN の型で書きます。
 
 ```text
-WHEN ユーザーが誤ったパスワードを 5 回連続で入力したとき
-THE SYSTEM SHALL そのアカウントを 15 分間ロックする
+IF ユーザーが誤ったパスワードを 5 回連続で入力した
+THEN THE SYSTEM SHALL そのアカウントを 15 分間ロックする
 ```
 
 同じ振る舞いを Gherkin で書くと次のようになります。
