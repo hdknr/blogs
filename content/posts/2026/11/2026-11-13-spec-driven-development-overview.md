@@ -86,7 +86,7 @@ EARS の 6 つのパターンや日本語での書き方は「[EARS 記法とは
 
 ### 専用 AI IDE・フレームワーク（Kiro・GitHub Spec Kit・OpenSpec）
 
-- **[Kiro](https://kiro.dev/)**: AWS が提供する AI IDE。対話しながら要件（`requirements.md`）・設計（`design.md`）・タスク（`tasks.md`）の仕様ファイルを生成し、それに沿って実装する
+- **[Kiro](https://kiro.dev/)**: AWS が提供する AI IDE。対話しながら要件（`requirements.md`）・設計（`design.md`）・タスク（`tasks.md`）の仕様ファイルを生成し、それに沿って実装する（詳しくは「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」）
 - **[GitHub Spec Kit](https://github.com/github/spec-kit)**: GitHub が公開している仕様駆動開発用のツールキット。既存の AI コーディングエージェントに、原則（constitution）→ 仕様 → 計画 → タスク → 実装の流れを組み込む
 - **[OpenSpec](https://github.com/Fission-AI/OpenSpec) / [cc-sdd](https://github.com/gotalab/cc-sdd) / [Spec Workflow MCP](https://github.com/Pimzino/spec-workflow-mcp)**: Claude Code や Cursor などの既存エージェントに SDD のワークフローを組み込むオープンソースのツール群
 

@@ -174,6 +174,8 @@ Kiro のドキュメント（[Feature Specs](https://kiro.dev/docs/specs/feature
 WHEN [condition/event] THE SYSTEM SHALL [expected behavior]
 ```
 
+Kiro そのものの機能（Spec・Steering・Hooks など）は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」で紹介しています。
+
 示されているのはイベント駆動の形だけで、While・Where・If / Then は出てきません。そのため AI に要件を書かせると、すべてが WHEN の文になりがちです。たとえば「誤ったパスワードを 5 回連続で入力した」は不正入力への対処なので、本来は If / Then で書く異常系です。**状態に依存する要件や異常系が WHEN の中に紛れ込んでいないか** を人間が確かめると、抜けを見つけやすくなります。
 
 ### 異常系の If / Then を数える

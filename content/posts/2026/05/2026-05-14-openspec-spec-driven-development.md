@@ -117,6 +117,8 @@ pnpm・yarn・bun・nixにも対応している。
 
 OpenSpecの強みは「軽量さ」と「ツールの自由度」。既存プロジェクトへの導入もしやすい。
 
+Kiro の機能と料金の詳細は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」を参照。
+
 ## コンテキストエンジニアリングの標準化
 
 OpenSpecが注目されるもう一つの理由が、**コンテキストエンジニアリングの標準化**だ。
