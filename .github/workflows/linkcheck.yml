@@ -63,12 +63,23 @@ jobs:
       - name: Validate frontmatter
         run: python3 scripts/validate_frontmatter.py
 
+      # check_links.py is the only blocking link check on PRs (see `internal`),
+      # so a link form it stops recognising would pass silently. Test it here.
+      - name: Test the internal-link checker
+        run: python3 scripts/test_check_links.py
+
   # ---------------------------------------------------------------------------
   # Internal-link check (blocking). Runs on PRs and pushes.
-  # Builds the site, mirrors it under the /blogs/ base path, serves it locally,
-  # and checks that every INTERNAL link/image resolves. External links are
-  # excluded here (they are handled by the weekly job) so this stays fast and
-  # deterministic. A missing /blogs prefix or a wrong slug becomes a 404.
+  # Builds the site and checks that every INTERNAL link/image resolves. External
+  # links are excluded here (they are handled by the weekly job) so this stays
+  # fast and deterministic. A missing /blogs prefix or a wrong slug is a failure.
+  #
+  # On PRs — the run /ship waits on — the check is check_assets.py plus
+  # check_links.py, which read dist directly and finish in seconds. lychee over a
+  # served copy used to run here too and took 3.5 of the job's ~6 minutes while
+  # checking nothing more (no --include-fragments, no redirects to follow), so it
+  # now runs only on pushes to main and workflow_dispatch: a miss still surfaces,
+  # just after merge instead of before.
   # ---------------------------------------------------------------------------
   internal:
     if: github.event_name != 'schedule'
@@ -100,8 +111,24 @@ jobs:
           TZ: Asia/Tokyo
         run: npx astro build
 
+      # Renditions are keyed by source content inside the cache (see
+      # generate-images.mjs), so restoring an older cache via restore-keys is
+      # safe: unchanged diagrams hit, new or redrawn ones are generated. The
+      # script's own hash is in every key, so changing widths or quality never
+      # reuses renditions made the old way. PR runs can read main's cache, and
+      # the push-to-main run of this job is what keeps that cache current.
+      - name: Restore image rendition cache
+        uses: actions/cache@v4
+        with:
+          path: .image-cache
+          key: image-renditions-${{ hashFiles('astro/scripts/generate-images.mjs') }}-${{ hashFiles('static/images/**/*.png') }}
+          restore-keys: |
+            image-renditions-${{ hashFiles('astro/scripts/generate-images.mjs') }}-
+
       - name: Generate image renditions
         working-directory: astro
+        env:
+          IMAGE_CACHE_DIR: ${{ github.workspace }}/.image-cache
         run: node scripts/generate-images.mjs
 
       - name: Check assets
@@ -109,19 +136,24 @@ jobs:
       - name: Check internal links
         run: python3 scripts/check_links.py astro/dist --base /blogs
 
+      # Everything below is the lychee pass, skipped on PRs (see the job comment).
+      #
       # The search page links the Pagefind bundle, which exists only after
       # Pagefind runs. Without this step the link check 404s on it, and the
       # checked tree would not match what actually deploys.
       - name: Build search index
+        if: github.event_name != 'pull_request'
         working-directory: astro
         run: npx -y pagefind@${PAGEFIND_VERSION} --site dist --glob "{posts,wiki}/**/*.html"
 
       - name: Mirror to /blogs base path
+        if: github.event_name != 'pull_request'
         run: |
           mkdir -p _site/blogs
           cp -a astro/dist/. _site/blogs/
 
       - name: Serve site locally
+        if: github.event_name != 'pull_request'
         run: |
           nohup python3 -c "
           from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
@@ -135,6 +167,7 @@ jobs:
           done
 
       - name: Install lychee
+        if: github.event_name != 'pull_request'
         run: |
           wget -O /tmp/lychee.tar.gz \
             "https://github.com/lycheeverse/lychee/releases/download/lychee-v${LYCHEE_VERSION}/lychee-x86_64-unknown-linux-gnu.tar.gz"
@@ -148,7 +181,8 @@ jobs:
       # local mirror, so a host-wide remap rewrote those live URLs to the local
       # server and reported a spurious 404. Scoped this way, sibling-project
       # links fall outside --include and are swept by the weekly external job.
-      - name: Check internal links
+      - name: Check internal links (lychee)
+        if: github.event_name != 'pull_request'
         run: |
           lychee \
             --no-progress \
