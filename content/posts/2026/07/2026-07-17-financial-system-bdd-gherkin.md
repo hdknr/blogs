@@ -27,6 +27,8 @@ Gherkin は主に次の 3 つのキーワードで構成されます。
 - **When（もし〜のとき）** — 発生させるアクション
 - **Then（ならば〜となる）** — 期待される結果
 
+`Rule`・`Background`・`Scenario Outline` などを含むキーワードの全体と日本語キーワードの一覧は、「[BDD・Gherkin・Cucumber の違いとは？ キーワード一覧と日本語での書き方入門](/blogs/posts/2026/11/gherkin-bdd-cucumber/)」でまとめています。
+
 ### 金融システムでの具体例（口座振替の仕様）
 
 ```gherkin
