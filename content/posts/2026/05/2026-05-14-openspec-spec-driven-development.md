@@ -184,6 +184,8 @@ OpenSpec の README は、Spec Kit を「徹底しているが重い（厳格な
 
 Kiro の機能と料金の詳細は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」、Spec Kit のコマンドと原則（constitution）は「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」を参照。
 
+Kiro の機能と料金の詳細は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」を参照。
+
 ## コンテキストエンジニアリングの標準化
 
 OpenSpecが注目されるもう一つの理由が、**コンテキストエンジニアリングの標準化**だ。
