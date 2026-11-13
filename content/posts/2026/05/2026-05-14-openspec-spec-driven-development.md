@@ -1,13 +1,15 @@
 ---
-title: "OpenSpec — 仕様駆動開発でVibe Codingの「あとから全部作り直し」を防ぐ"
+title: "OpenSpec とは？ 仕様駆動開発の使い方・/openspec-* スキルと Spec Kit・Kiro との違い"
 date: 2026-05-14
-lastmod: 2026-05-14
+lastmod: 2026-11-13
 slug: "openspec-spec-driven-development"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/1#issuecomment-4447281857"
 categories: ["AI/LLM"]
-tags: ["OpenSpec", "仕様駆動開発", "SDD", "claude-code", "コンテキストエンジニアリング"]
+tags: ["OpenSpec", "仕様駆動開発", "SDD", "AI駆動開発", "claude-code"]
 ---
+
+> **2026-11-13 更新:** OpenSpec v2.0.0（2026 年 11 月 11 日リリース）で `/opsx:*` のスラッシュコマンドが廃止され、`/openspec-*` のスキルに置き換わった。使い方・インストール方法・対応ツール・比較表を最新の情報に合わせて書き直し、仕様の差分（delta spec）と v1.x からの移行の節を追加した。
 
 ## はじめに
 
@@ -15,11 +17,18 @@ tags: ["OpenSpec", "仕様駆動開発", "SDD", "claude-code", "コンテキス�
 
 **Vibe coding**（感覚的なプロンプトだけでAIにコーディングさせるスタイル）は手軽な反面、AIとの認識齟齬が後から発覚してリワークが発生するリスクをはらんでいる。
 
-**OpenSpec** は、その問題を「仕様駆動開発（SDD: Spec-Driven Development）」で解消するフレームワークだ。2025年8月に登場してから急速に普及し、2026年5月時点で⭐50,000超を獲得している。
+**OpenSpec** は、その問題を「[仕様駆動開発（SDD: Spec-Driven Development）](/blogs/posts/2026/11/spec-driven-development-overview/)」で解消するフレームワークだ。2025 年 8 月にリポジトリが公開されてから急速に普及し、2026 年 11 月時点で GitHub のスターは 7 万を超えている。
 
 - GitHub: [Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec)
+- ドキュメント: [openspec.dev](https://openspec.dev/docs/)
 - npm: `@fission-ai/openspec`
 - ライセンス: MIT
+
+要点は次の 3 つ。
+
+- OpenSpec は、Claude Code などの既存のエージェントに追加する、軽量な SDD ツールである
+- `/openspec-propose` → `/openspec-apply-change` → `/openspec-archive-change` の 3 ステップで進む
+- 変更を差分（delta spec）で扱うので、既存のプロジェクトにも導入しやすい
 
 ## Vibe Codingの落とし穴
 
@@ -41,81 +50,139 @@ OpenSpecは、AIコーディングアシスタント向けの軽量な仕様レ�
 → fluid not rigid      （柔軟、固定フェーズなし）
 → iterative not waterfall （反復的、ウォーターフォールではない）
 → easy not complex     （シンプル）
-→ built for brownfield （既存プロジェクトにも対応）
+→ built for brownfield not just greenfield （新規だけでなく既存プロジェクトにも対応）
 → scalable from personal projects to enterprises
 ```
 
-## 主要コマンド（`/opsx:*` スラッシュコマンド）
+## OpenSpec の使い方：`/openspec-*` スキルと基本の流れ
 
-OpenSpecは `/opsx:propose` から始まる一連のスラッシュコマンドで動作する。
+OpenSpec は、AI コーディングアシスタントに追加する **スキル**（エージェントが呼び出せる手順書のようなもの）で動作する。v2.0.0 からはスキルが `.agents/skills/` に置かれる。
+
+どのスキルを入れるかは「プロファイル」で切り替える。既定の `core` プロファイルで使えるのは次の 6 つだ（詳細は [Skills](https://openspec.dev/docs/skills)）。
+
+| スキル | 役割 |
+|---|---|
+| `/openspec-explore` | 変更として提案する前に、アイデアを検討する |
+| `/openspec-propose` | 変更を提案し、4 つのアーティファクト（proposal・specs・design・tasks）をまとめて生成する |
+| `/openspec-apply-change` | 提案した変更のタスクを実装する |
+| `/openspec-update-change` | アーティファクトを修正する |
+| `/openspec-sync-specs` | アーカイブせずに、変更の仕様を `openspec/specs/` に反映する |
+| `/openspec-archive-change` | 完了した変更をアーカイブに移す |
+
+Codex では `/` の代わりに `$openspec-propose` のように呼ぶ。
+
+### 基本の 3 ステップ
+
+流れは、提案 → 実装 → アーカイブの 3 ステップ。エージェントのチャット欄で、次の順に実行する。
 
 ```text
-# 機能を提案→仕様生成
-You: /opsx:propose add-dark-mode
-AI:  Created openspec/changes/add-dark-mode/
-     ✓ proposal.md  — なぜやるか、何が変わるか
-     ✓ specs/       — 要件とシナリオ
-     ✓ design.md    — 技術的アプローチ
-     ✓ tasks.md     — 実装チェックリスト
-     Ready for implementation!
-
-# 仕様に従って実装
-You: /opsx:apply
-AI:  Implementing tasks...
-     ✓ 1.1 Add theme context provider
-     ✓ 1.2 Create toggle component
-     ✓ 2.1 Add CSS variables
-     ✓ 2.2 Wire up localStorage
-     All tasks complete!
-
-# アーカイブして次へ
-You: /opsx:archive
-AI:  Archived to openspec/changes/archive/2025-01-23-add-dark-mode/
-     Specs updated. Ready for the next feature.
+/openspec-propose add-dark-mode
+/openspec-apply-change
+/openspec-archive-change
 ```
 
-`/opsx:propose` で要件を入力するだけで、AIが提案書・仕様書・設計書・タスクリストを自動生成する。人間はそれをレビューして合意した上で実装に進む。
+`/openspec-propose` で作りたいものを伝えると、`openspec/changes/add-dark-mode/` に次のファイルが作られる。人間はそれをレビューして合意した上で実装に進む。
+
+| ファイル | 内容 |
+|---|---|
+| `proposal.md` | なぜやるか、何が変わるか |
+| `specs/` | 要件とシナリオ（変更分） |
+| `design.md` | 技術的アプローチ |
+| `tasks.md` | 実装チェックリスト |
+
+アーカイブすると、変更のフォルダは `openspec/changes/archive/YYYY-MM-DD-<変更名>/` に移る。同時に、変更分の仕様が `openspec/specs/` の仕様に統合される。
+
+### 追加のスキルとプロファイル
+
+既定の 6 つのほかに、次のようなスキルもある。
+
+- `/openspec-continue-change`：アーティファクトを 1 つずつ作る
+- `/openspec-verify-change`：実装がアーティファクトと合っているかを確かめる（報告だけで、変更はしない）
+
+これらは既定では入っていない。プロファイルで選んでから、各プロジェクトでスキルを入れ直す。
+
+```bash
+openspec config profile   # 使うスキルを選ぶ
+openspec update           # 各プロジェクトでスキルを入れ直す
+```
+
+### 仕様の差分（delta spec）
+
+`specs/` に書くのは、仕様全体ではなく **変更分（差分）** だ。追加・変更・削除・名前の変更を見出しで分けて書く。次は書式を示すための例（文面は説明用に作ったもの）。
+
+```markdown
+## ADDED Requirements
+
+### Requirement: Theme selection
+The system SHALL allow users to choose between light and dark themes.
+
+#### Scenario: User toggles dark mode
+- **WHEN** the user selects dark mode
+- **THEN** the interface switches to the dark theme
+```
+
+見出しは `## ADDED Requirements`・`## MODIFIED Requirements`・`## REMOVED Requirements`・`## RENAMED Requirements` を使う。要件には少なくとも 1 つの `#### Scenario:` が必要で、`openspec validate` で形式を確かめられる。
+
+既存のコードに手を入れる変更でも変わる部分だけを書けばよいので、既存プロジェクト（brownfield）にも導入しやすい。
 
 ## インストールと初期化
 
-Node.js 20.19.0 以上が必要。
+インストールスクリプトを使えば、Node.js がなくても入れられる（[Installation](https://openspec.dev/docs/installation)）。
 
 ```bash
-# グローバルインストール
+# macOS / Linux（スタンドアロン版）
+curl -fsSL https://openspec.dev/cli/install.sh | sh
+
+# npm で入れる場合（Node.js 22.12.0 以上が必要）
 npm install -g @fission-ai/openspec@latest
 
 # プロジェクトディレクトリで初期化
 cd your-project
 openspec init
-
-# AIに伝える
-/opsx:propose <作りたいもの>
 ```
 
-pnpm・yarn・bun・nixにも対応している。
+Windows は PowerShell の `irm https://openspec.dev/cli/install.ps1 | iex` で入れられる。Homebrew（`brew install openspec`）・pnpm・yarn・bun・Nix にも対応している。
 
-## 対応ツール
+初期化したら、エージェントで `/openspec-propose <作りたいもの>` を実行する。
 
-30種類以上のAIツールに対応しており、主なものは以下のとおり。
+### v1.x（`/opsx:*`）からの移行
+
+v1.x では `/opsx:propose`・`/opsx:apply`・`/opsx:archive` のようなスラッシュコマンドを使っていた。v2.0.0 でこれらは廃止され、`/openspec-propose`・`/openspec-apply-change`・`/openspec-archive-change` などのスキルに置き換わった。
+
+v1.x から使っているプロジェクトでは、`openspec update` を実行する。古いバージョンが作ったファイルが整理され、新しいスキルに入れ替わる。
+
+### テレメトリの無効化
+
+OpenSpec は、匿名の利用統計（コマンド名とバージョンのみ）を収集する。`openspec config set telemetry.enabled false` か、環境変数 `OPENSPEC_TELEMETRY=0` で無効にできる。
+
+## 対応ツール（Claude Code・Codex・Cursor など）
+
+README では「30 種類以上」とされ、[対応ツールの一覧](https://openspec.dev/docs/supported-tools)には 40 を超えるツールが並んでいる。主なものは以下のとおり。
 
 - **Claude Code** (Anthropic)
 - **Codex** (OpenAI)
 - **Cursor**
 - **GitHub Copilot**
-- その他多数（[対応ツール一覧](https://github.com/Fission-AI/OpenSpec/blob/main/docs/supported-tools.md)）
+- **Gemini CLI**
+- **Kiro**
 
-推奨モデルは高推論モデル（OpenAI Codex / gpt-5.5、Anthropic Claude Opus 4.7）。
+README では、計画と実装の両方に高推論モデル（Codex 5.5 と Opus 4.7）を推奨している。
 
-## 他のスペックフレームワークとの比較
+## Spec Kit・Kiro との違い
 
 | | OpenSpec | Spec Kit (GitHub) | Kiro (AWS) |
 |---|---|---|---|
-| 学習コスト | 低 | 高（Pythonセットアップ等） | 中 |
-| フェーズゲート | なし（流動的） | 厳格 | あり |
-| ツール縛り | なし（30種類以上） | なし | AWS Kiro IDEのみ |
-| モデル縛り | なし | なし | Amazon Bedrock上のモデルのみ |
+| 形態 | 既存のエージェントに追加する | 既存のエージェントに追加する | 専用の AI 開発環境（IDE・CLI・Web など） |
+| 導入 | インストールスクリプト 1 行か npm | Python 3.11 以上と uv / pipx | Kiro 自体をインストール |
+| 進め方 | 提案 → 実装 → アーカイブ（固定フェーズなし） | 原則 → 仕様 → 計画 → タスク → 実装 | 要件 → 設計 → タスク → 実装（承認を省く Quick Spec もある） |
+| 使えるエージェント | 30 種類以上（一覧では 40 超） | 40 種類以上 | —（専用環境） |
+| モデル | エージェントに依存 | エージェントに依存 | Kiro が提供するモデル（Claude・OpenAI・オープンウェイトなど） |
 
-OpenSpecの強みは「軽量さ」と「ツールの自由度」。既存プロジェクトへの導入もしやすい。
+OpenSpec の README は、Spec Kit を「徹底しているが重い（厳格なフェーズゲート、大量の Markdown、Python のセットアップ）」と評している。Kiro については「強力だが IDE に縛られ、Claude のモデルに限られる」とする。ただし 2026 年 11 月時点の Kiro は、CLI や Web からも使え、Claude 以外のモデルも選べる。OpenSpec 自身による比較なので、割り引いて読むとよい。
+
+そのうえで筆者の見立てを言えば、OpenSpec の強みは「軽量さ」と「ツールの自由度」だ。固定フェーズがなく、変更を差分で扱うので、既存プロジェクトにも導入しやすい。
+
+Kiro の機能と料金の詳細は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」、Spec Kit のコマンドと原則（constitution）は「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」を参照。
 
 Kiro の機能と料金の詳細は「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」を参照。
 
@@ -136,7 +203,7 @@ OpenSpec を導入していなくても、すでに **「docs/ フォルダに m
 | 問題 | docs/ + mkdocs 方式 | OpenSpec の解 |
 |---|---|---|
 | **why / what / how / do の混在** | 1つの仕様書に動機・要件・設計・タスクが混ざりがち | `proposal.md` / `specs/` / `design.md` / `tasks.md` で物理分離 |
-| **AIのコンテキスト戦略が手動** | 「どの docs を読ませるか」を毎回人間が判断 | スラッシュコマンドが「コンテキストクリア → 該当 change だけ読む」を強制 |
+| **AIのコンテキスト戦略が手動** | 「どの docs を読ませるか」を毎回人間が判断 | 変更ごとのフォルダにアーティファクトがまとまる（README は実装前のコンテキストのクリアも推奨） |
 
 > **補足: 「変更履歴」は git で足りる**
 >
@@ -155,7 +222,7 @@ OpenSpec を導入していなくても、すでに **「docs/ フォルダに m
 逆に言えば、次の状況に達したときに OpenSpec の導入価値が跳ね上がる。
 
 1. **複数機能を並行開発するようになったとき** — docs/ がフラットだと AI が読むべき範囲を絞れないが、`changes/<feature>/` は機能単位で物理隔離される
-2. **AI に実装を任せる比率が増えたとき** — `tasks.md` のチェックリストで進捗が機械可読になり、`/opsx:apply` で一気通貫の自動実装が可能になる
+2. **AI に実装を任せる比率が増えたとき** — `tasks.md` のチェックリストで進捗が機械可読になり、`/openspec-apply-change` で一気通貫の自動実装が可能になる
 3. **why/what/how/do を1ファイルに書き散らかして AI が混乱し始めたとき** — 4アーティファクト分離は単なる整理整頓ではなく、AI のコンテキスト窓を節約する仕組みとして効く
 
 ### 折衷案: docs/ 上で OpenSpec の構造だけ真似る
@@ -185,7 +252,7 @@ mkdocs ベースで開発を始めるとき、リポジトリ作成直後の典�
 3. GitHub Issue は「`docs-structure.md` に従って docs/ を作って」と一行で立てる
 4. AI コーディングアシスタントに着手させる
 
-**ポイントは「規約はリポジトリに、依頼は短く」**。Issue にルール全文を毎回コピペするのではなく、リポジトリ内の固定ファイルとして外出しする。これは `CLAUDE.md` / `AGENTS.md` / `openspec/AGENTS.md` と同じパターンで、
+**ポイントは「規約はリポジトリに、依頼は短く」**。Issue にルール全文を毎回コピペするのではなく、リポジトリ内の固定ファイルとして外出しする。これは `CLAUDE.md` / `AGENTS.md` と同じパターンで、
 
 - 1箇所更新すれば全 Issue に伝播
 - AI コーディングアシスタントが固定パスでコンテキストに投入できる
@@ -276,7 +343,7 @@ Issue はこれだけ。後続の「機能 X を追加」系の Issue も「`doc
 
 - **`docs-structure.md` 自体が「契約」になる**ので、曖昧さは AI が文字通り解釈して事故る。受け入れ条件は機械的に判定できる形で書く
 - **`PLAN.md` と `docs-structure.md` の責務分離を明確に** — `PLAN.md` は「何を作るか」、`docs-structure.md` は「どう書くか」
-- 後から OpenSpec を導入する場合も、`docs-structure.md` は `openspec/AGENTS.md` に変換しやすい
+- 後から OpenSpec を導入する場合も、`changes/` と `specs/` の構造が同じなので移行しやすい
 
 この形にしておくと、プロジェクトが育っても OpenSpec を導入するかどうかは選択肢として残しつつ、AI コーディング時代の最低限の構造は最初から確保できる。
 
@@ -287,7 +354,9 @@ Issue はこれだけ。後続の「機能 X を追加」系の Issue も「`doc
 | 課題 | Vibe codingでは要件齟齬が後から発覚しやすい |
 | 解決策 | 仕様書（proposal/specs/design/tasks）を先に合意してから実装 |
 | ツール | OpenSpec (`@fission-ai/openspec`) |
-| 対応環境 | Claude Code・Codex・Cursor 他30種類以上 |
-| 導入コスト | `npm install -g @fission-ai/openspec` で即日導入可能 |
+| 対応環境 | Claude Code・Codex・Cursor・Kiro など 30 種類以上（一覧では 40 超） |
+| 使い方 | `/openspec-propose` → `/openspec-apply-change` → `/openspec-archive-change` |
+| v2.0.0 の変更 | `/opsx:*` から `/openspec-*` スキルへ（v1.x からは `openspec update` で移行） |
+| 導入コスト | インストールスクリプトか `npm install -g @fission-ai/openspec` で即日導入可能 |
 
 仕様書を先に書く。それだけでAIの出力品質が桁違いに変わる。OpenSpecはこの単純な原則をツールとして具体化したプロジェクトだ。AIコーディングを本格的に活用したい開発者にとって、試す価値は十分にある。

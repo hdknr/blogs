@@ -90,7 +90,7 @@ EARS の 6 つのパターンや日本語での書き方は「[EARS 記法とは
 - **[GitHub Spec Kit](https://github.com/github/spec-kit)**: GitHub が公開している仕様駆動開発用のツールキット。既存の AI コーディングエージェントに、原則（constitution）→ 仕様 → 計画 → タスク → 実装の流れを組み込む
 - **[OpenSpec](https://github.com/Fission-AI/OpenSpec) / [cc-sdd](https://github.com/gotalab/cc-sdd) / [Spec Workflow MCP](https://github.com/Pimzino/spec-workflow-mcp)**: Claude Code や Cursor などの既存エージェントに SDD のワークフローを組み込むオープンソースのツール群
 
-OpenSpec については「[OpenSpec — 仕様駆動開発でVibe Codingの「あとから全部作り直し」を防ぐ](/blogs/posts/2026/05/openspec-spec-driven-development/)」で詳しく紹介しています。
+OpenSpec については「[OpenSpec とは？ 仕様駆動開発の使い方・/openspec-* スキルと Spec Kit・Kiro との違い](/blogs/posts/2026/05/openspec-spec-driven-development/)」で詳しく紹介しています。
 
 ## SDD と TDD（テスト駆動開発）の違い
 
