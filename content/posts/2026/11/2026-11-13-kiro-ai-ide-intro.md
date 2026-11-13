@@ -17,7 +17,8 @@ tags: ["Kiro", "aws", "仕様駆動開発", "AI駆動開発", "EARS"]
 - SDD の全体像：[仕様駆動開発（SDD）とは？ 3 つのアプローチ・EARS 記法・Kiro / Spec Kit・TDD との違い](/blogs/posts/2026/11/spec-driven-development-overview/)
 - Kiro が要件に使う記法：[EARS 記法とは？ 6 つのパターンと日本語での書き方・Kiro での使い方](/blogs/posts/2026/11/ears-requirements-syntax/)
 - 対になる GitHub のツールキット：[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)
-- Kiro に着想を得た Claude Code 向けのツール：[非エンジニアの社長が出した巨大 PR をどう受け止めるか — cc-sdd・CodeRabbit・Takumi Guard で組む AI 駆動開発フロー](/blogs/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/)
+- Kiro に着想を得た Claude Code 向けのツール：[cc-sdd とは？ Claude Code・Codex で Kiro 式の仕様駆動開発を回すスキルと使い方](/blogs/posts/2026/11/cc-sdd-intro/)
+- cc-sdd を軸にした開発フローの事例：[非エンジニアの社長が出した巨大 PR をどう受け止めるか — cc-sdd・CodeRabbit・Takumi Guard で組む AI 駆動開発フロー](/blogs/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/)
 
 ## Kiro の概要
 
@@ -225,7 +226,7 @@ Thoughtworks の Birgitta Böckeler 氏は、SDD ツールを比較した記事�
 
 Kiro の IDE を使わずに、Claude Code などの既存のエージェントで同じ流れを取り入れるツールもあります。[cc-sdd](https://github.com/gotalab/cc-sdd) は Kiro に着想を得たツールで、`requirements.md` / `design.md` / `tasks.md` を作る流れを Claude Code や Cursor に持ち込みます。GitHub の [Spec Kit](https://github.com/github/spec-kit) や [OpenSpec](https://github.com/Fission-AI/OpenSpec) も、同じく既存のエージェントに SDD の流れを組み込むツールです。
 
-それぞれの詳細は「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」と「[OpenSpec とは？ 仕様駆動開発の使い方・/openspec-* スキルと Spec Kit・Kiro との違い](/blogs/posts/2026/05/openspec-spec-driven-development/)」で紹介しています。
+それぞれの詳細は「[cc-sdd とは？ Claude Code・Codex で Kiro 式の仕様駆動開発を回すスキルと使い方](/blogs/posts/2026/11/cc-sdd-intro/)」「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」と「[OpenSpec とは？ 仕様駆動開発の使い方・/openspec-* スキルと Spec Kit・Kiro との違い](/blogs/posts/2026/05/openspec-spec-driven-development/)」で紹介しています。
 
 ## まとめ
 
