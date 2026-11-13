@@ -222,11 +222,11 @@ Thoughtworks の Birgitta Böckeler 氏は、SDD ツールを比較した記事�
 
 また、小さな修正にまで 3 つの文書を作ると、作る手間のほうが大きくなります。Default エージェントで直接直すか、Spec を使うかを、変更の大きさで使い分けるのが現実的です。
 
-## Kiro 以外のエージェントで同じ流れを使うには（cc-sdd / Spec Kit / OpenSpec）
+## Kiro 以外のエージェントで同じ流れを使うには（cc-sdd / Spec Kit / OpenSpec / Spec Workflow MCP）
 
-Kiro の IDE を使わずに、Claude Code などの既存のエージェントで同じ流れを取り入れるツールもあります。[cc-sdd](https://github.com/gotalab/cc-sdd) は Kiro に着想を得たツールで、`requirements.md` / `design.md` / `tasks.md` を作る流れを Claude Code や Cursor に持ち込みます。GitHub の [Spec Kit](https://github.com/github/spec-kit) や [OpenSpec](https://github.com/Fission-AI/OpenSpec) も、同じく既存のエージェントに SDD の流れを組み込むツールです。
+Kiro の IDE を使わずに、Claude Code などの既存のエージェントで同じ流れを取り入れるツールもあります。[cc-sdd](https://github.com/gotalab/cc-sdd) は Kiro に着想を得たツールで、`requirements.md` / `design.md` / `tasks.md` を作る流れを Claude Code や Cursor に持ち込みます。GitHub の [Spec Kit](https://github.com/github/spec-kit) や [OpenSpec](https://github.com/Fission-AI/OpenSpec) も、同じく既存のエージェントに SDD の流れを組み込むツールです。[Spec Workflow MCP](https://github.com/Pimzino/spec-workflow-mcp) は MCP サーバーとして動き、Kiro とよく似た文書構成の仕様をダッシュボードで承認しながら進めます。
 
-それぞれの詳細は「[cc-sdd とは？ Claude Code・Codex で Kiro 式の仕様駆動開発を回すスキルと使い方](/blogs/posts/2026/11/cc-sdd-intro/)」「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」と「[OpenSpec とは？ 仕様駆動開発の使い方・/openspec-* スキルと Spec Kit・Kiro との違い](/blogs/posts/2026/05/openspec-spec-driven-development/)」で紹介しています。
+それぞれの詳細は「[cc-sdd とは？ Claude Code・Codex で Kiro 式の仕様駆動開発を回すスキルと使い方](/blogs/posts/2026/11/cc-sdd-intro/)」「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」「[Spec Workflow MCP とは？ ダッシュボードで仕様を承認しながら進める MCP サーバーの使い方と注意点](/blogs/posts/2026/11/spec-workflow-mcp-intro/)」と「[OpenSpec とは？ 仕様駆動開発の使い方・/openspec-* スキルと Spec Kit・Kiro との違い](/blogs/posts/2026/05/openspec-spec-driven-development/)」で紹介しています。
 
 ## まとめ
 

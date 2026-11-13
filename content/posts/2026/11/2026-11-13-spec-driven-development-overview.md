@@ -88,7 +88,7 @@ EARS の 6 つのパターンや日本語での書き方は「[EARS 記法とは
 
 - **[Kiro](https://kiro.dev/)**: AWS が提供する AI IDE。対話しながら要件（`requirements.md`）・設計（`design.md`）・タスク（`tasks.md`）の仕様ファイルを生成し、それに沿って実装する（詳しくは「[Kiro とは？ AWS の仕様駆動 AI IDE の Spec・Steering・Hooks と料金プラン](/blogs/posts/2026/11/kiro-ai-ide-intro/)」）
 - **[GitHub Spec Kit](https://github.com/github/spec-kit)**: GitHub が公開している仕様駆動開発用のツールキット。既存の AI コーディングエージェントに、原則（constitution）→ 仕様 → 計画 → タスク → 実装の流れを組み込む（詳しくは「[GitHub Spec Kit とは？ 仕様駆動開発のコマンド・constitution と Kiro との違い](/blogs/posts/2026/11/github-spec-kit-intro/)」）
-- **[OpenSpec](https://github.com/Fission-AI/OpenSpec) / [cc-sdd](https://github.com/gotalab/cc-sdd) / [Spec Workflow MCP](https://github.com/Pimzino/spec-workflow-mcp)**: Claude Code や Cursor などの既存エージェントに SDD のワークフローを組み込むオープンソースのツール群（cc-sdd の詳細は「[cc-sdd とは？ Claude Code・Codex で Kiro 式の仕様駆動開発を回すスキルと使い方](/blogs/posts/2026/11/cc-sdd-intro/)」）
+- **[OpenSpec](https://github.com/Fission-AI/OpenSpec) / [cc-sdd](https://github.com/gotalab/cc-sdd) / [Spec Workflow MCP](https://github.com/Pimzino/spec-workflow-mcp)**: Claude Code や Cursor などの既存エージェントに SDD のワークフローを組み込むオープンソースのツール群（cc-sdd の詳細は「[cc-sdd とは？ Claude Code・Codex で Kiro 式の仕様駆動開発を回すスキルと使い方](/blogs/posts/2026/11/cc-sdd-intro/)」、Spec Workflow MCP の詳細は「[Spec Workflow MCP とは？ ダッシュボードで仕様を承認しながら進める MCP サーバーの使い方と注意点](/blogs/posts/2026/11/spec-workflow-mcp-intro/)」）
 
 OpenSpec については「[OpenSpec とは？ 仕様駆動開発の使い方・/openspec-* スキルと Spec Kit・Kiro との違い](/blogs/posts/2026/05/openspec-spec-driven-development/)」で詳しく紹介しています。
 
