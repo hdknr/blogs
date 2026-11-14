@@ -1,5 +1,5 @@
 ---
-title: "Terraform 向け AWS 設計書の書き方 — パラメータシートを variables.tf に対応させる4要素と構成図ツール比較"
+title: "Terraform 向け AWS 設計書の書き方 — パラメータシートを variables.tf に対応させる5要素と構成図ツール比較"
 date: 2026-11-14
 lastmod: 2026-11-14
 slug: "terraform-aws-design-spec"
@@ -13,13 +13,13 @@ Terraform で AWS の IaC を実装するときは、設計工程から開発工
 
 結論から言うと、設計指示書は **Terraform のコード構造（ディレクトリ・変数・リソース）にそのまま対応づけられる形** で書くのが最も効率的です。マネジメントコンソールの画面キャプチャを並べた Excel や、文章中心の設計書では、実装者が「この項目はどの引数のことか」を毎回調べ直すことになります。
 
-この記事では、設計指示書に含めるべき 4 つの要素、記述のベストプラクティス、AI に実装させる場合の書き方、そして構成図を描くツールの選び方を整理します。
+この記事では、設計指示書に含めるべき 5 つの要素、記述のベストプラクティス、AI に実装させる場合の書き方、そして構成図を描くツールの選び方を整理します。
 
-## 設計指示書に含めるべき 4 つの要素
+## 設計指示書に含めるべき 5 つの要素
 
-実装者が迷わずコードに落とし込めるよう、設計指示書を次の 4 つのセクションに分けます。それぞれが Terraform リポジトリのどこに対応するかを図にすると次のとおりです。
+実装者が迷わずコードに落とし込めるよう、設計指示書を次の 5 つのセクションに分けます。それぞれが Terraform リポジトリのどこに対応するかを図にすると次のとおりです。
 
-![設計指示書の4要素（全体像とState分割方針、リソース一覧と命名規則、パラメータシート、機密情報と手動作業の境界）が、それぞれTerraformリポジトリのディレクトリとbackend、localsとproviderのdefault_tags、variables.tfとtfvars、dataソースとBootstrap手順に対応することを示した図](/blogs/images/terraform-aws-design-spec-mapping.png)
+![設計指示書の5要素（全体像とState分割方針、リソース一覧と命名規則、パラメータシート、機密情報と手動作業の境界、環境の分割方針）が、それぞれTerraformリポジトリのディレクトリとbackend、localsとproviderのdefault_tags、variables.tfとtfvars、dataソースとBootstrap手順、環境ごとのルートディレクトリとbackend設定に対応することを示した図](/blogs/images/terraform-aws-design-spec-mapping.png)
 
 ### ① アーキテクチャ全体像と State 分割方針
 
@@ -36,7 +36,7 @@ data "terraform_remote_state" "network" {
   backend = "s3"
   config = {
     bucket = "myproj-tfstate"
-    key    = "dev/01_network/terraform.tfstate"
+    key    = "dev/01_network/terraform.tfstate" # 環境ごとの切り替えは ⑤ で扱う
     region = "ap-northeast-1"
   }
 }
@@ -49,6 +49,27 @@ resource "aws_security_group" "app" {
 ```
 
 `terraform_remote_state` は参照先の State にあるルートモジュールの outputs を読む仕組みです。参照される側が何を `output` として公開するかも設計指示書に書いておくと、ディレクトリ間の契約がはっきりします。
+
+ただし `terraform_remote_state` には注意点があります。参照できるのは outputs だけですが、参照する側には **State ファイル全体の読み取り権限** が要ります。State には、たとえば RDS モジュールに渡した管理者パスワードのような機密値も平文で入っています。参照元が別チームや別リポジトリのスタックなら、共有したい識別子だけを SSM Parameter Store に公開し、読む側はパス単位に絞った IAM で `data "aws_ssm_parameter"` から引く方式のほうが安全です。
+
+```hcl
+# 公開する側（01_network）
+resource "aws_ssm_parameter" "vpc_id" {
+  name  = "/${var.project}/${var.env}/shared/vpc/id"
+  type  = "String"
+  value = aws_vpc.main.id
+}
+
+# 読む側（別スタック）
+data "aws_ssm_parameter" "vpc_id" {
+  name = "/${var.project}/${var.env}/shared/vpc/id"
+}
+```
+
+この方式を採る場合は、設計指示書に次の 2 点も書いておきます。
+
+- 公開するのは ID やエンドポイントなどの識別子だけで、パスワードやトークンは従来どおり Secrets Manager に置く。`SecureString` にしても、`data "aws_ssm_parameter"` で読めば復号した値が読む側の State に平文で残るため、機密値の受け渡しには使わない
+- ある環境に存在しない値は、空文字で埋めずにパラメータ自体を作らない。読む側の data ソースがエラーになることで「その環境には無い」と気付ける
 
 ### ② リソース一覧と命名規則
 
@@ -141,6 +162,140 @@ data "aws_secretsmanager_secret" "db" {
 
 ARN だけを参照するのは、`aws_secretsmanager_secret_version` などでシークレットの値そのものを読み込むと、その値が tfstate に平文で残るためです。そこで設計指示書には「値を読む data ソースは使わない」まで書いておくと安全です。
 
+### ⑤ 環境の分割方針（dev / stg / prod）
+
+①の State 分割が「何を一緒に変更するか」という縦の分割だとすると、環境の分割は「同じ構成を何面作るか」という横の分割です。ここを実装者任せにすると、環境ごとに backend の指定やアカウントの切り替え方がばらつき、後から揃えるのは大仕事になります。設計工程で次の項目を決めて指示します。
+
+| 項目 | 指示の例 |
+| --- | --- |
+| 環境の一覧と用途 | dev（開発者が自由に apply）、stg（本番相当の検証）、prod |
+| AWS アカウントとリージョン | 環境ごとに AWS アカウントを分けるか、1 つのアカウント内で名前だけで分けるか |
+| ルートディレクトリとアカウントの対応表 | どのディレクトリを apply すると、どのアカウントのどの backend に書かれるか |
+| 環境をまたいで共有するもの | CI・ビルド基盤、コンテナレジストリ、DNS など、どの環境にも属さないリソースを置くルート |
+| コード上の分け方 | 環境ごとのディレクトリ、共通コードと環境ごとの設定ファイル、workspace のどれにするか |
+| State の置き場所 | 環境ごとの S3 バケットとキー。バケットのバージョニング・暗号化と、ロックの方式 |
+| バージョンの固定 | Terraform と provider のバージョン制約。ルートごとに `.terraform.lock.hcl` をコミットする |
+| 環境間で違ってよいもの | 違いは変数の値だけに限る。環境によってリソースの有無が変わるなら、`count` などで使うフラグ変数として明示する。冗長構成（Multi-AZ の有無）や稼働時間（stg は夜間停止など）の違いもここに書く |
+| apply の権限と流れ | prod は CI からのみ apply する、dev → stg → prod の順に反映する |
+
+ルートディレクトリとアカウントの対応表は、アカウントを分けるなら必ず作ります。たとえば CI 用アカウントに作るべき IAM ロールを本番アカウント用のルートに書くと、エラーにならないまま別のアカウントに作られてしまいます。「どのアカウントに作るか」は「どのルートに書くか」と同じ問いだと、表で見える形にしておきます。
+
+環境をまたいで共有するリソースも、どれか 1 つの環境のルートに同居させず、専用のルートに分けます。stg のルートに置くと、stg を作り直すときに本番も使うビルド基盤まで巻き込みます。
+
+State のバケットのバージョニングは、モジュールの既定値で無効のまま作られがちです。State を壊したときに戻せるかどうかはここで決まるので、設計指示書で有効化を明示します。
+
+コード上の分け方には、主に 3 つの方式があります。
+
+**1. 環境ごとのディレクトリ**
+
+`envs/dev/01_network/`、`envs/prod/01_network/` のように環境ごとにルートモジュールを置き、中身は共通モジュールを呼ぶだけにします。backend と provider（assume する IAM ロール）がファイルにそのまま書かれるので、どの環境に apply しているかが一目で分かります。なお、次の例の `use_lockfile`（S3 だけで State をロックする設定）は Terraform 1.11 以降で正式機能です。それより前は DynamoDB テーブルでロックします。
+
+```hcl
+# envs/prod/01_network/main.tf
+terraform {
+  backend "s3" {
+    bucket       = "myproj-prod-tfstate"
+    key          = "01_network/terraform.tfstate"
+    region       = "ap-northeast-1"
+    use_lockfile = true
+  }
+}
+
+provider "aws" {
+  region = "ap-northeast-1"
+
+  assume_role {
+    role_arn = "arn:aws:iam::111111111111:role/terraform-apply"
+  }
+}
+
+module "network" {
+  source   = "../../../modules/network"
+  project  = "myproj"
+  env      = "prod"
+  vpc_cidr = "10.1.0.0/16"
+}
+```
+
+**2. 共通コードと環境ごとの設定ファイル**
+
+ルートモジュールは 1 つにして、backend の設定と変数の値だけを環境ごとのファイルに分けます。③の `envs/prod.tfvars` はこの方式を想定した例です。重複は減りますが、`init` と `apply` のたびに正しいファイルを指定するという運用ルールが要ります。
+
+```bash
+terraform init -reconfigure -backend-config=envs/prod.s3.tfbackend
+terraform apply -var-file=envs/prod.tfvars
+```
+
+**3. Terraform の CLI workspace**
+
+`terraform workspace select prod` で State を切り替え、コード内では `terraform.workspace` で環境名を参照します。手軽ですが、すべての workspace が同じ backend とコードを共有します。HashiCorp のドキュメントも、別々の認証情報やアクセス制御が要るデプロイには workspace は向かないとしています。AWS アカウントを分けて本番を隔離するなら、1 か 2 を選ぶのが無難です。
+
+どの方式でも、①の `terraform_remote_state` の参照先は環境に追従させる必要があります。変数を参照できない `backend` ブロックと違い、`terraform_remote_state` は通常の data ソースなので `config` に変数を書けます。①の例は、環境ごとに State のバケットを分けるなら次のように書きます。
+
+```hcl
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = "${var.project}-${var.env}-tfstate"
+    key    = "01_network/terraform.tfstate"
+    region = "ap-northeast-1"
+  }
+}
+```
+
+## 運用を見据えて追加で指示しておくこと
+
+5 つの要素は「最初に作る」ための指示です。実際に運用を続けると、作った後の変更で事故が起きやすくなります。次の項目も設計指示書か、変更のたびに書く実行計画のテンプレートに入れておくと効果があります。
+
+### Terraform 以外が変更する属性を決めておく
+
+Auto Scaling や夜間停止のスクリプトが ECS サービスの `desired_count` を変える構成では、Terraform がそれを「ドリフト」とみなして apply のたびに元へ戻してしまいます。属性ごとに「誰が値を持つか」を決め、Terraform 以外が持つ属性は `lifecycle` の `ignore_changes` に入れるよう指示します。
+
+```hcl
+resource "aws_ecs_service" "web" {
+  # ...
+  desired_count = var.desired_count # 初期値だけ Terraform が決める
+
+  lifecycle {
+    # 以降は Auto Scaling と夜間停止が変更する
+    ignore_changes = [desired_count]
+  }
+}
+```
+
+### 共有モジュールの変更は、使っている全ルートで plan する
+
+`modules/` の共有モジュールを変えたら、そのモジュールを呼んでいるルートすべてで plan を取ることをルールにします。特定のリソースだけを `-target` で apply する運用が続いたルートには、他の人が共有モジュールに入れた変更が何か月も反映されずに残ることがあります。`-target` で絞る前に、絞らない plan で取りこぼしがないかを確かめます。
+
+`-target` は指定したリソースの依存先も plan に含めます。依存先のモジュールにドリフトがあると、それも一緒に apply されます。「絞ったから安全」とは限らないことも書き添えておきます。
+
+### plan の期待値を実行計画に書いてから apply する
+
+変更ごとの実行計画に、apply 前の plan で期待する結果（例: `3 to add, 0 to change, 0 to destroy`）を書いておき、一致したときだけ apply します。plan を読むときは、`Plan:` の行と `will be` / `must be replaced` の付いた行を見ます。「Objects have changed outside of Terraform」に出る項目は refresh で見つかった差分で、それだけでは apply で何かが変わるわけではありません。ここを読み違えると、不要に `-target` を重ねることになります。
+
+### 置き換え（replace）が起きる変更は、下流への影響を棚卸しする
+
+インスタンスの実体が入れ替わる変更は、Terraform の外にいる利用者を壊すことがあります。たとえば RDS の Blue/Green 切り替えでは、binlog の位置を覚えて CDC を続けている DMS のタスクが、切り替え後に再開できなくなることがあります（筆者が実際に踏んだ記録は [RDS の Blue/Green 切替で DMS が静かに死んだ話](/blogs/posts/2026/08/rds-blue-green-dms-cdc-incident/)）。こうした変更は「その実体を読んでいる下流」を一覧にして、止める順番と再開の手順を実行計画に含めるよう指示します。
+
+### パラメータシートの制約を `terraform test` で固定する
+
+③の「備考・制約」のうち、組み合わせで決まる制約（「A を 100 にするなら B は 200 以上」など）は、`validation` だけでなく `terraform test`（`.tftest.hcl`）で確かめられます。`mock_provider` を使えば AWS に接続せずに plan の結果を検証できるので、設計書の制約をそのまま受入テストにできます。次の例は、モジュール側の `minimum_healthy_percent` の `validation` が `maximum_percent` も参照して組み合わせを検査している前提です（他の変数を参照する `validation` は Terraform 1.9 以降で書けます）。
+
+```hcl
+# modules/ecs_service/tests/deployment.tftest.hcl
+mock_provider "aws" {}
+
+run "rejects_stuck_deployment" {
+  command = plan
+  variables {
+    minimum_healthy_percent = 100
+    maximum_percent         = 100
+  }
+  # 100 / 100 ではデプロイが進まないので validation で拒否されること
+  expect_failures = [var.minimum_healthy_percent]
+}
+```
+
 ## 記述における 3 つのベストプラクティス
 
 ### 1. 画面の項目名ではなく Terraform の引数名で書く
@@ -178,6 +333,8 @@ variables:
 ```
 
 人が読む表と AI が読む定義を別々に持つと乖離するので、YAML を正として表を生成するなど、どちらか一方を正本に決めておくのがおすすめです。
+
+AI エージェントにリポジトリを操作させるなら、実行してよいコマンドの線引きも指示に含めます。たとえば「`terraform validate` と `plan` は自由に実行してよいが、`apply` と State を書き換える操作（`state mv`・`import`・backend の移行など）は人間の明示的な承認なしに実行しない」と、エージェント向けの指示ファイル（`CLAUDE.md` や `AGENTS.md`）に書いておきます。どのディレクトリがどのアカウントに対応するかという⑤の対応表も、同じファイルから参照できるようにしておくと、エージェントが別アカウントに apply する事故を防げます。
 
 ## 構成図はどのツールで描くか
 
@@ -271,7 +428,9 @@ with Diagram("myproj-dev", show=False):
 
 ## まとめ
 
-- 設計指示書は「全体像と State 分割」「命名規則」「パラメータシート」「機密情報と手動作業の境界」の 4 要素に分け、それぞれを Terraform のディレクトリ・`locals`・`variables.tf`・`data` ソースに対応させる
+- 設計指示書は「全体像と State 分割」「命名規則」「パラメータシート」「機密情報と手動作業の境界」「環境の分割方針」の 5 要素に分け、それぞれを Terraform のディレクトリ・`locals`・`variables.tf`・`data` ソース・環境ごとのルートと backend 設定に対応させる
+- 環境（dev / stg / prod）の分け方は、AWS アカウントの分け方・State の置き場所・apply の権限とあわせて設計工程で決める。認証情報を分けて本番を隔離するなら、workspace ではなく環境ごとのディレクトリか設定ファイルで分ける
+- 運用に入ってからの事故を防ぐため、Terraform 以外が変更する属性、共有モジュール変更時の plan の範囲、plan の期待値、置き換え時の下流への影響も指示しておく
 - パラメータシートの列は Terraform の変数名・型・環境ごとの値に合わせ、画面の項目名ではなく引数名で書き、デフォルトのままの項目は書かない
 - 設計書は Markdown でリポジトリに置き、コードと同じ Pull Request で更新する。AI に実装させるなら YAML などの構造化データで書く
 - 構成図は draw.io（`.drawio.svg`）を基本に、テキスト管理を重視するなら Mermaid や Diagrams を選ぶ
