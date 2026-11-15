@@ -258,6 +258,23 @@ curl -N http://localhost:3000/api/chat/completions \
   -d '{"question": "How many orders shipped last week?"}'
 ```
 
+### Web UI なしでシステムに組み込めるか
+
+自社のシステムに組み込む場合、「Frontend なしで動かせるか」が気になるところです。答えは、何を外したいかで変わります。
+
+**画面（Web UI）を使わずに組み込むことはできます。** これは公式に想定された使い方です。Frontend（Next.js、ポート 3000）は Web UI であると同時に、**認証と公開 API のゲートウェイ**も兼ねています。外部から呼べる公開 API（`docs/openapi/auto-ontology-api.json`）は、すべてこの Next.js が提供しています。そのため Next.js は「画面を見せない API ゲートウェイ」として動かしたまま、組み込み先のシステムからは上記の REST API か MCP で呼びます。利用者に画面を見せる必要はありません。ただし、データソースの接続やセマンティックコンパイルの有効化、用語の認定といった初期設定は、管理者が UI か API で行う前提です。
+
+**Next.js 自体を外して Backend（FastAPI、ポート 3001）を直接呼ぶ構成は、おすすめしません。** 技術的には、`conversation_id` を付けない単発の質問なら、利用者を示すヘッダーなしでも受け付ける作りになっています（`auto_ontology/server/identity.py`、`docs/conversation-api.md`）。しかし、次の問題があります。
+
+- **認証がない**：FastAPI は、ゲートウェイが付ける `x-auto-ontology-user-id` ヘッダーを検証せずに信頼します。Next.js を外すなら、自前の認証ゲートウェイを前に置き、利用者を確かめたうえでこのヘッダーを付ける必要があります。
+- **Next.js にしかない機能が使えない**：利用者（アカウント）・セッション・API トークンは Next.js 側（Better Auth・Prisma）が管理しており、FastAPI 側には対応する API がありません。各 API の権限チェックも Next.js が行います（FastAPI にもグループと role の管理 API はありますが、呼び出し元の識別は転送ヘッダー頼みです）。
+- **MCP サーバーも使えない**：MCP サーバーは Next.js の公開 API を呼ぶ HTTP クライアントで、サインインも Next.js が担います。
+- **公式の想定外**：`docs/openapi/README.md` では、Python のサービスはクラスター内専用で Next.js のプロキシ経由でしか届かないものとされ、Backend の API 仕様は内部用という位置づけです。
+
+なお、README は自らを「open library」と呼んでいますが、ドキュメントに載っている使い方は REST API・MCP などのサービス経由で、`auto_ontology` パッケージをアプリに直接 import して使う方法は記載されていません。
+
+いちばん手堅いのは、Next.js を外部に公開せず社内ネットワーク内の API ゲートウェイとして残し、組み込み先のシステムから API トークンで `/api/chat/completions` を呼ぶ構成です。ポート 3001・3002 は、引き続き外から届かないようにしておきます。
+
 ## 運用上の注意点
 
 README には、導入前に押さえておきたい注意点がいくつか書かれています。
