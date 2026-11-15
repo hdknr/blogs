@@ -2,7 +2,7 @@
 title: "DuckDB"
 description: "インプロセス OLAP データベース。列指向アーキテクチャで分析クエリを高速実行し、Iceberg や DuckLake のテーブルを読み書きする計算エンジンにもなる"
 date: 2026-04-06
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["duckdb"]
 related_posts:
   - "/posts/2026/03/duckdb-columnar-arrow/"
@@ -11,6 +11,7 @@ related_posts:
   - "/posts/2026/10/redshift-vs-lakehouse/"
   - "/posts/2026/10/lakehouse-ecosystem-2026/"
   - "/posts/2026/10/ai-agent-data-platform/"
+  - "/posts/2026/11/nvidia-auto-ontology/"
 tags: ["データベース", "OLAP", "SQL", "python", "duckdb"]
 ---
 
@@ -44,6 +45,10 @@ tags: ["データベース", "OLAP", "SQL", "python", "duckdb"]
 
 Redshift Serverless（RPU 時間課金）や Athena（スキャン量課金）と違い、DuckDB はエンジンの利用料がかからず、実行するマシンの能力が上限になる。AI エージェントに社内データを分析させる基盤でも、試行段階は手元の DuckDB（＋ DuckLake）で始めるのが勧められている。
 
+### Text-to-SQL のデータソースとして
+
+NVIDIA Auto Ontology は接続先の 10 種類のデータソースに DuckDB を含む。手元の DuckDB に置いたデータからオントロジーを生成し、エージェントに自然文で問い合わせさせる試行もできる（[NVIDIA Auto Ontology](/blogs/wiki/tools/nvidia-auto-ontology/)）。
+
 ### 使い分けの目安
 
 重い ETL は Glue / EMR の Spark で Iceberg に書き、DuckDB は手元での探索・軽い集計・小規模修正に使うのが無難。DuckDB だけで完結する小さな構成なら DuckLake、組織横断で複数エンジンが同じテーブルを共有するなら Iceberg。
@@ -54,6 +59,7 @@ Redshift Serverless（RPU 時間課金）や Athena（スキャン量課金）�
 - [Apache Iceberg](/blogs/wiki/tools/apache-iceberg/) — DuckDB から読み書きできるオープンテーブルフォーマット
 - [DuckLake](/blogs/wiki/tools/ducklake/) — DuckDB チームのレイクハウスフォーマット
 - [レイクハウス](/blogs/wiki/concepts/lakehouse/) — フォーマット・カタログ・エンジンを組み合わせる全体像
+- [NVIDIA Auto Ontology](/blogs/wiki/tools/nvidia-auto-ontology/) — DuckDB にも接続できる Text-to-SQL 向けオントロジー生成
 
 ## ソース記事
 
@@ -63,3 +69,4 @@ Redshift Serverless（RPU 時間課金）や Athena（スキャン量課金）�
 - [Redshift か、S3 ＋ Iceberg のレイクハウスか：DWH とオープンテーブルフォーマットの選び方](/blogs/posts/2026/10/redshift-vs-lakehouse/) — 2026-10-13
 - [Iceberg と DuckLake の先へ：2026 年に注目したいレイクハウスの技術とプロダクト](/blogs/posts/2026/10/lakehouse-ecosystem-2026/) — 2026-10-13
 - [AI エージェントのためのデータ基盤：レイクハウスを土台に「意味・費用・権限・取り消し」を設計する](/blogs/posts/2026/10/ai-agent-data-platform/) — 2026-10-13
+- [NVIDIA Auto Ontology とは — オントロジー自動生成で AI エージェントの Text-to-SQL 精度を上げる](/blogs/posts/2026/11/nvidia-auto-ontology/) — 2026-11-15

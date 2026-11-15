@@ -2,7 +2,7 @@
 title: "作る役と確かめる役の分離（maker-checker）"
 description: "成果物を作った主体に自分で採点させない原則。AI エージェントでは「エージェントを分ける」だけでは足りず、接続・規律・重み（モデル）の 3 層を塞いで初めて機能する"
 date: 2026-09-30
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["maker-checker", "four-eyes principle", "四つの目の原則", "generator と evaluator の分離", "検証者の分離", "自己採点"]
 related_posts:
   - "/posts/2026/09/fact-checker-maker-checker/"
@@ -12,6 +12,8 @@ related_posts:
   - "/posts/2026/09/agent-self-improvement-design/"
   - "/posts/2026/10/spec-loop-two-frameworks-comparison/"
   - "/posts/2026/10/replacing-mandatory-code-review/"
+  - "/posts/2026/11/agents-talking-to-agents/"
+  - "/posts/2026/11/positive-control-in-systems/"
 tags: ["エージェント設計", "サブエージェント", "ファクトチェック", "コードレビュー", "claude-code"]
 ---
 
@@ -52,6 +54,10 @@ tags: ["エージェント設計", "サブエージェント", "ファクトチ�
 
 エージェントを分ければ見ている文脈がずれ、モデルを変えれば間違え方がずれる。**片方だけでは足りない。**
 
+さらに一段進めて**系統を分ける**設計もある。dev-loop は、別ティアにしても「どちらも Claude の上で動く」点を問題にし、CodeRabbit などの外部レビュー bot のコメントを採否の表の入力に加えている。確かめる役には Edit / Write を持たせず（証拠を出す Bash だけ）、作る役の「PR を作って CI が通った」という報告は**言い分**として扱い、親が `gh pr checks` などで実物を確かめてから先へ進む。エージェント同士のメッセージは承認の代わりにならない（[マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/)）。
+
+確かめる役そのものが空振りしていないかも別に確かめる。検査器や grader に「必ず落ちるはずの入力」を流して実際に落ちることを見るのが[陽性対照](/blogs/wiki/concepts/positive-control/)で、spec-loop は判定役の「反例なし」をこれとセットでしか書かせない。
+
 ### 分離しても正しさは保証されない
 
 GMO ペパボのレビューループでは、6 体のレビュアーの指摘を別エージェントに渡して妥当性を判定させたが、検証役が妥当な指摘を却下するリスクは常にあり、AI 同士の判断が一致しても正しいとは限らない。分離が断つのは**自己採点バイアス**であって、判定の正しさではない。期待値は「フィルタとしてある程度機能する」程度に置く。
@@ -71,12 +77,14 @@ GMO ペパボのレビューループでは、6 体のレビュアーの指摘�
 
 ## 関連ページ
 
+- [陽性対照（ポジティブコントロール）](/blogs/wiki/concepts/positive-control/) — 確かめる役が働いていることを確かめる
+- [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — Generator-Verifier と、エージェント間メッセージの注意点
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — 検証ノードをエッジに置く設計、敵対的検証
 - [沈黙する失敗](/blogs/wiki/concepts/silent-failure/) — 自己検証では捕まらない失敗
 - [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — 計画と実装の分離
 - [スケーラブル・オーバーサイト](/blogs/wiki/concepts/scalable-oversight/) — 人間より強いモデルをどう監督するか
 - [Claude Code](/blogs/wiki/tools/claude-code/) — サブエージェントの `model` 指定
-- [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) — 人間の承認とスクリプト・別ティア判定役の使い分け
+- [仕様駆動開発（SDD）](/blogs/wiki/concepts/spec-driven-development/) — 人間の承認とスクリプト・別ティア判定役の使い分け
 - [必須コードレビューの代替](/blogs/wiki/concepts/code-review-alternatives/) — AI レビュアーを入れるときの注意
 
 ## ソース記事
@@ -88,3 +96,5 @@ GMO ペパボのレビューループでは、6 体のレビュアーの指摘�
 - [停止条件は測れても収束しない — AIエージェントのループ設計と「不動点」](/blogs/posts/2026/09/loop-convergence-design/) — 2026-09-18
 - [AI 仕様駆動開発の 2 つの spec-loop を比べる — 実装ループと要求確定ループ](/blogs/posts/2026/10/spec-loop-two-frameworks-comparison/) — 2026-10-25（関門を誰が判定するか）
 - [必須コードレビューをやめるなら、品質は何で担保するのか](/blogs/posts/2026/10/replacing-mandatory-code-review/) — 2026-10-30（AI レビューの注意点）
+- [陽性対照（ポジティブコントロール）とは？ IT の監視・テストで「異常なし」を信じる前に確かめること](/blogs/posts/2026/11/positive-control-in-systems/) — 2026-11-13（grader の陽性対照）
+- [エージェント同士に会話させる — Claude Code の 3 つの経路と A2A の使い分け](/blogs/posts/2026/11/agents-talking-to-agents/) — 2026-11-15（系統を分ける、報告は言い分として扱う）

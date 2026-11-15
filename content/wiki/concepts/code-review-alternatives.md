@@ -2,11 +2,12 @@
 title: "必須コードレビューの代替"
 description: "全件必須のコードレビューをやめるとき、レビューが担っていた 8 つの役割をテスト・CI・静的解析・本番の安全網・人の仕組みに割り振り、高リスクな変更だけ人が見る形を必須ステータスチェックで強制する"
 date: 2026-10-30
-lastmod: 2026-10-30
-aliases: ["必須レビューの廃止", "コードレビューの廃止", "リスクベースレビュー", "CODEOWNERS", "AI コードレビュー", "レビューの役割"]
+lastmod: 2026-11-15
+aliases: ["必須レビューの廃止", "コードレビューの廃止", "リスクベースレビュー", "CODEOWNERS", "AI コードレビュー", "レビューの役割", "CodeRabbit", "外部レビュー bot"]
 related_posts:
   - "/posts/2026/10/replacing-mandatory-code-review/"
   - "/posts/2026/10/extreme-programming-in-ai-era/"
+  - "/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/"
 tags: ["コードレビュー", "AI駆動開発", "CI/CD", "ミューテーションテスト", "エクストリーム・プログラミング"]
 ---
 
@@ -72,6 +73,14 @@ GitHub の標準設定では作りにくい。「Require review from Code Owners
 - **指摘には証拠を付けさせる**。再現テストやコマンドの実行結果がない指摘は、人の確認の手間を増やすだけ
 - **設計の一貫性と知識共有は AI レビューでは補えない**。ルールファイルは書く側の AI を方針に沿わせるもので、レビューの代わりではない。AI が読んでもチームの誰かが理解したことにはならない
 
+### 別系統の AI レビューを重ねる（CodeRabbit）
+
+[CodeRabbit](https://www.coderabbit.ai/ja) は、GitHub や GitLab の PR に自動でレビューコメントを付ける AI レビューサービスである。[cc-sdd](/blogs/wiki/tools/cc-sdd/) を軸にした開発フローの事例では、エージェント内部のレビュアーが仕様・設計に沿っているかを作業の途中で確かめ、PR として出てきた差分を CodeRabbit が外側からもう一度見る。**実装したエージェントとは別の仕組みでレビューさせる**ことで見落としの重なりを減らす狙いで、「人が指摘しなくても AI が全部指摘してくれるようになれば人のレビューは要らなくなる」という方向につながる。
+
+その事例の原則は、人間のゲートを実装後ではなく計画（仕様と設計）の段階に寄せる、書く役と見る役を分けて別系統のレビューを重ねる、機械的に検出できる問題（悪性パッケージ・規約違反・アーキテクチャの逸脱）はツールとエージェントのループで潰して人間はリリース判断に集中する、の 3 つ。悪性パッケージの側は [Takumi Guard](/blogs/wiki/tools/takumi-guard/) のようにインストール経路に関所を置く。
+
+外部 bot のコメントを自分のループに取り込むなら、**関門には格上げせず信頼できない入力の 1 つとして**指摘の採否表に載せるのが安全である（[要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/)）。
+
 ### いちばん失われやすいのは知識共有
 
 廃止すると「チームの誰もそのコードを読んでいない」状態が生まれる。レビューを**マージを止める関門**と**知識を共有する場**に分け、前者は自動化と振り分けで軽くし、後者は別枠で残す。
@@ -88,9 +97,12 @@ GitHub の標準設定では作りにくい。「Require review from Code Owners
 - [ミューテーションテスト](/blogs/wiki/concepts/mutation-testing/) — 「緑」に意味を持たせる検査
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — AI レビュアーのモデルを分ける理由
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 自動ゲートで AI の出力を囲む
+- [cc-sdd](/blogs/wiki/tools/cc-sdd/) — CodeRabbit を重ねた AI 駆動開発フローの事例
+- [Takumi Guard](/blogs/wiki/tools/takumi-guard/) — 悪性パッケージをインストール経路で止める
 - [GitHub Actions スクリプトインジェクション対策](/blogs/wiki/guides/github-actions-security/) — ワークフローのトークン権限と PR の扱い
 
 ## ソース記事
 
 - [必須コードレビューをやめるなら、品質は何で担保するのか — レビューが担っていた 8 つの役割と AI 時代の代替手段](/blogs/posts/2026/10/replacing-mandatory-code-review/) — 2026-10-30
 - [AI 時代にこそ効くエクストリーム・プログラミング（XP）— 27 年前の価値・原則・実践を読み直す](/blogs/posts/2026/10/extreme-programming-in-ai-era/) — 2026-10-30
+- [非エンジニアの社長が出した巨大 PR をどう受け止めるか — cc-sdd・CodeRabbit・Takumi Guard で組む AI 駆動開発フロー](/blogs/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/) — 2026-11-13

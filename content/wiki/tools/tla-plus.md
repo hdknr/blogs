@@ -2,13 +2,15 @@
 title: "TLA+ と TLC"
 description: "Leslie Lamport が考案した形式仕様記述言語 TLA+ と、そのモデル検査器 TLC。設計の到達しうる全状態を探索し、不変条件違反・デッドロック・活性の破れを反例トレースつきで返す。並行処理や分散システムの設計バグを実装前に見つける道具"
 date: 2026-11-09
-lastmod: 2026-11-09
+lastmod: 2026-11-15
 aliases: ["TLA+", "TLC", "tla2tools", "tla2tools.jar", "TLAPS", "TLA+ Toolbox", "Temporal Logic of Actions", "モデル検査器"]
 related_posts:
   - "/posts/2026/11/tla-plus-tlc-model-checker/"
   - "/posts/2026/11/quint-formal-specification-language/"
   - "/posts/2026/11/spec-loop-tlc-formal-checker/"
   - "/posts/2026/10/formal-methods-claude-code-spec-check/"
+  - "/posts/2026/11/contract-formal-verification/"
+  - "/posts/2026/11/positive-control-in-systems/"
 tags: ["TLA+", "形式手法", "モデル検査", "ソフトウェア検証", "同時実行制御"]
 ---
 
@@ -87,6 +89,12 @@ TLA+ と同じ論理をプログラマ向けの構文で書ける [Quint](/blogs
 
 [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/)の Claude Code プラグイン spec-loop では、仕様レビューの判定役 Formal Checker が、並行・リトライ・取り消しを含む業務フローの検査に TLC を使う。Java と `tla2tools.jar` が手元に無ければ判定役を起動せず、業務フローの検査を手作業の総当たりで代用することもしない。
 
+TLC の起動コマンドは環境で違うので、spec-loop は付属の `check-tlc.py` で**通るモデル**（終了コード 0 と `No error has been found`）と**違反するモデル**（`is violated`）の 2 つを実際に検査させてから「TLC が使える」とみなす。後者は、起動コマンドを書き間違えて何も検査していないのに「エラーなし」と言う状態を弾く[陽性対照](/blogs/wiki/concepts/positive-control/)。
+
+### ソフトウェア以外のモデル化：契約書
+
+契約の状態（発効・履行中・停止・解除）と、通知・支払い・期限経過によるアクションを TLA+ で書くと、「解除後に新たな履行義務が発生しない」のような不変条件や、終了状態なのにアクションが要求されるデッドロックを反例つきで検出できる。期日や計算式の両立は [SMT ソルバ](/blogs/wiki/concepts/smt-solver/) の担当。
+
 ## 関連ページ
 
 - [形式手法（Formal Methods）](/blogs/wiki/concepts/formal-methods/) — 道具の選び方と LLM との役割分担
@@ -94,6 +102,8 @@ TLA+ と同じ論理をプログラマ向けの構文で書ける [Quint](/blogs
 - [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — Formal Checker が TLC で業務フローを検査する
 - [分散ロック](/blogs/wiki/concepts/distributed-lock/) — 反例で見つかった競合を実装で防ぐ手段の 1 つ
 - [ミューテーションテスト](/blogs/wiki/concepts/mutation-testing/) — 「破られるべき性質」で空振りを確かめる考え方が共通
+- [陽性対照（ポジティブコントロール）](/blogs/wiki/concepts/positive-control/) — 検査器の呼び方とモデルの両方を疑う
+- [SMT ソルバ（Z3）](/blogs/wiki/concepts/smt-solver/) — 数値・条件式の両立を調べる相方
 
 ## ソース記事
 
@@ -101,3 +111,5 @@ TLA+ と同じ論理をプログラマ向けの構文で書ける [Quint](/blogs
 - [Quint とは — TLA+ の論理をプログラマ向けの構文で書く形式仕様記述言語と、TLC との使い分け](/blogs/posts/2026/11/quint-formal-specification-language/) — 2026-11-09
 - [spec-loop は TLC をどう使っているか — Formal Checker の設計と、実案件で見えた 2 つの穴](/blogs/posts/2026/11/spec-loop-tlc-formal-checker/) — 2026-11-08
 - [形式手法を Claude Code で回す — Z3 と TLA+ で仕様の穴を見つけ、反例をテストに落とす](/blogs/posts/2026/10/formal-methods-claude-code-spec-check/) — 2026-10-09
+- [契約書を形式手法で検証する — モデル検査と SMT ソルバで条項の矛盾・デッドロックを見つける](/blogs/posts/2026/11/contract-formal-verification/) — 2026-11-11
+- [陽性対照（ポジティブコントロール）とは？ IT の監視・テストで「異常なし」を信じる前に確かめること](/blogs/posts/2026/11/positive-control-in-systems/) — 2026-11-13

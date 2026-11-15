@@ -74,7 +74,7 @@ tags: ["オーバーエンジニアリング", "yagni", "技術的負債", "保�
 
 - [AI 開発と保守コスト](/blogs/wiki/concepts/ai-maintenance-cost/) — 書くコストが下がっても保守コストは残るという定量モデル
 - [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — 頻度 × 影響の範囲の線を仕様段階の規則にした仕組み
-- [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) — 仕様と受入基準を先に決める進め方
+- [仕様駆動開発（SDD）](/blogs/wiki/concepts/spec-driven-development/) — 仕様と受入基準を先に決める進め方
 - [Vibe Coding](/blogs/wiki/concepts/vibe-coding/) — AI が黙って仕様を埋めるとき何が起きるか
 - [エクストリーム・プログラミング（XP）](/blogs/wiki/concepts/extreme-programming/) — Incremental Design（LLM 時代の課題は不要な「怪物」を作る誘惑に抗ってスコープを絞ること）
 - [Brownfield リファクタリング](/blogs/wiki/concepts/brownfield-refactoring/) — 増えたコードを安全に減らし作り替える

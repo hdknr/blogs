@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -51,6 +51,8 @@ related_posts:
   - "/posts/2026/10/claude-code-remote-control-iphone/"
   - "/posts/2026/10/claude-code-routines-proactive-agent-workshop/"
   - "/posts/2026/10/claude-p-input-tokens-bare/"
+  - "/posts/2026/11/agents-talking-to-agents/"
+  - "/posts/2026/11/modern-web-guidance-ai-frontend/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "hooks", "mcp"]
 ---
 
@@ -126,6 +128,18 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - **セッションログ（JSONL）** — 全履歴は `~/.claude/projects/<encoded-project-path>/<session-uuid>.jsonl` に追記される（`~/.claude/sessions/` は実在するが会話ログではない）。全行にあるキーは `type` だけで 17 種類あり、`type: "user"` の 9 割超はツール実行結果。他 CLI 向けのパーサは 0 件のまま正常終了する。詳細: [Claude Code の JSONL ログを読む](/blogs/wiki/guides/claude-code-jsonl-logs/)
 - **サブエージェントは定義しただけでは動かない** — `.claude/agents/` に定義があっても、どのスキルからも呼ばれていなければ存在しないのと同じ（`grep -rn "<agent-name>" .claude/` で確かめる）。既定で親と同じモデルを継承するので、検証役には `model` を明示してティアを跨がせる。詳細: [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/)
 
+## エージェント同士の会話経路
+
+| 経路 | 要点 |
+|---|---|
+| サブエージェント | Agent ツールで起動し、最終報告だけが親に返る。完了後も `SendMessage` で続きを頼める（履歴は保たれる） |
+| Agent Teams | 実験的機能（`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`）。チームメイト同士がメールボックスで直接話し、共有タスクリストを取り合う。権限モードはリーダーと同じ、`claude -p` では起動しない、1 セッション 1 チーム、まず 3〜5 人から |
+| セッション間メッセージ | v2.1.224 以降は設定不要。`ListAgents` で相手を探し `SendMessage` で送る（`/list-agents`・`/peers` で確認）。同じマシンはローカルソケット、別マシンは Remote Control 経由。受信は `crossSessionInbound`（`accept` / `hold` / `refuse`）、`notify_when_idle` で相手の待機を一度だけ通知 |
+
+別セッションからのメッセージは**承認の代わりにならず**、本文の `/compact` も実行されない。渡るのはテキストだけで会話履歴やファイルは渡らない。送信自体を禁じるなら `SendMessage` と `ListAgents` を deny に入れる（サブエージェントへの送信も止まる）。社外エージェントとは [A2A](/blogs/wiki/concepts/a2a-protocol/)、設計上の注意は [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/)。
+
+フロントエンドを書かせるなら、Chrome チームの [Modern Web Guidance](/blogs/wiki/concepts/modern-web-guidance/) をプラグインとして入れ、`CLAUDE.md` に Baseline ターゲットを書いておくと古い実装に寄りにくい。
+
 ## 非エンジニア業務での活用
 
 コードを書かない業務自動化でも使える。ローカルの CSV・PDF を直接読み、計算し、ファイルとして書き出せる点が「ブラウザで会話する AI」との決定的な差になる。個人経営の飲食店で原価計算（3時間→12分）・レジ締め（毎晩40分→ゼロ）・シフト作成（2時間→15分）を自動化した事例がある。
@@ -178,6 +192,8 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Ponytail](/blogs/wiki/tools/ponytail/) — 過剰実装を抑える YAGNI プラグイン
 - [Claude Opus 5.5](/blogs/wiki/tools/claude-opus-5-5/) — CLAUDE.md から「よく考えて」を消す
 - [AI に書かせる文書の「書かないこと」指定](/blogs/wiki/concepts/ai-doc-writing-guidelines/) — Skill で文書の分量を抑える
+- [A2A プロトコル](/blogs/wiki/concepts/a2a-protocol/) / [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — エージェント同士の会話経路と設計
+- [Modern Web Guidance](/blogs/wiki/concepts/modern-web-guidance/) — フロントエンド向け Agent Skills
 - [Remote Control ガイド](/blogs/wiki/guides/claude-code-remote-control/) / [claude -p ヘッドレス実行](/blogs/wiki/guides/claude-p-headless/) — iPhone からの遠隔操作と非対話実行
 
 ## ソース記事
@@ -200,3 +216,5 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [「Claude Code の基本16コマンドで AI 社員化」を数え直す](/blogs/posts/2026/08/claude-code-16-commands-ai-employee/) — 2026-08-16
 - [Claude Code の JSONL ログを 29,043 行で検証 — 解説記事の前提が自分の環境で成り立たなかった 6 点](/blogs/posts/2026/09/claude-code-jsonl-log-verified/) — 2026-09-04
 - [Claude Code のサブエージェントは定義しただけでは動かない — ファクトチェックを繋ぎ直した 3 つの穴](/blogs/posts/2026/09/fact-checker-maker-checker/) — 2026-09-07
+- [エージェント同士に会話させる — Claude Code の 3 つの経路と A2A の使い分け](/blogs/posts/2026/11/agents-talking-to-agents/) — 2026-11-15
+- [AI が書くフロントエンドが「2019年」で止まる問題と、Chrome チームの Modern Web Guidance](/blogs/posts/2026/11/modern-web-guidance-ai-frontend/) — 2026-11-15

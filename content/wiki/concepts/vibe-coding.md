@@ -2,7 +2,7 @@
 title: "Vibe Coding"
 description: "生成されたコードを読まずに AI に任せる開発スタイル。元の定義の核心は検証の放棄で、実務では誰にも決定権のない仕様を AI が黙って埋めることが問題になる"
 date: 2026-04-06
-lastmod: 2026-11-09
+lastmod: 2026-11-15
 aliases: ["ヴァイブコーディング", "バイブコーディング", "バイブ仕様", "Vibe Specifying"]
 related_posts:
   - "/posts/2026/03/vibe-coding-skills/"
@@ -11,6 +11,8 @@ related_posts:
   - "/posts/2026/10/spec-loop-design-first-ai-development/"
   - "/posts/2026/10/extreme-programming-in-ai-era/"
   - "/posts/2026/11/vibe-coding-is-vibe-specifying/"
+  - "/posts/2026/11/spec-driven-development-overview/"
+  - "/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/"
 tags: ["vibe-coding", "プロンプト", "開発手法", "CHI2026", "文章力", "要求定義"]
 ---
 
@@ -51,7 +53,7 @@ AI に仕様を埋めさせてしまうのは、決めるべき人が要求・�
 
 従来はシステムコンサルタント（ビジネスアナリスト）がヒアリング・決定表・画面モックで決められる形に整えてきたが、品質は個人の力量に依存した。Vibe Coding ではこの役割すら抜け落ち、実装が安くなった分、曖昧な仕様が大量のコードに増幅される。
 
-対案の共通原則は「**AI には空白を埋めさせず、表に出させる**」こと。業務要件の空白は業務を持つ側に返し、技術の空白は開発者が決めて記録する。4 つの理由への具体策（場面と選択肢で問う・機械に総当たりさせる・捨てるプロトタイプ・別の目でのレビュー）は [仕様駆動開発](/blogs/wiki/concepts/spec-driven-development/) にまとめた。
+対案の共通原則は「**AI には空白を埋めさせず、表に出させる**」こと。業務要件の空白は業務を持つ側に返し、技術の空白は開発者が決めて記録する。4 つの理由への具体策（場面と選択肢で問う・機械に総当たりさせる・捨てるプロトタイプ・別の目でのレビュー）は [仕様駆動開発](/blogs/wiki/concepts/spec-driven-development/) にまとめた。曖昧なプロンプトでの丸投げは手戻りやスパゲッティコードを生みやすく、仕様駆動開発（SDD）はそれを防ぐガードレールとして広まっている。
 
 ### 成果に影響する要因（CHI2026 研究）
 
@@ -72,6 +74,7 @@ CHI2026 採択論文の実験から、バイブコーディングの成果を左
 ### チーム開発での批判
 
 - **判断の経緯が残らない巨大な差分** — 意図だけ伝えて隙間をモデルに埋めさせると、なぜそう書いたかの記録がない大きな差分が出る。レビューは「考古学」になり、テストはうっかり省かれる。逆に完全な仕様を先に書こうとするウォーターフォールも、仕様が膨らんで変更を阻むか無視される。その中間として「次の小さな仕様だけを書き、レビューし、テスト付きで実装する」を繰り返すのが [Spec Loop](/blogs/wiki/concepts/spec-driven-development/)
+- **非エンジニアの巨大 PR** — ドメインエキスパートが Claude Code で週末にシステムを作り、大量のコードの PR を出してくる状況はもう珍しくない。社長のコードは**ドメイン知識の塊**として価値があるが、アーキテクチャ・保守性・性能の考慮（例：Google Cloud 前提のサービスに AWS 前提のコード）が抜ける。止めるのではなく、仕様と設計のフェーズ・別系統のレビュー・依存パッケージのチェックを AI に自動で回させ、人間に届く前に品質を上げる仕組みで受け止める事例がある（[cc-sdd](/blogs/wiki/tools/cc-sdd/)）
 - **レビューの丸投げ** — vibe coding で作った巨大 PR を他人にレビューさせるのは、XP の原則 Mutual Benefit（相互利益）の違反例として挙げられる。書く側は数秒でも、読む側には数十分の負担が転嫁される（[エクストリーム・プログラミング](/blogs/wiki/concepts/extreme-programming/)）
 
 ### Vibe Hacking（対義概念）
@@ -80,7 +83,7 @@ Vibe Coding の反対側が Vibe Hacking（AI による攻撃の民主化）。�
 
 ## 関連ページ
 
-- [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) — 空白を表に出させる 4 つの対案と、Vibe Coding とウォーターフォールの中間
+- [仕様駆動開発（SDD）](/blogs/wiki/concepts/spec-driven-development/) — Vibe Coding へのガードレールとしての SDD、空白を表に出させる 4 つの対案
 - [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — 業務要件を利用者に差し戻して確定させる仕組み
 - [形式手法](/blogs/wiki/concepts/formal-methods/) — 例外の組み合わせを機械に総当たりさせる
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 書き漏れを別の目で突く
@@ -97,3 +100,5 @@ Vibe Coding の反対側が Vibe Hacking（AI による攻撃の民主化）。�
 - [Spec Loop — 次の小さな仕様だけを書いて回す、AI エージェント向け仕様駆動開発フレームワーク](/blogs/posts/2026/10/spec-loop-design-first-ai-development/) — 2026-10-25
 - [AI 時代にこそ効くエクストリーム・プログラミング（XP）— 27 年前の価値・原則・実践を読み直す](/blogs/posts/2026/10/extreme-programming-in-ai-era/) — 2026-10-30
 - [バイブコーディングの本当の問題は、誰も決めていない仕様が実装されることだ](/blogs/posts/2026/11/vibe-coding-is-vibe-specifying/) — 2026-11-08
+- [仕様駆動開発（SDD）とは？ 3 つのアプローチ・EARS 記法・Kiro / Spec Kit・TDD との違い](/blogs/posts/2026/11/spec-driven-development-overview/) — 2026-11-13
+- [非エンジニアの社長が出した巨大 PR をどう受け止めるか — cc-sdd・CodeRabbit・Takumi Guard で組む AI 駆動開発フロー](/blogs/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/) — 2026-11-13

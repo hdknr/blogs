@@ -2,7 +2,7 @@
 title: "沈黙する失敗（成功に見える失敗）"
 description: "終了コード 0・出力あり・手元では正常に見えるのに中身が壊れている失敗。エラーを出さないため、コマンドの成否やファイルの有無で検証すると全部すり抜ける"
 date: 2026-09-30
-lastmod: 2026-09-30
+lastmod: 2026-11-15
 aliases: ["沈黙する失敗", "silent failure", "サイレント故障", "0件成功", "成功したように見える失敗"]
 related_posts:
   - "/posts/2026/09/video-use-silent-failures-hard-rules/"
@@ -12,6 +12,7 @@ related_posts:
   - "/posts/2026/09/mutation-harness/"
   - "/posts/2026/09/whitebox-blackbox-boundary-coverage/"
   - "/posts/2026/09/rokid-glasses-app-ideas/"
+  - "/posts/2026/11/positive-control-in-systems/"
 tags: ["エージェント設計", "テスト", "トラブルシューティング", "監視", "品質保証"]
 ---
 
@@ -46,7 +47,7 @@ AI エージェントにパイプラインを任せるほど効いてくる。�
 1. **件数をアサーションに入れる** — `assert matched > 0` の 1 行で「0 件成功」は例外に変わる
 2. **設定したら読み直す** — 「成功した」は「効いた」ではない。値を書いたら同じ値を読み出して比べる
 3. **対照実験を用意する** — 「通る条件」と「通らない条件」の両方を測り、差が出ることを確かめて初めて証明になる。片方だけでは何も言えない
-4. **ポジティブコントロールを先に通す** — 「検出されなかった」と言う前に、検出されるはずの対象で実際に検出されることを見る（[ミューテーションテスト](/blogs/wiki/concepts/mutation-testing/)）
+4. **ポジティブコントロールを先に通す** — 「検出されなかった」と言う前に、検出されるはずの対象で実際に検出されることを見る。監視なら常に発火する Watchdog アラートを外部の Dead man's switch に送り続け、届かなくなったら通知経路ごと死んでいると判断する。ウイルス対策なら EICAR テストファイル、テストならミューテーション（[陽性対照](/blogs/wiki/concepts/positive-control/)）
 5. **非交渉の規則を taste から切り離す** — Video Use の `SKILL.md` は、外れると沈黙する失敗になる 12 項目だけを Hard Rules として「correctness」に分け、それ以外はエージェントの裁量に任せている
 6. **状態ではなく結果を問う** — 設定値を並べて見るより、カーネルに「このパケットをどこへ出すか」を直接問うほうが確実。WireGuard ハブの故障は個別の設定値ではなくこの結果に現れた
 7. **自動修復しない** — 黙って直すと同じ故障が再発しても誰も気づかない。検出してアラームを上げるところまでに留める
@@ -59,6 +60,7 @@ AI エージェントにパイプラインを任せるほど効いてくる。�
 
 ## 関連ページ
 
+- [陽性対照（ポジティブコントロール）](/blogs/wiki/concepts/positive-control/) — 「異常なし」を信じる前に、必ず陽性になる入力で検査の仕組みを確かめる
 - [ミューテーションテスト](/blogs/wiki/concepts/mutation-testing/) — 「緑」が何も語っていないことを壊して確かめる技法
 - [テストの導出元（ホワイトボックスとブラックボックス）](/blogs/wiki/concepts/whitebox-blackbox-testing/) — カバレッジ 100% でもバグを守るテスト
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 自己採点の盲点
@@ -77,3 +79,4 @@ AI エージェントにパイプラインを任せるほど効いてくる。�
 - [Rokid スマートAIグラスで何を作るか — 実装 2 本でわかった制約から、道案内と売り場検索を設計する](/blogs/posts/2026/09/rokid-glasses-app-ideas/) — 2026-09-12
 - [テストを信じる前に、テストを壊す — mutation harness で「緑」に意味を持たせる](/blogs/posts/2026/09/mutation-harness/) — 2026-09-16
 - [ホワイトボックスとブラックボックスの違いを実測した — 分岐カバレッジ 100% でミューテーションスコアは 0% と 100%](/blogs/posts/2026/09/whitebox-blackbox-boundary-coverage/) — 2026-09-17
+- [陽性対照（ポジティブコントロール）とは？ IT の監視・テストで「異常なし」を信じる前に確かめること](/blogs/posts/2026/11/positive-control-in-systems/) — 2026-11-13

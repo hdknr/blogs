@@ -2,12 +2,14 @@
 title: "AI-ready データ設計"
 description: "LLM に算術をさせず、検索・集計条件の指定だけを任せるデータ公開の設計パターン"
 date: 2026-08-23
-lastmod: 2026-10-30
-aliases: ["AI-ready", "LLM に計算させない設計", "セマンティックレイヤー"]
+lastmod: 2026-11-15
+aliases: ["AI-ready", "LLM に計算させない設計"]
 related_posts:
   - "/posts/2026/08/digital-agency-mcp-ai-ready-data/"
   - "/posts/2026/09/nec-corporate-ai-workforce/"
   - "/posts/2026/10/ai-agent-data-platform/"
+  - "/posts/2026/11/ai-native-data-platform-lightdash-mcp/"
+  - "/posts/2026/11/business-system-data-chatbot/"
 tags: ["mcp", "AI-ready", "Parquet", "セマンティックレイヤー", "AIエージェント"]
 ---
 
@@ -28,7 +30,7 @@ LLM は自然言語から「何を集計したいか」を読み取るのは得�
 
 ### 意味定義を構造化して持つ
 
-`dataset.yaml` のような形でカラムの意味・単位・取りうる値を定義し、LLM がスキーマを推測しなくて済むようにする。セマンティックレイヤーに相当する。
+`dataset.yaml` のような形でカラムの意味・単位・取りうる値を定義し、LLM がスキーマを推測しなくて済むようにする。[セマンティックレイヤー](/blogs/wiki/concepts/semantic-layer/)に相当し、用語・同義語・関係まで広げたものが[オントロジー](/blogs/wiki/concepts/ontology/)。
 
 ### ファジーマッチの適用範囲を絞る
 
@@ -42,6 +44,14 @@ Parquet を採用することで、集計クエリのスキャン量を抑える
 
 レイクハウスを土台に AI エージェントへ社内データを分析させる場合、「意味」はこの設計パターンが受け持ち、ほかに「費用・権限・取り消し」の守りを重ねる（[レイクハウス](/blogs/wiki/concepts/lakehouse/)を参照）。意味の層では dbt Semantic Layer のようなセマンティックレイヤーで「売上」などの指標を定義し、エージェントには指標名と集計の切り口だけを選ばせる。dbt の MCP サーバーは `list_metrics`・`query_metrics` といったツールでこれを提供する。エージェントが誤るのは SQL の文法より「売上は税込か、返品を引くか」といった列や指標の意味である。
 
+### 間違えると困るものは LLM に作らせない
+
+PKSHA の AI ネイティブなデータ分析基盤は、同じ原則を MCP サーバーの設計に広げた。チャートやダッシュボードの URL、コンパイル済み SQL は LLM に自作させずツールが必ず返し、PII テーブルを参照するクエリには行の値を返さず件数と URL だけを返す。「AI が間違えたらプロンプトを直す」ではなく「間違えようのないツールにする」発想（[AI ネイティブなデータ分析基盤](/blogs/wiki/concepts/ai-native-data-platform/)）。
+
+### 権限と計算の正本はアプリに残す
+
+業務システムにデータ照会チャットボットを組み込むときも同じで、LLM の担当は「どの照会ツールをどの引数で呼ぶか」に絞り、行単位の権限と帳票の計算はテスト済みの既存コードに任せる。SQL を生成させる [Text-to-SQL](/blogs/wiki/concepts/text-to-sql/) は、全社データを見てよい役割にだけ開放する。
+
 ## 転用のポイント
 
 自社データを AI につなぐ際、まず「LLM に何をさせないか」を決めるところから始める。検索インターフェースを提供するのであって、計算エンジンを LLM に肩代わりさせるのではない。
@@ -49,6 +59,9 @@ Parquet を採用することで、集計クエリのスキャン量を抑える
 ## 関連ページ
 
 - [MCP](/blogs/wiki/concepts/mcp/) — 実装のプロトコル
+- [セマンティックレイヤー](/blogs/wiki/concepts/semantic-layer/) — 意味定義を 1 か所に集める層
+- [Text-to-SQL](/blogs/wiki/concepts/text-to-sql/) — LLM に SQL を書かせる方式とその限界
+- [AI ネイティブなデータ分析基盤](/blogs/wiki/concepts/ai-native-data-platform/) — 人間と AI が同じ定義で分析する基盤
 - [レイクハウス](/blogs/wiki/concepts/lakehouse/) — エージェント向けデータ基盤の土台と 4 つの守り
 - [列指向ストレージ](/blogs/wiki/concepts/columnar-storage/) — Parquet の背景
 - [RAG](/blogs/wiki/concepts/rag/) — 対比される取り込み方式
@@ -59,3 +72,5 @@ Parquet を採用することで、集計クエリのスキャン量を抑える
 - [デジタル庁の行政手続 MCP サーバーに学ぶ「LLM に計算させない」データ設計](/blogs/posts/2026/08/digital-agency-mcp-ai-ready-data/) — 2026-08-16
 - [NEC「部署が丸ごとAI」の中身 — コーポレートAI・Workforce部門の4階層と、人が手放さなかった仕事](/blogs/posts/2026/09/nec-corporate-ai-workforce/) — 2026-09-02
 - [AI エージェントのためのデータ基盤：レイクハウスを土台に「意味・費用・権限・取り消し」を設計する](/blogs/posts/2026/10/ai-agent-data-platform/) — 2026-10-13
+- [BigQuery × dbt × Lightdash × MCP で作る AI ネイティブなデータ分析基盤：PKSHA の事例に学ぶ設計](/blogs/posts/2026/11/ai-native-data-platform-lightdash-mcp/) — 2026-11-15
+- [Text-to-SQL vs ツール呼び出し — 権限管理のある業務システムに AI データ照会を組み込む](/blogs/posts/2026/11/business-system-data-chatbot/) — 2026-11-15

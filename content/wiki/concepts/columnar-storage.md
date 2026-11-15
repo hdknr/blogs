@@ -2,13 +2,14 @@
 title: "列指向ストレージ"
 description: "データを列ごとに格納するストレージ方式。分析クエリの I/O 効率と圧縮率を大幅向上"
 date: 2026-04-06
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["Columnar Storage", "列指向"]
 related_posts:
   - "/posts/2026/03/duckdb-columnar-arrow/"
   - "/posts/2026/10/apache-iceberg-duckdb/"
   - "/posts/2026/10/ducklake-sql-lakehouse/"
   - "/posts/2026/10/lakehouse-ecosystem-2026/"
+  - "/posts/2026/11/ai-native-data-platform-lightdash-mcp/"
 tags: ["データベース", "OLAP", "Parquet", "Arrow"]
 ---
 
@@ -29,6 +30,10 @@ Parquet は「1 つのファイルの中身をどう並べるか」を決める*
 
 どちらもデータ本体は列指向の Parquet で、競合ではなくレイヤーが違う。Delta Lake・Hudi・Paimon も同じく Parquet の上に乗るので、Apache XTable のようにメタデータだけを変換すればデータをコピーせずに別フォーマットとして読める。
 
+### 列指向 DWH の課金と落とし穴
+
+BigQuery や Redshift のようなクラウド DWH も列指向で、BigQuery のオンデマンド課金は**クエリがスキャンしたデータ量**で決まる。必要な列だけ読む設計がそのまま費用に効く一方、裏側の処理が全体を読むと請求に直結する。PKSHA の事例では BigQuery の CDC が変更の適用のたびにテーブル全体を読み（パーティションでも削減できない）、1 日約 330 USD に達した。反映の遅れの許容（`max_staleness`）を緩めて読み込み量を約 1/100 に下げている（[BigQuery](/blogs/wiki/tools/bigquery/)）。
+
 ### Parquet の次を狙うフォーマット
 
 - **Vortex** — 圧縮した Apache Arrow の配列を扱う拡張可能な列指向ファイルフォーマット。LF AI & Data Foundation でインキュベーション中
@@ -40,6 +45,7 @@ Parquet は「1 つのファイルの中身をどう並べるか」を決める*
 - [Apache Iceberg](/blogs/wiki/tools/apache-iceberg/) — Parquet の上に乗るオープンテーブルフォーマット
 - [DuckLake](/blogs/wiki/tools/ducklake/) — メタデータを SQL データベースに置くレイクハウスフォーマット
 - [レイクハウス](/blogs/wiki/concepts/lakehouse/) — フォーマット・カタログ・エンジンを組み合わせる全体像
+- [BigQuery](/blogs/wiki/tools/bigquery/) / [Amazon Redshift](/blogs/wiki/tools/amazon-redshift/) — 列指向のクラウド DWH
 
 ## ソース記事
 
@@ -47,3 +53,4 @@ Parquet は「1 つのファイルの中身をどう並べるか」を決める*
 - [Apache Iceberg 入門：データレイクを「テーブル」にする仕組みと DuckDB との関係](/blogs/posts/2026/10/apache-iceberg-duckdb/) — 2026-10-12
 - [DuckLake 入門：メタデータを SQL データベースに置くレイクハウスフォーマットと Iceberg との違い](/blogs/posts/2026/10/ducklake-sql-lakehouse/) — 2026-10-13
 - [Iceberg と DuckLake の先へ：2026 年に注目したいレイクハウスの技術とプロダクト](/blogs/posts/2026/10/lakehouse-ecosystem-2026/) — 2026-10-13
+- [BigQuery × dbt × Lightdash × MCP で作る AI ネイティブなデータ分析基盤：PKSHA の事例に学ぶ設計](/blogs/posts/2026/11/ai-native-data-platform-lightdash-mcp/) — 2026-11-15
