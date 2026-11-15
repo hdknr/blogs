@@ -1,0 +1,108 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="rnn-vs-transformer" name="RNN vs Transformer">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1020" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- RNN panel -->
+        <mxCell id="rnn-group" value="RNN：1 単語ずつ順番に処理（直列）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="470" height="480" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="h1" value="h1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="45" y="150" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="h2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="135" y="150" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="h3" value="h3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="225" y="150" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="h4" value="h4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="315" y="150" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="h5" value="h5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="405" y="150" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="hlabel" value="隠れ状態（それまでの記憶）" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="140" y="110" width="240" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="eh12" style="endArrow=block;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="h1" target="h2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eh23" style="endArrow=block;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="h2" target="h3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eh34" style="endArrow=block;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="h3" target="h4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eh45" style="endArrow=block;html=1;strokeColor=#d6b656;strokeWidth=2;" edge="1" parent="1" source="h4" target="h5"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="rt1" value="彼は" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="45" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="rt2" value="リンゴを" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="135" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="rt3" value="食べた" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="225" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="rt4" value="それは" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="315" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="rt5" value="甘かった" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="405" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="er1" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="rt1" target="h1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="er2" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="rt2" target="h2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="er3" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="rt3" target="h3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="er4" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="rt4" target="h4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="er5" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="rt5" target="h5"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="rnote" value="前の単語の情報は h をバケツリレーで渡るだけ。&lt;br&gt;1 ステップ前が終わらないと次を計算できず、&lt;br&gt;遠い単語ほど情報が薄れる" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="45" y="390" width="430" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Transformer panel -->
+        <mxCell id="tf-group" value="Transformer：全単語を一斉に処理（並列）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=14;verticalAlign=top;spacingTop=8;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="520" y="20" width="480" height="480" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="attn" value="Self-Attention&lt;br&gt;（全単語のペアについて関連度を一度に計算）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="545" y="140" width="430" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="tt1" value="彼は" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="545" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt2" value="リンゴを" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="635" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt3" value="食べた" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="725" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt4" value="それは" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="815" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="tt5" value="甘かった" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="905" y="300" width="70" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="et1" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="tt1" target="attn"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="et2" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="tt2" target="attn"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="et3" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="tt3" target="attn"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="et4" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="tt4" target="attn"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="et5" style="endArrow=block;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="tt5" target="attn"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="elink" value="強い関連" style="endArrow=block;startArrow=block;html=1;strokeColor=#d79b00;strokeWidth=3;curved=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=12;fontColor=#d79b00;fontStyle=1;labelBackgroundColor=#f5f5f5;" edge="1" parent="1" source="tt4" target="tt2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="395"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="tnote" value="どの単語同士も距離に関係なく直接つながる。&lt;br&gt;全単語を同時に計算できるので GPU で速く学習できる" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#82b366;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="545" y="420" width="430" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
