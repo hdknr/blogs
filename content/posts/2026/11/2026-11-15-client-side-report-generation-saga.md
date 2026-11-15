@@ -453,7 +453,7 @@ AWS なら Step Functions で、リトライ（`Retry`）と失敗時の分岐�
 
 ## BFF とは: フロントエンドごとに置く専用のバックエンド
 
-方針 3 に入る前に、BFF（Backend for Frontend）というデザインパターンを整理しておきます。
+方針 3 に入る前に、BFF（Backend for Frontend）というデザインパターンを整理しておきます。パターン名としては、フロントエンドごとに複数置くことから、複数形の **Backends for Frontends** とも呼ばれます。
 
 ### なぜ必要か: 汎用の API を画面から直接使うと苦しくなる
 
