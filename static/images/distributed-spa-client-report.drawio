@@ -1,0 +1,42 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="distributed-spa-client-report" name="Client-side report generation">
+    <mxGraphModel dx="1200" dy="760" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="680" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="正式な帳票をクライアントで生成し、サーバーは突合して保管する" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="150" y="10" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Lifeline heads -->
+        <mxCell id="h1" value="デスクトップアプリ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;帳票レンダラ + API クライアント&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="30" y="55" width="190" height="45" as="geometry"/></mxCell>
+        <mxCell id="h3" value="業務 API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="420" y="55" width="140" height="45" as="geometry"/></mxCell>
+        <mxCell id="h4" value="S3&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;バージョニング有効&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="650" y="55" width="130" height="45" as="geometry"/></mxCell>
+        <mxCell id="h5" value="監査ログ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="840" y="55" width="120" height="45" as="geometry"/></mxCell>
+
+        <!-- Lifelines -->
+        <mxCell id="l1" style="endArrow=none;dashed=1;html=1;strokeColor=#999999;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="100" as="sourcePoint"/><mxPoint x="125" y="660" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="l3" style="endArrow=none;dashed=1;html=1;strokeColor=#999999;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="100" as="sourcePoint"/><mxPoint x="490" y="660" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="l4" style="endArrow=none;dashed=1;html=1;strokeColor=#999999;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="715" y="100" as="sourcePoint"/><mxPoint x="715" y="660" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="l5" style="endArrow=none;dashed=1;html=1;strokeColor=#999999;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="900" y="100" as="sourcePoint"/><mxPoint x="900" y="660" as="targetPoint"/></mxGeometry></mxCell>
+
+        <mxCell id="m1" value="① テンプレートを取得（版 v12）" style="html=1;endArrow=block;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="140" as="sourcePoint"/><mxPoint x="490" y="140" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m2" value="② 帳票データを取得（参照 API）" style="html=1;endArrow=block;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="185" as="sourcePoint"/><mxPoint x="490" y="185" as="targetPoint"/></mxGeometry></mxCell>
+
+        <mxCell id="render" value="&lt;b&gt;③ ローカルで PDF を生成&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;決定論的なレンダラ + 同梱フォント&lt;br&gt;PC の複数コアで並列に&lt;br&gt;（サーバーの CPU とメモリを使わない）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1"><mxGeometry x="30" y="225" width="230" height="85" as="geometry"/></mxCell>
+
+        <mxCell id="viewonly" value="&lt;b&gt;確認用の帳票はここで終わり&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;画面に表示・印刷するだけ。④⑤ は行わない&lt;br&gt;（アップロードも突合も保管もしない）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;dashed=1;fontSize=11;fontColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="300" y="235" width="290" height="65" as="geometry"/></mxCell>
+        <mxCell id="loop" value="1 件ずつ（冪等）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6c8ebf;dashed=1;fontSize=10;fontColor=#6c8ebf;align=left;verticalAlign=top;spacingLeft=6;" vertex="1" parent="1"><mxGeometry x="80" y="335" width="680" height="80" as="geometry"/></mxCell>
+        <mxCell id="m4" value="④ PUT /reports/{id}　Idempotency-Key" style="html=1;endArrow=block;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="375" as="sourcePoint"/><mxPoint x="490" y="375" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m4b" value="仮保存" style="html=1;endArrow=block;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="375" as="sourcePoint"/><mxPoint x="715" y="375" as="targetPoint"/></mxGeometry></mxCell>
+
+        <mxCell id="m5" value="⑤ 確定：件数・合計金額・テンプレート版" style="html=1;endArrow=block;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="460" as="sourcePoint"/><mxPoint x="490" y="460" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="verify" value="&lt;font style=&quot;font-size:10px&quot;&gt;DB の値と突合&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1"><mxGeometry x="500" y="480" width="110" height="30" as="geometry"/></mxCell>
+        <mxCell id="m6" value="一致したら正本として確定" style="html=1;endArrow=block;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="545" as="sourcePoint"/><mxPoint x="715" y="545" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m7" value="誰が・いつ・何件・どの版で" style="html=1;endArrow=block;strokeColor=#d6b656;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="585" as="sourcePoint"/><mxPoint x="900" y="585" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m8" value="受理（不一致なら拒否）" style="html=1;endArrow=block;dashed=1;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="630" as="sourcePoint"/><mxPoint x="125" y="630" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
