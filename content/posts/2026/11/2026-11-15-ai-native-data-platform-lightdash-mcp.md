@@ -17,6 +17,46 @@ PKSHA VoiceAgent の SRE が、社内向けのデータ分析基盤「Laplace」
 
 この記事では、元記事の設計判断を整理し、自分たちの基盤に持ち帰れるポイントをまとめます。数字や固有名詞は元記事の記述に基づいています。
 
+## 前提：登場するプロダクトと用語
+
+本文に入る前に、この記事に出てくるプロダクトと用語を簡単に説明します。
+
+### プロダクト
+
+| プロダクト | 種類 | この基盤での役割 |
+|---|---|---|
+| **Amazon Aurora** | AWS のマネージド RDB（MySQL / PostgreSQL 互換） | 分析対象のデータを持つプロダクトの本番 DB |
+| **Redash** | OSS の BI・クエリツール | 以前の分析環境。SQL を書いてグラフを作る |
+| **BigQuery** | Google Cloud のサーバーレス DWH（データウェアハウス） | 分析用データの置き場所。オンデマンド課金では、クエリがスキャンしたデータ量で課金される |
+| **Datastream** | Google Cloud の CDC サービス | Aurora の変更を BigQuery に流し込む |
+| **Cloud Storage（GCS）** | Google Cloud のオブジェクトストレージ | ファイルで渡すデータの受け口 |
+| **AWS Glue** | AWS のサーバーレス ETL サービス | 一部の列を定期的に BigQuery へ転送する |
+| **dbt** | SQL でデータ変換を書くツール | 生データを分析しやすい形に整え、指標の定義も持つ |
+| **Lightdash** | dbt と連携する BI ツール（コアは OSS、一部の企業向け機能は別ライセンス） | ダッシュボードと探索画面を提供し、権限も制御する |
+| **GKE Autopilot** | Google Cloud のマネージド Kubernetes | Lightdash や dbt を動かす実行基盤 |
+| **Terraform** | インフラをコードで管理するツール | クラウドの構成をまとめて定義する |
+| **Claude Code** | Anthropic の AI コーディングエージェント | 基盤のコードを書き、分析の窓口にもなる |
+
+### 用語
+
+| 用語 | 意味 |
+|---|---|
+| **DWH（データウェアハウス）** | 分析用にデータを集めて保管するデータベース。本番 DB とは分けて置くことで、重い集計が本番に影響しない |
+| **CDC（Change Data Capture）** | DB の変更（INSERT / UPDATE / DELETE）を差分として拾い、別の場所に反映する方式 |
+| **binlog** | MySQL 系 DB が書き出す変更ログ。CDC の情報源になる |
+| **スナップショット** | ある時点のテーブルを丸ごとコピーする方式。CDC と対になる |
+| **raw / staging / mart** | dbt でよく使う層構成。raw は取り込んだまま、staging は型や名前を整えたもの、mart は分析用に集計・結合したもの |
+| **セマンティックレイヤー** | 「売上」「アクティブユーザー」などの指標の定義を 1 か所にまとめる層。ツールや人によって数字がずれるのを防ぐ |
+| **`schema.yml`** | dbt でモデルの列・説明・テストなどを書く YAML ファイル。Lightdash は、ここに書いた `meta` から指標の定義を読む |
+| **Explore** | Lightdash で分析の起点になる単位。YAML に定義した dbt モデルが、原則として 1 つの Explore になる |
+| **セルフサービス分析** | エンジニアに頼まず、ビジネス側の人が自分でデータを見て分析すること |
+| **PII（個人識別情報）** | 氏名・電話番号・メールアドレスなど、個人を特定できる情報 |
+| **決定的ハッシュ** | 同じ入力からは常に同じ値になるハッシュ。元の値を隠したまま、同じ人かどうかは判別できる |
+| **ソルト** | ハッシュをかける前に足す秘密の値。総当たりで元の値を推測されるのを防ぐ |
+| **行レベルセキュリティ** | 同じテーブルでも、ユーザーごとに見える行を絞る仕組み |
+| **MCP（Model Context Protocol）** | AI エージェントが外部のツールやデータにつなぐための共通プロトコル。MCP サーバーがツールを提供し、AI クライアントがそれを呼び出す |
+| **OAuth** | パスワードを渡さずに、ほかのアプリへ権限を委譲する認可の仕組み |
+
 ## 以前の状態と 3 つの課題
 
 もともとの分析は、Redash から Aurora のリードレプリカに直接 SQL を投げる形でした。分析用のレイヤーはなく、最大のログテーブルは約 2.5 TB あります。元記事は課題を 3 つ挙げています。
@@ -49,13 +89,13 @@ Laplace が現在担うのは、Data・Information・Knowledge の層と、AI �
 |---|---|---|
 | 取り込み | Datastream / GCS（Avro）/ AWS Glue | データを BigQuery に取り込む（3 経路、後述） |
 | DWH・変換 | BigQuery + dbt | raw → staging → mart の層構成で変換 |
-| セマンティック・BI | Lightdash（OSS をセルフホスト） | dbt の `schema.yml` から Explore（分析対象の単位）を生成 |
+| セマンティック・BI | Lightdash（OSS をセルフホスト） | dbt の `schema.yml` から Explore を生成 |
 | AI の入口 | 自前の MCP サーバー | PII ガード、Lightdash URL と SQL の返却、ユーザー単位 OAuth |
 | 実行基盤 | GKE Autopilot + Terraform | Lightdash・dbt の CronJob・MCP サーバー・社内ツールを 1 クラスタに集約 |
 
 BigQuery への取り込みは 3 経路です。
 
-- **Datastream**：Aurora の binlog（DB の変更ログ）を読み、CDC（Change Data Capture：変更差分の取り込み）で BigQuery に直接書き込みます。Aurora の 200 テーブル弱はすべてこの経路で、主経路です。
+- **Datastream**：Aurora の binlog を読み、CDC で BigQuery に直接書き込みます。Aurora の 200 テーブル弱はすべてこの経路で、主経路です。
 - **AWS Glue**：CDC から除外した幅の広い列を、毎時 BigQuery に書き込みます。
 - **GCS 経由の push**：Avro ファイルを GCS に push し、BigQuery の外部テーブルとして読むスナップショット経路です。認証はキーレスの Workload Identity Federation です。現在は AWS のコスト集約データで使われています。
 
