@@ -83,6 +83,7 @@ s_t = N(F(u_t))
 
 ## 関連ページ
 
+- [Transformer](/blogs/wiki/concepts/transformer/) — ループさせる前の、通常の Transformer の仕組み
 - [ニューラルネットワークの基礎](/blogs/wiki/concepts/neural-network-basics/) — Transformer を構成する層（Attention と FFN）の土台
 - [Subquadratic Sparse Attention](/blogs/wiki/concepts/subquadratic-attention/) — Attention と KV キャッシュの効率化という別方向のアーキテクチャ改良
 - [Kimi K3](/blogs/wiki/tools/kimi-k3/) — 記憶の持ち方を変えて KV キャッシュを減らす別アプローチ
