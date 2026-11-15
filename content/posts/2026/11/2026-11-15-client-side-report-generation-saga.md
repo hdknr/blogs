@@ -1,8 +1,8 @@
 ---
-title: "複数 API サーバーをまたぐ業務システムの設計 — 帳票生成と Saga の調整をデスクトップアプリに寄せて、速く・壊れにくくする"
+title: "Celery はメモリ不足、ECS タスクは起動待ち — 帳票生成と Saga をデスクトップアプリに寄せる設計"
 date: 2026-11-15
 lastmod: 2026-11-15
-slug: "distributed-api-spa-frontend-patterns"
+slug: "client-side-report-generation-saga"
 draft: false
 categories: ["Web開発"]
 tags: ["帳票", "Saga", "celery", "デスクトップアプリ", "aws"]
