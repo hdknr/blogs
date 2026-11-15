@@ -92,7 +92,7 @@ tags: ["データ基盤", "セマンティックレイヤー", "Redshift", "dbt"
 | 層 | 元記事（Google Cloud） | AWS だけで作る場合 |
 |---|---|---|
 | CDC の取り込み | Datastream → BigQuery | **Aurora zero-ETL 連携 → Redshift** |
-| 列を落とした取り込み | Datastream の列除外 + AWS Glue | 必要なテーブルだけ **AWS DMS** |
+| CDC から外した列 | Datastream の除外設定で外し、太い列は AWS Glue で別に運ぶ | 必要なテーブルだけ **AWS DMS** で列を落とす |
 | コストデータ | Avro ファイルを GCS に送る | **CUR 2.0 を S3 に出力**し、Redshift に取り込む |
 | DWH | BigQuery | **Redshift Serverless**（または小さめのプロビジョンド） |
 | 変換 | dbt（GKE の CronJob） | **dbt-redshift** を ECS Fargate のスケジュールタスクで実行 |
@@ -105,6 +105,31 @@ tags: ["データ基盤", "セマンティックレイヤー", "Redshift", "dbt"
 Redshift を推す理由は、**取り込みを自作しなくてよい** ことです。元記事の筆者は 1 人で約 1 か月で基盤を立ち上げました。そのスピードを AWS で再現するなら、Aurora の変更を Redshift に流し続ける zero-ETL 連携が、Datastream にいちばん近い役割を果たします。Lightdash も Redshift への接続に公式に対応しています。
 
 コストデータは、CUR 2.0 の Data Exports で S3 に出力します。CUR 2.0 には Redshift と連携するための出力形式とセットアップ用スクリプトが用意されているので、それを使って Redshift に取り込むのが手軽です。
+
+## 元の GCP 構成とのプロダクト比較
+
+上の表は層ごとの対応でした。ここではプロダクト単位で、元記事の構成（Aurora 以外は Google Cloud が中心）と AWS だけの構成を並べます。「クラウド」列で、どちらのクラウドで動くかを示しています。
+
+| 役割 | 元の構成 | クラウド | AWS だけの構成 | 変わる点 |
+|---|---|---|---|---|
+| 本番 DB（ソース） | Amazon Aurora | AWS | Amazon Aurora | 変わらない |
+| CDC の取り込み | Datastream | GCP | Aurora zero-ETL 連携 | 列単位の除外ができない。取り込み自体の追加料金はない |
+| CDC から外した太い列の転送 | AWS Glue（→ BigQuery、毎時） | AWS → GCP | 原則不要（zero-ETL はテーブル単位で丸ごと運ぶ） | 列単位で外せないので、別経路で運ぶ必要もなくなる。逆に費用を見ながら運ぶ列を選ぶことはできない |
+| PII 列を落とした取り込み | Datastream の除外設定 | GCP | AWS DMS（必要なテーブルだけ） | 列を落とす用途は DMS の変換ルール（`remove-column`）で担う |
+| ファイルの受け口 | Cloud Storage（GCS） | GCP | Amazon S3 | クラウドをまたぐ転送がなくなる |
+| コストデータ | AWS のコストデータを Avro で GCS に送る | AWS → GCP | CUR 2.0（Data Exports）を S3 に出力 | Redshift 連携用の出力形式とスクリプトが公式にある |
+| DWH | BigQuery | GCP | Redshift Serverless / プロビジョンド | 課金がスキャン量から計算時間（RPU 時間）に変わる |
+| データ変換 | dbt（dbt-bigquery） | GCP | dbt（dbt-redshift） | SQL の方言の書き換えが要る |
+| BI・セマンティックレイヤー | Lightdash（セルフホスト） | GCP | Lightdash（セルフホスト） | 変わらない。接続先を Redshift にする |
+| AI の入口 | 自前の MCP サーバー | GCP | 自前の MCP サーバー | 変わらない |
+| AI クライアント | Claude Code / Slack bot | — | Claude Code / Slack bot（LLM は Bedrock も可） | AWS の中で LLM を呼ぶ選択肢が増える |
+| コンテナの実行基盤 | GKE Autopilot | GCP | ECS Fargate | Kubernetes を使わない構成になる |
+| 列単位のアクセス制御 | Policy Tags（不採用） | GCP | Redshift の RLS・動的データマスキング・列権限 | SQL で宣言でき、DB 側の防御線として使いやすい |
+| クエリの監査 | `INFORMATION_SCHEMA.JOBS` | GCP | `SYS_QUERY_HISTORY` + CloudTrail | 全員分を見るには `sys:monitor` ロールが要る |
+| 費用の監視 | Cloud Billing の予算アラート | GCP | AWS Budgets + Cost Anomaly Detection | 異常検知を足せる |
+| IaC | Terraform | — | Terraform | 変わらない。定義する実行基盤が GKE から ECS に変わる |
+
+元の構成では、データが AWS（Aurora）から GCP へ渡り、Glue のように両方のクラウドにまたがる部品もありました。AWS だけの構成では、すべてが 1 つのクラウドに収まります。その代わり、取り込み（zero-ETL 連携）と DWH（Redshift）の性質が変わるので、後の「AWS で変えるべき 3 つのポイント」で説明する注意点が生まれます。
 
 ## BigQuery 版からそのまま持ち込める設計
 
