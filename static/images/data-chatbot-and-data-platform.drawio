@@ -1,0 +1,125 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="chatbot-platform" name="Data Chatbot and Data Platform">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="データ照会チャットボットとデータ分析基盤の関係（完成形）" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="320" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Users -->
+        <mxCell id="user-group" value="利用者" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="20" y="70" width="170" height="500" as="geometry"/>
+        </mxCell>
+        <mxCell id="u1" value="一般の利用者&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;自分の案件・部署の数字&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="130" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="u2" value="経営・企画・分析担当&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;推移・横断の集計&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="290" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="u3" value="管理本部・監査担当&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;一度きりの例外抽出&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="35" y="450" width="140" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Router -->
+        <mxCell id="router" value="チャットのバックエンド&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;LLM は質問を解釈し、ツールを選ぶ&lt;br&gt;使える経路はアプリが役割で決める&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="270" width="190" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane 1: operational -->
+        <mxCell id="lane1" value="① 業務照会：ツール呼び出し（全員）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="70" width="760" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="tool" value="照会ツール&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;ログイン中の利用者として実行&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="480" y="115" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="app" value="業務システムのロジック&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;行単位の権限・正本の計算&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="115" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="opdb" value="業務 DB&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;最新の値（リアルタイム）&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="950" y="105" width="150" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane 2: analytics via semantic layer -->
+        <mxCell id="lane2" value="② 定型分析：セマンティックレイヤー（BI の権限を持つ人）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="245" width="760" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="mcp" value="BI の MCP サーバー&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;定義済みの指標だけで問い合わせ&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="480" y="290" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="sem" value="セマンティックレイヤー&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;dbt の指標定義 + BI の権限&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="290" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="dwh" value="DWH&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;CDC で数分〜数十分遅れ&lt;br&gt;履歴・複数システムを統合&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="950" y="280" width="150" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane 3: exploration -->
+        <mxCell id="lane3" value="③ 探索：Text-to-SQL（許可された役割だけ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="420" width="760" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="t2s" value="Text-to-SQL&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;SQL を見せる・調査用の数字&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="480" y="465" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="mart" value="mart のモデル&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;説明付き・PII はハッシュ化済み&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="465" width="190" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges: users to router -->
+        <mxCell id="eu1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.25;" edge="1" parent="1" source="u1" target="router">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eu2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="u2" target="router">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eu3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.75;" edge="1" parent="1" source="u3" target="router">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- router to lanes -->
+        <mxCell id="er1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" parent="1" source="router" target="tool">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="er2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="router" target="mcp">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="er3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;endArrow=block;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="router" target="t2s">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- lane internals -->
+        <mxCell id="el1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="tool" target="app">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="el2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="app" target="opdb">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="el3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="mcp" target="sem">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="el4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="sem" target="dwh">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="el5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="t2s" target="mart">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="el6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#666666;endArrow=block;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="mart" target="dwh">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1025" y="495"/></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ecdc" value="CDC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673a6;endArrow=block;dashed=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="opdb" target="dwh">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="1160" y="145"/><mxPoint x="1160" y="325"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="note" value="繰り返し来る質問は昇格させる：業務の数字 → 業務システムの API（①のツール）／分析の指標 → dbt の指標定義（②）" style="text;html=1;fontSize=11;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="590" width="990" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
