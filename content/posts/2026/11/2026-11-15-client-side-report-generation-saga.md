@@ -1,5 +1,5 @@
 ---
-title: "Celery はメモリ不足、ECS タスクは起動待ち — 帳票生成と Saga をデスクトップアプリに寄せる設計"
+title: "Celery はメモリ不足、ECS タスクは起動待ち — 帳票・Saga・AI エージェントの窓口をデスクトップアプリに寄せる設計"
 date: 2026-11-15
 lastmod: 2026-11-15
 slug: "client-side-report-generation-saga"
