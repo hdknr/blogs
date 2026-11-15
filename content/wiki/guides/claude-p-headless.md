@@ -2,11 +2,12 @@
 title: "claude -p によるヘッドレス実行"
 description: "Claude Code の非対話モード claude -p を、構造化出力を返す関数としてスクリプトやジョブから呼ぶための手順と注意点。--bare による入力トークン削減、Celery からの呼び出し"
 date: 2026-10-30
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["claude -p", "headless", "ヘッドレスモード", "--bare", "--json-schema", "apiKeyHelper"]
 related_posts:
   - "/posts/2026/10/claude-p-input-tokens-bare/"
   - "/posts/2026/10/celery-claude-recursive-orchestration/"
+  - "/posts/2026/11/agents-talking-to-agents/"
 tags: ["claude-code", "claude -p", "トークン最適化", "prompt-caching", "celery"]
 ---
 
@@ -68,9 +69,16 @@ tags: ["claude-code", "claude -p", "トークン最適化", "prompt-caching", "c
 
 計画役は入力・出力・失敗（`ValueError` / `SubprocessError`）の約束さえ守れば Codex CLI（`codex exec --output-schema --sandbox read-only`）などに差し替えられる。費用上限オプションがない計画役では、呼び出し回数の上限がほぼ唯一の費用の歯止めになる。設計の背景は [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) を参照。
 
+### 他のエージェントとのやり取り
+
+- `claude -p`（Agent SDK を含む）の非対話セッションでは Agent Teams のチームメイトは起動しない
+- セッション間メッセージは、ドキュメント上は `claude -p` のセッションも受け取れる（bare モードを除く）。ただし非対話のセッションは承認ダイアログを出せないので、受信側の `crossSessionInbound` を `accept` にしておかないと、保留されたメッセージは期限切れで落ちる
+- 親ループから `claude -p` の子を回す構成では、メッセージではなく台帳ファイルなどで状態を引き継ぐのが確実（[マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/)）
+
 ## 関連ページ
 
-- [Claude Code](/blogs/wiki/tools/claude-code/)
+- [Claude Code](/blogs/wiki/tools/claude-code/) — エージェント同士の会話経路
+- [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/)
 - [Celery](/blogs/wiki/tools/celery/) — `claude -p` を呼ぶタスクキュー
 - [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — LLM は提案、コードが検査して投入
 - [Claude Code Remote Control](/blogs/wiki/guides/claude-code-remote-control/) — 対話セッションを外から操作する別ルート
@@ -80,3 +88,4 @@ tags: ["claude-code", "claude -p", "トークン最適化", "prompt-caching", "c
 
 - [claude -p の入力トークンを実測 — Claude Code の既定 1 万前後を --bare で約 700 に減らす](/blogs/posts/2026/10/claude-p-input-tokens-bare/) — 2026-10-30
 - [Celery と claude -p で組む再帰的なエージェントオーケストレーション](/blogs/posts/2026/10/celery-claude-recursive-orchestration/) — 2026-10-30
+- [エージェント同士に会話させる — Claude Code の 3 つの経路と A2A の使い分け](/blogs/posts/2026/11/agents-talking-to-agents/) — 2026-11-15

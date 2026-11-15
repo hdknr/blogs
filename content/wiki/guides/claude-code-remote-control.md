@@ -2,10 +2,11 @@
 title: "Claude Code Remote Control で iPhone から遠隔操作する"
 description: "Mac で走る Claude Code のセッションを iPhone からミラーして答える設定、プッシュ通知の切り分け、不在中に止まらないための設定"
 date: 2026-10-30
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["Remote Control", "/remote-control", "/rc", "claude rc", "Claude Code モバイル通知"]
 related_posts:
   - "/posts/2026/10/claude-code-remote-control-iphone/"
+  - "/posts/2026/11/agents-talking-to-agents/"
 tags: ["claude-code", "Remote Control", "プッシュ通知", "macOS"]
 ---
 
@@ -70,6 +71,10 @@ iPhone で開いたセッション名が `claude rc` の画面に出た名前と
 
 PC を閉じても動かしたいなら、Anthropic のクラウドで動く scheduled tasks（旧 Routines）が選択肢になる（[Claude Code](/blogs/wiki/tools/claude-code/) 参照）。
 
+### 別マシンのセッションへのメッセージ経路として
+
+Remote Control の接続は、セッション間メッセージ（cross-session messaging）で**別マシンのセッション**に届ける経路にもなる。同じマシンのセッション同士はローカルソケットで直接届くが、別マシン宛ては Anthropic のサーバー経由で相手の Remote Control 接続に届くため、送信側が Remote Control に接続し claude.ai でサインインしている必要がある。クラウドのセッション（claude.ai/code）は `SendMessage` で返信できない（[Claude Code](/blogs/wiki/tools/claude-code/)）。
+
 ## 関連ページ
 
 - [Claude Code](/blogs/wiki/tools/claude-code/) — 本体と Routines（scheduled tasks）
@@ -79,3 +84,4 @@ PC を閉じても動かしたいなら、Anthropic のクラウドで動く sch
 ## ソース記事
 
 - [Claude Code を iPhone から遠隔操作する — Remote Control の設定と、通知でつまずいた話](/blogs/posts/2026/10/claude-code-remote-control-iphone/) — 2026-10-25
+- [エージェント同士に会話させる — Claude Code の 3 つの経路と A2A の使い分け](/blogs/posts/2026/11/agents-talking-to-agents/) — 2026-11-15

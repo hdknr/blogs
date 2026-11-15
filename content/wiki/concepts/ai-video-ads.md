@@ -2,13 +2,14 @@
 title: "AI動画広告生成ツール"
 description: "AI を使って UGC スタイルや企業向けの動画広告を自動生成するツール群。Arcads・Creatify・HeyGen・Synthesia が主要プレイヤー"
 date: 2026-04-16
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["AI UGC", "AI動画広告", "AI video generation"]
 related_posts:
   - "/posts/2026/04/ai-ugc-video-ad-tools-comparison/"
   - "/posts/2026/04/arcads-ai-ugc-ads/"
   - "/posts/2026/10/higgsfield-claude-code-short-video/"
   - "/posts/2026/10/short-video-scenario-reverse-generation/"
+  - "/posts/2026/11/veo-lite-fable-avatar-video/"
 tags: ["AI広告", "UGC", "動画生成", "マーケティング自動化"]
 ---
 
@@ -56,11 +57,14 @@ AI を活用して動画広告を自動生成するツールカテゴリ。特�
 - **リバース生成** — 伸びている広告やショート動画から、マルチモーダル LLM（Gemini は動画を直接読める）や VidSbo でシナリオと絵コンテを逆引きし、演出意図とテロップまで言語化する。Morphic・LTX Studio・insMind に台本を入れれば、構成はそのままに商品だけ差し替えた絵コンテを作り直せる。参考にするのは構成と演出意図までで、表現そのものは自分で作る
 - **シナリオ量産** — Claude Code に `CLAUDE.md` でカット形式とプロンプト語順を固定させ、テーマからカット割りと英文プロンプトをファイルで量産し、Higgsfield MCP で生成する
 
+- **汎用エージェント + 動画モデルでアバター動画** — LLM が台本・Veo 用プロンプト・3D と BGM を作るコード・ffmpeg の編集を担い、[Veo](/blogs/wiki/tools/veo/) 3.1 Lite が声つきの人物映像を生成する。24 秒・1080p で約 $1.92（Gemini API に Veo の無料枠はない）。HeyGen のようなアバター専用サービスの代わりになり得るが、品質の安定性と商用利用の条件は別に確かめる
+
 手順は [ショート動画のシナリオ設計と生成](/blogs/wiki/guides/short-video-scenario-generation/) にまとめた。
 
 ## 関連ページ
 
 - [Arcads](/blogs/wiki/tools/arcads/) — UGC動画広告特化ツール
+- [Veo](/blogs/wiki/tools/veo/) — 映像と声を同時に生成する Google の動画モデル。料金とモデル ID の提供状況
 - [Higgsfield](/blogs/wiki/tools/higgsfield/) — 30 以上の動画・画像モデルを MCP で使える生成プラットフォーム
 - [ショート動画のシナリオ設計と生成](/blogs/wiki/guides/short-video-scenario-generation/) — リバース生成とシナリオ量産の手順
 - [OpenClaw](/blogs/wiki/tools/openclaw/) — AI エージェント（Arcads API と連携実績あり）
@@ -71,3 +75,4 @@ AI を活用して動画広告を自動生成するツールカテゴリ。特�
 - [Arcads 完全ガイド](/blogs/posts/2026/04/arcads-ai-ugc-ads/) — 2026-04-02
 - [Claude Code で Higgsfield 用ショート動画シナリオを量産する](/blogs/posts/2026/10/higgsfield-claude-code-short-video/) — 2026-10-14
 - [ショート動画からシナリオと絵コンテをリバース生成する](/blogs/posts/2026/10/short-video-scenario-reverse-generation/) — 2026-10-16
+- [Veo 3.1 Lite の料金でアバター動画は 0 円で作れるか — Claude Fable 5.2 との分担を検証](/blogs/posts/2026/11/veo-lite-fable-avatar-video/) — 2026-11-15

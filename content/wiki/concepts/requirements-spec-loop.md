@@ -2,13 +2,14 @@
 title: "要求仕様書作成ループ"
 description: "コーディングエージェントの開発ループの手前に、利用者と回す要求確定ループ、エージェント同士の仕様レビューループ、並行する実現性・コストのループを置き、確定仕様からテストと契約を生成して開発ループへ渡す構成"
 date: 2026-10-13
-lastmod: 2026-11-09
+lastmod: 2026-11-15
 aliases: ["要求確定ループ", "仕様レビューループ", "実現性・コストのループ", "仕様駆動のスキャフォールディング", "Q&A 表", "hdknr 版 spec-loop", "シフトレフト", "Formal Checker"]
 related_posts:
   - "/posts/2026/10/requirements-spec-loop/"
   - "/posts/2026/10/spec-loop-plugin/"
   - "/posts/2026/10/spec-loop-two-frameworks-comparison/"
   - "/posts/2026/11/spec-loop-tlc-formal-checker/"
+  - "/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/"
 tags: ["AIエージェント", "仕様駆動開発", "ハーネスエンジニアリング", "形式手法", "要求定義", "claude-code", "Agent Skills"]
 ---
 
@@ -110,12 +111,34 @@ TLC を使うのは spec-loop の spec-review だけで、dev-loop には TLA+ �
 
 先に直すべきなのは 2 のモデルの保存とトレースの引き渡し。モデルが残らないと、線を見直しても前後の検査結果を比べられない。
 
-同名の dpolivaev/spec-loop は、方向が決まった後の実装の一歩一歩を開発者と回すもので、重なるのはこのプラグインではなく後ろの dev-loop である。比較と取り入れ方は [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) にまとめた。
+同名の dpolivaev/spec-loop は、方向が決まった後の実装の一歩一歩を開発者と回すもので、重なるのはこのプラグインではなく後ろの dev-loop である。比較と取り入れ方は [仕様駆動開発（SDD）](/blogs/wiki/concepts/spec-driven-development/) にまとめた。
+
+### cc-sdd を軸にした外部のフローと比べて見えた不足
+
+非エンジニアの社長が Claude Code で作った巨大 PR を受け止めるため、[cc-sdd](/blogs/wiki/tools/cc-sdd/) を軸に役割別エージェント・計画段階の CTO レビュー・[CodeRabbit](/blogs/wiki/concepts/code-review-alternatives/)・[Takumi Guard](/blogs/wiki/tools/takumi-guard/)・司令塔エージェントを組んだ事例がある。そこから読み取れる原則は、**人間のゲートを前（計画）に寄せる**、**書く役と見る役を分け、別系統のレビューを重ねる**、**自動化できない判断（リリース判断）だけを人間に残す**の 3 つ。
+
+| 要素 | 外部のフロー | spec-loop / dev-loop |
+|---|---|---|
+| 実装前の人間のゲート | 計画の PR を CTO がレビュー | 要求と予算の承認をスクリプトで照合（dev-loop 単独では無し） |
+| 作業とレビューの自動ループ | 司令塔エージェント | cruise / autopilot |
+| 実装の検証 | レビュアーと CodeRabbit | 別ティアの Verifier と `/code-review` の 2 関門 |
+| 形式検査 | 記載なし | TLA+ / Alloy |
+| 依存パッケージの安全性 | Takumi Guard | **なし** |
+| 系統の違うレビュアー | CodeRabbit | **なし** |
+| 持ち込まれたコードの扱い | 社長の PR を起点にする | **入口がない** |
+| 依頼の振り分け | `/kiro-discovery` | **なし** |
+
+仕様の厳密さ・検証・承認（判定役にファイルを書かせない、検証通過を停止条件にする、形式検査、承認範囲の機械照合）は spec-loop / dev-loop のほうが踏み込んでいる。欠けていたのは**コードの外側の守り**と**入口**で、次の 3 件を起票した。
+
+- 依存パッケージが悪性でないかを見る関門（利用者不在の周でエージェントが依存を足しても誰も見ない）
+- 外部レビュー bot のコメントを指摘の採否表に取り込む（関門には格上げせず、信頼できない入力として扱う）
+- 持ち込まれた動くコードから要求の候補と暗黙の業務ルールを抜き出して Q&A 表に起票する（コードはマージせず、確定は利用者の回答で）
+
+依頼の振り分けは未起票の検討課題。dev-loop は「小さいから」で手順を省かない設計なので、変えるべきは周の厳密さではなく**どのループに乗せるかの入口**である。入口がないと小さな依頼まで重い仕様のループに乗り、非エンジニアが使い続けにくくなる。
 
 ## 関連ページ
 
-- [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) — 実装側を受け持つ同名の dpolivaev 版との比較
-
+- [仕様駆動開発（SDD）](/blogs/wiki/concepts/spec-driven-development/) — SDD の全体像と、実装側を受け持つ同名の dpolivaev 版との比較
 - [形式手法（Formal Methods）](/blogs/wiki/concepts/formal-methods/) — Formal Checker の道具と反例の扱い
 - [TLA+ と TLC](/blogs/wiki/tools/tla-plus/) — Formal Checker が業務フローの検査に使うモデル検査器
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 開発ループ側の実行環境の設計
@@ -123,6 +146,7 @@ TLC を使うのは spec-loop の spec-review だけで、dev-loop には TLA+ �
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — Planner と批判役、判定役を分ける理由
 - [BDD と Gherkin 構文](/blogs/wiki/concepts/bdd-gherkin/) — 日本語シナリオを実行可能な仕様にする
 - [Claude Code](/blogs/wiki/tools/claude-code/) — プラグインとスキルの実行基盤
+- [cc-sdd](/blogs/wiki/tools/cc-sdd/) — 比較対象にした Kiro 式の SDD スキル
 
 ## ソース記事
 
@@ -130,3 +154,4 @@ TLC を使うのは spec-loop の spec-review だけで、dev-loop には TLA+ �
 - [要求仕様ループを Claude Code プラグインにする — dev-loop と分けて 1 プラグイン・複数スキルで組む](/blogs/posts/2026/10/spec-loop-plugin/) — 2026-10-12
 - [AI 仕様駆動開発の 2 つの spec-loop を比べる — 実装ループと要求確定ループ](/blogs/posts/2026/10/spec-loop-two-frameworks-comparison/) — 2026-10-25
 - [spec-loop は TLC をどう使っているか — Formal Checker の設計と、実案件で見えた 2 つの穴](/blogs/posts/2026/11/spec-loop-tlc-formal-checker/) — 2026-11-08
+- [非エンジニアの社長が出した巨大 PR をどう受け止めるか — cc-sdd・CodeRabbit・Takumi Guard で組む AI 駆動開発フロー](/blogs/posts/2026/11/cc-sdd-coderabbit-takumi-guard-ai-dev-flow/) — 2026-11-13

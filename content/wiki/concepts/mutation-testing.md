@@ -2,12 +2,13 @@
 title: "ミューテーションテスト（mutation harness）"
 description: "コードをわざと 1 箇所壊してテストが落ちるかを確かめ、テストの検出力を測る技法。専用ツールなしの 30 行のスクリプトでも価値が出る"
 date: 2026-09-30
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["mutation testing", "mutation harness", "ミューテーションスコア", "変異テスト", "mutant", "変異体"]
 related_posts:
   - "/posts/2026/09/mutation-harness/"
   - "/posts/2026/09/whitebox-blackbox-boundary-coverage/"
   - "/posts/2026/10/replacing-mandatory-code-review/"
+  - "/posts/2026/11/positive-control-in-systems/"
 tags: ["ミューテーションテスト", "テスト", "python", "pytest", "コード品質"]
 ---
 
@@ -57,12 +58,14 @@ GREEN の 3 分類のうち、一番よく出て一番価値があるのは**死
 | 主張の形 | 効く検査 |
 |---|---|
 | 「このガード／検査は効いている」 | ミューテーション |
-| 「〜は起きない」「呼ばれない」「0 件」 | ポジティブコントロール（検出できるはずの対象で先に検出を確認） |
+| 「〜は起きない」「呼ばれない」「0 件」 | [ポジティブコントロール](/blogs/wiki/concepts/positive-control/)（検出できるはずの対象で先に検出を確認） |
 | 「この入力範囲で正しい」 | property-based testing |
 | 期待値が書けない | メタモルフィックテスティング |
 | 「落ちても復旧する」 | フォールトインジェクション／カオスエンジニアリング |
 | 「既存の挙動を変えていない」 | 固定 SHA との比較 + 特性テスト |
 | 「性能は劣化していない」 | ベースライン付きベンチ（固定シード・相対値） |
+
+ミューテーションテスト自体も、テストに対する陽性対照の一種と位置づけられる。同じ発想は採点側にも要る。Eval の grader（正規表現で成果物を調べる判定ルール）は、`not_contains` ならエージェントが何もしなかった実行でも緑になるので、誤った振る舞いを 1 行で直接させるプロンプトを流して grader が赤になることを確かめる。「修正前の実装で落ちる」（振る舞いの差）と「対照で落ちる」（検査が落ちうる）は別の問いとして記録する。
 
 TDD で「まず RED を見る」のも、実装が無い状態という 1 個の変異を当てているのと同じ。レビューで一番効く質問「この行、消したら何が壊れますか？」も同じ発想である。
 
@@ -91,6 +94,7 @@ TDD で「まず RED を見る」のも、実装が無い状態という 1 個�
 
 ## 関連ページ
 
+- [陽性対照（ポジティブコントロール）](/blogs/wiki/concepts/positive-control/) — 監視・セキュリティ・ML まで含めた同じ考え方の一般形
 - [テストの導出元（ホワイトボックスとブラックボックス）](/blogs/wiki/concepts/whitebox-blackbox-testing/) — 分岐カバレッジ 100% でスコアが 0% と 100% に割れた実測
 - [沈黙する失敗](/blogs/wiki/concepts/silent-failure/) — 「緑」が何も語らない構造
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 検査役を分ける理由
@@ -104,3 +108,4 @@ TDD で「まず RED を見る」のも、実装が無い状態という 1 個�
 - [テストを信じる前に、テストを壊す — mutation harness で「緑」に意味を持たせる](/blogs/posts/2026/09/mutation-harness/) — 2026-09-16
 - [ホワイトボックスとブラックボックスの違いを実測した — 分岐カバレッジ 100% でミューテーションスコアは 0% と 100%](/blogs/posts/2026/09/whitebox-blackbox-boundary-coverage/) — 2026-09-17
 - [必須コードレビューをやめるなら、品質は何で担保するのか — レビューが担っていた 8 つの役割と AI 時代の代替手段](/blogs/posts/2026/10/replacing-mandatory-code-review/) — 2026-10-30
+- [陽性対照（ポジティブコントロール）とは？ IT の監視・テストで「異常なし」を信じる前に確かめること](/blogs/posts/2026/11/positive-control-in-systems/) — 2026-11-13

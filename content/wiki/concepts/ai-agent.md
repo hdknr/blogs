@@ -2,7 +2,7 @@
 title: "AI エージェント"
 description: "自律的にタスク実行できる AI システム。複数ステップの処理を自己制御で進める"
 date: 2026-04-06
-lastmod: 2026-11-09
+lastmod: 2026-11-15
 aliases: ["AI Agent", "エージェント", "autonomous agent"]
 related_posts:
   - "/posts/2026/03/ai-agent-qa/"
@@ -15,6 +15,8 @@ related_posts:
   - "/posts/2026/04/agent-harness-memory-lock-in/"
   - "/posts/2026/11/meta-muse-use-case-inventory/"
   - "/posts/2026/11/meta-muse-vs-hermes-agent/"
+  - "/posts/2026/11/agents-talking-to-agents/"
+  - "/posts/2026/11/modern-web-guidance-ai-frontend/"
 tags: ["agent", "llm", "自律実行", "マネージドエージェント"]
 ---
 
@@ -25,12 +27,16 @@ tags: ["agent", "llm", "自律実行", "マネージドエージェント"]
 ## 主な実装パターン
 
 - **シングルエージェント**: 1つの LLM が計画→実行→検証を繰り返す（Claude Code など）
-- **マルチエージェント**: 複数のエージェントが役割分担して協調（Agent Teams）
+- **マルチエージェント**: 複数のエージェントが役割分担して協調（Agent Teams）。製品内ではサブエージェント・Agent Teams・セッション間メッセージ、ベンダーをまたぐなら [A2A](/blogs/wiki/concepts/a2a-protocol/) でつなぐ。人の仕事は「プロンプトを書く」から「誰と誰をどの経路でつなぎ、どこで止め、どこに人の承認を残すか」を決めることへ移る
 - **メタエージェント**: エージェントのハーネスを AI 自身が改善（AutoAgent）
 
 ## 品質保証
 
 AI エージェントの出力品質を担保するにはハーネスエンジニアリングが必須。CLAUDE.md（入力層）、Hooks（検証層）、Agent Skills（ワークフロー層）の多層構造で品質を保証する。
+
+## 学習データの鮮度
+
+エージェントは学習データに多い書き方へ寄る。フロントエンドでは、ネイティブの `<dialog>` や CSS Anchor Positioning で済む場面でも古い JavaScript 実装やライブラリを持ち出しがち。Chrome チームの [Modern Web Guidance](/blogs/wiki/concepts/modern-web-guidance/) のように、最新のガイドを Agent Skills として必要なときだけ検索・参照させるのが対策の型になる。
 
 ## エージェント基盤の分類
 
@@ -67,6 +73,9 @@ LangChain 創設者 Harrison Chase が指摘する重要な概念。エージェ
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — エージェント品質保証の設計パターン
 - [自己改善エージェント](/blogs/wiki/concepts/self-improving-agents/) — エージェントが自律的に改善するパターン
 - [MCP](/blogs/wiki/concepts/mcp/) — エージェントと外部ツールの接続プロトコル
+- [A2A プロトコル](/blogs/wiki/concepts/a2a-protocol/) — エージェント同士を接続するプロトコル
+- [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — 複数エージェントの協調と会話の経路
+- [Modern Web Guidance](/blogs/wiki/concepts/modern-web-guidance/) — 学習データの古さを Agent Skills で補う例
 
 ## ソース記事
 
@@ -80,3 +89,5 @@ LangChain 創設者 Harrison Chase が指摘する重要な概念。エージェ
 - [エージェントハーネスとメモリのロックイン問題](/blogs/posts/2026/04/agent-harness-memory-lock-in/) — 2026-04-12
 - [Meta の AI エージェント Muse は「使い方の凡例が 388 通り」— 汎用エージェントは GTD で棚卸しする](/blogs/posts/2026/11/meta-muse-use-case-inventory/) — 2026-11-04
 - [Meta Muse と Hermes Agent の違い — マネージド型とセルフホスト型、常駐 AI エージェントの選び方と併用例](/blogs/posts/2026/11/meta-muse-vs-hermes-agent/) — 2026-11-09
+- [エージェント同士に会話させる — Claude Code の 3 つの経路と A2A の使い分け](/blogs/posts/2026/11/agents-talking-to-agents/) — 2026-11-15
+- [AI が書くフロントエンドが「2019年」で止まる問題と、Chrome チームの Modern Web Guidance](/blogs/posts/2026/11/modern-web-guidance-ai-frontend/) — 2026-11-15

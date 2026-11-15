@@ -2,11 +2,12 @@
 title: "記号的 AI（知識表現とエキスパートシステム）"
 description: "知識を明示的なルールやトリプレットで表し、推論エンジンで結論を導くトップダウン型の AI。エキスパートシステム、オントロジー、セマンティックウェブ、知識グラフへと続く系譜"
 date: 2026-09-30
-lastmod: 2026-09-30
-aliases: ["シンボリック AI", "Symbolic AI", "記号的推論", "知識表現", "エキスパートシステム", "オントロジー", "セマンティックウェブ", "順方向推論", "逆方向推論"]
+lastmod: 2026-11-15
+aliases: ["シンボリック AI", "Symbolic AI", "記号的推論", "知識表現", "エキスパートシステム", "セマンティックウェブ", "順方向推論", "逆方向推論"]
 related_posts:
   - "/posts/2026/09/ai-for-beginners-02-symbolic-ai/"
   - "/posts/2026/09/ai-for-beginners-01-intro-history/"
+  - "/posts/2026/11/nvidia-auto-ontology/"
 tags: ["エキスパートシステム", "オントロジー", "知識グラフ", "AI-For-Beginners", "python"]
 ---
 
@@ -62,6 +63,7 @@ tags: ["エキスパートシステム", "オントロジー", "知識グラフ"
 - **OWL の推論は少ない定義から大量の関係を導く** — 「おば＝親の姉妹」を `owl:propertyChainAxiom` で書くと、家系図の 669 トリプレットが `owlrl` の閉包で 4,246 に増え、おじ・おば・祖父の関係が自動で導かれた
 - **推論は入力の正しさを超えられない** — 変換コードが同じ両親を持つ子どもにしか兄弟関係を付けないと、異母兄弟を経由する「おじ」は出てこない。推論ではなく元の事実に抜けがある
 - テキストから自動マイニングしたオントロジーの例が Microsoft Concept Graph（`is-a` 関係を確率付きで返す）だが、API は既に停止している
+- **LLM 時代の再登場** — 2026 年には、DB のメタデータから業務オントロジー（用語・計算式・結合経路）を自動生成し、LLM の Text-to-SQL を正確にする NVIDIA Auto Ontology のような形で使われている。記号的な定義が「説明できる・人が直せる」性質を、LLM の出力の検証に持ち込む構図（[オントロジー](/blogs/wiki/concepts/ontology/)）
 
 ### 教材で間違えやすい用語
 
@@ -75,9 +77,11 @@ tags: ["エキスパートシステム", "オントロジー", "知識グラフ"
 - [AI-For-Beginners（Microsoft）](/blogs/wiki/tools/ai-for-beginners/) — このページの出典カリキュラム
 - [ニューラルネットワークの基礎](/blogs/wiki/concepts/neural-network-basics/) — 反対側のボトムアップ・アプローチ
 - [RAG](/blogs/wiki/concepts/rag/) — 外部知識を LLM に持ち込む現代の手法
+- [オントロジー](/blogs/wiki/concepts/ontology/) — 業務データの意味の層としてのオントロジー
 - [AI レディデータ](/blogs/wiki/concepts/ai-ready-data/) — 知識を機械が使える形に整える実務の論点
 
 ## ソース記事
 
 - [知識表現とエキスパートシステムをやさしく解説 — Microsoft AI-For-Beginners レッスン 02](/blogs/posts/2026/09/ai-for-beginners-02-symbolic-ai/) — 2026-09-30
 - [AI の歴史と基本をやさしく解説 — Microsoft AI-For-Beginners レッスン 01](/blogs/posts/2026/09/ai-for-beginners-01-intro-history/) — 2026-09-29（トップダウンとボトムアップの 2 分類）
+- [NVIDIA Auto Ontology とは — オントロジー自動生成で AI エージェントの Text-to-SQL 精度を上げる](/blogs/posts/2026/11/nvidia-auto-ontology/) — 2026-11-15

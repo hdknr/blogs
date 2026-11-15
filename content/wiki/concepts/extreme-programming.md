@@ -73,7 +73,7 @@ AI 時代に生まれつつある実践の例:
 
 - [必須コードレビューの代替](/blogs/wiki/concepts/code-review-alternatives/) — Mutual Benefit と Redundancy をレビューの再設計に当てはめる
 - [Vibe Coding](/blogs/wiki/concepts/vibe-coding/) — 巨大 PR の丸投げという Mutual Benefit 違反
-- [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) — Baby Steps を AI エージェント向けに形式化した進め方
+- [仕様駆動開発（SDD）](/blogs/wiki/concepts/spec-driven-development/) — Baby Steps を AI エージェント向けに形式化した進め方
 - [ミューテーションテスト](/blogs/wiki/concepts/mutation-testing/) — Test-First で生成したテストが効いているかを測る
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — CI・テストで AI の出力を囲む環境
 

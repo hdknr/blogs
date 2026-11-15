@@ -140,7 +140,7 @@ tags: ["ループエンジニアリング", "AIエージェント", "自動化",
 - [Claude Code](/blogs/wiki/tools/claude-code/) — `/loop` `/goal` `/schedule` の提供元
 - [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — 作成者と検証者を分ける理由と 3 層
 - [要求仕様書作成ループ](/blogs/wiki/concepts/requirements-spec-loop/) — 人間の判断を待って止まる上流のループと、開発ループとの境界
-- [仕様駆動開発（Spec Loop）](/blogs/wiki/concepts/spec-driven-development/) — 人間の承認ゲートで回す実装側のループ
+- [仕様駆動開発（SDD）](/blogs/wiki/concepts/spec-driven-development/) — 人間の承認ゲートで回す実装側のループ
 
 ## ソース記事
 

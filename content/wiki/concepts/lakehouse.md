@@ -2,7 +2,7 @@
 title: "レイクハウス"
 description: "データをオープンな形式でオブジェクトストレージに 1 か所だけ置き、テーブルフォーマット・カタログ・計算エンジンを差し替え可能な層として組み合わせるデータ基盤のアーキテクチャ。DWH 一体型との使い分けと、AI エージェント向けの守りまで"
 date: 2026-10-30
-lastmod: 2026-10-30
+lastmod: 2026-11-15
 aliases: ["Lakehouse", "データレイクハウス", "Data Lakehouse", "レイクハウスアーキテクチャ", "Delta Lake", "Apache Hudi", "Apache Paimon", "Apache XTable", "Delta UniForm", "Apache Polaris", "Unity Catalog", "Lakekeeper", "Apache Fluss", "Lance", "Vortex"]
 related_posts:
   - "/posts/2026/10/apache-iceberg-duckdb/"
@@ -10,6 +10,7 @@ related_posts:
   - "/posts/2026/10/redshift-vs-lakehouse/"
   - "/posts/2026/10/lakehouse-ecosystem-2026/"
   - "/posts/2026/10/ai-agent-data-platform/"
+  - "/posts/2026/11/aws-only-ai-native-data-platform/"
 tags: ["データレイク", "データ基盤", "Apache Iceberg", "Delta Lake", "Apache Hudi", "Apache Paimon", "DuckLake", "Redshift", "aws"]
 ---
 
@@ -81,6 +82,10 @@ Redshift から Iceberg への書き込みは 1 文 1 トランザクション�
 3. **権限** — カタログでエージェント用ロールの読めるテーブルを絞り、既定は読み取り専用。MCP サーバー側の制限と二重に守る
 4. **取り消し** — Iceberg のブランチで WAP（Write-Audit-Publish）を回し、検証を通ったものだけ `main` に fast-forward。失敗はスナップショットへロールバック
 
+### DWH 案と S3（Iceberg）+ Athena 案
+
+AWS だけで AI ネイティブなデータ分析基盤を作る構成案では、Aurora zero-ETL 連携で取り込みを自作せずに済む [Amazon Redshift](/blogs/wiki/tools/amazon-redshift/) 案を推し、DWH を持たない S3（Iceberg）+ Athena 案を別案に置いた。後者は誰も使わないときの費用がほぼ S3 の保管料だけだが、AWS DMS で出した CDC を Iceberg にマージする処理を自作・運用することになり、小さなファイルが増えるとスキャン量と処理時間が増える。少人数で早く立ち上げたい・鮮度が要るなら Redshift、更新もクエリも少ないなら Athena が候補（[AI ネイティブなデータ分析基盤](/blogs/wiki/concepts/ai-native-data-platform/)）。
+
 段階的に進めるのが現実的で、試行（DuckDB ＋ DuckLake）→ チーム利用（S3 ＋ Iceberg、費用と権限）→ 業務組み込み（セマンティックレイヤーと Redshift、ブランチでの検証）と、前の段階の守りを外さずに積み増す。
 
 ## 関連ページ
@@ -91,6 +96,9 @@ Redshift から Iceberg への書き込みは 1 文 1 トランザクション�
 - [列指向ストレージ](/blogs/wiki/concepts/columnar-storage/) — Parquet・Arrow・Vortex の背景
 - [AI-ready データ設計](/blogs/wiki/concepts/ai-ready-data/) — エージェントに意味を渡す設計
 - [MCP](/blogs/wiki/concepts/mcp/) — エージェントがデータにアクセスする窓口
+- [セマンティックレイヤー](/blogs/wiki/concepts/semantic-layer/) — 4 つの守りの「意味」を担う層
+- [Amazon Redshift](/blogs/wiki/tools/amazon-redshift/) — DWH 一体型の代表
+- [AI ネイティブなデータ分析基盤](/blogs/wiki/concepts/ai-native-data-platform/) — DWH・dbt・BI・MCP で組む基盤の設計
 
 ## ソース記事
 
@@ -99,3 +107,4 @@ Redshift から Iceberg への書き込みは 1 文 1 トランザクション�
 - [Redshift か、S3 ＋ Iceberg のレイクハウスか：DWH とオープンテーブルフォーマットの選び方](/blogs/posts/2026/10/redshift-vs-lakehouse/) — 2026-10-13
 - [Iceberg と DuckLake の先へ：2026 年に注目したいレイクハウスの技術とプロダクト](/blogs/posts/2026/10/lakehouse-ecosystem-2026/) — 2026-10-13
 - [AI エージェントのためのデータ基盤：レイクハウスを土台に「意味・費用・権限・取り消し」を設計する](/blogs/posts/2026/10/ai-agent-data-platform/) — 2026-10-13
+- [AWS だけで作る AI ネイティブなデータ分析基盤：Aurora zero-ETL × Redshift × dbt 構成案](/blogs/posts/2026/11/aws-only-ai-native-data-platform/) — 2026-11-15

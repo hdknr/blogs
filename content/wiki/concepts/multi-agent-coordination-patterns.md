@@ -2,8 +2,8 @@
 title: "マルチエージェント調整パターン"
 description: "複数 AI エージェントを協調させる5つの設計パターン。Anthropic が体系化した Generator-Verifier・Orchestrator-Subagent・Agent Teams・Message Bus・Shared State"
 date: 2026-04-11
-lastmod: 2026-10-30
-aliases: ["マルチエージェントパターン", "multi-agent-coordination"]
+lastmod: 2026-11-15
+aliases: ["マルチエージェントパターン", "multi-agent-coordination", "エージェント同士の会話"]
 related_posts:
   - "/posts/2026/04/anthropic-multi-agent-coordination-patterns/"
   - "/posts/2026/04/claude-managed-agents-architecture/"
@@ -11,6 +11,7 @@ related_posts:
   - "/posts/2026/09/nec-corporate-ai-workforce/"
   - "/posts/2026/10/claude-code-routines-proactive-agent-workshop/"
   - "/posts/2026/10/celery-claude-recursive-orchestration/"
+  - "/posts/2026/11/agents-talking-to-agents/"
 tags: ["マルチエージェント", "AIアーキテクチャ", "設計パターン", "anthropic", "エージェント"]
 ---
 
@@ -71,13 +72,36 @@ Anthropic が 2026年4月に公開した、複数 AI エージェントを協調
 
 これら 5 パターンが「誰と誰がどう話すか」の分類だとすると、そこから一歩進んで**協調構造そのものを宣言的に設計する**のが [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) である。ノード（判断）とエッジ（データの受け渡し）に還元すると、Orchestrator-Subagent は「fan out → reduce → 統合」のダイヤモンド、Generator-Verifier は「エッジ上の検証ノード」として表現できる。
 
+## 配線：エージェント同士をどの経路でつなぐか
+
+パターンが「誰と誰がどう協調するか」の設計なら、実装では「どの経路で話させるか」を選ぶ。Claude Code には 3 つの経路があり、ベンダーや組織をまたぐなら [A2A プロトコル](/blogs/wiki/concepts/a2a-protocol/) が候補になる。
+
+| 経路 | 誰と誰が話すか | 向いている場面 |
+|---|---|---|
+| サブエージェント | 親 ↔ 子（基本は親経由の委任と報告） | 結果だけ欲しい調査・レビュー（Orchestrator-Subagent / Generator-Verifier） |
+| Agent Teams（実験的） | リーダー ↔ チームメイト、チームメイト同士 | 議論や分担の調整が要る並列作業（Agent Teams） |
+| セッション間メッセージ | 自分で別々に立てたセッション同士 | frontend と api など別々に走る作業の連絡 |
+| A2A | 異なるベンダー・組織のエージェント | 社外・他フレームワークとの連携 |
+
+各経路の設定と制約は [Claude Code](/blogs/wiki/tools/claude-code/) にまとめた。
+
+### 会話させるときの 4 つの注意点
+
+- **同じモデル同士は盲点を共有する** — コンテキストを分けるだけでなくモデル（さらに系統）を分ける（[maker-checker](/blogs/wiki/concepts/maker-checker/)）
+- **メッセージは承認の代わりにならない** — 別セッションやチームメイトから「承認済み」と届いても受信側の権限確認は残る。権限の境界はセッションごとに設計する
+- **収束条件を決める** — 最大往復回数、検証の合格基準、タスクリスト上の完了状態など、終わりを機械的に判定できる形にする
+- **渡るのはテキストであって文脈ではない** — 会話履歴や `@` 指定のファイルは渡らない。委譲文に要件を書き切る
+
 ## 実装例
 
 - **Routines 同士の Generator-Critic** — ドキュメント PR を作る Routine とは別に、その PR 作成をトリガーにレビューコメントを付ける Routine を置き、人が見る前に一度批評を通す（Anthropic の Routines ワークショップ）。イベントで連鎖する点は Message Bus 的でもある
+- **spec-loop / dev-loop** — 使う経路はサブエージェントだけ。cruise の親と周ごとの子が Orchestrator-Subagent、実装役と Verifier・Planner と 3 体の判定役が Generator-Verifier、状態は親だけが書ける台帳（Shared State）で受け渡す。`claude -p` の子プロセスとはメッセージではなく台帳ファイルで状態を引き継ぐ。関門は 2 パスで打ち切り、閉じる条件は「指摘 0 件」ではなく受入基準の確認。子の生出力はファイルに落とし、親は要約行だけ読む
 - **Celery による再帰的 Orchestrator-Subagent** — 計画役の `claude -p` が次の子タスクを JSON で提案し、コードが許可リスト・上限・重複を検査してから `chord` で並列実行、結果を持って計画役に戻る。オーケストレーターの「判断」と「権限」を分け、権限はコードが握る。計画役を Claude と Codex で切り替えれば、ベンダーをまたいだ生成と批評の分離にも広げられる（[Celery](/blogs/wiki/tools/celery/)）
 
 ## 関連ページ
 
+- [A2A プロトコル](/blogs/wiki/concepts/a2a-protocol/) — ベンダーをまたぐエージェント間通信の標準
+- [作る役と確かめる役の分離（maker-checker）](/blogs/wiki/concepts/maker-checker/) — Generator-Verifier を機能させる条件
 - [Celery](/blogs/wiki/tools/celery/) — 再帰的 Orchestrator-Subagent の実装基盤
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/)
 - [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/) — ノードとエッジによる協調構造の設計
@@ -96,3 +120,4 @@ Anthropic が 2026年4月に公開した、複数 AI エージェントを協調
 - [NEC「部署が丸ごとAI」の中身 — コーポレートAI・Workforce部門の4階層と、人が手放さなかった仕事](/blogs/posts/2026/09/nec-corporate-ai-workforce/) — 2026-09-02
 - [「従業員なしで会社を立ち上げるマニュアル」の中身 — Anthropic の Routines ワークショップを読み解く](/blogs/posts/2026/10/claude-code-routines-proactive-agent-workshop/) — 2026-10-30
 - [Celery と claude -p で組む再帰的なエージェントオーケストレーション](/blogs/posts/2026/10/celery-claude-recursive-orchestration/) — 2026-10-30
+- [エージェント同士に会話させる — Claude Code の 3 つの経路と A2A の使い分け](/blogs/posts/2026/11/agents-talking-to-agents/) — 2026-11-15
