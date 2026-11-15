@@ -170,6 +170,37 @@ Agent Teams でも同様で、チームメイトが別のチームメイトの�
 
 セッション間メッセージで届くのは、送信側が書いた**テキストだけ**です。会話履歴やファイルが一緒に渡るわけではなく、`@` で指定したファイルも添付されません。受信側が必要なら、自分のツールと権限でそのパスを開きます。「何を知っている前提で書くか」は、人間同士の引き継ぎメモと同じ感覚で考える必要があります。
 
+## 実例：spec-loop / dev-loop の場合
+
+筆者がメンテしている Claude Code プラグイン、spec-loop（要求・仕様のループ。執筆時点で v0.86.1）と dev-loop（Issue を 1 周させる開発ループ。同 v1.107.1）で、エージェント同士がどう会話しているかを上の分類に当てはめてみます（spec-loop の構成は [要求仕様ループを Claude Code プラグインにする](/blogs/posts/2026/10/spec-loop-plugin/) を参照）。
+
+結論から言うと、使っている経路は **① サブエージェントだけ**です。Agent Teams、セッション間メッセージ、A2A はどちらのプラグインでも使っていません。その代わり、「気をつけたい 4 つのこと」はどれも規範として書き込まれています。
+
+### どこで誰と誰が話しているか
+
+| 箇所 | 誰と誰か | 経路 |
+|---|---|---|
+| dev-loop の実装と検証 | 実装役 ↔ Verifier | `Agent` で起動する。Verifier の指摘は、`SendMessage` で同じ実装役に送り返す |
+| spec-loop の仕様レビュー | Planner → Red Team・Domain Checker・Formal Checker | 3 体の判定役を `Agent` で同時に起動する。判定役同士はデータを渡さない |
+| dev-loop の cruise（複数 Issue の連続実行） | 親 → 周ごとの子 | 既定はサブエージェント。止まった子には `SendMessage` で続きを促す |
+| cruise の子プロセス・spec-loop の autopilot | 親（外側のループ）→ `claude -p` の子 | メッセージではなく、台帳ファイルを介して状態を引き継ぐ |
+| dev-loop の PR レビュー | Claude ↔ 外部のレビュー bot | PR コメントを読んで採否の表に取り込む |
+
+協調パターンで言えば、**Orchestrator-Subagent**（cruise の親と子）と **Generator-Verifier**（実装と Verifier、Planner と判定役）を組み合わせ、状態は **Shared State**（台帳。書けるのは親だけ）で受け渡す構成です。
+
+### 4 つの注意点はどう実装されているか
+
+- **盲点の共有**：Verifier と判定役は、呼び出すたびに `model` で実装とは別のティアを指定するのが必須です。dev-loop はさらに、別ティアにしても「どちらも Claude の上で動く」点を問題にしていて、CodeRabbit などの外部 bot のコメントを採否の表の入力に加えています。モデルを分けるだけでなく、**系統を分ける**ところまで進めた形です
+- **メッセージは承認にならない**：判定役と Verifier には、ファイルを書き換える Edit や Write を持たせていません（証拠を出すための Bash は持ちます）。子の「PR を作って CI が通った」という報告は子の言い分として扱い、親が `gh pr view` や `gh pr checks` で実物を確かめてから台帳を進めます
+- **収束条件**：検証とレビューの関門は 2 パスで打ち切ります。周を閉じる条件は「受入基準を確かめたこと」で、「指摘が 0 件になったこと」ではありません
+- **渡るのはテキストだけ**：委譲文はテンプレートを使い、差し込み箇所だけを置き換えて削らないのが必須です。作業する worktree や受入基準など、委譲先に守らせたい要件は「引き継ぐだけでなく委譲文に書く」と明記されています
+
+### 運用から出てきた工夫
+
+記事の範囲を超える工夫もあります。子の生の出力はファイルに落とし、親は要約の行だけを読むので、会話の量そのものが抑えられます。また、背景で動かした子の完了通知が届かないまま翌日まで止まった実例を受けて、通知だけに頼らず、出力ファイルに終わりの印が出るのを見て待つ方式にしています。
+
+一方で、見直す余地も見つかりました。dev-loop のドキュメントは「`claude -p` で起こした子には `SendMessage` で宛てられない」としていますが、③のセッション間メッセージのドキュメントでは、`claude -p` のセッションもメッセージを受け取れるとされています（bare モードを除く）。ただし非対話のセッションは承認ダイアログを出せないため、受け取る側の `crossSessionInbound` を `accept` にしておかないと、保留されたメッセージは期限切れで落ちます。手元ではまだ確かめていませんが、今なら子プロセスにも直接声をかけられるかもしれません。実機で確かめる作業は [dev-loop の Issue](https://github.com/hdknr/claude-code-setup/issues/1039) にしました。
+
 ## まとめ
 
 - **結果だけ欲しい委任**ならサブエージェント。完了後も `SendMessage` で続きを頼める
@@ -185,4 +216,5 @@ Agent Teams でも同様で、チームメイトが別のチームメイトの�
 - [Agent teams（Claude Code Docs）](https://code.claude.com/docs/en/agent-teams)
 - [Subagents（Claude Code Docs）](https://code.claude.com/docs/en/sub-agents)
 - [A2A Protocol Surpasses 150 Organizations…（Linux Foundation）](https://www.linuxfoundation.org/press/a2a-protocol-surpasses-150-organizations-lands-in-major-cloud-platforms-and-sees-enterprise-production-use-in-first-year)
+- [dev-loop 設計ドキュメント（claude-code-setup）](https://hdknr.github.io/claude-code-setup/plugins/dev-loop-design/)
 - [Anthropic が解説するマルチエージェント調整パターン 5 選](/blogs/posts/2026/04/anthropic-multi-agent-coordination-patterns/)
