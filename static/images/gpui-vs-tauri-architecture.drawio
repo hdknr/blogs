@@ -1,0 +1,72 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="gpui-vs-tauri" name="GPUI vs Tauri">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Tauri と GPUI の描画アーキテクチャ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Tauri group -->
+        <mxCell id="tauri-group" value="Tauri（WebView 方式）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="400" height="470" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-front" value="フロントエンド&lt;br&gt;HTML / CSS / JS・TS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="110" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-back" value="バックエンド&lt;br&gt;Rust" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="250" y="110" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-ipc" value="IPC&lt;br&gt;（シリアライズ）" style="endArrow=classic;startArrow=classic;html=1;fontSize=10;strokeColor=#b85450;fontColor=#b85450;" edge="1" parent="1" source="t-front" target="t-back">
+          <mxGeometry relative="1" as="geometry"><mxPoint y="50" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="t-webview" value="OS 標準の WebView&lt;br&gt;WebView2（Windows）/ WKWebView（macOS）/ WebKitGTK（Linux）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="240" width="160" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-e1" value="DOM / レイアウト" style="endArrow=classic;html=1;fontSize=10;" edge="1" parent="1" source="t-front" target="t-webview">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-os" value="OS API&lt;br&gt;（ファイル・重い処理）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="250" y="255" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-e2" style="endArrow=classic;html=1;" edge="1" parent="1" source="t-back" target="t-os">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-screen" value="画面" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="420" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="t-e3" value="ブラウザエンジンが描画" style="endArrow=classic;html=1;fontSize=10;" edge="1" parent="1" source="t-webview" target="t-screen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- GPUI group -->
+        <mxCell id="gpui-group" value="GPUI（GPU 直接描画方式）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="470" y="60" width="400" height="470" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-app" value="UI 層 + ロジック層&lt;br&gt;すべて Rust（同一メモリ空間）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="530" y="110" width="280" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-layout" value="レイアウトエンジン（Taffy）&lt;br&gt;+ テキスト描画" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="530" y="210" width="280" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-e1" style="endArrow=classic;html=1;" edge="1" parent="1" source="g-app" target="g-layout">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-gpu" value="GPU API&lt;br&gt;Metal（macOS）/ Direct3D 11（Windows）/ wgpu（Linux）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="530" y="300" width="280" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-e2" style="endArrow=classic;html=1;" edge="1" parent="1" source="g-layout" target="g-gpu">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-screen" value="画面" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="420" width="280" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="g-e3" value="ピクセル単位で直接描画" style="endArrow=classic;html=1;fontSize=10;" edge="1" parent="1" source="g-gpu" target="g-screen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
