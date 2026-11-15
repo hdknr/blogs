@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="before-after" name="Text-to-SQL with and without ontology">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Text-to-SQL：オントロジーなし／ありの違い" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Without -->
+        <mxCell id="wo-group" value="オントロジーなし — LLM がテーブル名・列名から推測する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="1040" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="wo-q" value="質問&lt;br&gt;「6 月のペンシルベニア州の&lt;br&gt;売上は？」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="120" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="wo-llm" value="LLM&lt;br&gt;スキーマ（テーブル・列・型）&lt;br&gt;だけを見て SQL を書く" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="270" y="120" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="wo-guess" value="&lt;b&gt;推測が入る箇所&lt;/b&gt;&lt;br&gt;・「売上」はどの列？ 単価×数量？ 明細の金額？&lt;br&gt;・「州」は郵送先と配送先のどちらの住所経由？&lt;br&gt;・データにない概念でも似た列で答えてしまう" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="520" y="110" width="320" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="wo-out" value="SQL は動くが&lt;br&gt;数字が正しいか&lt;br&gt;分からない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="890" y="120" width="160" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="wo-q" target="wo-llm"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="wo-llm" target="wo-guess"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="wo-guess" target="wo-out"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- With -->
+        <mxCell id="w-group" value="オントロジーあり — 意味は定義済みの知識から引く" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="30" y="290" width="1040" height="240" as="geometry"/>
+        </mxCell>
+        <mxCell id="w-q" value="質問&lt;br&gt;「6 月のペンシルベニア州の&lt;br&gt;売上は？」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="370" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="w-onto" value="&lt;b&gt;オントロジー（人がレビュー・修正できる）&lt;/b&gt;&lt;br&gt;・売上 → 請求明細の金額の合計（SQL 属性）&lt;br&gt;・州 → 顧客 → 配送先の都市 → 州 の経路&lt;br&gt;・同義語：revenue / 売上 / 売上高" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="270" y="360" width="320" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="w-llm" value="LLM&lt;br&gt;定義に沿って&lt;br&gt;SQL を組み立てる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="370" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="w-out" value="毎回同じ式・同じ経路&lt;br&gt;使った定義を添えて&lt;br&gt;検証できる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="890" y="370" width="160" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="w-none" value="定義が見つからない概念（例：広告費）→「このデータでは答えられない」と返す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="270" y="480" width="570" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="f1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;fontSize=10;" edge="1" parent="1" source="w-q" target="w-onto"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="f2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="w-onto" target="w-llm"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="f4" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#d6b656;endArrow=block;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.1;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="w-onto" target="w-none"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="f3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="w-llm" target="w-out"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
