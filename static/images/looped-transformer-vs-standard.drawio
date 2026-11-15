@@ -1,0 +1,71 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="looped-vs-standard" name="Standard vs Looped Transformer">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="640" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="通常の Transformer と Looped Transformer" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Left: standard -->
+        <mxCell id="lgroup" value="通常の Transformer（層を積む）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="380" height="490" as="geometry"/>
+        </mxCell>
+        <mxCell id="ltok" value="入力トークン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="160" y="110" width="140" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="l1" value="層 1（Attention + FFN）&lt;br&gt;重み W&lt;sub&gt;1&lt;/sub&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="175" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="l2" value="層 2（Attention + FFN）&lt;br&gt;重み W&lt;sub&gt;2&lt;/sub&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="250" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ldots" value="⋮" style="text;html=1;fontSize=20;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="210" y="305" width="40" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="ln" value="層 N（Attention + FFN）&lt;br&gt;重み W&lt;sub&gt;N&lt;/sub&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="340" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="lout" value="次トークン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="160" y="420" width="140" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="lnote" value="深さ = 層の数 N&lt;br&gt;深くするとパラメータも増える" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="80" y="480" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="le1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="ltok" target="l1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="le2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="l1" target="l2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="le3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="ln" target="lout"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Right: looped -->
+        <mxCell id="rgroup" value="Looped Transformer（同じ層を繰り返す）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e1;strokeColor=#d79b00;fontStyle=1;fontSize=13;verticalAlign=top;spacingTop=6;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="480" y="70" width="380" height="490" as="geometry"/>
+        </mxCell>
+        <mxCell id="rtok" value="入力トークン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="600" y="110" width="140" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="rin" value="入力側の層" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="175" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="rshared" value="&lt;b&gt;共有ブロック&lt;/b&gt;&lt;br&gt;同じ重み W を毎回使う" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="260" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rout" value="出力側の層 → 次トークン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="380" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="rnote" value="深さ = ループ回数 k で変えられる&lt;br&gt;パラメータ数は k によらず一定" style="text;html=1;fontSize=12;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="520" y="480" width="300" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="re1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="rtok" target="rin"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="re2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="rin" target="rshared"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="re3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="rshared" target="rout"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rloop" value="k 回ループ" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#d79b00;endArrow=block;dashed=1;fontSize=12;fontStyle=1;labelBackgroundColor=#fff8e1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="rshared" target="rshared">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="820" y="305"/><mxPoint x="820" y="275"/></Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
