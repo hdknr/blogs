@@ -1,97 +1,112 @@
 <mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
   <diagram id="distributed-spa-architecture" name="Thin server, thick desktop client">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="700" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="720" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <mxCell id="title" value="調整と CPU はクライアントへ、サーバーはデータと整合性の検査だけ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="240" y="15" width="700" height="30" as="geometry"/>
+        <mxCell id="title" value="調整・計算・入口はクライアントへ、サーバーはデータと整合性の検査だけ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="190" y="15" width="800" height="30" as="geometry"/>
         </mxCell>
 
         <!-- Client group -->
         <mxCell id="client-group" value="利用者の PC（デスクトップアプリ）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
-          <mxGeometry x="30" y="70" width="330" height="560" as="geometry"/>
+          <mxGeometry x="30" y="70" width="420" height="580" as="geometry"/>
         </mxCell>
         <mxCell id="ui" value="&lt;b&gt;業務画面&lt;/b&gt;（WebView）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;既存の React UI を再利用&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="60" y="110" width="270" height="60" as="geometry"/>
+          <mxGeometry x="50" y="110" width="220" height="60" as="geometry"/>
         </mxCell>
-        <mxCell id="saga" value="&lt;b&gt;Saga ランナー&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;ステップを順に呼ぶ・失敗したら補償&lt;br&gt;再起動しても続きから再開&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="60" y="200" width="270" height="70" as="geometry"/>
+        <mxCell id="saga" value="&lt;b&gt;Saga ランナー&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;順に呼ぶ・失敗したら補償&lt;br&gt;再起動しても続きから再開&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="200" width="220" height="70" as="geometry"/>
         </mxCell>
         <mxCell id="sagalog" value="Saga ログ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;ローカル DB（SQLite 等）&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=8;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="125" y="290" width="140" height="60" as="geometry"/>
+          <mxGeometry x="90" y="290" width="140" height="60" as="geometry"/>
         </mxCell>
-        <mxCell id="render" value="&lt;b&gt;帳票レンダラ&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;決定論的な PDF 生成 + 同梱フォント&lt;br&gt;PC の複数コアで並列に&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="60" y="390" width="270" height="70" as="geometry"/>
+        <mxCell id="render" value="&lt;b&gt;帳票レンダラ&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;決定論的な PDF 生成&lt;br&gt;+ 同梱フォント・複数コアで並列&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="390" width="220" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="clientnote" value="&lt;font style=&quot;font-size:10px&quot;&gt;サーバーの CPU を使わない&lt;br&gt;利用者が増えれば計算資源も増える&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#6c8ebf;" vertex="1" parent="1">
-          <mxGeometry x="60" y="480" width="270" height="40" as="geometry"/>
+        <mxCell id="clientnote" value="&lt;font style=&quot;font-size:10px&quot;&gt;サーバーの CPU とメモリを使わない&lt;br&gt;利用者が増えれば計算資源も増える&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="50" y="480" width="220" height="40" as="geometry"/>
         </mxCell>
 
-        <!-- Entry -->
-        <mxCell id="bff" value="&lt;b&gt;入口&lt;/b&gt;（CloudFront / BFF）&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;認証・ルーティング&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="420" y="290" width="170" height="70" as="geometry"/>
+        <mxCell id="apiclient" value="&lt;b&gt;API クライアント&lt;/b&gt;&lt;br&gt;（アプリ内 BFF）&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;トークンを OS の&lt;br&gt;キーチェーンに保管&lt;br&gt;&lt;br&gt;業務ごとの接続先へ&lt;br&gt;振り分け&lt;br&gt;&lt;br&gt;読み取りを並列に&lt;br&gt;集約&lt;br&gt;&lt;br&gt;CORS は関係ない&lt;br&gt;（ネイティブの HTTP）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="110" width="130" height="410" as="geometry"/>
+        </mxCell>
+        <mxCell id="config" value="&lt;font style=&quot;font-size:10px&quot;&gt;接続先の設定は&lt;br&gt;サーバーから配信&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="290" y="530" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Network entry -->
+        <mxCell id="alb" value="&lt;b&gt;ALB&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;HTTPS 終端・WAF&lt;br&gt;（入口として残る）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="490" y="200" width="150" height="70" as="geometry"/>
         </mxCell>
 
         <!-- Server group -->
         <mxCell id="api-group" value="業務 API（小さく保つ・各自の DB）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#82b366;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
-          <mxGeometry x="650" y="70" width="250" height="330" as="geometry"/>
+          <mxGeometry x="670" y="70" width="250" height="350" as="geometry"/>
         </mxCell>
         <mxCell id="apiA" value="受注 API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="680" y="110" width="190" height="40" as="geometry"/>
+          <mxGeometry x="700" y="110" width="190" height="40" as="geometry"/>
         </mxCell>
         <mxCell id="apiB" value="在庫 API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="680" y="165" width="190" height="40" as="geometry"/>
+          <mxGeometry x="700" y="165" width="190" height="40" as="geometry"/>
         </mxCell>
         <mxCell id="apiC" value="請求 API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="680" y="220" width="190" height="40" as="geometry"/>
+          <mxGeometry x="700" y="220" width="190" height="40" as="geometry"/>
         </mxCell>
-        <mxCell id="apiNote" value="&lt;font style=&quot;font-size:10px&quot;&gt;冪等キー / 補償 API&lt;br&gt;有効期限つきの仮状態&lt;br&gt;件数・合計の突合&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
-          <mxGeometry x="680" y="280" width="190" height="55" as="geometry"/>
+        <mxCell id="apiNote" value="&lt;font style=&quot;font-size:10px&quot;&gt;認可の検査（クライアントを信頼しない）&lt;br&gt;冪等キー / 補償 API&lt;br&gt;有効期限つきの仮状態&lt;br&gt;件数・合計の突合&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="690" y="275" width="210" height="70" as="geometry"/>
         </mxCell>
         <mxCell id="sweep" value="&lt;font style=&quot;font-size:10px&quot;&gt;期限切れの仮状態を解放（定期実行）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;dashed=1;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="680" y="345" width="190" height="35" as="geometry"/>
+          <mxGeometry x="700" y="360" width="190" height="35" as="geometry"/>
         </mxCell>
 
         <mxCell id="sagareg" value="Saga の登録簿&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;ID・状態・最終更新&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=8;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="950" y="110" width="170" height="65" as="geometry"/>
+          <mxGeometry x="960" y="110" width="170" height="65" as="geometry"/>
         </mxCell>
 
         <!-- Storage group -->
         <mxCell id="store-group" value="保管と監査" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
-          <mxGeometry x="650" y="450" width="470" height="180" as="geometry"/>
+          <mxGeometry x="670" y="470" width="460" height="180" as="geometry"/>
         </mxCell>
         <mxCell id="s3" value="S3&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;帳票 PDF（バージョニング）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="680" y="495" width="180" height="55" as="geometry"/>
+          <mxGeometry x="700" y="515" width="180" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="audit" value="監査ログ&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;誰が・いつ・どの版で&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="910" y="495" width="180" height="55" as="geometry"/>
+          <mxGeometry x="920" y="515" width="180" height="55" as="geometry"/>
         </mxCell>
         <mxCell id="batch" value="&lt;font style=&quot;font-size:10px&quot;&gt;無人の夜間バッチだけ SQS + ワーカー&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;dashed=1;fontSize=10;fontColor=#666666;" vertex="1" parent="1">
-          <mxGeometry x="680" y="570" width="410" height="35" as="geometry"/>
+          <mxGeometry x="700" y="590" width="400" height="35" as="geometry"/>
         </mxCell>
 
-        <!-- Edges -->
+        <!-- Edges inside client -->
         <mxCell id="e0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#9673a6;" edge="1" parent="1" source="ui" target="saga"><mxGeometry relative="1" as="geometry"/></mxCell>
         <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#d6b656;dashed=1;" edge="1" parent="1" source="saga" target="sagalog"><mxGeometry relative="1" as="geometry"/></mxCell>
-        <mxCell id="e2" value="各ステップ&lt;br&gt;（冪等キー付き）" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#9673a6;fontSize=10;" edge="1" parent="1" source="saga" target="bff">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="505" y="235"/></Array></mxGeometry>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#9673a6;" edge="1" parent="1" source="saga" target="apiclient">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="285" y="235"/></Array></mxGeometry>
         </mxCell>
-        <mxCell id="e3" value="データ・テンプレート取得&lt;br&gt;PDF アップロード" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;startArrow=block;strokeColor=#6c8ebf;fontSize=10;" edge="1" parent="1" source="render" target="bff">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="505" y="425"/></Array></mxGeometry>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;startArrow=block;strokeColor=#6c8ebf;" edge="1" parent="1" source="render" target="apiclient">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="285" y="425"/></Array></mxGeometry>
         </mxCell>
-        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="bff" target="api-group">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="620" y="325"/><mxPoint x="620" y="235"/></Array></mxGeometry>
+        <mxCell id="e3b" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#6c8ebf;" edge="1" parent="1" source="ui" target="apiclient">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="285" y="140"/></Array></mxGeometry>
         </mxCell>
-        <mxCell id="e5" value="Saga を登録・状態を更新" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#d6b656;fontSize=10;dashed=1;" edge="1" parent="1" source="saga" target="sagareg">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="400" y="215"/><mxPoint x="400" y="50"/><mxPoint x="1035" y="50"/></Array></mxGeometry>
+
+        <!-- Edges client -> server -->
+        <mxCell id="e4" value="冪等キー付き" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="apiclient" target="alb">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="460" y="235"/></Array></mxGeometry>
         </mxCell>
-        <mxCell id="e6" value="突合して保管" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="bff" target="s3">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="505" y="522"/></Array></mxGeometry>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="alb" target="api-group">
+          <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#d6b656;dashed=1;" edge="1" parent="1" source="api-group" target="audit">
-          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1000" y="300"/></Array></mxGeometry>
+        <mxCell id="e6" value="Saga を登録・状態を更新" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#d6b656;fontSize=10;dashed=1;" edge="1" parent="1" source="apiclient" target="sagareg">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="365" y="55"/><mxPoint x="1045" y="55"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="e7" value="突合して保管" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;fontSize=10;" edge="1" parent="1" source="api-group" target="s3">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="790" y="445"/><mxPoint x="790" y="445"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#d6b656;dashed=1;" edge="1" parent="1" source="api-group" target="audit">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1010" y="300"/></Array></mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
