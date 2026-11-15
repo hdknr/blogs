@@ -5,7 +5,7 @@
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <mxCell id="title" value="帳票をクライアントで生成し、サーバーは突合して保管する" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+        <mxCell id="title" value="正式な帳票をクライアントで生成し、サーバーは突合して保管する" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="150" y="10" width="700" height="30" as="geometry"/>
         </mxCell>
 
@@ -26,6 +26,7 @@
 
         <mxCell id="render" value="&lt;b&gt;③ ローカルで PDF を生成&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;決定論的なレンダラ + 同梱フォント&lt;br&gt;PC の複数コアで並列に&lt;br&gt;（サーバーの CPU とメモリを使わない）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1"><mxGeometry x="30" y="225" width="230" height="85" as="geometry"/></mxCell>
 
+        <mxCell id="viewonly" value="&lt;b&gt;確認用の帳票はここで終わり&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;画面に表示・印刷するだけ。④⑤ は行わない&lt;br&gt;（アップロードも突合も保管もしない）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;dashed=1;fontSize=11;fontColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="300" y="235" width="290" height="65" as="geometry"/></mxCell>
         <mxCell id="loop" value="1 件ずつ（冪等）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6c8ebf;dashed=1;fontSize=10;fontColor=#6c8ebf;align=left;verticalAlign=top;spacingLeft=6;" vertex="1" parent="1"><mxGeometry x="80" y="335" width="680" height="80" as="geometry"/></mxCell>
         <mxCell id="m4" value="④ PUT /reports/{id}　Idempotency-Key" style="html=1;endArrow=block;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="125" y="375" as="sourcePoint"/><mxPoint x="490" y="375" as="targetPoint"/></mxGeometry></mxCell>
         <mxCell id="m4b" value="仮保存" style="html=1;endArrow=block;strokeColor=#333333;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="375" as="sourcePoint"/><mxPoint x="715" y="375" as="targetPoint"/></mxGeometry></mxCell>
