@@ -2,7 +2,7 @@
 title: "Capacitor"
 description: "Ionic チームの OSS ランタイム。Web アプリを WebView ごと iOS・Android のネイティブアプリに包み、端末機能はプラグイン経由で呼ぶ。ネイティブプロジェクトを Git 管理のソースとして扱うのが Cordova との違い"
 date: 2026-11-09
-lastmod: 2026-11-09
+lastmod: 2026-11-15
 aliases: ["capacitor", "Ionic Capacitor", "Capacitor 8", "Live Updates", "OTA 更新"]
 related_posts:
   - "/posts/2026/11/capacitor-cross-platform/"
@@ -81,6 +81,8 @@ Web 層（HTML・CSS・JS）だけをサーバーから配信して差し替え�
 - [GitHub Actions のセキュリティ](/blogs/wiki/guides/github-actions-security/) — CI で署名鍵などのシークレットを扱う際の注意
 - [JWT Bearer Grant](/blogs/wiki/concepts/jwt-bearer-grant/) — モバイルの認証・トークン発行に関わる仕組み
 - [Git](/blogs/wiki/tools/git/) — `ios/`・`android/` をソースとして管理する前提
+- [Tauri](/blogs/wiki/tools/tauri/) — デスクトップで同じ WebView 方式をとるフレームワーク
+- [GPUI](/blogs/wiki/tools/gpui/) — WebView を使わず GPU で直接描画する、反対側のアプローチ
 
 ## ソース記事
 
