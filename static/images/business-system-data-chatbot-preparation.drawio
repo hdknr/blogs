@@ -1,0 +1,84 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="prep" name="Preparation from past inquiries">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="導入前の準備：過去の問い合わせ事例（需要）から始め、コードと仕様書（供給）で裏付ける" style="text;html=1;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="80" y="15" width="940" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Demand side -->
+        <mxCell id="d-group" value="需要側：利用者が何を知りたいか" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="700" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="課題管理の&lt;br&gt;過去の問い合わせ" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=10;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="100" width="130" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="① データ照会を抜き出す&lt;br&gt;（個人情報は伏せ字）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="210" y="110" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="② 意図ごとにまとめ&lt;br&gt;件数順に並べる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="390" y="110" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="d4" value="③ 言い回し・用語・&lt;br&gt;当時の回答を整理" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="560" y="110" width="150" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Supply side -->
+        <mxCell id="s-group" value="供給側：システムが正しく何を持っているか" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="30" y="240" width="700" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1" value="コード・仕様書・&lt;br&gt;用語集・設計記録" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=10;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="50" y="280" width="130" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="機械的に取れる部分は自動生成&lt;br&gt;（モデル・API・権限の名前）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="210" y="290" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="④ 用語ごとに裏付ける&lt;br&gt;定義・正本の計算・API・権限" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="290" width="210" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Outputs -->
+        <mxCell id="o-group" value="⑤ 成果物" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="780" y="60" width="290" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="o1" value="&lt;b&gt;評価用の質問集&lt;/b&gt;&lt;br&gt;実際の問い合わせ文と当時の正解" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="100" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="o2" value="&lt;b&gt;用語の定義（オントロジー）&lt;/b&gt;&lt;br&gt;同義語・DB にない意味・正本の計算" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="180" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="o3" value="&lt;b&gt;最初のツール群&lt;/b&gt;&lt;br&gt;既存の API で答えられた質問" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="260" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="o4" value="&lt;b&gt;API にする候補／Text-to-SQL の対象&lt;/b&gt;&lt;br&gt;手で SQL を書いて答えた質問" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="340" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="o-note" value="→ 公開後は改善サイクルへ" style="text;html=1;fontSize=11;align=center;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="800" y="420" width="250" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="d1" target="d2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="d2" target="d3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="d3" target="d4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="対象の用語を絞る" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;fontSize=10;" edge="1" parent="1" source="d4" target="s3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="s1" target="s2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;" edge="1" parent="1" source="s2" target="s3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#666666;endArrow=block;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s3" target="o-group"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="755" y="320"/><mxPoint x="755" y="270"/></Array></mxGeometry></mxCell>
+
+        <mxCell id="lg1" value="LLM で下書き → 人が確認" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="30" y="420" width="170" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="lg2" value="自動生成（決定論的）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="210" y="420" width="150" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="lg3" value="人が判断" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="370" y="420" width="100" height="24" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
