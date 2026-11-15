@@ -49,6 +49,7 @@ Subquadratic Sparse Attention（SSA）は、標準 Transformer の `O(N²)` ア�
 
 ## 関連ページ
 
+- [Transformer](/blogs/wiki/concepts/transformer/) — O(N²) の元になる標準の Self-Attention の仕組み
 - [Context Compression](/blogs/wiki/concepts/context-compression/) — 別アプローチでのコンテキスト圧縮
 - [Context Rot](/blogs/wiki/concepts/context-rot/) — 長文化に伴う劣化問題
 - [Kimi K3](/blogs/wiki/tools/kimi-k3/) — KDA を実装したモデルの詳細

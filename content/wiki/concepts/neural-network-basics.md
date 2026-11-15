@@ -47,7 +47,7 @@ tags: ["ニューラルネットワーク", "機械学習", "ディープラー�
 
 - **名前は「パーセプトロン」でも中身は違う** — 誤差逆伝播法は微分を使うので、ほとんどの場所で傾き 0 のステップ関数は使えず、シグモイドや ReLU を使う
 - **課題** — 深くすると勾配消失、パラメータが多く過学習しやすい、計算コスト、判断の説明しにくさ（金融審査や医療診断支援では注意）
-- **今の価値** — 構造が単純で軽く、特徴量が整理されたタスクやエッジ AI に向く。Transformer の各層のフィードフォワード層は MLP そのもので、CNN・RNN・Transformer も「重み付き和を活性化関数に通す」単位を積み上げてできている
+- **今の価値** — 構造が単純で軽く、特徴量が整理されたタスクやエッジ AI に向く。[Transformer](/blogs/wiki/concepts/transformer/) の各層のフィードフォワード層は MLP そのもので、CNN・RNN・Transformer も「重み付き和を活性化関数に通す」単位を積み上げてできている
 - **CNN へ** — 全結合では数字の位置がずれると誤分類しうる。同じ小さなフィルターを画像のどの位置にも当てる CNN がこの弱点を克服する（[AI-For-Beginners](/blogs/wiki/tools/ai-for-beginners/) パート IV）
 
 ### 多層化と誤差逆伝播法
@@ -99,6 +99,7 @@ PyTorch の学習ループの `optim.zero_grad()` → `loss.backward()` → `opt
 - [記号的 AI（知識表現とエキスパートシステム）](/blogs/wiki/concepts/symbolic-ai/) — 反対側のトップダウン・アプローチ
 - [沈黙する失敗](/blogs/wiki/concepts/silent-failure/) — 結果が正しく見えるバグ（重みを 0 にするクラス）
 - [ローカル LLM 比較](/blogs/wiki/concepts/local-llm-comparison/) — ニューラルネットワークの先にある現在のモデル
+- [Transformer](/blogs/wiki/concepts/transformer/) — Attention を中心に積み上げた、現在の LLM の土台のアーキテクチャ
 - [Looped Transformer](/blogs/wiki/concepts/looped-transformer/) — 層を積む代わりに同じ層を繰り返して深さを稼ぐ Transformer の変種
 
 ## ソース記事
