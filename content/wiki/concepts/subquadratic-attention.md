@@ -2,7 +2,7 @@
 title: "Subquadratic Sparse Attention (SSA)"
 description: "アテンション計算のコストをコンテキスト長の2乗からほぼ線形に削減するスパースアテンション機構。重要なk位置だけに絞ることでO(N²)→O(N×k)を実現"
 date: 2026-05-20
-lastmod: 2026-08-05
+lastmod: 2026-11-15
 aliases: ["SSA", "スパースアテンション", "サブクアドラティック", "サブクアドラティックアテンション", "線形Attention", "DeltaNet", "KDA"]
 related_posts:
   - "/posts/2026/05/subq-llm-subquadratic-sparse-attention/"
@@ -52,6 +52,7 @@ Subquadratic Sparse Attention（SSA）は、標準 Transformer の `O(N²)` ア�
 - [Context Compression](/blogs/wiki/concepts/context-compression/) — 別アプローチでのコンテキスト圧縮
 - [Context Rot](/blogs/wiki/concepts/context-rot/) — 長文化に伴う劣化問題
 - [Kimi K3](/blogs/wiki/tools/kimi-k3/) — KDA を実装したモデルの詳細
+- [Looped Transformer](/blogs/wiki/concepts/looped-transformer/) — 層を繰り返して深さを稼ぐ別方向の改良。ループ分の KV キャッシュを「最終ループのみ」に絞る工夫がある
 
 ## ソース記事
 

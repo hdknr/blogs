@@ -2,7 +2,7 @@
 title: "ニューラルネットワークの基礎"
 description: "パーセプトロンの限界（XOR）から、多層化と誤差逆伝播法による突破、フレームワークの自動微分と過学習までを 1 本の流れで整理する"
 date: 2026-09-30
-lastmod: 2026-10-13
+lastmod: 2026-11-15
 aliases: ["パーセプトロン", "多層パーセプトロン", "MLP", "誤差逆伝播法", "バックプロパゲーション", "自動微分", "過学習", "XOR 問題"]
 related_posts:
   - "/posts/2026/09/ai-for-beginners-03-neural-networks/"
@@ -99,6 +99,7 @@ PyTorch の学習ループの `optim.zero_grad()` → `loss.backward()` → `opt
 - [記号的 AI（知識表現とエキスパートシステム）](/blogs/wiki/concepts/symbolic-ai/) — 反対側のトップダウン・アプローチ
 - [沈黙する失敗](/blogs/wiki/concepts/silent-failure/) — 結果が正しく見えるバグ（重みを 0 にするクラス）
 - [ローカル LLM 比較](/blogs/wiki/concepts/local-llm-comparison/) — ニューラルネットワークの先にある現在のモデル
+- [Looped Transformer](/blogs/wiki/concepts/looped-transformer/) — 層を積む代わりに同じ層を繰り返して深さを稼ぐ Transformer の変種
 
 ## ソース記事
 
