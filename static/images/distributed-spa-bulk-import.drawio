@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="distributed-spa-bulk-import" name="Bulk import as a saga">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="一括ファイル取り込みを PC で解析し、Saga で送って確定する" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="240" y="10" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- lanes -->
+        <mxCell id="lane-pc" value="デスクトップアプリ（PC）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f4fa;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="55" width="1140" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane-sv" value="業務 API（取り込み先の持ち主）" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3f8f1;strokeColor=#82b366;fontStyle=1;fontSize=12;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="265" width="1140" height="235" as="geometry"/>
+        </mxCell>
+
+        <!-- PC steps -->
+        <mxCell id="p1" value="&lt;b&gt;① 解析と検証&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;PC の CPU で全行を読む&lt;br&gt;形式・必須項目・コードの存在&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="perr" value="&lt;font style=&quot;font-size:10px&quot;&gt;エラーがあれば送る前に表示&lt;br&gt;→ 直して読み込み直す&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="180" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2" value="&lt;b&gt;② チャンクに分けて送る&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;例: 500 行ずつ・冪等キー付き&lt;br&gt;送り終えたら Saga ログに記録&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="420" y="100" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="progress" value="&lt;b&gt;進捗バー&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;送信済みチャンク / 全体&lt;br&gt;落ちても続きから再開&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;dashed=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="650" y="105" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3" value="&lt;b&gt;③ 確定を依頼&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;件数・合計を添える&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="850" y="100" width="150" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="pcancel" value="&lt;font style=&quot;font-size:10px&quot;&gt;中止 / リトライ上限超過&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="530" y="383" width="160" height="25" as="geometry"/>
+        </mxCell>
+
+        <!-- Server steps -->
+        <mxCell id="s1" value="&lt;b&gt;取り込みのまとまりを登録&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;状態 = 仮・有効期限つき&lt;br&gt;冪等キー = ファイルのハッシュ&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="200" y="310" width="190" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="&lt;b&gt;チャンクを仮で保存&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;チャンクごとにローカルトランザクション&lt;br&gt;同じキーの再送は前回の結果を返す&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="420" y="310" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="&lt;b&gt;突合して一括で確定&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;件数・合計が合えば&lt;br&gt;仮 → 確定（1 トランザクション）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="850" y="310" width="180" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="&lt;b&gt;補償: まとまりごと取り消す&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;仮の行を捨てる&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="420" y="410" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5" value="&lt;b&gt;期限切れで自動破棄&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;PC が戻らなくても片付く&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;dashed=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="410" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="1" source="p1" target="s1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="295" y="135"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="1" source="s1" target="p2">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="400" y="345"/><mxPoint x="400" y="135"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="e3" value="&lt;font style=&quot;font-size:10px&quot;&gt;繰り返し&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;startArrow=block;strokeColor=#9673a6;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="p2" target="s2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#6c8ebf;dashed=1;" edge="1" parent="1" source="p2" target="progress">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="1" source="progress" target="p3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="1" source="p3" target="s3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#b85450;dashed=1;" edge="1" parent="1" source="s2" target="s4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=none;strokeColor=#82b366;dashed=1;" edge="1" parent="1" source="s4" target="s5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
