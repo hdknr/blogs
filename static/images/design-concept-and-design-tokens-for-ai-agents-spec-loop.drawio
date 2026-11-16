@@ -1,0 +1,119 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="spec-loop" name="Spec-driven loop">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1520" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="実現手段を回すループ（仕様駆動）" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="510" y="15" width="500" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Lanes -->
+        <mxCell id="laneHuman" value="人間" style="swimlane;horizontal=0;startSize=60;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;swimlaneFillColor=#f7faff;" vertex="1" parent="1">
+          <mxGeometry x="20" y="60" width="1480" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="laneAgent" value="AIエージェント" style="swimlane;horizontal=0;startSize=60;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;swimlaneFillColor=#fffaf3;" vertex="1" parent="1">
+          <mxGeometry x="20" y="220" width="1480" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="laneAuto" value="自動検証" style="swimlane;horizontal=0;startSize=60;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;swimlaneFillColor=#f7fbf6;" vertex="1" parent="1">
+          <mxGeometry x="20" y="380" width="1480" height="150" as="geometry"/>
+        </mxCell>
+
+        <!-- Human nodes -->
+        <mxCell id="nPrd" value="① PRD&lt;br&gt;スコープを決める" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="130" y="107" width="150" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="nSpec" value="② spec.md を確定&lt;br&gt;検証方法も決める" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="107" width="150" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="nPlanReview" value="④ 計画をレビュー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="530" y="107" width="150" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="nUpdate" value="ズレの原因に応じて&lt;br&gt;concept・tokens・spec&lt;br&gt;を直す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="930" y="102" width="150" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="nDesignReview" value="⑦ 意匠面のレビュー&lt;br&gt;concept.md と照合&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;（人間が見る AC のあるタスク）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="100" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="nNext" value="次のタスクへ&lt;br&gt;全タスク完了で終了" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="107" width="150" height="56" as="geometry"/>
+        </mxCell>
+
+        <!-- Agent nodes -->
+        <mxCell id="nDraft" value="② 受け入れ基準を&lt;br&gt;Gherkin で下書き" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="267" width="150" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="nPlan" value="③ plan.md&lt;br&gt;タスクに分解" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="530" y="267" width="150" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="nImpl" value="⑤ 1タスクを実装" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="730" y="267" width="150" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="nFix" value="失敗ログを読んで&lt;br&gt;修正" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="930" y="267" width="150" height="56" as="geometry"/>
+        </mxCell>
+
+        <!-- Auto nodes -->
+        <mxCell id="nVerify" value="⑥ 自動検証&lt;br&gt;lint・E2E・a11y" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="730" y="427" width="150" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="nGate" value="合格？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="940" y="417" width="130" height="76" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#555555;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="nPrd" target="nDraft">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#555555;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="nDraft" target="nSpec">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#555555;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="nSpec" target="nPlan">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#555555;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="nPlan" target="nPlanReview">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#555555;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="nPlanReview" target="nImpl">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#555555;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="nImpl" target="nVerify">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#555555;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="nVerify" target="nGate">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="不合格" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#b85450;fontColor=#b85450;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="nGate" target="nFix">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="再実装" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#b85450;fontColor=#b85450;fontSize=11;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="nFix" target="nImpl">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="合格" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#82b366;fontColor=#4d7a3a;fontSize=11;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="nGate" target="nDesignReview">
+          <mxGeometry x="0.35" relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="OK" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#82b366;fontColor=#4d7a3a;fontSize=11;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="nDesignReview" target="nNext">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="NG" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#b85450;fontColor=#b85450;fontSize=11;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="nDesignReview" target="nUpdate">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="直した文書で再実装" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#b85450;fontColor=#b85450;fontSize=11;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="nUpdate" target="nImpl">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="次のタスク" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;fontColor=#555555;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.85;entryY=0;" edge="1" parent="1" source="nNext" target="nImpl">
+          <mxGeometry x="0.6" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1405" y="240"/>
+              <mxPoint x="858" y="240"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" value="3回失敗したら&lt;br&gt;人間へ" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;strokeColor=#b85450;fontColor=#b85450;fontSize=11;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="nFix" target="nUpdate">
+          <mxGeometry x="0.3" relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
