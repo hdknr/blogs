@@ -1,0 +1,97 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="design-harness-layers" name="Design Harness Layers">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="660" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="デザインハーネスの議論を 3 つの層に分ける" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="250" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer 3 (outer) -->
+        <mxCell id="layerOuter" value="③ リリース後：利用者を含めた運用（外側のループ）" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=14;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="30" y="60" width="1040" height="570" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer 2 (middle) -->
+        <mxCell id="layerMid" value="② リリース前：結果の品質確認（内側のループ）" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=14;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="105" width="640" height="405" as="geometry"/>
+        </mxCell>
+
+        <!-- Layer 1 (inner) -->
+        <mxCell id="layerInner" value="① 生成時：ハーネスそのもの" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=14;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="90" y="150" width="580" height="180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="nRules" value="ルール・デザインシステム&lt;br&gt;（Markdown）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="195" width="230" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="nGen" value="AI・エンジニア・PM が生成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="410" y="195" width="230" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="noteInner" value="論点 1・2・4：そもそもここに投資するか&lt;br&gt;（品質とは別軸の、組織としての判断）" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b46504;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="260" width="300" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="nCheck" value="Linter・AI がルール準拠を確認 ／ デザイナーがレビュー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="355" width="520" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="noteMid" value="論点 7：デザインの良し悪しはルールに書ききれず、&lt;br&gt;ここで測れる範囲が狭い" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#2f5597;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="425" width="560" height="55" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="nRelease" value="リリース" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="175" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="nUser" value="ユーザーがどう評価し、&lt;br&gt;受け入れたかを観測" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="290" width="270" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="nReflect" value="次のデザインに反映" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="415" width="270" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="noteOuter" value="論点 6：第一印象はやり直せないので、&lt;br&gt;ここでの手直しが高くつく&lt;br&gt;論点 5：ユーザーは他と比べるので、&lt;br&gt;最低限のラインがない" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#7f6000;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="480" width="290" height="95" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note3" value="論点 3「評価ループにユーザーがいない」は、② の確認に ③ の評価者を求める、層をまたいだ批判" style="text;html=1;fontSize=12;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="520" width="630" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="nRules" target="nGen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;exitX=0.5;exitY=1;entryX=0.8;entryY=0;" edge="1" parent="1" source="nGen" target="nCheck">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="eRetry" value="不合格" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#6c8ebf;fontSize=11;labelBackgroundColor=#dae8fc;exitX=0.95;exitY=0;entryX=0.887;entryY=1;" edge="1" parent="1" source="nCheck" target="nGen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="合格" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;fontSize=11;labelBackgroundColor=#fff2cc;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="nCheck" target="nRelease">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="380"/>
+              <mxPoint x="730" y="200"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="nRelease" target="nUser">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="nUser" target="nReflect">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#d6b656;strokeWidth=2;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="nReflect" target="nRules">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="740" y="440"/>
+              <mxPoint x="740" y="600"/>
+              <mxPoint x="45" y="600"/>
+              <mxPoint x="45" y="220"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
