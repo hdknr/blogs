@@ -1,7 +1,7 @@
 ---
 title: "仕様駆動開発（SDD）とは？ 3 つのアプローチ・EARS 記法・Kiro / Spec Kit・TDD との違い"
 date: 2026-11-13
-lastmod: 2026-11-13
+lastmod: 2026-11-17
 slug: "spec-driven-development-overview"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/694#issuecomment-6843965319"
@@ -113,3 +113,5 @@ SDD は TDD と対立するものではなく、**上流工程を補完する関
 - TDD とは補完関係にあり、SDD で仕様を確定させてから TDD で実装する組み合わせが効果的
 
 バイブコーディングで何が失われるのかについては「[バイブコーディングの本当の問題は、誰も決めていない仕様が実装されることだ](/blogs/posts/2026/11/vibe-coding-is-vibe-specifying/)」も参照してください。
+
+「仕様書は要らない」という議論に対して、詳細仕様書と要件定義書を分けて考える見方は「[AI 時代こそ要件定義書が重くなる — 仕様駆動開発（SDD）の議論がかみ合わない理由](/blogs/posts/2026/11/requirements-doc-matters-in-ai-era/)」を参照してください。
