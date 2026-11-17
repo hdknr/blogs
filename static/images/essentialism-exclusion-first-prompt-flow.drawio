@@ -1,0 +1,57 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="exclusion-first" name="Exclusion First Prompt">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="520" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="90 点ルールを「選ぶとき」から「頼むとき」へ前倒しする" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="700" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Lane A -->
+        <mxCell id="laneA" value="本の使い方そのまま：出させてから捨てる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="20" y="70" width="1060" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="a1" value="&lt;b&gt;頼む&lt;/b&gt;&lt;br&gt;「良いものを出して」&lt;br&gt;「多角的に 30 案」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="120" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" value="&lt;b&gt;AI が出す&lt;/b&gt;&lt;br&gt;思いつくものを全部&lt;br&gt;（20 案、30 案…）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="120" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" value="&lt;b&gt;人が全部読む&lt;/b&gt;&lt;br&gt;当たり前の案や&lt;br&gt;既知の情報も混ざる" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="120" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" value="&lt;b&gt;90 点ルールで選ぶ&lt;/b&gt;&lt;br&gt;3 つだけ残す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="830" y="120" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3note" value="「捨てる仕事」に時間が吸われる" style="text;html=1;fontSize=11;fontColor=#b85450;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="560" y="215" width="220" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="ea1" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="a1" target="a2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea2" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="a2" target="a3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea3" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="a3" target="a4"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Lane B -->
+        <mxCell id="laneB" value="前倒し：頼む前に捨てる基準を書く" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;align=left;spacingLeft=10;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="20" y="290" width="1060" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="b0" value="&lt;b&gt;捨てる基準を決める&lt;/b&gt;&lt;br&gt;「出さなくていいもの」&lt;br&gt;は頼む前から決まっている" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="340" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="b1" value="&lt;b&gt;頼む（2 文）&lt;/b&gt;&lt;br&gt;「◯◯は出さなくていい。&lt;br&gt;その上で△△」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="340" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="b2" value="&lt;b&gt;AI が出す&lt;/b&gt;&lt;br&gt;基準を外れたものは&lt;br&gt;最初から並ばない" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="340" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="b3" value="&lt;b&gt;人が読んで選ぶ&lt;/b&gt;&lt;br&gt;読むのは差分だけ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="830" y="340" width="200" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="eb0" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="b0" target="b1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eb1" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="b1" target="b2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eb2" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="b2" target="b3"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
