@@ -1,0 +1,30 @@
+---
+title: 購入フロー（TLC が展開した状態グラフ。仮想例）
+---
+stateDiagram-v2
+    direction LR
+    state "カート確認中" as Cart
+    state "支払い処理中" as Paying
+    state "支払い処理中（決済要求が 2 件）" as Paying2
+    state "支払い失敗" as Failed
+    state "購入完了" as Done
+    state "購入完了（決済要求が 1 件残る）" as DoneLeft
+    state "二重請求" as Double
+
+    [*] --> Cart
+    Cart --> Paying: 購入ボタンを押す
+    Paying --> Done: 決済が成功する
+    Paying --> Failed: 決済が失敗する
+    Failed --> Cart: もう一度試す
+    Paying --> Paying2: 購入ボタンをもう一度押す
+    Paying2 --> Paying: 片方の決済が失敗する
+    Paying2 --> DoneLeft: 片方の決済が成功する
+    DoneLeft --> Done: 残りの決済が失敗する
+    DoneLeft --> Double: 残りの決済も成功する
+
+    note right of Double
+        規則違反：1 回の注文で請求は 1 回だけ
+    end note
+
+    classDef breaks fill:#f8cecc,stroke:#b85450,stroke-width:2px,color:#000
+    class Double breaks
