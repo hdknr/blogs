@@ -5,7 +5,7 @@
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <mxCell id="title" value="形式検証 Skill を作る前に状態遷移図を描かせる流れ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+        <mxCell id="title" value="形式検証 Skill を作る前に状態遷移をモデルにする流れ" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="200" y="20" width="600" height="30" as="geometry"/>
         </mxCell>
 
@@ -16,10 +16,10 @@
         <mxCell id="a1" value="エージェントが機能を提案&lt;br&gt;（または既存コードを指定）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="60" y="115" width="230" height="60" as="geometry"/>
         </mxCell>
-        <mxCell id="a2" value="状態遷移図（statechart）を描かせる&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;状態はユーザーに見える言葉で&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="a2" value="状態遷移のモデルを書かせ&lt;br&gt;図はそこからレンダリング&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;TLA+ や SCXML で&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="60" y="225" width="230" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="a3" value="人が図を読んで判断&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;この遷移は正しい？ 抜けている状態は？&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="a3" value="人がレンダリングした図を読んで判断&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;この遷移は正しい？ 抜けている状態は？&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="60" y="345" width="230" height="70" as="geometry"/>
         </mxCell>
         <mxCell id="a4" value="守るべき性質を 1 文で言語化&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;例：1 回の注文で請求は 1 回だけ&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
