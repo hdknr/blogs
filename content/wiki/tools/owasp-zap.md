@@ -2,9 +2,10 @@
 title: "OWASP ZAP"
 description: "Web アプリケーション脆弱性スキャナー。XSS・CSRF・キャッシュ制御など自動検出"
 date: 2026-04-06
-lastmod: 2026-04-06
+lastmod: 2026-11-17
 aliases: ["ZAP", "owasp-zap"]
 related_posts:
+  - "/posts/2026/05/vibecoding-security-checklist/"
 tags: ["脆弱性スキャン", "Web セキュリティ", "owasp"]
 ---
 

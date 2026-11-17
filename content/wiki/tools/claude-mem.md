@@ -2,9 +2,10 @@
 title: "claude-mem"
 description: "Claude Code にセッションをまたいだ永続的な記憶機能を追加する MCP プラグイン。SQLite + Chroma の3層検索でトークン消費を95%削減。公開48時間で46,000スター獲得"
 date: 2026-04-13
-lastmod: 2026-04-16
+lastmod: 2026-11-17
 aliases: ["claude-mem persistent memory", "claude code memory"]
 related_posts:
+  - "/posts/2026/05/claude-code-session-context-persistence/"
 tags: ["claude-code", "mcp", "メモリ", "トークン最適化", "オープンソース"]
 ---
 

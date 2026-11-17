@@ -2,9 +2,10 @@
 title: "Django REST Framework (DRF)"
 description: "Django で RESTful API を構築するフレームワーク"
 date: 2026-04-06
-lastmod: 2026-04-06
+lastmod: 2026-11-17
 aliases: ["DRF", "django-rest-framework"]
 related_posts:
+  - "/posts/2026/02/7d1b02f7130f2fe523f3fee58d5b916f/"
 tags: ["django", "API", "REST", "python"]
 ---
 

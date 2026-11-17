@@ -2,9 +2,10 @@
 title: "FIDO2/パスキー認証"
 description: "秘密を送信しない公開鍵ベースの認証で、フィッシング耐性を構造的に実現する次世代認証"
 date: 2026-04-06
-lastmod: 2026-04-06
+lastmod: 2026-11-17
 aliases: ["FIDO2", "パスキー", "Passkey", "WebAuthn"]
-related_posts: []
+related_posts:
+  - "/posts/2026/03/c18862bd01d56d81c66ae0bf0fe9263b/"
 tags: ["認証", "FIDO2", "パスキー", "セキュリティ"]
 ---
 
