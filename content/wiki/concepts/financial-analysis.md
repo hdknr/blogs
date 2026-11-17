@@ -56,6 +56,7 @@ tags: ["財務分析", "四季報", "投資", "ROE", "自己資本比率"]
 - [株式の銘柄分類](/blogs/wiki/concepts/stock-style-classification/) — 分類別に見るべき指標
 - [悪材料出尽くし（アク抜け）](/blogs/wiki/concepts/news-priced-in/) — ニュースによる下落の読み方
 - [SSBJ基準](/blogs/wiki/concepts/ssbj/) — サステナビリティ開示の枠組み
+- [四季報（会社四季報）](/blogs/wiki/tools/shikiho/) — ROE などの財務指標を企業ごとに一覧できる定番の情報源
 
 ## ソース記事
 

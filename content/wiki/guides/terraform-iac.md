@@ -81,6 +81,7 @@ tags: ["Terraform", "IaC", "DevOps", "aws"]
 - [RDS Blue/Green 移行](/blogs/wiki/guides/rds-blue-green-migration/) — replace が下流を壊す実例
 - [NAT Gateway](/blogs/wiki/tools/nat-gateway/) — VPC 設計で出てくる構成要素
 - [AI エージェント時代のシークレット管理](/blogs/wiki/guides/ai-agent-secret-management/) — 機密値の置き場所
+- [Framework-defined Infrastructure (FdI)](/blogs/wiki/concepts/framework-defined-infrastructure/) — インフラ構成をアプリのフレームワークコードから導出する IaC の進化形
 
 ## ソース記事
 

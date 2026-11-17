@@ -69,6 +69,7 @@ AI エージェントにパイプラインを任せるほど効いてくる。�
 - [WireGuard](/blogs/wiki/tools/wireguard/) — 検出できない半壊状態とヘルスチェック
 - [Windows の受信ブロックを WFP で切り分ける](/blogs/wiki/guides/windows-inbound-block-wfp/) — 「コマンドは成功したのに効いていない」
 - [Claude Code の JSONL ログを読む](/blogs/wiki/guides/claude-code-jsonl-logs/) — 0 件で成功するパーサ
+- [Invidious](/blogs/wiki/tools/invidious/) — 稼働率 100% のインスタンスが 200 で「503」を返していた監視のずれの実例
 
 ## ソース記事
 

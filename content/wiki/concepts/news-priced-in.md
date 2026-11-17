@@ -75,6 +75,7 @@ tags: ["株式投資", "日本株", "ニュース分析", "ベータ値", "テ�
 - [セクターローテーション](/blogs/wiki/concepts/sector-rotation/) — 全体相場の下落局面で主役になる分析
 - [金融・財務分析](/blogs/wiki/concepts/financial-analysis/) — 決算数値の読み方
 - [J-Quants API](/blogs/wiki/tools/j-quants-api/) — 株価・財務データの取得元
+- [ブロックトレード（ブロック取引）](/blogs/wiki/concepts/block-trade/) — 大口の立会外取引が株価にどう織り込まれるか
 
 ## ソース記事
 

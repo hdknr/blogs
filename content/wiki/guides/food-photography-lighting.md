@@ -48,6 +48,7 @@ tags: ["料理写真", "物撮り", "ライティング", "フード撮影", "�
 ## 関連ページ
 
 - [キュレーション型EC・リテールDX](/blogs/wiki/concepts/curated-ec/) — 商品の見せ方・ストーリーテリングと関わる EC の文脈
+- [ソニー α のカスタムモード（MR）設定](/blogs/wiki/guides/sony-camera-custom-modes/) — 撮影シーンごとの設定をカスタムモードに登録して呼び出す
 
 ## ソース記事
 

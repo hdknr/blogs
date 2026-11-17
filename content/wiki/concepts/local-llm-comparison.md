@@ -88,6 +88,7 @@ Gemma 4 の Apache 2.0 ライセンスと E2B モデルのスマートフォン�
 - [Ollama](/blogs/wiki/tools/ollama/) — ローカル LLM 実行環境
 - [Kimi K3](/blogs/wiki/tools/kimi-k3/) — 記憶設計から見る大規模モデル
 - [ループエンジニアリング](/blogs/wiki/concepts/loop-engineering/) — 反復工程をどのモデルに振るかの設計
+- [DFlash](/blogs/wiki/tools/dflash/) — Apple Silicon（MLX）での推測デコードによる推論高速化
 
 ## ソース記事
 

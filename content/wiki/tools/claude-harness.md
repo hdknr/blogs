@@ -65,6 +65,7 @@ Claude Code v2.1.92 以上が必要。
 - [Claude Code](/blogs/wiki/tools/claude-code/) — Harness が拡張する対象
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — Harness が体現する設計概念
 - [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — Plan → Work → Review の自律運用パターン
+- [oh-my-openagent](/blogs/wiki/tools/oh-my-openagent/) — Claude Code・Codex・Gemini CLI を束ねる別系統のハーネス
 
 ## ソース記事
 

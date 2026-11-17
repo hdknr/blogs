@@ -51,6 +51,7 @@ JWT は署名により**発行元（IdP）を公開鍵（JWKS）で検証でき�
 
 - [FIDO2/パスキー認証](/blogs/wiki/concepts/fido2-passkey/)
 - [メール認証（SPF/DKIM/DMARC）](/blogs/wiki/concepts/email-authentication/)
+- [Misoca](/blogs/wiki/tools/misoca/) — OAuth2 で請求書・見積書を操作する、弥生のクラウド請求書 API
 
 ## ソース記事
 

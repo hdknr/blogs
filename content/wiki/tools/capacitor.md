@@ -83,6 +83,7 @@ Web 層（HTML・CSS・JS）だけをサーバーから配信して差し替え�
 - [Git](/blogs/wiki/tools/git/) — `ios/`・`android/` をソースとして管理する前提
 - [Tauri](/blogs/wiki/tools/tauri/) — デスクトップで同じ WebView 方式をとるフレームワーク
 - [GPUI](/blogs/wiki/tools/gpui/) — WebView を使わず GPU で直接描画する、反対側のアプローチ
+- [Dockerify Android](/blogs/wiki/tools/dockerify-android/) — Android エミュレーターを Docker で動かし、CI での実機相当テストに使う
 
 ## ソース記事
 

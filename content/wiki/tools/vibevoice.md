@@ -48,6 +48,7 @@ ASR は 64K トークン長で **60 分の連続音声を 1 パスで処理**で
 
 - [Qwen](/blogs/wiki/tools/qwen/) — VibeVoice のベース LLM
 - [vLLM](https://github.com/vllm-project/vllm) — 推論バックエンド
+- [NVIDIA RE-USE](/blogs/wiki/tools/nvidia-re-use/) — 文字起こし前の音声強調に使える NVIDIA のオープンモデル
 
 ## ソース記事
 
