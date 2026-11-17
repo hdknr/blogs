@@ -52,6 +52,7 @@ OpenClaw のアーキテクチャを参考に、Claude Code 風の AI コーデ�
 - [Claude Managed Agents](/blogs/wiki/tools/claude-managed-agents/) — クラウド型マネージドエージェントとの対比
 - [Gemini Agent](/blogs/wiki/tools/gemini-agent/) — クラウド連携型エージェントとの対比
 - [MCP](/blogs/wiki/concepts/mcp/) — OpenClaw が採用するプロトコル
+- [ANOLISA](/blogs/wiki/tools/anolisa/) — Alibaba が公開した AI エージェント向け Linux OS（Agentic OS）
 
 ## ソース記事
 

@@ -56,6 +56,7 @@ IoT を検討するなら、まず自社が保全ラダーのどの段にいて�
 - [SORACOM](/blogs/wiki/tools/soracom/) — 接続・収集・導入の3レイヤと製品群
 - [設備保全 IoT に使える補助金](/blogs/wiki/guides/iot-maintenance-subsidy/) — ラダー別の制度対応マップ
 - [IoT 開発ボードの使い分け](/blogs/wiki/guides/iot-board-selection/) — PoC 段階のボード選定
+- [TimesFM](/blogs/wiki/tools/timesfm/) — ゼロショットで使える時系列予測の基盤モデル。予兆検知の予測部分に
 
 ## ソース記事
 

@@ -89,6 +89,8 @@ tags: ["株式投資", "デイトレード", "スイングトレード", "スキ
 - [セクターローテーション](/blogs/wiki/concepts/sector-rotation/) — 相場の主役セクターの循環と、その検知手法
 - [損益分岐勝率](/blogs/wiki/concepts/breakeven-winrate/) — 売買ルールの期待値評価
 - [株式の銘柄分類](/blogs/wiki/concepts/stock-style-classification/) — 何を買うかの軸
+- [ガンマ・スクイーズ](/blogs/wiki/concepts/gamma-squeeze/) — オプションのヘッジ売買が現物の値動きを増幅する仕組み
+- [証券担保ローン](/blogs/wiki/concepts/securities-backed-loan/) — 保有株を売らずに資金を得る手段と、そのリスク
 
 ## ソース記事
 

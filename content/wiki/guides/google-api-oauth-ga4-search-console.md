@@ -82,6 +82,7 @@ OAuth 同意画面の公開ステータスが**テスト（Testing）のまま�
 - [claude-seo](/blogs/wiki/tools/claude-seo/) — GA4 / Search Console データを使う分析自動化
 - [AI エージェントのシークレット管理](/blogs/wiki/guides/ai-agent-secret-management/) — client_secret / refresh_token の保管
 - [JWT Bearer Grant](/blogs/wiki/concepts/jwt-bearer-grant/) — サービスアカウント方式との比較
+- [Google Business Profile API](/blogs/wiki/tools/google-business-profile-api/) — OAuth で使う Google の API 群。口コミ・投稿はレガシー v4 にだけ残る
 
 ## ソース記事
 

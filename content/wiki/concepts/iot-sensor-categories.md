@@ -50,6 +50,7 @@ tags: ["IoT", "センサー", "M5Stack", "Modbus", "LPWA"]
 - [VE（バリューエンジニアリング）](/blogs/wiki/concepts/value-engineering/) — 保全投資の価値評価
 - [BACnet / BACnet MS/TP](/blogs/wiki/concepts/bacnet/) — 既設ビル設備から値を読むときの実際のプロトコル
 - [ビルオートメーションシステム（BAS）](/blogs/wiki/concepts/building-automation-system/) — 導入先の商流と寡占構造
+- [Rokid スマートAIグラス](/blogs/wiki/tools/rokid-glasses/) — 光導波路ディスプレイを持つスマートグラス。実機の制約から逆算するアプリ設計
 
 ## ソース記事
 

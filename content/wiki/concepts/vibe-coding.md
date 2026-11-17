@@ -91,6 +91,7 @@ Vibe Coding の反対側が Vibe Hacking（AI による攻撃の民主化）。�
 - [Claude Code](/blogs/wiki/tools/claude-code/) — Vibe Coding の主要環境
 - [Claude の EQ](/blogs/wiki/concepts/claude-eq/) — AI が意図を補完する「脳内トレース能力」
 - [エクストリーム・プログラミング（XP）](/blogs/wiki/concepts/extreme-programming/) — 巨大 PR の丸投げを Mutual Benefit で評価する
+- [OWASP ZAP](/blogs/wiki/tools/owasp-zap/) — 公開前の Web アプリを自動スキャンする脆弱性診断ツール
 
 ## ソース記事
 

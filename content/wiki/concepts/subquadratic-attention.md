@@ -54,6 +54,7 @@ Subquadratic Sparse Attention（SSA）は、標準 Transformer の `O(N²)` ア�
 - [Context Rot](/blogs/wiki/concepts/context-rot/) — 長文化に伴う劣化問題
 - [Kimi K3](/blogs/wiki/tools/kimi-k3/) — KDA を実装したモデルの詳細
 - [Looped Transformer](/blogs/wiki/concepts/looped-transformer/) — 層を繰り返して深さを稼ぐ別方向の改良。ループ分の KV キャッシュを「最終ループのみ」に絞る工夫がある
+- [SubQ](/blogs/wiki/tools/subq-llm/) — サブ二次アテンションを採用したロングコンテキスト LLM の実装例
 
 ## ソース記事
 

@@ -63,6 +63,7 @@ int mart design 株式会社が提供するデジタルディスプレイお買�
 - [giftee](/blogs/wiki/tools/giftee/) — デジタルギフトによるEC購買体験の変革
 - [EC 一元管理（OMS/WMS）](/blogs/wiki/concepts/ec-order-management/) — 受注・在庫・出荷を自動化する国内サービスの分類
 - [ソーシャルコマース](/blogs/wiki/concepts/social-commerce/) — SNS 系 EC 連動チャネルの整理
+- [S_mart（エスマート）](/blogs/wiki/tools/s-mart/) — 売場を実物大のディスプレイで再現し、在庫を持たないサテライト店舗を作るリテール DX
 
 ## ソース記事
 

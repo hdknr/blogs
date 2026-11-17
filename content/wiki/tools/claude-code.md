@@ -195,6 +195,8 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [A2A プロトコル](/blogs/wiki/concepts/a2a-protocol/) / [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/) — エージェント同士の会話経路と設計
 - [Modern Web Guidance](/blogs/wiki/concepts/modern-web-guidance/) — フロントエンド向け Agent Skills
 - [Remote Control ガイド](/blogs/wiki/guides/claude-code-remote-control/) / [claude -p ヘッドレス実行](/blogs/wiki/guides/claude-p-headless/) — iPhone からの遠隔操作と非対話実行
+- [APM（Agent Package Manager）](/blogs/wiki/tools/apm/) — スキル・プロンプト・MCP サーバーを apm.yml で宣言的に管理する
+- [Supabase](/blogs/wiki/tools/supabase/) — Claude Code 向けの agent-skills を提供する PostgreSQL ベースの BaaS
 
 ## ソース記事
 

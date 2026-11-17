@@ -112,6 +112,7 @@ Anthropic が 2026年4月に公開した、複数 AI エージェントを協調
 - [AIエージェント設計の5レイヤー](/blogs/wiki/concepts/ai-agent-design-layers/) — 協調パターンが位置づく全体地図
 - [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — 2役に絞った最小の協調構成
 - [AI 自律型組織](/blogs/wiki/concepts/ai-autonomous-organization/) — 4階層の企業組織として実装された協調構造
+- [社会シミュレーション](/blogs/wiki/concepts/social-simulation/) — 多数のエージェントを住民として動かし、創発を観察する応用
 
 ## ソース記事
 

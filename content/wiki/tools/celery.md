@@ -44,6 +44,7 @@ Celery のタスクから Claude Code の非対話モード `claude -p` を呼�
 - [claude -p によるヘッドレス実行](/blogs/wiki/guides/claude-p-headless/) — 計画役として呼ぶ `claude -p` の使い方
 - [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — LLM は提案、コードが検査する設計
 - [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/)
+- [Plane](/blogs/wiki/tools/plane/) — 非同期処理に Celery を使う、OSS の Jira 代替プロジェクト管理ツール
 
 ## ソース記事
 

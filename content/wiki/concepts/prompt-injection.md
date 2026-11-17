@@ -52,6 +52,7 @@ Claude Opus 5.5 は間接プロンプトインジェクションへの耐性が�
 - [Claude Code](/blogs/wiki/tools/claude-code/) — セキュリティ機能の実装
 - [Claude Opus 5.5](/blogs/wiki/tools/claude-opus-5-5/) — 間接インジェクション耐性と貼り付けタグ
 - [AI エージェントのシークレット管理](/blogs/wiki/guides/ai-agent-secret-management/) — 侵害されたときの被害を小さくする
+- [REA（Reverse Engineer Anything）](/blogs/wiki/tools/rea/) — 解析対象からの誘導リスクを抱える、リバースエンジニアリング用 MCP
 
 ## ソース記事
 

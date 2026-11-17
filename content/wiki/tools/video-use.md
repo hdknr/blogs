@@ -79,6 +79,7 @@ browser-use が LLM に DOM を渡すのと同じ発想で、動画に対して�
 - [Claude Code](/blogs/wiki/tools/claude-code/) — スキルとして統合されている実行環境
 - [沈黙する失敗](/blogs/wiki/concepts/silent-failure/) — 成功に見える失敗の一般形
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 非交渉の規則をランタイム側に置く設計
+- [ViMax](/blogs/wiki/tools/vimax/) — マルチエージェントで動画を生成する OSS
 
 ## ソース記事
 

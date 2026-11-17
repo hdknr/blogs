@@ -69,6 +69,9 @@ Agentic RAG は1質問で LLM を何度も呼ぶ（Router 判定 → クエリ�
 - [AI エージェント](/blogs/wiki/concepts/ai-agent/) — RAG を内部で利用するシステム
 - [MemPalace](/blogs/wiki/tools/mempalace/) — ベクトル検索による永続メモリシステム
 - [Text-to-SQL](/blogs/wiki/concepts/text-to-sql/) — 構造化データへの問い合わせとツール呼び出しとの使い分け
+- [Exa](/blogs/wiki/tools/exa/) — 意味検索に特化した検索 API。MCP 経由でエージェントの検索ツールになる
+- [Onyx（旧 Danswer）](/blogs/wiki/tools/onyx/) — 社内ドキュメントを横断検索するセルフホスト型の RAG 基盤
+- [Open Notebook](/blogs/wiki/tools/open-notebook/) — NotebookLM のオープンソース代替。手元の資料に対する RAG
 
 ## ソース記事
 
