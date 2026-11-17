@@ -6,6 +6,26 @@ arguments: []
 
 Inspect the wiki knowledge base for problems and report (and optionally fix) them.
 
+## Run the script — do not re-check by hand
+
+All five checks below are mechanical and implemented in `scripts/wiki_lint.py`. Run it
+and use its output as the report; **do not Read/Grep the wiki pages to redo the checks**
+(that was ~150 pages of reading for answers a script gives in under a second).
+
+```bash
+python3 scripts/wiki_lint.py
+```
+
+- Output is the Markdown report in the format below, already in Japanese.
+- Exit 1 = broken links, dangling `related_posts`, or missing required fields.
+  Orphans, stale pages and missing `aliases` are advisory (exit 0).
+- Read individual pages only when proposing a concrete fix (e.g. which page should link
+  to an orphan).
+- If you change the script, run `python3 scripts/test_wiki_lint.py` — each check has a
+  positive control there.
+
+The sections below document what the script checks.
+
 ## Checks
 
 ### 1. Orphan page detection
@@ -13,15 +33,18 @@ Inspect the wiki knowledge base for problems and report (and optionally fix) the
 Find wiki pages that no other wiki page links to.
 
 - Scan every page under `content/wiki/`.
-- Collect the link targets in each page's "関連ページ" section.
+- Collect `/blogs/wiki/...` link targets anywhere in each page's body (not only the
+  "関連ページ" section), ignoring code blocks and self-links.
 - List the pages that nobody links to.
 
 ### 2. Broken link detection
 
 Find wiki-internal links that point at non-existent pages.
 
-- Extract internal links (`/blogs/wiki/...`) from each page.
-- Confirm the target file exists under `content/wiki/`.
+- Extract internal links (`/blogs/wiki/...` and `/blogs/posts/...`) from each page.
+- Wiki links must match a page under `content/wiki/`; post links must match a published
+  post by permalink (directory year/month + frontmatter `slug`). Draft and archived posts
+  count as dangling, and the report says which.
 - List the dangling links.
 
 ### 3. `related_posts` validation
