@@ -2,9 +2,11 @@
 title: "Grafana"
 description: "メトリクス可視化・ダッシュボード作成ツール"
 date: 2026-04-06
-lastmod: 2026-04-06
+lastmod: 2026-11-17
 aliases: ["grafana"]
 related_posts:
+  - "/posts/2026/05/grafana-oncall-irm-incident-response/"
+  - "/posts/2026/05/prometheus-loki-grafana-server-monitoring-stack/"
 tags: ["監視", "可視化", "CloudWatch", "Prometheus"]
 ---
 
