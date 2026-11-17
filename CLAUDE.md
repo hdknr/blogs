@@ -28,6 +28,8 @@ Tech blog built with **Astro + AstroPaper**, hosted on GitHub Pages.
 - `scripts/validate_frontmatter.py` — frontmatter/placement validation, enforced in CI
 - `scripts/normalize_tags.py` — collapse tag spelling variants (dry run by default)
 - `scripts/check_assets.py` — every referenced image/CSS/JS exists in the build
+- `scripts/wiki_lint.py` — the mechanical `/wiki-lint` checks (orphans, broken links,
+  `related_posts`, staleness, frontmatter); tests in `scripts/test_wiki_lint.py`
 - `scripts/bpmn/render.cjs` — renders a BPMN 2.0 file (Camunda Modeler format) to PNG
 - `astro/` — the Astro site. `content/` and `static/` stay at the repo root and are
   read in place (`publicDir: "../static"`, collections point at `../content`)
