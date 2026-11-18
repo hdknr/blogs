@@ -164,6 +164,31 @@ Rust の既定の x86-64 ターゲットは `popcnt` を有効にしないため
 
 80 以上の対応言語はすべてこの 1 つのエンジンで動いています。言語ごとの定義（コメントの対、文字列の区切り、エスケープ規則、ネスト、正規表現の文脈、補間の区切り）はプレーンテキストの設定ファイルに書かれ、初回使用時に遷移テーブルにコンパイルされます。
 
+### Python や TypeScript も数えられる
+
+Linux カーネルは C が中心ですが、mezura が数えられるのは C だけではありません。[GitHub リポジトリ](https://github.com/subamanis/mezura)の `mezura-core/data/languages/` には言語ごとの定義ファイルが並んでおり、Python・TypeScript・TSX も含まれています。
+
+| 言語 | 定義ファイル | 対象の拡張子 |
+|---|---|---|
+| Python | `Python.txt` | `.py` `.pyw` `.pyi` `.gyp` `.gypi`（shebang の `python` でも判定） |
+| TypeScript | `TypeScript.txt` | `.ts` `.mts` `.cts` |
+| TSX | `TSX.txt` | `.tsx` |
+
+定義ファイルの中身は、前述の「言語ごとのプレーンテキスト設定」そのものです。
+
+- **Python**
+  - コメントは `#`、文字列は `"` と `'`、複数行文字列は `"""` と `'''`
+  - キーワードとして `class` を数える
+- **TypeScript**
+  - コメントは `//` と `/* */`
+  - テンプレートリテラル（`` ` ``）と、その中の補間 `${ }` を字句解析する
+  - `return` や `typeof` などの後に来た `/` を正規表現リテラルの開始とみなし、割り算と区別する
+  - キーワードとして `class` と `enum` を数える
+
+TSX の定義は TypeScript と同じではありません。`TSX.txt` には `interface` を数えるキーワードがある一方、正規表現リテラルの設定はありません。
+
+Python の docstring（`"""..."""`）は、定義上は複数行文字列として扱われ、コメントとしては扱われません。リポジトリのテスト用サンプル `python_docstrings.py` でも、docstring の行はコード行として数える前提になっています。docstring をコメントとして数えたい場合は、結果の見方に注意が必要です。
+
 ### 正確さにはコストがかかる
 
 一方で、正確さはタダではありません。3.5.0 で入れた正規表現リテラル・文字列補間・HTML タグの引用符・PHP のページ境界の修正で、カーネルの命令数は 2.3% 増えました。`struct` や `class` が本当に型定義の開始かを確かめる処理は、既定設定の実行でさらに 2.6〜2.9% かかりますが、これはカーネルの `.c` ファイルで「単語 `struct` の出現 120 万回」と「実際に定義された構造体 33,589 個」の違いになります。
@@ -187,4 +212,5 @@ mezura の高速化の記録から、次のような教訓が引き出せます�
 ## 参考
 
 - [What it takes to count the Linux kernel's 36M lines of code in under 70ms](https://petros-papatheodorou.dev/writing/mezura/counting-the-linux-kernel/) — Petros Papatheodorou
+- [subamanis/mezura](https://github.com/subamanis/mezura) — mezura の GitHub リポジトリ
 - [柴田 淳 氏による紹介ポスト（X）](https://x.com/ats/status/2122885253958172809)
