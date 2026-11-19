@@ -74,7 +74,7 @@ Notion から HTML 形式でエクスポートした ZIP を、AFFiNE のイン�
 
 ```bash
 gh api repos/toeverything/AFFiNE --jq '.license.spdx_id'
-# => "NOASSERTION"
+# => NOASSERTION
 ```
 
 ルートの `LICENSE` ファイルを読むと、ディレクトリごとにライセンスが分かれています。
