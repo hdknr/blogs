@@ -214,7 +214,7 @@ Obsidian の [Excalidraw プラグイン](https://github.com/zsviczian/obsidian-
 人が描いた図をエージェントに読ませるのとは逆に、エージェントに図を描かせる方法もあります。
 
 - **Mermaid から変換する。** [mermaid-to-excalidraw](https://github.com/excalidraw/mermaid-to-excalidraw)（MIT）は、Mermaid の記法から Excalidraw の図を作る。エージェントには書きやすい Mermaid を書かせ、人は Excalidraw で清書・修正する、という分担ができる
-- **公式の MCP サーバーを使う。** [excalidraw/excalidraw-mcp](https://github.com/excalidraw/excalidraw-mcp) は、プロンプトから Excalidraw の図を生成する MCP サーバー
+- **excalidraw 組織の MCP サーバーを使う。** [excalidraw/excalidraw-mcp](https://github.com/excalidraw/excalidraw-mcp) は、プロンプトから Excalidraw の図を生成する MCP サーバー
 
 excalidraw-mcp は、README によればリモートのエンドポイント `https://mcp.excalidraw.com` をカスタムコネクタとして追加すると使えます。MCP Apps に対応したクライアントでは、生成した図を会話の中で表示・編集できます。名前の似たコミュニティ製の MCP サーバーも複数あるので、導入するときはリポジトリを確認してください。
 
@@ -225,7 +225,7 @@ excalidraw-mcp は、README によればリモートのエンドポイント `ht
 - JSON はそのままだと冗長なので、ノードと接続の一覧に縮めて渡す
 - 公開されている実際の図で試すと、ラベルが図形にひも付いていない、同じ名前の図形がある、矢印が吸着していない、の 3 つで情報が落ちた
 - エージェントに渡す図は、「矢印は吸着させる」「ラベルは図形の中に書く」というルールで描くのが一番確実
-- 逆にエージェントに図を描かせるなら、Mermaid からの変換か公式の MCP サーバーが使える
+- 逆にエージェントに図を描かせるなら、Mermaid からの変換か excalidraw 組織の MCP サーバーが使える
 
 ## 参考リンク
 
