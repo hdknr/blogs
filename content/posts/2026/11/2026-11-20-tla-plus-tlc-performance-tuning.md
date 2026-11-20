@@ -122,6 +122,8 @@ VIEW CoreVars
 
 外した変数が不変条件や次の遷移に影響する場合は、探索漏れが起きるので使えません。
 
+CONSTRAINT や VIEW で探索を絞ったあとの「違反なし」は、肝心の状態に届いていないだけかもしれません。わざと破られる性質を置いて TLC が違反を報告することを確かめると、空振りを防げます。考え方は [陽性対照（ポジティブコントロール）とは？](/blogs/posts/2026/11/positive-control-in-systems/) で解説しています。
+
 ## 第 2 段階：実行オプションと検査範囲を調整する（効果：中〜大）
 
 仕様を書き換えずに、実行時の設定だけで速くする方法です。以下のコマンド例は、TLA+ の [GitHub Releases](https://github.com/tlaplus/tlaplus/releases) から取得した `tla2tools.jar` をカレントディレクトリに置いた前提です。
@@ -174,13 +176,13 @@ java -cp tla2tools.jar tlc2.TLC -simulate -depth 100 Spec.tla
 
 「ノード 3・メッセージ 2」で起きないバグは、「ノード 5・メッセージ 4」でも起きにくい、という経験則があります。Alloy の Daniel Jackson が提唱した **small scope hypothesis** です。
 
-普段の開発では最小構成で素早く回し、パラメータを大きくした検査は CI や夜間バッチだけで回します。
+普段の開発では最小構成で素早く回し、パラメータを大きくした検査は CI や夜間バッチだけで回します。TLC を開発の流れに組み込む例は、[spec-loop は TLC をどう使っているか](/blogs/posts/2026/11/spec-loop-tlc-formal-checker/) で紹介しました。
 
 ### Apalache を併用する
 
 TLC は、状態を 1 つずつ列挙する明示的状態（explicit-state）のモデル検査器です。TLA+ には、SMT ソルバ（Z3 など）をバックエンドに使う記号的なモデル検査器 **Apalache** もあります。
 
-Apalache は、決められたステップ数までの実行を調べる有界モデル検査（Bounded Model Checking）を行います。データの値域が大きい仕様では、値を 1 つずつ列挙する TLC より速く反例を見つけることがあります。
+Apalache は、決められたステップ数までの実行を調べる有界モデル検査（Bounded Model Checking）を行います。データの値域が大きい仕様では、値を 1 つずつ列挙する TLC より速く反例を見つけることがあります。Apalache を検査器に使う仕様言語 Quint と TLC の使い分けは、[Quint とは](/blogs/posts/2026/11/quint-formal-specification-language/) で整理しています。
 
 ## まとめ
 
