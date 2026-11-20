@@ -1,7 +1,7 @@
 ---
 title: "AI エンジニアこそデータエンジニアリングを学ぶべき理由：RAG のデモが本番で崩れるところ"
 date: 2026-11-19
-lastmod: 2026-11-19
+lastmod: 2026-11-20
 slug: "data-engineering-for-ai-engineers"
 draft: false
 source_url: "https://github.com/hdknr/blogs/issues/556#issuecomment-7001463984"
@@ -23,13 +23,13 @@ X で、この点を指摘する中国語の投稿（[@UPing123zzz](https://x.co
 
 | 段階 | 項目 |
 |---|---|
-| 基礎 | [Python](/blogs/tags/python/)、[SQL](/blogs/tags/sql/)、[Linux](/blogs/tags/linux/)、[Git / GitHub](/blogs/posts/2026/11/git-in-one-hour-with-vscode/)、データ構造 |
+| 基礎 | [Python](/blogs/tags/python/)、[SQL](/blogs/tags/sql/)、[Linux](/blogs/tags/linux/)、[Git / GitHub](/blogs/posts/2026/11/git-in-one-hour-with-vscode/)、[データ構造](/blogs/posts/2026/11/data-structures-for-data-engineers/) |
 | データベースとモデリング | [リレーショナル DB、NoSQL](/blogs/categories/データベース/)、[データモデリング](/blogs/posts/2026/03/b32313de621a699d6b0e80a47d982cbf/)、[データウェアハウス](/blogs/posts/2026/10/redshift-vs-lakehouse/) |
-| パイプライン | [ETL / ELT](/blogs/posts/2026/11/aws-only-ai-native-data-platform/)、Apache Airflow、Apache Spark、Kafka、[データパイプライン](/blogs/wiki/concepts/ai-native-data-platform/) |
+| パイプライン | [ETL / ELT](/blogs/posts/2026/11/aws-only-ai-native-data-platform/)、[Apache Airflow](/blogs/posts/2026/11/apache-airflow-intro/)、[Apache Spark](/blogs/posts/2026/11/apache-spark-intro/)、[Kafka](/blogs/posts/2026/11/apache-kafka-intro/)、[データパイプライン](/blogs/wiki/concepts/ai-native-data-platform/) |
 | 保存先・変換・基盤 | [データレイク](/blogs/tags/データレイク/)、[レイクハウス](/blogs/wiki/concepts/lakehouse/)、[Snowflake](/blogs/tags/snowflake/)、[Databricks](/blogs/posts/2026/10/lakehouse-ecosystem-2026/)、[dbt](/blogs/wiki/tools/dbt/)、[クラウド](/blogs/categories/クラウド/インフラ/) |
 | 運用 | [Docker](/blogs/tags/docker/)、[Kubernetes](/blogs/tags/kubernetes/)、[CI/CD](/blogs/tags/ci/cd/) |
-| 信頼性と統制 | データ品質、[データガバナンス](/blogs/tags/データガバナンス/)、[データセキュリティ](/blogs/posts/2026/05/rbac-role-based-access-control/) |
-| AI との接続 | MLOps、[AI データエンジニアリング](/blogs/wiki/concepts/ai-ready-data/)、[本番運用できるパイプラインの構築](/blogs/posts/2026/08/rds-blue-green-dms-cdc-incident/) |
+| 信頼性と統制 | [データ品質](/blogs/posts/2026/11/data-quality-intro/)、[データガバナンス](/blogs/tags/データガバナンス/)、[データセキュリティ](/blogs/posts/2026/05/rbac-role-based-access-control/) |
+| AI との接続 | [MLOps](/blogs/posts/2026/11/mlops-intro/)、[AI データエンジニアリング](/blogs/wiki/concepts/ai-ready-data/)、[本番運用できるパイプラインの構築](/blogs/posts/2026/08/rds-blue-green-dms-cdc-incident/) |
 
 用語の羅列に見えますが、投稿者は「根っこにある問いは 1 つだけ」と言います。
 
@@ -58,10 +58,10 @@ X で、この点を指摘する中国語の投稿（[@UPing123zzz](https://x.co
 | 概念・ツール | 解く問題 |
 |---|---|
 | ETL / ELT（抽出・変換・格納。変換を格納の前に行うか後に行うかの違い） | データをどう取り出し、変換し、格納するか |
-| Apache Airflow | 複雑なデータ処理をどうスケジュールし、管理するか |
-| Apache Spark | 大規模なデータをどう計算するか |
-| Apache Kafka | 発生し続けるイベントをどう確実に受け渡し、消費するか |
-| dbt | データベース内の変換ロジックをどう整理し、テストするか |
+| [Apache Airflow](/blogs/posts/2026/11/apache-airflow-intro/) | 複雑なデータ処理をどうスケジュールし、管理するか |
+| [Apache Spark](/blogs/posts/2026/11/apache-spark-intro/) | 大規模なデータをどう計算するか |
+| [Apache Kafka](/blogs/posts/2026/11/apache-kafka-intro/) | 発生し続けるイベントをどう確実に受け渡し、消費するか |
+| [dbt](/blogs/wiki/tools/dbt/) | データベース内の変換ロジックをどう整理し、テストするか |
 
 投稿者は、これらは同じ種類の道具ではなく、1 つのプロジェクトで全部を入れる必要もない、と念を押しています。
 
