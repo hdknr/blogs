@@ -1,0 +1,88 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="mlops-lifecycle" name="MLOps Lifecycle">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1140" pageHeight="380" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="MLOps のライフサイクル" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="370" y="5" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Stages -->
+        <mxCell id="s1" value="データ収集・検証" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="100" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="学習" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="100" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="評価・検証" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="100" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="モデル登録" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="570" y="100" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5" value="デプロイ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="100" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6" value="監視" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="100" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e12" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e23" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s2" target="s3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e34" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s3" target="s4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e45" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s4" target="s5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e56" style="endArrow=block;html=1;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s5" target="s6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Feedback loop -->
+        <mxCell id="loop" value="ドリフトや性能劣化をきっかけに再学習（継続的トレーニング：CT）" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;strokeColor=#d79b00;strokeWidth=2;dashed=1;fontSize=12;fontColor=#b46504;fontStyle=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s6" target="s1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1005" y="60"/>
+              <mxPoint x="105" y="60"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Practices / tools -->
+        <mxCell id="p1" value="データ・特徴量の版管理&lt;br&gt;DVC / Feast" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="30" y="170" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p2" value="実験管理&lt;br&gt;MLflow Tracking" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="210" y="170" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p3" value="評価指標の記録と&lt;br&gt;本番モデルとの比較" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="390" y="170" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p4" value="モデルレジストリ&lt;br&gt;（版・エイリアス）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="570" y="170" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p5" value="CI/CD&lt;br&gt;段階的リリース&lt;br&gt;ロールバック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="750" y="170" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="p6" value="データドリフト・&lt;br&gt;予測品質の監視" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="930" y="170" width="150" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Pipeline bar -->
+        <mxCell id="pipe" value="学習パイプラインの自動化（Kubeflow Pipelines / SageMaker Pipelines / Vertex AI Pipelines）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="255" width="690" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="meta" value="メタデータ・系譜（どのデータ・コード・パラメータから、どのモデルができたか）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="310" width="1050" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
