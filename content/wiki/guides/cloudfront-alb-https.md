@@ -12,3 +12,7 @@ tags: ["aws", "CloudFront", "ALB", "django", "HTTPS"]
 
 CloudFront + ALB + Django 構成では ALB が X-Forwarded-Proto を上書きするため、Django に HTTP 判定されて API レスポンス URL が http:// になる問題。CloudFront の custom_header（X-Forwarded-Ssl）は ALB に干渉されない。Django の SECURE_PROXY_SSL_HEADER をカスタムヘッダー参照に変更。
 
+## 関連ページ
+
+- [nginx](/blogs/wiki/tools/nginx/) — 自前のリバースプロキシで TLS を終端する場合の選択肢
+- [Mozilla Hubs](/blogs/wiki/tools/mozilla-hubs/) — CloudFront を配信層に使うセルフホスト構成の例
