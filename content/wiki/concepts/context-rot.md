@@ -2,10 +2,11 @@
 title: "Context Rot（コンテキスト劣化）"
 description: "会話が長くなるにつれ LLM の性能がトークン数に比例して低下する現象。能動的なセッション管理で防げる"
 date: 2026-04-23
-lastmod: 2026-04-23
+lastmod: 2026-11-19
 aliases: ["Context Rot", "コンテキスト腐敗", "コンテキスト劣化"]
 related_posts:
   - "/posts/2026/04/claude-code-context-rot-session-management/"
+  - "/posts/2026/11/claude-code-autocompact-window/"
 tags: ["claude-code", "コンテキスト管理", "llm", "セッション管理", "プロンプトエンジニアリング"]
 ---
 
@@ -38,11 +39,18 @@ Anthropic テクニカルスタッフの Thariq 氏が整理した「ターン�
 
 `/usage` で自分のトークン使用量の推移を確認し、Context Rot が始まるしきい値を事前に把握しておく。鈍くなった後では遅い。
 
+## 1M ウィンドウは「詰め込んでよい」ではない
+
+Anthropic の「Effective context engineering for AI agents」は、トークンが増えるほど情報を正確に思い出す能力が下がる傾向はすべてのモデルに現れるとし、コンテキストを「限界効用が逓減する有限の資源」として扱うよう勧めている。1M が使えることと、1M まで詰め込んでよいことは別の話になる。
+
+Claude Code の 1M ウィンドウのモデルは既定で約 967K トークンまで自動圧縮しないので、`/autocompact 400k` などで早めに畳む運用が紹介されている。ただし「何トークンを超えると品質が落ちる」という公式の閾値はなく、400K は経験則にすぎない。早く畳むほど要約による細部の欠落が増えるトレードオフもある（詳細は [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/)）。
+
 ## 関連ページ
 
-- [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/) — 5 段階の圧縮カスケード
+- [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/) — 5 段階の圧縮カスケードと auto-compact window の調整
 - [Claude Code](/blogs/wiki/tools/claude-code/) — Context Rot 管理コマンドの実装
 
 ## ソース記事
 
 - [Claude Code のコンテキスト管理術 — Context Rot を防ぐ 5 つの選択肢](/blogs/posts/2026/04/claude-code-context-rot-session-management/) — 2026-04-17
+- [Claude Code の /autocompact 設定 — 1M コンテキストの自動圧縮を 400K に早めるコストと品質の得失](/blogs/posts/2026/11/claude-code-autocompact-window/) — 2026-11-17
