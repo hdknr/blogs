@@ -11,6 +11,7 @@ related_posts:
   - "/posts/2026/10/formal-methods-claude-code-spec-check/"
   - "/posts/2026/11/contract-formal-verification/"
   - "/posts/2026/11/positive-control-in-systems/"
+  - "/posts/2026/11/tla-plus-tlc-performance-tuning/"
 tags: ["TLA+", "形式手法", "モデル検査", "ソフトウェア検証", "同時実行制御"]
 ---
 
