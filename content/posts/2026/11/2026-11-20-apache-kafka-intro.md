@@ -20,6 +20,7 @@ tags: ["Apache Kafka", "データエンジニアリング", "データ基盤", "
 - Kafka が解く問題と、トピック・パーティション・コンシューマーグループの基本
 - 配信保証（at-least-once・冪等プロデューサー・exactly-once）とその限界
 - Debezium による CDC で、業務 DB の変更を検索や RAG に流す構成
+- AWS のマネージドサービス（MSK・Kinesis Data Streams・DMS など）との対応
 - Kafka を入れなくてよい場面（DB のキューテーブル・Redis Streams・SQS）
 
 ## 用語とプロダクト
@@ -275,6 +276,30 @@ docker exec kafka /opt/kafka/bin/kafka-consumer-groups.sh \
 docker rm -f kafka
 ```
 
+## AWS のマネージドサービスとの対応：MSK・Kinesis・DMS
+
+ブローカーを自分で運用したくない場合は、クラウドのマネージドサービスが選択肢になります。AWS には、Kafka そのものを提供するサービスと、Kafka に近い役割を AWS 独自の仕組みで提供するサービスがあります。
+
+| サービス | Kafka との関係 | 向いている場面 |
+|---|---|---|
+| Amazon MSK（Managed Streaming for Apache Kafka） | Kafka そのもののマネージドサービス。ブローカーの台数や種類を指定するプロビジョニング型と、容量を意識しないサーバーレス型がある。プロビジョニング型なら既存の Kafka のクライアントとツールがそのまま使える。サーバーレス型は IAM による認証が必須で、Kafka の ACL は使えない | Kafka を使いたいが、ブローカーの運用は任せたい |
+| MSK Connect | Kafka Connect のマネージド版。Debezium などのコネクターを載せて動かせる | 前述の CDC の構成（業務 DB → Kafka）を AWS 上で組む |
+| Amazon Kinesis Data Streams | AWS 独自のストリーミング基盤で、Kafka の API とは互換がない。シャードがパーティションに、シーケンス番号がオフセットにほぼ相当する。保持期間を延ばせば読み直せる | Kafka の運用知識なしで、Lambda など AWS の他のサービスとつなぎやすいストリームがほしい |
+| Amazon Data Firehose | ストリームを S3・Redshift・OpenSearch などへ届けることに特化したサービス。利用者が読む位置を戻して読み直す用途ではない | ログやイベントを、貯める先へそのまま流し込む |
+| AWS DMS（Database Migration Service） | DB の変更（CDC）を Kinesis Data Streams や MSK に流せる。Debezium に近い役割。ただし MSK のサーバーレス型と、MSK の IAM アクセス制御には対応していない | Debezium を自分で運用せずに CDC を組む |
+| Amazon SNS / SQS | SNS は複数の購読者への配信（fan-out）、SQS はキュー。どちらも、処理し終わったメッセージを別の用途で後から読み直すことはできない | 読み直しが要らない通知やジョブの受け渡し |
+| Amazon EventBridge | ルールでイベントを振り分けるイベントバス。イベントのアーカイブと再送（リプレイ）の機能もある | SaaS や AWS のサービスから届くイベントを、条件で振り分けて処理する |
+
+選び方の目安は次のとおりです。
+
+- **Kafka のエコシステム（Kafka Connect、Debezium、既存のクライアントやツール）を活かしたい**：MSK（と MSK Connect）
+- **AWS の中で完結させ、運用をできるだけ軽くしたい**：Kinesis Data Streams。オンデマンドモードならシャード数も自動で調整される（プロビジョニングモードではシャード数の設計が残る）
+- **読み直しが要らず、ジョブや通知を受け渡せればよい**：SQS / SNS
+
+DMS を CDC に使う場合も、Debezium と同じく、取り込みが止まっていないかの監視が欠かせません。前述の [Blue/Green 切替で DMS が静かに止まった事例](/blogs/posts/2026/08/rds-blue-green-dms-cdc-incident/)は、まさにこの経路で起きたものです。
+
+ほかのクラウドでは、Google Cloud の Pub/Sub（Kafka とはコネクター経由で接続する）や、Kafka 互換のエンドポイントを持つ Azure Event Hubs が近い位置にあります。どのサービスでも、パーティション（シャード）の数やキーの選び方、読み手の冪等性といった設計は利用者側に残ります。
+
 ## Kafka が要らない場面：キューテーブル・Redis Streams・SQS との使い分け
 
 Kafka は便利ですが、ブローカーの台数とディスク、パーティション数の設計、レプリケーション、監視、バージョンアップなど、運用で気にすることが増えます。マネージドサービス（Amazon MSK、Confluent Cloud など）を使っても、パーティションやコンシューマーの設計は利用者側に残ります。次のような場合は、もっと軽い選択肢で足ります。
@@ -304,6 +329,7 @@ Redis Streams を使った配信基盤の事例は、[Redis Pub/Sub から Strea
 - 実務の基本は at-least-once。冪等プロデューサーで書き込みの重複は防げるが、外部システムへの書き込みは upsert などで重複に耐える設計が要る
 - Debezium による CDC は、業務 DB の変更（削除を含む）を検索や RAG のインデックスへ流す定番の構成
 - 4.0 で ZooKeeper は削除され、KRaft が唯一の方式になった
+- AWS では、Kafka そのものを使うなら MSK、AWS 独自の仕組みで運用を軽くするなら Kinesis Data Streams。CDC は MSK Connect 上の Debezium か DMS で組める
 - 読み手が 1 種類で捨ててよいなら、DB のキューテーブル、Redis Streams、SQS で足りることが多い
 
 ## 関連記事
