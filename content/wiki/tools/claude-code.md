@@ -2,7 +2,7 @@
 title: "Claude Code"
 description: "Anthropic 公式の CLI ベース AI コーディングエージェント"
 date: 2026-04-06
-lastmod: 2026-11-15
+lastmod: 2026-11-19
 aliases: ["claude-code"]
 related_posts:
   - "/posts/2026/04/claude-code-context-compression/"
@@ -53,6 +53,9 @@ related_posts:
   - "/posts/2026/10/claude-p-input-tokens-bare/"
   - "/posts/2026/11/agents-talking-to-agents/"
   - "/posts/2026/11/modern-web-guidance-ai-frontend/"
+  - "/posts/2026/11/claude-code-code-mode/"
+  - "/posts/2026/11/claude-code-autocompact-window/"
+  - "/posts/2026/11/claude-code-team-verification/"
 tags: ["claude-code", "claude", "anthropic", "AIエージェント", "hooks", "mcp"]
 ---
 
@@ -70,10 +73,9 @@ Anthropic が開発する CLI ベースの AI コーディングエージェン�
 
 ## コンテキスト管理
 
-5段階の圧縮カスケードでコンテキストウィンドウを管理する:
-Microcompact → Context Collapse → Session Memory → Full Compact → PTL Truncation
+5段階の圧縮カスケード（Microcompact → Context Collapse → Session Memory → Full Compact → PTL Truncation）でコンテキストウィンドウを管理する。1M ウィンドウのモデル（Opus 5.5・Fable 5.2 など）は既定で約 967K トークンまで自動圧縮しない。`/autocompact 400k`（v2.1.288 以降はモデルごとに保存）や `settings.json` の `autoCompactWindow` で圧縮を早められ、毎ターンの入力コストと Context Rot を抑える代わりに要約での欠落が増える。長いセッションでは Continue / Rewind / `/clear` / `/compact` / Subagent の 5 択を使い分ける。
 
-詳細: [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/)
+詳細: [コンテキスト圧縮](/blogs/wiki/concepts/context-compression/) / [Context Rot](/blogs/wiki/concepts/context-rot/)
 
 ## LLM Wiki との関連
 
@@ -111,11 +113,14 @@ API 面は 3 つ。`agent()` がノード 1 個（`schema` に JSON Schema を�
 
 詳細: [グラフエンジニアリング](/blogs/wiki/concepts/graph-engineering/)
 
-## Context Rot 管理
+## Code Mode（実験的機能）
 
-Claude Code のコンテキストウィンドウは 100 万トークン。長いセッションでは Context Rot（コンテキスト劣化）が発生する。5 つのセッション管理選択肢（Continue / Rewind / /clear / /compact / Subagent）を使い分けることで性能を維持できる。
+ツールを 1 回ずつ呼ぶ代わりに、Claude が複数のツール呼び出しを **JavaScript で書いて 1 ステップで実行**する機能（Cloudflare が MCP 向けに提案した Code Mode と同じ発想）。v2.1.323 以降で `CLAUDE_CODE_EXPERIMENTAL_CODE_MODE=1` を**ユーザー設定かシェル**から渡す（プロジェクト・ローカル設定では無視される）。有効時に Claude が直接呼べるのは `REPL` と `Poll` だけになり、Bash・Read・Edit はコード内の関数になる。
 
-詳細: [Context Rot](/blogs/wiki/concepts/context-rot/)
+- 並列化できる処理や、大量の中間出力を絞り込む処理で効く（1,422 ファイルのリンク検査が 1 回の実行で済み、文脈に返ったのは 29 件だけ）。判断を挟みながら進める逐次作業には向かない
+- コード内の各呼び出しも通常のツール名で権限ルール・`PreToolUse` フックを通る。auto モードでは分類器がコード全体を実行前に審査する。コード自体の検査は `REPL` にマッチするフックで `tool_input.code` を読む
+- ツール呼び出しを検査するプラグイン・API キーヘルパー・OpenTelemetry・サードパーティのプロバイダーなどと競合して起動しないことがある。理由は `/status` で確かめ、`--setting-sources project,local` でユーザー設定を外すと切り分けやすい
+- 対話的なターミナルセッション専用（`-p`・Agent SDK・VS Code では不可）。再開時も変数が要る
 
 ## Obsidian Vault との統合
 
@@ -157,6 +162,17 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 
 設定を増やすことは目的ではない。訂正の回数を増やし、その結果を恒久化した副産物として設定が残る。
 
+## Claude Code チームの検証の考え方
+
+チームではコードの約 9 割を Claude が書きレビューする。任せられる量を決めるのは**検証ループの強さ**で、検証がなければ同時に走らせられる Claude は 1〜2 個が限界になる。
+
+- 1 種類だけ選ぶなら **E2E テスト**（ごまかしにくい）。補強にプロパティテストと差分テスト
+- アプリの起動・操作・確認を **`verify` スキル**にまとめ、コミット前に実際に動かす。3 回直して失敗が残ったら人間を呼ぶ
+- 差分から発動条件を読む信頼性チェックリスト（39 項目、毎回 3〜10 個だけ適用）。レビュアーは積み増さず `REVIEW.md` で 1 人を調整する。`REVIEW.md` はベースブランチから読まれ、PR が自分を裁くルールを書き換えられない
+- 新しいコミットゲートは off / observe / enforce の observe から始める。レビュアー自身も過去の障害から作った評価セットで採点する
+
+詳細: [必須コードレビューの代替](/blogs/wiki/concepts/code-review-alternatives/) / [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/)
+
 ## 「基本16コマンド」という区切りは公式に存在しない
 
 組み込みコマンドは執筆時点で **70 件前後**あり、「基本16コマンド」という公式の区切りはない。解説記事で見かける `/add`・`/drop`・`/ls` は **Aider のコマンドで Claude Code には存在しない**。
@@ -187,6 +203,8 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [ECC (Everything Claude Code)](/blogs/wiki/tools/ecc/) — エージェント・スキル・フックの総合エコシステム
 - [claude-seo](/blogs/wiki/tools/claude-seo/) — SEO 分析スキル
 - [Claude Design](/blogs/wiki/tools/claude-design/) — デザイン生成ツール（Claude Code でブランド連携）
+- [デザイントークン（W3C DTCG）](/blogs/wiki/concepts/design-tokens/) — UI を書かせるときにデザインの意図を渡す
+- [必須コードレビューの代替](/blogs/wiki/concepts/code-review-alternatives/) — Claude Code チームの `REVIEW.md` と検証ループ
 - [Claude Tag](/blogs/wiki/tools/claude-tag/) — Slack 上のプロアクティブなエージェント
 - [CodeGraph](/blogs/wiki/tools/codegraph/) — コード知識グラフで探索のツール呼び出しを削減
 - [Ponytail](/blogs/wiki/tools/ponytail/) — 過剰実装を抑える YAGNI プラグイン
@@ -220,3 +238,6 @@ Claude Code のコンテキストウィンドウは 100 万トークン。長い
 - [Claude Code のサブエージェントは定義しただけでは動かない — ファクトチェックを繋ぎ直した 3 つの穴](/blogs/posts/2026/09/fact-checker-maker-checker/) — 2026-09-07
 - [エージェント同士に会話させる — Claude Code の 3 つの経路と A2A の使い分け](/blogs/posts/2026/11/agents-talking-to-agents/) — 2026-11-15
 - [AI が書くフロントエンドが「2019年」で止まる問題と、Chrome チームの Modern Web Guidance](/blogs/posts/2026/11/modern-web-guidance-ai-frontend/) — 2026-11-15
+- [Claude Code の Code Mode を試す — ツール呼び出しを JavaScript で束ねる実験的機能の使いどころと起動のコツ](/blogs/posts/2026/11/claude-code-code-mode/) — 2026-11-17
+- [Claude Code の /autocompact 設定 — 1M コンテキストの自動圧縮を 400K に早めるコストと品質の得失](/blogs/posts/2026/11/claude-code-autocompact-window/) — 2026-11-17
+- [Claude Code チームは「検証」をどう考えているか — テストの選び方からレビューのレビューまで](/blogs/posts/2026/11/claude-code-team-verification/) — 2026-11-17

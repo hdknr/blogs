@@ -56,6 +56,7 @@ Bash コマンドを `read_only` / `write_local` / `destructive` / `external` �
 
 ## 関連ページ
 
+- [Gemini Decisions API](/blogs/wiki/tools/gemini-decisions-api/) — 判定に特化した API の後続例
 - [Claude Code Hooks](/blogs/wiki/concepts/claude-code-hooks/) — Jev を呼び出す PreToolUse hook の土台
 - [ハーネスエンジニアリング](/blogs/wiki/concepts/harness-engineering/) — 行動への柵としての権限判定
 - [プロンプトインジェクション](/blogs/wiki/concepts/prompt-injection/) — 誘導コメントで判定が揺らぐ問題
