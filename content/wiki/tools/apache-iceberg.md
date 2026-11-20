@@ -102,6 +102,7 @@ Redshift は 2025 年 11 月に Iceberg への書き込みが GA、2026 年 5 �
 - [DuckDB](/blogs/wiki/tools/duckdb/) — Iceberg を読み書きできる計算エンジンの 1 つ
 - [列指向ストレージ](/blogs/wiki/concepts/columnar-storage/) — データ本体の Parquet の土台
 - [レイクハウス](/blogs/wiki/concepts/lakehouse/) — 他のテーブルフォーマット・カタログ・DWH との使い分け
+- [Apache Spark](/blogs/wiki/tools/apache-spark/) — Iceberg を読み書きする代表的な分散処理エンジン
 
 ## ソース記事
 

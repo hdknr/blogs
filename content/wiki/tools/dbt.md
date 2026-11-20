@@ -55,6 +55,7 @@ dbt Labs は 2026 年 4 月に、セマンティックレイヤーと生テー�
 - [Lightdash](/blogs/wiki/tools/lightdash/) — dbt の定義をそのまま探索画面にする BI
 - [AI ネイティブなデータ分析基盤](/blogs/wiki/concepts/ai-native-data-platform/) — dbt を中心にした基盤設計
 - [BigQuery](/blogs/wiki/tools/bigquery/) / [Amazon Redshift](/blogs/wiki/tools/amazon-redshift/) — 主な変換先の DWH
+- [Apache Airflow](/blogs/wiki/tools/apache-airflow/) — dbt の実行を他の処理と順番どおりに起動するオーケストレーター
 
 ## ソース記事
 
