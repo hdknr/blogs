@@ -138,6 +138,7 @@ TLC を使うのは spec-loop の spec-review だけで、dev-loop には TLA+ �
 
 ## 関連ページ
 
+- [mezura](/blogs/wiki/tools/mezura/) — 高速な行数カウンタ。行数は見積りの根拠ではなく補助の観測値として使う
 - [仕様駆動開発（SDD）](/blogs/wiki/concepts/spec-driven-development/) — SDD の全体像と、実装側を受け持つ同名の dpolivaev 版との比較
 - [形式手法（Formal Methods）](/blogs/wiki/concepts/formal-methods/) — Formal Checker の道具と反例の扱い
 - [TLA+ と TLC](/blogs/wiki/tools/tla-plus/) — Formal Checker が業務フローの検査に使うモデル検査器

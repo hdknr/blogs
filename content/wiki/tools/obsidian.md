@@ -53,6 +53,7 @@ Vault が AI Agent 越しに自己強化される循環構造を構築できる�
 
 ## 関連ページ
 
+- [コーネル式ノート](/blogs/wiki/concepts/cornell-notes/) — 紙のノートで記録と復習を 1 ページで回すノート術
 - [Obsidian Vault Writeback Loop](/blogs/wiki/concepts/obsidian-vault-writeback-loop/) — Vault と AI Agent を繋ぐ循環設計パターン
 - [Claude Code × Obsidian Vault 統合ガイド](/blogs/wiki/guides/claude-code-obsidian-integration/) — 5 段階の実装手順
 - [Claude Code](/blogs/wiki/tools/claude-code/) — Vault と連携する AI Agent

@@ -84,6 +84,7 @@ EE License の要点：
 
 ## 関連ページ
 
+- [Mozilla Hubs](/blogs/wiki/tools/mozilla-hubs/) — 同じくセルフホストで公式サービスの代替にするツール
 - [Excalidraw](/blogs/wiki/tools/excalidraw/) — OSS ホワイトボードの比較（BlockSuite・tldraw のライセンス含む）
 - [draw.io](/blogs/wiki/tools/draw-io/) — 構成図向けの作図ツール
 - [Obsidian](/blogs/wiki/tools/obsidian/) — ローカルファーストの Markdown PKM
