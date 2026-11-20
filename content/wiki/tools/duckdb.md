@@ -60,6 +60,7 @@ NVIDIA Auto Ontology は接続先の 10 種類のデータソースに DuckDB �
 - [DuckLake](/blogs/wiki/tools/ducklake/) — DuckDB チームのレイクハウスフォーマット
 - [レイクハウス](/blogs/wiki/concepts/lakehouse/) — フォーマット・カタログ・エンジンを組み合わせる全体像
 - [NVIDIA Auto Ontology](/blogs/wiki/tools/nvidia-auto-ontology/) — DuckDB にも接続できる Text-to-SQL 向けオントロジー生成
+- [Apache Spark](/blogs/wiki/tools/apache-spark/) — データが 1 台に収まらないときの分散処理エンジン
 
 ## ソース記事
 

@@ -45,6 +45,7 @@ Celery のタスクから Claude Code の非対話モード `claude -p` を呼�
 - [オーケストレーター／コーダー分業と承認ゲート](/blogs/wiki/concepts/orchestrator-coder-split/) — LLM は提案、コードが検査する設計
 - [マルチエージェント調整パターン](/blogs/wiki/concepts/multi-agent-coordination-patterns/)
 - [Plane](/blogs/wiki/tools/plane/) — 非同期処理に Celery を使う、OSS の Jira 代替プロジェクト管理ツール
+- [Apache Airflow](/blogs/wiki/tools/apache-airflow/) — ワークフローの順序・期間・履歴を管理する上位の層。`CeleryExecutor` で Celery をワーカーとして使える
 
 ## ソース記事
 

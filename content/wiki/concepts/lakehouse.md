@@ -99,6 +99,7 @@ AWS だけで AI ネイティブなデータ分析基盤を作る構成案では
 - [セマンティックレイヤー](/blogs/wiki/concepts/semantic-layer/) — 4 つの守りの「意味」を担う層
 - [Amazon Redshift](/blogs/wiki/tools/amazon-redshift/) — DWH 一体型の代表
 - [AI ネイティブなデータ分析基盤](/blogs/wiki/concepts/ai-native-data-platform/) — DWH・dbt・BI・MCP で組む基盤の設計
+- [Apache Spark](/blogs/wiki/tools/apache-spark/) — レイクハウスの上で変換や集計を担う計算エンジン
 
 ## ソース記事
 

@@ -22,6 +22,7 @@ Lua スクリプトによる複数コマンドのアトミック実行で競合�
 
 - [分散ロック](/blogs/wiki/concepts/distributed-lock/) — Redis を使った排他制御
 - [Celery](/blogs/wiki/tools/celery/) — Redis をブローカーとして利用
+- [Apache Kafka](/blogs/wiki/tools/apache-kafka/) — 長期保持と読み直しが要るときの、Redis Streams より重い選択肢
 
 ## ソース記事
 
