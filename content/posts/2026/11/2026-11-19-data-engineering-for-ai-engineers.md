@@ -19,17 +19,17 @@ X で、この点を指摘する中国語の投稿（[@UPing123zzz](https://x.co
 
 ## ロードマップに並ぶ技術
 
-引用元のロードマップには、次の項目が並んでいます。元は 1 本の矢印でつないだ一覧で、段階の分け方はこの記事による整理です（CI/CD は元の一覧ではデータセキュリティの後に置かれています）。
+引用元のロードマップには、次の項目が並んでいます。元は 1 本の矢印でつないだ一覧で、段階の分け方はこの記事による整理です（CI/CD は元の一覧ではデータセキュリティの後に置かれています）。項目のリンク先は、このブログの紹介記事か、関連する記事・wiki・タグの一覧です。
 
 | 段階 | 項目 |
 |---|---|
-| 基礎 | Python、SQL、Linux、Git / GitHub、データ構造 |
-| データベースとモデリング | リレーショナル DB、NoSQL、データモデリング、データウェアハウス |
-| パイプライン | ETL / ELT、Apache Airflow、Apache Spark、Kafka、データパイプライン |
-| 保存先・変換・基盤 | データレイク、レイクハウス、Snowflake、Databricks、dbt、クラウド |
-| 運用 | Docker、Kubernetes、CI/CD |
-| 信頼性と統制 | データ品質、データガバナンス、データセキュリティ |
-| AI との接続 | MLOps、AI データエンジニアリング、本番運用できるパイプラインの構築 |
+| 基礎 | [Python](/blogs/tags/python/)、[SQL](/blogs/tags/sql/)、[Linux](/blogs/tags/linux/)、[Git / GitHub](/blogs/posts/2026/11/git-in-one-hour-with-vscode/)、データ構造 |
+| データベースとモデリング | [リレーショナル DB、NoSQL](/blogs/categories/データベース/)、[データモデリング](/blogs/posts/2026/03/b32313de621a699d6b0e80a47d982cbf/)、[データウェアハウス](/blogs/posts/2026/10/redshift-vs-lakehouse/) |
+| パイプライン | [ETL / ELT](/blogs/posts/2026/11/aws-only-ai-native-data-platform/)、Apache Airflow、Apache Spark、Kafka、[データパイプライン](/blogs/wiki/concepts/ai-native-data-platform/) |
+| 保存先・変換・基盤 | [データレイク](/blogs/tags/データレイク/)、[レイクハウス](/blogs/wiki/concepts/lakehouse/)、[Snowflake](/blogs/tags/snowflake/)、[Databricks](/blogs/posts/2026/10/lakehouse-ecosystem-2026/)、[dbt](/blogs/wiki/tools/dbt/)、[クラウド](/blogs/categories/クラウド/インフラ/) |
+| 運用 | [Docker](/blogs/tags/docker/)、[Kubernetes](/blogs/tags/kubernetes/)、[CI/CD](/blogs/tags/ci/cd/) |
+| 信頼性と統制 | データ品質、[データガバナンス](/blogs/tags/データガバナンス/)、[データセキュリティ](/blogs/posts/2026/05/rbac-role-based-access-control/) |
+| AI との接続 | MLOps、[AI データエンジニアリング](/blogs/wiki/concepts/ai-ready-data/)、[本番運用できるパイプラインの構築](/blogs/posts/2026/08/rds-blue-green-dms-cdc-incident/) |
 
 用語の羅列に見えますが、投稿者は「根っこにある問いは 1 つだけ」と言います。
 
