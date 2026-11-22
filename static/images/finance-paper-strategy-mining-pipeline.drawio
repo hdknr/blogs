@@ -1,0 +1,99 @@
+<mxfile host="app.diagrams.net" agent="Claude Code" version="26.0.0">
+  <diagram id="finance-paper-pipeline" name="Finance paper strategy mining pipeline">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1180" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="金融論文 → トレード戦略 自動選別パイプライン" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="290" y="15" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Sources -->
+        <mxCell id="src-group" value="論文ソース（24時間監視）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=5;dashed=1;dashPattern=5 5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="180" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="arxiv" value="arXiv（q-fin）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="55" y="105" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="ssrn" value="SSRN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="55" y="155" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="nber" value="NBER" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="55" y="205" width="130" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 1: AI stages -->
+        <mxCell id="s1" value="&lt;b&gt;① アブストラクト選別&lt;/b&gt;&lt;br&gt;売買ルールが具体的な&lt;br&gt;論文だけ残す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="260" y="120" width="190" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="&lt;b&gt;② YAML 抽出&lt;/b&gt;&lt;br&gt;数式・変数・売買条件・&lt;br&gt;必要データ・論文の成績" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="190" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="&lt;b&gt;③ コード化と照合&lt;/b&gt;&lt;br&gt;テストデータで&lt;br&gt;論文の数式と一致を確認" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="740" y="120" width="190" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Row 2: deterministic stages -->
+        <mxCell id="s4" value="&lt;b&gt;④ バックテスト&lt;/b&gt;&lt;br&gt;4年以上・手数料と&lt;br&gt;スリッページ込み&lt;br&gt;論文期間内／公開後" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="740" y="330" width="190" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5" value="&lt;b&gt;⑤ 頑健性テスト&lt;/b&gt;&lt;br&gt;手数料2倍・別銘柄・&lt;br&gt;パラメータ・期間を変更" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="500" y="330" width="190" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6" value="&lt;b&gt;⑥ 判定と日次レポート&lt;/b&gt;&lt;br&gt;WORKS / DECAYED /&lt;br&gt;FAILED / NOT TESTABLE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="260" y="330" width="190" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="s7" value="&lt;b&gt;⑦ ペーパートレード&lt;/b&gt;&lt;br&gt;実資金の前に&lt;br&gt;仮想売買で確認" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="30" y="330" width="180" height="110" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="discard" value="破棄（カーブフィッティング）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="985" y="290" width="170" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e0" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="src-group" target="s1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s2" target="s3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s3" target="s4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s4" target="s5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="s5" target="s6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="WORKS のみ" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#666666;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="s6" target="s7">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="0" y="-22" as="offset"/></mxGeometry>
+        </mxCell>
+        <mxCell id="e7" value="小さな変更で崩れる" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeColor=#b85450;strokeWidth=1.5;dashed=1;fontSize=11;fontColor=#b85450;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="s5" target="discard">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="595" y="480"/>
+              <mxPoint x="1070" y="480"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="lg-ai" value="AI（LLM）が担当" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="985" y="120" width="170" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="lg-det" value="決定的なコードが担当" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="985" y="160" width="170" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="lg-human" value="人間が最終確認" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="985" y="200" width="170" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
