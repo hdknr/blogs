@@ -1,0 +1,21 @@
+strict digraph DiskGraph {
+node [shape=box,style=rounded]
+edge [colorscheme="paired12"]
+nodesep=0.35;
+subgraph cluster_graph {
+color="white";
+101 [label="/\\ door = \"closed\"\n/\\ locked = FALSE",style = filled]
+101 -> 202 [label="Open",color="2",fontcolor="2"];
+202 [label="/\\ door = \"open\"\n/\\ locked = FALSE",tooltip="/\\ door = \"open\"\n/\\ locked = FALSE"];
+101 -> 303 [label="Lock",color="3",fontcolor="3"];
+303 [label="/\\ door = \"closed\"\n/\\ locked = TRUE",tooltip="/\\ door = \"closed\"\n/\\ locked = TRUE"];
+202 -> 101 [label="Close",color="4",fontcolor="4"];
+{rank = same; 101;}
+{rank = same; 202;}
+}
+subgraph cluster_legend {graph[style=bold];label = "Next State Actions" style="solid"
+node [ labeljust="l",colorscheme="paired12",style=filled,shape=record ]
+Open [label="Open",fillcolor=2]
+Lock [label="Lock",fillcolor=3]
+Close [label="Close",fillcolor=4]
+}}
